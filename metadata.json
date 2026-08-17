@@ -1,0 +1,6 @@
+{
+  "name": "Forge Operator",
+  "description": "AI operations decision engine for small businesses. Triage problems into priority actions, autonomous execution, human guardrails, and immediate next steps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

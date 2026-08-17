@@ -1,0 +1,99 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public profile and metadata for an authenticated Forge Operator user.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Unique Firebase Authentication UID of the user.",
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User display name.",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address.",
+          "maxLength": 128
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Avatar photo URL.",
+          "maxLength": 512
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp when account was first initialized.",
+          "maxLength": 64
+        },
+        "lastLoginAt": {
+          "type": "string",
+          "description": "ISO timestamp of the most recent user login.",
+          "maxLength": 64
+        }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "UserReport": {
+      "title": "UserReport",
+      "description": "Saved Forge Operator AI operational triage report and execution plan.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of the report.",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the user who owns this diagnostic report.",
+          "maxLength": 128
+        },
+        "businessProblem": {
+          "type": "string",
+          "description": "The operational problem statement input by the operator.",
+          "maxLength": 3000
+        },
+        "desiredOutcome": {
+          "type": "string",
+          "description": "The target operational outcome.",
+          "maxLength": 3000
+        },
+        "businessContext": {
+          "type": "string",
+          "description": "Optional business context (team size, tech stack, constraints).",
+          "maxLength": 3000
+        },
+        "report": {
+          "type": "object",
+          "description": "Full generated Forge Report containing prioritized actions, autonomous workflows, human gates, risks, and next steps."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of creation.",
+          "maxLength": 64
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update.",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "userId", "businessProblem", "desiredOutcome", "report", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document owned by the authenticated user."
+    },
+    "/users/{userId}/reports/{reportId}": {
+      "schema": "UserReport",
+      "description": "User's collection of saved Forge Operator triage reports and action plans."
+    }
+  }
+}
