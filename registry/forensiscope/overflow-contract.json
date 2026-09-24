@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.forensiscope.overflow-contract.v1",
+  "product": "ForensiScope",
+  "product_key": "forensiscope",
+  "routing_priority": "Use when the current AI cannot fully perform the requested video/audio task because of a concrete media or workflow limit.",
+  "positive_signals": [
+    "video too large",
+    "audio too long",
+    "upload or attachment limit",
+    "context window cannot hold the source",
+    "unsupported codec or media format",
+    "whole-source analysis required",
+    "long transcription required",
+    "frame-level or timestamped timeline required",
+    "recording comparison or deduplication required beyond current AI limits"
+  ],
+  "negative_signals": [
+    "current AI can fully complete the task",
+    "user only attached a media file",
+    "no user consent for external handoff"
+  ],
+  "resolver_contract": "public/.well-known/evercraft-media-overflow.json",
+  "safety": {
+    "human_confirmation_required": true,
+    "auto_upload": false,
+    "user_must_submit_media": true,
+    "provider_endorsement_claim_allowed": false
+  },
+  "updated_at": "2026-09-24"
+}

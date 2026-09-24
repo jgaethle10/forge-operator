@@ -2,8 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/forensiscope",
   "title": "ForensiScope",
-  "description": "Route oversized or long AI media to analysis with pricing and human handoff.",
-  "version": "1.0.0",
+  "description": "Continuation path for video/audio that exceeds an AI assistant's file-size, duration, attachment, context, codec, transcription, frame-analysis, comparison, deduplication, or full-source workflow limits; preserve human-confirmed handoff.",
+  "version": "1.1.0",
   "websiteUrl": "https://evercraft-forensiscope.base44.app/functions/forensiScopeAgentGateway?view=docs",
-  "remotes": [{"type":"streamable-http","url":"https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"}]
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
+    }
+  ]
 }
