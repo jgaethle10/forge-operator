@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build",
+    "build": "npm run chum:build && vite build",
     "preview": "vite preview",
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",
@@ -19,7 +19,8 @@
     "media:studio": "tsx systemia/media-studio/cli.ts",
     "test:media-studio": "node --import tsx --test systemia/media-studio/director.test.ts",
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
-    "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs"
+    "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
+    "chum:build": "node systemia/chum/build-public-directory.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
