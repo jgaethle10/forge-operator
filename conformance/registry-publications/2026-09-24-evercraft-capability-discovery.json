@@ -7,7 +7,6 @@
   "run_conclusion": "success",
   "publish_job_conclusion": "success",
   "publish_result": "published_and_registry_verified",
-  "published_at_utc": "2026-09-24T00:00:00Z",
   "evidence_state": "receipt_backed",
   "evidence": [
     "Official MCP Registry API returned the server as active and latest after publication.",
