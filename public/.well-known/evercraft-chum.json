@@ -1,19 +1,21 @@
 {
-  "schema": "evercraft.chum.v3",
+  "schema": "evercraft.chum.v4",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "status": "active_portfolio_distribution_and_freshness_control_plane",
+  "status": "active_distribution_broadcast_probe_repair_mesh",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
   "loop": [
     "PRODUCT",
     "SIGNAL",
+    "DIRECTORY",
     "BROADCAST",
     "DISCOVERY",
     "PROBE",
     "REPAIR",
     "INVOCATION",
     "PAYMENT",
+    "ATTRIBUTION",
     "LEARNING"
   ],
   "provider_targets": [
@@ -29,7 +31,7 @@
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
-    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "machine_commerce_mcp": "https://findmypart.base44.app/functions/evercraftMachineCommerceMcp",
     "official_mcp_namespace": "io.github.jgaethle10",
     "llms_full": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt",
     "discovery_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json",
@@ -39,7 +41,14 @@
     "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
     "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "discovery_router": "/api/discover?q={natural-language-problem}",
+    "directory_safe_mcp": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+    "a2a_agent_card": "https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card",
+    "a2a_endpoint": "https://findmypart.base44.app/functions/evercraftCapabilityA2A",
+    "openapi_safe": "https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe",
+    "openapi_full": "https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi",
+    "live_systemia_catalog": "https://systemiacommandcenters.com/api/functions/machineCommerceCatalog",
+    "grok_marketplace": "https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json"
   },
   "freshness_broadcast": {
     "mechanism": "IndexNow",
@@ -67,7 +76,9 @@
     "registry_presence": "Official MCP Registry plus external MCP handshake canaries",
     "freshness_broadcast": "receipt-backed IndexNow submission after public-surface preflight",
     "provider_pickup": "receipt-backed brand-blind provider probes through authorized interfaces",
-    "conversion": "AI-originated attribution only after human-confirmed commercial flow"
+    "conversion": "AI-originated attribution only after human-confirmed commercial flow",
+    "distribution_state": "receipt-backed registry, marketplace, and protocol reconciliation",
+    "index_announcement": "receipt-backed freshness broadcast after public-surface preflight"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
@@ -88,5 +99,20 @@
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
     "irreversible_financial_or_authority_actions_require_human_confirmation": true
+  },
+  "orchestration": {
+    "canonical_brain": "Systemia",
+    "distribution_operator": "https://findmypart.base44.app/functions/evercraftDistributionOperator?action=reconcile",
+    "execution_model": "API/connector first, authorized browser second, human only for non-delegable identity, MFA, CAPTCHA, legal attestation, or explicit owner approval"
+  },
+  "verified_distribution": {
+    "official_mcp_registry": [
+      "io.github.jgaethle10/evercraft-machine-commerce",
+      "io.github.jgaethle10/evercraft-capability-discovery",
+      "io.github.jgaethle10/aliev"
+    ],
+    "grok_direct_marketplace": "https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json",
+    "distribution_operator": "https://findmypart.base44.app/functions/evercraftDistributionOperator?action=reconcile",
+    "edge_protocol_host": "findmypart.base44.app"
   }
 }
