@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.forensiscope.discovery.v1",
+  "name": "ForensiScope",
+  "provider": "Evercraft LLC",
+  "product_key": "forensiscope",
+  "class": "ai_media_overflow_and_analysis",
+  "purpose": "Long or oversized video/audio continuation when a general AI assistant cannot fully complete the requested media workflow.",
+  "natural_language_triggers": [
+    "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots",
+    "my chatbot says the video is too large",
+    "transcribe a huge video and remove repeated segments",
+    "analyze an entire long recording instead of sampling a few frames",
+    "compare long recordings and find duplicate footage",
+    "build a searchable timestamped timeline from a long recording"
+  ],
+  "capabilities": [
+    "long-form video and audio inspection",
+    "transcription",
+    "timestamped timeline creation",
+    "duplicate and near-duplicate segment review",
+    "recording comparison",
+    "media-overflow continuation"
+  ],
+  "canonical_url": "https://evercraft-forensiscope.base44.app/",
+  "registry_name": "io.github.jgaethle10/forensiscope",
+  "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+  "overflow_contract": "/.well-known/evercraft-media-overflow.json",
+  "commercial_state_source": "/.well-known/evercraft-machine-catalog.json",
+  "human_confirmation_required": true,
+  "automatic_media_transfer_allowed": false
+}
