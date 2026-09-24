@@ -8,7 +8,13 @@
     "health": "/api/health",
     "invoke": "/api/forge",
     "manifest": "/.well-known/evercraft-capabilities.json",
-    "productDirectory": "/.well-known/evercraft-products.json"
+    "productDirectory": "/.well-known/evercraft-products.json",
+    "llmsFull": "/llms-full.txt",
+    "openapi": "/openapi.json",
+    "chum": "/.well-known/evercraft-chum.json",
+    "crawlerPolicy": "/robots.txt",
+    "sitemap": "/sitemap.xml",
+    "runtimeDiscovery": "/api/discovery"
   },
   "jobs": [
     "operations bottleneck diagnosis",
