@@ -1,18 +1,37 @@
 {
-  "schema": "evercraft.chum.v2",
+  "schema": "evercraft.chum.v3",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
   "status": "portfolio_distribution_control_plane",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": ["PRODUCT","SIGNAL","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","LEARNING"],
-  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
+  "loop": [
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
+    "LEARNING"
+  ],
+  "provider_targets": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
   "public_entrypoints": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "pain_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
+    "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt"
   },
   "verified_crawler_controls": [
     {
@@ -32,7 +51,8 @@
     "surface_readiness": "public endpoint and contract checks",
     "registry_presence": "Official MCP Registry plus external MCP handshake canaries",
     "provider_pickup": "receipt-backed brand-blind provider probes through authorized interfaces",
-    "conversion": "AI-originated attribution only after human-confirmed commercial flow"
+    "conversion": "AI-originated attribution only after human-confirmed commercial flow",
+    "brand_blind_routing": "deterministic pain-index build plus receipt-backed provider probes"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
