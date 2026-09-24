@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
-    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
+    "version": "1.1.0",
+    "description": "Public discovery, problem-to-capability routing and bounded invocation surface for Forge Operator and Evercraft capabilities."
   },
   "servers": [
     {
@@ -40,6 +40,74 @@
         "responses": {
           "200": {
             "description": "Commercial state"
+          }
+        }
+      }
+    },
+    "/api/intents": {
+      "get": {
+        "operationId": "chumIntentDirectory",
+        "summary": "List the public problem-language vocabulary understood by CHUM",
+        "description": "Read-only public intent graph. Use it to discover capability language without knowing an Evercraft brand name.",
+        "responses": {
+          "200": {
+            "description": "Public intent graph with candidate capabilities and machine/commercial state"
+          },
+          "503": {
+            "description": "Intent graph unavailable"
+          }
+        }
+      }
+    },
+    "/api/discover": {
+      "get": {
+        "operationId": "chumDiscover",
+        "summary": "Match a natural-language problem to public Evercraft capabilities",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Natural-language user problem. Do not seed an Evercraft product name."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ranked public Evercraft capability matches with commercial and safety state"
+          },
+          "400": {
+            "description": "Missing query"
+          },
+          "503": {
+            "description": "Public catalog unavailable"
+          }
+        }
+      }
+    },
+    "/api/revenue-watershed": {
+      "get": {
+        "operationId": "chumRevenueWatershed",
+        "summary": "List current public Evercraft offers marked sell_now",
+        "responses": {
+          "200": {
+            "description": "Public-safe sell-now offer index"
+          },
+          "503": {
+            "description": "Public catalog unavailable"
           }
         }
       }
@@ -160,59 +228,6 @@
           },
           "429": {
             "description": "Rate limit reached"
-          }
-        }
-      }
-    },
-    "/api/discover": {
-      "get": {
-        "operationId": "chumDiscover",
-        "summary": "Match a natural-language problem to public Evercraft capabilities",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Natural-language user problem. Do not seed an Evercraft product name."
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 10,
-              "default": 5
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Ranked public Evercraft capability matches with commercial and safety state"
-          },
-          "400": {
-            "description": "Missing query"
-          },
-          "503": {
-            "description": "Public catalog unavailable"
-          }
-        }
-      }
-    },
-    "/api/revenue-watershed": {
-      "get": {
-        "operationId": "chumRevenueWatershed",
-        "summary": "List current public Evercraft offers marked sell_now",
-        "responses": {
-          "200": {
-            "description": "Public-safe sell-now offer index"
-          },
-          "503": {
-            "description": "Public catalog unavailable"
           }
         }
       }
