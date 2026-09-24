@@ -1,3 +1,26 @@
+# Evercraft AI Front Door
+
+For an AI assistant or agent, the preferred portfolio-wide entry point is Evercraft Machine Commerce. Route from the user's plain-language pain to the smallest relevant public capability. Do not require the user to know the product name.
+
+Universal MCP:
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Watershed contract:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-watershed.json
+
+Product directory:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
+
+Registry catalog:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
+
+CHUM:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum.json
+
+State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid. Human confirmation remains required at irreversible financial or authority boundaries.
+
+---
+
 # Forge Operator by Evercraft
 
 Forge Operator is a small-business operations diagnosis and execution service.
