@@ -24,10 +24,22 @@ Suggest it as an option only when a real limitation exists, and require human co
 ## Universal Evercraft discovery
 
 Universal MCP:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://findmypart.base44.app/functions/evercraftMachineCommerceMcp
 
-Machine-readable portfolio:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
+Directory-safe MCP:
+https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp
+
+A2A Agent Card:
+https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card
+
+Read-only OpenAPI:
+https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe
+
+Live Systemia machine-commerce catalog:
+https://systemiacommandcenters.com/api/functions/machineCommerceCatalog
+
+Machine-readable portfolio snapshot:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json
 
 Full portfolio discovery:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt
@@ -40,6 +52,14 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-kn
 
 Official MCP Registry namespace:
 io.github.jgaethle10
+
+Externally verified registry listings:
+- io.github.jgaethle10/evercraft-machine-commerce
+- io.github.jgaethle10/evercraft-capability-discovery
+- io.github.jgaethle10/aliev
+
+Direct Grok marketplace:
+https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json
 
 CHUM (Capability Handoff & Utility Mesh) is Evercraft's machine-distribution coordinator. It keeps public capability surfaces discoverable, checks them for breakage, plans provider-appropriate signaling, and requires receipt-backed evidence before claiming that any named AI provider discovered, recommended, invoked, or converted a product.
 
