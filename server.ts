@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { rankOffers } from './systemia/chum/discovery-router.mjs';
+import { buildAgentCard, discoveryLinkHeader, handleA2ARequest } from './systemia/chum/a2a.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 
 dotenv.config();
@@ -87,6 +88,30 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+app.set('trust proxy', 1);
+
+app.use((_req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('Link', discoveryLinkHeader());
+  res.setHeader('X-Evercraft-Discovery', '/.well-known/evercraft-discovery.json');
+  res.setHeader('X-Evercraft-Agent-Card', '/.well-known/agent-card.json');
+  next();
+});
+
+function publicBaseUrl(req: Request): string {
+  const configured = process.env.PUBLIC_BASE_URL?.trim();
+  if (configured) {
+    try {
+      return new URL(configured).toString().replace(/\/$/, '');
+    } catch {
+      // Fall through to request-derived public URL.
+    }
+  }
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const protocol = forwardedProto || req.protocol || 'https';
+  const host = req.get('host') || 'localhost';
+  return `${protocol}://${host}`;
+}
+
 function loadPublicMachineCatalog(): any {
   const file = path.resolve(
     __dirname,
@@ -146,6 +171,31 @@ async function persistChumAttributionEvent(event: unknown) {
   return { persisted: true, state: 'receipt_forwarded' };
 }
 
+
+app.get('/.well-known/agent-card.json', (req: Request, res: Response) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.json(buildAgentCard(publicBaseUrl(req)));
+});
+
+app.post('/a2a', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  try {
+    const catalog = loadPublicMachineCatalog();
+    const response = handleA2ARequest(req.body, catalog);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.status(response.status).json(response.body);
+  } catch (error: any) {
+    res.status(503).json({
+      jsonrpc: '2.0',
+      id: req.body?.id ?? null,
+      error: {
+        code: -32000,
+        message: 'Evercraft public capability catalog is temporarily unavailable.',
+        data: { detail: error?.message || String(error) },
+      },
+    });
+  }
+});
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({

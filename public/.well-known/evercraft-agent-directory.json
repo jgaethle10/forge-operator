@@ -7,7 +7,10 @@
     "name": "Evercraft Machine Commerce",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "use_when": "The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits."
+    "use_when": "The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits.",
+    "a2a_agent_card": "/.well-known/agent-card.json",
+    "a2a": "/a2a",
+    "a2a_protocol": "1.0"
   },
   "routing_policy": {
     "pain_first": true,
