@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1#evercraft-capability",
+      "name": "Site-Survive Rapid Audit",
+      "description": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "site-survive-rapid-audit-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Site-Survive Rapid Audit | Evercraft capability",
+      "description": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+      "about": {
+        "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1#evercraft-capability"
+      }
+    }
+  ]
+}

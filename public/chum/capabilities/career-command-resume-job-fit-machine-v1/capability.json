@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "career-command-resume-job-fit-machine-v1",
+  "name": "Career Command Resume + Job Fit Audit",
+  "problem": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
+  "use_when": [
+    "check my resume against this job",
+    "why am I not getting interviews",
+    "tailor my resume to this opening",
+    "is my resume ATS friendly",
+    "what am I missing for this job",
+    "resume job match",
+    "audit my resume"
+  ],
+  "inputs": "Candidate-supplied resume or background plus the target job description. Optional skills, achievements and company context.",
+  "outputs": "Strongest proof anchors, job-fit evidence, generic or unsupported claims, missing evidence, highest-impact edits and a truthful rewritten summary.",
+  "commercial_state": "verify",
+  "machine_state": "discovery_only",
+  "pricing": "Free core is available. No premium machine-lane price is approved yet.",
+  "offers": [
+    {
+      "name": "Resume + Job Fit Audit",
+      "state": "free_core",
+      "price": "$0 core"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.",
+  "public_url": "https://evercraft-career-command.base44.app/",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "catalog_ready_runtime_adapter_pending",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/career-command-resume-job-fit-machine-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

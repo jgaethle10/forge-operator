@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://faie.base44.app/functions/faieAgentGateway?view=docs#evercraft-capability",
+      "name": "FAIE Evidence-First Signal Brief",
+      "description": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "faie-signal-brief-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "FAIE Evidence-First Signal Brief | Evercraft capability",
+      "description": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "about": {
+        "@id": "https://faie.base44.app/functions/faieAgentGateway?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

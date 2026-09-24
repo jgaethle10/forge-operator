@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://network-control.base44.app/join#evercraft-capability",
+      "name": "Evercraft Network Resilience + Founding Membership",
+      "description": "A household, business, or device operator wants an application-network identity and continuity visibility that can persist across changing internet paths the client is already authorized to use, without confusing that software layer with cellular service or guaranteed geographic coverage.",
+      "url": "https://network-control.base44.app/join",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "evercraft-network-resilience-membership-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft Network Resilience + Founding Membership | Evercraft capability",
+      "description": "A household, business, or device operator wants an application-network identity and continuity visibility that can persist across changing internet paths the client is already authorized to use, without confusing that software layer with cellular service or guaranteed geographic coverage.",
+      "about": {
+        "@id": "https://network-control.base44.app/join#evercraft-capability"
+      }
+    }
+  ]
+}

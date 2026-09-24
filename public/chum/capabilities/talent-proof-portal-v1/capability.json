@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "talent-proof-portal-v1",
+  "name": "Evidence-Backed Talent Proof Portal",
+  "problem": "Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.",
+  "use_when": [
+    "help me hire based on skills",
+    "verify candidate ability",
+    "talent evidence portal",
+    "skills based hiring",
+    "prove candidate competency",
+    "find talent by demonstrated ability"
+  ],
+  "inputs": "Authorized candidate/profile evidence, competency model, target role/opportunity and organization privacy requirements.",
+  "outputs": "Evidence-backed profiles, competency proof, opportunity routing and outcomes tracking.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current organization hypothesis $500-$3,000/month; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; privacy/onboarding acceptance work pending.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/talent-proof-portal-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

@@ -1,0 +1,42 @@
+# Public-Safe Geospatial Evidence Projection
+
+Capability ID: evermaps-evidence-projection-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- map this evidence for me
+- show lifeline coverage for this place
+- give me map-ready heat or smoke action sites
+- show historical river geometry
+- return public-safe geospatial evidence
+- plot verified infrastructure coverage
+
+## Problem
+
+An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.
+
+## Inputs
+
+Projection family and geography/subject; optional time window, service category and public-safe-only filter.
+
+## Outputs
+
+Map-ready geometry/coordinates and attributes with evidence state, confidence, freshness, source refs, cautions and publication state.
+
+## Pricing
+
+No approved machine price was found. Do not auto-quote.
+
+## Invocation and authority
+
+LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.
+
+Payment authority: No verified Evercraft Payments path for this capability.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

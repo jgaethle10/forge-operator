@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs#evercraft-capability",
+      "name": "Country / Domain Intelligence Slice",
+      "description": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
+      "url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "globalstat-country-intelligence-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Country / Domain Intelligence Slice | Evercraft capability",
+      "description": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
+      "about": {
+        "@id": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

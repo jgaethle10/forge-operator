@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs#evercraft-capability",
+      "name": "Public-Safe Geospatial Evidence Projection",
+      "description": "An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.",
+      "url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "evermaps-evidence-projection-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Public-Safe Geospatial Evidence Projection | Evercraft capability",
+      "description": "An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.",
+      "about": {
+        "@id": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+# AliEV EV Site Opportunity Intelligence
+
+Capability ID: aliev-site-opportunity-snapshot-v1
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
+Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- is this site good for EV charging
+- EV charger site analysis
+- EV charging feasibility by address
+- what EV chargers are near this property
+- EV charger competition around this address
+- EV charging opportunity report
+- should I install EV chargers at this property
+- find EV charging opportunities in this market
+- commercial EV site report
+
+## Problem
+
+A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
+
+## Inputs
+
+Street address for public site screening. Paid-depth site reports use the same address context. Opportunity packs and territory feeds use an agreed market/territory.
+
+## Outputs
+
+Free source-backed address screen with nearby mapped charging context, evidence-state labels and source provenance; paid preliminary/full site reports; qualified opportunity packs; recurring territory opportunity intelligence.
+
+## Pricing
+
+$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
+
+- AliEV Preliminary Site Opportunity Report: $299 (one_time)
+
+- AliEV Full Site Opportunity Report: $750 (one_time)
+
+- AliEV Qualified Opportunity Pack · Pilot: $250 (one_time)
+
+- AliEV Territory Opportunity Feed: $2,500/month (subscription)
+
+## Invocation and authority
+
+LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.
+
+Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.
+
+Payment authority: Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

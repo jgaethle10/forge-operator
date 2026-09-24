@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs#evercraft-capability",
+      "name": "Systemia Website Audit",
+      "description": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "audit-center-website-audit-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Systemia Website Audit | Evercraft capability",
+      "description": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "about": {
+        "@id": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

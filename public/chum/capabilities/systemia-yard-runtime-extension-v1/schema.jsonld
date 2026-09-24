@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/index.html#evercraft-capability",
+      "name": "Systemia Yard Bounded Runtime Extension",
+      "description": "An already-approved active Yard execution needs more runtime without receiving broader authority.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "systemia-yard-runtime-extension-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Systemia Yard Bounded Runtime Extension | Evercraft capability",
+      "description": "An already-approved active Yard execution needs more runtime without receiving broader authority.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

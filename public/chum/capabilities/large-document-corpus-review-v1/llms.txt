@@ -1,0 +1,41 @@
+# Large Document Corpus Review Service
+
+Capability ID: large-document-corpus-review-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/index.html
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- review thousands of documents
+- analyze a document dump
+- deduplicate a large document set
+- map a public records production
+- large legal document review
+
+## Problem
+
+Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.
+
+## Inputs
+
+Public or owner-authorized corpus, review question/scope and applicable privilege/privacy boundaries.
+
+## Outputs
+
+Corpus ingestion, subdocument mapping, deduplication, evidence index and review packets with provenance.
+
+## Pricing
+
+Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.
+
+## Invocation and authority
+
+Discoverable capability; upload/payment disabled pending rights/security verification.
+
+Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.
+
+Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

@@ -1,0 +1,41 @@
+# Community Health Evidence Brief
+
+Capability ID: community-health-evidence-brief-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/index.html
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- community health data
+- county health evidence brief
+- public health grant research
+- health indicators for a community
+- public health planning data
+
+## Problem
+
+Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.
+
+## Inputs
+
+Geography, planning/grant question, target population where appropriate and requested public indicators.
+
+## Outputs
+
+Geography-specific public-health evidence brief with indicator provenance, gaps, comparisons and uncertainty.
+
+## Pricing
+
+Current hypothesis $250-$2,500 per brief; not auto-quotable yet.
+
+## Invocation and authority
+
+Discoverable capability; brief-specific source verification required before fulfillment.
+
+Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.
+
+Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

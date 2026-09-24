@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/index.html#evercraft-capability",
+      "name": "Evercraft Capability Concierge",
+      "description": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "capability-concierge-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft Capability Concierge | Evercraft capability",
+      "description": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

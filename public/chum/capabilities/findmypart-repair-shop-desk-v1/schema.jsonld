@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://findmypart.base44.app/#evercraft-capability",
+      "name": "Repair Shop Sourcing Desk",
+      "description": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
+      "url": "https://findmypart.base44.app/",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "findmypart-repair-shop-desk-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Repair Shop Sourcing Desk | Evercraft capability",
+      "description": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
+      "about": {
+        "@id": "https://findmypart.base44.app/#evercraft-capability"
+      }
+    }
+  ]
+}

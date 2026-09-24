@@ -1,0 +1,45 @@
+# FAIE Evidence-First Signal Brief
+
+Capability ID: faie-signal-brief-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- research this land or water question
+- investigate this agriculture signal
+- give me an evidence brief on this region
+- validate this environmental signal
+- do a resilience investigation
+
+## Problem
+
+A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
+
+## Inputs
+
+Defined question, buyer email and selected fixed offer. Geography, organization and use case are optional scope context.
+
+## Outputs
+
+A bounded evidence-first mission packet with findings, source references, uncertainty/evidence-needed items, challenge notes and human-review items.
+
+## Pricing
+
+Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
+
+- FAIE Signal Brief: $250 (one_time)
+
+- FAIE Proof Sprint: $2,500 (one_time)
+
+## Invocation and authority
+
+LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
+
+Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
+
+Payment authority: FAIE / Stripe, provider-verified
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

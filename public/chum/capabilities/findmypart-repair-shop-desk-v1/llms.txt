@@ -1,0 +1,41 @@
+# Repair Shop Sourcing Desk
+
+Capability ID: findmypart-repair-shop-desk-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://findmypart.base44.app/
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- source difficult parts for my repair shop
+- parts sourcing desk
+- find obsolete parts for customers
+- repair shop hard part sourcing
+- recurring parts research
+
+## Problem
+
+Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.
+
+## Inputs
+
+Shop identity, part requests, asset/equipment context and preferred service level.
+
+## Outputs
+
+Recurring difficult-part sourcing with saved case memory, vendor/salvage research, compatibility evidence and resolved-case reuse.
+
+## Pricing
+
+Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
+
+## Invocation and authority
+
+Discoverable capability; recurring entitlement/payment path still being verified.
+
+Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.
+
+Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

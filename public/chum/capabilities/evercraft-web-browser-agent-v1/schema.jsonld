@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web#evercraft-capability",
+      "name": "Evercraft Web Agent / Fetch & Browser",
+      "description": "An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "evercraft-web-browser-agent-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft Web Agent / Fetch & Browser | Evercraft capability",
+      "description": "An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.",
+      "about": {
+        "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web#evercraft-capability"
+      }
+    }
+  ]
+}

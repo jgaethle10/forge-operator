@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-capability",
+      "name": "BuildFlow Enterprise Operations Router",
+      "description": "A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.",
+      "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "buildflow-enterprise-ops-router-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "BuildFlow Enterprise Operations Router | Evercraft capability",
+      "description": "A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.",
+      "about": {
+        "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-capability"
+      }
+    }
+  ]
+}

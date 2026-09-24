@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "findmypart-paid-hunt-v1",
+  "name": "FindMyPart Paid Part Hunt",
+  "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+  "use_when": [
+    "find a hard-to-source part",
+    "identify this part",
+    "find a discontinued part",
+    "source an obsolete component",
+    "find a donor or salvage part"
+  ],
+  "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
+  "outputs": "Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+  "offers": [
+    {
+      "name": "Quick Hunt",
+      "price_usd": 19,
+      "billing": "one_time"
+    },
+    {
+      "name": "Deep Hunt",
+      "price_usd": 49,
+      "billing": "one_time"
+    },
+    {
+      "name": "Rescue Hunt",
+      "price_usd": 99,
+      "billing": "one_time"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
+  "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+  "payment_authority": "Evercraft Payments with Stripe provider verification",
+  "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/findmypart-paid-hunt-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

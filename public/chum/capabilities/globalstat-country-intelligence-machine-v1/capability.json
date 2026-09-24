@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "globalstat-country-intelligence-machine-v1",
+  "name": "Country / Domain Intelligence Slice",
+  "problem": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
+  "use_when": [
+    "compare these countries on this metric",
+    "give me sourced country intelligence",
+    "which countries lead on this domain and why",
+    "show me the evidence behind this country score",
+    "reconcile conflicting country data",
+    "country benchmark with sources"
+  ],
+  "inputs": "One or more countries plus a domain/question; optional metric slugs, comparison set and as-of date.",
+  "outputs": "Sourced observations, evidence state/confidence, source URLs, reconciliation findings, methodology context, signals and limitations.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.",
+  "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path for this capability.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/globalstat-country-intelligence-machine-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

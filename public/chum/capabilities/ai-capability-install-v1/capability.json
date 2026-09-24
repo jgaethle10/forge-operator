@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "ai-capability-install-v1",
+  "name": "AI Capability Installation Package",
+  "problem": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
+  "use_when": [
+    "install an AI capability",
+    "add an agent tool to my system",
+    "deploy an AI workflow",
+    "version and verify an AI capability",
+    "add a safe AI tool"
+  ],
+  "inputs": "Authorized target environment, desired bounded capability, integration constraints and security/authority requirements.",
+  "outputs": "Versioned capability artifacts, execution contract, install verification receipt, health check and rollback path.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; environment-specific deployment/payment verification required.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/ai-capability-install-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

@@ -1,0 +1,42 @@
+# Evidence-Controlled Research Brief
+
+Capability ID: towi-evidence-research-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- research this question with sources
+- build me an evidence brief
+- validate this claim independently
+- make me a decision grade research report
+- map the evidence for this issue
+- give me a sourced validation memo
+
+## Problem
+
+A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.
+
+## Inputs
+
+Research question and requester identity; optional organization, sector, geography, decision context, urgency, evidence standard and deliverable type.
+
+## Outputs
+
+Decision brief/report/evidence map/dataset/validation memo with findings, uncertainties, recommendations, evidence count, confidence and underlying evidence records.
+
+## Pricing
+
+No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.
+
+## Invocation and authority
+
+LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+Research may be scoped without obligation. Paid work and consequential-domain deliverables require explicit confirmation and existing review gates.
+
+Payment authority: No verified Evercraft Payments path for this capability.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

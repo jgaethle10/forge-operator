@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai#evercraft-capability",
+      "name": "ForensiScope Evidence Review",
+      "description": "An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.",
+      "url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "forensiscope-evidence-review-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "ForensiScope Evidence Review | Evercraft capability",
+      "description": "An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.",
+      "about": {
+        "@id": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai#evercraft-capability"
+      }
+    }
+  ]
+}

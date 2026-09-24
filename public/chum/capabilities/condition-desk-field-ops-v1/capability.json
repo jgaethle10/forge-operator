@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "condition-desk-field-ops-v1",
+  "name": "Condition Desk for Weather-Sensitive Field Operations",
+  "problem": "Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.",
+  "use_when": [
+    "can my crews work tomorrow",
+    "weather go no-go for field crews",
+    "jobsite weather risk",
+    "roofing weather decision",
+    "construction weather operations",
+    "air quality work decision"
+  ],
+  "inputs": "Locations, work type, customer-defined thresholds/tolerances and operating window.",
+  "outputs": "Conditions and hazards evaluated against defined thresholds with source health and evidence snapshot.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; notification/commercial reliability verification pending.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/condition-desk-field-ops-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

@@ -1,0 +1,41 @@
+# Book Export QA
+
+Capability ID: littlered-kdp-export-qa-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- check if my book is ready for KDP
+- validate my cover dimensions
+- audit this paperback export
+- is my book file ready to publish
+- check page count and cover DPI
+
+## Problem
+
+An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.
+
+## Inputs
+
+Book/project identifier, interior page count and trim size; optional paper type and cover dimensions/DPI.
+
+## Outputs
+
+Page-count validity, cover-geometry validity, effective DPI, check timestamp and notes.
+
+## Pricing
+
+No approved external machine price/payment path was found. Do not auto-quote.
+
+## Invocation and authority
+
+LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.
+
+Payment authority: No verified Evercraft Payments path.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

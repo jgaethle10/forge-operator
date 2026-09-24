@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://call-proof-vault.base44.app/#evercraft-capability",
+      "name": "CallProof Complaint Evidence Packet",
+      "description": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
+      "url": "https://call-proof-vault.base44.app/",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "callproof-complaint-packet-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "CallProof Complaint Evidence Packet | Evercraft capability",
+      "description": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
+      "about": {
+        "@id": "https://call-proof-vault.base44.app/#evercraft-capability"
+      }
+    }
+  ]
+}

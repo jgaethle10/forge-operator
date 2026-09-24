@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "income-war-map-v1",
+  "name": "Income War Map Revenue Planning",
+  "problem": "A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.",
+  "use_when": [
+    "help me make more money",
+    "find revenue opportunities",
+    "build me an income plan",
+    "side hustle ideas for my situation",
+    "revenue war map",
+    "income strategy",
+    "how can I increase my income"
+  ],
+  "inputs": "User-provided income, expenses, debt, skills, available time, risk tolerance, work context, location and revenue target.",
+  "outputs": "Personalized planning opportunities, modeled revenue/startup/time/risk estimates, prioritized missions and progress tracking.",
+  "commercial_state": "hold",
+  "machine_state": "discovery_only",
+  "pricing": "Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/index.html",
+  "payment_authority": "Stripe legacy adapter; checkout paused",
+  "invocation_status": "Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/income-war-map-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

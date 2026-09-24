@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/index.html#evercraft-capability",
+      "name": "Community Health Evidence Brief",
+      "description": "Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "community-health-evidence-brief-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Community Health Evidence Brief | Evercraft capability",
+      "description": "Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

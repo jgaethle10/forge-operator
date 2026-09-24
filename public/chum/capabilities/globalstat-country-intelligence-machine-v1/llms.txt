@@ -1,0 +1,42 @@
+# Country / Domain Intelligence Slice
+
+Capability ID: globalstat-country-intelligence-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- compare these countries on this metric
+- give me sourced country intelligence
+- which countries lead on this domain and why
+- show me the evidence behind this country score
+- reconcile conflicting country data
+- country benchmark with sources
+
+## Problem
+
+An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.
+
+## Inputs
+
+One or more countries plus a domain/question; optional metric slugs, comparison set and as-of date.
+
+## Outputs
+
+Sourced observations, evidence state/confidence, source URLs, reconciliation findings, methodology context, signals and limitations.
+
+## Pricing
+
+Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
+
+## Invocation and authority
+
+LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.
+
+Payment authority: No verified Evercraft Payments path for this capability.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

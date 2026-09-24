@@ -1,0 +1,48 @@
+# ROASTED 99¢ Text Pressure Test
+
+Capability ID: roasted-text-pressure-test-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- roast this text
+- roast my bio
+- roast my resume
+- tear apart this pitch
+- be brutally honest about this copy
+- brutally critique this message
+- roast my linkedin headline
+- roast this post
+- pressure test this copy
+- pressure test my writing
+
+## Problem
+
+Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
+
+## Inputs
+
+Text to critique and optional roast style.
+
+## Outputs
+
+A roast, three practical fixes and a shareable result.
+
+## Pricing
+
+$0.99 USD one-time per roast.
+
+- Single Roast: $0.99 (one_time)
+
+## Invocation and authority
+
+LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.
+
+Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.
+
+Payment authority: ROASTED / Stripe, provider-verified
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

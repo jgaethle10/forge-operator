@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-career-command.base44.app/#evercraft-capability",
+      "name": "Career Command Resume + Job Fit Audit",
+      "description": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
+      "url": "https://evercraft-career-command.base44.app/",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "career-command-resume-job-fit-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Career Command Resume + Job Fit Audit | Evercraft capability",
+      "description": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
+      "about": {
+        "@id": "https://evercraft-career-command.base44.app/#evercraft-capability"
+      }
+    }
+  ]
+}

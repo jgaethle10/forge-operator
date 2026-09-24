@@ -1,0 +1,50 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "eventwave-paid-promotion-v1",
+  "name": "EventWave Event / Venue Promotion",
+  "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+  "use_when": [
+    "promote my event on EventWave",
+    "promote my local event",
+    "help people find my event",
+    "advertise my event",
+    "promote an event",
+    "boost event visibility",
+    "boost this event",
+    "feature my venue on EventWave",
+    "promote my venue",
+    "buy event promotion",
+    "promote this venue's events"
+  ],
+  "inputs": "Choose Event Boost or Venue Pack, provide contact email and the relevant public event or venue identifiers/URL.",
+  "outputs": "Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
+  "offers": [
+    {
+      "name": "Event Boost",
+      "price": "$49",
+      "billing": "one_time"
+    },
+    {
+      "name": "Venue Pack",
+      "price": "$149",
+      "billing": "one_time"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.",
+  "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+  "payment_authority": "Evercraft Payments with provider verification",
+  "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/eventwave-paid-promotion-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

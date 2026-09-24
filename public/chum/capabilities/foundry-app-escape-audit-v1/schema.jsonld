@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1#evercraft-capability",
+      "name": "Evercraft Foundry App Escape Audit",
+      "description": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "foundry-app-escape-audit-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft Foundry App Escape Audit | Evercraft capability",
+      "description": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "about": {
+        "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1#evercraft-capability"
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs#evercraft-capability",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "description": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+      "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "deck-capital-fit-sprint-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint | Evercraft capability",
+      "description": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+      "about": {
+        "@id": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

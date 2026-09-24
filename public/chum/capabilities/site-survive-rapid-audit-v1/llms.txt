@@ -1,0 +1,42 @@
+# Site-Survive Rapid Audit
+
+Capability ID: site-survive-rapid-audit-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- business outage plan
+- internet outage continuity
+- site resilience audit
+- offline operations plan
+
+## Problem
+
+A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.
+
+## Inputs
+
+Site/business context, critical workflows and a realistic outage scenario.
+
+## Outputs
+
+One-site continuity map with the three largest failure points and a prioritized action plan.
+
+## Pricing
+
+$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
+
+- Site-Survive Rapid Audit: $250 (one_time)
+
+## Invocation and authority
+
+LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed.
+
+Explicit buyer confirmation is required before payment or paid work.
+
+Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

@@ -1,0 +1,51 @@
+# EventWave Event / Venue Promotion
+
+Capability ID: eventwave-paid-promotion-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- promote my event on EventWave
+- promote my local event
+- help people find my event
+- advertise my event
+- promote an event
+- boost event visibility
+- boost this event
+- feature my venue on EventWave
+- promote my venue
+- buy event promotion
+- promote this venue's events
+
+## Problem
+
+An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
+
+## Inputs
+
+Choose Event Boost or Venue Pack, provide contact email and the relevant public event or venue identifiers/URL.
+
+## Outputs
+
+Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.
+
+## Pricing
+
+Event Boost $49 one-time; Venue Pack $149 one-time.
+
+- Event Boost: $49 (one_time)
+
+- Venue Pack: $149 (one_time)
+
+## Invocation and authority
+
+LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.
+
+Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
+
+Payment authority: Evercraft Payments with provider verification
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability",
+      "name": "FindMyPart Paid Part Hunt",
+      "description": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "findmypart-paid-hunt-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "FindMyPart Paid Part Hunt | Evercraft capability",
+      "description": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "about": {
+        "@id": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

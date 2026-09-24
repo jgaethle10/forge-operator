@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-capability",
+      "name": "BuildFlow Shadow Migration Audit",
+      "description": "A business needs to ingest and understand messy operational exports while preserving source lineage, surfacing conflicts and avoiding destructive migration assumptions.",
+      "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "buildflow-shadow-migration-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "BuildFlow Shadow Migration Audit | Evercraft capability",
+      "description": "A business needs to ingest and understand messy operational exports while preserving source lineage, surfacing conflicts and avoiding destructive migration assumptions.",
+      "about": {
+        "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-capability"
+      }
+    }
+  ]
+}

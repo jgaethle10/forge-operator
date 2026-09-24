@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "agent-proving-mission-v1",
+  "name": "Agent Proving Mission",
+  "problem": "Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.",
+  "use_when": [
+    "test my AI agent",
+    "evaluate an AI agent",
+    "prove agent reliability",
+    "agent benchmark mission",
+    "AI worker competency test"
+  ],
+  "inputs": "Agent/workflow under test, bounded mission, success criteria, allowed tools/environment and authority boundaries.",
+  "outputs": "Mission criteria, observed attempts, competency evidence, decision traces and concise pass/gap report.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; paid execution verification pending.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/agent-proving-mission-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

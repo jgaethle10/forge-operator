@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs#evercraft-capability",
+      "name": "Evercraft Website Launch Service",
+      "description": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "website-launch-service-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft Website Launch Service | Evercraft capability",
+      "description": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "about": {
+        "@id": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

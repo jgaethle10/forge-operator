@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "datafoundry-data-gap-audit-machine-v1",
+  "name": "Canonical Data Gap Audit",
+  "problem": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
+  "use_when": [
+    "audit this dataset for gaps",
+    "what data is missing for this decision",
+    "find provenance problems in this data",
+    "reconcile conflicting sources",
+    "where are our visibility gaps",
+    "design a plan to close these data gaps"
+  ],
+  "inputs": "Authorized dataset/domain plus decision question; optional geography, population scope, metric/subject and source refs.",
+  "outputs": "Explicit gaps and types, severity, evidence/confidence, affected decisions, source conflicts, collection options/effort, governance constraints and next actions.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.",
+  "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path for this specific audit.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/datafoundry-data-gap-audit-machine-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

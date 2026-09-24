@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/index.html#evercraft-capability",
+      "name": "Condition Desk for Weather-Sensitive Field Operations",
+      "description": "Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "condition-desk-field-ops-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Condition Desk for Weather-Sensitive Field Operations | Evercraft capability",
+      "description": "Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

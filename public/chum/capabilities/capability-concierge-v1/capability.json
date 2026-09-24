@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "capability-concierge-v1",
+  "name": "Evercraft Capability Concierge",
+  "problem": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
+  "use_when": [
+    "help my business with AI",
+    "find software for this problem",
+    "automate this workflow",
+    "which Evercraft capability solves this"
+  ],
+  "inputs": "Desired outcome, constraints, existing systems and optional budget/urgency context.",
+  "outputs": "The smallest evidence-backed Evercraft capability set that fits the requested outcome.",
+  "commercial_state": "discovery_only",
+  "machine_state": "discovery_only",
+  "pricing": "Quote required until machine-lane pricing is approved.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Internal routing exists; public universal invocation is not yet advertised.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/capability-concierge-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

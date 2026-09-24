@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs#evercraft-capability",
+      "name": "Canonical Data Gap Audit",
+      "description": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
+      "url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "datafoundry-data-gap-audit-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Canonical Data Gap Audit | Evercraft capability",
+      "description": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
+      "about": {
+        "@id": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

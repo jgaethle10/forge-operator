@@ -1,0 +1,41 @@
+# Agent Proving Mission
+
+Capability ID: agent-proving-mission-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/agent-proving-mission-v1/index.html
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- test my AI agent
+- evaluate an AI agent
+- prove agent reliability
+- agent benchmark mission
+- AI worker competency test
+
+## Problem
+
+Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.
+
+## Inputs
+
+Agent/workflow under test, bounded mission, success criteria, allowed tools/environment and authority boundaries.
+
+## Outputs
+
+Mission criteria, observed attempts, competency evidence, decision traces and concise pass/gap report.
+
+## Pricing
+
+Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
+
+## Invocation and authority
+
+Discoverable capability; paid execution verification pending.
+
+Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.
+
+Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html#evercraft-capability",
+      "name": "RIVET EV Charging Site Underwriting Package",
+      "description": "A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "rivet-site-underwriting-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "RIVET EV Charging Site Underwriting Package | Evercraft capability",
+      "description": "A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+# CallProof Complaint Evidence Packet
+
+Capability ID: callproof-complaint-packet-machine-v1
+Commercial state: verify
+Machine state: human_auth_handoff
+Public URL: https://call-proof-vault.base44.app/
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- organize my robocall evidence
+- make an FCC complaint packet
+- organize unwanted call records
+- help me document spam calls
+- prepare my FTC call evidence
+- turn my call log into a complaint packet
+
+## Problem
+
+Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.
+
+## Inputs
+
+Authenticated user-owned incident records, with optional contact details, notes and evidence references.
+
+## Outputs
+
+Downloadable factual incident packet. CallProof does not file the complaint or determine that a law was violated.
+
+## Pricing
+
+Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
+
+- Stop-The-Calls Packet: $19 (one_time)
+
+- Vault: $7.99/month (subscription)
+
+- Pro: $29/month (subscription)
+
+## Invocation and authority
+
+discoverable_authenticated_checkout_required
+
+User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.
+
+Payment authority: CallProof Vault / Stripe
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

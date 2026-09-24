@@ -1,0 +1,43 @@
+# BuildFlow Procure-to-Pay Shadow Audit
+
+Capability ID: buildflow-procure-to-pay-shadow-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- our invoices do not match receipts
+- audit purchase approvals without replacing accounting
+- reconstruct request to purchase order to invoice
+- find missing purchasing approvals
+- trace procure to pay exceptions
+- our vendor invoices and purchase orders keep disagreeing
+- analyze three way match problems
+
+## Problem
+
+A business needs to reconstruct purchasing flow, approval state, receipts and invoice references without turning a new product into the authoritative general ledger.
+
+## Inputs
+
+Authenticated vendors, purchase requests, approvals, purchase-order references, receipts and invoice references.
+
+## Outputs
+
+Process timeline, approval gaps, invoice/receipt exceptions, recommendations and reconciliation context.
+
+## Pricing
+
+No approved machine price/payment path was found. Do not auto-quote.
+
+## Invocation and authority
+
+SOURCE-VERIFIED: discovery, tenant-scoped P2P model and bounded internal approval-request flow are implemented and build-tested; external client canary remains pending. External writes disabled.
+
+Current BuildFlow mode is shadow-first. It does not post accounting entries, create external POs or initiate payment.
+
+Payment authority: No verified Evercraft Payments path.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

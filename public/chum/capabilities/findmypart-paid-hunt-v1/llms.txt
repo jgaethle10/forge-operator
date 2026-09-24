@@ -1,0 +1,47 @@
+# FindMyPart Paid Part Hunt
+
+Capability ID: findmypart-paid-hunt-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- find a hard-to-source part
+- identify this part
+- find a discontinued part
+- source an obsolete component
+- find a donor or salvage part
+
+## Problem
+
+A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
+
+## Inputs
+
+Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.
+
+## Outputs
+
+Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.
+
+## Pricing
+
+Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
+
+- Quick Hunt:  (one_time)
+
+- Deep Hunt:  (one_time)
+
+- Rescue Hunt:  (one_time)
+
+## Invocation and authority
+
+LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.
+
+User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.
+
+Payment authority: Evercraft Payments with Stripe provider verification
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

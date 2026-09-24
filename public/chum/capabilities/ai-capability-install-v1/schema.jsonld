@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/index.html#evercraft-capability",
+      "name": "AI Capability Installation Package",
+      "description": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "ai-capability-install-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "AI Capability Installation Package | Evercraft capability",
+      "description": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ai-capability-install-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

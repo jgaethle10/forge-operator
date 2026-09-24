@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/index.html#evercraft-capability",
+      "name": "Evidence-Backed Talent Proof Portal",
+      "description": "Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "talent-proof-portal-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evidence-Backed Talent Proof Portal | Evercraft capability",
+      "description": "Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-proof-portal-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

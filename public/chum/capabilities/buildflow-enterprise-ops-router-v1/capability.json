@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "buildflow-enterprise-ops-router-v1",
+  "name": "BuildFlow Enterprise Operations Router",
+  "problem": "A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.",
+  "use_when": [
+    "our business operations are a mess",
+    "we need an ERP but cannot survive a huge implementation",
+    "help an AI understand how our company works",
+    "connect our business systems without replacing everything",
+    "turn spreadsheets and legacy systems into an operating layer",
+    "we need a safer way for AI agents to work with our business",
+    "modernize our operations without a big bang migration"
+  ],
+  "inputs": "A non-sensitive problem description for public routing. Private business data is collected only after authenticated tenant handoff.",
+  "outputs": "Ranked smallest-fit BuildFlow capability, safety boundary and human-authentication handoff guidance.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
+  "offers": [],
+  "human_ui_required": true,
+  "confirmation": "Public routing does not ingest private company records or execute business actions. Authenticated tenant context is required before customer data access.",
+  "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+  "payment_authority": "No verified Evercraft Payments path.",
+  "invocation_status": "SOURCE-VERIFIED: BuildFlow public router and central MCP specialist routing are implemented and build-tested. External client canary remains pending; private data and consequential actions remain authenticated/human-gated.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/buildflow-enterprise-ops-router-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

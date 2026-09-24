@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "evermaps-evidence-projection-machine-v1",
+  "name": "Public-Safe Geospatial Evidence Projection",
+  "problem": "An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.",
+  "use_when": [
+    "map this evidence for me",
+    "show lifeline coverage for this place",
+    "give me map-ready heat or smoke action sites",
+    "show historical river geometry",
+    "return public-safe geospatial evidence",
+    "plot verified infrastructure coverage"
+  ],
+  "inputs": "Projection family and geography/subject; optional time window, service category and public-safe-only filter.",
+  "outputs": "Map-ready geometry/coordinates and attributes with evidence state, confidence, freshness, source refs, cautions and publication state.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved machine price was found. Do not auto-quote.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.",
+  "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path for this capability.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/evermaps-evidence-projection-machine-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

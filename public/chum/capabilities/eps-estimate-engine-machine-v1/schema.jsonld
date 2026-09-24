@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs#evercraft-capability",
+      "name": "Field-Service Estimate Engine",
+      "description": "A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.",
+      "url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "eps-estimate-engine-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Field-Service Estimate Engine | Evercraft capability",
+      "description": "A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.",
+      "about": {
+        "@id": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

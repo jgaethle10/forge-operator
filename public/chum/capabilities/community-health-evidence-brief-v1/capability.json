@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "community-health-evidence-brief-v1",
+  "name": "Community Health Evidence Brief",
+  "problem": "Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.",
+  "use_when": [
+    "community health data",
+    "county health evidence brief",
+    "public health grant research",
+    "health indicators for a community",
+    "public health planning data"
+  ],
+  "inputs": "Geography, planning/grant question, target population where appropriate and requested public indicators.",
+  "outputs": "Geography-specific public-health evidence brief with indicator provenance, gaps, comparisons and uncertainty.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $250-$2,500 per brief; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; brief-specific source verification required before fulfillment.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/community-health-evidence-brief-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

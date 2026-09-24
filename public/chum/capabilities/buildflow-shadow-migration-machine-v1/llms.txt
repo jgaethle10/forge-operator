@@ -1,0 +1,42 @@
+# BuildFlow Shadow Migration Audit
+
+Capability ID: buildflow-shadow-migration-machine-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- analyze this messy ERP export
+- migrate our spreadsheets without losing provenance
+- map CSV data before replacing our system
+- find conflicts in our business exports
+- reconcile records from multiple business systems
+- stage an ERP migration without overwriting anything
+
+## Problem
+
+A business needs to ingest and understand messy operational exports while preserving source lineage, surfacing conflicts and avoiding destructive migration assumptions.
+
+## Inputs
+
+Authenticated tenant CSV/structured exports or connector-fed records.
+
+## Outputs
+
+ImportRun, SourceRecord, mapping preview, explicit ImportConflict records and review state.
+
+## Pricing
+
+No approved machine price/payment path was found. Do not auto-quote.
+
+## Invocation and authority
+
+SOURCE-VERIFIED: discovery/routing and authenticated shadow-import flow are implemented and build-tested; external client canary remains pending. External-system writes are disabled.
+
+Shadow import does not overwrite the source or silently create canonical truth. Private records require authenticated tenant access.
+
+Payment authority: No verified Evercraft Payments path.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

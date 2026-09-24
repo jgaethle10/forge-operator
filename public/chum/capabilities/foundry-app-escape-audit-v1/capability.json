@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "foundry-app-escape-audit-v1",
+  "name": "Evercraft Foundry App Escape Audit",
+  "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+  "use_when": [
+    "escape vendor lock-in",
+    "migrate from no-code",
+    "export an AI-built app",
+    "audit app portability"
+  ],
+  "inputs": "Authorized read-only project access or exported source/schema information.",
+  "outputs": "Dependency map, route/schema inventory, security findings, provider-neutral architecture candidate, reconstruction manifest and migration/rollback plan.",
+  "commercial_state": "sell_now",
+  "machine_state": "human_handoff_ready",
+  "pricing": "$500 one-time.",
+  "offers": [
+    {
+      "name": "App Escape Audit",
+      "price": "$500",
+      "billing": "one_time",
+      "checkout": "human_handoff"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "Explicit buyer authorization for source access and payment is required.",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+  "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
+  "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/foundry-app-escape-audit-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

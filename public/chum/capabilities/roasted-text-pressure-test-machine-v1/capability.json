@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "roasted-text-pressure-test-machine-v1",
+  "name": "ROASTED 99¢ Text Pressure Test",
+  "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+  "use_when": [
+    "roast this text",
+    "roast my bio",
+    "roast my resume",
+    "tear apart this pitch",
+    "be brutally honest about this copy",
+    "brutally critique this message",
+    "roast my linkedin headline",
+    "roast this post",
+    "pressure test this copy",
+    "pressure test my writing"
+  ],
+  "inputs": "Text to critique and optional roast style.",
+  "outputs": "A roast, three practical fixes and a shareable result.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "$0.99 USD one-time per roast.",
+  "offers": [
+    {
+      "name": "Single Roast",
+      "price": "$0.99",
+      "billing": "one_time"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.",
+  "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "payment_authority": "ROASTED / Stripe, provider-verified",
+  "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

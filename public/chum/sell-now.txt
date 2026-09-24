@@ -1,6 +1,6 @@
-# Evercraft SELL NOW
+# Evercraft SELL NOW directory
 
-Current public Machine Commerce offers marked sell_now.
+These are current Evercraft capabilities whose public Machine Commerce catalog marks commercial_state=sell_now.
 
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
@@ -19,7 +19,7 @@ Use this when:
 - should I install EV chargers at this property
 - find EV charging opportunities in this market
 - commercial EV site report
-Confirmation: Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt
 
 ## Systemia Website Audit
 Capability ID: audit-center-website-audit-machine-v1
@@ -40,7 +40,7 @@ Use this when:
 - why is my website not converting
 - website traffic but no leads
 - visitors are not turning into leads
-Confirmation: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt
 
 ## Career Command Interview Practice + Interview Sprint
 Capability ID: career-command-interview-practice-machine-v1
@@ -55,7 +55,7 @@ Use this when:
 - I have an interview tomorrow
 - prepare me for a recruiter screen
 - behavioral interview practice
-Confirmation: Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt
 
 ## Evercraft Deck Engine Founding Capital Fit Sprint
 Capability ID: deck-capital-fit-sprint-machine-v1
@@ -71,7 +71,7 @@ Use this when:
 - find capital options for this project
 - turn my business info into a funding deck
 - what am I missing before I seek funding
-Confirmation: The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt
 
 ## EventWave Event / Venue Promotion
 Capability ID: eventwave-paid-promotion-v1
@@ -90,7 +90,7 @@ Use this when:
 - promote my venue
 - buy event promotion
 - promote this venue's events
-Confirmation: Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/llms.txt
 
 ## FAIE Evidence-First Signal Brief
 Capability ID: faie-signal-brief-v1
@@ -103,7 +103,7 @@ Use this when:
 - give me an evidence brief on this region
 - validate this environmental signal
 - do a resilience investigation
-Confirmation: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/llms.txt
 
 ## FindMyPart Paid Part Hunt
 Capability ID: findmypart-paid-hunt-v1
@@ -116,7 +116,7 @@ Use this when:
 - find a discontinued part
 - source an obsolete component
 - find a donor or salvage part
-Confirmation: User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/llms.txt
 
 ## Evercraft Foundry App Escape Audit
 Capability ID: foundry-app-escape-audit-v1
@@ -128,7 +128,7 @@ Use this when:
 - migrate from no-code
 - export an AI-built app
 - audit app portability
-Confirmation: Explicit buyer authorization for source access and payment is required.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/llms.txt
 
 ## ROASTED 99¢ Text Pressure Test
 Capability ID: roasted-text-pressure-test-machine-v1
@@ -146,7 +146,7 @@ Use this when:
 - roast this post
 - pressure test this copy
 - pressure test my writing
-Confirmation: Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt
 
 ## Site-Survive Rapid Audit
 Capability ID: site-survive-rapid-audit-v1
@@ -158,7 +158,7 @@ Use this when:
 - internet outage continuity
 - site resilience audit
 - offline operations plan
-Confirmation: Explicit buyer confirmation is required before payment or paid work.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/llms.txt
 
 ## Evercraft Website Launch Service
 Capability ID: website-launch-service-v1
@@ -171,6 +171,6 @@ Use this when:
 - replace my bad website
 - make me a professional business site
 - handle my website for me
-Confirmation: The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/llms.txt
 
-Discovery creates no payment obligation. Checkout creation is not proof of payment.
+Checkout preparation requires explicit human confirmation where supported. Checkout creation is not payment proof.

@@ -1,0 +1,44 @@
+# Business Process Pattern Audit
+
+Capability ID: buildflow-process-audit-machine-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- map how our process actually works
+- find bottlenecks in this business workflow
+- analyze our purchase approval process
+- reconstruct our process from logs
+- where are exceptions slowing us down
+- audit our procure to pay workflow
+- compare the real workflow to company policy
+- process mining from operational history
+
+## Problem
+
+A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.
+
+## Inputs
+
+Tenant-scoped process observations/events and optional process/source-system scope.
+
+## Outputs
+
+Candidate step sequence, sample size, median duration, exception rate, confidence, evidence refs and review state. No policy change or external action.
+
+## Pricing
+
+No approved machine price/payment path was found. Do not auto-quote.
+
+## Invocation and authority
+
+SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.
+
+Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.
+
+Payment authority: No verified Evercraft Payments path.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

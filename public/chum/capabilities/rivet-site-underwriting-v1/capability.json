@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "rivet-site-underwriting-v1",
+  "name": "RIVET EV Charging Site Underwriting Package",
+  "problem": "A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.",
+  "use_when": [
+    "underwrite an EV charging site",
+    "EV charger investment report",
+    "charging site economics",
+    "evaluate this address for EV charging",
+    "EV charging diligence"
+  ],
+  "inputs": "Site/address, intended project context, buyer decision question and authorized site-specific inputs.",
+  "outputs": "Address-specific siting and underwriting package with evidence-state labels, economics, competition, power/incentive context and next diligence.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Discovery may be automatic. Payment, engineering representations and commitments require explicit confirmation/approval.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; quote/payment verification required before sale.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/rivet-site-underwriting-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

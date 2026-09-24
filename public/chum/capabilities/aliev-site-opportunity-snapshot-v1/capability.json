@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "aliev-site-opportunity-snapshot-v1",
+  "name": "AliEV EV Site Opportunity Intelligence",
+  "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
+  "use_when": [
+    "is this site good for EV charging",
+    "EV charger site analysis",
+    "EV charging feasibility by address",
+    "what EV chargers are near this property",
+    "EV charger competition around this address",
+    "EV charging opportunity report",
+    "should I install EV chargers at this property",
+    "find EV charging opportunities in this market",
+    "commercial EV site report"
+  ],
+  "inputs": "Street address for public site screening. Paid-depth site reports use the same address context. Opportunity packs and territory feeds use an agreed market/territory.",
+  "outputs": "Free source-backed address screen with nearby mapped charging context, evidence-state labels and source provenance; paid preliminary/full site reports; qualified opportunity packs; recurring territory opportunity intelligence.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready_human_confirmation",
+  "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
+  "offers": [
+    {
+      "offer_key": "site_report_299",
+      "name": "AliEV Preliminary Site Opportunity Report",
+      "price": "$299",
+      "billing": "one_time"
+    },
+    {
+      "offer_key": "site_report_750",
+      "name": "AliEV Full Site Opportunity Report",
+      "price": "$750",
+      "billing": "one_time"
+    },
+    {
+      "offer_key": "opportunity_pack_250",
+      "name": "AliEV Qualified Opportunity Pack · Pilot",
+      "price": "$250",
+      "billing": "one_time"
+    },
+    {
+      "offer_key": "territory_feed_2500_monthly",
+      "name": "AliEV Territory Opportunity Feed",
+      "price": "$2,500/month",
+      "billing": "subscription"
+    }
+  ],
+  "human_ui_required": true,
+  "confirmation": "Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.",
+  "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+  "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
+  "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs#evercraft-capability",
+      "name": "Book Export QA",
+      "description": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
+      "url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "littlered-kdp-export-qa-machine-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Book Export QA | Evercraft capability",
+      "description": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
+      "about": {
+        "@id": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

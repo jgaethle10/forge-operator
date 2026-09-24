@@ -1,0 +1,42 @@
+# Condition Desk for Weather-Sensitive Field Operations
+
+Capability ID: condition-desk-field-ops-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/condition-desk-field-ops-v1/index.html
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- can my crews work tomorrow
+- weather go no-go for field crews
+- jobsite weather risk
+- roofing weather decision
+- construction weather operations
+- air quality work decision
+
+## Problem
+
+Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.
+
+## Inputs
+
+Locations, work type, customer-defined thresholds/tolerances and operating window.
+
+## Outputs
+
+Conditions and hazards evaluated against defined thresholds with source health and evidence snapshot.
+
+## Pricing
+
+Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
+
+## Invocation and authority
+
+Discoverable capability; notification/commercial reliability verification pending.
+
+Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.
+
+Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

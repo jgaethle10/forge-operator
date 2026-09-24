@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "callproof-complaint-packet-machine-v1",
+  "name": "CallProof Complaint Evidence Packet",
+  "problem": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
+  "use_when": [
+    "organize my robocall evidence",
+    "make an FCC complaint packet",
+    "organize unwanted call records",
+    "help me document spam calls",
+    "prepare my FTC call evidence",
+    "turn my call log into a complaint packet"
+  ],
+  "inputs": "Authenticated user-owned incident records, with optional contact details, notes and evidence references.",
+  "outputs": "Downloadable factual incident packet. CallProof does not file the complaint or determine that a law was violated.",
+  "commercial_state": "verify",
+  "machine_state": "human_auth_handoff",
+  "pricing": "Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.",
+  "offers": [
+    {
+      "name": "Stop-The-Calls Packet",
+      "display_price": "$19",
+      "billing": "one_time",
+      "verification": "provider price authoritative"
+    },
+    {
+      "name": "Vault",
+      "display_price": "$7.99/month",
+      "billing": "subscription",
+      "verification": "provider price authoritative"
+    },
+    {
+      "name": "Pro",
+      "display_price": "$29/month",
+      "billing": "subscription",
+      "verification": "provider price authoritative"
+    }
+  ],
+  "human_ui_required": true,
+  "confirmation": "User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.",
+  "public_url": "https://call-proof-vault.base44.app/",
+  "payment_authority": "CallProof Vault / Stripe",
+  "invocation_status": "discoverable_authenticated_checkout_required",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/callproof-complaint-packet-machine-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

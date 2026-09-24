@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "large-document-corpus-review-v1",
+  "name": "Large Document Corpus Review Service",
+  "problem": "Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.",
+  "use_when": [
+    "review thousands of documents",
+    "analyze a document dump",
+    "deduplicate a large document set",
+    "map a public records production",
+    "large legal document review"
+  ],
+  "inputs": "Public or owner-authorized corpus, review question/scope and applicable privilege/privacy boundaries.",
+  "outputs": "Corpus ingestion, subdocument mapping, deduplication, evidence index and review packets with provenance.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/index.html",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; upload/payment disabled pending rights/security verification.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/large-document-corpus-review-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/large-document-corpus-review-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}

@@ -1,0 +1,43 @@
+# Income War Map Revenue Planning
+
+Capability ID: income-war-map-v1
+Commercial state: hold
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/index.html
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- help me make more money
+- find revenue opportunities
+- build me an income plan
+- side hustle ideas for my situation
+- revenue war map
+- income strategy
+- how can I increase my income
+
+## Problem
+
+A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.
+
+## Inputs
+
+User-provided income, expenses, debt, skills, available time, risk tolerance, work context, location and revenue target.
+
+## Outputs
+
+Personalized planning opportunities, modeled revenue/startup/time/risk estimates, prioritized missions and progress tracking.
+
+## Pricing
+
+Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.
+
+## Invocation and authority
+
+Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.
+
+Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.
+
+Payment authority: Stripe legacy adapter; checkout paused
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

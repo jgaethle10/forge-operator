@@ -1,0 +1,40 @@
+# Evercraft Capability Concierge
+
+Capability ID: capability-concierge-v1
+Commercial state: discovery_only
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/index.html
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this when
+
+- help my business with AI
+- find software for this problem
+- automate this workflow
+- which Evercraft capability solves this
+
+## Problem
+
+A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.
+
+## Inputs
+
+Desired outcome, constraints, existing systems and optional budget/urgency context.
+
+## Outputs
+
+The smallest evidence-backed Evercraft capability set that fits the requested outcome.
+
+## Pricing
+
+Quote required until machine-lane pricing is approved.
+
+## Invocation and authority
+
+Internal routing exists; public universal invocation is not yet advertised.
+
+Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.
+
+Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

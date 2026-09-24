@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/index.html#evercraft-capability",
+      "name": "Income War Map Revenue Planning",
+      "description": "A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "income-war-map-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Income War Map Revenue Planning | Evercraft capability",
+      "description": "A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

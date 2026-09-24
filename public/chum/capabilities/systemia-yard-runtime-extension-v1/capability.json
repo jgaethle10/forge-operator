@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "systemia-yard-runtime-extension-v1",
+  "name": "Systemia Yard Bounded Runtime Extension",
+  "problem": "An already-approved active Yard execution needs more runtime without receiving broader authority.",
+  "use_when": [
+    "keep this approved agent run going longer",
+    "buy more runtime for this Yard execution",
+    "extend this bounded build run",
+    "give this approved execution more time"
+  ],
+  "inputs": "Authenticated owner, eligible active execution request key, requested additional seconds and optional spend cap.",
+  "outputs": "Request-bound server quote, quote digest, payment requirement, bounded runtime entitlement, receipt and updated lease expiry.",
+  "commercial_state": "verification_required",
+  "machine_state": "invocation_ready",
+  "pricing": "Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Explicit purchase authorization is required. Purchased runtime changes time only and never widens execution scope, permissions, release authority or security access.",
+  "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/index.html",
+  "payment_authority": "Runtime broker supports machine settlement, but live verifier configuration and a paid canary still require independent verification.",
+  "invocation_status": "Machine discovery/OpenAPI contract exists; settlement remains verification-gated.",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mirror": {
+    "page": "/chum/capabilities/systemia-yard-runtime-extension-v1/",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/llms.txt",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/capability.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/schema.jsonld"
+  },
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+}
