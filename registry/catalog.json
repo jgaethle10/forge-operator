@@ -7,7 +7,7 @@
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "read_only_purpose": "Read-only matching from user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://findmypart.base44.app/functions/evercraftMachineCommerceMcp",
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported.",
     "read_only_mcp": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
     "a2a_agent_card": "https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card",
@@ -18,7 +18,9 @@
     "distribution_operator": "https://findmypart.base44.app/functions/evercraftDistributionOperator",
     "grok_marketplace": "https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json",
     "gateway": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway",
-    "pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding"
+    "pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
+    "registry_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "redundant_edge_mcp": "https://findmypart.base44.app/functions/evercraftMachineCommerceMcp"
   },
   "products": [
     {
@@ -121,7 +123,7 @@
       "name": "Evercraft Rewards",
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://findmypart.base44.app/functions/evercraftMachineCommerceMcp",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "triggers": [
         "join a local rewards network",
         "local business loyalty program",
