@@ -2,6 +2,14 @@ import fs from 'node:fs';
 
 const gateway = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const painIndex = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding';
+const edgeHost = 'findmypart.base44.app';
+const edgeIndexNowKey = 'https://findmypart.base44.app/functions/indexNowKey';
+const edgeProtocolUrls = [
+  'https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp',
+  'https://findmypart.base44.app/functions/evercraftMachineCommerceMcp',
+  'https://findmypart.base44.app/functions/evercraftCapabilityA2A',
+  'https://findmypart.base44.app/functions/evercraftUniversalAgentGateway'
+];
 const artifactsDir = 'artifacts/chum';
 fs.mkdirSync(artifactsDir, { recursive: true });
 
@@ -19,6 +27,12 @@ const receipt = {
     status: 'pending',
     submitted: 0,
     pages: 0,
+    urls: [],
+    preflight_failed: []
+  },
+  edge_protocols: {
+    status: 'pending',
+    submitted: 0,
     urls: [],
     preflight_failed: []
   }
@@ -41,6 +55,10 @@ function writeReceipt() {
     'Pain pages declared: ' + receipt.pain_index.pages,
     receipt.pain_index.http_status ? 'Pain IndexNow HTTP: ' + receipt.pain_index.http_status : null,
     receipt.pain_index.error ? 'Pain index error: ' + receipt.pain_index.error : null,
+    'Edge protocol status: ' + receipt.edge_protocols.status,
+    'Edge protocol URLs submitted: ' + receipt.edge_protocols.submitted,
+    receipt.edge_protocols.http_status ? 'Edge IndexNow HTTP: ' + receipt.edge_protocols.http_status : null,
+    receipt.edge_protocols.error ? 'Edge protocol error: ' + receipt.edge_protocols.error : null,
     '',
     '## Submitted surfaces',
     '',
@@ -62,6 +80,18 @@ function writeReceipt() {
       '## Pain-index preflight failures',
       '',
       ...receipt.pain_index.preflight_failed.map((row) => '- ' + row.url + ': HTTP ' + (row.status || 0) + (row.error ? ' ' + row.error : '')),
+      ''
+    ] : []),
+    ...(receipt.edge_protocols.urls.length ? [
+      '## Edge protocol surfaces',
+      '',
+      ...receipt.edge_protocols.urls.map((url) => '- ' + url),
+      ''
+    ] : []),
+    ...(receipt.edge_protocols.preflight_failed.length ? [
+      '## Edge protocol preflight failures',
+      '',
+      ...receipt.edge_protocols.preflight_failed.map((row) => '- ' + row.url + ': HTTP ' + (row.status || 0) + (row.error ? ' ' + row.error : '')),
       ''
     ] : [])
   ].filter((value) => value !== null);
@@ -222,6 +252,69 @@ try {
   if (!painResponse.ok) throw new Error('Pain-index IndexNow HTTP ' + painResponse.status + ': ' + await painResponse.text());
   receipt.pain_index.status = 'accepted';
 
+  const edgeKeyResponse = await fetch(edgeIndexNowKey, {
+    headers: { 'user-agent': 'Evercraft-CHUM/0.6 (+edge-indexnow-key)' }
+  });
+  if (!edgeKeyResponse.ok) {
+    throw new Error('Edge IndexNow key endpoint HTTP ' + edgeKeyResponse.status);
+  }
+  const edgeKey = (await edgeKeyResponse.text()).trim().replace(/^["']|["']$/g, '');
+  if (!/^[a-zA-Z0-9_-]{8,128}$/.test(edgeKey)) {
+    throw new Error('Edge IndexNow key missing or malformed');
+  }
+
+  const edgeChecked = await Promise.all(edgeProtocolUrls.map(async (url) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        headers: {
+          'user-agent': 'Evercraft-CHUM/0.6 (+edge-indexnow-preflight)',
+          accept: 'text/html,application/json,text/plain;q=0.8,*/*;q=0.3'
+        },
+        signal: controller.signal
+      });
+      return { url, ok: response.ok, status: response.status };
+    } catch (error) {
+      return {
+        url,
+        ok: false,
+        status: 0,
+        error: error instanceof Error ? error.message : String(error)
+      };
+    } finally {
+      clearTimeout(timer);
+    }
+  }));
+
+  const healthyEdgeUrls = edgeChecked.filter((row) => row.ok).map((row) => row.url);
+  receipt.edge_protocols.urls = healthyEdgeUrls;
+  receipt.edge_protocols.preflight_failed = edgeChecked.filter((row) => !row.ok);
+
+  if (!healthyEdgeUrls.length) {
+    throw new Error('No healthy edge protocol URLs survived IndexNow preflight');
+  }
+
+  const edgeResponse = await fetch('https://api.indexnow.org/indexnow', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json; charset=utf-8' },
+    body: JSON.stringify({
+      host: edgeHost,
+      key: edgeKey,
+      keyLocation: edgeIndexNowKey,
+      urlList: healthyEdgeUrls
+    })
+  });
+
+  receipt.edge_protocols.http_status = edgeResponse.status;
+  receipt.edge_protocols.submitted = healthyEdgeUrls.length;
+  if (!edgeResponse.ok) {
+    throw new Error('Edge IndexNow HTTP ' + edgeResponse.status + ': ' + await edgeResponse.text());
+  }
+  receipt.edge_protocols.status = 'accepted';
+
   writeReceipt();
   console.log(JSON.stringify({
     ok: true,
@@ -233,7 +326,10 @@ try {
     pain_index_status: receipt.pain_index.status,
     pain_index_submitted: receipt.pain_index.submitted,
     pain_pages: receipt.pain_index.pages,
-    pain_preflight_failed: receipt.pain_index.preflight_failed.length
+    pain_preflight_failed: receipt.pain_index.preflight_failed.length,
+    edge_protocol_status: receipt.edge_protocols.status,
+    edge_protocol_submitted: receipt.edge_protocols.submitted,
+    edge_protocol_preflight_failed: receipt.edge_protocols.preflight_failed.length
   }));
 } catch (error) {
   receipt.status = 'failed';
