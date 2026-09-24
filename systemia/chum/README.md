@@ -60,7 +60,7 @@ npm run chum:announce
 
 Provider probes use an authorized bridge when `CHUM_PROBE_BRIDGE_URL` and `CHUM_PROBE_BRIDGE_TOKEN` are available. The runner also accepts the existing `NEXUS_PROBE_BRIDGE_URL` and `NEXUS_PROBE_BRIDGE_TOKEN` names so CHUM can inherit the already-designed execution boundary.
 
-No bridge means **blocked**, not fabricated success.
+No bridge means **blocked**, not fabricated success. The canonical watershed requires an authorized bridge, so a zero-probe run is a failed provider-pickup lane rather than a green check.
 
 ## Failure doctrine
 

@@ -13,6 +13,7 @@ const requestedProviders = String(process.env.CHUM_PROBE_PROVIDERS || '')
   .filter(Boolean);
 const providers = requestedProviders.length ? requestedProviders : suite.providers;
 const timeoutMs = 45000;
+const requireBridge = process.env.CHUM_REQUIRE_PROBE_BRIDGE === 'true' || process.argv.includes('--require-bridge');
 
 const normalize = (value) => String(value || '').toLowerCase();
 const sha256 = (value) => crypto.createHash('sha256').update(String(value || '')).digest('hex');
@@ -170,4 +171,14 @@ const md = [
 ];
 fs.writeFileSync('artifacts/chum/provider-probe-latest.md', md.join('\n') + '\n');
 
-console.log(JSON.stringify({ run_id: receipt.run_id, bridge_configured: receipt.bridge_configured, summary: receipt.summary }));
+console.log(JSON.stringify({ run_id: receipt.run_id, bridge_configured: receipt.bridge_configured, require_bridge: requireBridge, summary: receipt.summary }));
+
+if (requireBridge && !receipt.bridge_configured) {
+  throw new Error('CHUM provider probes are required for this run, but no authorized probe bridge is configured.');
+}
+if (requireBridge && receipt.summary.completed === 0) {
+  throw new Error('CHUM provider probes are required for this run, but zero provider probes completed.');
+}
+if (requireBridge && receipt.summary.failed > 0) {
+  throw new Error(`CHUM provider probe run contains ${receipt.summary.failed} failed probe(s).`);
+}
