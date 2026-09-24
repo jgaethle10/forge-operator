@@ -19,7 +19,8 @@
     "media:studio": "tsx systemia/media-studio/cli.ts",
     "test:media-studio": "node --import tsx --test systemia/media-studio/director.test.ts",
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
-    "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs"
+    "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
+    "chum:sync": "node systemia/chum/sync-public-discovery.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
