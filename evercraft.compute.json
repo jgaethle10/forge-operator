@@ -21,17 +21,18 @@
     "capabilities_path": "/api/capabilities",
     "commercial_path": "/api/commercial",
     "public_discovery": [
+      "/chum/",
+      "/api/resolve",
       "/llms.txt",
-      "/.well-known/evercraft-capabilities.json",
       "/llms-full.txt",
       "/ai-discovery.json",
       "/openapi.json",
-      "/chum/",
+      "/.well-known/evercraft-capabilities.json",
       "/.well-known/evercraft-discovery.json",
       "/.well-known/evercraft-products.json",
       "/.well-known/evercraft-agent-directory.json",
-      "/.well-known/evercraft-chum.json",
-      "/api/resolve"
+      "/.well-known/evercraft-machine-catalog.json",
+      "/.well-known/evercraft-chum.json"
     ]
   },
   "environment": {
@@ -51,7 +52,9 @@
     "ci_pass",
     "health_pass",
     "capability_manifest_present",
-    "public_route_verified"
+    "public_route_verified",
+    "chum_resolver_smoke_pass",
+    "crawler_surface_smoke_pass"
   ],
   "receipt_requirements": [
     "release_sha",
