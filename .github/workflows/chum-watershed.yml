@@ -49,6 +49,7 @@ jobs:
           npm run chum:revenue
           npm run chum:index
           npm run chum:answers
+          npm run chum:capabilities
           npm run chum:mirror
 
       - name: Publish changed CHUM mirrors
