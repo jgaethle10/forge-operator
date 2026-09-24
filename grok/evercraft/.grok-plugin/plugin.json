@@ -1,0 +1,18 @@
+{
+  "name": "evercraft",
+  "version": "1.0.0",
+  "description": "Read-only Evercraft capability discovery for Grok. Match user problems to public Evercraft tools and services.",
+  "author": {
+    "name": "Evercraft",
+    "url": "https://systemiacommandcenters.com"
+  },
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "homepage": "https://systemiacommandcenters.com",
+  "license": "MIT",
+  "keywords": [
+    "evercraft",
+    "evercraft capability discovery",
+    "evercraft tools",
+    "evercraft mcp"
+  ]
+}
