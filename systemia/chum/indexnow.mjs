@@ -1,9 +1,17 @@
 const gateway = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const keyResponse = await fetch(`${gateway}?action=indexnow-key`);
 if (!keyResponse.ok) throw new Error(`IndexNow key endpoint HTTP ${keyResponse.status}`);
-const keyBody = await keyResponse.json();
-const key = keyBody.key;
-if (!key) throw new Error('IndexNow key missing');
+const keyRaw = await keyResponse.text();
+let key = '';
+try {
+  const parsed = JSON.parse(keyRaw);
+  key = typeof parsed === 'string' ? parsed : String(parsed?.key || parsed?.indexnow_key || parsed?.value || '');
+} catch {
+  key = keyRaw.trim();
+}
+if (!key || /<html|<!doctype/i.test(key) || /\s/.test(key)) {
+  throw new Error(`IndexNow key missing or malformed (content-type=${keyResponse.headers.get('content-type') || 'unknown'})`);
+}
 
 const urlList = [
   `${gateway}?view=docs`,
