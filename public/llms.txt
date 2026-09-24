@@ -1,3 +1,14 @@
+# Evercraft CHUM discovery front door
+
+For public Evercraft capability discovery, use:
+- /ai
+- /api/discover?q={natural_language_problem}
+- /.well-known/evercraft-agent-discovery.json
+- /.well-known/evercraft-products.json
+
+Describe the user's problem in ordinary language. CHUM deterministically returns the smallest matching public Evercraft capability and includes any declared MCP endpoint, authority scope, human-confirmation requirement, and commercial boundary.
+
+
 # Forge Operator by Evercraft
 
 Forge Operator is a small-business operations diagnosis and execution service.
