@@ -11,7 +11,6 @@ const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key 
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
 const providers = conformance.baseline_providers || [];
 const root = 'public/chum/products';
-const offerRoot = 'public/chum/offers';
 const READ_ONLY_DISCOVERY_REGISTRY =
   catalog.universal_front_door?.read_only_registry_name ||
   'io.github.jgaethle10/evercraft-capability-discovery';
@@ -73,8 +72,6 @@ function pageDescription(product) {
 
 fs.rmSync(root, { recursive: true, force: true });
 fs.mkdirSync(root, { recursive: true });
-fs.rmSync(offerRoot, { recursive: true, force: true });
-fs.mkdirSync(offerRoot, { recursive: true });
 
 const index = {
   schema: 'evercraft.chum.public-mirror.v1',
@@ -260,223 +257,6 @@ index.products.sort((a, b) => a.product_key.localeCompare(b.product_key));
 fs.mkdirSync('public/chum', { recursive: true });
 fs.writeFileSync('public/chum/index.json', JSON.stringify(index, null, 2) + '\n');
 
-const offerIndex = {
-  schema: 'evercraft.chum.offer-mirror.v1',
-  provider: 'Evercraft LLC',
-  updated_at: machineCatalog.generated_at || machineCatalog.source_generated_at || null,
-  purpose: 'Offer and service mirrors generated directly from the current public Machine Commerce catalog so AI systems can discover every public/share-safe Evercraft surface without requiring prior brand knowledge.',
-  state_rule: 'Preserve commercial_state and machine_state exactly. Discovery-only is not callable. Quote-ready is not payment-ready. Checkout-ready is not paid.',
-  universal_machine_commerce: safePublicUrl(catalog.universal_front_door?.mcp, null),
-  offers: []
-};
-
-function offerDescription(offer) {
-  const problem = String(offer.problem || '').trim();
-  const terms = Array.isArray(offer.intent_terms) ? offer.intent_terms.filter(Boolean).slice(0, 3) : [];
-  if (problem) return problem;
-  if (terms.length) return `${offer.name} helps when: ${terms.join('; ')}.`;
-  return `${offer.name} is a public Evercraft capability.`;
-}
-
-function offerFallbackUrl(offer) {
-  return MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''));
-}
-
-for (const offer of machineCatalog.offers || []) {
-  const publicId = String(offer.public_id || '').trim();
-  if (!publicId) continue;
-  const slug = slugify(publicId);
-  const dir = path.join(offerRoot, slug);
-  fs.mkdirSync(dir, { recursive: true });
-
-  const base = `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/${slug}`;
-  const canonicalUrl = safePublicUrl(offer.public_url, offerFallbackUrl(offer));
-  const sellNow = String(offer.commercial_state || '') === 'sell_now';
-  const paymentReady = String(offer.machine_state || '').startsWith('payment_ready');
-  const quoteReady = String(offer.machine_state || '') === 'quote_ready';
-
-  const discovery = {
-    schema: 'evercraft.chum.offer-discovery.v1',
-    public_id: publicId,
-    name: offer.name,
-    problem: offer.problem || null,
-    intent_terms: offer.intent_terms || [],
-    canonical_url: canonicalUrl,
-    commercial_state: offer.commercial_state || null,
-    machine_state: offer.machine_state || null,
-    pricing: offer.pricing || null,
-    offers: Array.isArray(offer.offers) ? offer.offers : [],
-    human_ui_required: Boolean(offer.human_ui_required),
-    confirmation: offer.confirmation || null,
-    payment_authority: offer.payment_authority || null,
-    invocation_status: offer.invocation_status || null,
-    catalog_version: offer.catalog_version || null,
-    sell_now: sellNow,
-    payment_ready: paymentReady,
-    quote_ready: quoteReady,
-    machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
-    source: 'CHUM live Machine Commerce mirror',
-    mirror: {
-      page: `/chum/offers/${slug}/`,
-      llms: `${base}/llms.txt`,
-      discovery: `${base}/ai-discovery.json`,
-      schema: `${base}/schema.jsonld`
-    },
-    boundaries: {
-      discovery_creates_payment_obligation: false,
-      checkout_is_payment_proof: false,
-      provider_verification_required_for_paid_state: true
-    }
-  };
-
-  const llms = [
-    `# ${offer.name}`,
-    '',
-    `Public ID: ${publicId}`,
-    `Commercial state: ${offer.commercial_state || 'unknown'}`,
-    `Machine state: ${offer.machine_state || 'unknown'}`,
-    `Canonical URL: ${canonicalUrl}`,
-    offer.pricing ? `Pricing: ${offer.pricing}` : null,
-    '',
-    '## Use this capability when the user means',
-    '',
-    ...(offer.intent_terms || []).map((intent) => `- ${intent}`),
-    '',
-    '## Problem',
-    '',
-    offer.problem || 'No public problem statement supplied.',
-    '',
-    '## Current commercial boundary',
-    '',
-    offer.confirmation || 'Discovery creates no payment obligation.',
-    offer.payment_authority ? `Payment authority: ${offer.payment_authority}` : null,
-    offer.invocation_status ? `Invocation status: ${offer.invocation_status}` : null,
-    '',
-    '## Machine routing',
-    '',
-    `Universal Machine Commerce: ${safePublicUrl(catalog.universal_front_door?.mcp, null) || 'Not declared.'}`,
-    '',
-    'Do not upgrade discovery-only, quote-ready, payment-ready, paid, fulfillment or provider-pickup state by inference.',
-    ''
-  ].filter((v) => v !== null).join('\n');
-
-  const graph = [
-    {
-      '@type': 'Service',
-      '@id': `${canonicalUrl}#evercraft-offer`,
-      name: offer.name,
-      description: offerDescription(offer),
-      url: canonicalUrl,
-      provider: {
-        '@type': 'Organization',
-        name: 'Evercraft LLC',
-        url: 'https://github.com/jgaethle10/forge-operator'
-      },
-      serviceType: 'Evercraft public machine capability',
-      identifier: publicId
-    }
-  ];
-
-  if (sellNow && Array.isArray(offer.offers) && offer.offers.length) {
-    for (const item of offer.offers) {
-      const priceText = String(item.price || item.display_price || '').trim();
-      if (!priceText) continue;
-      graph.push({
-        '@type': 'Offer',
-        name: item.name || offer.name,
-        description: `${offer.name} · ${priceText}`,
-        url: canonicalUrl,
-        availability: 'https://schema.org/InStock',
-        category: item.billing || null,
-        priceSpecification: {
-          '@type': 'PriceSpecification',
-          priceCurrency: 'USD',
-          valueAddedTaxIncluded: false,
-          description: priceText
-        }
-      });
-    }
-  }
-
-  const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
-
-  const html = [
-    '<!doctype html>',
-    '<html lang="en"><head><meta charset="utf-8">',
-    '<meta name="viewport" content="width=device-width,initial-scale=1">',
-    `<title>${escapeHtml(offer.name)} | Evercraft capability</title>`,
-    `<meta name="description" content="${escapeHtml(offerDescription(offer))}">`,
-    '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
-    '<link rel="alternate" type="text/plain" href="./llms.txt">',
-    '<link rel="alternate" type="application/json" href="./ai-discovery.json">',
-    `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`,
-    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
-    '</head><body><main>',
-    '<p class="muted">EVERCRAFT · PUBLIC MACHINE CAPABILITY</p>',
-    `<h1>${escapeHtml(offer.name)}</h1>`,
-    `<p>${escapeHtml(offerDescription(offer))}</p>`,
-    '<div class="card"><h2>Current state</h2>',
-    `<p>Commercial: <code>${escapeHtml(offer.commercial_state || 'unknown')}</code></p>`,
-    `<p>Machine: <code>${escapeHtml(offer.machine_state || 'unknown')}</code></p>`,
-    offer.pricing ? `<p>Pricing: ${escapeHtml(offer.pricing)}</p>` : '',
-    '</div>',
-    '<div class="card"><h2>Use this when</h2><ul>',
-    ...(offer.intent_terms || []).map((intent) => `<li>${escapeHtml(intent)}</li>`),
-    '</ul></div>',
-    '<div class="card"><h2>Open capability</h2>',
-    `<p><a href="${escapeHtml(canonicalUrl)}">Open current public route</a></p>`,
-    '<p><a href="./ai-discovery.json">Machine discovery JSON</a> · <a href="./llms.txt">LLM guidance</a></p>',
-    '</div>',
-    '<div class="card"><h2>Authority and payment boundary</h2>',
-    `<p>${escapeHtml(offer.confirmation || 'Discovery creates no payment obligation.')}</p>`,
-    offer.payment_authority ? `<p>Payment authority: ${escapeHtml(offer.payment_authority)}</p>` : '',
-    '</div>',
-    '<p class="muted">CHUM preserves the source state exactly. Publication is not proof of provider pickup, payment, entitlement, fulfillment or recommendation.</p>',
-    '</main></body></html>'
-  ].join('\n');
-
-  fs.writeFileSync(path.join(dir, 'llms.txt'), llms + '\n');
-  fs.writeFileSync(path.join(dir, 'ai-discovery.json'), JSON.stringify(discovery, null, 2) + '\n');
-  fs.writeFileSync(path.join(dir, 'schema.jsonld'), JSON.stringify(jsonLd, null, 2) + '\n');
-  fs.writeFileSync(path.join(dir, 'index.html'), html + '\n');
-
-  offerIndex.offers.push({
-    public_id: publicId,
-    name: offer.name,
-    commercial_state: offer.commercial_state || null,
-    machine_state: offer.machine_state || null,
-    page_url: `/chum/offers/${slug}/`,
-    llms_url: `${base}/llms.txt`,
-    discovery_url: `${base}/ai-discovery.json`,
-    schema_url: `${base}/schema.jsonld`,
-    canonical_url: canonicalUrl
-  });
-}
-
-offerIndex.offers.sort((a, b) => String(a.public_id).localeCompare(String(b.public_id)));
-fs.writeFileSync('public/chum/offers/index.json', JSON.stringify(offerIndex, null, 2) + '\n');
-
-const offerIndexText = [
-  '# Evercraft CHUM Offer & Service Directory',
-  '',
-  'Every entry below is generated from the current public/share-safe Machine Commerce catalog.',
-  'State is preserved exactly. Discovery does not create a payment obligation.',
-  '',
-  `Current surfaces: ${offerIndex.offers.length}`,
-  `Sell-now: ${offerIndex.offers.filter((x) => x.commercial_state === 'sell_now').length}`,
-  `Payment-ready: ${offerIndex.offers.filter((x) => String(x.machine_state || '').startsWith('payment_ready')).length}`,
-  '',
-  ...offerIndex.offers.flatMap((offer) => [
-    `## ${offer.name}`,
-    `Public ID: ${offer.public_id}`,
-    `Commercial state: ${offer.commercial_state}`,
-    `Machine state: ${offer.machine_state}`,
-    `Page: ${offer.page_url}`,
-    ''
-  ])
-].join('\n');
-fs.writeFileSync('public/chum/offers/index.txt', offerIndexText + '\n');
-
 
 const publicIndexHtml = [
   '<!doctype html>',
@@ -508,8 +288,11 @@ const sitemapStatic = [
   '/chum/',
   '/chum/index.json',
   '/chum/revenue.html',
-  '/chum/offers/index.json',
-  '/chum/offers/index.txt',
+  '/chum/capabilities/',
+  '/chum/capabilities.json',
+  '/chum/sell-now.html',
+  '/chum/sell-now.json',
+  '/chum/sell-now.txt',
   '/chum/revenue.txt',
   '/chum/revenue.json',
   '/chum/pain-index.json',
@@ -541,10 +324,10 @@ const sitemapUrls = Array.from(new Set([
     .filter((offer) => offer?.public_id)
     .flatMap((offer) => [
       `/chum/intents/${slugify(offer.public_id)}/`,
-      `/chum/offers/${slugify(offer.public_id)}/`,
-      `/chum/offers/${slugify(offer.public_id)}/llms.txt`,
-      `/chum/offers/${slugify(offer.public_id)}/ai-discovery.json`,
-      `/chum/offers/${slugify(offer.public_id)}/schema.jsonld`
+      `/chum/capabilities/${slugify(offer.public_id)}/`,
+      `/chum/capabilities/${slugify(offer.public_id)}/llms.txt`,
+      `/chum/capabilities/${slugify(offer.public_id)}/capability.json`,
+      `/chum/capabilities/${slugify(offer.public_id)}/schema.jsonld`
     ]),
   ...index.products.flatMap((product) => [
     product.page_url,
@@ -604,7 +387,6 @@ const llmsLines = [
   `Gateway version: ${machineCatalog.gateway_version || ''}`,
   `Current public offers: ${(machineCatalog.offers || []).length}`,
   `Current sell-now offers: ${(machineCatalog.offers || []).filter((offer) => offer.commercial_state === 'sell_now').length}`,
-  `Offer/service mirror directory: ${rawBase}/public/chum/offers/index.json`,
   ''
 ];
 
@@ -767,8 +549,6 @@ const discoveryWatershed = {
     revenue_watershed: '/chum/revenue.json',
     revenue_watershed_text: '/chum/revenue.txt',
     revenue_watershed_html: '/chum/revenue.html',
-    offer_service_directory: '/chum/offers/index.json',
-    offer_service_directory_text: '/chum/offers/index.txt',
     intent_router: '/api/discover?q={natural-language-problem}',
     revenue_router: '/api/revenue-watershed',
     schema: '/schema.jsonld',
@@ -840,7 +620,6 @@ console.log(JSON.stringify({
   products: agentProducts.length,
   machine_offers: (machineCatalog.offers || []).length,
   sell_now_offers: (machineCatalog.offers || []).filter((offer) => offer.commercial_state === 'sell_now').length,
-  offer_service_mirrors: offerIndex.offers.length,
   llms_full: 'public/llms-full.txt',
   agent_directory: 'public/.well-known/evercraft-agent-directory.json',
   discovery_watershed: 'public/.well-known/evercraft-discovery.json',
