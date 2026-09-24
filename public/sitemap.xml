@@ -3,6 +3,9 @@
   <url><loc>/</loc></url>
   <url><loc>/chum/</loc></url>
   <url><loc>/chum/index.json</loc></url>
+  <url><loc>/chum/answers/</loc></url>
+  <url><loc>/chum/answers/index.json</loc></url>
+  <url><loc>/chum/answers/index.txt</loc></url>
   <url><loc>/forensiscope/</loc></url>
   <url><loc>/forensiscope/llms.txt</loc></url>
   <url><loc>/forensiscope/discovery.json</loc></url>

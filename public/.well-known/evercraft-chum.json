@@ -41,7 +41,9 @@
     "discovery_router": "/api/discover?q={natural-language-problem}",
     "pain_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
     "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
-    "handoff_attribution": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json"
+    "handoff_attribution": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json",
+    "answer_graph": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json",
+    "answer_graph_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.txt"
   },
   "verified_crawler_controls": [
     {
@@ -65,7 +67,8 @@
     "brand_blind_routing": "deterministic pain-index build plus receipt-backed provider probes",
     "handoff_attribution": "signed CHUM referrals plus public landing/checkout-start receipts",
     "verified_revenue": "trusted payment-authority receipt only",
-    "provider_identity": "caller-asserted in referrals unless separately verified by a provider receipt"
+    "provider_identity": "caller-asserted in referrals unless separately verified by a provider receipt",
+    "answer_doors": "deterministic natural-language intent graph generated from the public machine-commerce catalog; duplicate phrases are grouped, not multiplied"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
