@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
   },
   "servers": [
@@ -160,6 +160,64 @@
           },
           "429": {
             "description": "Rate limit reached"
+          }
+        }
+      }
+    },
+    "/api/resolve": {
+      "get": {
+        "operationId": "resolveEvercraftIntent",
+        "summary": "Resolve a plain-language problem to public Evercraft capabilities without prior brand knowledge",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The user's plain-language problem or desired outcome."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ranked public capability matches"
+          },
+          "400": {
+            "description": "Missing query"
+          }
+        }
+      },
+      "post": {
+        "operationId": "resolveEvercraftIntentPost",
+        "summary": "Resolve a plain-language problem to public Evercraft capabilities",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string"
+                  },
+                  "problem": {
+                    "type": "string"
+                  },
+                  "intent": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ranked public capability matches"
+          },
+          "400": {
+            "description": "Missing query"
           }
         }
       }
