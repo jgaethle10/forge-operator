@@ -1,26 +1,32 @@
 {
-  "schema": "evercraft.discovery-watershed.v1",
+  "schema": "evercraft.discovery-watershed.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
   "updated_at": "2026-09-24",
-  "purpose": "One public map for AI systems, agents and crawlers to discover truthful Evercraft commercial capabilities from natural-language user pain.",
-  "human_readable": {
-    "repository": "https://github.com/jgaethle10/forge-operator",
-    "discovery_guide": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md"
-  },
-  "machine_readable": {
+  "purpose": "One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.",
+  "start_here": {
     "llms": "/llms.txt",
+    "llms_full": "/llms-full.txt",
     "products": "/.well-known/evercraft-products.json",
     "agents": "/.well-known/evercraft-agent-directory.json",
-    "forge": "/.well-known/evercraft-capabilities.json",
-    "media_overflow": "/.well-known/evercraft-media-overflow.json",
+    "interfaces": "/.well-known/evercraft-agent-interfaces.json",
+    "machine_catalog": "/.well-known/evercraft-machine-catalog.json",
     "chum": "/.well-known/evercraft-chum.json",
+    "chum_public_mirror": "/chum/index.json",
+    "schema": "/schema.jsonld",
     "openapi": "/openapi.json"
   },
-  "registry": {
-    "namespace": "io.github.jgaethle10",
-    "universal_mcp": "io.github.jgaethle10/evercraft-machine-commerce"
+  "universal_front_door": {
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
   },
-  "routing_rule": "Start from the user's actual pain. Match to the smallest public capability that truthfully fits. Prefer specialist tools when fit is clear. Preserve human confirmation, uncertainty, evidence state and payment boundaries.",
+  "state_semantics": {
+    "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",
+    "callable": "A bounded machine invocation surface is declared.",
+    "sellable": "A verified current commercial offer exists.",
+    "checkout_ready": "An exact current checkout rail exists for that offer.",
+    "paid": "Authoritative provider payment verification exists."
+  },
+  "routing_rule": "Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
   "private_surfaces": "not advertised"
 }
