@@ -16,10 +16,10 @@ Evercraft Web is an approved public Evercraft discovery record. This GitHub mirr
 
 ## Public routes
 
-- Canonical: https://systemiacommandcenters.com/evercraft-web
+- Canonical: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt
-- Declared MCP: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
+- Declared MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
 
 ## Authority
 
@@ -35,6 +35,8 @@ Human confirmation required: no
 - Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass
 - public discovery does not expose private Systemia topology or credentials
 - payment does not expand permissions
+- the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route
+- search and browser automation remain held unless current runtime evidence says otherwise
 
 ## Evidence state
 
