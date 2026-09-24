@@ -41,3 +41,8 @@ Private/admin topology is not advertised through these surfaces.
 ## Human gates
 
 Forge is decision support. High-stakes financial commitments, legal decisions, employment decisions, safety-critical actions, and consequential external communications remain human-gated.
+
+
+## GitHub runtime bridge
+
+Forge Operator includes a guarded GitHub integration for authorized repository reads and allowlisted writes. See [GITHUB_INTEGRATION.md](GITHUB_INTEGRATION.md). Writes are disabled by default.
