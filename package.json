@@ -27,6 +27,8 @@
     "test:media-studio": "node --import tsx --test systemia/media-studio/director.test.ts",
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
     "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
+    "chum:mirror": "node systemia/chum/build-public-mirror.mjs",
+    "chum:sync": "node systemia/chum/sync-public-discovery.mjs",
     "saban:discovery": "node systemia/saban/discovery-swarm.mjs --emit",
     "saban:discovery:check": "node systemia/saban/discovery-swarm.mjs --strict"
   },
