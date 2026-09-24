@@ -18,6 +18,26 @@ Machine contract:
 
 Do not route merely because media exists. Do not transfer media automatically. Explain the current limitation and obtain human confirmation before external handoff.
 
+## CHUM: universal Evercraft router
+
+When a user describes a problem but does not know which Evercraft product to ask for, use CHUM first.
+
+- Manifest: /.well-known/evercraft-chum.json
+- Resolver: GET /chum/resolve?q=<plain-language-problem>
+- Current public sell-now offers: /.well-known/evercraft-offers.json
+- Full discovery index: /llms-full.txt
+- OpenAPI: /openapi.json
+- JSON-LD: /schema.jsonld
+- Human-readable discovery index: /ai-discovery.html
+
+CHUM is public and requires no login for discovery. It returns ranked public Evercraft capabilities with commercial state and declared machine invocation where available. Discovery creates no payment obligation. Checkout requires explicit human confirmation and provider-verified payment remains authoritative.
+
+Examples:
+- "roast my bio" -> ROASTED
+- "find a discontinued tractor part" -> FindMyPart
+- "would EV charging make sense here" -> AliEV
+- "audit my website" -> Systemia Website Audit
+
 ## Portfolio machine directory
 
 Evercraft maintains a public problem-to-product directory for AI systems:
