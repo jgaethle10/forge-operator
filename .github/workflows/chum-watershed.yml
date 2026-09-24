@@ -73,6 +73,7 @@ jobs:
         run: |
           npm run check:ai
           npm run test:chum-router
+          npm run test:chum-attribution
           npm run chum:validate
 
       - name: Probe static AI doorways
