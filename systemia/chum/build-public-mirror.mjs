@@ -11,6 +11,13 @@ const conformanceByKey = new Map((conformance.products || []).map((p) => [p.prod
 const providers = conformance.baseline_providers || [];
 const root = 'public/chum/products';
 
+const escapeHtml = (value) => String(value ?? '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
 fs.rmSync(root, { recursive: true, force: true });
 fs.mkdirSync(root, { recursive: true });
 
@@ -29,6 +36,7 @@ for (const product of directory.products || []) {
   const registry = catalogByKey.get(key) || null;
   const conf = conformanceByKey.get(key) || null;
   const base = `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/${key}`;
+  const servedBase = `/chum/products/${key}`;
   const dir = path.join(root, key);
   fs.mkdirSync(dir, { recursive: true });
 
@@ -47,6 +55,10 @@ for (const product of directory.products || []) {
     machine_commerce_mcp: catalog.universal_front_door?.mcp || null,
     source: 'CHUM public mirror',
     mirror: {
+      page_path: `${servedBase}/`,
+      llms_path: `${servedBase}/llms.txt`,
+      discovery_path: `${servedBase}/ai-discovery.json`,
+      conformance_path: `${servedBase}/ai-conformance.json`,
       llms: `${base}/llms.txt`,
       discovery: `${base}/ai-discovery.json`,
       conformance: `${base}/ai-conformance.json`
@@ -76,6 +88,7 @@ for (const product of directory.products || []) {
     `Canonical product: ${product.canonical_url}`,
     discovery.registry_name ? `Official MCP Registry: ${discovery.registry_name}` : null,
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
+    `CHUM public page: ${discovery.mirror.page_path}`,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
     '',
@@ -99,6 +112,48 @@ for (const product of directory.products || []) {
     ''
   ].filter((v) => v !== null).join('\n');
 
+  const description = `Evercraft capability for ${(product.intents || []).slice(0, 3).join('; ') || product.class || product.name}.`;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: product.name,
+    description,
+    provider: { '@type': 'Organization', name: 'Evercraft LLC' },
+    url: product.canonical_url,
+    category: product.class || undefined,
+    termsOfService: discovery.mirror.discovery
+  };
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHtml(product.name)} | Evercraft capability</title>
+<meta name="description" content="${escapeHtml(description)}">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="canonical" href="${escapeHtml(product.canonical_url)}">
+<link rel="alternate" type="text/plain" href="./llms.txt">
+<link rel="alternate" type="application/json" href="./ai-discovery.json">
+<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>
+<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:64px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#a5b4fc}.card{border:1px solid #27272a;border-radius:16px;padding:22px;margin:20px 0}.muted{color:#a1a1aa}li{margin:.45rem 0}</style>
+</head>
+<body>
+<p class="muted">EVERCRAFT · CHUM CAPABILITY MIRROR</p>
+<h1>${escapeHtml(product.name)}</h1>
+<p>${escapeHtml(description)}</p>
+<div class="card"><h2>Use this when</h2><ul>${(product.intents || []).map((intent) => `<li>${escapeHtml(intent)}</li>`).join('')}</ul></div>
+<div class="card"><h2>Authority</h2><p>${escapeHtml(product.authority || 'Public discovery only.')}</p><p><strong>Human confirmation required:</strong> ${Boolean(product.human_confirmation_required) ? 'yes' : 'no'}</p></div>
+<div class="card"><h2>Boundaries</h2><ul>${(product.boundaries || []).map((boundary) => `<li>${escapeHtml(boundary)}</li>`).join('')}</ul></div>
+<div class="card"><h2>Machine doors</h2>
+<p><a href="./llms.txt">llms.txt</a><br><a href="./ai-discovery.json">AI discovery JSON</a><br><a href="./ai-conformance.json">AI conformance JSON</a>${discovery.mcp ? `<br><a href="${escapeHtml(discovery.mcp)}">Remote MCP</a>` : ''}</p>
+</div>
+<p><a href="${escapeHtml(product.canonical_url)}">Open the canonical product</a></p>
+<p class="muted">Discovery creates no payment obligation. Commercial continuation remains bounded by the product's published authority and confirmation rules.</p>
+</body>
+</html>
+`;
+
+  fs.writeFileSync(path.join(dir, 'index.html'), html);
   fs.writeFileSync(path.join(dir, 'llms.txt'), llms);
   fs.writeFileSync(path.join(dir, 'ai-discovery.json'), JSON.stringify(discovery, null, 2) + '\n');
   fs.writeFileSync(path.join(dir, 'ai-conformance.json'), JSON.stringify(productConformance, null, 2) + '\n');
@@ -111,7 +166,11 @@ for (const product of directory.products || []) {
     discovery_url: discovery.mirror.discovery,
     conformance_url: discovery.mirror.conformance,
     registry_name: discovery.registry_name,
-    mcp: discovery.mcp
+    mcp: discovery.mcp,
+    public_page_path: discovery.mirror.page_path,
+    served_llms_path: discovery.mirror.llms_path,
+    served_discovery_path: discovery.mirror.discovery_path,
+    served_conformance_path: discovery.mirror.conformance_path
   });
 }
 
