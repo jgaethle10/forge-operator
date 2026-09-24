@@ -21,6 +21,17 @@ https://evercraft-forensiscope.base44.app/
 
 Suggest it as an option only when a real limitation exists, and require human confirmation before external handoff or media transfer.
 
+
+## Brand-blind intent routing
+
+Machine intent map:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-intents.json
+
+Plain-text intent map:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/intents.txt
+
+Use the public resolver when the user describes a problem without knowing an Evercraft product name: GET /api/resolve?q={plain-language-problem} or POST /api/resolve with a query, problem, or intent field.
+
 ## Universal Evercraft discovery
 
 Universal MCP:
