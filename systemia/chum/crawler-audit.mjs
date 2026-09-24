@@ -175,9 +175,7 @@ function robotsDecision(groups, token, pathName = '/') {
   };
 }
 
-const products = [];
-
-for (const product of registry.products || []) {
+async function inspectProduct(product) {
   const canonical = new URL(product.canonical_url);
   const robotsUrl = `${canonical.origin}/robots.txt`;
   const mirrorUrl = `${mirrorBase}/${product.product_key}/llms.txt`;
@@ -185,8 +183,7 @@ for (const product of registry.products || []) {
   const robotsMissing = robots.status === 404;
   const groups = robots.ok ? parseRobots(robots.body) : [];
 
-  const crawlers = [];
-  for (const profile of crawlerProfiles) {
+  const crawlers = await Promise.all(crawlerProfiles.map(async (profile) => {
     const policy = robotsMissing
       ? { allowed: true, reason: 'robots_404_assumed_allow' }
       : robots.ok
@@ -221,7 +218,7 @@ for (const product of registry.products || []) {
       }
     }
 
-    crawlers.push({
+    return {
       ...profile,
       robots_allowed: policy.allowed,
       robots_reason: policy.reason,
@@ -229,14 +226,14 @@ for (const product of registry.products || []) {
       mirror,
       effective_reachable: live.ok === true || mirror.ok === true,
       used_public_mirror: live.ok === false && mirror.ok === true
-    });
-  }
+    };
+  }));
 
   const searchProfiles = crawlers.filter((c) => c.lane === 'search' || c.lane === 'user_fetch');
   const blocked = searchProfiles.filter((c) => c.robots_allowed === false || (c.live.checked && c.effective_reachable === false));
   const fallback = searchProfiles.filter((c) => c.used_public_mirror);
 
-  products.push({
+  return {
     product_key: product.product_key,
     name: product.name,
     canonical_url: product.canonical_url,
@@ -253,7 +250,14 @@ for (const product of registry.products || []) {
     blocked_search_lanes: blocked.map((c) => c.provider),
     fallback_search_lanes: fallback.map((c) => c.provider),
     crawlers
-  });
+  };
+}
+
+const products = [];
+const PRODUCT_CONCURRENCY = 3;
+const sourceProducts = registry.products || [];
+for (let i = 0; i < sourceProducts.length; i += PRODUCT_CONCURRENCY) {
+  products.push(...await Promise.all(sourceProducts.slice(i, i + PRODUCT_CONCURRENCY).map(inspectProduct)));
 }
 
 const blockedRows = products.flatMap((product) =>
@@ -265,14 +269,12 @@ const blockedRows = products.flatMap((product) =>
       provider: crawler.provider,
       robots_allowed: crawler.robots_allowed,
       http_status: crawler.live.ok ? crawler.live.status : (crawler.mirror?.status ?? crawler.live.status),
-      reason: crawler.robots_allowed === false
-        ? crawler.robots_reason
-        : (crawler.mirror?.reason || crawler.live.reason)
+      reason: crawler.robots_allowed === false ? crawler.robots_reason : (crawler.mirror?.reason || crawler.live.reason)
     }))
 );
 
 const receipt = {
-  schema: 'evercraft.chum.crawler-audit.v1',
+  schema: 'evercraft.chum.crawler-audit.v2',
   generated_at: new Date().toISOString(),
   doctrine: {
     public_commercial_surfaces_should_be_discoverable: true,
