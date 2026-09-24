@@ -14,7 +14,10 @@
     "discovery_watershed": "/.well-known/evercraft-discovery.json",
     "agent_directory": "/.well-known/evercraft-agent-directory.json",
     "chum_public_mirror": "/chum/index.json",
-    "structured_data": "/schema.jsonld"
+    "structured_data": "/schema.jsonld",
+    "intent_map": "/.well-known/evercraft-intents.json",
+    "intent_text": "/intents.txt",
+    "intent_router": "/api/discover?q={natural-language-problem}"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
@@ -36,6 +39,11 @@
       "provider": "OpenAI / ChatGPT Search",
       "robots_token": "OAI-SearchBot",
       "intent": "allow public search discovery"
+    },
+    {
+      "provider": "OpenAI / ChatGPT user fetch",
+      "robots_token": "ChatGPT-User",
+      "intent": "allow user-directed retrieval of public Evercraft surfaces"
     },
     {
       "provider": "Anthropic / Claude Search",
