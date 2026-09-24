@@ -1,0 +1,21 @@
+{
+  "name": "evercraft",
+  "description": "Read-only Evercraft capability discovery. Match real-world user problems to current public Evercraft tools and services.",
+  "category": "development",
+  "source": {
+    "source": "url",
+    "url": "https://github.com/jgaethle10/forge-operator.git",
+    "sha": "6c5a7e1b4344d9b5f58b161849227e87041d4922",
+    "path": "grok/evercraft"
+  },
+  "homepage": "https://systemiacommandcenters.com",
+  "keywords": [
+    "evercraft",
+    "evercraft capability discovery",
+    "evercraft tools",
+    "evercraft mcp"
+  ],
+  "domains": [
+    "systemiacommandcenters.com"
+  ]
+}
