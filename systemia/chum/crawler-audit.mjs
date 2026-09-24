@@ -1,0 +1,293 @@
+import fs from 'node:fs';
+
+const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+const registry = readJson('conformance/products.json');
+const timeoutMs = 15000;
+const strict = process.argv.includes('--strict');
+
+const crawlerProfiles = [
+  {
+    provider: 'chatgpt_search',
+    robots_token: 'OAI-SearchBot',
+    user_agent: 'Mozilla/5.0 (compatible; OAI-SearchBot/1.4; +https://openai.com/searchbot)',
+    lane: 'search'
+  },
+  {
+    provider: 'openai_model_crawl',
+    robots_token: 'GPTBot',
+    user_agent: 'Mozilla/5.0 (compatible; GPTBot/1.4; +https://openai.com/gptbot)',
+    lane: 'model_crawl'
+  },
+  {
+    provider: 'claude_search',
+    robots_token: 'Claude-SearchBot',
+    user_agent: 'Claude-SearchBot',
+    lane: 'search'
+  },
+  {
+    provider: 'claude_user_fetch',
+    robots_token: 'Claude-User',
+    user_agent: 'Claude-User',
+    lane: 'user_fetch'
+  },
+  {
+    provider: 'claude_model_crawl',
+    robots_token: 'ClaudeBot',
+    user_agent: 'ClaudeBot',
+    lane: 'model_crawl'
+  },
+  {
+    provider: 'google_search',
+    robots_token: 'Googlebot',
+    user_agent: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+    lane: 'search'
+  },
+  {
+    provider: 'gemini_grounding',
+    robots_token: 'Google-Extended',
+    user_agent: null,
+    lane: 'robots_policy_only'
+  },
+  {
+    provider: 'copilot_search',
+    robots_token: 'bingbot',
+    user_agent: 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+    lane: 'search'
+  },
+  {
+    provider: 'perplexity_search',
+    robots_token: 'PerplexityBot',
+    user_agent: 'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)',
+    lane: 'search'
+  }
+];
+
+async function fetchText(url, userAgent = 'Evercraft-CHUM-CrawlerAudit/0.3') {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'user-agent': userAgent,
+        accept: 'text/plain, text/html, application/json;q=0.9, */*;q=0.5'
+      },
+      signal: controller.signal
+    });
+    const body = await response.text();
+    return {
+      ok: response.ok,
+      status: response.status,
+      final_url: response.url,
+      content_type: response.headers.get('content-type') || '',
+      bytes: Buffer.byteLength(body),
+      body
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 0,
+      final_url: url,
+      content_type: '',
+      bytes: 0,
+      body: '',
+      error: error instanceof Error ? error.message : String(error)
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function parseRobots(text) {
+  const groups = [];
+  let current = null;
+  let seenDirective = false;
+
+  for (const raw of String(text || '').split(/\r?\n/)) {
+    const line = raw.replace(/#.*$/, '').trim();
+    if (!line) continue;
+    const idx = line.indexOf(':');
+    if (idx < 0) continue;
+    const field = line.slice(0, idx).trim().toLowerCase();
+    const value = line.slice(idx + 1).trim();
+
+    if (field === 'user-agent') {
+      if (!current || seenDirective) {
+        current = { agents: [], rules: [] };
+        groups.push(current);
+        seenDirective = false;
+      }
+      current.agents.push(value.toLowerCase());
+      continue;
+    }
+
+    if (!current) continue;
+    if (field === 'allow' || field === 'disallow') {
+      current.rules.push({ type: field, path: value });
+      seenDirective = true;
+    }
+  }
+
+  return groups;
+}
+
+function robotsDecision(groups, token, pathName = '/') {
+  const needle = String(token || '').toLowerCase();
+  const matches = groups
+    .map((group) => {
+      const lengths = group.agents
+        .map((agent) => agent === '*' ? 1 : (needle.includes(agent) || agent.includes(needle) ? agent.length : 0));
+      return { group, match: Math.max(0, ...lengths) };
+    })
+    .filter((entry) => entry.match > 0);
+
+  if (!matches.length) return { allowed: true, reason: 'no_matching_group' };
+  const best = Math.max(...matches.map((entry) => entry.match));
+  const rules = matches.filter((entry) => entry.match === best).flatMap((entry) => entry.group.rules);
+  const matchingRules = rules
+    .filter((rule) => {
+      if (rule.type === 'disallow' && rule.path === '') return false;
+      return pathName.startsWith(rule.path || '/');
+    })
+    .sort((a, b) => {
+      const delta = (b.path || '').length - (a.path || '').length;
+      if (delta) return delta;
+      if (a.type === b.type) return 0;
+      return a.type === 'allow' ? -1 : 1;
+    });
+
+  if (!matchingRules.length) return { allowed: true, reason: 'no_matching_rule' };
+  const winning = matchingRules[0];
+  return {
+    allowed: winning.type === 'allow',
+    reason: `${winning.type}:${winning.path || '/'}`
+  };
+}
+
+const products = [];
+
+for (const product of registry.products || []) {
+  const canonical = new URL(product.canonical_url);
+  const robotsUrl = `${canonical.origin}/robots.txt`;
+  const robots = await fetchText(robotsUrl);
+  const robotsMissing = robots.status === 404;
+  const groups = robots.ok ? parseRobots(robots.body) : [];
+
+  const crawlers = [];
+  for (const profile of crawlerProfiles) {
+    const policy = robotsMissing
+      ? { allowed: true, reason: 'robots_404_assumed_allow' }
+      : robots.ok
+        ? robotsDecision(groups, profile.robots_token, canonical.pathname || '/')
+        : { allowed: null, reason: `robots_unreadable_http_${robots.status || 'error'}` };
+
+    let live = { checked: false, ok: null, status: null, reason: 'robots_policy_only' };
+    if (profile.user_agent) {
+      const result = await fetchText(product.canonical_url, profile.user_agent);
+      live = {
+        checked: true,
+        ok: result.ok,
+        status: result.status,
+        final_url: result.final_url,
+        content_type: result.content_type,
+        bytes: result.bytes,
+        reason: result.ok ? 'reachable' : (result.error || `http_${result.status}`)
+      };
+    }
+
+    crawlers.push({
+      ...profile,
+      robots_allowed: policy.allowed,
+      robots_reason: policy.reason,
+      live
+    });
+  }
+
+  const searchProfiles = crawlers.filter((c) => c.lane === 'search' || c.lane === 'user_fetch');
+  const blocked = searchProfiles.filter((c) => c.robots_allowed === false || (c.live.checked && c.live.ok === false));
+
+  products.push({
+    product_key: product.product_key,
+    name: product.name,
+    canonical_url: product.canonical_url,
+    robots: {
+      url: robotsUrl,
+      status: robots.status,
+      readable: robots.ok,
+      missing_assumed_allow: robotsMissing,
+      bytes: robots.bytes,
+      error: robots.error || null
+    },
+    search_discovery_state: blocked.length ? 'repair_needed' : 'open_or_reachable',
+    blocked_search_lanes: blocked.map((c) => c.provider),
+    crawlers
+  });
+}
+
+const blockedRows = products.flatMap((product) =>
+  product.crawlers
+    .filter((crawler) => (crawler.lane === 'search' || crawler.lane === 'user_fetch') &&
+      (crawler.robots_allowed === false || (crawler.live.checked && crawler.live.ok === false)))
+    .map((crawler) => ({
+      product_key: product.product_key,
+      provider: crawler.provider,
+      robots_allowed: crawler.robots_allowed,
+      http_status: crawler.live.status,
+      reason: crawler.robots_allowed === false ? crawler.robots_reason : crawler.live.reason
+    }))
+);
+
+const receipt = {
+  schema: 'evercraft.chum.crawler-audit.v1',
+  generated_at: new Date().toISOString(),
+  doctrine: {
+    public_commercial_surfaces_should_be_discoverable: true,
+    private_admin_surfaces_should_not_be_advertised: true,
+    provider_pickup_not_inferred_from_access: true
+  },
+  profiles: crawlerProfiles.map(({ user_agent, ...rest }) => ({ ...rest, http_probe: Boolean(user_agent) })),
+  summary: {
+    products: products.length,
+    crawler_profiles: crawlerProfiles.length,
+    blocked_search_lanes: blockedRows.length,
+    products_needing_repair: new Set(blockedRows.map((row) => row.product_key)).size
+  },
+  blocked_search_lanes: blockedRows,
+  products
+};
+
+fs.mkdirSync('artifacts/chum', { recursive: true });
+fs.writeFileSync('artifacts/chum/crawler-audit-latest.json', JSON.stringify(receipt, null, 2) + '\n');
+
+const md = [
+  '# CHUM Crawler / AI Discovery Audit',
+  '',
+  `Generated: ${receipt.generated_at}`,
+  `Products: ${receipt.summary.products}`,
+  `Crawler profiles: ${receipt.summary.crawler_profiles}`,
+  `Blocked search lanes: ${receipt.summary.blocked_search_lanes}`,
+  `Products needing repair: ${receipt.summary.products_needing_repair}`,
+  '',
+  '> Reachability and robots permission make a surface eligible to be crawled. They do not prove indexing, recommendation, citation, or conversion.',
+  '',
+  '| Product | Search state | Robots | Blocked lanes |',
+  '|---|---|---:|---|',
+  ...products.map((product) =>
+    `| ${product.name} | ${product.search_discovery_state} | ${product.robots.status || 'ERR'} | ${product.blocked_search_lanes.join(', ') || 'none'} |`
+  ),
+  '',
+  '## Repair queue',
+  '',
+  ...(blockedRows.length
+    ? blockedRows.map((row) => `- ${row.product_key} / ${row.provider}: ${row.reason} (HTTP ${row.http_status ?? 'n/a'})`)
+    : ['- No blocked search lanes detected by this run.']),
+  ''
+];
+
+fs.writeFileSync('artifacts/chum/crawler-audit-latest.md', md.join('\n'));
+console.log(JSON.stringify(receipt.summary));
+
+if (strict && blockedRows.length) {
+  throw new Error(`CHUM crawler audit found ${blockedRows.length} blocked search lane(s)`);
+}

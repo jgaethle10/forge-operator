@@ -3,20 +3,23 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "owner": "Systemia",
   "status": "live_in_forge_operator",
   "contract": {
     "inputs": [
       "conformance/products.json",
       "public/.well-known/evercraft-products.json",
+      "public/.well-known/evercraft-agent.json",
       "registry/catalog.json",
       "Official MCP Registry",
       "public capability endpoints",
+      "robots.txt policies",
       "authorized provider-probe bridge receipts"
     ],
     "outputs": [
       "surface-readiness receipts",
+      "crawler and AI-search reachability receipts",
       "MCP handshake and registry receipts",
       "repair queue",
       "provider signal plan",
@@ -34,12 +37,32 @@
   },
   "evidence_state": {
     "public_surface_probes": "receipt_backed",
+    "crawler_reachability": "receipt_backed",
     "mcp_external_canary": "receipt_backed",
     "provider_pickup": "receipt_required",
     "conversion_attribution": "receipt_required"
   },
   "compatibility": {
-    "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"]
+    "provider_targets": [
+      "chatgpt",
+      "claude",
+      "gemini",
+      "copilot",
+      "perplexity",
+      "grok",
+      "generic_agent"
+    ],
+    "crawler_targets": [
+      "OAI-SearchBot",
+      "GPTBot",
+      "Claude-SearchBot",
+      "Claude-User",
+      "ClaudeBot",
+      "Googlebot",
+      "Google-Extended",
+      "bingbot",
+      "PerplexityBot"
+    ]
   },
   "rollback": {
     "safe_disable": "disable the CHUM watershed workflow or run CHUM with --offline",
