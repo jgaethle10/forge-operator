@@ -112,6 +112,17 @@
       "doorway_state": "source_build_green",
       "conformance_state": "not_yet_propagated",
       "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "class": "agent_native_local_commerce",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-rewards",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
     }
   ],
   "state_semantics": {
