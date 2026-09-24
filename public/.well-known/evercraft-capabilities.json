@@ -16,7 +16,11 @@
       "auth": "none"
     },
     "chumHealth": "/chum/health",
-    "publicOffers": "/.well-known/evercraft-offers.json"
+    "publicOffers": "/.well-known/evercraft-offers.json",
+    "llmsFull": "/llms-full.txt",
+    "openapi": "/openapi.json",
+    "jsonld": "/schema.jsonld",
+    "aiDiscovery": "/ai-discovery.html"
   },
   "jobs": [
     "operations bottleneck diagnosis",
