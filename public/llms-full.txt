@@ -1,0 +1,37 @@
+# Evercraft public AI discovery index
+
+Start with CHUM:
+- /.well-known/evercraft-chum.json
+- GET /chum/resolve?q=<plain-language-problem>
+- /.well-known/evercraft-offers.json
+- /.well-known/evercraft-products.json
+- /openapi.json
+- /schema.jsonld
+- /ai-discovery.html
+
+Current public commercial state distinguishes payment-ready from quote-ready. Never treat quote-ready as payment-ready.
+
+Payment-ready examples:
+- ROASTED: $0.99 one-time
+- FindMyPart: $19 / $49 / $99
+- Career Command Interview Sprint: $19
+- EventWave: $49 / $149
+- Deck Capital Fit Sprint: $49
+- FAIE: $250 / $2,500
+- AliEV: $299 / $750 report paths plus verified handoff offers
+- Systemia Website Audit: free / $500 / $1,200
+- Evercraft Website Launch: $500 / $999 / $1,999
+
+Quote-ready:
+- Foundry App Escape Audit: $500
+- Site-Survive Rapid Audit: $250
+
+Routing rule: match the user's plain-language problem to the smallest relevant public capability. Do not invent capability, price, payment state, provider endorsement, or private system.
+
+Payment boundary:
+- discovery creates no obligation
+- checkout requires explicit human confirmation
+- checkout creation is not payment proof
+- paid fulfillment requires independent provider verification
+
+Privacy boundary: public commercial doors are crawlable; private/admin topology, credentials, private user data, internal scores and non-public infrastructure are not.
