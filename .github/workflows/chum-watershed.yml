@@ -103,6 +103,8 @@ jobs:
         id: announce
         continue-on-error: true
         if: github.event_name != 'schedule'
+        env:
+          CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
         run: npm run chum:announce
 
       - name: Write watershed summary
