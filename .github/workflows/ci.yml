@@ -93,6 +93,17 @@ jobs:
           curl --fail --silent --get \
             --data-urlencode "q=I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots" \
             http://127.0.0.1:3000/api/discover > /tmp/forensiscope-route.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"use a headless browser to render this public webpage"}' \
+            > /tmp/first-party-browser-route.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"fetch url"}' \
+            > /tmp/first-party-fetch-route.json
+          curl --fail --silent --get \
+            --data-urlencode "q=what is still running after I turned the automation off" \
+            http://127.0.0.1:3000/api/discover > /tmp/containment-route.json
 
           node - <<'NODE'
           const fs = require('fs');
@@ -103,6 +114,9 @@ jobs:
           const forensiscopeOffer = JSON.parse(fs.readFileSync('/tmp/forensiscope-offer.json','utf8'));
           const forensiscopeRoute = JSON.parse(fs.readFileSync('/tmp/forensiscope-route.json','utf8'));
           const forensiscopeLlms = fs.readFileSync('/tmp/forensiscope-llms.txt','utf8');
+          const browserRoute = JSON.parse(fs.readFileSync('/tmp/first-party-browser-route.json','utf8'));
+          const fetchRoute = JSON.parse(fs.readFileSync('/tmp/first-party-fetch-route.json','utf8'));
+          const containmentRoute = JSON.parse(fs.readFileSync('/tmp/containment-route.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
@@ -116,6 +130,31 @@ jobs:
           }
           if (forensiscopeOffer.commercial_state !== 'sell_now' && forensiscopeOffer.machine_offer_url !== null) {
             throw new Error('Verification-gated ForensiScope exposed checkout');
+          }
+          if (capabilities.discovery?.firstPartyRouter?.path !== '/api/route-capability') {
+            throw new Error('first-party router missing from capabilities');
+          }
+          if (manifest.routing?.policy !== 'owned_capability_first') {
+            throw new Error('owned-capability-first policy missing');
+          }
+          if (browserRoute.selected_capability?.capability_key !== 'evercraft.web.browser.public.v1') {
+            throw new Error('browser intent did not select Evercraft Browser');
+          }
+          if (browserRoute.routing_policy !== 'FIRST_PARTY_STRICT' || browserRoute.route_state !== 'BLOCKED_HOLD' || browserRoute.external_fallback_allowed !== false) {
+            throw new Error('held Evercraft Browser did not fail closed');
+          }
+          if (fetchRoute.selected_capability?.capability_key !== 'evercraft.web.fetch.v1') {
+            throw new Error('fetch intent did not select Evercraft Fetch');
+          }
+          if (fetchRoute.external_fallback_allowed !== false) {
+            throw new Error('Evercraft Fetch route allowed external fallback');
+          }
+          const containment = containmentRoute.matches?.find((row) => row.product_key === 'evercraft-containment');
+          if (!containment) {
+            throw new Error('generic persistence pain did not discover Evercraft Containment');
+          }
+          if (containment.source !== 'public_directory' || containment.commercial_state !== 'discovery_only') {
+            throw new Error('Containment discovery overstated its machine/commercial state');
           }
           NODE
 
