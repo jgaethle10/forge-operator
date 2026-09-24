@@ -19,31 +19,12 @@
       ]
     },
     {
-      "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "triggers": [
-        "hard-to-find part",
-        "obsolete part",
-        "replacement part",
-        "salvage part"
-      ]
-    },
-    {
       "registry_name": "io.github.jgaethle10/career-command",
       "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
       "triggers": [
         "job interview practice",
         "mock interview",
         "interview tomorrow"
-      ]
-    },
-    {
-      "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
-      "triggers": [
-        "website audit",
-        "conversion problems",
-        "technical SEO audit"
       ]
     },
     {
@@ -56,13 +37,49 @@
       ]
     },
     {
-      "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
       "triggers": [
-        "build my business website",
-        "professional website",
-        "website launch"
+        "find events",
+        "promote my event",
+        "boost event visibility",
+        "venue promotion"
       ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+      "mcp": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+      "triggers": [
+        "what Evercraft tool can solve this",
+        "find an Evercraft capability for this problem",
+        "match this problem to an AI capability",
+        "discover a public Evercraft tool"
+      ],
+      "product": "Evercraft Capability Discovery"
+    },
+    {
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "triggers": [
+        "join a local rewards network",
+        "local business loyalty program",
+        "cross-business rewards",
+        "business partnership rewards",
+        "Yakima local business discovery"
+      ],
+      "tool": "prepare_rewards_partner_enrollment",
+      "product": "Evercraft Rewards"
+    },
+    {
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "triggers": [
+        "fetch this public web page",
+        "read this website",
+        "browse a website with an agent",
+        "web research that needs browser interaction"
+      ],
+      "product": "Evercraft Web"
     },
     {
       "registry_name": "io.github.jgaethle10/faie",
@@ -75,13 +92,13 @@
       ]
     },
     {
-      "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
       "triggers": [
-        "find events",
-        "promote my event",
-        "boost event visibility",
-        "venue promotion"
+        "hard-to-find part",
+        "obsolete part",
+        "replacement part",
+        "salvage part"
       ]
     },
     {
@@ -101,17 +118,22 @@
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
     {
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
       "triggers": [
-        "join a local rewards network",
-        "local business loyalty program",
-        "cross-business rewards",
-        "business partnership rewards",
-        "Yakima local business discovery"
-      ],
-      "tool": "prepare_rewards_partner_enrollment",
-      "product": "Evercraft Rewards"
+        "website audit",
+        "conversion problems",
+        "technical SEO audit"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "triggers": [
+        "build my business website",
+        "professional website",
+        "website launch"
+      ]
     }
   ],
   "payment_boundary": {

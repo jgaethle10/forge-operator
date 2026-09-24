@@ -1,32 +1,44 @@
 {
-  "schema": "evercraft.chum.v1",
+  "schema": "evercraft.chum.v2",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "status": "prototype",
+  "status": "active",
   "provider": "Evercraft LLC",
-  "purpose": "Coordinate public machine discovery, routing, invocation readiness, provider pickup verification, and AI-originated conversion attribution across Evercraft capabilities.",
-  "inputs": [
-    "Evercraft capability registry",
-    "public product directory",
-    "cross-LLM conformance registry",
-    "MCP registry"
-  ],
+  "purpose": "Actively keep legitimate public Evercraft capabilities easy for AI systems, search crawlers and agents to discover, understand, verify, route to and hand off into while preserving human confirmation for consequential commerce.",
+  "doctrine": {
+    "public_doors_wide_open": true,
+    "private_admin_topology_dark": true,
+    "no_spam": true,
+    "no_unverified_provider_claims": true,
+    "discovery_creates_obligation": false,
+    "human_confirmation_required_for_payment": true,
+    "provider_verification_required_for_paid_state": true
+  },
+  "entrypoints": {
+    "live_catalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
+    "public_snapshot": "/.well-known/evercraft-machine-catalog.json",
+    "portfolio_directory": "/.well-known/evercraft-products.json",
+    "llms": "/llms.txt",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
+    "pain_index_llms": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=llms",
+    "pain_index_sitemap": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=sitemap",
+    "official_mcp_registry_namespace": "io.github.jgaethle10",
+    "official_mcp_registry_search": "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.jgaethle10&version=latest"
+  },
   "outputs": [
+    "canonical public catalog snapshot",
     "surface readiness receipts",
+    "official registry verification",
+    "provider pickup observations",
     "repair queue",
-    "provider signal plan",
-    "receipt-gated pickup state",
     "AI-originated conversion attribution"
   ],
   "boundaries": [
-    "does not guarantee indexing, recommendation, invocation, or conversion",
-    "does not expose private or administrative topology",
-    "does not claim provider behavior without receipt-backed evidence",
-    "does not create a payment obligation",
-    "checkout and payment actions remain subject to explicit human confirmation and authoritative payment verification"
-  ],
-  "public_entrypoints": {
-    "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
-    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt"
-  }
+    "CHUM does not guarantee indexing, recommendation, invocation or conversion",
+    "CHUM does not expose private/admin topology or credentials",
+    "provider pickup is not claimed without receipt-backed observation",
+    "checkout preparation is not payment proof",
+    "no automatic financial obligation is created by discovery or routing"
+  ]
 }
