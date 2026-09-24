@@ -147,8 +147,8 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-kn
 Public product directory:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
 
-A2A Agent Card:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/agent-card.json
+Evercraft agent discovery manifest:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent.json
 
 CHUM measures surface readiness, Official MCP Registry presence, live MCP handshakes, receipt-backed provider pickup, and AI-originated conversion. Publication alone is never treated as proof that a provider recommended Evercraft.
 
