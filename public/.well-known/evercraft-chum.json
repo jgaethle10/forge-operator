@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.v1",
+  "name": "CHUM",
+  "expansion": "Capability Handoff & Utility Mesh",
+  "status": "prototype",
+  "provider": "Evercraft LLC",
+  "purpose": "Coordinate public machine discovery, routing, invocation readiness, provider pickup verification, and AI-originated conversion attribution across Evercraft capabilities.",
+  "inputs": [
+    "Evercraft capability registry",
+    "public product directory",
+    "cross-LLM conformance registry",
+    "MCP registry"
+  ],
+  "outputs": [
+    "surface readiness receipts",
+    "repair queue",
+    "provider signal plan",
+    "receipt-gated pickup state",
+    "AI-originated conversion attribution"
+  ],
+  "boundaries": [
+    "does not guarantee indexing, recommendation, invocation, or conversion",
+    "does not expose private or administrative topology",
+    "does not claim provider behavior without receipt-backed evidence",
+    "does not create a payment obligation",
+    "checkout and payment actions remain subject to explicit human confirmation and authoritative payment verification"
+  ],
+  "public_entrypoints": {
+    "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt"
+  }
+}

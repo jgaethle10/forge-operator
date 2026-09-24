@@ -1,0 +1,66 @@
+{
+  "schema_version": "evercraft.capability.v1",
+  "capability_id": "systemia.chum",
+  "name": "CHUM",
+  "expansion": "Capability Handoff & Utility Mesh",
+  "version": "0.1.0",
+  "owner": "Systemia",
+  "status": "prototype_live_in_repo",
+  "contract": {
+    "inputs": [
+      "conformance/products.json",
+      "public/.well-known/evercraft-products.json",
+      "registry/catalog.json",
+      "public capability endpoints"
+    ],
+    "outputs": [
+      "surface-readiness receipts",
+      "repair queue",
+      "provider signal plan",
+      "receipt-gated provider behavior state"
+    ]
+  },
+  "dependencies": [
+    "Node.js 22+",
+    "Evercraft cross-LLM conformance registry",
+    "Evercraft public product directory",
+    "Evercraft machine-commerce registry"
+  ],
+  "permissions": {
+    "public_http_read": true,
+    "provider_side_effects": false,
+    "payment_side_effects": false,
+    "private_topology_access": false
+  },
+  "evidence_state": {
+    "public_surface_probes": "receipt_backed",
+    "provider_pickup": "not_run_until_authorized_probe",
+    "conversion_attribution": "planned"
+  },
+  "compatibility": {
+    "product_classes": [
+      "agent_commerce",
+      "discovery_human_handoff",
+      "public_learning_discovery",
+      "public_resource_discovery_only",
+      "bounded_membership_discovery",
+      "human_handoff_media_overflow",
+      "evidence_aware_agent_commerce",
+      "two_sided_marketplace_human_handoff"
+    ],
+    "provider_targets": [
+      "chatgpt",
+      "claude",
+      "gemini",
+      "copilot",
+      "perplexity",
+      "grok",
+      "generic_agent"
+    ]
+  },
+  "rollback": {
+    "safe_disable": "remove CHUM workflow step or run with --offline",
+    "data_mutation": "none; current version writes build artifacts only"
+  },
+  "intended_adoption": "Default machine-distribution audit layer for public Evercraft commercial capabilities, with documented exceptions for private or non-commercial systems."
+}

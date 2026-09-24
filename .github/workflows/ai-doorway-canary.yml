@@ -5,7 +5,9 @@ on:
   push:
     paths:
       - "conformance/**"
-      - "registry/evercraft-machine-commerce/conformance.json"
+      - "registry/**"
+      - "public/.well-known/**"
+      - "systemia/chum/**"
       - "scripts/check-ai-doorways.mjs"
       - ".github/workflows/ai-doorway-canary.yml"
   schedule:
@@ -32,10 +34,15 @@ jobs:
       - name: Probe public AI doorways
         run: node scripts/check-ai-doorways.mjs
 
-      - name: Upload canary receipts
+      - name: Run CHUM signal mesh
+        run: node systemia/chum/chum.mjs
+
+      - name: Upload AI distribution receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ai-doorway-canary
-          path: artifacts/ai-doorway-canary.*
+          name: ai-distribution-receipts
+          path: |
+            artifacts/ai-doorway-canary.*
+            artifacts/chum/chum-latest.*
           if-no-files-found: warn
