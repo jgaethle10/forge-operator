@@ -149,5 +149,11 @@
     "human_confirmation_required_for_checkout": true,
     "checkout_is_payment_proof": false,
     "provider_verification_required_for_paid_state": true
+  },
+  "pain_index": {
+    "schema": "evercraft.chum.pain-index.v1",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
+    "text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
+    "purpose": "Brand-blind routing from user pain to the smallest relevant public Evercraft capability while preserving commercial, invocation, payment and evidence state."
   }
 }
