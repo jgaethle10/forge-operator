@@ -1,0 +1,72 @@
+name: Publish MCP Registry manifests
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "mcp-registry/*.json"
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: "Manifest path, for example mcp-registry/systemia-website-audit.json"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Determine manifests to publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            printf '%s\n' "${{ inputs.manifest }}" > /tmp/mcp-manifests.txt
+          else
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- 'mcp-registry/*.json' > /tmp/mcp-manifests.txt
+          fi
+
+          if [[ ! -s /tmp/mcp-manifests.txt ]]; then
+            echo "No MCP manifests changed."
+            exit 0
+          fi
+
+          while IFS= read -r manifest; do
+            case "$manifest" in
+              mcp-registry/*.json) ;;
+              *) echo "Refusing unexpected manifest path: $manifest"; exit 1 ;;
+            esac
+            test -f "$manifest" || { echo "Missing manifest: $manifest"; exit 1; }
+          done < /tmp/mcp-manifests.txt
+
+          echo "Publishing:"
+          cat /tmp/mcp-manifests.txt
+
+      - name: Install mcp-publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --help >/dev/null
+
+      - name: Authenticate with Official MCP Registry
+        shell: bash
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish changed manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r manifest; do
+            echo "Publishing $manifest"
+            ./mcp-publisher publish "$manifest"
+          done < /tmp/mcp-manifests.txt
