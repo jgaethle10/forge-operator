@@ -348,5 +348,13 @@
         "directory publication and commercial activation require their own verified state"
       ]
     }
-  ]
+  ],
+  "coverage": {
+    "type": "curated_high_signal_routes",
+    "note": "This curated directory is not the complete Evercraft portfolio. Use CHUM or the live machine catalog for the comprehensive current public-safe capability set."
+  },
+  "chum": "/.well-known/evercraft-chum.json",
+  "live_machine_catalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
+  "machine_catalog_snapshot": "/.well-known/evercraft-machine-catalog.json",
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
 }
