@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/evercraft-web",
+  "title": "Evercraft Web",
+  "description": "Read public web content with Evercraft; search and browser automation stay behind safety gates.",
+  "version": "0.1.1",
+  "websiteUrl": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+  "repository": {
+    "url": "https://github.com/jgaethle10/forge-operator",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
+    }
+  ]
+}
