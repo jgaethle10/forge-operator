@@ -2,4 +2,9 @@ User-agent: *
 Allow: /
 Allow: /llms.txt
 Allow: /.well-known/evercraft-capabilities.json
-Disallow: /api/
+Allow: /api/chum
+Allow: /api/capabilities
+Allow: /api/commercial
+Allow: /api/health
+Disallow: /api/forge
+Disallow: /api/chum/match
