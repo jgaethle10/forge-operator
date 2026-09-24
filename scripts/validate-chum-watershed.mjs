@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 const read=p=>fs.readFileSync(p,'utf8'); const json=p=>JSON.parse(read(p));
 const fail=m=>{console.error('FAIL:',m);process.exitCode=1}; const pass=m=>console.log('PASS:',m);
-const required=['public/llms.txt','public/llms-full.txt','public/robots.txt','public/sitemap.xml','public/ai-discovery.json','public/openapi.json','public/.well-known/evercraft-agent.json','public/.well-known/agent-card.json','public/.well-known/evercraft-products.json','public/.well-known/evercraft-chum.json','public/chum/index.html'];
+const required=['public/llms.txt','public/llms-full.txt','public/robots.txt','public/sitemap.xml','public/ai-discovery.json','public/openapi.json','public/.well-known/evercraft-agent.json','public/.well-known/evercraft-agent-interfaces.json','public/.well-known/evercraft-products.json','public/.well-known/evercraft-chum.json','public/chum/index.html'];
 for(const p of required){fs.existsSync(p)?pass('present '+p):fail('missing '+p)}
 const robots=read('public/robots.txt');
 for(const bot of ['OAI-SearchBot','Claude-SearchBot','Googlebot','Google-Extended','bingbot','PerplexityBot']) robots.includes(bot)?pass('crawler '+bot):fail('crawler policy missing '+bot);
