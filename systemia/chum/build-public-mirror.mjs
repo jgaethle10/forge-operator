@@ -353,6 +353,7 @@ const llmsLines = [
   '',
   '## Universal routing',
   '',
+  'Human/search directory: /ai',
   `Read-only Official MCP Registry: ${READ_ONLY_DISCOVERY_REGISTRY}`,
   `Pain Index: ${rawBase}/public/.well-known/evercraft-pain-index.json`,
   `Answer Graph: ${rawBase}/public/chum/answers/index.json`,
@@ -483,6 +484,7 @@ const agentDirectory = {
   purpose: 'Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.',
   universal_front_door: {
     name: 'Evercraft discovery watershed',
+    human_directory: '/ai',
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     pain_index: '/.well-known/evercraft-pain-index.json',
     answer_graph: '/chum/answers/index.json',
@@ -511,6 +513,7 @@ const discoveryWatershed = {
   updated_at: directory.updated_at || null,
   purpose: 'One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.',
   start_here: {
+    human_directory: '/ai',
     llms: '/llms.txt',
     llms_full: '/llms-full.txt',
     pain_index: '/.well-known/evercraft-pain-index.json',
