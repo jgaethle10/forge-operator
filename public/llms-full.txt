@@ -23,6 +23,7 @@ Canonical: https://aliev.base44.app/
 Machine state: callable_via_declared_mcp
 Official registry name: io.github.jgaethle10/aliev
 MCP: https://aliev.base44.app/functions/alievMcp
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/aliev/ai-conformance.json
 Use when the user says or means:
 - would EV charging make sense at this property
 - what public EV charging is near this address
@@ -185,6 +186,7 @@ Canonical: https://findmypart.base44.app/
 Machine state: callable_via_declared_mcp
 Official registry name: io.github.jgaethle10/findmypart
 MCP: https://findmypart.base44.app/functions/findMyPartMcp
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/findmypart/ai-conformance.json
 Use when the user says or means:
 - find a discontinued tractor part
 - find an obsolete automotive or machine part
@@ -202,6 +204,7 @@ Canonical: https://evercraft-forensiscope.base44.app/
 Machine state: callable_via_declared_mcp
 Official registry name: io.github.jgaethle10/forensiscope
 MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/forensiscope/ai-conformance.json
 Use when the user says or means:
 - this video is too large for my AI to process
 - this audio is too long for my AI to process
