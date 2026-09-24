@@ -29,7 +29,8 @@
     "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
     "chum:mirror": "node systemia/chum/build-public-mirror.mjs",
     "chum:sync": "node systemia/chum/sync-public-discovery.mjs",
-    "check:workflow-noise": "node scripts/validate-workflow-noise.mjs"
+    "check:workflow-noise": "node scripts/validate-workflow-noise.mjs",
+    "chum:intents": "node systemia/chum/build-intent-map.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
