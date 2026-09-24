@@ -19,10 +19,12 @@
     "sell_now_revenue_text": "/chum/revenue.txt",
     "intent_router": "/api/discover?q={natural-language-problem}",
     "revenue_router": "/api/revenue-watershed",
-    "chum": "/.well-known/evercraft-chum.json"
+    "chum": "/.well-known/evercraft-chum.json",
+    "pain_index": "/.well-known/evercraft-pain-index.json",
+    "pain_index_text": "/chum/pain-index.txt"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true,

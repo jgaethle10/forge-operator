@@ -14,6 +14,8 @@
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc></url>
   <url><loc>/.well-known/evercraft-products.json</loc></url>
+  <url><loc>/.well-known/evercraft-pain-index.json</loc></url>
+  <url><loc>/chum/pain-index.txt</loc></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc></url>
   <url><loc>/.well-known/evercraft-chum.json</loc></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc></url>

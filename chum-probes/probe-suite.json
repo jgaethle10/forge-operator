@@ -155,6 +155,21 @@
       "expected_fit": true
     },
     {
+      "case_id": "evercraft-web-001",
+      "product_key": "evercraft-web",
+      "expected_product": "Evercraft Web",
+      "expected_aliases": [
+        "Evercraft Web",
+        "Evercraft Fetch"
+      ],
+      "expected_hosts": [
+        "systemiacommandcenters.com"
+      ],
+      "enabled": true,
+      "prompt": "I need a web tool my AI agent can use to fetch and read public URLs with source details, and I also care about a path toward search and browser automation. I do not want to build the browser plumbing myself. What service should I consider?",
+      "expected_fit": true
+    },
+    {
       "case_id": "control-negative-001",
       "product_key": null,
       "expected_product": null,

@@ -3,7 +3,7 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.5.0",
+  "version": "0.4.0",
   "owner": "Systemia",
   "status": "live_in_forge_operator",
   "contract": {
@@ -16,10 +16,11 @@
       "public capability endpoints",
       "robots.txt policies",
       "authorized provider-probe bridge receipts",
-      "signed CHUM referral tokens",
-      "trusted payment verification receipts"
+      "public/.well-known/evercraft-machine-catalog.json"
     ],
     "outputs": [
+      "plain-text LLM routing index",
+      "brand-blind pain-first routing index",
       "surface-readiness receipts",
       "crawler and AI-search reachability receipts",
       "MCP handshake and registry receipts",
@@ -27,9 +28,7 @@
       "repair queue",
       "provider signal plan",
       "receipt-backed provider pickup state",
-      "privacy-minimized AI referral tokens",
-      "AI-originated landing and checkout-start receipts",
-      "authoritatively verified payment attribution receipts"
+      "AI-originated conversion attribution inputs"
     ]
   },
   "permissions": {
@@ -38,10 +37,7 @@
     "authorized_provider_probe": true,
     "provider_side_effects": false,
     "payment_side_effects": false,
-    "private_topology_access": false,
-    "public_referral_issue": true,
-    "public_payment_claims": false,
-    "trusted_payment_receipt_ingest": true
+    "private_topology_access": false
   },
   "evidence_state": {
     "public_surface_probes": "receipt_backed",
@@ -49,8 +45,8 @@
     "mcp_external_canary": "receipt_backed",
     "freshness_broadcast": "receipt_backed",
     "provider_pickup": "receipt_required",
-    "conversion_attribution": "signed_referral_plus_receipt_backed",
-    "revenue_attribution": "authoritative_payment_verification_required"
+    "conversion_attribution": "receipt_required",
+    "pain_index": "deterministic_build_and_brand_blind_tests"
   },
   "compatibility": {
     "provider_targets": [
@@ -76,7 +72,7 @@
   },
   "rollback": {
     "safe_disable": "disable the CHUM watershed workflow or run CHUM with --offline",
-    "data_mutation": "public referral/event APIs can be disabled by removing attribution secrets; CHUM never performs payment actions"
+    "data_mutation": "none; probes are read-only and write receipts/artifacts"
   },
   "intended_adoption": "Default distribution, freshness-broadcast and discovery feedback layer for every legitimate public Evercraft capability."
 }

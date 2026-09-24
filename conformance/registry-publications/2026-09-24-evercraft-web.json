@@ -1,0 +1,20 @@
+{
+  "schema": "evercraft.registry-publication.receipt.v1",
+  "product_key": "evercraft-web",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/evercraft-web",
+  "version": "0.1.0",
+  "workflow_run_id": 36029850545,
+  "workflow_name": "Publish Evercraft Web to MCP Registry",
+  "head_sha": "ab3725d34d2369a9a3d0d0d0db0836e2f322a8d7",
+  "run_conclusion": "success",
+  "publish_job_conclusion": "success",
+  "publish_log_result": "MCP_REGISTRY_PUBLISH_VERIFIED io.github.jgaethle10/evercraft-web",
+  "published_at_utc": "2026-09-24T16:49:21Z",
+  "evidence_state": "receipt_backed",
+  "notes": [
+    "This proves publication to the Official MCP Registry.",
+    "The receipt verification step queried the Registry and observed the exact server name.",
+    "It does not prove that the remote MCP successfully executes Fetch, that generic search indexed it, or that any named AI provider recommended or invoked it."
+  ]
+}
