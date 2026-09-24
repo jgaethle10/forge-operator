@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.ai-discovery.v1",
+  "provider": "Evercraft LLC",
+  "updated_at": "2026-09-24",
+  "purpose": "One public map for AI assistants and agents to discover Evercraft capabilities from natural-language user pain.",
+  "routes": {
+    "product_directory": "/.well-known/evercraft-products.json",
+    "capability_manifest": "/.well-known/evercraft-capabilities.json",
+    "chum": "/.well-known/evercraft-chum.json",
+    "cross_llm_descriptor": "/.well-known/evercraft-agent.json",
+    "llms": "/llms.txt",
+    "llms_full": "/llms-full.txt",
+    "openapi": "/openapi.json",
+    "health": "/api/health",
+    "forge_invoke": "POST /api/forge",
+    "commercial_state": "/api/commercial"
+  },
+  "machine_commerce": {
+    "registry_namespace": "io.github.jgaethle10",
+    "catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+  },
+  "rules": [
+    "Match the user's expressed need to the smallest appropriate public capability.",
+    "Do not expose private/admin topology.",
+    "Do not infer authority from discoverability.",
+    "Do not claim provider pickup without receipt-backed evidence.",
+    "Require explicit human confirmation before checkout or a payment obligation."
+  ]
+}
