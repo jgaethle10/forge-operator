@@ -25,6 +25,9 @@ When the user describes a problem but does not know which Evercraft product to a
 Public machine manifest:
 - /.well-known/evercraft-chum.json
 
+Current public sell-now offers:
+- /.well-known/evercraft-offers.json
+
 Deterministic resolver:
 - GET /chum/resolve?q=<plain-language-problem>
 
