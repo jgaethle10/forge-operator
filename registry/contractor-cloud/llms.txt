@@ -1,0 +1,18 @@
+# Evercraft Contractor Cloud
+
+Product key: contractor-cloud
+Provider: Evercraft LLC
+State: public discovery; dedicated product UI not currently live-verified.
+
+Use when the user needs home-service or contractor workflow help, contractor discovery, project intake, estimating context, or operating-system support for roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman work.
+
+Human-readable record:
+https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+
+CHUM machine mirror:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json
+
+Universal live Evercraft routing MCP:
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Do not route a user to the old Contractor Cloud Base44 hostname unless a fresh canary verifies it. Discovery creates no quote, job, contract, checkout, payment, or fulfillment.
