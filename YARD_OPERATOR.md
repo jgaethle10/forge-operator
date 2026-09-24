@@ -18,6 +18,14 @@ The bounded deployment interface is expected to support these operations:
 
 The runtime desired state is declared in `evercraft.compute.json`.
 
+## Organism admission
+
+Before Yard Operator accepts an agent-capable release, the candidate must pass the Systemia organism proof in CI. Yard deployment must consume the same commit-addressed artifact that passed that proof.
+
+Elastic capacity from Saban / Evercraft Compute supplies execution hands only. It does not create new mission authority. Every admitted workload remains bound to the canonical mission state and must return an observed reconciliation receipt.
+
+If runtime state, assigned-agent memory freshness, authority, or receipt lineage cannot be verified, Yard must hold that workload rather than silently falling back to isolated-agent execution.
+
 ## Admission rules
 
 - provider preference must be `evercraft-owned`
