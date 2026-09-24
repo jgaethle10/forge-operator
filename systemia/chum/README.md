@@ -31,11 +31,25 @@ The index starts from the user's problem rather than an Evercraft brand. Product
 
 Sellable capabilities must have pain-language. Discovery-only and held capabilities remain discoverable but may not borrow a stronger capability's evidence state.
 
+## Answer Graph
+
+CHUM compiles the canonical Pain Index into exact natural-language answer doors at:
+
+- `public/chum/answers/index.json`
+- `public/chum/answers/index.txt`
+- `public/chum/answers/doors/*.json`
+
+The Answer Graph is derived from the full Pain Index, not only sell-now offers. That means discovery-only and held products can still be found without inheriting checkout or invocation authority they do not have.
+
+The read-only Official MCP Registry front door is `io.github.jgaethle10/evercraft-capability-discovery`. Machine Commerce remains the second-stage front door when a genuine match reaches current commercial state or a human-confirmed paid continuation.
+
 ## Commands
 
 ```bash
 npm run chum:index
 npm run test:chum-index
+npm run chum:answers
+npm run test:chum-answers
 npm run chum
 npm run chum:offline
 npm run chum:mcp
