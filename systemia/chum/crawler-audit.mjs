@@ -4,6 +4,10 @@ const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
 const registry = readJson('conformance/products.json');
 const timeoutMs = 15000;
 const strict = process.argv.includes('--strict');
+const mirrorBase = String(
+  process.env.CHUM_PUBLIC_MIRROR_BASE ||
+  'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products'
+).replace(/\/$/, '');
 
 const crawlerProfiles = [
   {
@@ -11,6 +15,12 @@ const crawlerProfiles = [
     robots_token: 'OAI-SearchBot',
     user_agent: 'Mozilla/5.0 (compatible; OAI-SearchBot/1.4; +https://openai.com/searchbot)',
     lane: 'search'
+  },
+  {
+    provider: 'chatgpt_user_fetch',
+    robots_token: 'ChatGPT-User',
+    user_agent: 'ChatGPT-User/1.0',
+    lane: 'user_fetch'
   },
   {
     provider: 'openai_model_crawl',
@@ -170,6 +180,7 @@ const products = [];
 for (const product of registry.products || []) {
   const canonical = new URL(product.canonical_url);
   const robotsUrl = `${canonical.origin}/robots.txt`;
+  const mirrorUrl = `${mirrorBase}/${product.product_key}/llms.txt`;
   const robots = await fetchText(robotsUrl);
   const robotsMissing = robots.status === 404;
   const groups = robots.ok ? parseRobots(robots.body) : [];
@@ -183,6 +194,7 @@ for (const product of registry.products || []) {
         : { allowed: null, reason: `robots_unreadable_http_${robots.status || 'error'}` };
 
     let live = { checked: false, ok: null, status: null, reason: 'robots_policy_only' };
+    let mirror = { checked: false, ok: null, status: null, reason: 'not_needed' };
     if (profile.user_agent) {
       const result = await fetchText(product.canonical_url, profile.user_agent);
       live = {
@@ -194,23 +206,41 @@ for (const product of registry.products || []) {
         bytes: result.bytes,
         reason: result.ok ? 'reachable' : (result.error || `http_${result.status}`)
       };
+
+      if (!result.ok) {
+        const fallback = await fetchText(mirrorUrl, profile.user_agent);
+        mirror = {
+          checked: true,
+          ok: fallback.ok,
+          status: fallback.status,
+          final_url: fallback.final_url,
+          content_type: fallback.content_type,
+          bytes: fallback.bytes,
+          reason: fallback.ok ? 'reachable_public_mirror' : (fallback.error || `http_${fallback.status}`)
+        };
+      }
     }
 
     crawlers.push({
       ...profile,
       robots_allowed: policy.allowed,
       robots_reason: policy.reason,
-      live
+      live,
+      mirror,
+      effective_reachable: live.ok === true || mirror.ok === true,
+      used_public_mirror: live.ok === false && mirror.ok === true
     });
   }
 
   const searchProfiles = crawlers.filter((c) => c.lane === 'search' || c.lane === 'user_fetch');
-  const blocked = searchProfiles.filter((c) => c.robots_allowed === false || (c.live.checked && c.live.ok === false));
+  const blocked = searchProfiles.filter((c) => c.robots_allowed === false || (c.live.checked && c.effective_reachable === false));
+  const fallback = searchProfiles.filter((c) => c.used_public_mirror);
 
   products.push({
     product_key: product.product_key,
     name: product.name,
     canonical_url: product.canonical_url,
+    public_mirror_url: mirrorUrl,
     robots: {
       url: robotsUrl,
       status: robots.status,
@@ -219,8 +249,9 @@ for (const product of registry.products || []) {
       bytes: robots.bytes,
       error: robots.error || null
     },
-    search_discovery_state: blocked.length ? 'repair_needed' : 'open_or_reachable',
+    search_discovery_state: blocked.length ? 'repair_needed' : (fallback.length ? 'public_mirror_reachable' : 'open_or_reachable'),
     blocked_search_lanes: blocked.map((c) => c.provider),
+    fallback_search_lanes: fallback.map((c) => c.provider),
     crawlers
   });
 }
@@ -228,13 +259,15 @@ for (const product of registry.products || []) {
 const blockedRows = products.flatMap((product) =>
   product.crawlers
     .filter((crawler) => (crawler.lane === 'search' || crawler.lane === 'user_fetch') &&
-      (crawler.robots_allowed === false || (crawler.live.checked && crawler.live.ok === false)))
+      (crawler.robots_allowed === false || (crawler.live.checked && crawler.effective_reachable === false)))
     .map((crawler) => ({
       product_key: product.product_key,
       provider: crawler.provider,
       robots_allowed: crawler.robots_allowed,
-      http_status: crawler.live.status,
-      reason: crawler.robots_allowed === false ? crawler.robots_reason : crawler.live.reason
+      http_status: crawler.live.ok ? crawler.live.status : (crawler.mirror?.status ?? crawler.live.status),
+      reason: crawler.robots_allowed === false
+        ? crawler.robots_reason
+        : (crawler.mirror?.reason || crawler.live.reason)
     }))
 );
 
@@ -251,7 +284,9 @@ const receipt = {
     products: products.length,
     crawler_profiles: crawlerProfiles.length,
     blocked_search_lanes: blockedRows.length,
-    products_needing_repair: new Set(blockedRows.map((row) => row.product_key)).size
+    products_needing_repair: new Set(blockedRows.map((row) => row.product_key)).size,
+    products_using_public_mirror: products.filter((product) => product.fallback_search_lanes.length).length,
+    fallback_search_lanes: products.reduce((count, product) => count + product.fallback_search_lanes.length, 0)
   },
   blocked_search_lanes: blockedRows,
   products
@@ -268,13 +303,15 @@ const md = [
   `Crawler profiles: ${receipt.summary.crawler_profiles}`,
   `Blocked search lanes: ${receipt.summary.blocked_search_lanes}`,
   `Products needing repair: ${receipt.summary.products_needing_repair}`,
+  `Products using CHUM public mirror: ${receipt.summary.products_using_public_mirror}`,
+  `Fallback search lanes: ${receipt.summary.fallback_search_lanes}`,
   '',
   '> Reachability and robots permission make a surface eligible to be crawled. They do not prove indexing, recommendation, citation, or conversion.',
   '',
-  '| Product | Search state | Robots | Blocked lanes |',
-  '|---|---|---:|---|',
+  '| Product | Search state | Robots | Fallback lanes | Blocked lanes |',
+  '|---|---|---:|---|---|',
   ...products.map((product) =>
-    `| ${product.name} | ${product.search_discovery_state} | ${product.robots.status || 'ERR'} | ${product.blocked_search_lanes.join(', ') || 'none'} |`
+    `| ${product.name} | ${product.search_discovery_state} | ${product.robots.status || 'ERR'} | ${product.fallback_search_lanes.join(', ') || 'none'} | ${product.blocked_search_lanes.join(', ') || 'none'} |`
   ),
   '',
   '## Repair queue',
