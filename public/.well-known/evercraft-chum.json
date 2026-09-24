@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.chum.v2",
+  "schema": "evercraft.chum.v3",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
   "status": "portfolio_distribution_control_plane",
@@ -34,7 +34,9 @@
     "discovery_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json",
     "agent_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-directory.json",
     "public_mirror": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json",
-    "structured_data": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/schema.jsonld"
+    "structured_data": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/schema.jsonld",
+    "pain_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
+    "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt"
   },
   "verified_crawler_controls": [
     {
@@ -54,7 +56,8 @@
     "surface_readiness": "public endpoint and contract checks",
     "registry_presence": "Official MCP Registry plus external MCP handshake canaries",
     "provider_pickup": "receipt-backed brand-blind provider probes through authorized interfaces",
-    "conversion": "AI-originated attribution only after human-confirmed commercial flow"
+    "conversion": "AI-originated attribution only after human-confirmed commercial flow",
+    "brand_blind_routing": "deterministic pain-index build plus receipt-backed provider probes"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
