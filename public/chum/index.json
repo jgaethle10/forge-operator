@@ -203,5 +203,7 @@
       "registry_name": "io.github.jgaethle10/website-launch",
       "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
     }
-  ]
+  ],
+  "a2a_agent_card": "/.well-known/agent-card.json",
+  "universal_a2a": "/a2a"
 }

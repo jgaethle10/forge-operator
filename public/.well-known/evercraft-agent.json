@@ -21,7 +21,9 @@
     "revenue_router": "/api/revenue-watershed",
     "chum": "/.well-known/evercraft-chum.json",
     "pain_index": "/.well-known/evercraft-pain-index.json",
-    "pain_index_text": "/chum/pain-index.txt"
+    "pain_index_text": "/chum/pain-index.txt",
+    "a2a_agent_card": "/.well-known/agent-card.json",
+    "a2a_endpoint": "/a2a"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
@@ -46,6 +48,11 @@
       "provider": "OpenAI / ChatGPT Search",
       "robots_token": "OAI-SearchBot",
       "intent": "allow public search discovery"
+    },
+    {
+      "provider": "OpenAI / user-directed ChatGPT fetch",
+      "robots_token": "ChatGPT-User",
+      "intent": "allow user-directed retrieval; automatic Search inclusion is controlled by OAI-SearchBot"
     },
     {
       "provider": "Anthropic / Claude Search",

@@ -4,6 +4,8 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 ## Start here
 
+- A2A 1.0 agent card: /.well-known/agent-card.json
+- A2A pain router: POST /a2a (JSON-RPC method SendMessage)
 - Universal agent manifest: /.well-known/evercraft-agent.json
 - CHUM pain-first routing index: /.well-known/evercraft-pain-index.json
 - CHUM pain-first text index: /chum/pain-index.txt

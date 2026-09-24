@@ -40,6 +40,8 @@ High-signal examples:
 
 ## Machine-readable entry points
 
+- `/.well-known/agent-card.json` (A2A 1.0 public agent discovery)
+- `/a2a` (A2A JSON-RPC `SendMessage` pain router)
 - `/llms.txt`
 - `/llms-full.txt`
 - `/.well-known/evercraft-agent.json`

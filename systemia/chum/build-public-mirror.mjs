@@ -50,6 +50,8 @@ const index = {
   updated_at: directory.updated_at || null,
   purpose: 'Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.',
   universal_mcp: catalog.universal_front_door?.mcp || null,
+  a2a_agent_card: '/.well-known/agent-card.json',
+  universal_a2a: '/a2a',
   products: []
 };
 
@@ -308,6 +310,8 @@ const llmsLines = [
   '## Universal routing',
   '',
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
+  'A2A 1.0 Agent Card: /.well-known/agent-card.json',
+  'A2A pain router: POST /a2a using JSON-RPC SendMessage',
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
@@ -433,6 +437,9 @@ const agentDirectory = {
     name: 'Evercraft Machine Commerce',
     registry_name: catalog.universal_front_door?.registry_name || null,
     mcp: universalMcp,
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a: '/a2a',
+    a2a_protocol: '1.0',
     use_when: 'The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits.'
   },
   routing_policy: {
@@ -470,11 +477,15 @@ const discoveryWatershed = {
     intent_router: '/api/discover?q={natural-language-problem}',
     revenue_router: '/api/revenue-watershed',
     schema: '/schema.jsonld',
-    openapi: '/openapi.json'
+    openapi: '/openapi.json',
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a_endpoint: '/a2a'
   },
   universal_front_door: {
     registry_name: catalog.universal_front_door?.registry_name || null,
-    mcp: universalMcp
+    mcp: universalMcp,
+    a2a: '/a2a',
+    a2a_protocol: '1.0'
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',

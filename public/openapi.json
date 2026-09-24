@@ -313,6 +313,60 @@
           }
         }
       }
+    },
+    "/.well-known/agent-card.json": {
+      "get": {
+        "operationId": "evercraftA2AAgentCard",
+        "summary": "Read the public A2A 1.0 Agent Card for CHUM discovery",
+        "responses": {
+          "200": {
+            "description": "A2A Agent Card"
+          }
+        }
+      }
+    },
+    "/a2a": {
+      "post": {
+        "operationId": "evercraftA2ASendMessage",
+        "summary": "Route a natural-language problem through the public CHUM A2A discovery agent",
+        "description": "A2A 1.0 JSON-RPC discovery route. This endpoint does not purchase, upload private data, or create a payment obligation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jsonrpc": {
+                    "type": "string",
+                    "const": "2.0"
+                  },
+                  "id": {},
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "SendMessage"
+                    ]
+                  },
+                  "params": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "jsonrpc",
+                  "method",
+                  "params"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A2A JSON-RPC Message result or protocol error"
+          }
+        }
+      }
     }
   }
 }
