@@ -276,9 +276,9 @@ llmsLines.push(
   '- Private/admin topology remains private.',
   ''
 );
-const llmsFullText = llmsLines.join('\n');
-fs.writeFileSync('public/llms-full.txt', llmsFullText);
-fs.writeFileSync('llms-full.txt', llmsFullText);
+// build-llms-full.mjs owns public/llms-full.txt and root llms-full.txt.
+ // This compiler still assembles product metadata for agent/discovery surfaces,
+ // but must not narrow the full machine-offer + product-family directory.
 
 const agentDirectory = {
   schema: 'evercraft.agent-directory.v2',
@@ -381,7 +381,7 @@ fs.writeFileSync('public/schema.jsonld', JSON.stringify(schemaGraph, null, 2) + 
 console.log(JSON.stringify({
   watershed_compiled: true,
   products: agentProducts.length,
-  llms_full: 'public/llms-full.txt',
+  llms_full_owner: 'systemia/chum/build-llms-full.mjs',
   agent_directory: 'public/.well-known/evercraft-agent-directory.json',
   discovery_watershed: 'public/.well-known/evercraft-discovery.json',
   schema: 'public/schema.jsonld'
