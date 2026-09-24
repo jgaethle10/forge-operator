@@ -1,0 +1,34 @@
+name: Systemia capability runtime proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/organism/capability-runtime.mjs"
+      - "systemia/organism/capability-runtime.proof.mjs"
+      - "systemia/organism/goal-runtime.mjs"
+      - ".github/workflows/systemia-capability-runtime.yml"
+  push:
+    branches:
+      - main
+      - "systemia/**"
+    paths:
+      - "systemia/organism/capability-runtime.mjs"
+      - "systemia/organism/capability-runtime.proof.mjs"
+      - "systemia/organism/goal-runtime.mjs"
+      - ".github/workflows/systemia-capability-runtime.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run capability runtime proof
+        run: node systemia/organism/capability-runtime.proof.mjs
