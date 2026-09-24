@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "title": "Evercraft Machine Commerce",
+  "description": "Match natural-language needs to verified Evercraft offers and human-confirmed purchase paths.",
+  "version": "1.1.1",
+  "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    }
+  ]
+}

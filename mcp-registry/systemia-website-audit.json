@@ -3,12 +3,12 @@
   "name": "io.github.jgaethle10/systemia-website-audit",
   "title": "Systemia Website Audit",
   "description": "Website, local SEO, performance and conversion audits with human-confirmed checkout.",
-  "version": "1.0.0",
-  "websiteUrl": "https://systemiacommandcenters.com/",
+  "version": "1.0.1",
+  "websiteUrl": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://base44.app/api/apps/698cb6dd30475e7649f4fdcd/functions/auditAgentMcp"
+      "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
     }
   ]
 }

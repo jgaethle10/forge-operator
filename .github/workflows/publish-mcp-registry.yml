@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "mcp-registry/*.json"
+      - ".github/workflows/publish-mcp-registry.yml"
   workflow_dispatch:
     inputs:
       manifest:
@@ -57,6 +58,36 @@ jobs:
           set -euo pipefail
           curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
           ./mcp-publisher --help >/dev/null
+
+      - name: Validate changed manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r manifest; do
+            echo "Validating $manifest"
+            ./mcp-publisher validate "$manifest"
+          done < /tmp/mcp-manifests.txt
+
+      - name: Verify remote MCP handshakes
+        shell: bash
+        run: |
+          set -euo pipefail
+          PAYLOAD='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"evercraft-registry-publisher","version":"1.0"}}}'
+          while IFS= read -r manifest; do
+            NAME="$(jq -r '.name' "$manifest")"
+            URL="$(jq -r '.remotes[0].url // empty' "$manifest")"
+            if [[ -z "$URL" ]]; then
+              echo "No remote MCP URL in $manifest; skipping remote canary."
+              continue
+            fi
+            echo "Checking $NAME -> $URL"
+            BODY="$(curl -fsS --max-time 25 -X POST "$URL"               -H 'Content-Type: application/json'               -H 'Accept: application/json, text/event-stream'               --data "$PAYLOAD")"
+            printf '%s' "$BODY" | grep -q '"serverInfo"' || {
+              echo "MCP initialize did not return serverInfo for $NAME" >&2
+              printf '%s\n' "$BODY" >&2
+              exit 1
+            }
+          done < /tmp/mcp-manifests.txt
 
       - name: Authenticate with Official MCP Registry
         shell: bash
