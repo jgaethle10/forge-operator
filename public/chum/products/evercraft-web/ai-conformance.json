@@ -12,22 +12,20 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
+  "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-web",
   "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
-  "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
+  "authority": "public discovery and live-verified read-only public URL fetch through the neutral Evercraft Web MCP; search and browser automation remain separately held/gated",
   "human_confirmation_required": false,
   "boundaries": [
-    "registry publication is not proof that the remote MCP successfully executes Fetch",
-    "Evercraft Fetch must not be described as production-live until its external canary succeeds",
+    "public Fetch is live-verified by external MCP initialize, tools/list, successful public-page fetch, and private-target rejection canaries",
     "Evercraft Search remains held until independently verified",
-    "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
+    "browser automation remains behind Systemia runtime and authorization gates and is not represented as live through the public MCP",
+    "authenticated browsing requires explicit authorized profile state and credential isolation",
     "public discovery does not expose private Systemia topology or credentials",
-    "payment does not expand permissions",
-    "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
-    "search and browser automation remain held unless current runtime evidence says otherwise"
+    "payment does not expand permissions"
   ],
   "provider_behavior_state": "not_inferred_from_publication"
 }

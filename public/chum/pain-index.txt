@@ -992,7 +992,7 @@ Capability ID: product:evercraft-web
 Product key: evercraft-web
 Commercial state: product_contract
 Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+Public URL: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
 Use when the user means:
 - fetch and read a public URL with an AI agent

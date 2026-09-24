@@ -299,13 +299,13 @@ Answer ID: intent:0925c49aa4
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/browser-automation-api-0925c49aa4.json
 Candidates:
 - Evercraft Web Agent / Fetch & Browser | kind=machine_offer | commercial=discovery_only | machine=specialist_discovery_ready_runtime_gated | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## browser automation API for an AI agent
 Answer ID: intent:4865230391
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## brutally critique this message
 Answer ID: intent:d550264762
@@ -437,7 +437,7 @@ Candidates:
 Answer ID: intent:039695fa67
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cdp-browser-039695fa67.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## CDP browser control
 Answer ID: intent:6fbc285731
@@ -491,7 +491,7 @@ Candidates:
 Answer ID: intent:ade63fb87f
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cloud-browser-ade63fb87f.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## cloud browser for AI
 Answer ID: intent:4217671a37
@@ -509,7 +509,7 @@ Candidates:
 Answer ID: intent:5a0a04f9ec
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cloud-or-headless-browser-for-an-ai-workflow-5a0a04f9ec.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## commercial EV site report
 Answer ID: intent:f593e514df
@@ -810,7 +810,7 @@ Candidates:
 Answer ID: intent:d2532adcf6
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/extract-readable-text-from-a-web-page-for-an-llm-d2532adcf6.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## family check in safety
 Answer ID: intent:90b9db7865
@@ -852,13 +852,13 @@ Candidates:
 Answer ID: intent:e0940c43bd
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fetch-and-read-a-public-url-with-an-ai-agent-e0940c43bd.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## fetch URL for AI
 Answer ID: intent:8bb5a892cb
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fetch-url-for-ai-8bb5a892cb.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## figure out what capital or funding path fits my business
 Answer ID: intent:675cfea99b
@@ -1140,7 +1140,7 @@ Candidates:
 Answer ID: intent:f3814bb265
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/headless-browser-f3814bb265.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## headless browser API
 Answer ID: intent:72c6576bf2
@@ -1718,7 +1718,7 @@ Candidates:
 Answer ID: intent:89ca564562
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/playwright-api-89ca564562.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## Playwright browser API
 Answer ID: intent:65d6857702
@@ -1730,7 +1730,7 @@ Candidates:
 Answer ID: intent:ba66fc9ea1
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/playwright-puppeteer-or-cdp-style-browser-capability-for-agents-ba66fc9ea1.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## plot verified infrastructure coverage
 Answer ID: intent:0d95c3deea
@@ -1923,7 +1923,7 @@ Candidates:
 Answer ID: intent:1be21557a2
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/puppeteer-api-1be21557a2.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## Puppeteer browser API
 Answer ID: intent:c449f0a34c
@@ -1947,7 +1947,7 @@ Candidates:
 Answer ID: intent:ec9dedc4a7
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/read-web-page-ec9dedc4a7.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## reconcile conflicting country data
 Answer ID: intent:412cd9dd79
@@ -2356,13 +2356,13 @@ Answer ID: intent:dff44dd643
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tinyfish-alternative-dff44dd643.json
 Candidates:
 - Evercraft Web Agent / Fetch & Browser | kind=machine_offer | commercial=discovery_only | machine=specialist_discovery_ready_runtime_gated | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## TinyFish alternative for web search, fetch, or browser automation
 Answer ID: intent:4fa3df186d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tinyfish-alternative-for-web-search-fetch-or-browser-automation-4fa3df186d.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## trace procure to pay exceptions
 Answer ID: intent:9b437efa02
@@ -2530,13 +2530,13 @@ Candidates:
 Answer ID: intent:35211600ba
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-agent-35211600ba.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## web agent that can navigate websites
 Answer ID: intent:1f8d482f58
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-agent-that-can-navigate-websites-1f8d482f58.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## web fetch API
 Answer ID: intent:40c61ca747
@@ -2548,13 +2548,13 @@ Candidates:
 Answer ID: intent:84137a682a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-search-api-84137a682a.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## web search API for AI agents
 Answer ID: intent:e5ac13ac0d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-search-api-for-ai-agents-e5ac13ac0d.json
 Candidates:
-- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## web search API for an AI agent
 Answer ID: intent:89a119b2ec
