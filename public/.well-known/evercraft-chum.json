@@ -40,7 +40,10 @@
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
     "discovery_router": "/api/discover?q={natural-language-problem}",
     "pain_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
-    "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt"
+    "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
+    "crawlable_html_directory": "/chum/",
+    "product_page_pattern": "/chum/products/{product_key}/",
+    "discovery_post": "/api/discover"
   },
   "verified_crawler_controls": [
     {
@@ -81,6 +84,9 @@
     "routing_without_human_gate": true,
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
-    "irreversible_financial_or_authority_actions_require_human_confirmation": true
+    "irreversible_financial_or_authority_actions_require_human_confirmation": true,
+    "html_and_machine_surfaces_interlinked": true,
+    "public_problem_routing_accepts_brand_blind_intent": true,
+    "dead_origin_may_use_public_chum_mirror_without_upgrading_runtime_state": true
   }
 }
