@@ -6,6 +6,15 @@ const directory = readJson('public/.well-known/evercraft-products.json');
 const conformance = readJson('conformance/products.json');
 const catalog = readJson('registry/catalog.json');
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json');
+const interfaces = readJson('public/.well-known/evercraft-agent-interfaces.json');
+const verifiedRegistryNames = new Set(interfaces.official_mcp_registry_verified || []);
+const SAFE_MCP = 'https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp';
+const COMMERCE_MCP = 'https://findmypart.base44.app/functions/evercraftMachineCommerceMcp';
+const A2A_CARD = 'https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card';
+const A2A_ENDPOINT = 'https://findmypart.base44.app/functions/evercraftCapabilityA2A';
+const OPENAPI_SAFE = 'https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe';
+const OPENAPI_FULL = 'https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi';
+const GROK_MARKETPLACE = 'https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json';
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
@@ -20,7 +29,11 @@ const index = {
   provider: 'Evercraft LLC',
   updated_at: directory.updated_at || null,
   purpose: 'Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.',
-  universal_mcp: catalog.universal_front_door?.mcp || null,
+  universal_mcp: COMMERCE_MCP,
+  directory_safe_mcp: SAFE_MCP,
+  a2a_agent_card: A2A_CARD,
+  openapi_safe: OPENAPI_SAFE,
+  grok_marketplace: GROK_MARKETPLACE,
   products: []
 };
 
@@ -45,7 +58,8 @@ for (const product of directory.products || []) {
     boundaries: product.boundaries || [],
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
     mcp: registry?.mcp || null,
-    machine_commerce_mcp: catalog.universal_front_door?.mcp || null,
+    machine_commerce_mcp: COMMERCE_MCP,
+    registry_verified: verifiedRegistryNames.has(registry?.registry_name || conf?.mcp_registry?.name || ''),
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -75,8 +89,8 @@ for (const product of directory.products || []) {
     '',
     `Product key: ${key}`,
     `Canonical product: ${product.canonical_url}`,
-    discovery.registry_name ? `Official MCP Registry: ${discovery.registry_name}` : null,
-    discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
+    discovery.registry_name && discovery.registry_verified ? `Verified Official MCP Registry: ${discovery.registry_name}` : null,
+    discovery.mcp ? `Direct MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
     '',
@@ -127,7 +141,7 @@ console.log(JSON.stringify({ products: index.products.length, output: 'public/ch
 // A product enters once through evercraft-products.json, then CHUM fans it out without
 // claiming invocation, sale, payment, or authority that the source records do not declare.
 
-const universalMcp = catalog.universal_front_door?.mcp || null;
+const universalMcp = COMMERCE_MCP;
 const rawBase = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main';
 
 const llmsLines = [
@@ -138,7 +152,13 @@ const llmsLines = [
   '',
   '## Universal routing',
   '',
-  `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
+  `Directory-safe MCP: ${SAFE_MCP}`,
+  `Machine Commerce MCP: ${universalMcp}`,
+  `A2A Agent Card: ${A2A_CARD}`,
+  `A2A endpoint: ${A2A_ENDPOINT}`,
+  `Read-only OpenAPI: ${OPENAPI_SAFE}`,
+  `Full OpenAPI: ${OPENAPI_FULL}`,
+  `Direct Grok marketplace: ${GROK_MARKETPLACE}`,
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
@@ -203,7 +223,7 @@ for (const product of directory.products || []) {
   llmsLines.push(`Product key: ${key}`);
   llmsLines.push(`Canonical: ${product.canonical_url}`);
   llmsLines.push(`Machine state: ${invocation.mode}`);
-  if (invocation.registry_name) llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
+  if (invocation.registry_name && verifiedRegistryNames.has(invocation.registry_name)) llmsLines.push(`Verified Official MCP Registry: ${invocation.registry_name}`);
   if (invocation.url) llmsLines.push(`Invocation: ${invocation.url}`);
   llmsLines.push(`Discovery: ${mirrorBase}/ai-discovery.json`);
   llmsLines.push(`AI conformance: ${mirrorBase}/ai-conformance.json`);
@@ -221,7 +241,7 @@ for (const product of directory.products || []) {
     class: product.class,
     canonical_url: product.canonical_url,
     intents: product.intents || [],
-    invocation,
+    invocation: { ...invocation, registry_verified: verifiedRegistryNames.has(invocation.registry_name || '') },
     llms_url: `${mirrorBase}/llms.txt`,
     discovery_url: `${mirrorBase}/ai-discovery.json`,
     conformance_url: `${mirrorBase}/ai-conformance.json`,
@@ -242,6 +262,12 @@ for (const product of directory.products || []) {
 }
 
 llmsLines.push(
+  '## Verified Official MCP Registry listings',
+  '',
+  ...[...verifiedRegistryNames].sort().map((name) => `- ${name}`),
+  '',
+  'Do not infer Official MCP Registry publication for another specialist merely because it exposes a direct MCP endpoint.',
+  '',
   '## Commerce boundary',
   '',
   '- Discovery and matching create no payment obligation.',
@@ -301,11 +327,23 @@ const discoveryWatershed = {
     intent_router: '/api/discover?q={natural-language-problem}',
     revenue_router: '/api/revenue-watershed',
     schema: '/schema.jsonld',
-    openapi: '/openapi.json'
+    openapi: '/openapi.json',
+    directory_safe_mcp: SAFE_MCP,
+    machine_commerce_mcp: COMMERCE_MCP,
+    a2a_agent_card: A2A_CARD,
+    a2a_endpoint: A2A_ENDPOINT,
+    openapi_safe: OPENAPI_SAFE,
+    openapi_full: OPENAPI_FULL,
+    grok_marketplace: GROK_MARKETPLACE
   },
   universal_front_door: {
     registry_name: catalog.universal_front_door?.registry_name || null,
-    mcp: universalMcp
+    mcp: universalMcp,
+    directory_safe_mcp: SAFE_MCP,
+    a2a_agent_card: A2A_CARD,
+    openapi_safe: OPENAPI_SAFE,
+    openapi_full: OPENAPI_FULL,
+    grok_marketplace: GROK_MARKETPLACE
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',
