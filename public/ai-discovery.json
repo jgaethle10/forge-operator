@@ -22,7 +22,11 @@
     "chum_manifest": "/.well-known/evercraft-chum.json",
     "revenue_watershed": "/chum/revenue.json",
     "revenue_watershed_text": "/chum/revenue.txt",
-    "revenue_watershed_html": "/chum/revenue.html"
+    "revenue_watershed_html": "/chum/revenue.html",
+    "offer_index": "/chum/offers/index.json",
+    "offer_directory": "/chum/offers/index.html",
+    "pain_intents": "/chum/intents.json",
+    "capability_catalog": "https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md"
   },
   "universal_front_door": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
