@@ -19,14 +19,15 @@
       "canonical_url": "https://aliev.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
-      "openapi_url": "https://aliev.base44.app/openapi.json",
       "doorway_state": "source_build_green",
       "conformance_state": "reference_implementation",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://aliev.base44.app/llms.txt",
       "origin_conformance_url": "https://aliev.base44.app/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "openapi_state": "not_declared_until_independently_live_verified",
+      "openapi_note": "The previously declared root /openapi.json returned HTML rather than a verified OpenAPI document on the 2026-09-24 CHUM canary. AliEV discovery and invocation remain available through CHUM mirrors and the verified MCP."
     },
     {
       "product_key": "buildflow",
