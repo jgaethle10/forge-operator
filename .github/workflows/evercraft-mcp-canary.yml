@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: evercraft-mcp-external-canary-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   canary:
     runs-on: ubuntu-latest
