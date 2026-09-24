@@ -21,7 +21,12 @@
     "source_uses_base44_sdk": true,
     "legacy_gateway_present": true,
     "entity_schema_api_access": "inconsistent_or_unavailable",
-    "live_yard_runtime_verified": false
+    "live_yard_runtime_verified": false,
+    "legacy_baseline_checkpoint_created": true,
+    "legacy_baseline_build_pass": true,
+    "legacy_identity_boundary_test": "pass",
+    "legacy_edge_discovery_test": "pass",
+    "source_checkpoint_ref": "opaque:bcd9d3bd895f0a294539cc232901afea785a0b8f"
   },
   "migrate": [
     "collider_runtime_and_cycle_scheduler",
