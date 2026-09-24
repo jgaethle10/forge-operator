@@ -81,6 +81,72 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb' }));
+app.set('trust proxy', true);
+
+const discoverySitemapPaths = [
+  '/',
+  '/discover/',
+  '/discover/intents.json',
+  '/discover/intents.txt',
+  '/llms.txt',
+  '/llms-full.txt',
+  '/ai-discovery.json',
+  '/schema.jsonld',
+  '/openapi.json',
+  '/.well-known/evercraft-agent.json',
+  '/.well-known/evercraft-agent-directory.json',
+  '/.well-known/evercraft-agent-interfaces.json',
+  '/.well-known/evercraft-discovery.json',
+  '/.well-known/evercraft-products.json',
+  '/.well-known/evercraft-machine-catalog.json',
+  '/.well-known/evercraft-intents.json',
+  '/.well-known/evercraft-chum.json',
+  '/.well-known/evercraft-media-overflow.json',
+  '/.well-known/evercraft-capabilities.json',
+  '/chum/revenue.html',
+  '/chum/revenue.txt',
+  '/chum/revenue.json',
+];
+
+function requestOrigin(req: Request): string {
+  const configured = String(process.env.PUBLIC_BASE_URL || '').trim();
+  if (configured) {
+    try {
+      const parsed = new URL(configured);
+      if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+        return parsed.origin;
+      }
+    } catch {}
+  }
+  const host = String(req.get('host') || '').trim();
+  if (!host) return '';
+  return `${req.protocol}://${host}`;
+}
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  if (!origin) {
+    res.status(503).type('text/plain').send('Public origin unavailable.');
+    return;
+  }
+  const urls = discoverySitemapPaths
+    .map((pathname) => `  <url><loc>${origin}${pathname}</loc></url>`)
+    .join('\n');
+  res.type('application/xml').send(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`
+  );
+});
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const source = path.resolve(
+    __dirname,
+    isProd ? 'dist/robots.txt' : 'public/robots.txt'
+  );
+  const origin = requestOrigin(req);
+  const body = fs.readFileSync(source, 'utf8').trimEnd();
+  const sitemap = origin ? `\n\nSitemap: ${origin}/sitemap.xml\n` : '\n';
+  res.type('text/plain').send(body + sitemap);
+});
 
 function loadPublicMachineCatalog(): any {
   const file = path.resolve(
