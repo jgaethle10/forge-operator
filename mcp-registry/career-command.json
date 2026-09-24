@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/career-command",
+  "title": "Career Command",
+  "description": "AI interview practice and career preparation with user-controlled guidance.",
+  "version": "1.0.0",
+  "websiteUrl": "https://evercraft-career-command.base44.app/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://evercraft-career-command.base44.app/functions/careerMcp"
+    }
+  ]
+}
