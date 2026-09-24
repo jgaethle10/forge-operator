@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.attribution.v1",
+  "provider": "Evercraft LLC",
+  "updated_at": "2026-09-24",
+  "purpose": "Standard attribution fields for AI-originated Evercraft discovery, handoff and checkout preparation. Attribution is informational and never grants payment or action authority.",
+  "recommended_fields": {
+    "acquisition_source": "Provider or channel, for example chatgpt, claude, gemini, copilot, perplexity, grok, mcp, search, or chum.",
+    "distribution_source": "chum or another truthful distribution layer when accepted by the product gateway.",
+    "distribution_medium": "llm, mcp, ai_search, web_search, or direct.",
+    "campaign_key": "chum-llm-discovery-v1",
+    "referral_code": "Optional campaign or partner identifier. Use chum only where the product supports referral codes.",
+    "source_agent": "Calling agent or provider identity when supported.",
+    "source_session_ref": "Optional opaque, non-sensitive session or handoff reference.",
+    "referrer": "Public referring URL when available. Never place secrets, tokens or private conversation content here."
+  },
+  "chum_defaults": {
+    "distribution_source": "chum",
+    "distribution_medium": "llm",
+    "campaign_key": "chum-llm-discovery-v1"
+  },
+  "known_live_support": {
+    "aliev": ["distribution_source","distribution_medium","campaign_key","referral_code","referrer"],
+    "findmypart": ["acquisition_source","referral_code"],
+    "systemia-website-audit": ["acquisition_source","referral_code"],
+    "evercraft-rewards": ["source_agent","source_session_ref"]
+  },
+  "rules": [
+    "Do not fabricate a provider source. Use the actual calling provider/channel or omit the field.",
+    "Do not put private conversation text, credentials, auth tokens, or personal identifiers into attribution fields.",
+    "Attribution never means the user agreed to pay.",
+    "Checkout preparation still requires explicit human confirmation.",
+    "Checkout creation is not payment proof; provider verification remains authoritative."
+  ]
+}
