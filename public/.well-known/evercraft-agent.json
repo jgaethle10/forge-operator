@@ -9,13 +9,21 @@
     "forge_capabilities": "/.well-known/evercraft-capabilities.json",
     "registry_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "llms_full": "/llms-full.txt",
+    "discovery_watershed": "/.well-known/evercraft-discovery.json",
+    "agent_directory": "/.well-known/evercraft-agent-directory.json",
+    "chum_public_mirror": "/chum/index.json",
+    "structured_data": "/schema.jsonld"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
-    "human_confirmation_required_for_checkout_or_payment_obligation": true
+    "human_confirmation_required_for_checkout_or_payment_obligation": true,
+    "smallest_sufficient_capability": true,
+    "discovery_only_is_not_callable": true,
+    "callable_is_not_paid": true
   },
   "public_discovery_policy": {
     "public_commercial_surfaces": "intentionally discoverable",
