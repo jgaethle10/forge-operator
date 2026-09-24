@@ -4,6 +4,11 @@
   "updated_at": "2026-09-24",
   "purpose": "Public machine-readable front door for AI assistants and agents to discover Evercraft capabilities from a user's stated problem without prior brand knowledge.",
   "start_here": {
+    "intent_page": "/discover/",
+    "intent_directory": "/.well-known/evercraft-intents.json",
+    "intent_api": "/api/intents",
+    "live_problem_router": "/api/discover?q={natural-language-problem}",
+    "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "llms": "/llms.txt",
     "product_directory": "/.well-known/evercraft-products.json",
     "forge_capabilities": "/.well-known/evercraft-capabilities.json",
@@ -22,7 +27,7 @@
     "chum": "/.well-known/evercraft-chum.json"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Use the public intent directory or read-only capability-discovery MCP to understand the vocabulary, then match to the smallest relevant public capability. Use Machine Commerce only when commercial state or a human-confirmed paid continuation is actually relevant. Preserve stated limits and uncertainty.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true,
@@ -31,7 +36,8 @@
     "callable_is_not_paid": true,
     "fit_before_sale": true,
     "prefer_sell_now_only_after_fit": true,
-    "no_match_means_no_forced_evercraft_offer": true
+    "no_match_means_no_forced_evercraft_offer": true,
+    "read_only_discovery_before_commerce": true
   },
   "public_discovery_policy": {
     "public_commercial_surfaces": "intentionally discoverable",
