@@ -1,0 +1,168 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Evercraft Forge Operator Public API",
+    "version": "1.0.0",
+    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "forgeHealth",
+        "summary": "Check Forge runtime health",
+        "responses": {
+          "200": {
+            "description": "Healthy runtime"
+          }
+        }
+      }
+    },
+    "/api/capabilities": {
+      "get": {
+        "operationId": "forgeCapabilities",
+        "summary": "Read Forge and Evercraft public capability metadata",
+        "responses": {
+          "200": {
+            "description": "Capability metadata"
+          }
+        }
+      }
+    },
+    "/api/commercial": {
+      "get": {
+        "operationId": "forgeCommercialState",
+        "summary": "Read whether a human-confirmed commercial continuation is configured",
+        "responses": {
+          "200": {
+            "description": "Commercial state"
+          }
+        }
+      }
+    },
+    "/api/resolve/media-overflow": {
+      "post": {
+        "operationId": "resolveMediaOverflow",
+        "summary": "Resolve an AI media-processing limitation to a public continuation path",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mediaType": {
+                    "type": "string",
+                    "enum": [
+                      "video",
+                      "audio"
+                    ]
+                  },
+                  "assistantCanFullyProcess": {
+                    "type": "boolean"
+                  },
+                  "failureCode": {
+                    "type": "string"
+                  },
+                  "failureReason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "assistantCanFullyProcess",
+                  "failureCode"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Media overflow routing result"
+          }
+        }
+      }
+    },
+    "/api/forge": {
+      "post": {
+        "operationId": "forgeOperationsPlan",
+        "summary": "Generate a prioritized small-business operations plan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "businessProblem": {
+                    "type": "string"
+                  },
+                  "desiredOutcome": {
+                    "type": "string"
+                  },
+                  "businessContext": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "businessProblem",
+                  "desiredOutcome"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Forge report"
+          },
+          "429": {
+            "description": "Rate limit reached"
+          }
+        }
+      }
+    },
+    "/api/forge/deep-dive": {
+      "post": {
+        "operationId": "forgeImplementationBlueprint",
+        "summary": "Generate a deeper implementation blueprint for a selected operational action",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "actionTitle": {
+                    "type": "string"
+                  },
+                  "actionCategory": {
+                    "type": "string"
+                  },
+                  "context": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "actionTitle"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Implementation blueprint"
+          },
+          "429": {
+            "description": "Rate limit reached"
+          }
+        }
+      }
+    }
+  }
+}
