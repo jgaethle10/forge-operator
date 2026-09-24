@@ -9,6 +9,7 @@ on:
       - "conformance/**"
       - "registry/**"
       - "public/.well-known/**"
+      - "!public/.well-known/evercraft-machine-catalog.json"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
       - ".github/workflows/chum-watershed.yml"
@@ -16,7 +17,7 @@ on:
     - cron: "17 */6 * * *"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   watershed:
@@ -29,6 +30,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Refresh public Evercraft machine catalog
+        run: npm run chum:sync
 
       - name: Validate machine-discovery contracts
         run: |
@@ -54,8 +58,23 @@ jobs:
       - name: Run CHUM portfolio mesh
         run: npm run chum
 
+      - name: Commit changed public catalog snapshot
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add public/.well-known/evercraft-machine-catalog.json
+          if git diff --cached --quiet; then
+            echo "CHUM public catalog is already current."
+            exit 0
+          fi
+          git config user.name "Evercraft CHUM"
+          git config user.email "chum@users.noreply.github.com"
+          git commit -m "CHUM refresh public machine catalog"
+          git push origin HEAD:main
+
       - name: Announce updated central discovery surfaces
-        if: github.event_name != 'schedule'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'schedule'
         run: npm run chum:announce
 
       - name: Write watershed summary
