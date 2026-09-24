@@ -13,17 +13,6 @@
   ],
   "products": [
     {
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "class": "agent_commerce",
-      "canonical_url": "https://findmypart.base44.app/",
-      "llms_url": "https://findmypart.base44.app/llms.txt",
-      "conformance_url": "https://findmypart.base44.app/ai-conformance.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "reference_implementation",
-      "provider_behavior_state": "not_run"
-    },
-    {
       "product_key": "aliev",
       "name": "AliEV",
       "class": "evidence_aware_agent_commerce",
@@ -31,6 +20,136 @@
       "llms_url": "https://aliev.base44.app/llms.txt",
       "conformance_url": "https://aliev.base44.app/ai-conformance.json",
       "openapi_url": "https://aliev.base44.app/openapi.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "reference_implementation",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "career-command",
+      "name": "Evercraft Career Command",
+      "class": "agent_commerce",
+      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "llms_url": "https://evercraft-career-command.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/career-command",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "contractor-cloud",
+      "name": "Evercraft Contractor Cloud",
+      "class": "two_sided_marketplace_human_handoff",
+      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "llms_url": "https://evercraft-contractor-cloud-314d2197.base44.app/llms.txt",
+      "discovery_url": "https://evercraft-contractor-cloud-314d2197.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "name": "Evercraft Deck Capital Fit",
+      "class": "agent_commerce",
+      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "llms_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=llms",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/deck-capital-fit",
+        "version": "2.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "class": "agent_commerce",
+      "canonical_url": "https://event-wave.base44.app/",
+      "llms_url": "https://event-wave.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/eventwave",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "evercraft-network",
+      "name": "Evercraft Network",
+      "class": "bounded_membership_discovery",
+      "canonical_url": "https://network-control.base44.app/",
+      "llms_url": "https://network-control.base44.app/llms.txt",
+      "discovery_url": "https://network-control.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "class": "bounded_membership_discovery",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "llms_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
+      "doorway_state": "machine_commerce_live",
+      "conformance_state": "machine_commerce_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.1.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "evernest",
+      "name": "EverNest",
+      "class": "public_resource_discovery_only",
+      "canonical_url": "https://evernest-home.base44.app/",
+      "llms_url": "https://evernest-home.base44.app/llms.txt",
+      "discovery_url": "https://evernest-home.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "everystage",
+      "name": "EveryStage",
+      "class": "discovery_human_handoff",
+      "canonical_url": "https://every-stage.base44.app/product",
+      "llms_url": "https://every-stage.base44.app/llms.txt",
+      "discovery_url": "https://every-stage.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "faie",
+      "name": "FAIE",
+      "class": "evidence_aware_agent_commerce",
+      "canonical_url": "https://faie.base44.app/",
+      "llms_url": "https://faie.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/faie",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "class": "agent_commerce",
+      "canonical_url": "https://findmypart.base44.app/",
+      "llms_url": "https://findmypart.base44.app/llms.txt",
+      "conformance_url": "https://findmypart.base44.app/ai-conformance.json",
       "doorway_state": "source_build_green",
       "conformance_state": "reference_implementation",
       "provider_behavior_state": "not_run"
@@ -59,39 +178,6 @@
       "provider_observation_state": "negative_observations_recorded"
     },
     {
-      "product_key": "skyops-parking",
-      "name": "SkyOps Parking",
-      "class": "discovery_human_handoff",
-      "canonical_url": "https://skyops-parking.base44.app/",
-      "llms_url": "https://skyops-parking.base44.app/llms.txt",
-      "discovery_url": "https://skyops-parking.base44.app/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
-      "provider_behavior_state": "not_run"
-    },
-    {
-      "product_key": "everystage",
-      "name": "EveryStage",
-      "class": "discovery_human_handoff",
-      "canonical_url": "https://every-stage.base44.app/product",
-      "llms_url": "https://every-stage.base44.app/llms.txt",
-      "discovery_url": "https://every-stage.base44.app/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
-      "provider_behavior_state": "not_run"
-    },
-    {
-      "product_key": "contractor-cloud",
-      "name": "Evercraft Contractor Cloud",
-      "class": "two_sided_marketplace_human_handoff",
-      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
-      "llms_url": "https://evercraft-contractor-cloud-314d2197.base44.app/llms.txt",
-      "discovery_url": "https://evercraft-contractor-cloud-314d2197.base44.app/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
-      "provider_behavior_state": "not_run"
-    },
-    {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "class": "public_learning_discovery",
@@ -103,41 +189,26 @@
       "provider_behavior_state": "not_run"
     },
     {
-      "product_key": "evernest",
-      "name": "EverNest",
-      "class": "public_resource_discovery_only",
-      "canonical_url": "https://evernest-home.base44.app/",
-      "llms_url": "https://evernest-home.base44.app/llms.txt",
-      "discovery_url": "https://evernest-home.base44.app/ai-discovery.json",
-      "doorway_state": "source_build_green",
+      "product_key": "raven-nexus",
+      "name": "Raven Nexus",
+      "class": "pain_first_modular_safety_and_stability",
+      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "discovery_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "doorway_state": "live_verified",
       "conformance_state": "not_yet_propagated",
-      "provider_behavior_state": "not_run"
-    },
-    {
-      "product_key": "evercraft-network",
-      "name": "Evercraft Network",
-      "class": "bounded_membership_discovery",
-      "canonical_url": "https://network-control.base44.app/",
-      "llms_url": "https://network-control.base44.app/llms.txt",
-      "discovery_url": "https://network-control.base44.app/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
-      "provider_behavior_state": "not_run"
-    },
-    {
-      "product_key": "career-command",
-      "name": "Evercraft Career Command",
-      "class": "agent_commerce",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
-      "llms_url": "https://evercraft-career-command.base44.app/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
       "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/career-command",
-        "version": "1.0.0",
-        "publication_state": "published"
-      }
+      "public_web_discovery_state": "not_measured"
+    },
+    {
+      "product_key": "skyops-parking",
+      "name": "SkyOps Parking",
+      "class": "discovery_human_handoff",
+      "canonical_url": "https://skyops-parking.base44.app/",
+      "llms_url": "https://skyops-parking.base44.app/llms.txt",
+      "discovery_url": "https://skyops-parking.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
     },
     {
       "product_key": "systemia-website-audit",
@@ -155,21 +226,6 @@
       }
     },
     {
-      "product_key": "deck-capital-fit",
-      "name": "Evercraft Deck Capital Fit",
-      "class": "agent_commerce",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
-      "llms_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=llms",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/deck-capital-fit",
-        "version": "2.0.0",
-        "publication_state": "published"
-      }
-    },
-    {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
       "class": "agent_commerce",
@@ -181,51 +237,6 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/website-launch",
         "version": "1.0.0",
-        "publication_state": "published"
-      }
-    },
-    {
-      "product_key": "faie",
-      "name": "FAIE",
-      "class": "evidence_aware_agent_commerce",
-      "canonical_url": "https://faie.base44.app/",
-      "llms_url": "https://faie.base44.app/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/faie",
-        "version": "1.0.0",
-        "publication_state": "published"
-      }
-    },
-    {
-      "product_key": "eventwave",
-      "name": "EventWave",
-      "class": "agent_commerce",
-      "canonical_url": "https://event-wave.base44.app/",
-      "llms_url": "https://event-wave.base44.app/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/eventwave",
-        "version": "1.0.0",
-        "publication_state": "published"
-      }
-    },
-    {
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "class": "bounded_membership_discovery",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-      "llms_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "machine_commerce_live",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "version": "1.1.0",
         "publication_state": "published"
       }
     }
