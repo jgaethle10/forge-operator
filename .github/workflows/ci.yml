@@ -65,20 +65,43 @@ jobs:
 
           curl --fail --silent http://127.0.0.1:3000/api/health | tee /tmp/health.json
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
+          curl --fail --silent http://127.0.0.1:3000/api/intents | tee /tmp/intents.json
+          curl --fail --silent 'http://127.0.0.1:3000/api/discover?q=my%20website%20gets%20traffic%20but%20nobody%20contacts%20us' | tee /tmp/discover.json
+          curl --fail --silent http://127.0.0.1:3000/discover/ > /tmp/discover.html
+          curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-intents.json > /tmp/intent-manifest.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
+          curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
+          curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
 
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
+          const intents = JSON.parse(fs.readFileSync('/tmp/intents.json','utf8'));
+          const discover = JSON.parse(fs.readFileSync('/tmp/discover.json','utf8'));
+          const intentManifest = JSON.parse(fs.readFileSync('/tmp/intent-manifest.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const discoverHtml = fs.readFileSync('/tmp/discover.html','utf8');
+          const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
+          const robots = fs.readFileSync('/tmp/robots.txt','utf8');
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
+          if (capabilities.discovery?.intentDirectory?.path !== '/api/intents') throw new Error('missing intent directory contract');
+          if (intents.schema !== 'evercraft.chum.intent-watershed.v1') throw new Error('unexpected intent graph schema');
+          if (Number(intents.counts?.intents) < 50) throw new Error('intent graph unexpectedly small');
+          if (intentManifest.counts?.intents !== intents.counts?.intents) throw new Error('intent API/manifest parity failed');
+          if (discover.ok !== true || !Array.isArray(discover.matches) || discover.matches.length < 1) throw new Error('brand-blind discovery smoke failed');
+          if (!discoverHtml.includes('Tell the AI the problem. It can find the door.')) throw new Error('crawlable problem page missing');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+          if (!robots.includes('OAI-SearchBot')) throw new Error('OAI-SearchBot crawl policy missing');
+          if (!robots.includes('Allow: /discover/')) throw new Error('discover crawl policy missing');
+          if (!robots.includes('Sitemap: https://discovery.example.test/sitemap.xml')) throw new Error('absolute sitemap declaration missing');
+          if (!sitemap.includes('<loc>https://discovery.example.test/discover/</loc>')) throw new Error('absolute discover sitemap URL missing');
+          if (sitemap.includes('<loc>/')) throw new Error('relative sitemap URL leaked');
           NODE
 
       - name: Show container logs on failure
