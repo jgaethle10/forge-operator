@@ -5,7 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
-import { rankOffers } from './systemia/chum/discovery-router.mjs';
+import { rankOffers, rankProducts } from './systemia/chum/discovery-router.mjs';
 
 dotenv.config();
 
@@ -82,12 +82,20 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
-function loadPublicMachineCatalog(): any {
+function loadPublicJson(name: string): any {
   const file = path.resolve(
     __dirname,
-    isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json'
+    isProd ? `dist/.well-known/${name}` : `public/.well-known/${name}`
   );
   return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function loadPublicMachineCatalog(): any {
+  return loadPublicJson('evercraft-machine-catalog.json');
+}
+
+function loadPublicProductDirectory(): any {
+  return loadPublicJson('evercraft-products.json');
 }
 
 function publicOfferProjection(offer: any) {
@@ -136,7 +144,12 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
-      intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
+      intentRouter: {
+        methods: ['GET', 'POST'],
+        path: '/api/discover',
+        queryExample: '/api/discover?q={natural-language-problem}',
+        compatibilityAlias: '/api/resolve',
+      },
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
       chumRevenueJson: '/chum/revenue.json',
@@ -203,14 +216,24 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
 });
 
 
-app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
-  const q = String(req.query.q || '').trim();
-  const requestedLimit = Number(req.query.limit || 5);
+function discoveryRequest(req: Request) {
+  const rawQuery = req.method === 'GET'
+    ? (req.query.q ?? req.query.query ?? req.query.problem ?? '')
+    : (req.body?.q ?? req.body?.query ?? req.body?.problem ?? req.body?.intent ?? '');
+  const rawLimit = req.method === 'GET' ? req.query.limit : req.body?.limit;
+  return {
+    query: String(rawQuery || '').trim().slice(0, 2000),
+    limit: Math.max(1, Math.min(Number(rawLimit || 5), 10)),
+  };
+}
 
-  if (!q) {
+function handleDiscovery(req: Request, res: Response) {
+  const { query, limit } = discoveryRequest(req);
+
+  if (!query) {
     res.status(400).json({
       ok: false,
-      error: 'Query parameter q is required.',
+      error: 'A natural-language query is required using q, query, problem, or intent.',
       example: '/api/discover?q=I%20need%20a%20discontinued%20tractor%20part',
     });
     return;
@@ -218,36 +241,60 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
 
   try {
     const catalog = loadPublicMachineCatalog();
-    const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
+    const directory = loadPublicProductDirectory();
+    const matches = rankOffers(catalog, query, { limit, minimumScore: 8 });
+    const productMatches = rankProducts(directory, query, { limit, minimumScore: 8 });
+    const topOffer = matches[0] || null;
+    const topProduct = productMatches[0] || null;
+
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
     res.json({
-      schema: 'evercraft.chum.intent-routing.v1',
+      schema: 'evercraft.chum.intent-routing.v2',
       ok: true,
-      query: q,
+      query,
       match_count: matches.length,
+      product_match_count: productMatches.length,
       doctrine: {
         match_problem_first: true,
+        sellable_machine_fit_preferred_when_truthful: true,
+        broader_public_product_discovery_preserved: true,
         discovery_creates_obligation: false,
+        private_authority_granted: false,
         human_confirmation_preserved: true,
         checkout_is_not_payment_proof: true,
       },
+      best_fit: topOffer
+        ? { lane: 'machine_offer', public_id: topOffer.public_id, name: topOffer.name, score: topOffer.score }
+        : topProduct
+          ? { lane: 'public_product', product_key: topProduct.product_key, name: topProduct.name, score: topProduct.score }
+          : null,
       matches,
-      fallback: matches.length
+      product_matches: productMatches,
+      fallback: matches.length || productMatches.length
         ? null
         : {
             message: 'No strong Evercraft match was found. Do not force a product recommendation.',
             directory: '/.well-known/evercraft-products.json',
             catalog: '/.well-known/evercraft-machine-catalog.json',
+            universal_agent_directory: '/.well-known/evercraft-agent-directory.json',
           },
     });
   } catch (error: any) {
     res.status(503).json({
       ok: false,
-      error: 'Public machine catalog is unavailable.',
+      error: 'Public Evercraft discovery catalogs are unavailable.',
       detail: error?.message || String(error),
     });
   }
-});
+}
+
+const discoveryLimit = rateLimit(240, 60 * 60 * 1000);
+app.get('/api/discover', discoveryLimit, handleDiscovery);
+app.post('/api/discover', discoveryLimit, handleDiscovery);
+// Compatibility alias so agents that look for a generic resolver do not need Evercraft-specific vocabulary.
+app.get('/api/resolve', discoveryLimit, handleDiscovery);
+app.post('/api/resolve', discoveryLimit, handleDiscovery);
 
 app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request, res: Response) => {
   try {
