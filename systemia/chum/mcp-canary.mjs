@@ -35,9 +35,22 @@ async function registryState(name) {
   if (!name) return { checked: false, present: null, reason: 'registry_name_missing' };
   try {
     const url = `https://registry.modelcontextprotocol.io/v0.1/servers?search=${encodeURIComponent(name)}&version=latest`;
-    const r = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.2' } });
-    const text = await r.text();
-    return { checked: true, ok: r.ok, status: r.status, present: r.ok && text.includes(name), bytes: Buffer.byteLength(text) };
+    const r = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.4' } });
+    const body = await r.json().catch(() => null);
+    const row = Array.isArray(body?.servers)
+      ? body.servers.find((x) => x?.server?.name === name)
+      : null;
+    const meta = row?._meta?.['io.modelcontextprotocol.registry/official'] || {};
+    return {
+      checked: true,
+      ok: r.ok,
+      status: r.status,
+      present: Boolean(row),
+      active: meta.status === 'active',
+      latest: Boolean(meta.isLatest),
+      version: row?.server?.version || null,
+      published_at: meta.publishedAt || null
+    };
   } catch (error) {
     return { checked: true, ok: false, present: null, reason: error instanceof Error ? error.message : String(error) };
   }
@@ -77,7 +90,11 @@ for (let i = 0; i < targets.length; i += CONCURRENCY) {
 }
 
 const failed = rows.filter((r) => !r.initialize.valid || !r.tools_list.valid);
-const registryMissing = rows.filter((r) => r.registry.checked && r.registry.ok && r.registry.present === false);
+const registryMissing = rows.filter((r) =>
+  r.registry.checked &&
+  r.registry.ok &&
+  (r.registry.present !== true || r.registry.active !== true || r.registry.latest !== true)
+);
 const receipt = {
   schema: 'evercraft.chum.mcp-canary.v2',
   checked_at: new Date().toISOString(),
@@ -99,7 +116,7 @@ fs.writeFileSync('artifacts/chum/mcp-canary-latest.md', [
   '',
   '| Capability | MCP initialize | tools/list | Registry |',
   '|---|---|---|---|',
-  ...rows.map((r) => `| ${r.name} | ${r.initialize.valid ? 'pass' : 'FAIL'} | ${r.tools_list.valid ? 'pass' : 'FAIL'} | ${r.registry.present === true ? 'present' : r.registry.present === false ? 'MISSING' : 'unknown'} |`)
+  ...rows.map((r) => `| ${r.name} | ${r.initialize.valid ? 'pass' : 'FAIL'} | ${r.tools_list.valid ? 'pass' : 'FAIL'} | ${r.registry.present === true && r.registry.active === true && r.registry.latest === true ? `active/latest ${r.registry.version || ''}`.trim() : r.registry.present === false ? 'MISSING' : r.registry.active === false ? 'INACTIVE' : r.registry.latest === false ? 'NOT_LATEST' : 'unknown'} |`)
 ].join('\n') + '\n');
 
 console.log(JSON.stringify({ targets: receipt.targets, failed_mcp: receipt.failed_mcp, registry_missing: receipt.registry_missing }));

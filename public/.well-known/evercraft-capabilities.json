@@ -26,7 +26,11 @@
     "firstPartyRouter": {
       "method": "POST",
       "path": "/api/route-capability"
-    }
+    },
+    "chum": "/.well-known/evercraft-chum.json",
+    "liveMachineCatalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
+    "livePainIndex": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
+    "universalMcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
   },
   "jobs": [
     "operations bottleneck diagnosis",
