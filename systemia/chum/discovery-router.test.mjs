@@ -1,7 +1,8 @@
 import fs from 'node:fs';
-import { rankOffers } from './discovery-router.mjs';
+import { rankDiscoveryCandidates } from './discovery-router.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+const directory = JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
 
 const cases = [
   ['discontinued tractor part donor salvage', 'findmypart-paid-hunt-v1'],
@@ -13,12 +14,13 @@ const cases = [
   ['escape vendor lock in migrate from no code app portability', 'foundry-app-escape-audit-v1'],
   ['internet outage continuity offline operations plan', 'site-survive-rapid-audit-v1'],
   ['promote my local event boost visibility', 'eventwave-paid-promotion-v1'],
-  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1']
+  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1'],
+  ['what is still running after I turned the automation off', 'product:evercraft-containment']
 ];
 
 let failed = 0;
 for (const [query, expected] of cases) {
-  const results = rankOffers(catalog, query, { limit: 3, minimumScore: 8 });
+  const results = rankDiscoveryCandidates(catalog, directory, query, { limit: 3, minimumScore: 8 });
   const top = results[0]?.public_id || null;
   if (top !== expected) {
     failed += 1;
@@ -28,7 +30,7 @@ for (const [query, expected] of cases) {
   }
 }
 
-const negative = rankOffers(catalog, 'add vintage film filters and stickers to my vacation photos', { limit: 3, minimumScore: 18 });
+const negative = rankDiscoveryCandidates(catalog, directory, 'add vintage film filters and stickers to my vacation photos', { limit: 3, minimumScore: 18 });
 if (negative.length) {
   failed += 1;
   console.error('FAIL negative control', negative.map(r => [r.public_id,r.score]));
