@@ -156,9 +156,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          FAILED=0
           while IFS= read -r manifest; do
-            ./mcp-publisher publish "$manifest"
+            echo "::group::Publish $manifest"
+            set +e
+            OUTPUT="$(./mcp-publisher publish "$manifest" 2>&1)"
+            CODE=$?
+            set -e
+            printf '%s\n' "$OUTPUT"
+            if [ "$CODE" -ne 0 ]; then
+              if printf '%s' "$OUTPUT" | grep -q 'cannot publish duplicate version'; then
+                echo "Already published at this version; continuing idempotently."
+              else
+                echo "Publish failed for $manifest" >&2
+                FAILED=1
+              fi
+            fi
+            echo "::endgroup::"
           done < /tmp/mcp-manifests.txt
+          [ "$FAILED" -eq 0 ]
 
       - name: Record ReleaseExecutionReceipt
         run: |
