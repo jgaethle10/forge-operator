@@ -129,6 +129,50 @@ app.get('/api/chum', (_req: Request, res: Response) => {
   });
 });
 
+app.post('/api/chum/campaign-plan', rateLimit(12, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const capabilityId = String(req.body?.capabilityId || '').trim();
+  const objective = String(req.body?.objective || 'Increase legitimate machine discovery and qualified demand').trim();
+  const requestedCapacity = Math.max(1, Math.min(24, Number(req.body?.requestedCapacity) || 8));
+
+  const capability = chumCapabilities.find((item) => item.id === capabilityId);
+  if (!capability) {
+    res.status(404).json({ success: false, error: 'capability_not_advertised' });
+    return;
+  }
+
+  res.json({
+    success: true,
+    mode: 'plan_only',
+    executionStarted: false,
+    objective,
+    capability,
+    sabanRequest: {
+      mission_request_key: `chum-growth-${capability.id}`,
+      objective: `Improve legitimate discovery for ${capability.name}: ${objective}`,
+      requested_capacity: requestedCapacity,
+      allowed_side_effects: [],
+      workstreams: [
+        'crawler and indexability verification',
+        'machine-readable capability coverage',
+        'public documentation and examples',
+        'integration and registry opportunity research',
+        'referral and failed-match analysis',
+        'claim and evidence QA',
+        'commercial path friction audit',
+        'independent review',
+      ],
+      acceptance_criteria: [
+        'No spam, fake endorsements, cloaking, or deceptive discovery tactics.',
+        'No outbound publication or account creation without the applicable authorization gate.',
+        'No invented pricing, payment state, customer demand, or execution evidence.',
+        'Private topology and credentials remain undisclosed.',
+        'Every proposed distribution action includes evidence and a measurable success signal.',
+      ],
+    },
+    next: 'Submit this bounded mission to the authenticated Systemia/Saban admission surface when that execution bridge is verified.',
+  });
+});
+
 app.post('/api/chum/match', rateLimit(60, 60 * 60 * 1000), (req: Request, res: Response) => {
   const need = String(req.body?.need || '').trim();
   if (!need) {
