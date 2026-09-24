@@ -171,6 +171,8 @@ for (const offer of output.offers) {
     pricing:offer.pricing,
     machine_state:offer.machine_state,
     public_url:offer.public_url,
+    attributed_handoff_url:offer.attributed_handoff_url,
+    attribution:offer.attribution,
     human_ui_required:offer.human_ui_required,
     confirmation:offer.confirmation,
     payment_authority:offer.payment_authority,
@@ -190,7 +192,8 @@ for (const offer of output.offers) {
     `Problem: ${offer.problem}`,
     `Pricing: ${offer.pricing}`,
     `Machine state: ${offer.machine_state}`,
-    `Public capability: ${offer.public_url}`,
+    `Canonical public capability: ${offer.public_url}`,
+    `AI-attributed handoff: ${offer.attributed_handoff_url || offer.public_url}`,
     '',
     'Use when the user says or means:',
     ...(offer.intent_terms || []).map((term) => `- ${term}`),
@@ -229,7 +232,7 @@ for (const offer of output.offers) {
     '</ul>',
     `<p><strong>Pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
     `<p><strong>Machine state:</strong> ${escapeHtml(offer.machine_state)}</p>`,
-    `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a></p>`,
+    `<p><a href="${escapeHtml(offer.attributed_handoff_url || offer.public_url)}">Open the public capability</a></p>`,
     '<p>Discovery creates no payment obligation. Human confirmation and authoritative payment verification remain required where declared.</p>',
     '</main></body></html>'
   ].join('\n');
