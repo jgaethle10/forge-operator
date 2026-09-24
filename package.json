@@ -34,7 +34,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:kaidance",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -46,7 +46,8 @@
     "saban:watershed": "npm run saban:discovery && npm run chum:all",
     "chum:capabilities": "node systemia/chum/build-capability-mirror.mjs",
     "test:chum-revenue": "npm run chum:revenue && node tests/chum-revenue-watershed.test.mjs",
-    "check:base44-exit": "node scripts/validate-base44-exit.mjs"
+    "check:base44-exit": "node scripts/validate-base44-exit.mjs",
+    "proof:kaidance": "node systemia/collider/proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
