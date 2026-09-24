@@ -76,8 +76,13 @@ export function buildPainIndex(){
       boundaries:product.boundaries||[],
       commercial_state:'product_contract',
       machine_state:specialistMcp?'specialist_mcp_declared':'discovery_only',
-      pricing:null,
-      offers:[],
+      pricing:String(product.commercial?.pricing||'')||null,
+      offers:product.commercial?.offer ? [{
+        name:String(product.commercial.offer),
+        price:String(product.commercial?.pricing||'')||null,
+        payment_state:String(product.commercial?.payment_state||'')||null
+      }] : [],
+      commercial:product.commercial||null,
       human_confirmation_required:Boolean(product.human_confirmation_required),
       confirmation:product.human_confirmation_required?'Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.':'No payment obligation is created by discovery.',
       payment_authority:null,
