@@ -70,6 +70,10 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-chum.json > /tmp/chum-manifest.json
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-offers.json > /tmp/offers.json
+          curl --fail --silent http://127.0.0.1:3000/llms-full.txt > /tmp/llms-full.txt
+          curl --fail --silent http://127.0.0.1:3000/openapi.json > /tmp/openapi.json
+          curl --fail --silent http://127.0.0.1:3000/schema.jsonld > /tmp/schema.jsonld
+          curl --fail --silent http://127.0.0.1:3000/ai-discovery.html > /tmp/ai-discovery.html
           curl --fail --silent http://127.0.0.1:3000/chum/health > /tmp/chum-health.json
           curl --fail --silent --get --data-urlencode "q=roast my bio" http://127.0.0.1:3000/chum/resolve > /tmp/chum-roasted.json
           curl --fail --silent --get --data-urlencode "q=find a discontinued tractor part" http://127.0.0.1:3000/chum/resolve > /tmp/chum-part.json
@@ -82,6 +86,10 @@ jobs:
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
           const chumManifest = JSON.parse(fs.readFileSync('/tmp/chum-manifest.json','utf8'));
           const offers = JSON.parse(fs.readFileSync('/tmp/offers.json','utf8'));
+          const openapi = JSON.parse(fs.readFileSync('/tmp/openapi.json','utf8'));
+          const jsonld = JSON.parse(fs.readFileSync('/tmp/schema.jsonld','utf8'));
+          const llmsFull = fs.readFileSync('/tmp/llms-full.txt','utf8');
+          const aiDiscovery = fs.readFileSync('/tmp/ai-discovery.html','utf8');
           const chumHealth = JSON.parse(fs.readFileSync('/tmp/chum-health.json','utf8'));
           const roasted = JSON.parse(fs.readFileSync('/tmp/chum-roasted.json','utf8'));
           const part = JSON.parse(fs.readFileSync('/tmp/chum-part.json','utf8'));
@@ -94,6 +102,10 @@ jobs:
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
           if (chumManifest.schema !== 'evercraft.chum.discovery.v1') throw new Error('CHUM manifest missing');
           if (offers.schema !== 'evercraft.public-offers.v1') throw new Error('public offers catalog missing');
+          if (openapi.openapi !== '3.1.0' || !openapi.paths?.['/chum/resolve']) throw new Error('CHUM OpenAPI missing');
+          if (!Array.isArray(jsonld['@graph']) || !jsonld['@graph'].some((x) => x.name === 'CHUM')) throw new Error('CHUM JSON-LD missing');
+          if (!llmsFull.includes('Evercraft public AI discovery index')) throw new Error('llms-full missing');
+          if (!aiDiscovery.includes('Evercraft AI Discovery')) throw new Error('AI discovery page missing');
           if (!Array.isArray(offers.offers) || offers.offers.length < 11) throw new Error('expected current sell-now offer catalog');
           if (chumHealth.ok !== true || chumHealth.service !== 'CHUM') throw new Error('CHUM health failed');
           if (chumHealth.sell_now_offer_count < 11) throw new Error('CHUM sell-now count is stale');
