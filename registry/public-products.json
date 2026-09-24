@@ -103,13 +103,13 @@
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
       "class": "ai_web_fetch_search_browser_infrastructure",
-      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
       "github_record": "./evercraft-web/README.md",
       "llms": "./evercraft-web/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "invocation": {
         "mode": "mcp",
-        "url": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp"
+        "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
       }
     },
     {
