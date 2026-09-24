@@ -109,3 +109,20 @@ for (const manifestPath of findServerManifests('registry')) {
 if (process.exitCode) throw new Error('AI conformance registry validation failed');
 
 console.log(`AI CONFORMANCE REGISTRY PASS: ${registry.products.length} products indexed and publicly routable`);
+
+
+// CHUM brand-blind intent doorway must remain complete and machine-readable.
+const intentMapPath = 'public/.well-known/evercraft-intents.json';
+if (!fs.existsSync(intentMapPath)) fail('missing public Evercraft intent map');
+else {
+  const intentMap = JSON.parse(fs.readFileSync(intentMapPath, 'utf8'));
+  const directory = JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json', 'utf8'));
+  if (intentMap.schema !== 'evercraft.intent-map.v1') fail('unexpected Evercraft intent map schema');
+  if (!intentMap.resolver?.get || !intentMap.resolver?.post) fail('intent map missing callable resolver');
+  if ((intentMap.products || []).length !== (directory.products || []).length) fail('intent map product count drift');
+  for (const product of intentMap.products || []) {
+    if (!product.product_key || !product.canonical_url || !Array.isArray(product.intents) || product.intents.length === 0) {
+      fail(`intent map product incomplete: ${product.product_key || 'unknown'}`);
+    }
+  }
+}
