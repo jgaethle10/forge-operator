@@ -32,7 +32,7 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalo
 Full portfolio discovery:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt
 
-A2A Agent Card:
+Agent discovery metadata (not counted as a verified A2A runtime until a live A2A handshake is receipt-backed):
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/agent-card.json
 
 Human-readable portfolio:
@@ -53,3 +53,18 @@ Direct specialist MCPs include AliEV, FindMyPart, Career Command, Systemia Websi
 Evercraft Rewards is a local-commerce capability exposed through Evercraft Machine Commerce. Use the `prepare_rewards_partner_enrollment` tool when a business wants discoverability, loyalty, cross-business rewards, or community partnership. It may prepare a reversible enrollment intent, but it does not activate a partner or create a payment obligation.
 
 Payment rule: discovery and matching create no payment obligation. Checkout preparation requires explicit human confirmation. Checkout creation is not proof of payment, revenue, entitlement or fulfillment.
+
+
+## Public web discovery doors
+
+When served by the Forge runtime:
+- /robots.txt — explicit crawl policy for major AI/search crawlers plus a wildcard public fallback
+- /sitemap.xml — public discovery sitemap
+- /llms.txt — compact LLM index
+- /llms-full.txt — full portfolio directory
+- /openapi.json — bounded public HTTP contract
+- /.well-known/evercraft-chum.json — CHUM machine manifest
+- /.well-known/evercraft-products.json — pain-to-product routing directory
+- /api/discovery — runtime discovery summary
+
+These are public discovery surfaces only. They do not expose private/admin topology or grant authority to perform consequential actions.
