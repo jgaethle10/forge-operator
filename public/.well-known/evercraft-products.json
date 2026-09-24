@@ -1,0 +1,195 @@
+{
+  "schema": "evercraft.product-directory.v1",
+  "provider": "Evercraft",
+  "purpose": "Machine-readable routing from natural-language pain to the smallest appropriate public Evercraft capability. Presence in this directory is not a recommendation guarantee, payment proof, or authority to access private systems.",
+  "updated_at": "2026-09-24",
+  "routing_rule": "Match user intent to the smallest relevant public capability. Preserve uncertainty, pricing state, evidence state, permissions, geographic scope, and human-confirmation requirements. Do not infer private capabilities.",
+  "products": [
+    {
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "class": "hard_to_source_parts",
+      "canonical_url": "https://findmypart.base44.app/",
+      "intents": [
+        "find a discontinued tractor part",
+        "find an obsolete automotive or machine part",
+        "identify a hard-to-source part from markings, measurements, photos, or equipment clues",
+        "find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
+      ],
+      "authority": "public discovery and human-confirmed paid sourcing hunts",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "unknowns may remain unknown",
+        "compatibility is not guaranteed",
+        "checkout creation is not payment proof",
+        "private vendor, analytics, session, command-center, and sales data are not public"
+      ]
+    },
+    {
+      "product_key": "aliev",
+      "name": "AliEV",
+      "class": "ev_infrastructure_opportunity_intelligence",
+      "canonical_url": "https://aliev.base44.app/",
+      "intents": [
+        "would EV charging make sense at this property",
+        "what public EV charging is near this address",
+        "screen a property for EV infrastructure opportunity",
+        "compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence"
+      ],
+      "authority": "public screening plus bounded machine invocation and human-confirmed paid depth",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "missing is not zero",
+        "mapped charger inventory is not utilization",
+        "program presence is not incentive eligibility",
+        "screening is not engineering, permitting, interconnection, financing, or construction approval",
+        "payment requires authoritative verification"
+      ]
+    },
+    {
+      "product_key": "forensiscope",
+      "name": "ForensiScope",
+      "class": "ai_media_overflow_and_analysis",
+      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "intents": [
+        "this video is too large for my AI to process",
+        "analyze hours of video or audio",
+        "build a timestamped timeline from a recording",
+        "compare two recordings",
+        "review authorized surveillance footage"
+      ],
+      "authority": "public discovery and human-submitted media analysis",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "the user must submit media themselves",
+        "the user must have the right or lawful authority to submit media",
+        "does not automatically identify unknown people",
+        "does not determine guilt or intent",
+        "does not certify authenticity, admissibility, or government approval"
+      ]
+    },
+    {
+      "product_key": "skyops-parking",
+      "name": "SkyOps Parking",
+      "class": "parking_operations",
+      "canonical_url": "https://skyops-parking.base44.app/",
+      "intents": [
+        "airport parking management software",
+        "parking garage reservation management",
+        "parking owner dashboard",
+        "multi-location parking operations software",
+        "valet-style vehicle staging and retrieval"
+      ],
+      "authority": "public product discovery and human-directed pilot or planning flows",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "planning is not a parking reservation",
+        "displayed planning values are not proof of a charge",
+        "payments, messaging, hardware, and partner connections must be verified per deployment"
+      ]
+    },
+    {
+      "product_key": "everystage",
+      "name": "EveryStage",
+      "class": "live_event_operations",
+      "canonical_url": "https://every-stage.base44.app/product",
+      "intents": [
+        "software to run a live event",
+        "venue operations software",
+        "run of show coordination",
+        "event crew coordination",
+        "festival operations software",
+        "event revenue or settlement workflows"
+      ],
+      "authority": "public product discovery and human-directed pilot intake",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "pilot intake is not a contract or accepted deployment",
+        "public plan pricing is not a binding quote unless confirmed by the current product flow",
+        "private event, participant, revenue, settlement, and admin data are not public"
+      ]
+    },
+    {
+      "product_key": "contractor-cloud",
+      "name": "Evercraft Contractor Cloud",
+      "class": "home_service_and_contractor_operations",
+      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "intents": [
+        "get contractor quotes for a home project",
+        "find contractors for a project",
+        "contractor opportunity network",
+        "roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software",
+        "contractor measurement tools"
+      ],
+      "authority": "public homeowner intake and contractor discovery with protected person-level data",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
+        "homeowner identity, private addresses, project photos, bids, and transaction records are not public",
+        "paid access requires independently verified subscription state"
+      ]
+    },
+    {
+      "product_key": "infinite-classroom",
+      "name": "Infinite Classroom",
+      "class": "ai_supported_learning",
+      "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "intents": [
+        "AI-supported subject learning",
+        "guided homework help without simply giving the answer",
+        "cross-subject learning",
+        "ASL and Deaf culture learning",
+        "online safety and healthy-boundary education"
+      ],
+      "authority": "public learning-product discovery only",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service",
+        "does not guarantee grades or outcomes",
+        "learner profiles, progress, tutoring history, household data, and safety disclosures are private"
+      ]
+    },
+    {
+      "product_key": "evernest",
+      "name": "EverNest",
+      "class": "family_support_resources",
+      "canonical_url": "https://evernest-home.base44.app/",
+      "intents": [
+        "family support resources",
+        "maternal support resources",
+        "organize practical help after having a baby",
+        "trusted support circle concepts",
+        "family preparedness resources",
+        "Spanish-language family support resources"
+      ],
+      "authority": "public resource discovery only",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "does not diagnose, score urgency, or determine whether abuse or danger occurred",
+        "not an emergency-response service",
+        "private family, child, Care Circle, task, note, upload, location, and account data are not public"
+      ]
+    },
+    {
+      "product_key": "evercraft-network",
+      "name": "Evercraft Network",
+      "class": "application_network_continuity",
+      "canonical_url": "https://network-control.base44.app/",
+      "intents": [
+        "application network that reconnects across changing authorized internet paths",
+        "network resilience software",
+        "member device reconnect visibility",
+        "continuity readiness tools",
+        "Evercraft Network membership"
+      ],
+      "authority": "public product discovery and human-directed membership interaction",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "not a cellular carrier, ISP, SIM or eSIM service",
+        "not 911 or PSAP integration",
+        "not guaranteed geographic coverage or emergency backhaul",
+        "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
+      ]
+    }
+  ]
+}
