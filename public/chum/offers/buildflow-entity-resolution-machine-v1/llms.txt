@@ -1,0 +1,36 @@
+# BuildFlow Business Entity Resolution
+
+Evercraft public capability ID: buildflow-entity-resolution-machine-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public handoff: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+
+## Use this capability when the user means
+
+- dedupe our vendor list safely
+- the same customer exists in multiple systems
+- match vendors without silently merging them
+- resolve duplicate suppliers across ERP exports
+- AI found uncertain business entity matches
+- reconcile customer or vendor identity conflicts
+
+## Problem
+
+A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.
+
+## Inputs
+
+Authenticated source records and mapping candidates.
+
+## Outputs
+
+MappingCandidate confidence, conflict flags, MappingDecision lineage and review work items.
+
+## Commercial truth
+
+- Pricing: No approved machine price/payment path was found. Do not auto-quote.
+- Human UI required: yes
+- Confirmation: Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.
+- Payment authority: No verified Evercraft Payments path.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

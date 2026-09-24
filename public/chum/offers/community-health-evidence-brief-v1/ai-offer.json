@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "community-health-evidence-brief-v1",
+  "name": "Community Health Evidence Brief",
+  "problem": "Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.",
+  "intent_terms": [
+    "community health data",
+    "county health evidence brief",
+    "public health grant research",
+    "health indicators for a community",
+    "public health planning data"
+  ],
+  "inputs": "Geography, planning/grant question, target population where appropriate and requested public indicators.",
+  "outputs": "Geography-specific public-health evidence brief with indicator provenance, gaps, comparisons and uncertainty.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $250-$2,500 per brief; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.",
+  "public_url": "https://systemiacommandcenters.com",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; brief-specific source verification required before fulfillment.",
+  "catalog_version": "2026-09-23",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/community-health-evidence-brief-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/community-health-evidence-brief-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/community-health-evidence-brief-v1/index.html"
+  }
+}

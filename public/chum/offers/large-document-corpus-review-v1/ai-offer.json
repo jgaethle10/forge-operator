@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "large-document-corpus-review-v1",
+  "name": "Large Document Corpus Review Service",
+  "problem": "Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.",
+  "intent_terms": [
+    "review thousands of documents",
+    "analyze a document dump",
+    "deduplicate a large document set",
+    "map a public records production",
+    "large legal document review"
+  ],
+  "inputs": "Public or owner-authorized corpus, review question/scope and applicable privilege/privacy boundaries.",
+  "outputs": "Corpus ingestion, subdocument mapping, deduplication, evidence index and review packets with provenance.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.",
+  "public_url": "https://systemiacommandcenters.com",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; upload/payment disabled pending rights/security verification.",
+  "catalog_version": "2026-09-23",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/large-document-corpus-review-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/large-document-corpus-review-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/large-document-corpus-review-v1/index.html"
+  }
+}

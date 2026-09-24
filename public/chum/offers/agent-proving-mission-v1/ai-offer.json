@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "agent-proving-mission-v1",
+  "name": "Agent Proving Mission",
+  "problem": "Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.",
+  "intent_terms": [
+    "test my AI agent",
+    "evaluate an AI agent",
+    "prove agent reliability",
+    "agent benchmark mission",
+    "AI worker competency test"
+  ],
+  "inputs": "Agent/workflow under test, bounded mission, success criteria, allowed tools/environment and authority boundaries.",
+  "outputs": "Mission criteria, observed attempts, competency evidence, decision traces and concise pass/gap report.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.",
+  "public_url": "https://systemiacommandcenters.com",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; paid execution verification pending.",
+  "catalog_version": "2026-09-23",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/agent-proving-mission-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/agent-proving-mission-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/agent-proving-mission-v1/index.html"
+  }
+}
