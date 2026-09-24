@@ -1,11 +1,23 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
-const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+const readJson = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8'));
 const fail = (message) => {
   console.error('FAIL:', message);
   process.exitCode = 1;
 };
 const pass = (message) => console.log('PASS:', message);
+
+const findServerManifests = (root) => {
+  const results = [];
+  if (!fs.existsSync(root)) return results;
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const fullPath = path.join(root, entry.name);
+    if (entry.isDirectory()) results.push(...findServerManifests(fullPath));
+    else if (entry.isFile() && entry.name === 'server.json') results.push(fullPath);
+  }
+  return results.sort();
+};
 
 const registry = readJson('conformance/products.json');
 const binding = readJson('registry/evercraft-machine-commerce/conformance.json');
@@ -74,6 +86,24 @@ for (const product of publicDirectory.products || []) {
   if (!String(product.canonical_url || '').startsWith('https://')) fail(`${product.product_key} public canonical URL is invalid`);
   if (!product.authority) fail(`${product.product_key} missing machine authority statement`);
   if (!Array.isArray(product.boundaries) || product.boundaries.length === 0) fail(`${product.product_key} missing machine boundaries`);
+}
+
+for (const manifestPath of findServerManifests('registry')) {
+  let manifest;
+  try {
+    manifest = readJson(manifestPath);
+  } catch (error) {
+    fail(`${manifestPath} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+    continue;
+  }
+
+  const description = String(manifest.description || '');
+  if (!description) fail(`${manifestPath} is missing description`);
+  else if (description.length > 100) fail(`${manifestPath} description exceeds MCP Registry 100-character limit (${description.length})`);
+  else pass(`${manifestPath} description length ${description.length}/100`);
+
+  if (!String(manifest.name || '').startsWith('io.github.')) fail(`${manifestPath} has invalid MCP Registry name`);
+  if (!String(manifest.version || '').trim()) fail(`${manifestPath} is missing version`);
 }
 
 if (process.exitCode) throw new Error('AI conformance registry validation failed');
