@@ -22,7 +22,16 @@
     "commercial_path": "/api/commercial",
     "public_discovery": [
       "/llms.txt",
-      "/.well-known/evercraft-capabilities.json"
+      "/.well-known/evercraft-capabilities.json",
+      "/llms-full.txt",
+      "/ai-discovery.json",
+      "/openapi.json",
+      "/chum/",
+      "/.well-known/evercraft-discovery.json",
+      "/.well-known/evercraft-products.json",
+      "/.well-known/evercraft-agent-directory.json",
+      "/.well-known/evercraft-chum.json",
+      "/api/resolve"
     ]
   },
   "environment": {
