@@ -1,0 +1,23 @@
+{
+  "schema": "evercraft.ai-discovery.v1",
+  "provider": "Evercraft LLC",
+  "updated_at": "2026-09-24",
+  "purpose": "Single public machine map from natural-language user pain to Evercraft discovery, verified interfaces and bounded commercial continuation.",
+  "start_here": {
+    "agent": "/.well-known/evercraft-agent.json",
+    "interfaces": "/.well-known/evercraft-agent-interfaces.json",
+    "products": "/.well-known/evercraft-products.json",
+    "machine_catalog": "/.well-known/evercraft-machine-catalog.json",
+    "chum": "/.well-known/evercraft-chum.json",
+    "llms": "/llms.txt",
+    "llms_full": "/llms-full.txt",
+    "openapi": "/openapi.json",
+    "chum_public_mirror": "/chum/index.json"
+  },
+  "invocation": {
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "interfaces_evidence": "/.well-known/evercraft-agent-interfaces.json"
+  },
+  "routing_rule": "Start from the user's problem, route to the smallest relevant public capability, preserve evidence/permission/payment boundaries, and never infer provider pickup from publication alone."
+}
