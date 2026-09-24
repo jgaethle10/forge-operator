@@ -46,7 +46,6 @@ jobs:
       - name: Regenerate CHUM public mirrors
         run: |
           npm run chum:sync
-          npm run chum:llms
           npm run chum:revenue
           npm run chum:mirror
 
