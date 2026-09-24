@@ -1,0 +1,35 @@
+# RIVET EV Charging Site Underwriting Package
+
+Evercraft public capability ID: rivet-site-underwriting-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://systemiacommandcenters.com
+
+## Use this when
+
+- underwrite an EV charging site
+- EV charger investment report
+- charging site economics
+- evaluate this address for EV charging
+- EV charging diligence
+
+## Problem
+
+A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.
+
+## Inputs
+
+Site/address, intended project context, buyer decision question and authorized site-specific inputs.
+
+## Outputs
+
+Address-specific siting and underwriting package with evidence-state labels, economics, competition, power/incentive context and next diligence.
+
+## Commercial truth
+
+- Pricing: Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
+- Human UI required: no
+- Confirmation: Discovery may be automatic. Payment, engineering representations and commitments require explicit confirmation/approval.
+- Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

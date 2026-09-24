@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "globalstat-country-intelligence-machine-v1",
+  "name": "Country / Domain Intelligence Slice",
+  "problem": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
+  "intent_terms": [
+    "compare these countries on this metric",
+    "give me sourced country intelligence",
+    "which countries lead on this domain and why",
+    "show me the evidence behind this country score",
+    "reconcile conflicting country data",
+    "country benchmark with sources"
+  ],
+  "inputs": "One or more countries plus a domain/question; optional metric slugs, comparison set and as-of date.",
+  "outputs": "Sourced observations, evidence state/confidence, source URLs, reconciliation findings, methodology context, signals and limitations.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.",
+  "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path for this capability.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "catalog_version": "2026-09-23.12",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/globalstat-country-intelligence-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/globalstat-country-intelligence-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/globalstat-country-intelligence-machine-v1/index.html"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "buildflow-process-audit-machine-v1",
+  "name": "Business Process Pattern Audit",
+  "problem": "A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.",
+  "intent_terms": [
+    "map how our process actually works",
+    "find bottlenecks in this business workflow",
+    "analyze our purchase approval process",
+    "reconstruct our process from logs",
+    "where are exceptions slowing us down",
+    "audit our procure to pay workflow",
+    "compare the real workflow to company policy",
+    "process mining from operational history"
+  ],
+  "inputs": "Tenant-scoped process observations/events and optional process/source-system scope.",
+  "outputs": "Candidate step sequence, sample size, median duration, exception rate, confidence, evidence refs and review state. No policy change or external action.",
+  "commercial_state": "verification_required",
+  "machine_state": "human_auth_handoff",
+  "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
+  "offers": [],
+  "human_ui_required": true,
+  "confirmation": "Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.",
+  "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path.",
+  "invocation_status": "SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.",
+  "catalog_version": "2026-09-24.1",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/buildflow-process-audit-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/buildflow-process-audit-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/buildflow-process-audit-machine-v1/index.html"
+  }
+}

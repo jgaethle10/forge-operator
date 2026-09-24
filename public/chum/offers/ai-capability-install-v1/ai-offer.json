@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "ai-capability-install-v1",
+  "name": "AI Capability Installation Package",
+  "problem": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
+  "intent_terms": [
+    "install an AI capability",
+    "add an agent tool to my system",
+    "deploy an AI workflow",
+    "version and verify an AI capability",
+    "add a safe AI tool"
+  ],
+  "inputs": "Authorized target environment, desired bounded capability, integration constraints and security/authority requirements.",
+  "outputs": "Versioned capability artifacts, execution contract, install verification receipt, health check and rollback path.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.",
+  "public_url": "https://systemiacommandcenters.com",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; environment-specific deployment/payment verification required.",
+  "catalog_version": "2026-09-23",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/ai-capability-install-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/ai-capability-install-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/ai-capability-install-v1/index.html"
+  }
+}

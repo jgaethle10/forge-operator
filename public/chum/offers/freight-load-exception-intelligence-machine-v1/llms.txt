@@ -1,0 +1,36 @@
+# Freight Load Exception Intelligence
+
+Evercraft public capability ID: freight-load-exception-intelligence-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+
+## Use this when
+
+- what is wrong with this load
+- audit this freight load for exceptions
+- check this carrier and load paperwork
+- find missing POD or rate mismatches
+- summarize freight risk on this shipment
+- what recoverable charges or detention issues exist
+
+## Problem
+
+A freight operator needs a compact operational picture of a load's exceptions, document gaps, carrier/compliance state and possible financial impact without manually reconciling several records.
+
+## Inputs
+
+Authorized organization scope plus load/freight context; optional documents, carrier, route, compliance and Foundry-derived freight signals.
+
+## Outputs
+
+Exception types/severity, estimated impact and recoverable amount when recorded, document/compliance state, risk flags, evidence refs, unknowns and review actions.
+
+## Commercial truth
+
+- Pricing: No approved machine price or payment path was verified. Do not auto-quote.
+- Human UI required: no
+- Confirmation: Analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment, invoice action or any other external/financial side effect.
+- Payment authority: No verified payment path for this capability.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

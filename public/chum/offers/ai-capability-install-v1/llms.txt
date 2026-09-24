@@ -1,0 +1,35 @@
+# AI Capability Installation Package
+
+Evercraft public capability ID: ai-capability-install-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://systemiacommandcenters.com
+
+## Use this when
+
+- install an AI capability
+- add an agent tool to my system
+- deploy an AI workflow
+- version and verify an AI capability
+- add a safe AI tool
+
+## Problem
+
+Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.
+
+## Inputs
+
+Authorized target environment, desired bounded capability, integration constraints and security/authority requirements.
+
+## Outputs
+
+Versioned capability artifacts, execution contract, install verification receipt, health check and rollback path.
+
+## Commercial truth
+
+- Pricing: Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.
+- Human UI required: no
+- Confirmation: Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.
+- Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

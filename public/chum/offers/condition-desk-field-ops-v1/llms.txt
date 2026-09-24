@@ -1,0 +1,36 @@
+# Condition Desk for Weather-Sensitive Field Operations
+
+Evercraft public capability ID: condition-desk-field-ops-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://systemiacommandcenters.com
+
+## Use this when
+
+- can my crews work tomorrow
+- weather go no-go for field crews
+- jobsite weather risk
+- roofing weather decision
+- construction weather operations
+- air quality work decision
+
+## Problem
+
+Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.
+
+## Inputs
+
+Locations, work type, customer-defined thresholds/tolerances and operating window.
+
+## Outputs
+
+Conditions and hazards evaluated against defined thresholds with source health and evidence snapshot.
+
+## Commercial truth
+
+- Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
+- Human UI required: no
+- Confirmation: Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.
+- Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "freight-load-exception-intelligence-machine-v1",
+  "name": "Freight Load Exception Intelligence",
+  "problem": "A freight operator needs a compact operational picture of a load's exceptions, document gaps, carrier/compliance state and possible financial impact without manually reconciling several records.",
+  "intent_terms": [
+    "what is wrong with this load",
+    "audit this freight load for exceptions",
+    "check this carrier and load paperwork",
+    "find missing POD or rate mismatches",
+    "summarize freight risk on this shipment",
+    "what recoverable charges or detention issues exist"
+  ],
+  "inputs": "Authorized organization scope plus load/freight context; optional documents, carrier, route, compliance and Foundry-derived freight signals.",
+  "outputs": "Exception types/severity, estimated impact and recoverable amount when recorded, document/compliance state, risk flags, evidence refs, unknowns and review actions.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved machine price or payment path was verified. Do not auto-quote.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment, invoice action or any other external/financial side effect.",
+  "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified payment path for this capability.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "catalog_version": "2026-09-23.12",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/freight-load-exception-intelligence-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/freight-load-exception-intelligence-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/freight-load-exception-intelligence-machine-v1/index.html"
+  }
+}

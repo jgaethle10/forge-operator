@@ -1,0 +1,39 @@
+# AliEV EV Site Opportunity Intelligence
+
+Evercraft public capability ID: aliev-site-opportunity-snapshot-v1
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
+Public handoff: https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
+## Use this when
+
+- is this site good for EV charging
+- EV charger site analysis
+- EV charging feasibility by address
+- what EV chargers are near this property
+- EV charger competition around this address
+- EV charging opportunity report
+- should I install EV chargers at this property
+- find EV charging opportunities in this market
+- commercial EV site report
+
+## Problem
+
+A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
+
+## Inputs
+
+Street address for public site screening. Paid-depth site reports use the same address context. Opportunity packs and territory feeds use an agreed market/territory.
+
+## Outputs
+
+Free source-backed address screen with nearby mapped charging context, evidence-state labels and source provenance; paid preliminary/full site reports; qualified opportunity packs; recurring territory opportunity intelligence.
+
+## Commercial truth
+
+- Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
+- Human UI required: yes
+- Confirmation: Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.
+- Payment authority: Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

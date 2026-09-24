@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "datafoundry-data-gap-audit-machine-v1",
+  "name": "Canonical Data Gap Audit",
+  "problem": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
+  "intent_terms": [
+    "audit this dataset for gaps",
+    "what data is missing for this decision",
+    "find provenance problems in this data",
+    "reconcile conflicting sources",
+    "where are our visibility gaps",
+    "design a plan to close these data gaps"
+  ],
+  "inputs": "Authorized dataset/domain plus decision question; optional geography, population scope, metric/subject and source refs.",
+  "outputs": "Explicit gaps and types, severity, evidence/confidence, affected decisions, source conflicts, collection options/effort, governance constraints and next actions.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.",
+  "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path for this specific audit.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "catalog_version": "2026-09-23.12",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/datafoundry-data-gap-audit-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/datafoundry-data-gap-audit-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/datafoundry-data-gap-audit-machine-v1/index.html"
+  }
+}

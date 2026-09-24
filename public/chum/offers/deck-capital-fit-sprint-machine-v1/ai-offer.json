@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "deck-capital-fit-sprint-machine-v1",
+  "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+  "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+  "intent_terms": [
+    "help me find funding for my business",
+    "which lenders or programs fit my business",
+    "build a lender ready deck",
+    "review my funding pitch",
+    "help me prepare for SBA financing",
+    "find capital options for this project",
+    "turn my business info into a funding deck",
+    "what am I missing before I seek funding"
+  ],
+  "inputs": "Company/project name, contact email and use of funds. Optional capital goal, website, business summary, existing pitch, revenue/profit/collateral context and timeline.",
+  "outputs": "Research summary, capital-readiness notes, 3-6 public-source provider/program candidates, requirements and evidence links, recommended audience and a 6-14 slide deck outline.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
+  "offers": [
+    {
+      "name": "Founding Capital Fit Sprint",
+      "price": "$49",
+      "billing": "one_time",
+      "limit": "first 20 paid cases",
+      "upgrade_credit": "$49"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.",
+  "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+  "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
+  "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
+  "catalog_version": "2026-09-23.15",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/deck-capital-fit-sprint-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/deck-capital-fit-sprint-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/deck-capital-fit-sprint-machine-v1/index.html"
+  }
+}
