@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/systemia-website-audit",
+  "title": "Systemia Website Audit",
+  "description": "Website, local SEO, performance and conversion audits with human-confirmed checkout.",
+  "version": "1.0.0",
+  "websiteUrl": "https://systemiacommandcenters.com/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://base44.app/api/apps/698cb6dd30475e7649f4fdcd/functions/auditAgentMcp"
+    }
+  ]
+}
