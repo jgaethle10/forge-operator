@@ -347,6 +347,66 @@
         "prepared enrollment creates no payment obligation",
         "directory publication and commercial activation require their own verified state"
       ]
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "class": "low_cost_text_pressure_test",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "intents": [
+        "roast my bio",
+        "roast my resume",
+        "tear apart this pitch",
+        "be brutally honest about this copy",
+        "roast my linkedin headline",
+        "roast this post",
+        "pressure test this copy"
+      ],
+      "authority": "public offer discovery and human-confirmed paid text critique",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "checkout requires explicit confirmation",
+        "paid output requires provider-verified payment",
+        "user-supplied text only"
+      ]
+    },
+    {
+      "product_key": "foundry-app-escape",
+      "name": "Evercraft Foundry App Escape Audit",
+      "class": "app_portability_and_vendor_lock_in_audit",
+      "canonical_url": "https://systemiacommandcenters.com",
+      "intents": [
+        "escape vendor lock-in",
+        "migrate from no-code",
+        "export an AI-built app",
+        "audit app portability"
+      ],
+      "authority": "public qualification for a read-only portability audit",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "quote-ready, not payment-ready",
+        "private source requires explicit authorization",
+        "no automatic migration or modification"
+      ]
+    },
+    {
+      "product_key": "site-survive",
+      "name": "Site-Survive Rapid Audit",
+      "class": "site_connectivity_and_continuity_audit",
+      "canonical_url": "https://systemiacommandcenters.com",
+      "intents": [
+        "business outage plan",
+        "internet outage continuity",
+        "site resilience audit",
+        "offline operations plan"
+      ],
+      "authority": "public qualification for continuity/resilience audit",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "quote-ready, not payment-ready",
+        "no safety guarantee",
+        "no automatic continuation into deeper audit"
+      ]
     }
   ]
 }
