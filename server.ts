@@ -87,6 +87,18 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+// CHUM attribution public CORS. Authentication still gates trusted ingestion.
+app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type, authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+  next();
+});
+
 function loadPublicMachineCatalog(): any {
   const file = path.resolve(
     __dirname,
@@ -274,6 +286,7 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
       attribution: {
         manifest: '/.well-known/evercraft-chum-attribution.json',
         referral_endpoint: '/api/chum/referral',
+        provider_identity_note: 'The provider field is caller-asserted unless a separate provider receipt verifies pickup.',
         note: 'A referral token measures an optional handoff. It creates no payment obligation and cannot prove payment.',
       },
       fallback: matches.length
@@ -328,6 +341,7 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
   res.json({
     schema: 'evercraft.chum.attribution.v1',
     configured: Boolean(chumAttributionSecret),
+    durableSinkConfigured: Boolean(chumAttributionSinkUrl),
     publicStages: PUBLIC_ATTRIBUTION_STAGES,
     referral: { method: 'POST', path: '/api/chum/referral' },
     publicEvent: { method: 'POST', path: '/api/chum/attribution/event' },
@@ -336,6 +350,7 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
       discoveryCreatesObligation: false,
       checkoutIsPayment: false,
       publicCallersCanAssertPayment: false,
+      providerClaimIsPickupProof: false,
       verifiedRevenueRequiresTrustedPaymentEvidence: true,
     },
   });
@@ -348,7 +363,7 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
   }
 
   const publicId = String(req.body?.publicId || '').trim();
-  const provider = String(req.body?.provider || 'unknown').trim().toLowerCase().slice(0, 64);
+  const providerClaim = String(req.body?.provider || 'unknown').trim().toLowerCase().slice(0, 64);
   const surface = String(req.body?.surface || 'assistant_handoff').trim().toLowerCase().slice(0, 64);
   const intent = String(req.body?.intent || '').slice(0, 2000);
 
@@ -362,7 +377,7 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
     const issued = issueReferralToken({
       productKey: offer.product_key || offer.public_id,
       publicId: offer.public_id,
-      provider,
+      providerClaim,
       surface,
       targetUrl: offer.public_url,
       intent,
@@ -376,7 +391,8 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       schema: 'evercraft.chum.referral-response.v1',
       referral_id: issued.payload.referral_id,
       expires_at: issued.payload.expires_at,
-      provider: issued.payload.provider,
+      provider_claim: issued.payload.provider_claim,
+      provider_evidence_state: issued.payload.provider_evidence_state,
       surface: issued.payload.surface,
       offer: {
         public_id: offer.public_id,
@@ -389,6 +405,7 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       doctrine: {
         discovery_creates_obligation: false,
         checkout_is_payment: false,
+        provider_claim_is_pickup_proof: false,
         human_confirmation_preserved: true,
       },
     });
