@@ -205,7 +205,7 @@
       "conformance_state": "not_yet_propagated",
       "provider_behavior_state": "not_run",
       "public_web_discovery_state": "not_measured",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms-full.txt"
+      "llms_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/public/llms.txt"
     },
     {
       "product_key": "skyops-parking",
