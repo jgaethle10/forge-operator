@@ -137,6 +137,21 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "guardian-pilot",
+      "name": "Guardian Pilot",
+      "class": "public_resource_discovery_only",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/ai-discovery.json",
+      "doorway_state": "public_origin_observed_source_contract_pending_build",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
+      "origin_discovery_url": "https://guardian-pilot.base44.app/",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/ai-conformance.json",
+      "chum_mirror_state": "pending_generation",
+      "public_web_discovery_state": "search_result_observed_2026-09-24"
+    },
+    {
       "product_key": "evernest",
       "name": "EverNest",
       "class": "public_resource_discovery_only",
