@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 
@@ -37,6 +37,14 @@ function App() {
   const [report, setReport] = useState<ForgeReport | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [checkoutAvailable, setCheckoutAvailable] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/commercial')
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload) => setCheckoutAvailable(Boolean(payload?.checkoutAvailable)))
+      .catch(() => setCheckoutAvailable(false));
+  }, []);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -192,6 +200,11 @@ function App() {
               <strong>{report.singleNextAction?.timeToExecute}</strong>
               <span>{report.singleNextAction?.successVerification}</span>
             </div>
+            {checkoutAvailable && (
+              <a className="primary purchase-link" href="/api/checkout">
+                Continue to implementation
+              </a>
+            )}
           </article>
         </section>
       )}

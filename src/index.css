@@ -66,3 +66,5 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #071016; borde
   .action-card { grid-template-columns: 1fr; }
   .footer { flex-direction: column; }
 }
+
+.purchase-link { display: inline-flex; align-items: center; justify-content: center; margin-top: 20px; text-decoration: none; min-width: 220px; }

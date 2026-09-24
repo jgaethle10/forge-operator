@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -13,6 +13,41 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const isProd = process.env.NODE_ENV === 'production';
+const checkoutUrl = process.env.FORGE_CHECKOUT_URL?.trim() || '';
+
+type RateBucket = { count: number; resetAt: number };
+const rateBuckets = new Map<string, RateBucket>();
+
+function rateLimit(maxRequests: number, windowMs: number) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const now = Date.now();
+    const key = req.ip || req.socket.remoteAddress || 'unknown';
+    const current = rateBuckets.get(key);
+
+    if (!current || current.resetAt <= now) {
+      rateBuckets.set(key, { count: 1, resetAt: now + windowMs });
+      res.setHeader('RateLimit-Limit', String(maxRequests));
+      res.setHeader('RateLimit-Remaining', String(maxRequests - 1));
+      next();
+      return;
+    }
+
+    if (current.count >= maxRequests) {
+      const retryAfterSeconds = Math.max(1, Math.ceil((current.resetAt - now) / 1000));
+      res.setHeader('Retry-After', String(retryAfterSeconds));
+      res.status(429).json({
+        success: false,
+        error: 'Forge request limit reached. Please try again later.',
+      });
+      return;
+    }
+
+    current.count += 1;
+    res.setHeader('RateLimit-Limit', String(maxRequests));
+    res.setHeader('RateLimit-Remaining', String(Math.max(0, maxRequests - current.count)));
+    next();
+  };
+}
 
 app.use(express.json({ limit: '10mb' }));
 
@@ -32,6 +67,11 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
     product: 'Forge Operator',
     provider: 'Evercraft',
     invoke: { method: 'POST', path: '/api/forge' },
+    commercial: {
+      checkoutAvailable: Boolean(checkoutUrl),
+      checkout: checkoutUrl ? '/api/checkout' : null,
+      pricingState: 'human-gated',
+    },
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',
@@ -46,6 +86,37 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
   });
 });
 
+app.get('/api/commercial', (_req: Request, res: Response) => {
+  res.json({
+    product: 'Forge Operator',
+    checkoutAvailable: Boolean(checkoutUrl),
+    checkout: checkoutUrl ? '/api/checkout' : null,
+    pricingState: 'human-gated',
+  });
+});
+
+app.get('/api/checkout', (_req: Request, res: Response) => {
+  if (!checkoutUrl) {
+    res.status(503).json({
+      success: false,
+      error: 'Checkout is not configured yet.',
+    });
+    return;
+  }
+
+  try {
+    const target = new URL(checkoutUrl);
+    if (target.protocol !== 'https:') {
+      throw new Error('Checkout URL must use HTTPS.');
+    }
+    res.redirect(303, target.toString());
+  } catch {
+    res.status(500).json({
+      success: false,
+      error: 'Checkout configuration is invalid.',
+    });
+  }
+});
 
 // Server-side Gemini AI Client with required User-Agent
 const ai = new GoogleGenAI({
@@ -316,7 +387,7 @@ async function generateContentWithFallback(params: {
 }
 
 // Main Analysis Endpoint
-app.post('/api/forge', async (req: Request, res: Response) => {
+app.post('/api/forge', rateLimit(12, 60 * 60 * 1000), async (req: Request, res: Response) => {
   try {
     const { businessProblem, desiredOutcome, businessContext } = req.body;
 
@@ -377,7 +448,7 @@ ${businessContext ? `ADDITIONAL OPERATIONAL CONTEXT (Industry, Team Size, Curren
 });
 
 // Deep Dive / Blueprint Generator Endpoint
-app.post('/api/forge/deep-dive', async (req: Request, res: Response) => {
+app.post('/api/forge/deep-dive', rateLimit(6, 60 * 60 * 1000), async (req: Request, res: Response) => {
   try {
     const { actionTitle, context, actionCategory } = req.body;
     if (!actionTitle) {
