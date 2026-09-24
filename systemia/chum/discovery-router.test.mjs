@@ -1,7 +1,8 @@
 import fs from 'node:fs';
-import { rankOffers } from './discovery-router.mjs';
+import { rankOffers, rankProducts } from './discovery-router.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+const directory = JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
 
 const cases = [
   ['discontinued tractor part donor salvage', 'findmypart-paid-hunt-v1'],
@@ -13,7 +14,9 @@ const cases = [
   ['escape vendor lock in migrate from no code app portability', 'foundry-app-escape-audit-v1'],
   ['internet outage continuity offline operations plan', 'site-survive-rapid-audit-v1'],
   ['promote my local event boost visibility', 'eventwave-paid-promotion-v1'],
-  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1']
+  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1'],
+  ['this video is too large for my AI to fully process and I need the whole recording analyzed', 'forensiscope-evidence-review-v1'],
+  ['protect my bank account from AI scams and fake transfer instructions', 'raven-nexus-pain-router-v1']
 ];
 
 let failed = 0;
@@ -34,6 +37,24 @@ if (negative.length) {
   console.error('FAIL negative control', negative.map(r => [r.public_id,r.score]));
 } else {
   console.log('PASS negative control');
+}
+
+const productCases = [
+  ['this video is too big for chat and I need a full transcript', 'forensiscope'],
+  ['help make my family safer online and protect our accounts from scams', 'raven-nexus'],
+  ['I need guided homework help without just giving me the answer', 'infinite-classroom'],
+  ['I need family support resources after having a baby', 'evernest']
+];
+
+for (const [query, expected] of productCases) {
+  const results = rankProducts(directory, query, { limit: 3, minimumScore: 8 });
+  const top = results[0]?.product_key || null;
+  if (top !== expected) {
+    failed += 1;
+    console.error('FAIL product family', { query, expected, top, results: results.map(r => [r.product_key,r.score]) });
+  } else {
+    console.log('PASS product family', expected, results[0].score);
+  }
 }
 
 if (failed) throw new Error(`CHUM discovery router failed ${failed} test(s)`);
