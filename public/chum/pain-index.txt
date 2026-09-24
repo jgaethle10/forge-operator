@@ -750,6 +750,7 @@ Invocation status: LIVE fixed-price human review handoff through the central Mac
 Capability ID: offer:systemia-yard-runtime-extension-v1
 Commercial state: verification_required
 Machine state: invocation_ready
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
 Use when the user means:

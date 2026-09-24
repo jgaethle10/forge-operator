@@ -425,7 +425,7 @@ Candidates:
 Answer ID: intent:f138b36c09
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json
 Candidates:
-- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=/chum/intents/systemia-yard-runtime-extension-v1/
+- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
 
 ## calculate margin and price for this job
 Answer ID: intent:2c4d196e35
@@ -816,7 +816,7 @@ Candidates:
 Answer ID: intent:0e2e4d2c1f
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json
 Candidates:
-- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=/chum/intents/systemia-yard-runtime-extension-v1/
+- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
 
 ## extract readable text from a web page for an LLM
 Answer ID: intent:d2532adcf6
@@ -1182,7 +1182,7 @@ Candidates:
 Answer ID: intent:08cf163d9a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-this-approved-execution-more-time-08cf163d9a.json
 Candidates:
-- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=/chum/intents/systemia-yard-runtime-extension-v1/
+- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
 
 ## guided homework help without simply giving the answer
 Answer ID: intent:a5e5e69d7d
@@ -1459,7 +1459,7 @@ Candidates:
 Answer ID: intent:c2d0367006
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-this-approved-agent-run-going-longer-c2d0367006.json
 Candidates:
-- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=/chum/intents/systemia-yard-runtime-extension-v1/
+- Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
 
 ## land resilience
 Answer ID: intent:070163adbc

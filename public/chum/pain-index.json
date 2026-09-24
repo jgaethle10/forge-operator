@@ -1726,7 +1726,7 @@
       "problem": "An already-approved active Yard execution needs more runtime without receiving broader authority.",
       "inputs": "Authenticated owner, eligible active execution request key, requested additional seconds and optional spend cap.",
       "outputs": "Request-bound server quote, quote digest, payment requirement, bounded runtime entitlement, receipt and updated lease expiry.",
-      "canonical_url": null,
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

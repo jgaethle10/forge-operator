@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-24T19:29:41.468Z",
+  "updated_at": "2026-09-24T20:59:59.345Z",
   "count": 42,
   "sell_now_count": 11,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
@@ -793,7 +793,7 @@
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
       "pricing": "Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.",
-      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/index.html",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
       "page_url": "/chum/capabilities/systemia-yard-runtime-extension-v1/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/capability.json",
