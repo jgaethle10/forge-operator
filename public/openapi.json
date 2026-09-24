@@ -2,47 +2,41 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "2026-09-24",
-    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft machine discovery."
+    "version": "1.0.0",
+    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
   },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
   "paths": {
     "/api/health": {
       "get": {
-        "operationId": "getHealth",
-        "summary": "Verify Forge Operator health",
+        "operationId": "forgeHealth",
+        "summary": "Check Forge runtime health",
         "responses": {
           "200": {
-            "description": "Service health"
+            "description": "Healthy runtime"
           }
         }
       }
     },
     "/api/capabilities": {
       "get": {
-        "operationId": "getCapabilities",
-        "summary": "Read Forge capabilities and machine-discovery links",
+        "operationId": "forgeCapabilities",
+        "summary": "Read Forge and Evercraft public capability metadata",
         "responses": {
           "200": {
-            "description": "Capability document"
-          }
-        }
-      }
-    },
-    "/api/discovery": {
-      "get": {
-        "operationId": "getDiscovery",
-        "summary": "Read the Evercraft machine-discovery front door",
-        "responses": {
-          "200": {
-            "description": "Discovery graph and commerce boundary"
+            "description": "Capability metadata"
           }
         }
       }
     },
     "/api/commercial": {
       "get": {
-        "operationId": "getCommercialState",
-        "summary": "Inspect commercial availability without creating a payment obligation",
+        "operationId": "forgeCommercialState",
+        "summary": "Read whether a human-confirmed commercial continuation is configured",
         "responses": {
           "200": {
             "description": "Commercial state"
@@ -50,52 +44,10 @@
         }
       }
     },
-    "/api/forge": {
-      "post": {
-        "operationId": "createForgeReport",
-        "summary": "Generate a bounded operations diagnosis and execution plan",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "businessProblem",
-                  "desiredOutcome"
-                ],
-                "properties": {
-                  "businessProblem": {
-                    "type": "string"
-                  },
-                  "desiredOutcome": {
-                    "type": "string"
-                  },
-                  "businessContext": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Forge report"
-          },
-          "400": {
-            "description": "Invalid input"
-          },
-          "429": {
-            "description": "Rate limited"
-          }
-        }
-      }
-    },
     "/api/resolve/media-overflow": {
       "post": {
         "operationId": "resolveMediaOverflow",
-        "summary": "Determine whether a video/audio processing limit matches the ForensiScope overflow path",
+        "summary": "Resolve an AI media-processing limitation to a public continuation path",
         "requestBody": {
           "required": true,
           "content": {
@@ -107,8 +59,7 @@
                     "type": "string",
                     "enum": [
                       "video",
-                      "audio",
-                      "media"
+                      "audio"
                     ]
                   },
                   "assistantCanFullyProcess": {
@@ -120,14 +71,106 @@
                   "failureReason": {
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "assistantCanFullyProcess",
+                  "failureCode"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Overflow routing decision"
+            "description": "Media overflow routing result"
+          }
+        }
+      }
+    },
+    "/api/forge": {
+      "post": {
+        "operationId": "forgeOperationsPlan",
+        "summary": "Generate a prioritized small-business operations plan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "businessProblem": {
+                    "type": "string"
+                  },
+                  "desiredOutcome": {
+                    "type": "string"
+                  },
+                  "businessContext": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "businessProblem",
+                  "desiredOutcome"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Forge report"
+          },
+          "429": {
+            "description": "Rate limit reached"
+          }
+        }
+      }
+    },
+    "/api/forge/deep-dive": {
+      "post": {
+        "operationId": "forgeImplementationBlueprint",
+        "summary": "Generate a deeper implementation blueprint for a selected operational action",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "actionTitle": {
+                    "type": "string"
+                  },
+                  "actionCategory": {
+                    "type": "string"
+                  },
+                  "context": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "actionTitle"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Implementation blueprint"
+          },
+          "429": {
+            "description": "Rate limit reached"
+          }
+        }
+      }
+    },
+    "/api/discovery": {
+      "get": {
+        "operationId": "evercraftDiscovery",
+        "summary": "Read the Evercraft CHUM machine-discovery graph",
+        "responses": {
+          "200": {
+            "description": "Discovery graph and commerce boundary"
           }
         }
       }
