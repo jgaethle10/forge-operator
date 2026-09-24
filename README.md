@@ -1,20 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Forge Operator
 
-# Run and deploy your AI Studio app
+Forge Operator is Evercraft's small-business operations diagnosis and execution front door.
 
-This contains everything you need to run your app locally.
+A user describes an operational pain point and desired outcome. Forge returns a structured report with:
 
-View your app in AI Studio: https://ai.studio/apps/4a0273b1-dc16-4903-8980-50ce3dd15bfb
+- the three highest-priority interventions
+- automation feasibility and expected speed to first value
+- autonomous workflows and guardrails
+- human-required decision gates
+- the greatest operational risk
+- one immediate next action
 
-## Run Locally
+## Local development
 
-**Prerequisites:**  Node.js
+Prerequisites: Node.js and a Gemini API key.
 
+```bash
+npm install
+export GEMINI_API_KEY="..."
+npm run dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Run the release checks with:
+
+```bash
+npm run check
+```
+
+## Public AI discovery
+
+Forge intentionally publishes a public machine-readable discovery layer:
+
+- `/llms.txt`
+- `/.well-known/evercraft-capabilities.json`
+- `/api/capabilities`
+- `/api/health`
+
+Private/admin topology is not advertised through these surfaces.
+
+## Human gates
+
+Forge is decision support. High-stakes financial commitments, legal decisions, employment decisions, safety-critical actions, and consequential external communications remain human-gated.
