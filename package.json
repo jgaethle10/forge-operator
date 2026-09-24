@@ -19,8 +19,8 @@
     "chum:validate": "node scripts/validate-chum-probes.mjs",
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
-    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run test:chum-revenue && npm run chum:index && npm run chum:answers && npm run chum:capabilities && npm run chum:mirror && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run chum && npm run chum:crawlers && npm run chum:mcp",
-    "check": "npm run test:signal-fabric && npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run test:media-studio && npm run check:ai && npm run test:chum-capabilities && npm run chum:mirror && npm run saban:discovery && npm run saban:discovery:check && npm run test:chum-revenue && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run check:probes && npm run lint && npm run build",
+    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run test:chum-revenue && npm run chum:index && npm run chum:answers && npm run chum:capabilities && npm run chum:mirror && npm run test:chum-router && npm run test:a2a && npm run test:chum-index && npm run test:chum-answers && npm run chum && npm run chum:crawlers && npm run chum:mcp",
+    "check": "npm run test:signal-fabric && npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run test:media-studio && npm run check:ai && npm run test:chum-capabilities && npm run chum:mirror && npm run saban:discovery && npm run saban:discovery:check && npm run test:chum-revenue && npm run test:chum-router && npm run test:a2a && npm run test:chum-index && npm run test:chum-answers && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
@@ -47,7 +47,8 @@
     "chum:capabilities": "node systemia/chum/build-capability-mirror.mjs",
     "test:chum-revenue": "npm run chum:revenue && node tests/chum-revenue-watershed.test.mjs",
     "test:chum-capabilities": "npm run chum:capabilities && node tests/chum-capability-mirrors.test.mjs",
-    "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs"
+    "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
+    "test:a2a": "node systemia/chum/a2a.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
