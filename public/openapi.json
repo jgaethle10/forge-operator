@@ -163,6 +163,17 @@
           }
         }
       }
+    },
+    "/api/discovery": {
+      "get": {
+        "operationId": "evercraftDiscovery",
+        "summary": "Read the Evercraft CHUM machine-discovery graph",
+        "responses": {
+          "200": {
+            "description": "Discovery graph and commerce boundary"
+          }
+        }
+      }
     }
   }
 }

@@ -2,6 +2,21 @@
 
 Evercraft publishes public machine-readable capability doors so AI assistants and agents can discover a product from the user's problem without already knowing an Evercraft brand name.
 
+## Universal machine discovery map
+
+- Compact LLM index: /llms.txt
+- Full capability directory: /llms-full.txt
+- Discovery watershed: /.well-known/evercraft-discovery.json
+- Universal agent manifest: /.well-known/evercraft-agent.json
+- Agent interface truth table: /.well-known/evercraft-agent-interfaces.json
+- Problem-to-product directory: /.well-known/evercraft-products.json
+- CHUM control-plane manifest: /.well-known/evercraft-chum.json
+- Forge capability contract: /.well-known/evercraft-capabilities.json
+- OpenAPI contract: /openapi.json
+- Runtime discovery summary: /api/discovery
+- Crawl policy: /robots.txt
+- Sitemap: /sitemap.xml
+
 ## Start here
 
 - Universal agent manifest: /.well-known/evercraft-agent.json

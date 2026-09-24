@@ -13,6 +13,12 @@ const crawlerProfiles = [
     lane: 'search'
   },
   {
+    provider: 'chatgpt_user_fetch',
+    robots_token: 'ChatGPT-User',
+    user_agent: 'ChatGPT-User',
+    lane: 'user_fetch'
+  },
+  {
     provider: 'openai_model_crawl',
     robots_token: 'GPTBot',
     user_agent: 'Mozilla/5.0 (compatible; GPTBot/1.4; +https://openai.com/gptbot)',
@@ -59,6 +65,12 @@ const crawlerProfiles = [
     robots_token: 'PerplexityBot',
     user_agent: 'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)',
     lane: 'search'
+  },
+  {
+    provider: 'perplexity_user_fetch',
+    robots_token: 'Perplexity-User',
+    user_agent: 'Perplexity-User',
+    lane: 'user_fetch'
   }
 ];
 
