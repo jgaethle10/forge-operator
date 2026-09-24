@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 58
-Product entries: 16
+Entries: 59
+Product entries: 17
 Machine-offer entries: 42
 Sell-now machine offers: 11
 
@@ -966,6 +966,36 @@ Use when the user means:
 - business partnership rewards
 - Yakima local business discovery
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Evercraft Web
+Capability ID: product:evercraft-web
+Product key: evercraft-web
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://systemiacommandcenters.com/evercraft-web
+MCP: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
+Use when the user means:
+- fetch and read a public URL with an AI agent
+- extract readable text from a web page for an LLM
+- web search API for AI agents
+- browser automation API for an AI agent
+- cloud or headless browser for an AI workflow
+- web agent that can navigate websites
+- Playwright, Puppeteer, or CDP-style browser capability for agents
+- TinyFish alternative for web search, fetch, or browser automation
+- fetch URL for AI
+- read web page
+- web search API
+- browser automation API
+- cloud browser
+- headless browser
+- web agent
+- Playwright API
+- Puppeteer API
+- CDP browser
+- TinyFish alternative
+Confirmation boundary: No payment obligation is created by discovery.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## EverNest
