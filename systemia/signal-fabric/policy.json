@@ -1,0 +1,61 @@
+{
+  "schema": "systemia.signal-fabric.policy.v1",
+  "version": "1.0.0",
+  "purpose": "Company-wide signal normalization, deduplication, severity classification, notification budgeting, escalation, and receipt retention.",
+  "defaults": {
+    "dedupe_window_seconds": 900,
+    "recovery_coalesce_seconds": 300,
+    "immediate_notification_budget_per_recipient_per_hour": 4,
+    "default_digest_minutes": 60,
+    "notify_on_recovery": true
+  },
+  "severity": {
+    "receipt": {
+      "page": false,
+      "digest": false,
+      "description": "Expected system activity, skipped/cancelled work, or successful receipts."
+    },
+    "notice": {
+      "page": false,
+      "digest": true,
+      "description": "Non-urgent drift, source-ready gaps, or branch/test failures without live impact."
+    },
+    "warning": {
+      "page": false,
+      "digest": true,
+      "description": "Mainline/release degradation or repeated dependency failure that needs owner attention."
+    },
+    "critical": {
+      "page": true,
+      "digest": false,
+      "description": "Verified live customer impact, security/compliance danger, data loss, or blocked money movement requiring immediate human action."
+    }
+  },
+  "evidence_rules": [
+    "A failed job is not a live outage unless live impact is independently verified.",
+    "cancelled and skipped jobs are receipts unless another signal proves impact.",
+    "source_build_green is not live_verified.",
+    "External notification requires a stable fingerprint and evidence state.",
+    "Recovery messages coalesce with the incident they close.",
+    "Financial obligations, invoices, collections, refunds, payments, contracts, destructive releases, and trust-sensitive actions retain their existing human approval gates."
+  ],
+  "routes": {
+    "receipt": [
+      "ledger"
+    ],
+    "notice": [
+      "ledger",
+      "digest"
+    ],
+    "warning": [
+      "ledger",
+      "digest",
+      "owner_queue"
+    ],
+    "critical": [
+      "ledger",
+      "immediate",
+      "owner_queue"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evercraft.example/schemas/systemia.signal.v1.json",
+  "title": "Systemia Signal",
+  "type": "object",
+  "required": ["schema","fingerprint","severity","routes","created_at"],
+  "properties": {
+    "schema": {"const":"systemia.signal.v1"},
+    "id": {"type":"string"},
+    "fingerprint": {"type":"string","minLength":8},
+    "company": {"type":"string"},
+    "product": {"type":"string"},
+    "source": {"type":"string"},
+    "severity": {"enum":["receipt","notice","warning","critical"]},
+    "evidence_state": {"type":"string"},
+    "human_action_required": {"type":"boolean"},
+    "summary": {"type":"string"},
+    "routes": {"type":"array","items":{"enum":["ledger","digest","owner_queue","immediate"]},"uniqueItems":true},
+    "dedupe_window_seconds": {"type":"integer","minimum":0},
+    "immediate_allowed": {"type":"boolean"},
+    "digest_eligible": {"type":"boolean"},
+    "created_at": {"type":"string"}
+  },
+  "additionalProperties": true
+}
