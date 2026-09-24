@@ -125,6 +125,41 @@ async function probe(url, kind) {
   }
 }
 
+async function probeWithFallback(primaryUrl, fallbackUrl, kind) {
+  const primary = await probe(primaryUrl, kind);
+  if (primary.valid === true || !fallbackUrl) {
+    return {
+      ...primary,
+      source: 'primary',
+      effective_url: primaryUrl || null,
+      primary,
+      fallback: null,
+      primary_repair_needed: primary.declared && primary.valid === false
+    };
+  }
+
+  const fallback = await probe(fallbackUrl, kind);
+  if (fallback.valid === true) {
+    return {
+      ...fallback,
+      source: 'central_fallback',
+      effective_url: fallbackUrl,
+      primary,
+      fallback,
+      primary_repair_needed: true
+    };
+  }
+
+  return {
+    ...primary,
+    source: 'primary',
+    effective_url: primaryUrl || null,
+    primary,
+    fallback,
+    primary_repair_needed: primary.declared && primary.valid === false
+  };
+}
+
 function readiness({ product, publicEntry, catalogEntry, checks }) {
   const gates = [
     ['public_directory', Boolean(publicEntry)],
@@ -155,14 +190,19 @@ async function inspectProduct(product) {
   ];
 
   const entries = [
-    ['canonical', product.canonical_url],
-    ['llms', product.llms_url],
-    ['conformance', product.conformance_url],
-    ['discovery', product.discovery_url],
-    ['openapi', product.openapi_url]
+    ['canonical', product.canonical_url, null],
+    ['llms', product.llms_url, product.central_llms_url],
+    ['conformance', product.conformance_url, product.central_conformance_url],
+    ['discovery', product.discovery_url, product.central_discovery_url],
+    ['openapi', product.openapi_url, product.central_openapi_url]
   ];
 
-  const pairs = await Promise.all(entries.map(async ([kind, url]) => [kind, await probe(url, kind)]));
+  const pairs = await Promise.all(entries.map(async ([kind, url, fallbackUrl]) => [
+    kind,
+    kind === 'canonical'
+      ? { ...(await probe(url, kind)), source: 'primary', effective_url: url || null, primary_repair_needed: false }
+      : await probeWithFallback(url, fallbackUrl, kind)
+  ]));
   const checks = Object.fromEntries(pairs);
 
   return {
@@ -230,6 +270,10 @@ function mergedProduct(productKey) {
     conformance_url: c.conformance_url || null,
     discovery_url: c.discovery_url || null,
     openapi_url: c.openapi_url || null,
+    central_llms_url: c.central_llms_url || null,
+    central_conformance_url: c.central_conformance_url || null,
+    central_discovery_url: c.central_discovery_url || null,
+    central_openapi_url: c.central_openapi_url || null,
     public_web_discovery_state: c.public_web_discovery_state || 'not_measured',
     provider_behavior_state: c.provider_behavior_state || 'not_run'
   };
@@ -267,7 +311,9 @@ const receipt = {
     declared_surfaces: allChecks.length,
     checked_surfaces: checked.length,
     valid_surfaces: valid.length,
-    invalid_surfaces: invalid.length
+    invalid_surfaces: invalid.length,
+    primary_surfaces_needing_repair: checked.filter((x) => x.primary_repair_needed).length,
+    rescued_by_central_fallback: checked.filter((x) => x.source === 'central_fallback' && x.valid === true).length
   },
   provider_targets: providerTargets,
   products
@@ -285,9 +331,11 @@ const md = [
   `Declared public surfaces: ${receipt.summary.declared_surfaces}`,
   `Checked surfaces: ${receipt.summary.checked_surfaces}`,
   `Valid surfaces: ${receipt.summary.valid_surfaces}`,
-  `Invalid surfaces: ${receipt.summary.invalid_surfaces}`,
+  `Invalid effective surfaces: ${receipt.summary.invalid_surfaces}`,
+  `Primary surfaces needing repair: ${receipt.summary.primary_surfaces_needing_repair}`,
+  `Rescued by central fallback: ${receipt.summary.rescued_by_central_fallback}`,
   '',
-  '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
+  '> Readiness below measures Evercraft-owned public surfaces. A central fallback can preserve discovery while a product-host doorway is repaired. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
   '| Product | Surface readiness | Canonical | llms.txt | Contract | MCP declared | Official registry | Web discovery | Provider observations |',
   '|---|---:|---|---|---|---|---|---|---|',
@@ -299,8 +347,11 @@ const md = [
   '## Repair queue',
   '',
   ...(invalid.length
-    ? invalid.map((x) => `- ${x.product_key} / ${x.kind}: ${x.reason || x.status}`)
-    : ['- No invalid checked surfaces detected.']),
+    ? invalid.map((x) => `- ${x.product_key} / ${x.kind}: effective doorway invalid (${x.reason || x.status})`)
+    : ['- No invalid effective surfaces detected.']),
+  ...checked
+    .filter((x) => x.primary_repair_needed)
+    .map((x) => `- ${x.product_key} / ${x.kind}: primary doorway needs repair${x.source === 'central_fallback' ? '; central fallback active' : ''}`),
   ''
 ];
 
