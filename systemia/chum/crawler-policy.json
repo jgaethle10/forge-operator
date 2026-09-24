@@ -1,0 +1,108 @@
+{
+  "schema": "evercraft.chum.crawler-policy.v1",
+  "updated_at": "2026-09-24",
+  "doctrine": "Open legitimate public commercial discovery surfaces broadly while keeping private/admin/action-bearing topology outside crawl scope.",
+  "public_surface_scope": [
+    "/",
+    "/llms.txt",
+    "/llms-full.txt",
+    "/openapi.json",
+    "/.well-known/",
+    "/api/health",
+    "/api/capabilities",
+    "/api/discovery",
+    "/api/commercial"
+  ],
+  "protected_crawl_scope": [
+    "/api/",
+    "/admin/",
+    "/internal/",
+    "/systemia/"
+  ],
+  "providers": [
+    {
+      "provider": "OpenAI ChatGPT Search",
+      "robots_token": "OAI-SearchBot",
+      "lane": "search",
+      "allow": true,
+      "source": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "OpenAI user fetch",
+      "robots_token": "ChatGPT-User",
+      "lane": "user_fetch",
+      "allow": true,
+      "source": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "OpenAI model crawl",
+      "robots_token": "GPTBot",
+      "lane": "model_crawl",
+      "allow": true,
+      "source": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "Anthropic Claude Search",
+      "robots_token": "Claude-SearchBot",
+      "lane": "search",
+      "allow": true,
+      "source": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Anthropic user fetch",
+      "robots_token": "Claude-User",
+      "lane": "user_fetch",
+      "allow": true,
+      "source": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Anthropic model crawl",
+      "robots_token": "ClaudeBot",
+      "lane": "model_crawl",
+      "allow": true,
+      "source": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Perplexity Search",
+      "robots_token": "PerplexityBot",
+      "lane": "search",
+      "allow": true,
+      "source": "https://docs.perplexity.ai/guides/bots"
+    },
+    {
+      "provider": "Perplexity user fetch",
+      "robots_token": "Perplexity-User",
+      "lane": "user_fetch",
+      "allow": true,
+      "source": "https://docs.perplexity.ai/guides/bots"
+    },
+    {
+      "provider": "Google Search",
+      "robots_token": "Googlebot",
+      "lane": "search",
+      "allow": true,
+      "source": "https://developers.google.com/crawling"
+    },
+    {
+      "provider": "Gemini and Vertex control",
+      "robots_token": "Google-Extended",
+      "lane": "robots_policy_only",
+      "allow": true,
+      "source": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
+    },
+    {
+      "provider": "Microsoft Bing and Copilot web grounding",
+      "robots_token": "bingbot",
+      "lane": "search",
+      "allow": true,
+      "source": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-ai-public-websites"
+    }
+  ],
+  "unknown_agents": {
+    "policy": "allow_public_surfaces",
+    "controlled_by": "User-agent: *"
+  },
+  "unverified_tokens": {
+    "grok": "No official public Grok search crawler token is asserted by CHUM; wildcard public discovery remains open."
+  }
+}
