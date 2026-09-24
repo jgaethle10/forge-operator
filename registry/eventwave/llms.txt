@@ -1,0 +1,26 @@
+# EventWave
+
+Provider: Evercraft
+Product key: eventwave
+Class: event_discovery_and_labeled_promotion
+Canonical URL: https://event-wave.base44.app/
+Authority: public event search plus human-confirmed paid labeled promotion
+Human confirmation required: yes
+Runtime llms.txt: https://event-wave.base44.app/llms.txt
+Declared MCP: https://event-wave.base44.app/functions/eventWaveMcp
+
+## Natural-language intents
+- find local events
+- promote my local event
+- help people find my event
+- boost event visibility
+- promote a venue's events
+
+## Boundaries
+- paid promotion remains labeled
+- source review governs public placement
+- checkout creation is not payment proof
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
