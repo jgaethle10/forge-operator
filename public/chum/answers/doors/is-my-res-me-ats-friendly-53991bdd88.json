@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.answer-door.v1",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/chum/revenue.json",
+  "updated_at": "2026-09-24T19:29:41.468Z",
+  "answer_id": "intent:53991bdd88",
+  "user_language": "is my resume ATS friendly",
+  "normalized": "is my res me ats friendly",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "public_id": "career-command-resume-job-fit-machine-v1",
+      "name": "Career Command Resume + Job Fit Audit",
+      "problem": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
+      "pricing": "Free core is available. No premium machine-lane price is approved yet.",
+      "commercial_state": "verify",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-career-command.base44.app/",
+      "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-resume-job-fit-machine-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.",
+      "invocation_status": "catalog_ready_runtime_adapter_pending"
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

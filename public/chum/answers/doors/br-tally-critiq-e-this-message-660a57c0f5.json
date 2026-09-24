@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.answer-door.v1",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/chum/revenue.json",
+  "updated_at": "2026-09-24T19:29:41.468Z",
+  "answer_id": "intent:660a57c0f5",
+  "user_language": "brutally critique this message",
+  "normalized": "br tally critiq e this message",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "public_id": "roasted-text-pressure-test-machine-v1",
+      "name": "ROASTED 99¢ Text Pressure Test",
+      "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+      "pricing": "$0.99 USD one-time per roast.",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=roasted-text-pressure-test-machine-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.",
+      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID."
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

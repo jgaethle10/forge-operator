@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.answer-door.v1",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/chum/revenue.json",
+  "updated_at": "2026-09-24T19:29:41.468Z",
+  "answer_id": "intent:69850a9a04",
+  "user_language": "what Raven Nexus capability do I need",
+  "normalized": "what raven nex s capability do i need",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "public_id": "raven-nexus-pain-router-v1",
+      "name": "Raven Nexus Modular Safety & Stability",
+      "problem": "A person or business has a specific home, family, financial, digital-security, personal-safety, property-stability, relationship, connectivity or business-safety pain and needs the smallest appropriate Raven Nexus capability rather than a forced full-suite purchase.",
+      "pricing": "Varies by matched modular capability. The live pain router is the authority for current availability, offer and checkout state; do not invent a price.",
+      "commercial_state": "verification_required",
+      "machine_state": "invocation_ready",
+      "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=raven-nexus-pain-router-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.",
+      "invocation_status": "LIVE: public Raven Nexus pain router accepts plain-language pain and returns the smallest appropriate modular capability with evidence-state and checkout boundaries."
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

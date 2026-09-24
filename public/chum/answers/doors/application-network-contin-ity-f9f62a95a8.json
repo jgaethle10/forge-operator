@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.answer-door.v1",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/chum/revenue.json",
+  "updated_at": "2026-09-24T19:29:41.468Z",
+  "answer_id": "intent:f9f62a95a8",
+  "user_language": "application network continuity",
+  "normalized": "application network contin ity",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "public_id": "evercraft-network-resilience-membership-v1",
+      "name": "Evercraft Network Resilience + Founding Membership",
+      "problem": "A household, business, or device operator wants an application-network identity and continuity visibility that can persist across changing internet paths the client is already authorized to use, without confusing that software layer with cellular service or guaranteed geographic coverage.",
+      "pricing": "Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.",
+      "commercial_state": "discovery_only",
+      "machine_state": "human_handoff_only",
+      "public_url": "https://network-control.base44.app/join",
+      "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-network-resilience-membership-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.",
+      "invocation_status": "SOURCE-WIRED: Network specialist MCP tools and agent gateway are prepared for read-only capability discovery, public presence and human handoff. Production verification is still required before claiming the v1.2.0 MCP surface is live."
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

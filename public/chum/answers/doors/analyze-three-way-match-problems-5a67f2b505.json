@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.answer-door.v1",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/chum/revenue.json",
+  "updated_at": "2026-09-24T19:29:41.468Z",
+  "answer_id": "intent:5a67f2b505",
+  "user_language": "analyze three way match problems",
+  "normalized": "analyze three way match problems",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "public_id": "buildflow-procure-to-pay-shadow-v1",
+      "name": "BuildFlow Procure-to-Pay Shadow Audit",
+      "problem": "A business needs to reconstruct purchasing flow, approval state, receipts and invoice references without turning a new product into the authoritative general ledger.",
+      "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
+      "commercial_state": "verification_required",
+      "machine_state": "human_auth_handoff",
+      "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-procure-to-pay-shadow-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Current BuildFlow mode is shadow-first. It does not post accounting entries, create external POs or initiate payment.",
+      "invocation_status": "SOURCE-VERIFIED: discovery, tenant-scoped P2P model and bounded internal approval-request flow are implemented and build-tested; external client canary remains pending. External writes disabled."
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

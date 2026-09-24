@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.answer-door.v1",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/chum/revenue.json",
+  "updated_at": "2026-09-24T19:29:41.468Z",
+  "answer_id": "intent:d214fc3642",
+  "user_language": "version and verify an AI capability",
+  "normalized": "version and verify an ai capability",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "public_id": "ai-capability-install-v1",
+      "name": "AI Capability Installation Package",
+      "problem": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
+      "pricing": "Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ai-capability-install-v1",
+      "pain_page": "/chum/intents/ai-capability-install-v1/",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ai-capability-install-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.",
+      "invocation_status": "Discoverable capability; environment-specific deployment/payment verification required."
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}
