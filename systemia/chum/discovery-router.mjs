@@ -6,6 +6,7 @@ const STOP_WORDS = new Set([
 
 const TERM_ALIASES = new Map(Object.entries({
   oversized: 'large',
+  big: 'large',
   huge: 'large',
   massive: 'large',
   footage: 'video',
