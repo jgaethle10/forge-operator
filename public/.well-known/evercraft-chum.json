@@ -50,8 +50,10 @@
     "live_pain_index_llms": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=llms",
     "live_pain_index_sitemap": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=sitemap",
     "official_mcp_registry_search": "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.jgaethle10&version=latest",
-    "offer_service_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.json",
-    "offer_service_directory_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.txt"
+    "capability_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities.json",
+    "capability_directory_page": "/chum/capabilities/",
+    "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
+    "sell_now_directory_page": "/chum/sell-now.html"
   },
   "verified_crawler_controls": [
     {
@@ -77,7 +79,7 @@
     "verified_revenue": "trusted payment-authority receipt only",
     "provider_identity": "caller-asserted in referrals unless separately verified by a provider receipt",
     "answer_doors": "deterministic natural-language answer graph generated from the canonical CHUM Pain Index; duplicate phrases are grouped, not multiplied",
-    "offer_service_mirrors": "one generated public mirror per public/share-safe Machine Commerce surface; count must equal current machine catalog count"
+    "capability_mirrors": "one canonical public mirror per public/share-safe Machine Commerce surface; count must equal the current machine catalog"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
