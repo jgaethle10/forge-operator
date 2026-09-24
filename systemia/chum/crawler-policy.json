@@ -1,0 +1,108 @@
+{
+  "schema": "evercraft.chum.crawler-policy.v1",
+  "updated_at": "2026-09-24",
+  "doctrine": "Public commercial discovery surfaces are open by default. Private, admin, and action-bearing surfaces remain outside crawler scope. robots.txt is discovery guidance, not authorization.",
+  "public_surface_scope": [
+    "/",
+    "/llms.txt",
+    "/llms-full.txt",
+    "/openapi.json",
+    "/.well-known/",
+    "/api/health",
+    "/api/capabilities",
+    "/api/discovery",
+    "/api/commercial"
+  ],
+  "protected_crawl_scope": [
+    "/api/",
+    "/admin/",
+    "/internal/",
+    "/systemia/"
+  ],
+  "providers": [
+    {
+      "provider": "OpenAI ChatGPT Search",
+      "robots_token": "OAI-SearchBot",
+      "purpose": "search discovery",
+      "allow": true,
+      "official_source": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "OpenAI user-directed fetch",
+      "robots_token": "ChatGPT-User",
+      "purpose": "user-directed retrieval",
+      "allow": true,
+      "official_source": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "OpenAI model development",
+      "robots_token": "GPTBot",
+      "purpose": "public model-development crawl",
+      "allow": true,
+      "official_source": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "Anthropic Claude Search",
+      "robots_token": "Claude-SearchBot",
+      "purpose": "search discovery",
+      "allow": true,
+      "official_source": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Anthropic user-directed fetch",
+      "robots_token": "Claude-User",
+      "purpose": "user-directed retrieval",
+      "allow": true,
+      "official_source": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Anthropic model development",
+      "robots_token": "ClaudeBot",
+      "purpose": "public model-development crawl",
+      "allow": true,
+      "official_source": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Perplexity Search",
+      "robots_token": "PerplexityBot",
+      "purpose": "search discovery",
+      "allow": true,
+      "official_source": "https://docs.perplexity.ai/guides/bots"
+    },
+    {
+      "provider": "Perplexity user-directed fetch",
+      "robots_token": "Perplexity-User",
+      "purpose": "user-directed retrieval",
+      "allow": true,
+      "official_source": "https://docs.perplexity.ai/guides/bots"
+    },
+    {
+      "provider": "Google Search",
+      "robots_token": "Googlebot",
+      "purpose": "search indexing",
+      "allow": true,
+      "official_source": "https://developers.google.com/crawling"
+    },
+    {
+      "provider": "Google Gemini/Vertex control",
+      "robots_token": "Google-Extended",
+      "purpose": "Gemini grounding/model-development control token",
+      "allow": true,
+      "official_source": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
+    },
+    {
+      "provider": "Microsoft Bing/Copilot web grounding",
+      "robots_token": "bingbot",
+      "purpose": "Bing index discovery",
+      "allow": true,
+      "official_source": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-ai-public-websites"
+    }
+  ],
+  "unverified_provider_tokens": {
+    "grok": "No official public Grok web-search crawler token is asserted; wildcard public policy remains open."
+  },
+  "unknown_agents": {
+    "policy": "allow_public_surfaces",
+    "controlled_by": "User-agent: *"
+  }
+}
