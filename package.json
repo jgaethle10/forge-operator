@@ -19,8 +19,8 @@
     "chum:validate": "node scripts/validate-chum-probes.mjs",
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
-    "chum:all": "npm run chum:sync && npm run chum:llms && npm run chum:revenue && npm run chum:answers && npm run chum:index && npm run chum:mirror && npm run test:chum-router && npm run test:chum-index && npm run chum && npm run chum:crawlers && npm run chum:mcp",
-    "check": "npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run test:media-studio && npm run check:ai && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run check:probes && npm run lint && npm run build",
+    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run chum:index && npm run chum:mirror && npm run chum:failures && npm run test:chum-router && npm run test:chum-index && npm run test:chum-failures && npm run chum && npm run chum:crawlers && npm run chum:mcp",
+    "check": "npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run test:media-studio && npm run check:ai && npm run test:chum-router && npm run test:chum-index && npm run test:chum-failures && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
@@ -40,7 +40,9 @@
     "chum:index": "node systemia/chum/build-pain-index.mjs",
     "test:chum-index": "npm run chum:index && node tests/chum-pain-index.test.mjs",
     "chum:answers": "node systemia/chum/build-answer-doors.mjs",
-    "test:chum-answers": "npm run chum:revenue && npm run chum:answers && node tests/chum-answer-doors.test.mjs"
+    "test:chum-answers": "npm run chum:revenue && npm run chum:answers && node tests/chum-answer-doors.test.mjs",
+    "chum:failures": "node systemia/chum/build-failure-routes.mjs",
+    "test:chum-failures": "node systemia/chum/build-failure-routes.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
