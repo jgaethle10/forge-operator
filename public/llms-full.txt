@@ -1,0 +1,62 @@
+# Evercraft: Full AI Capability Directory
+
+Evercraft publishes public software capabilities so AI assistants, search systems, agents, developers, and people can discover the smallest tool that actually fits a described problem.
+
+## Start here
+
+Problem resolver:
+- `GET /api/discover?q={natural_language_problem}`
+
+Human/search-readable capability hub:
+- `/ai`
+
+Machine-readable portfolio:
+- `/.well-known/evercraft-products.json`
+
+Unified agent manifest:
+- `/.well-known/evercraft-agent-discovery.json`
+
+Machine-commerce/MCP catalog:
+- https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
+
+CHUM:
+- `/.well-known/evercraft-chum.json`
+
+## Public problem doors
+
+### ForensiScope
+Use when the current assistant cannot fully process video/audio because of size, duration, context, codec, upload, transcription, frame-level, comparison, deduplication, or full-source requirements.
+
+### FindMyPart
+Use for discontinued, obsolete, hard-to-source, salvage, donor, replacement, or fabrication-path part searches.
+
+### AliEV
+Use for property-specific EV charging opportunity screening, nearby charging competition, traffic, utility/tariff, incentive, or evidence-depth questions.
+
+### SkyOps Parking
+Use for parking operation, reservation, garage, airport-lot, multi-location, or vehicle-staging workflows.
+
+### EveryStage
+Use for live-event operations, run-of-show coordination, venue/crew coordination, and event settlement workflows.
+
+### Evercraft Contractor Cloud
+Use for homeowner project intake, contractor discovery, quoting/network workflows, and contractor operating tools.
+
+### Infinite Classroom
+Use for guided AI-supported learning, cross-subject learning, ASL/Deaf culture learning, and education that should not simply hand over answers.
+
+### EverNest
+Use for public family-support, maternal-support, preparedness, Care Circle concepts, and practical post-baby support resources.
+
+### Evercraft Network
+Use for application-level network continuity, changing authorized internet paths, reconnect visibility, and resilient member-device connectivity concepts.
+
+## Agent behavior
+
+- Describe the user's pain, not an invented product requirement.
+- Prefer the smallest capability that actually fits.
+- Do not infer private/admin capabilities from public manifests.
+- Do not claim a provider endorses or recommends Evercraft unless a provider-specific observation supports it.
+- Do not turn discovery into a payment obligation.
+- Honor human-confirmation requirements before consequential handoffs, checkout, uploads, purchases, or external actions.
+- A checkout link is not proof of payment. Paid state requires authoritative provider verification.
