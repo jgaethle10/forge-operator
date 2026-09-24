@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build",
+    "build": "npm run chum:build && vite build",
     "preview": "vite preview",
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",
@@ -23,7 +23,8 @@
     "chum:mcp": "node systemia/chum/mcp-canary.mjs",
     "chum:validate": "node scripts/validate-chum-probes.mjs",
     "chum:providers": "node systemia/chum/provider-probes.mjs",
-    "chum:announce": "node systemia/chum/indexnow.mjs"
+    "chum:announce": "node systemia/chum/indexnow.mjs",
+    "chum:build": "node systemia/chum/build-public-directory.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
