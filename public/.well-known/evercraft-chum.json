@@ -5,9 +5,27 @@
   "status": "portfolio_distribution_control_plane",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": ["PRODUCT","SIGNAL","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","LEARNING"],
-  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
+  "loop": [
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
+    "LEARNING"
+  ],
+  "provider_targets": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
   "public_entrypoints": {
+    "watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-watershed.json",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
@@ -43,5 +61,14 @@
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification"
-  ]
+  ],
+  "version": "0.3.0",
+  "routing_doctrine": {
+    "pain_first": true,
+    "smallest_sufficient_capability": true,
+    "discovery_without_human_gate": true,
+    "routing_without_human_gate": true,
+    "irreversible_financial_or_authority_actions_require_human_confirmation": true,
+    "discovery_only_must_not_be_presented_as_callable": true
+  }
 }
