@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.discovery-watershed.v1",
+  "schema": "evercraft.discovery-watershed.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
   "updated_at": "2026-09-24",
@@ -15,12 +15,14 @@
     "forge": "/.well-known/evercraft-capabilities.json",
     "media_overflow": "/.well-known/evercraft-media-overflow.json",
     "chum": "/.well-known/evercraft-chum.json",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "resolver": "/api/resolve",
+    "public_mirror": "/chum/index.json"
   },
   "registry": {
     "namespace": "io.github.jgaethle10",
     "universal_mcp": "io.github.jgaethle10/evercraft-machine-commerce"
   },
-  "routing_rule": "Start from the user's actual pain. Match to the smallest public capability that truthfully fits. Prefer specialist tools when fit is clear. Preserve human confirmation, uncertainty, evidence state and payment boundaries.",
+  "routing_rule": "Start from the user's actual pain. Call /api/resolve when available, then route to the smallest public capability that truthfully fits. Prefer specialist tools when fit is clear. Preserve human confirmation, uncertainty, evidence state and payment boundaries.",
   "private_surfaces": "not advertised"
 }
