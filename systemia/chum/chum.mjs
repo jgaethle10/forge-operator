@@ -28,10 +28,28 @@ const readJsonDir = (dir) => {
 const registryPublicationReceipts = readJsonDir('conformance/registry-publications');
 const providerObservationReceipts = readJsonDir('conformance/provider-observations');
 
+const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
 const publicByKey = new Map((directory.products || []).map((p) => [p.product_key, p]));
 const catalogByKey = new Map(
-  (catalog.products || []).map((p) => [String(p.registry_name || '').split('/').pop(), p])
+  (catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p])
 );
+const portfolioKeys = Array.from(new Set([
+  ...conformanceByKey.keys(),
+  ...publicByKey.keys(),
+  ...catalogByKey.keys()
+])).sort();
+
+const liveProviderProbe = fs.existsSync('artifacts/chum/provider-probe-latest.json')
+  ? readJson('artifacts/chum/provider-probe-latest.json')
+  : null;
+const liveProviderObservationsByKey = new Map();
+for (const result of liveProviderProbe?.results || []) {
+  const key = result.product_key;
+  if (!key) continue;
+  const list = liveProviderObservationsByKey.get(key) || [];
+  list.push(result);
+  liveProviderObservationsByKey.set(key, list);
+}
 const registryReceiptsByKey = new Map();
 for (const receipt of registryPublicationReceipts) {
   const key = receipt.product_key;
@@ -67,7 +85,7 @@ async function probe(url, kind) {
       method: 'GET',
       redirect: 'follow',
       headers: {
-        'user-agent': 'Evercraft-CHUM/0.1 (+public-discovery-canary)',
+        'user-agent': 'Evercraft-CHUM/0.2 (+public-discovery-canary)',
         accept: 'text/plain, application/json;q=0.9, text/html;q=0.7, */*;q=0.3'
       },
       signal: controller.signal
@@ -131,7 +149,10 @@ async function inspectProduct(product) {
   const publicEntry = publicByKey.get(product.product_key);
   const catalogEntry = catalogByKey.get(product.product_key);
   const registryReceipts = registryReceiptsByKey.get(product.product_key) || [];
-  const providerObservations = providerObservationsByKey.get(product.product_key) || [];
+  const providerObservations = [
+    ...(providerObservationsByKey.get(product.product_key) || []),
+    ...(liveProviderObservationsByKey.get(product.product_key) || [])
+  ];
 
   const entries = [
     ['canonical', product.canonical_url],
@@ -159,9 +180,13 @@ async function inspectProduct(product) {
         : 'not_receipt_backed',
       public_web_discovery: product.public_web_discovery_state || 'not_measured',
       provider_observations: providerObservations.length,
-      provider_surface_state: providerObservations.some((r) => r.surfaced_forensiscope === false)
-        ? 'negative_observation_recorded'
-        : (providerObservations.length ? 'observation_recorded' : 'not_measured')
+      provider_surface_state: providerObservations.some((r) => r.evaluation?.pickup_observed || r.evaluation?.expected_product_mentioned || r.evaluation?.expected_host_cited)
+        ? 'positive_observation_recorded'
+        : providerObservations.some((r) => r.status === 'completed' || r.surfaced_forensiscope === false)
+          ? 'negative_observation_recorded'
+          : providerObservations.length
+            ? 'observation_recorded'
+            : 'not_measured'
     },
     registry_publication_receipts: registryReceipts,
     provider_observation_receipts: providerObservations,
@@ -192,9 +217,27 @@ async function inspectProduct(product) {
   };
 }
 
+function mergedProduct(productKey) {
+  const c = conformanceByKey.get(productKey) || {};
+  const p = publicByKey.get(productKey) || {};
+  const r = catalogByKey.get(productKey) || {};
+  return {
+    product_key: productKey,
+    name: c.name || p.name || r.name || productKey,
+    class: c.class || p.class || r.class || 'registry_product',
+    canonical_url: c.canonical_url || p.canonical_url || r.canonical_url || null,
+    llms_url: c.llms_url || r.llms_url || null,
+    conformance_url: c.conformance_url || null,
+    discovery_url: c.discovery_url || null,
+    openapi_url: c.openapi_url || null,
+    public_web_discovery_state: c.public_web_discovery_state || 'not_measured',
+    provider_behavior_state: c.provider_behavior_state || 'not_run'
+  };
+}
+
 const products = [];
-for (const product of conformance.products || []) {
-  products.push(await inspectProduct(product));
+for (const productKey of portfolioKeys) {
+  products.push(await inspectProduct(mergedProduct(productKey)));
 }
 
 const allChecks = products.flatMap((p) =>
@@ -207,7 +250,7 @@ const valid = checked.filter((x) => x.valid === true);
 const invalid = checked.filter((x) => x.valid === false);
 
 const receipt = {
-  schema: 'evercraft.chum.receipt.v1',
+  schema: 'evercraft.chum.receipt.v2',
   name: 'CHUM',
   expansion: 'Capability Handoff & Utility Mesh',
   generated_at: new Date().toISOString(),
