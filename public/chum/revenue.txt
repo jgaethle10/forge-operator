@@ -11,6 +11,9 @@ Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Re
 Machine state: payment_ready_human_confirmation
 Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
 Pain page: /chum/intents/aliev-site-opportunity-snapshot-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=aliev-site-opportunity-snapshot-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - is this site good for EV charging
 - EV charger site analysis
@@ -29,6 +32,9 @@ Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one
 Machine state: payment_ready
 Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
 Pain page: /chum/intents/career-command-interview-practice-machine-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - help me prepare for this interview
 - mock interview me for this job
@@ -45,6 +51,9 @@ Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Machine state: payment_ready
 Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
 Pain page: /chum/intents/eventwave-paid-promotion-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=eventwave-paid-promotion-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - promote my event on EventWave
 - promote my local event
@@ -65,6 +74,9 @@ Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 
 Machine state: payment_ready
 Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
 Pain page: /chum/intents/deck-capital-fit-sprint-machine-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - help me find funding for my business
 - which lenders or programs fit my business
@@ -82,6 +94,9 @@ Pricing: $500 one-time.
 Machine state: human_handoff_ready
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
 Pain page: /chum/intents/foundry-app-escape-audit-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=foundry-app-escape-audit-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - escape vendor lock-in
 - migrate from no-code
@@ -95,6 +110,9 @@ Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-ti
 Machine state: payment_ready
 Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
 Pain page: /chum/intents/website-launch-service-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=website-launch-service-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - build me a business website
 - launch a website for my company
@@ -109,6 +127,9 @@ Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake 
 Machine state: payment_ready
 Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
 Pain page: /chum/intents/faie-signal-brief-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=faie-signal-brief-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - research this land or water question
 - investigate this agriculture signal
@@ -123,6 +144,9 @@ Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-ti
 Machine state: payment_ready
 Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
 Pain page: /chum/intents/findmypart-paid-hunt-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - find a hard-to-source part
 - identify this part
@@ -137,6 +161,9 @@ Pricing: $0.99 USD one-time per roast.
 Machine state: payment_ready
 Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
 Pain page: /chum/intents/roasted-text-pressure-test-machine-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=roasted-text-pressure-test-machine-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - roast this text
 - roast my bio
@@ -156,6 +183,9 @@ Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the cust
 Machine state: human_handoff_ready
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
 Pain page: /chum/intents/site-survive-rapid-audit-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=site-survive-rapid-audit-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - business outage plan
 - internet outage continuity
@@ -169,6 +199,9 @@ Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-ti
 Machine state: payment_ready
 Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
 Pain page: /chum/intents/audit-center-website-audit-machine-v1/
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=audit-center-website-audit-machine-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Intent examples:
 - why is my website not getting leads
 - audit my website

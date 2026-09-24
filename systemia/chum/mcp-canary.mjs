@@ -43,38 +43,43 @@ async function registryState(name) {
   }
 }
 
-const rows = [];
-for (const t of targets) {
+async function inspectTarget(t) {
   try {
     const init = await postMcp(t.mcp, {
       jsonrpc: '2.0',
       id: 1,
       method: 'initialize',
-      params: { protocolVersion: '2025-03-26', capabilities: {}, clientInfo: { name: 'evercraft-chum-canary', version: '0.2' } }
+      params: { protocolVersion: '2025-03-26', capabilities: {}, clientInfo: { name: 'evercraft-chum-canary', version: '0.3' } }
     });
     const initValid = init.ok && /serverInfo/.test(init.text);
     const tools = initValid ? await postMcp(t.mcp, { jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} }) : { ok: false, status: 0, text: '' };
     const toolsValid = tools.ok && /\"tools\"/.test(tools.text);
-    rows.push({
+    return {
       ...t,
       initialize: { ok: init.ok, status: init.status, valid: initValid },
       tools_list: { ok: tools.ok, status: tools.status, valid: toolsValid },
       registry: await registryState(t.registry_name)
-    });
+    };
   } catch (error) {
-    rows.push({
+    return {
       ...t,
       initialize: { ok: false, status: 0, valid: false, error: error instanceof Error ? error.message : String(error) },
       tools_list: { ok: false, status: 0, valid: false },
       registry: await registryState(t.registry_name)
-    });
+    };
   }
+}
+
+const rows = [];
+const CONCURRENCY = 5;
+for (let i = 0; i < targets.length; i += CONCURRENCY) {
+  rows.push(...await Promise.all(targets.slice(i, i + CONCURRENCY).map(inspectTarget)));
 }
 
 const failed = rows.filter((r) => !r.initialize.valid || !r.tools_list.valid);
 const registryMissing = rows.filter((r) => r.registry.checked && r.registry.ok && r.registry.present === false);
 const receipt = {
-  schema: 'evercraft.chum.mcp-canary.v1',
+  schema: 'evercraft.chum.mcp-canary.v2',
   checked_at: new Date().toISOString(),
   targets: rows.length,
   failed_mcp: failed.length,

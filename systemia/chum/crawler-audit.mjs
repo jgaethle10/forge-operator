@@ -165,17 +165,14 @@ function robotsDecision(groups, token, pathName = '/') {
   };
 }
 
-const products = [];
-
-for (const product of registry.products || []) {
+async function inspectProduct(product) {
   const canonical = new URL(product.canonical_url);
   const robotsUrl = `${canonical.origin}/robots.txt`;
   const robots = await fetchText(robotsUrl);
   const robotsMissing = robots.status === 404;
   const groups = robots.ok ? parseRobots(robots.body) : [];
 
-  const crawlers = [];
-  for (const profile of crawlerProfiles) {
+  const crawlers = await Promise.all(crawlerProfiles.map(async (profile) => {
     const policy = robotsMissing
       ? { allowed: true, reason: 'robots_404_assumed_allow' }
       : robots.ok
@@ -196,18 +193,18 @@ for (const product of registry.products || []) {
       };
     }
 
-    crawlers.push({
+    return {
       ...profile,
       robots_allowed: policy.allowed,
       robots_reason: policy.reason,
       live
-    });
-  }
+    };
+  }));
 
   const searchProfiles = crawlers.filter((c) => c.lane === 'search' || c.lane === 'user_fetch');
   const blocked = searchProfiles.filter((c) => c.robots_allowed === false || (c.live.checked && c.live.ok === false));
 
-  products.push({
+  return {
     product_key: product.product_key,
     name: product.name,
     canonical_url: product.canonical_url,
@@ -222,7 +219,14 @@ for (const product of registry.products || []) {
     search_discovery_state: blocked.length ? 'repair_needed' : 'open_or_reachable',
     blocked_search_lanes: blocked.map((c) => c.provider),
     crawlers
-  });
+  };
+}
+
+const products = [];
+const PRODUCT_CONCURRENCY = 3;
+const sourceProducts = registry.products || [];
+for (let i = 0; i < sourceProducts.length; i += PRODUCT_CONCURRENCY) {
+  products.push(...await Promise.all(sourceProducts.slice(i, i + PRODUCT_CONCURRENCY).map(inspectProduct)));
 }
 
 const blockedRows = products.flatMap((product) =>
@@ -239,7 +243,7 @@ const blockedRows = products.flatMap((product) =>
 );
 
 const receipt = {
-  schema: 'evercraft.chum.crawler-audit.v1',
+  schema: 'evercraft.chum.crawler-audit.v2',
   generated_at: new Date().toISOString(),
   doctrine: {
     public_commercial_surfaces_should_be_discoverable: true,
