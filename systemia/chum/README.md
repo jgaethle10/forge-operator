@@ -28,6 +28,7 @@ npm run chum:mcp
 npm run chum:validate
 npm run chum:providers
 npm run chum:announce
+npm run chum:build
 ```
 
 Provider probes use an authorized bridge when `CHUM_PROBE_BRIDGE_URL` and `CHUM_PROBE_BRIDGE_TOKEN` are available. The runner also accepts the existing `NEXUS_PROBE_BRIDGE_URL` and `NEXUS_PROBE_BRIDGE_TOKEN` names so CHUM can inherit the already-designed execution boundary.
@@ -41,3 +42,17 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+
+## Public watershed surfaces
+
+CHUM generates and maintains redundant public discovery surfaces so legitimate commercial capabilities are easy for humans, crawlers, LLMs and agents to find:
+
+- a crawlable pain-first capability directory under `/ai/`
+- `/.well-known/evercraft-discovery.json`
+- `/.well-known/evercraft-agent-directory.json`
+- `/openapi.json`
+- `/llms.txt`
+- Official MCP Registry manifests for live specialist MCPs
+
+The asymmetry is intentional: public commercial capability facts are bright and redundant; private/admin topology, credentials and user records stay dark. Publication is never treated as proof that a named AI provider surfaced or recommended Evercraft.
