@@ -442,8 +442,9 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
 
   try {
     const catalog = loadPublicMachineCatalog();
+    const directory = loadPublicProductDirectory();
     const painIndex = loadPublicPainIndex();
-    const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
+    const matches = rankDiscoveryCandidates(catalog, directory, q, { limit: requestedLimit, minimumScore: 8 });
     const capabilityMatches = rankPain(painIndex, q, requestedLimit)
       .filter(({ score }: any) => Number(score) >= 8)
       .map(({ entry, score }: any) => ({
