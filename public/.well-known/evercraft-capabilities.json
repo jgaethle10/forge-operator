@@ -18,7 +18,9 @@
       "path": "/api/revenue-watershed"
     },
     "machineCatalog": "/.well-known/evercraft-machine-catalog.json",
-    "chumRevenue": "/chum/revenue.json"
+    "chumRevenue": "/chum/revenue.json",
+    "intentMap": "/.well-known/evercraft-intents.json",
+    "intentText": "/intents.txt"
   },
   "jobs": [
     "operations bottleneck diagnosis",
