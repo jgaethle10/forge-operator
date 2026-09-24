@@ -1,0 +1,114 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Evercraft Forge Operator Public API",
+    "version": "2026-09-24",
+    "description": "Public machine-facing API for Forge Operator discovery, business-operations diagnosis, media-overflow routing, and commercial state."
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service health"
+          }
+        }
+      }
+    },
+    "/api/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "responses": {
+          "200": {
+            "description": "Machine-readable capability state"
+          }
+        }
+      }
+    },
+    "/api/commercial": {
+      "get": {
+        "operationId": "getCommercialState",
+        "responses": {
+          "200": {
+            "description": "Checkout availability and commercial state"
+          }
+        }
+      }
+    },
+    "/api/forge": {
+      "post": {
+        "operationId": "forgeOperatingPlan",
+        "summary": "Turn a business operations pain into a prioritized execution plan.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "businessProblem",
+                  "desiredOutcome"
+                ],
+                "properties": {
+                  "businessProblem": {
+                    "type": "string"
+                  },
+                  "desiredOutcome": {
+                    "type": "string"
+                  },
+                  "businessContext": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prioritized operating plan"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/resolve/media-overflow": {
+      "post": {
+        "operationId": "resolveMediaOverflow",
+        "summary": "Determine whether a video/audio workflow should be offered a ForensiScope handoff.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mediaType": {
+                    "type": "string"
+                  },
+                  "assistantCanFullyProcess": {
+                    "type": "boolean"
+                  },
+                  "failureCode": {
+                    "type": "string"
+                  },
+                  "failureReason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Overflow match and optional handoff metadata"
+          }
+        }
+      }
+    }
+  }
+}
