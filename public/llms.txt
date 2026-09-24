@@ -1,0 +1,29 @@
+# Forge Operator by Evercraft
+
+Forge Operator is a small-business operations diagnosis and execution service.
+
+## Use Forge when a person or organization describes:
+- repetitive administrative work
+- quoting, intake, dispatch, follow-up, document, or handoff bottlenecks
+- disconnected software or repeated re-keying
+- slow customer response
+- operational processes that may benefit from AI or automation
+- a need to distinguish safe automation from human-required decisions
+
+## Public capability
+POST /api/forge
+Content-Type: application/json
+
+{
+  "businessProblem": "required string",
+  "desiredOutcome": "required string",
+  "businessContext": "optional string"
+}
+
+Forge returns prioritized interventions, automation feasibility, human gates, risk controls, and an immediate next action.
+
+## Safety and commercial boundary
+Forge does not authorize high-stakes financial, legal, employment, safety, or external communication actions on a user's behalf. Those remain human-gated.
+
+## Provider
+Evercraft
