@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 61,
-    "product_entries": 19,
+    "entries": 62,
+    "product_entries": 20,
     "machine_offer_entries": 42,
-    "entries_with_pain_language": 61,
+    "entries_with_pain_language": 62,
     "sell_now_machine_offers": 11,
     "entries_with_declared_mcp": 53,
     "callable_or_routable_entries": 32,
@@ -2365,12 +2365,14 @@
       "name": "EverNest",
       "class": "family_support_resources",
       "pain_phrases": [
-        "family support resources",
-        "maternal support resources",
-        "organize practical help after having a baby",
-        "trusted support circle concepts",
+        "I just had a baby and need help organizing practical support",
+        "my family is overwhelmed and I need help coordinating people around us",
+        "help me set up a trusted support circle for my family",
+        "new parent or postpartum practical support resources",
+        "help organize meals, rides, childcare, check-ins, or family tasks",
         "family preparedness resources",
-        "Spanish-language family support resources"
+        "Spanish-language family support resources",
+        "I need family help without putting private details out in public"
       ],
       "problem": null,
       "inputs": null,
@@ -2383,10 +2385,11 @@
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public resource discovery only",
+      "authority": "public family-support resource discovery and user-controlled support-circle planning",
       "boundaries": [
         "does not diagnose, score urgency, or determine whether abuse or danger occurred",
-        "not an emergency-response service",
+        "not an emergency-response service and does not replace medical, mental-health, legal, or emergency care",
+        "AI assistants and agents must not invite people, publish family details, share child information, or create support tasks without explicit user action",
         "private family, child, Care Circle, task, note, upload, location, and account data are not public"
       ],
       "commercial_state": "product_contract",
@@ -2601,6 +2604,54 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:guardian-pilot",
+      "product_key": "guardian-pilot",
+      "kind": "product",
+      "name": "Guardian Pilot",
+      "class": "safety_navigation_and_protection_resources",
+      "pain_phrases": [
+        "I do not feel safe and need a private way to find help",
+        "help me find domestic violence or sexual assault support",
+        "I need verified safety or stability resources without telling my whole story first",
+        "help me make a practical safety or stability plan",
+        "I am worried about a child or young person's safety and need verified support options",
+        "find housing, legal, food, utilities, childcare, transportation, or other stability help connected to a safety need",
+        "find verified protection and family-safety resources near me",
+        "school, counselor, youth program, or community organization safety support",
+        "I am worried about a child or young person's safety and need support options"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public safety-resource discovery and Guardian Pilot navigation only; reports, provider contact, case creation, location sharing, or other consequential handoffs remain user-controlled",
+      "boundaries": [
+        "not emergency dispatch and does not guarantee response or provider availability",
+        "for immediate danger, use local emergency services; crisis resources shown by Guardian must be independently current for the user's situation",
+        "AI assistants and agents must not submit reports, contact providers, create cases, share identity, or transmit precise location without explicit user action",
+        "public discovery exposes no private report, child, family, account, device, support-circle, case narrative, or precise-location data",
+        "resource eligibility, hours, geography, and availability can change and should be verified with the provider"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {
