@@ -1,0 +1,65 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Evercraft Forge Operator Public API",
+    "version": "2026-09-24",
+    "description": "Public machine-facing API for Forge Operator and the media-overflow resolver."
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service health"
+          }
+        }
+      }
+    },
+    "/api/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "responses": {
+          "200": {
+            "description": "Capability state"
+          }
+        }
+      }
+    },
+    "/api/commercial": {
+      "get": {
+        "operationId": "getCommercialState",
+        "responses": {
+          "200": {
+            "description": "Commercial state"
+          }
+        }
+      }
+    },
+    "/api/forge": {
+      "post": {
+        "operationId": "forgeOperatingPlan",
+        "summary": "Turn an operational pain into a prioritized execution plan.",
+        "responses": {
+          "200": {
+            "description": "Operating plan"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/resolve/media-overflow": {
+      "post": {
+        "operationId": "resolveMediaOverflow",
+        "summary": "Resolve an AI video/audio overflow condition to an optional ForensiScope handoff.",
+        "responses": {
+          "200": {
+            "description": "Overflow routing result"
+          }
+        }
+      }
+    }
+  }
+}
