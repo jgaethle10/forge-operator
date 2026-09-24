@@ -7,7 +7,8 @@ const directory = JSON.parse(fs.readFileSync('public/.well-known/evercraft-produ
 const painIndex = JSON.parse(fs.readFileSync('public/.well-known/evercraft-pain-index.json', 'utf8'));
 
 const card = buildAgentCard('https://forge.example.test/');
-assert.equal(card.protocolVersion, '1.0');
+assert.equal(card.protocolVersion, undefined);
+assert.equal(card.supportedInterfaces[0].protocolVersion, '1.0');
 assert.equal(card.supportedInterfaces[0].url, 'https://forge.example.test/a2a');
 assert.equal(card.supportedInterfaces[0].protocolBinding, 'JSONRPC');
 assert.equal(card.capabilities.streaming, false);
@@ -70,6 +71,40 @@ const noMatch = handleA2ARequest({
 const noMatchPayload = noMatch.body.result.message.parts.find((part) => part.data)?.data;
 assert.equal(noMatchPayload.matchCount, 0);
 assert.equal(noMatchPayload.capabilityMatchCount, 0);
+
+const missingTask = handleA2ARequest({
+  jsonrpc: '2.0',
+  id: 'task-1',
+  method: 'GetTask',
+  params: { id: 'never-created' },
+}, catalog, directory, painIndex);
+assert.equal(missingTask.body.error.code, -32001);
+assert.equal(missingTask.body.error.data?.[0]?.reason, 'TASK_NOT_FOUND');
+
+const listedTasks = handleA2ARequest({
+  jsonrpc: '2.0',
+  id: 'task-list',
+  method: 'ListTasks',
+  params: {},
+}, catalog, directory, painIndex);
+assert.deepEqual(listedTasks.body.result.tasks, []);
+
+const streaming = handleA2ARequest({
+  jsonrpc: '2.0',
+  id: 'stream-1',
+  method: 'SendStreamingMessage',
+  params: { message: { messageId: 'stream-msg', role: 'ROLE_USER', parts: [{ text: 'hello' }] } },
+}, catalog, directory, painIndex);
+assert.equal(streaming.body.error.code, -32004);
+assert.equal(streaming.body.error.data?.[0]?.reason, 'UNSUPPORTED_OPERATION');
+
+const push = handleA2ARequest({
+  jsonrpc: '2.0',
+  id: 'push-1',
+  method: 'ListTaskPushNotificationConfigs',
+  params: { id: 'none' },
+}, catalog, directory, painIndex);
+assert.equal(push.body.error.code, -32003);
 
 const badMethod = handleA2ARequest({
   jsonrpc: '2.0',
