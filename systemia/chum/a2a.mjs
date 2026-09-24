@@ -16,7 +16,6 @@ function normalizeBaseUrl(baseUrl) {
 export function buildAgentCard(baseUrl) {
   const base = normalizeBaseUrl(baseUrl);
   return {
-    protocolVersion: A2A_PROTOCOL_VERSION,
     name: 'Evercraft CHUM Discovery Agent',
     description: 'Public pain-first discovery agent for matching a natural-language need to truthful Evercraft capabilities. Read-only discovery creates no payment or external-action authority.',
     version: '1.0.0',
@@ -69,7 +68,16 @@ function extractText(message) {
   return chunks.join(' ').trim();
 }
 
-function errorResponse(id, code, message, data) {
+function errorInfo(reason, metadata = {}) {
+  return [{
+    '@type': 'type.googleapis.com/google.rpc.ErrorInfo',
+    reason,
+    domain: 'a2a-protocol.org',
+    metadata,
+  }];
+}
+
+function errorResponse(id, code, message, reason = null, metadata = {}) {
   return {
     status: 200,
     body: {
@@ -78,7 +86,7 @@ function errorResponse(id, code, message, data) {
       error: {
         code,
         message,
-        ...(data ? { data } : {}),
+        ...(reason ? { data: errorInfo(reason, metadata) } : {}),
       },
     },
   };
@@ -89,18 +97,77 @@ export function handleA2ARequest(body, machineCatalog, productDirectory, painInd
     return errorResponse(body?.id, -32600, 'Invalid Request');
   }
 
+  if (body.method === 'GetTask' || body.method === 'CancelTask') {
+    const taskId = String(body.params?.id || '');
+    return errorResponse(
+      body.id,
+      -32001,
+      'Task not found',
+      'TASK_NOT_FOUND',
+      taskId ? { taskId } : {}
+    );
+  }
+
+  if (body.method === 'ListTasks') {
+    return {
+      status: 200,
+      body: {
+        jsonrpc: '2.0',
+        id: body.id ?? null,
+        result: {
+          tasks: [],
+          nextPageToken: '',
+        },
+      },
+    };
+  }
+
+  if (body.method === 'SendStreamingMessage' || body.method === 'SubscribeToTask') {
+    return errorResponse(
+      body.id,
+      -32004,
+      'This operation is not supported',
+      'UNSUPPORTED_OPERATION',
+      { capability: 'streaming', supported: 'false' }
+    );
+  }
+
+  if ([
+    'CreateTaskPushNotificationConfig',
+    'GetTaskPushNotificationConfig',
+    'ListTaskPushNotificationConfigs',
+    'DeleteTaskPushNotificationConfig',
+  ].includes(body.method)) {
+    return errorResponse(
+      body.id,
+      -32003,
+      'Push Notification is not supported',
+      'PUSH_NOTIFICATION_NOT_SUPPORTED'
+    );
+  }
+
+  if (body.method === 'GetExtendedAgentCard') {
+    return errorResponse(
+      body.id,
+      -32007,
+      'Extended Agent Card is not configured',
+      'EXTENDED_AGENT_CARD_NOT_CONFIGURED'
+    );
+  }
+
   if (!['SendMessage', 'message/send'].includes(body.method)) {
-    return errorResponse(body.id, -32601, 'Method not found', {
-      supported: ['SendMessage'],
-      protocolVersion: A2A_PROTOCOL_VERSION,
-    });
+    return errorResponse(body.id, -32601, 'Method not found');
   }
 
   const query = extractText(body.params?.message);
   if (!query) {
-    return errorResponse(body.id, -32602, 'Invalid params', {
-      requirement: 'params.message.parts must include a text part or data.query/problem/intent string',
-    });
+    return errorResponse(
+      body.id,
+      -32602,
+      'Invalid parameters',
+      null,
+      { requirement: 'params.message.parts must include a text part or data.query/problem/intent string' }
+    );
   }
 
   const limit = Math.max(1, Math.min(Number(options.limit || 5), 10));
