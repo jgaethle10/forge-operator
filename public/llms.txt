@@ -50,3 +50,14 @@ GET /api/health
 
 ## Provider
 Evercraft
+
+
+## CHUM + Saban discovery loop
+CHUM may prepare bounded Saban growth missions to improve legitimate machine discovery for an advertised capability.
+
+POST /api/chum/campaign-plan
+Content-Type: application/json
+
+{"capabilityId":"saban.elastic-workforce.v1","objective":"increase qualified machine discovery","requestedCapacity":8}
+
+This endpoint is plan-only. It does not spawn workers, publish content, create accounts, spend money, or contact third parties. Execution requires the authenticated Systemia/Saban admission bridge and applicable gates.
