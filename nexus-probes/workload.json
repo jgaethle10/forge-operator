@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "nexus-cross-llm-probes",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "provider_policy": {
+    "preferred": "evercraft-owned",
+    "fallback": "none"
+  },
+  "execution": {
+    "command": "node scripts/run-nexus-cross-llm-probes.mjs",
+    "cadence": "daily",
+    "max_parallel_provider_sessions": 7,
+    "checkpoint_between_cases": true
+  },
+  "inputs": [
+    "nexus-probes/probe-suite.json",
+    "nexus-probes/provider-matrix.json",
+    "nexus-probes/bridge-contract.json"
+  ],
+  "secrets": [
+    "NEXUS_PROBE_BRIDGE_URL",
+    "NEXUS_PROBE_BRIDGE_TOKEN"
+  ],
+  "outputs": [
+    "probe-receipts/*.json"
+  ],
+  "receipt_requirements": [
+    "provider",
+    "surface",
+    "case_id",
+    "status",
+    "observed_at",
+    "response_sha256"
+  ],
+  "safety": [
+    "clean sessions",
+    "no brand seeding",
+    "no prior conversation context",
+    "no credential exfiltration",
+    "no captcha bypass",
+    "no purchases or external messages"
+  ]
+}

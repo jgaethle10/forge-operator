@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.nexus.cross-llm-bridge-contract.v1",
+  "updated_at": "2026-09-24",
+  "endpoint": "POST /v1/probe",
+  "request": {
+    "required": [
+      "probe_id",
+      "provider",
+      "surface",
+      "clean_session",
+      "prompt",
+      "capture",
+      "constraints"
+    ],
+    "example": {
+      "probe_id": "media-overflow-001:claude",
+      "provider": "claude",
+      "surface": "consumer_chat",
+      "clean_session": true,
+      "prompt": "<brand-blind user pain>",
+      "capture": {
+        "text": true,
+        "citations": true,
+        "urls": true,
+        "screenshot": true
+      },
+      "constraints": {
+        "no_brand_seed": true,
+        "no_prior_context": true,
+        "no_external_actions": true
+      }
+    }
+  },
+  "response": {
+    "required": [
+      "status",
+      "provider",
+      "surface"
+    ],
+    "status": [
+      "completed",
+      "blocked",
+      "failed"
+    ],
+    "optional": [
+      "session_ref",
+      "text",
+      "citations",
+      "urls",
+      "screenshot_ref",
+      "provider_receipt",
+      "started_at",
+      "completed_at",
+      "blocked_reason",
+      "error"
+    ]
+  },
+  "security": [
+    "Provider credentials and cookies stay inside the authorized Nexus execution boundary.",
+    "Receipts must never include raw credentials, auth headers, cookies, or session tokens.",
+    "Do not bypass CAPTCHAs, provider access controls, rate limits, or account restrictions.",
+    "A provider API response must not be labeled as consumer UI behavior.",
+    "No messages, purchases, subscriptions, or other consequential external actions are permitted during discovery probes."
+  ]
+}

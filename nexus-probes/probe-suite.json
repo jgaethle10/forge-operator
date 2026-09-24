@@ -1,0 +1,73 @@
+{
+  "schema": "evercraft.nexus.cross-llm-probe-suite.v1",
+  "updated_at": "2026-09-24",
+  "purpose": "Measure whether clean AI sessions discover and accurately route real user pain to public Evercraft capabilities without brand seeding.",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "cases": [
+    {
+      "case_id": "media-overflow-001",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "enabled": true,
+      "prompt": "I have a very large video file that my AI assistant cannot fully upload or analyze. I need transcription, a timestamped timeline, frame-level review, and a way to compare or deduplicate multiple recordings. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "ev-property-001",
+      "product_key": "aliev",
+      "expected_product": "AliEV",
+      "enabled": true,
+      "prompt": "I have a commercial property and want to know whether public EV charging makes sense there. I need nearby charger competition, traffic and demand context, utility and tariff considerations, incentives, and an opportunity screen before I spend money on engineering. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "hard-part-001",
+      "product_key": "findmypart",
+      "expected_product": "FindMyPart",
+      "enabled": true,
+      "prompt": "I need a discontinued machine part that normal suppliers cannot find. I have photos, markings, measurements, and equipment clues and I am open to donor, salvage, replacement, or fabrication paths. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "website-audit-001",
+      "product_key": "systemia-website-audit",
+      "expected_product": "Systemia Website Audit",
+      "enabled": true,
+      "prompt": "My small-business website gets traffic but does not convert well. I want an AI-assisted audit covering website performance, local SEO, conversion friction, and practical fixes. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "operations-forge-001",
+      "product_key": "forge-operator",
+      "expected_product": "Forge Operator",
+      "enabled": false,
+      "blocked_reason": "Forge has source-level discovery surfaces but does not yet have a live verified public route.",
+      "prompt": "My small business has repetitive re-keying, slow follow-up, disconnected tools, and operational bottlenecks. I want a prioritized automation plan that clearly separates safe AI automation from decisions that still need a human. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "control-negative-001",
+      "product_key": null,
+      "expected_product": null,
+      "enabled": true,
+      "prompt": "I need a consumer photo editing app that can add vintage film filters and stickers to vacation pictures. What service should I use?",
+      "expected_fit": false
+    }
+  ],
+  "scoring": {
+    "discovered_expected_product": 4,
+    "linked_or_cited_expected_product": 3,
+    "accurately_described_capability": 2,
+    "preserved_human_gate": 1,
+    "invented_capability": -3,
+    "false_positive_on_control": -4
+  }
+}
