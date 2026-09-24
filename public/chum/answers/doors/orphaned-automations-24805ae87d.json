@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
+  "answer_id": "intent:24805ae87d",
+  "user_language": "orphaned automations",
+  "normalized": "orphaned automations",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:evercraft-containment",
+      "kind": "product",
+      "product_key": "evercraft-containment",
+      "public_id": null,
+      "name": "Evercraft Containment",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft.base44.app/containment",
+      "pain_page": "/chum/products/evercraft-containment/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public product discovery and a bounded human-confirmed Persistence Exposure Review; diagnostic purchase does not authorize destructive remediation",
+      "boundaries": [
+        "the public diagnostic does not authorize credential revocation workflow deletion production shutdown or destructive testing",
+        "do not send passwords API keys cookies tokens or private credential material through public intake",
+        "remediation that can interrupt production requires separate explicit scope and authorization",
+        "checkout is not payment proof and paid state requires authoritative verification"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

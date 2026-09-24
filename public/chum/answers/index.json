@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 60,
-    "unique_user_phrases": 436,
-    "mapped_candidate_edges": 443,
+    "pain_index_entries": 61,
+    "unique_user_phrases": 454,
+    "mapped_candidate_edges": 461,
     "ambiguous_phrases": 7,
-    "product_candidates": 18,
+    "product_candidates": 19,
     "machine_offer_candidates": 42
   },
   "doors": [
@@ -161,6 +161,28 @@
       ]
     },
     {
+      "answer_id": "intent:a532e2a149",
+      "user_language": "agent persistence",
+      "normalized": "agent persistence",
+      "relative_json": "/chum/answers/doors/agent-persistence-a532e2a149.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/agent-persistence-a532e2a149.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9ad9d965bc",
       "user_language": "agriculture evidence brief",
       "normalized": "agriculture evidence brief",
@@ -200,6 +222,28 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6bf3174230",
+      "user_language": "AI agents still running",
+      "normalized": "ai agents still running",
+      "relative_json": "/chum/answers/doors/ai-agents-still-running-6bf3174230.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-agents-still-running-6bf3174230.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -667,6 +711,50 @@
       ]
     },
     {
+      "answer_id": "intent:fa3a1c24fc",
+      "user_language": "audit my AI agents and automations for persistence",
+      "normalized": "audit my ai agents and automations for persistence",
+      "relative_json": "/chum/answers/doors/audit-my-ai-agents-and-automations-for-persistence-fa3a1c24fc.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-my-ai-agents-and-automations-for-persistence-fa3a1c24fc.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:30c6cd575f",
+      "user_language": "audit my n8n Make Zapier cloud function or webhook stack for hidden persistence",
+      "normalized": "audit my n8n make zapier cloud function or webhook stack for hidden persistence",
+      "relative_json": "/chum/answers/doors/audit-my-n8n-make-zapier-cloud-function-or-webhook-stack-for-hidden-persistence-30c6cd575f.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-my-n8n-make-zapier-cloud-function-or-webhook-stack-for-hidden-persistence-30c6cd575f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:4c2e67ee30",
       "user_language": "audit my resume",
       "normalized": "audit my resume",
@@ -860,6 +948,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/capability-concierge-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f812c17c66",
+      "user_language": "automation persistence",
+      "normalized": "automation persistence",
+      "relative_json": "/chum/answers/doors/automation-persistence-f812c17c66.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/automation-persistence-f812c17c66.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -1725,6 +1835,28 @@
       ]
     },
     {
+      "answer_id": "intent:2220ba512e",
+      "user_language": "cloud function cleanup",
+      "normalized": "cloud function cleanup",
+      "relative_json": "/chum/answers/doors/cloud-function-cleanup-2220ba512e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cloud-function-cleanup-2220ba512e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5a0a04f9ec",
       "user_language": "cloud or headless browser for an AI workflow",
       "normalized": "cloud or headless browser for an ai workflow",
@@ -2204,6 +2336,28 @@
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
           "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7941dee6af",
+      "user_language": "cron job audit",
+      "normalized": "cron job audit",
+      "relative_json": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cron-job-audit-7941dee6af.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -3409,6 +3563,28 @@
       ]
     },
     {
+      "answer_id": "intent:4d901de764",
+      "user_language": "find orphaned cron jobs callbacks webhooks retries queues or credentials",
+      "normalized": "find orphaned cron jobs callbacks webhooks retries queues or credentials",
+      "relative_json": "/chum/answers/doors/find-orphaned-cron-jobs-callbacks-webhooks-retries-queues-or-credentials-4d901de764.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-orphaned-cron-jobs-callbacks-webhooks-retries-queues-or-credentials-4d901de764.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:57334a96e5",
       "user_language": "find provenance problems in this data",
       "normalized": "find provenance problems in this data",
@@ -3559,6 +3735,28 @@
           "pain_page": "/chum/products/systemia-website-audit/",
           "public_url": "https://systemia-audit-pro.base44.app/",
           "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5e46a2a660",
+      "user_language": "find what can respawn",
+      "normalized": "find what can respawn",
+      "relative_json": "/chum/answers/doors/find-what-can-respawn-5e46a2a660.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-what-can-respawn-5e46a2a660.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
         }
       ]
     },
@@ -4218,6 +4416,28 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
           "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b599e48bbe",
+      "user_language": "help me safely shut down an automation stack and prove it stays off",
+      "normalized": "help me safely shut down an automation stack and prove it stays off",
+      "relative_json": "/chum/answers/doors/help-me-safely-shut-down-an-automation-stack-and-prove-it-stays-off-b599e48bbe.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-safely-shut-down-an-automation-stack-and-prove-it-stays-off-b599e48bbe.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -5137,6 +5357,28 @@
       ]
     },
     {
+      "answer_id": "intent:8438674d63",
+      "user_language": "Make automation cleanup",
+      "normalized": "make automation cleanup",
+      "relative_json": "/chum/answers/doors/make-automation-cleanup-8438674d63.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-automation-cleanup-8438674d63.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1b0d24ff89",
       "user_language": "make me a decision grade research report",
       "normalized": "make me a decision grade research report",
@@ -5242,6 +5484,28 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:51e9389dab",
+      "user_language": "map how disabled or deleted agents could regenerate",
+      "normalized": "map how disabled or deleted agents could regenerate",
+      "relative_json": "/chum/answers/doors/map-how-disabled-or-deleted-agents-could-regenerate-51e9389dab.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-how-disabled-or-deleted-agents-could-regenerate-51e9389dab.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -5665,6 +5929,28 @@
       ]
     },
     {
+      "answer_id": "intent:18925f60fe",
+      "user_language": "n8n cleanup",
+      "normalized": "n8n cleanup",
+      "relative_json": "/chum/answers/doors/n8n-cleanup-18925f60fe.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/n8n-cleanup-18925f60fe.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:57ad2a7ed8",
       "user_language": "network resilience software",
       "normalized": "network resilience software",
@@ -5826,6 +6112,28 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
           "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:24805ae87d",
+      "user_language": "orphaned automations",
+      "normalized": "orphaned automations",
+      "relative_json": "/chum/answers/doors/orphaned-automations-24805ae87d.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/orphaned-automations-24805ae87d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -6696,6 +7004,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-proof-portal-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7dcc426c23",
+      "user_language": "prove the agent stays dead",
+      "normalized": "prove the agent stays dead",
+      "relative_json": "/chum/answers/doors/prove-the-agent-stays-dead-7dcc426c23.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prove-the-agent-stays-dead-7dcc426c23.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -9111,6 +9441,28 @@
       ]
     },
     {
+      "answer_id": "intent:6fd74117c5",
+      "user_language": "webhook cleanup",
+      "normalized": "webhook cleanup",
+      "relative_json": "/chum/answers/doors/webhook-cleanup-6fd74117c5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/webhook-cleanup-6fd74117c5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:18aa1bf010",
       "user_language": "website audit",
       "normalized": "website audit",
@@ -9260,6 +9612,28 @@
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
           "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:98c67beafc",
+      "user_language": "what is still running after I turned the automation off",
+      "normalized": "what is still running after i turned the automation off",
+      "relative_json": "/chum/answers/doors/what-is-still-running-after-i-turned-the-automation-off-98c67beafc.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-is-still-running-after-i-turned-the-automation-off-98c67beafc.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
         }
       ]
@@ -9701,6 +10075,28 @@
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:126ea7dc78",
+      "user_language": "Zapier cleanup",
+      "normalized": "zapier cleanup",
+      "relative_json": "/chum/answers/doors/zapier-cleanup-126ea7dc78.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/zapier-cleanup-126ea7dc78.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-containment",
+          "kind": "product",
+          "product_key": "evercraft-containment",
+          "public_id": null,
+          "name": "Evercraft Containment",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-containment/",
+          "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
         }
       ]
     }

@@ -64,6 +64,17 @@
       "mcp": "https://event-wave.base44.app/functions/eventWaveMcp"
     },
     {
+      "product_key": "evercraft-containment",
+      "name": "Evercraft Containment",
+      "canonical_url": "https://evercraft.base44.app/containment",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-containment/",
+      "registry_name": null,
+      "mcp": null
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "canonical_url": "https://network-control.base44.app/",

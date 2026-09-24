@@ -4,10 +4,14 @@
   "updated_at": "2026-09-24",
   "purpose": "Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.",
   "universal_front_door": {
-    "name": "Evercraft Machine Commerce",
-    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "use_when": "The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits."
+    "name": "Evercraft discovery watershed",
+    "human_directory": "/ai",
+    "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "pain_index": "/.well-known/evercraft-pain-index.json",
+    "answer_graph": "/chum/answers/index.json",
+    "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "use_when": "Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant."
   },
   "routing_policy": {
     "pain_first": true,
@@ -79,7 +83,7 @@
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
       "class": "home_service_and_contractor_operations",
-      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
       "intents": [
         "get contractor quotes for a home project",
         "find contractors for a project",
@@ -96,11 +100,13 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json",
       "human_confirmation_required": true,
-      "authority": "public homeowner intake and contractor discovery with protected person-level data",
+      "authority": "public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified",
       "boundaries": [
         "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
         "homeowner identity, private addresses, project photos, bids, and transaction records are not public",
-        "paid access requires independently verified subscription state"
+        "paid access requires independently verified subscription state",
+        "the previously advertised Contractor Cloud product hostname is not currently live-verified",
+        "do not imply a live transactional Contractor Cloud UI until a fresh external canary passes"
       ]
     },
     {
@@ -159,6 +165,36 @@
       ]
     },
     {
+      "product_key": "evercraft-containment",
+      "name": "Evercraft Containment",
+      "class": "ai_persistence_and_automation_security_diagnostics",
+      "canonical_url": "https://evercraft.base44.app/containment",
+      "intents": [
+        "what is still running after I turned the automation off",
+        "audit my AI agents and automations for persistence",
+        "find orphaned cron jobs callbacks webhooks retries queues or credentials",
+        "map how disabled or deleted agents could regenerate",
+        "help me safely shut down an automation stack and prove it stays off",
+        "audit my n8n Make Zapier cloud function or webhook stack for hidden persistence"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public product discovery and a bounded human-confirmed Persistence Exposure Review; diagnostic purchase does not authorize destructive remediation",
+      "boundaries": [
+        "the public diagnostic does not authorize credential revocation workflow deletion production shutdown or destructive testing",
+        "do not send passwords API keys cookies tokens or private credential material through public intake",
+        "remediation that can interrupt production requires separate explicit scope and authorization",
+        "checkout is not payment proof and paid state requires authoritative verification"
+      ]
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "application_network_continuity",
@@ -212,6 +248,42 @@
         "prepared enrollment does not activate a merchant",
         "prepared enrollment creates no payment obligation",
         "directory publication and commercial activation require their own verified state"
+      ]
+    },
+    {
+      "product_key": "evercraft-web",
+      "name": "Evercraft Web",
+      "class": "ai_web_fetch_search_browser_infrastructure",
+      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
+      "intents": [
+        "fetch and read a public URL with an AI agent",
+        "extract readable text from a web page for an LLM",
+        "web search API for AI agents",
+        "browser automation API for an AI agent",
+        "cloud or headless browser for an AI workflow",
+        "web agent that can navigate websites",
+        "Playwright, Puppeteer, or CDP-style browser capability for agents",
+        "TinyFish alternative for web search, fetch, or browser automation"
+      ],
+      "invocation": {
+        "mode": "mcp",
+        "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-web"
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
+      "human_confirmation_required": false,
+      "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
+      "boundaries": [
+        "registry publication is not proof that the remote MCP successfully executes Fetch",
+        "Evercraft Fetch must not be described as production-live until its external canary succeeds",
+        "Evercraft Search remains held until independently verified",
+        "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
+        "public discovery does not expose private Systemia topology or credentials",
+        "payment does not expand permissions",
+        "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
+        "search and browser automation remain held unless current runtime evidence says otherwise"
       ]
     },
     {
@@ -341,7 +413,15 @@
         "build a timestamped timeline from a recording",
         "perform frame-level review beyond the current assistant's limits",
         "compare or deduplicate multiple recordings",
-        "review authorized surveillance footage"
+        "review authorized surveillance footage",
+        "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots",
+        "my chatbot says the video is too large",
+        "work with video files too large for normal chatbots",
+        "transcribe a huge video and remove duplicate or repeated segments",
+        "inspect an entire long recording instead of sampling only a few frames",
+        "compare long recordings and find repeated footage",
+        "turn a long video into a searchable transcript and timestamped timeline",
+        "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits"
       ],
       "invocation": {
         "mode": "mcp",
@@ -365,7 +445,7 @@
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "class": "ai_supported_learning",
-      "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "canonical_url": "https://infiniteclassroom.base44.app/",
       "intents": [
         "AI-supported subject learning",
         "guided homework help without simply giving the answer",
@@ -427,7 +507,7 @@
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
       "class": "parking_operations",
-      "canonical_url": "https://skyops-parking.base44.app/",
+      "canonical_url": "https://skyopsparking.base44.app/",
       "intents": [
         "airport parking management software",
         "parking garage reservation management",

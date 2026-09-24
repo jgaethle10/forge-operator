@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 60
-Product entries: 18
+Entries: 61
+Product entries: 19
 Machine-offer entries: 42
 Sell-now machine offers: 11
 
@@ -923,6 +923,34 @@ Use when the user means:
 - venue promotion
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Evercraft Containment
+Capability ID: product:evercraft-containment
+Product key: evercraft-containment
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraft.base44.app/containment
+Use when the user means:
+- what is still running after I turned the automation off
+- audit my AI agents and automations for persistence
+- find orphaned cron jobs callbacks webhooks retries queues or credentials
+- map how disabled or deleted agents could regenerate
+- help me safely shut down an automation stack and prove it stays off
+- audit my n8n Make Zapier cloud function or webhook stack for hidden persistence
+- automation persistence
+- agent persistence
+- AI agents still running
+- orphaned automations
+- webhook cleanup
+- cron job audit
+- n8n cleanup
+- Make automation cleanup
+- Zapier cleanup
+- cloud function cleanup
+- prove the agent stays dead
+- find what can respawn
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Network
 Capability ID: product:evercraft-network

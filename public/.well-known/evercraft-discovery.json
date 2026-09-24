@@ -1,24 +1,36 @@
 {
-  "schema": "evercraft.discovery-watershed.v2",
+  "schema": "evercraft.discovery-watershed.v3",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
   "updated_at": "2026-09-24",
   "purpose": "One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.",
   "start_here": {
+    "human_directory": "/ai",
     "llms": "/llms.txt",
     "llms_full": "/llms-full.txt",
+    "pain_index": "/.well-known/evercraft-pain-index.json",
+    "pain_index_text": "/chum/pain-index.txt",
+    "answer_graph": "/chum/answers/index.json",
+    "answer_graph_text": "/chum/answers/index.txt",
+    "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "products": "/.well-known/evercraft-products.json",
     "agents": "/.well-known/evercraft-agent-directory.json",
     "interfaces": "/.well-known/evercraft-agent-interfaces.json",
     "machine_catalog": "/.well-known/evercraft-machine-catalog.json",
     "chum": "/.well-known/evercraft-chum.json",
     "chum_public_mirror": "/chum/index.json",
+    "revenue_watershed": "/chum/revenue.json",
+    "revenue_watershed_text": "/chum/revenue.txt",
+    "revenue_watershed_html": "/chum/revenue.html",
+    "intent_router": "/api/discover?q={natural-language-problem}",
+    "revenue_router": "/api/revenue-watershed",
     "schema": "/schema.jsonld",
     "openapi": "/openapi.json"
   },
   "universal_front_door": {
-    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
   },
   "state_semantics": {
     "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",
@@ -27,6 +39,11 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
-  "routing_rule": "Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
-  "private_surfaces": "not advertised"
+  "routing_rule": "Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
+  "private_surfaces": "not advertised",
+  "freshness_broadcast": {
+    "coordinator": "CHUM",
+    "mechanism": "IndexNow",
+    "semantics": "Healthy public capability pages are announced for freshness. Submission is not proof of indexing, recommendation, citation or conversion."
+  }
 }

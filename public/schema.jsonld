@@ -44,9 +44,9 @@
     },
     {
       "@type": "Service",
-      "@id": "https://evercraft-contractor-cloud-314d2197.base44.app/#evercraft-service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud#evercraft-service",
       "name": "Evercraft Contractor Cloud",
-      "url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -77,6 +77,17 @@
     },
     {
       "@type": "Service",
+      "@id": "https://evercraft.base44.app/containment#evercraft-service",
+      "name": "Evercraft Containment",
+      "url": "https://evercraft.base44.app/containment",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ai_persistence_and_automation_security_diagnostics",
+      "description": "what is still running after I turned the automation off; audit my AI agents and automations for persistence; find orphaned cron jobs callbacks webhooks retries queues or credentials; map how disabled or deleted agents could regenerate"
+    },
+    {
+      "@type": "Service",
       "@id": "https://network-control.base44.app/#evercraft-service",
       "name": "Evercraft Network",
       "url": "https://network-control.base44.app/",
@@ -96,6 +107,17 @@
       },
       "serviceType": "local_business_rewards_and_partnership",
       "description": "join a local business rewards network; create cross-business loyalty rewards; make my local business more discoverable; join a community business partnership program"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway#evercraft-service",
+      "name": "Evercraft Web",
+      "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ai_web_fetch_search_browser_infrastructure",
+      "description": "fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent"
     },
     {
       "@type": "Service",
@@ -154,9 +176,9 @@
     },
     {
       "@type": "Service",
-      "@id": "https://infinite-classroom-fe2d1357.base44.app/#evercraft-service",
+      "@id": "https://infiniteclassroom.base44.app/#evercraft-service",
       "name": "Infinite Classroom",
-      "url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "url": "https://infiniteclassroom.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -176,9 +198,9 @@
     },
     {
       "@type": "Service",
-      "@id": "https://skyops-parking.base44.app/#evercraft-service",
+      "@id": "https://skyopsparking.base44.app/#evercraft-service",
       "name": "SkyOps Parking",
-      "url": "https://skyops-parking.base44.app/",
+      "url": "https://skyopsparking.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -206,6 +228,127 @@
       },
       "serviceType": "done_for_you_business_website_service",
       "description": "build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-aliev-site-opportunity-snapshot-v1",
+      "name": "AliEV EV Site Opportunity Intelligence",
+      "description": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
+      "url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-audit-center-website-audit-machine-v1",
+      "name": "Systemia Website Audit",
+      "description": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-career-command-interview-practice-machine-v1",
+      "name": "Career Command Interview Practice + Interview Sprint",
+      "description": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
+      "url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-deck-capital-fit-sprint-machine-v1",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "description": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+      "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-eventwave-paid-promotion-v1",
+      "name": "EventWave Event / Venue Promotion",
+      "description": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+      "url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-faie-signal-brief-v1",
+      "name": "FAIE Evidence-First Signal Brief",
+      "description": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-findmypart-paid-hunt-v1",
+      "name": "FindMyPart Paid Part Hunt",
+      "description": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-foundry-app-escape-audit-v1",
+      "name": "Evercraft Foundry App Escape Audit",
+      "description": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-roasted-text-pressure-test-machine-v1",
+      "name": "ROASTED 99¢ Text Pressure Test",
+      "description": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+      "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-site-survive-rapid-audit-v1",
+      "name": "Site-Survive Rapid Audit",
+      "description": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-website-launch-service-v1",
+      "name": "Evercraft Website Launch Service",
+      "description": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
     }
   ]
 }

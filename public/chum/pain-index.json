@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 60,
-    "product_entries": 18,
+    "entries": 61,
+    "product_entries": 19,
     "machine_offer_entries": 42,
-    "entries_with_pain_language": 60,
+    "entries_with_pain_language": 61,
     "sell_now_machine_offers": 11,
     "entries_with_declared_mcp": 53,
     "callable_or_routable_entries": 32,
@@ -2148,6 +2148,62 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:evercraft-containment",
+      "product_key": "evercraft-containment",
+      "kind": "product",
+      "name": "Evercraft Containment",
+      "class": "ai_persistence_and_automation_security_diagnostics",
+      "pain_phrases": [
+        "what is still running after I turned the automation off",
+        "audit my AI agents and automations for persistence",
+        "find orphaned cron jobs callbacks webhooks retries queues or credentials",
+        "map how disabled or deleted agents could regenerate",
+        "help me safely shut down an automation stack and prove it stays off",
+        "audit my n8n Make Zapier cloud function or webhook stack for hidden persistence",
+        "automation persistence",
+        "agent persistence",
+        "AI agents still running",
+        "orphaned automations",
+        "webhook cleanup",
+        "cron job audit",
+        "n8n cleanup",
+        "Make automation cleanup",
+        "Zapier cleanup",
+        "cloud function cleanup",
+        "prove the agent stays dead",
+        "find what can respawn"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://evercraft.base44.app/containment",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public product discovery and a bounded human-confirmed Persistence Exposure Review; diagnostic purchase does not authorize destructive remediation",
+      "boundaries": [
+        "the public diagnostic does not authorize credential revocation workflow deletion production shutdown or destructive testing",
+        "do not send passwords API keys cookies tokens or private credential material through public intake",
+        "remediation that can interrupt production requires separate explicit scope and authorization",
+        "checkout is not payment proof and paid state requires authoritative verification"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

@@ -1,0 +1,28 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Containment",
+  "product_key": "evercraft-containment",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft.base44.app/containment",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public product discovery and a bounded human-confirmed Persistence Exposure Review; diagnostic purchase does not authorize destructive remediation",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "the public diagnostic does not authorize credential revocation workflow deletion production shutdown or destructive testing",
+    "do not send passwords API keys cookies tokens or private credential material through public intake",
+    "remediation that can interrupt production requires separate explicit scope and authorization",
+    "checkout is not payment proof and paid state requires authoritative verification"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}
