@@ -6,6 +6,7 @@
   <url><loc>/forensiscope/</loc></url>
   <url><loc>/llms.txt</loc></url>
   <url><loc>/llms-full.txt</loc></url>
+  <url><loc>/intents.txt</loc></url>
   <url><loc>/ai-discovery.json</loc></url>
   <url><loc>/schema.jsonld</loc></url>
   <url><loc>/openapi.json</loc></url>
@@ -14,6 +15,7 @@
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc></url>
   <url><loc>/.well-known/evercraft-products.json</loc></url>
+  <url><loc>/.well-known/evercraft-intents.json</loc></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc></url>
   <url><loc>/.well-known/evercraft-chum.json</loc></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc></url>
