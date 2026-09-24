@@ -143,6 +143,19 @@ app.get('/robots.txt', (req: Request, res: Response) => {
   }
 });
 
+app.get('/ai', (_req: Request, res: Response) => {
+  res.redirect(308, '/chum/');
+});
+
+app.get('/ai/products/:productKey', (req: Request, res: Response) => {
+  const productKey = String(req.params.productKey || '').trim();
+  if (!productKey) {
+    res.redirect(308, '/chum/');
+    return;
+  }
+  res.redirect(308, `/chum/products/${encodeURIComponent(productKey)}/`);
+});
+
 // CHUM attribution public CORS. Authentication still gates trusted ingestion.
 app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -244,6 +257,10 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',
+      agentManifest: '/.well-known/evercraft-agent.json',
+      aiDirectory: '/ai',
+      sitemap: '/sitemap.xml',
+      robots: '/robots.txt',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
       painIndex: '/.well-known/evercraft-pain-index.json',
