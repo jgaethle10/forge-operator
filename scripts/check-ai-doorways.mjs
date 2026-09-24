@@ -3,11 +3,21 @@ import fs from 'node:fs';
 const registry = JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
 const timeoutMs = 15000;
 
+function resolveProbeUrl(url) {
+  const canonical = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/';
+  const sha = String(process.env.GITHUB_SHA || '').trim();
+  if (sha && String(url || '').startsWith(canonical)) {
+    return `https://raw.githubusercontent.com/jgaethle10/forge-operator/${sha}/${String(url).slice(canonical.length)}`;
+  }
+  return url;
+}
+
 async function probe(url) {
+  const probeUrl = resolveProbeUrl(url);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, {
+    const response = await fetch(probeUrl, {
       method: 'GET',
       redirect: 'follow',
       headers: {
@@ -25,10 +35,11 @@ async function probe(url) {
       content_type: contentType,
       bytes: Buffer.byteLength(body),
       body,
-      looks_html: looksHtml
+      looks_html: looksHtml,
+      probe_url: probeUrl
     };
   } catch (error) {
-    return {ok:false,status:0,error:error instanceof Error ? error.message : String(error),bytes:0,body:'',looks_html:false};
+    return {ok:false,status:0,error:error instanceof Error ? error.message : String(error),bytes:0,body:'',looks_html:false,probe_url:probeUrl};
   } finally {
     clearTimeout(timer);
   }
