@@ -19,6 +19,7 @@ export type ChumDirectory = {
 };
 
 export type ChumRegistryProduct = {
+  product_key?: string;
   registry_name: string;
   mcp?: string;
   triggers?: string[];
@@ -64,7 +65,7 @@ function tokens(value: unknown): string[] {
   return [...new Set(normalize(value).split(' ').filter((token)=>token.length>1&&!STOP.has(token)))];
 }
 function registryKey(entry: ChumRegistryProduct): string {
-  return String(entry.registry_name || '').split('/').pop() || '';
+  return String(entry.product_key || String(entry.registry_name || '').split('/').pop() || '');
 }
 function scoreText(query:string, queryTokens:string[], candidate:string, weight:number):number {
   const normalized=normalize(candidate);
