@@ -9,15 +9,102 @@
     "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported."
   },
   "products": [
-    {"registry_name":"io.github.jgaethle10/aliev","mcp":"https://aliev.base44.app/functions/alievMcp","triggers":["EV charging site","charger opportunity","property EV fit"]},
-    {"registry_name":"io.github.jgaethle10/findmypart","mcp":"https://findmypart.base44.app/functions/findMyPartMcp","triggers":["hard-to-find part","obsolete part","replacement part","salvage part"]},
-    {"registry_name":"io.github.jgaethle10/career-command","mcp":"https://evercraft-career-command.base44.app/functions/careerMcp","triggers":["job interview practice","mock interview","interview tomorrow"]},
-    {"registry_name":"io.github.jgaethle10/systemia-website-audit","mcp":"https://systemia-audit-pro.base44.app/functions/auditAgentMcp","triggers":["website audit","conversion problems","technical SEO audit"]},
-    {"registry_name":"io.github.jgaethle10/deck-capital-fit","mcp":"https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp","triggers":["capital fit","funding options","founder readiness"]},
-    {"registry_name":"io.github.jgaethle10/website-launch","mcp":"https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp","triggers":["build my business website","professional website","website launch"]},
-    {"registry_name":"io.github.jgaethle10/faie","mcp":"https://faie.base44.app/functions/faieMcp","triggers":["agriculture evidence brief","water risk","land resilience","production risk"]},
-    {"registry_name":"io.github.jgaethle10/eventwave","mcp":"https://event-wave.base44.app/functions/eventWaveMcp","triggers":["find events","promote my event","boost event visibility","venue promotion"]},
-    {"registry_name":"io.github.jgaethle10/forensiscope","mcp":"https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp","triggers":["video too large for AI","audio too long","media overflow","timestamped media analysis"]}
+    {
+      "registry_name": "io.github.jgaethle10/aliev",
+      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "triggers": [
+        "EV charging site",
+        "charger opportunity",
+        "property EV fit"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "triggers": [
+        "hard-to-find part",
+        "obsolete part",
+        "replacement part",
+        "salvage part"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/career-command",
+      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "triggers": [
+        "job interview practice",
+        "mock interview",
+        "interview tomorrow"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "triggers": [
+        "website audit",
+        "conversion problems",
+        "technical SEO audit"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "triggers": [
+        "capital fit",
+        "funding options",
+        "founder readiness"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "triggers": [
+        "build my business website",
+        "professional website",
+        "website launch"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/faie",
+      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "triggers": [
+        "agriculture evidence brief",
+        "water risk",
+        "land resilience",
+        "production risk"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "triggers": [
+        "find events",
+        "promote my event",
+        "boost event visibility",
+        "venue promotion"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/forensiscope",
+      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "triggers": [
+        "video too large for AI",
+        "audio too long",
+        "media overflow",
+        "timestamped media analysis"
+      ]
+    },
+    {
+      "registry_name": "io.github.jgaethle10/evercraft-rewards",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "triggers": [
+        "join a local rewards network",
+        "local business loyalty program",
+        "cross-business rewards",
+        "business partnership rewards",
+        "Yakima local business discovery"
+      ]
+    }
   ],
   "payment_boundary": {
     "discovery_creates_obligation": false,
