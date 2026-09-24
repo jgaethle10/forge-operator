@@ -1,0 +1,124 @@
+{
+  "schema": "evercraft.agent-directory.v1",
+  "provider": "Evercraft LLC",
+  "updated_at": "2026-09-24",
+  "purpose": "Public machine-readable directory for routing natural-language needs to bounded Evercraft agent capabilities. Public discovery does not create private-system authority or a payment obligation.",
+  "universal_front_door": {
+    "name": "Evercraft Machine Commerce",
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "use_when": "The user describes a pain or desired outcome but does not know which Evercraft product or specialist fits."
+  },
+  "specialists": [
+    {
+      "product_key": "aliev",
+      "name": "AliEV",
+      "registry_name": "io.github.jgaethle10/aliev",
+      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "intents": [
+        "EV charging property opportunity",
+        "charger competition near an address",
+        "traffic utility tariff and incentive screening"
+      ]
+    },
+    {
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "intents": [
+        "hard-to-find part",
+        "obsolete or discontinued part",
+        "replacement donor salvage or fabrication path"
+      ]
+    },
+    {
+      "product_key": "career-command",
+      "name": "Career Command",
+      "registry_name": "io.github.jgaethle10/career-command",
+      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "intents": [
+        "job interview practice",
+        "mock interview",
+        "career preparation"
+      ]
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "intents": [
+        "website audit",
+        "local SEO problems",
+        "conversion friction",
+        "website performance fixes"
+      ]
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "name": "Deck Capital Fit",
+      "registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "intents": [
+        "capital fit",
+        "funding options",
+        "founder funding readiness"
+      ]
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Website Launch",
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "intents": [
+        "build a business website",
+        "launch a professional website",
+        "small-business website setup"
+      ]
+    },
+    {
+      "product_key": "faie",
+      "name": "FAIE",
+      "registry_name": "io.github.jgaethle10/faie",
+      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "intents": [
+        "agriculture evidence brief",
+        "water risk",
+        "land resilience",
+        "production risk"
+      ]
+    },
+    {
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "intents": [
+        "find events",
+        "promote an event",
+        "venue promotion",
+        "event visibility"
+      ]
+    },
+    {
+      "product_key": "forensiscope",
+      "name": "ForensiScope",
+      "registry_name": "io.github.jgaethle10/forensiscope",
+      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "intents": [
+        "video too large for AI",
+        "audio too long for AI",
+        "full-source media analysis",
+        "transcription timeline comparison and deduplication"
+      ]
+    }
+  ],
+  "commerce_boundary": {
+    "discovery_creates_payment_obligation": false,
+    "human_confirmation_required_for_checkout": true,
+    "checkout_is_not_payment_proof": true,
+    "authoritative_payment_verification_required": true
+  },
+  "privacy_boundary": "Only public commercial capability metadata is listed. Private/admin topology, credentials, user records and internal control surfaces are excluded."
+}
