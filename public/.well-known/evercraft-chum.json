@@ -1,18 +1,47 @@
 {
-  "schema": "evercraft.chum.v2",
+  "schema": "evercraft.chum.v3",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
   "status": "portfolio_distribution_control_plane",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": ["PRODUCT","SIGNAL","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","LEARNING"],
-  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
+  "loop": [
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
+    "LEARNING"
+  ],
+  "provider_targets": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
   "public_entrypoints": {
-    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "llms_full": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms-full.txt",
+    "discovery_guide": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md",
+    "public_mirror": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json",
+    "resolver": {
+      "method": [
+        "GET",
+        "POST"
+      ],
+      "path": "/api/resolve",
+      "query_parameter": "q",
+      "purpose": "Route natural-language user pain to the smallest truthful public Evercraft capability."
+    }
   },
   "verified_crawler_controls": [
     {
@@ -43,5 +72,13 @@
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification"
-  ]
+  ],
+  "protocol_posture": {
+    "web": true,
+    "llms_txt": true,
+    "openapi": true,
+    "mcp_registry": true,
+    "remote_mcp": true,
+    "a2a": "not_advertised_until_required_protocol_operations_are_implemented"
+  }
 }
