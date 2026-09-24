@@ -28,7 +28,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: chum-watershed-${{ github.ref }}
+  group: chum-watershed-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
