@@ -1,24 +1,75 @@
 {
-  "schema": "evercraft.agent-interfaces.v1",
+  "schema": "evercraft.agent-interfaces.v2",
   "provider": "Evercraft LLC",
   "updated_at": "2026-09-24",
   "interfaces": [
     {
       "protocol": "MCP",
       "state": "live",
+      "name": "Evercraft Capability Discovery",
+      "registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+      "transport": "streamable-http",
+      "url": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+      "authority": "read_only_directory_safe",
+      "evidence": "Externally canaried initialize/tools/list and Official MCP Registry publication receipt-backed."
+    },
+    {
+      "protocol": "MCP",
+      "state": "live",
       "name": "Evercraft Machine Commerce",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "transport": "streamable-http",
-      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "evidence": "Externally canaried initialize and tools/list; Official MCP Registry publication receipt-backed."
+      "url": "https://findmypart.base44.app/functions/evercraftMachineCommerceMcp",
+      "authority": "discovery_plus_human_confirmed_checkout_routing",
+      "evidence": "Externally canaried initialize/tools/list and Official MCP Registry publication receipt-backed. Product gateways independently enforce payment and fulfillment truth."
     },
     {
       "protocol": "A2A",
-      "state": "not_live",
-      "name": "Evercraft Machine Commerce A2A adapter",
-      "url": null,
-      "evidence": "No production A2A JSON-RPC endpoint has been live-verified. Do not infer A2A support from MCP availability."
+      "state": "live",
+      "name": "Evercraft Capability Router",
+      "transport": "json-rpc",
+      "url": "https://findmypart.base44.app/functions/evercraftCapabilityA2A",
+      "agent_card": "https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card",
+      "authority": "discovery_and_protocol_handoff",
+      "evidence": "Externally live-verified Agent Card and SendMessage routing."
+    },
+    {
+      "protocol": "OpenAPI",
+      "state": "live",
+      "name": "Evercraft Universal Agent Gateway read-only",
+      "url": "https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe",
+      "authority": "read_only_directory_safe",
+      "evidence": "Externally live-verified OpenAPI 3.1 response and discovery call."
+    },
+    {
+      "protocol": "OpenAPI",
+      "state": "live",
+      "name": "Evercraft Universal Agent Gateway full",
+      "url": "https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi",
+      "authority": "discovery_plus_human_confirmed_checkout_routing",
+      "evidence": "Externally live-verified; checkout path rejects missing explicit human confirmation."
+    },
+    {
+      "protocol": "HTTP",
+      "state": "live",
+      "name": "Systemia Machine Commerce Catalog",
+      "url": "https://systemiacommandcenters.com/api/functions/machineCommerceCatalog",
+      "authority": "public_read_only_catalog",
+      "evidence": "HTTP 200 public-safe catalog with 33 current machine-commercial capability surfaces at CHUM v0.4 release validation."
+    },
+    {
+      "protocol": "Grok Marketplace",
+      "state": "live",
+      "name": "Evercraft direct Grok marketplace",
+      "url": "https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json",
+      "authority": "read_only_capability_discovery_plugin",
+      "evidence": "Marketplace index merged to public Forge Operator main and externally fetched from GitHub."
     }
   ],
-  "rule": "Advertise only interfaces whose protocol endpoint has been independently live-verified."
+  "official_mcp_registry_verified": [
+    "io.github.jgaethle10/evercraft-machine-commerce",
+    "io.github.jgaethle10/evercraft-capability-discovery",
+    "io.github.jgaethle10/aliev"
+  ],
+  "rule": "Advertise only interfaces whose endpoint/listing state has been independently live-verified. Directory presence is not evidence of provider recommendation or conversion."
 }
