@@ -64,7 +64,7 @@ const noMatch = handleA2ARequest({
     message: {
       messageId: 'msg-3',
       role: 'ROLE_USER',
-      parts: [{ text: 'zzzxxyyqqq nonmatching request' }],
+      parts: [{ text: 'zzzxxyyqqq vvkkppzz nnnqqq' }],
     },
   },
 }, catalog, directory, painIndex);
