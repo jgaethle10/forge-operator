@@ -20,7 +20,10 @@
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
-    "chum": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum.json"
+    "chum": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum.json",
+    "llms_full": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms-full.txt",
+    "agent_card": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/agent-card.json",
+    "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/schema.jsonld"
   },
   "agent_instructions": [
     "Do not require the user to know an Evercraft product name.",
