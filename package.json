@@ -10,7 +10,8 @@
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "check": "npm run lint && npm run build"
+    "check:ai": "node scripts/validate-ai-conformance.mjs",
+    "check": "npm run check:ai && npm run lint && npm run build"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
