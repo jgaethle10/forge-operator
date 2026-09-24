@@ -103,17 +103,35 @@
       "product": "Evercraft Rewards"
     },
     {
+      "product_key": "guardian-pilot",
+      "name": "Guardian Pilot",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "mode": "discovery_only",
+      "triggers": [
+        "I do not feel safe and need a private way to find help",
+        "help me find domestic violence or sexual assault support",
+        "I need verified safety or stability resources without telling my whole story first",
+        "help me make a practical safety or stability plan",
+        "I am worried about a child or young person's safety and need support options",
+        "find housing, legal, food, utilities, childcare, transportation, or other stability help connected to a safety need",
+        "find verified protection and family-safety resources near me",
+        "school, counselor, youth program, or community organization safety support"
+      ]
+    },
+    {
       "product_key": "evernest",
       "name": "EverNest",
       "canonical_url": "https://evernest-home.base44.app/",
       "mode": "discovery_only",
       "triggers": [
-        "family support resources",
-        "maternal support resources",
-        "organize practical help after having a baby",
-        "trusted support circle concepts",
+        "I just had a baby and need help organizing practical support",
+        "my family is overwhelmed and I need help coordinating people around us",
+        "help me set up a trusted support circle for my family",
+        "new parent or postpartum practical support resources",
+        "help organize meals, rides, childcare, check-ins, or family tasks",
         "family preparedness resources",
-        "Spanish-language family support resources"
+        "Spanish-language family support resources",
+        "I need family help without putting private details out in public"
       ]
     },
     {
