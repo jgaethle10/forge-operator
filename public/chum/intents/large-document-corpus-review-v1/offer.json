@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "large-document-corpus-review-v1",
+  "name": "Large Document Corpus Review Service",
+  "problem": "Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.",
+  "intent_terms": [
+    "review thousands of documents",
+    "analyze a document dump",
+    "deduplicate a large document set",
+    "map a public records production",
+    "large legal document review"
+  ],
+  "pricing": "Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "public_url": "https://systemiacommandcenters.com",
+  "human_ui_required": false,
+  "confirmation": "Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; upload/payment disabled pending rights/security verification.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=large-document-corpus-review-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

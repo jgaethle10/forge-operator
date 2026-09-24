@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "talent-evidence-profile-machine-v1",
+  "name": "Evidence-Backed Talent Profile",
+  "problem": "A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.",
+  "intent_terms": [
+    "evaluate this candidate from the evidence",
+    "build a talent profile from this portfolio",
+    "what roles fit this person's demonstrated skills",
+    "find gaps in this candidate's proof",
+    "turn this athlete or creator evidence into an opportunity dossier",
+    "map this person's capabilities to opportunities"
+  ],
+  "pricing": "No approved machine price/payment path was verified. Do not auto-quote.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+  "human_ui_required": false,
+  "confirmation": "No contact, representation, application or third-party sharing without explicit authority/consent. Analysis must not infer protected traits or use gated sensitive data for scoring.",
+  "payment_authority": "No verified Evercraft Payments path for this capability.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-evidence-profile-machine-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

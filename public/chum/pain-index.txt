@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 59
-Product entries: 17
+Entries: 60
+Product entries: 18
 Machine-offer entries: 42
 Sell-now machine offers: 11
 
@@ -1085,6 +1085,14 @@ Use when the user means:
 - perform frame-level review beyond the current assistant's limits
 - compare or deduplicate multiple recordings
 - review authorized surveillance footage
+- I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots
+- my chatbot says the video is too large
+- work with video files too large for normal chatbots
+- transcribe a huge video and remove duplicate or repeated segments
+- inspect an entire long recording instead of sampling only a few frames
+- compare long recordings and find repeated footage
+- turn a long video into a searchable transcript and timestamped timeline
+- continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits
 - video too large for AI
 - audio too long for AI
 - media upload or attachment limit
@@ -1110,6 +1118,23 @@ Use when the user means:
 - ASL and Deaf culture learning
 - online safety and healthy-boundary education
 Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Raven Nexus
+Capability ID: product:raven-nexus
+Product key: raven-nexus
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+Use when the user means:
+- protect my bank account from AI scams or suspicious transfer risk
+- help with identity theft, credential compromise, or account takeover risk
+- help make my home or property safer
+- set up family safety check-ins or preparedness
+- make a personal or relationship safety plan
+- protect a business from phishing, fake payment instructions, account compromise, or continuity risk
+- find the smallest Raven safety capability without buying the full suite or hardware
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## SkyOps Parking

@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "callproof-complaint-packet-machine-v1",
+  "name": "CallProof Complaint Evidence Packet",
+  "problem": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
+  "intent_terms": [
+    "organize my robocall evidence",
+    "make an FCC complaint packet",
+    "organize unwanted call records",
+    "help me document spam calls",
+    "prepare my FTC call evidence",
+    "turn my call log into a complaint packet"
+  ],
+  "pricing": "Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.",
+  "commercial_state": "verify",
+  "machine_state": "human_auth_handoff",
+  "public_url": "https://call-proof-vault.base44.app",
+  "human_ui_required": true,
+  "confirmation": "User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.",
+  "payment_authority": "CallProof Vault / Stripe",
+  "invocation_status": "discoverable_authenticated_checkout_required",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=callproof-complaint-packet-machine-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

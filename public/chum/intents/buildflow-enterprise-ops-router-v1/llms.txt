@@ -1,0 +1,25 @@
+# BuildFlow Enterprise Operations Router
+
+Problem: A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-enterprise-ops-router-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- our business operations are a mess
+- we need an ERP but cannot survive a huge implementation
+- help an AI understand how our company works
+- connect our business systems without replacing everything
+- turn spreadsheets and legacy systems into an operating layer
+- we need a safer way for AI agents to work with our business
+- modernize our operations without a big bang migration
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Web",
+  "product_key": "evercraft-web",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
+  "registry_name": "io.github.jgaethle10/evercraft-web",
+  "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+  "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "registry publication is not proof that the remote MCP successfully executes Fetch",
+    "Evercraft Fetch must not be described as production-live until its external canary succeeds",
+    "Evercraft Search remains held until independently verified",
+    "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
+    "public discovery does not expose private Systemia topology or credentials",
+    "payment does not expand permissions"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

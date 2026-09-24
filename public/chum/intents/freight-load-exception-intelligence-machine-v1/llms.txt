@@ -1,0 +1,24 @@
+# Freight Load Exception Intelligence
+
+Problem: A freight operator needs a compact operational picture of a load's exceptions, document gaps, carrier/compliance state and possible financial impact without manually reconciling several records.
+Pricing: No approved machine price or payment path was verified. Do not auto-quote.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=freight-load-exception-intelligence-machine-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- what is wrong with this load
+- audit this freight load for exceptions
+- check this carrier and load paperwork
+- find missing POD or rate mismatches
+- summarize freight risk on this shipment
+- what recoverable charges or detention issues exist
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

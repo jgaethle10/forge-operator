@@ -1,0 +1,25 @@
+# Income War Map Revenue Planning
+
+Problem: A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.
+Pricing: Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.
+Commercial state: hold
+Machine state: discovery_only
+Public capability: https://systemiacommandcenters.com
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=income-war-map-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- help me make more money
+- find revenue opportunities
+- build me an income plan
+- side hustle ideas for my situation
+- revenue war map
+- income strategy
+- how can I increase my income
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

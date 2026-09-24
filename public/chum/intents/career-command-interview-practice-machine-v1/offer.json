@@ -14,6 +14,7 @@
     "behavioral interview practice"
   ],
   "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+  "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
   "human_ui_required": false,

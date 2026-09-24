@@ -1,0 +1,24 @@
+# Country / Domain Intelligence Slice
+
+Problem: An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.
+Pricing: Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=globalstat-country-intelligence-machine-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- compare these countries on this metric
+- give me sourced country intelligence
+- which countries lead on this domain and why
+- show me the evidence behind this country score
+- reconcile conflicting country data
+- country benchmark with sources
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

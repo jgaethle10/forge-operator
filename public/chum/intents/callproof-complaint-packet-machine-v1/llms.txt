@@ -1,0 +1,24 @@
+# CallProof Complaint Evidence Packet
+
+Problem: Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.
+Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
+Commercial state: verify
+Machine state: human_auth_handoff
+Public capability: https://call-proof-vault.base44.app
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=callproof-complaint-packet-machine-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- organize my robocall evidence
+- make an FCC complaint packet
+- organize unwanted call records
+- help me document spam calls
+- prepare my FTC call evidence
+- turn my call log into a complaint packet
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

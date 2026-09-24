@@ -1,0 +1,32 @@
+# ForensiScope Evidence Review
+
+Problem: An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.
+Pricing: Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- this video is too large for the AI
+- the chat will not take my video
+- video too big for AI
+- audio too large for AI
+- analyze a long video
+- review hours of footage
+- transcribe and analyze this video
+- make a timestamped timeline from this video
+- compare two recordings
+- review surveillance footage
+- review video evidence
+- analyze long-form evidence
+- evidence timeline review
+- media evidence integrity review
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

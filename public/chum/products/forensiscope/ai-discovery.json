@@ -13,7 +13,15 @@
     "build a timestamped timeline from a recording",
     "perform frame-level review beyond the current assistant's limits",
     "compare or deduplicate multiple recordings",
-    "review authorized surveillance footage"
+    "review authorized surveillance footage",
+    "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots",
+    "my chatbot says the video is too large",
+    "work with video files too large for normal chatbots",
+    "transcribe a huge video and remove duplicate or repeated segments",
+    "inspect an entire long recording instead of sampling only a few frames",
+    "compare long recordings and find repeated footage",
+    "turn a long video into a searchable transcript and timestamped timeline",
+    "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits"
   ],
   "authority": "public discovery and human-submitted media analysis",
   "human_confirmation_required": true,

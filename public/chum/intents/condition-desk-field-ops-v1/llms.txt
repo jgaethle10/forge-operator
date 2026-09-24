@@ -1,0 +1,24 @@
+# Condition Desk for Weather-Sensitive Field Operations
+
+Problem: Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.
+Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://systemiacommandcenters.com
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=condition-desk-field-ops-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- can my crews work tomorrow
+- weather go no-go for field crews
+- jobsite weather risk
+- roofing weather decision
+- construction weather operations
+- air quality work decision
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

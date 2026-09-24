@@ -1,0 +1,22 @@
+# Systemia Yard Bounded Runtime Extension
+
+Problem: An already-approved active Yard execution needs more runtime without receiving broader authority.
+Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
+Commercial state: verification_required
+Machine state: invocation_ready
+Public capability: 
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- keep this approved agent run going longer
+- buy more runtime for this Yard execution
+- extend this bounded build run
+- give this approved execution more time
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

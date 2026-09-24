@@ -1,0 +1,23 @@
+# Large Document Corpus Review Service
+
+Problem: Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.
+Pricing: Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://systemiacommandcenters.com
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=large-document-corpus-review-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- review thousands of documents
+- analyze a document dump
+- deduplicate a large document set
+- map a public records production
+- large legal document review
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.
