@@ -1,9 +1,10 @@
 {
-  "schema": "evercraft.ai-discovery.v1",
+  "schema": "evercraft.ai-discovery.v2",
   "provider": "Evercraft LLC",
   "updated_at": "2026-09-24",
   "purpose": "Single public machine map from natural-language user pain to Evercraft discovery, verified interfaces and bounded commercial continuation.",
   "start_here": {
+    "resolver": "/api/resolve",
     "agent": "/.well-known/evercraft-agent.json",
     "interfaces": "/.well-known/evercraft-agent-interfaces.json",
     "products": "/.well-known/evercraft-products.json",
@@ -19,5 +20,13 @@
     "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "interfaces_evidence": "/.well-known/evercraft-agent-interfaces.json"
   },
-  "routing_rule": "Start from the user's problem, route to the smallest relevant public capability, preserve evidence/permission/payment boundaries, and never infer provider pickup from publication alone."
+  "routing_rule": "Start from the user's problem. Prefer /api/resolve, route to the smallest relevant public capability, preserve evidence/permission/payment boundaries, and never infer provider pickup from publication alone.",
+  "resolution": {
+    "get": "/api/resolve?q=<natural-language-problem>",
+    "post": "/api/resolve",
+    "deterministic": true,
+    "source": "/.well-known/evercraft-products.json",
+    "universal_fallback": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "creates_payment_obligation": false
+  }
 }
