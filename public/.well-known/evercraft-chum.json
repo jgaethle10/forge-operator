@@ -30,7 +30,11 @@
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt"
   },
   "entrypoints": {
-    "offers": "/.well-known/evercraft-offers.json"
+    "offers": "/.well-known/evercraft-offers.json",
+    "llms_full": "/llms-full.txt",
+    "openapi": "/openapi.json",
+    "jsonld": "/schema.jsonld",
+    "ai_discovery": "/ai-discovery.html"
   },
   "commercial_catalog": {
     "state": "public",
@@ -39,7 +43,11 @@
   },
   "crawler_policy": {
     "public_machine_surfaces": [
-      "/.well-known/evercraft-offers.json"
+      "/.well-known/evercraft-offers.json",
+      "/llms-full.txt",
+      "/openapi.json",
+      "/schema.jsonld",
+      "/ai-discovery.html"
     ]
   }
 }
