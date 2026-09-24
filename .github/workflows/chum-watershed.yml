@@ -3,6 +3,8 @@ name: CHUM watershed
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - "systemia/chum/**"
       - "chum-probes/**"
@@ -17,6 +19,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: chum-watershed-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   watershed:
