@@ -1,0 +1,10 @@
+mission AnalyzeMedia(file) {
+  use ForensiScope@^1
+  budget $2.00 USD
+  timeout 5s
+  replay prefer-replay
+  require approval before ForensiScope.analyze
+  receipt everything
+  call ForensiScope.analyze(file) -> findings
+  return findings
+}

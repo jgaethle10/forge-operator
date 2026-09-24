@@ -1,0 +1,11 @@
+{
+  "name": "@evercraft/everscript-prototype",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node test.mjs",
+    "check": "node --check everscript.mjs && node --check gateway.mjs && node --check agent-bridge.mjs && node --check test.mjs"
+  }
+}
