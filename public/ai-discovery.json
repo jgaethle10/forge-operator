@@ -14,7 +14,12 @@
     "chum": "/.well-known/evercraft-chum.json",
     "chum_public_mirror": "/chum/index.json",
     "schema": "/schema.jsonld",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "sell_now_revenue": "/chum/revenue.json",
+    "sell_now_revenue_text": "/chum/revenue.txt",
+    "intent_router": "/api/discover?q={natural-language-problem}",
+    "revenue_router": "/api/revenue-watershed",
+    "chum_manifest": "/.well-known/evercraft-chum.json"
   },
   "universal_front_door": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
@@ -27,6 +32,6 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
-  "routing_rule": "Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
+  "routing_rule": "Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
   "private_surfaces": "not advertised"
 }
