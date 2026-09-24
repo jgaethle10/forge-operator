@@ -1,0 +1,20 @@
+{
+  "schema": "evercraft.registry-publication.receipt.v1",
+  "product_key": "website-launch",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/website-launch",
+  "version": "1.0.2",
+  "workflow_run_id": 36045552401,
+  "workflow_name": "Publish MCP Registry manifests",
+  "head_sha": "5eda0be3b12c3b049442a0620ba00fb2d03b9da2",
+  "run_conclusion": "success",
+  "publish_job_conclusion": "success",
+  "publish_result": "published",
+  "published_at_utc": "2026-09-24T19:04:42Z",
+  "evidence_state": "receipt_backed",
+  "notes": [
+    "Official MCP Registry publisher reported Successfully published for this server.",
+    "Remote MCP validation and initialize handshake passed before the publication phase.",
+    "Registry publication does not prove that a named consumer AI provider has surfaced or recommended the capability."
+  ]
+}
