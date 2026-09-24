@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.attribution.v1",
-  "name": "CHUM AI-originated conversion attribution",
-  "purpose": "Issue privacy-minimized referral tokens for legitimate AI-originated handoffs and distinguish discovery, landing, checkout, verified payment, and fulfillment without treating checkout as revenue.",
+  "name": "CHUM handoff and conversion attribution",
+  "purpose": "Issue privacy-minimized referral tokens for public Evercraft handoffs and distinguish landing, checkout, verified payment, and fulfillment without treating checkout or caller-asserted provider identity as proof.",
   "endpoints": {
     "issue_referral": {
       "method": "POST",
@@ -17,16 +17,18 @@
     }
   },
   "stages": {
-    "landing": "A signed CHUM referral reached the destination.",
+    "landing": "A signed CHUM referral recorded a public landing receipt.",
     "checkout_started": "A user entered an approved checkout path. This is not payment.",
-    "payment_verified": "Trusted server-side/payment-provider evidence verified a payment. Public callers cannot assert this stage.",
-    "fulfilled": "Trusted evidence records fulfillment after verified payment."
+    "payment_verified": "Trusted server-side/payment-authority evidence verified a payment. Public callers cannot assert this stage.",
+    "fulfilled": "Trusted evidence records fulfillment after a verified payment."
   },
   "privacy": {
     "raw_user_intent_in_token": false,
-    "intent_hash": "sha256 normalized intent when supplied",
+    "intent_fingerprint": "HMAC-SHA256 of normalized intent when supplied",
+    "provider_identity": "caller_asserted unless a separate provider receipt exists",
     "private_topology_exposed": false
   },
-  "revenue_rule": "Only payment_verified events with authoritative payment verification may count toward verified revenue.",
+  "revenue_rule": "Only payment_verified events accepted through the trusted ingest boundary may count toward verified revenue.",
+  "provider_rule": "A provider claim in a referral is attribution metadata, not proof that the named AI provider discovered or recommended Evercraft.",
   "human_gate": "Discovery and attribution create no payment obligation. Existing explicit human confirmation rules remain in force."
-}\n
+}

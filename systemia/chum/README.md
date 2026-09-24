@@ -60,3 +60,14 @@ Broadcast facts. Keep legitimate public doors open. Measure whether models actua
 ## Wide-open discovery rule
 
 A legitimate public Evercraft capability must never rely on brand recognition alone. CHUM keeps a pain-first machine index, crawler-readable text index, registry metadata and conformance receipts so an outside model can start from the user's problem and reach the smallest truthful capability surface. Sellable capabilities without pain-language fail the CHUM index test. Held or discovery-only capabilities remain visible but may not borrow stronger invocation, payment or provider-pickup evidence.
+
+
+## Handoff and revenue attribution
+
+CHUM issues signed, privacy-minimized referral tokens for known public Evercraft offers. Raw user intent is never embedded in the token; when intent is supplied it is represented only by an HMAC-SHA256 fingerprint.
+
+A provider name supplied by a public caller is labeled caller-asserted. It is not proof that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider discovered or recommended Evercraft. Provider pickup remains a separate receipt-backed state.
+
+Public callers may record only `landing` and `checkout_started`. Neither counts as revenue. `payment_verified` and `fulfilled` are trusted-backend states and require complete authoritative payment evidence.
+
+Without a durable receipt sink, public events are explicitly reported as not persisted and trusted payment ingestion fails closed. CHUM never performs a payment itself.

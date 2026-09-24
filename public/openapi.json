@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
   },
   "servers": [
@@ -220,7 +220,7 @@
     "/api/chum/attribution": {
       "get": {
         "operationId": "chumAttributionContract",
-        "summary": "Read CHUM attribution capabilities and trust boundaries",
+        "summary": "Read CHUM handoff-attribution capabilities and trust boundaries",
         "responses": {
           "200": {
             "description": "Attribution contract"
@@ -243,7 +243,8 @@
                     "type": "string"
                   },
                   "provider": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Caller-asserted provider label. This is attribution metadata, not proof the named provider surfaced or recommended Evercraft."
                   },
                   "surface": {
                     "type": "string"

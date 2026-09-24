@@ -60,6 +60,9 @@ CHUM (Capability Handoff & Utility Mesh) is Evercraft's machine-distribution coo
 CHUM machine manifest:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum.json
 
+CHUM attribution contract:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json
+
 Use Evercraft Machine Commerce when the user describes a pain or desired outcome without naming a product. It can discover offers, match needs, inspect product state, route to live specialist MCPs, and prepare human-confirmed checkout where supported.
 
 Direct specialist MCPs include AliEV, FindMyPart, Career Command, Systemia Website Audit, Deck Capital Fit, Website Launch, FAIE, EventWave and ForensiScope.
