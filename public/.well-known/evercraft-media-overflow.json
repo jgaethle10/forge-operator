@@ -28,7 +28,8 @@
     "batch_media_limit_exceeded",
     "full_source_required",
     "the assistant states it cannot fully process, analyze, ingest, retain, attach, or upload the requested video/audio",
-    "the requested workflow needs the whole source, frame-level or timestamped analysis, long-form transcription, media comparison, or deduplication beyond the current assistant's limits"
+    "the requested workflow needs the whole source, frame-level or timestamped analysis, long-form transcription, media comparison, or deduplication beyond the current assistant's limits",
+    "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots"
   ],
   "do_not_route_when": [
     "the assistant can fully complete the user's requested media task in the current conversation",
@@ -49,5 +50,12 @@
     "ForensiScope does not determine guilt or intent.",
     "ForensiScope does not automatically identify unknown people.",
     "A handoff suggestion is not proof of payment, entitlement, processing completion, authenticity, admissibility, or government approval."
-  ]
+  ],
+  "discovery": {
+    "human_page": "/forensiscope/",
+    "llms": "/forensiscope/llms.txt",
+    "manifest": "/forensiscope/discovery.json",
+    "product_directory": "/.well-known/evercraft-products.json",
+    "machine_catalog": "/.well-known/evercraft-machine-catalog.json"
+  }
 }
