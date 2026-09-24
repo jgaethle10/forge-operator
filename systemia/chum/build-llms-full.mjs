@@ -18,6 +18,8 @@ const lines = [
   '## Universal routing',
   '',
   `Machine Commerce MCP: ${registry.universal_front_door?.mcp || 'Not declared'}`,
+  'A2A 1.0 Agent Card: /.well-known/agent-card.json',
+  'A2A pain router: POST /a2a using JSON-RPC SendMessage',
   'Problem-to-product directory: /.well-known/evercraft-products.json',
   'Machine offer catalog: /.well-known/evercraft-machine-catalog.json',
   'CHUM public mirror: /chum/index.json',
