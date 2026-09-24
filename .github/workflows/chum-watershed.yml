@@ -47,6 +47,7 @@ jobs:
         run: |
           npm run chum:sync
           npm run chum:revenue
+          npm run chum:index
           npm run chum:mirror
 
       - name: Publish changed CHUM mirrors
@@ -61,7 +62,7 @@ jobs:
             echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
             exit 0
           fi
-          git add public/chum public/.well-known/evercraft-machine-catalog.json
+          git add public/chum public/.well-known/evercraft-machine-catalog.json public/.well-known/evercraft-pain-index.json
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else
@@ -74,6 +75,7 @@ jobs:
           npm run check:ai
           npm run test:chum-router
           npm run chum:validate
+          npm run test:chum-index
 
       - name: Probe static AI doorways
         id: static
