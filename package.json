@@ -11,6 +11,8 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "check:ai": "node scripts/validate-ai-conformance.mjs",
+    "chum": "node systemia/chum/chum.mjs",
+    "chum:offline": "node systemia/chum/chum.mjs --offline",
     "check": "npm run check:ai && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output"
   },
