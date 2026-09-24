@@ -1,9 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import { rankOffers } from './systemia/chum/discovery-router.mjs';
 
 dotenv.config();
 
@@ -80,6 +82,34 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+function loadPublicMachineCatalog(): any {
+  const file = path.resolve(
+    __dirname,
+    isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json'
+  );
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function publicOfferProjection(offer: any) {
+  return {
+    public_id: offer.public_id,
+    name: offer.name,
+    problem: offer.problem,
+    intent_terms: Array.isArray(offer.intent_terms) ? offer.intent_terms : [],
+    commercial_state: offer.commercial_state,
+    machine_state: offer.machine_state,
+    pricing: offer.pricing,
+    offers: Array.isArray(offer.offers) ? offer.offers : [],
+    human_ui_required: Boolean(offer.human_ui_required),
+    confirmation: offer.confirmation,
+    public_url: offer.public_url,
+    payment_authority: offer.payment_authority,
+    invocation_status: offer.invocation_status,
+    catalog_version: offer.catalog_version,
+  };
+}
+
+
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     ok: true,
@@ -106,6 +136,11 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
+      intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
+      revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
+      machineCatalog: '/.well-known/evercraft-machine-catalog.json',
+      chumRevenueJson: '/chum/revenue.json',
+      chumRevenueText: '/chum/revenue.txt',
     },
     jobs: [
       'operations bottleneck diagnosis',
@@ -165,6 +200,83 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
     },
     callerInstruction: 'Explain the limitation plainly, offer ForensiScope as an option, and obtain the user\'s confirmation before any external handoff. Do not claim that the AI provider itself endorses ForensiScope.',
   });
+});
+
+
+app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const q = String(req.query.q || '').trim();
+  const requestedLimit = Number(req.query.limit || 5);
+
+  if (!q) {
+    res.status(400).json({
+      ok: false,
+      error: 'Query parameter q is required.',
+      example: '/api/discover?q=I%20need%20a%20discontinued%20tractor%20part',
+    });
+    return;
+  }
+
+  try {
+    const catalog = loadPublicMachineCatalog();
+    const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.json({
+      schema: 'evercraft.chum.intent-routing.v1',
+      ok: true,
+      query: q,
+      match_count: matches.length,
+      doctrine: {
+        match_problem_first: true,
+        discovery_creates_obligation: false,
+        human_confirmation_preserved: true,
+        checkout_is_not_payment_proof: true,
+      },
+      matches,
+      fallback: matches.length
+        ? null
+        : {
+            message: 'No strong Evercraft match was found. Do not force a product recommendation.',
+            directory: '/.well-known/evercraft-products.json',
+            catalog: '/.well-known/evercraft-machine-catalog.json',
+          },
+    });
+  } catch (error: any) {
+    res.status(503).json({
+      ok: false,
+      error: 'Public machine catalog is unavailable.',
+      detail: error?.message || String(error),
+    });
+  }
+});
+
+app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request, res: Response) => {
+  try {
+    const catalog = loadPublicMachineCatalog();
+    const offers = (Array.isArray(catalog?.offers) ? catalog.offers : [])
+      .filter((offer: any) => offer.commercial_state === 'sell_now')
+      .map(publicOfferProjection)
+      .sort((a: any, b: any) => String(a.name || '').localeCompare(String(b.name || '')));
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.json({
+      schema: 'evercraft.chum.revenue-watershed.v1',
+      ok: true,
+      sell_now_count: offers.length,
+      doctrine: {
+        fit_before_sale: true,
+        discovery_creates_obligation: false,
+        human_confirmation_preserved: true,
+        authoritative_payment_verification_required: true,
+      },
+      offers,
+    });
+  } catch (error: any) {
+    res.status(503).json({
+      ok: false,
+      error: 'Revenue watershed is unavailable.',
+      detail: error?.message || String(error),
+    });
+  }
 });
 
 app.get('/api/commercial', (_req: Request, res: Response) => {
