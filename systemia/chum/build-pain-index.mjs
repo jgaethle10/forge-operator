@@ -5,6 +5,23 @@ import { pathToFileURL } from 'node:url';
 const readJson=(p)=>JSON.parse(fs.readFileSync(p,'utf8'));
 const unique=(values)=>[...new Set((values||[]).map((v)=>String(v||'').trim()).filter(Boolean))];
 
+const BLOCKED_PUBLIC_HOSTS=new Set([
+  'systemiacommandcenters.com',
+  'www.systemiacommandcenters.com'
+]);
+
+function safePublicUrl(value){
+  if(!value) return null;
+  try{
+    const url=new URL(String(value));
+    if(!['http:','https:'].includes(url.protocol)) return null;
+    if(BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return null;
+    return url.toString();
+  }catch{
+    return null;
+  }
+}
+
 const PRODUCT_DIR='public/.well-known/evercraft-products.json';
 const MACHINE_CATALOG='public/.well-known/evercraft-machine-catalog.json';
 const REGISTRY='registry/catalog.json';
@@ -35,6 +52,8 @@ export function buildPainIndex(){
     if(!key) continue;
     const reg=registryByKey.get(key)||{};
     const painPhrases=unique([...(product.intents||[]),...(reg.triggers||[])]);
+    const productUrl=safePublicUrl(product.canonical_url||reg.canonical_url);
+    const specialistMcp=safePublicUrl(reg.mcp);
     entries.push({
       capability_id:`product:${key}`,
       product_key:key,
@@ -45,23 +64,24 @@ export function buildPainIndex(){
       problem:null,
       inputs:null,
       outputs:null,
-      canonical_url:product.canonical_url||reg.canonical_url||null,
+      canonical_url:productUrl,
       registry_name:reg.registry_name||null,
-      mcp:reg.mcp||null,
+      mcp:specialistMcp,
       routing:{
-        preferred:reg.mcp?'specialist_mcp':'universal_machine_commerce',
-        target:reg.mcp||registry.universal_front_door?.mcp||null
+        preferred:specialistMcp?'specialist_mcp':'universal_machine_commerce',
+        target:specialistMcp||safePublicUrl(registry.universal_front_door?.mcp)||null
       },
+      legacy_marketing_route_suppressed:Boolean((product.canonical_url||reg.canonical_url)&&!productUrl),
       authority:product.authority||null,
       boundaries:product.boundaries||[],
       commercial_state:'product_contract',
-      machine_state:reg.mcp?'specialist_mcp_declared':'discovery_only',
+      machine_state:specialistMcp?'specialist_mcp_declared':'discovery_only',
       pricing:null,
       offers:[],
       human_confirmation_required:Boolean(product.human_confirmation_required),
       confirmation:product.human_confirmation_required?'Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.':'No payment obligation is created by discovery.',
       payment_authority:null,
-      invocation_status:reg.mcp?'Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.':'Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.',
+      invocation_status:specialistMcp?'Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.':'Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.',
       source_refs:[
         PRODUCT_DIR,
         reg.registry_name?REGISTRY:null
@@ -73,6 +93,7 @@ export function buildPainIndex(){
     const publicId=String(offer.public_id||'').trim();
     if(!publicId) continue;
     const painPhrases=unique(offer.intent_terms||[]);
+    const offerUrl=safePublicUrl(offer.public_url);
     entries.push({
       capability_id:`offer:${publicId}`,
       product_key:null,
@@ -84,12 +105,13 @@ export function buildPainIndex(){
       problem:String(offer.problem||'')||null,
       inputs:String(offer.inputs||'')||null,
       outputs:String(offer.outputs||'')||null,
-      canonical_url:String(offer.public_url||'')||null,
+      canonical_url:offerUrl,
+      legacy_marketing_route_suppressed:Boolean(offer.public_url&&!offerUrl),
       registry_name:null,
-      mcp:registry.universal_front_door?.mcp||null,
+      mcp:safePublicUrl(registry.universal_front_door?.mcp)||null,
       routing:{
         preferred:'universal_machine_commerce',
-        target:registry.universal_front_door?.mcp||null
+        target:safePublicUrl(registry.universal_front_door?.mcp)||null
       },
       authority:'Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.',
       boundaries:[],
@@ -133,7 +155,8 @@ export function buildPainIndex(){
       entries_with_pain_language:withPain,
       sell_now_machine_offers:sellNow,
       entries_with_declared_mcp:entries.filter((e)=>Boolean(e.mcp)).length,
-      callable_or_routable_entries:callable
+      callable_or_routable_entries:callable,
+      suppressed_legacy_marketing_routes:entries.filter((e)=>e.legacy_marketing_route_suppressed===true).length
     },
     entries
   };

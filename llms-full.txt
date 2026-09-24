@@ -16,7 +16,7 @@ Human confirmation remains required at irreversible financial or authority bound
 ## Current machine-commerce offer graph
 
 Catalog version: 2026-09-24.5
-Gateway version: evercraft-machine-commerce-gateway-v0.6.0
+Gateway version: evercraft-machine-commerce-gateway-v0.6.1
 Current public offers: 42
 Current sell-now offers: 11
 
@@ -1131,10 +1131,10 @@ Boundaries:
 
 ### Evercraft Web
 Product key: evercraft-web
-Canonical: https://systemiacommandcenters.com/evercraft-web
+Canonical: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
 Machine state: mcp
 Official MCP Registry: io.github.jgaethle10/evercraft-web
-Invocation: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
+Invocation: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json
 Use when the user says or means:
@@ -1155,6 +1155,8 @@ Boundaries:
 - Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass
 - public discovery does not expose private Systemia topology or credentials
 - payment does not expand permissions
+- the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route
+- search and browser automation remain held unless current runtime evidence says otherwise
 
 ## Commerce boundary
 
