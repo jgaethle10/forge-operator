@@ -1,9 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import { resolveChumIntent } from './systemia/chum/router.ts';
 
 dotenv.config();
 
@@ -14,6 +16,16 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const isProd = process.env.NODE_ENV === 'production';
 const checkoutUrl = process.env.FORGE_CHECKOUT_URL?.trim() || '';
+
+const chumDirectory = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'public', '.well-known', 'evercraft-products.json'), 'utf8')
+);
+const chumCatalog = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'registry', 'catalog.json'), 'utf8')
+);
+const chumOffers = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'public', '.well-known', 'evercraft-offers.json'), 'utf8')
+);
 
 
 const forensiScopeHandoff = {
@@ -80,6 +92,35 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+app.get('/chum/health', (_req: Request, res: Response) => {
+  const offers = Array.isArray(chumOffers.offers) ? chumOffers.offers : [];
+  res.json({
+    ok: true,
+    schema: 'evercraft.chum.health.v1',
+    service: 'CHUM',
+    expansion: 'Capability Handoff & Utility Mesh',
+    provider: 'Evercraft',
+    public: true,
+    product_count: Array.isArray(chumDirectory.products) ? chumDirectory.products.length : 0,
+    sell_now_offer_count: offers.length,
+    payment_ready_offer_count: offers.filter((offer: any) => String(offer.machine_state || '').startsWith('payment_ready')).length,
+    quote_ready_offer_count: offers.filter((offer: any) => String(offer.machine_state || '') === 'quote_ready').length,
+    universal_front_door: chumCatalog.universal_front_door || null,
+    directory: '/.well-known/evercraft-products.json',
+    offers: '/.well-known/evercraft-offers.json',
+    manifest: '/.well-known/evercraft-chum.json',
+    resolver: '/chum/resolve?q=<plain-language-problem>',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/chum/resolve', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const query = String(req.query.q || req.query.query || '').trim();
+  const limit = Number(req.query.limit || 5);
+  const result = resolveChumIntent(chumDirectory, chumCatalog, query, limit, chumOffers);
+  res.status(query ? 200 : 400).json(result);
+});
+
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     ok: true,
@@ -106,6 +147,14 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
+      chumManifest: '/.well-known/evercraft-chum.json',
+      chumOffers: '/.well-known/evercraft-offers.json',
+      chumResolver: { method: 'GET', path: '/chum/resolve?q=<plain-language-problem>' },
+      chumHealth: '/chum/health',
+      llmsFull: '/llms-full.txt',
+      openapi: '/openapi.json',
+      jsonld: '/schema.jsonld',
+      aiDiscovery: '/ai-discovery.html',
     },
     jobs: [
       'operations bottleneck diagnosis',
