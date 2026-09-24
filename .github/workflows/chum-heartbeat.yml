@@ -1,0 +1,41 @@
+name: CHUM discovery heartbeat
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Validate public discovery watershed
+        run: npm run chum:check
+      - name: Probe declared public surfaces
+        run: npm run chum
+      - name: Validate provider probe contract
+        run: npm run check:probes
+      - name: Run authorized cross-LLM probes when bridge is configured
+        env:
+          NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
+          NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
+        run: npm run probe:cross-llm
+      - name: Upload CHUM receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-receipts-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            artifacts/chum/**
+            probe-receipts/**
