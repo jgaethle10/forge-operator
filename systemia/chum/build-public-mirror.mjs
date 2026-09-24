@@ -293,7 +293,7 @@ const publicIndexHtml = [
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
   '<form action="/api/discover" method="get" class="card"><label for="q"><strong>Describe the problem</strong></label><br><input id="q" name="q" required style="width:min(100%,700px);padding:10px;margin:10px 0" placeholder="Example: I cannot find a discontinued machine part"><button type="submit" style="padding:10px 16px">Find the smallest matching capability</button></form>',
   `<p><strong>Read-only AI discovery:</strong> <code>${escapeHtml(READ_ONLY_DISCOVERY_REGISTRY)}</code></p>`,
-  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/.well-known/agent-card.json">A2A Agent Card</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
   '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
@@ -328,6 +328,7 @@ const sitemapStatic = [
   '/ai-discovery.json',
   '/schema.jsonld',
   '/openapi.json',
+  '/.well-known/agent-card.json',
   '/.well-known/evercraft-agent.json',
   '/.well-known/evercraft-agent-directory.json',
   '/.well-known/evercraft-agent-interfaces.json',
@@ -397,6 +398,9 @@ const llmsLines = [
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
+  'A2A v1 Agent Card: /.well-known/agent-card.json',
+  'A2A v1 JSON-RPC discovery endpoint: POST /a2a',
+  'A2A state: release_candidate until the deployed public route is independently live-verified.',
   '',
   'State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.',
   'Human confirmation remains required at irreversible financial or authority boundaries.',
@@ -535,6 +539,10 @@ const agentDirectory = {
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     pain_index: '/.well-known/evercraft-pain-index.json',
     answer_graph: '/chum/answers/index.json',
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a_endpoint: '/a2a',
+    a2a_state: 'release_candidate',
+    a2a_protocol_version: '1.0',
     machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
     machine_commerce_mcp: universalMcp,
     use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant.'
@@ -568,6 +576,9 @@ const discoveryWatershed = {
     answer_graph: '/chum/answers/index.json',
     answer_graph_text: '/chum/answers/index.txt',
     read_only_mcp_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a_endpoint: '/a2a',
+    a2a_state: 'release_candidate',
     products: '/.well-known/evercraft-products.json',
     agents: '/.well-known/evercraft-agent-directory.json',
     interfaces: '/.well-known/evercraft-agent-interfaces.json',
@@ -595,6 +606,16 @@ const discoveryWatershed = {
     paid: 'Authoritative provider payment verification exists.'
   },
   routing_rule: 'Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  protocol_posture: {
+    a2a: {
+      state: 'release_candidate',
+      protocol_version: '1.0',
+      binding: 'JSONRPC',
+      agent_card: '/.well-known/agent-card.json',
+      endpoint: '/a2a',
+      live_verification_required: true
+    }
+  },
   private_surfaces: 'not advertised',
   freshness_broadcast: {
     coordinator: 'CHUM',
