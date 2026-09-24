@@ -11,6 +11,35 @@ const conformanceByKey = new Map((conformance.products || []).map((p) => [p.prod
 const providers = conformance.baseline_providers || [];
 const root = 'public/chum/products';
 
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+function escapeXml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&apos;'
+  }[ch]));
+}
+
+function pageDescription(product) {
+  const intents = Array.isArray(product.intents) ? product.intents.filter(Boolean) : [];
+  const lead = intents.slice(0, 3).join('; ');
+  return lead
+    ? `${product.name} is an Evercraft public capability for: ${lead}.`
+    : `${product.name} is an Evercraft public capability in ${product.class || 'software'}.`;
+}
+
 fs.rmSync(root, { recursive: true, force: true });
 fs.mkdirSync(root, { recursive: true });
 
@@ -50,6 +79,8 @@ for (const product of directory.products || []) {
       llms: `${base}/llms.txt`,
       discovery: `${base}/ai-discovery.json`,
       conformance: `${base}/ai-conformance.json`
+,
+      page: `/chum/products/${key}/`
     }
   };
 
@@ -103,6 +134,73 @@ for (const product of directory.products || []) {
   fs.writeFileSync(path.join(dir, 'ai-discovery.json'), JSON.stringify(discovery, null, 2) + '\n');
   fs.writeFileSync(path.join(dir, 'ai-conformance.json'), JSON.stringify(productConformance, null, 2) + '\n');
 
+
+  const productPageJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': `${product.canonical_url}#evercraft-capability`,
+        name: product.name,
+        serviceType: product.class,
+        url: product.canonical_url,
+        provider: {
+          '@type': 'Organization',
+          name: 'Evercraft LLC',
+          url: 'https://github.com/jgaethle10/forge-operator'
+        },
+        description: pageDescription(product),
+        identifier: discovery.registry_name || key
+      },
+      {
+        '@type': 'WebPage',
+        name: `${product.name} | Evercraft public capability`,
+        description: pageDescription(product),
+        about: { '@id': `${product.canonical_url}#evercraft-capability` }
+      }
+    ]
+  };
+
+  const productHtml = [
+    '<!doctype html>',
+    '<html lang="en"><head><meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    `<title>${escapeHtml(product.name)} | Evercraft public capability</title>`,
+    `<meta name="description" content="${escapeHtml(pageDescription(product))}">`,
+    '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+    '<link rel="alternate" type="text/plain" href="./llms.txt">',
+    '<link rel="alternate" type="application/json" href="./ai-discovery.json">',
+    `<script type="application/ld+json">${JSON.stringify(productPageJsonLd).replace(/<\\//g, '<\\/')}</script>`,
+    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
+    '</head><body><main>',
+    '<p class="muted">EVERCRAFT · PUBLIC CAPABILITY</p>',
+    `<h1>${escapeHtml(product.name)}</h1>`,
+    `<p>${escapeHtml(pageDescription(product))}</p>`,
+    '<div class="card"><h2>Use this when</h2><ul>',
+    ...(product.intents || []).map((intent) => `<li>${escapeHtml(intent)}</li>`),
+    '</ul></div>',
+    '<div class="card"><h2>Open capability</h2>',
+    `<p><a href="${escapeHtml(product.canonical_url)}">Open ${escapeHtml(product.name)}</a></p>`,
+    discovery.registry_name ? `<p>Official MCP Registry name: <code>${escapeHtml(discovery.registry_name)}</code></p>` : '',
+    discovery.mcp ? `<p>Remote MCP: <code>${escapeHtml(discovery.mcp)}</code></p>` : '',
+    '<p>Universal pain-first routing: <a href="/chum/">CHUM</a></p>',
+    '</div>',
+    '<div class="card"><h2>Machine-readable doors</h2>',
+    '<ul>',
+    '<li><a href="./llms.txt">LLM guidance</a></li>',
+    '<li><a href="./ai-discovery.json">Discovery JSON</a></li>',
+    '<li><a href="./ai-conformance.json">AI conformance</a></li>',
+    '</ul></div>',
+    '<div class="card"><h2>Authority and boundaries</h2>',
+    `<p>${escapeHtml(product.authority || 'Public discovery only.')}</p>`,
+    '<ul>',
+    ...(product.boundaries || []).map((boundary) => `<li>${escapeHtml(boundary)}</li>`),
+    '</ul></div>',
+    '<p class="muted">Discovery and matching create no payment obligation. Human confirmation remains required where the product declares it, and checkout creation is not proof of payment.</p>',
+    '</main></body></html>'
+  ].join('\n');
+  fs.writeFileSync(path.join(dir, 'index.html'), productHtml + '\n');
+
   index.products.push({
     product_key: key,
     name: product.name,
@@ -110,6 +208,7 @@ for (const product of directory.products || []) {
     llms_url: discovery.mirror.llms,
     discovery_url: discovery.mirror.discovery,
     conformance_url: discovery.mirror.conformance,
+    page_url: `/chum/products/${key}/`,
     registry_name: discovery.registry_name,
     mcp: discovery.mcp
   });
@@ -118,6 +217,71 @@ for (const product of directory.products || []) {
 index.products.sort((a, b) => a.product_key.localeCompare(b.product_key));
 fs.mkdirSync('public/chum', { recursive: true });
 fs.writeFileSync('public/chum/index.json', JSON.stringify(index, null, 2) + '\n');
+
+
+const publicIndexHtml = [
+  '<!doctype html>',
+  '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+  '<title>CHUM | Evercraft AI Discovery Watershed</title>',
+  '<meta name="description" content="Pain-first public directory of Evercraft capabilities for AI assistants, search engines, agents and people.">',
+  '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+  '<link rel="alternate" type="text/plain" href="/llms-full.txt">',
+  '<link rel="alternate" type="application/json" href="/chum/index.json">',
+  '<style>body{font-family:system-ui,sans-serif;max-width:980px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.card{border:1px solid #27272a;border-radius:16px;padding:18px}.muted{color:#a1a1aa}</style>',
+  '</head><body><main>',
+  '<p class="muted">EVERCRAFT · MACHINE DISTRIBUTION</p>',
+  '<h1>CHUM</h1>',
+  '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
+  '<p><a href="/llms-full.txt">LLM directory</a> · <a href="/.well-known/evercraft-products.json">Product JSON</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<h2>Public capability doors</h2>',
+  '<div class="grid">',
+  ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
+  '</div>',
+  '<p class="muted">Public discovery is deliberately open. Private/admin topology, secrets and customer data remain private. Discovery is not proof of provider pickup or payment.</p>',
+  '</main></body></html>'
+].join('\n');
+fs.writeFileSync('public/chum/index.html', publicIndexHtml + '\n');
+
+const sitemapStatic = [
+  '/',
+  '/chum/',
+  '/chum/index.json',
+  '/chum/revenue.html',
+  '/chum/revenue.txt',
+  '/chum/revenue.json',
+  '/forensiscope/',
+  '/llms.txt',
+  '/llms-full.txt',
+  '/ai-discovery.json',
+  '/schema.jsonld',
+  '/openapi.json',
+  '/.well-known/evercraft-agent.json',
+  '/.well-known/evercraft-agent-directory.json',
+  '/.well-known/evercraft-agent-interfaces.json',
+  '/.well-known/evercraft-discovery.json',
+  '/.well-known/evercraft-products.json',
+  '/.well-known/evercraft-machine-catalog.json',
+  '/.well-known/evercraft-chum.json',
+  '/.well-known/evercraft-media-overflow.json',
+  '/.well-known/evercraft-capabilities.json'
+];
+const sitemapUrls = Array.from(new Set([
+  ...sitemapStatic,
+  ...index.products.flatMap((product) => [
+    product.page_url,
+    `/chum/products/${product.product_key}/llms.txt`,
+    `/chum/products/${product.product_key}/ai-discovery.json`,
+    `/chum/products/${product.product_key}/ai-conformance.json`
+  ])
+]));
+const sitemap = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...sitemapUrls.map((url) => `  <url><loc>${escapeXml(url)}</loc></url>`),
+  '</urlset>',
+  ''
+].join('\n');
+fs.writeFileSync('public/sitemap.xml', sitemap);
 console.log(JSON.stringify({ products: index.products.length, output: 'public/chum' }));
 
 
@@ -261,6 +425,7 @@ const discoveryWatershed = {
     machine_catalog: '/.well-known/evercraft-machine-catalog.json',
     chum: '/.well-known/evercraft-chum.json',
     chum_public_mirror: '/chum/index.json',
+    product_pages: '/chum/products/{product_key}/',
     schema: '/schema.jsonld',
     openapi: '/openapi.json'
   },
