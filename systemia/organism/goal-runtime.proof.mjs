@@ -66,13 +66,13 @@ assert.ok(receipt.task_receipts.find((task) => task.work_key === 'commit-money')
 
 assert.throws(() => admitGoalPlan({
   state: createGoalState({ goalKey: 'cycle', objective: 'reject cyclic plans' }),
-  planS¢Ê
+  plan: [
     { work_key: 'a', dependency_keys: ['b'] },
     { work_key: 'b', dependency_keys: ['a'] },
   ],
 }), /dependency cycle/);
 
-console.log(JSON.stringify {
+console.log(JSON.stringify({
   ok: true,
   schema: 'evercraft.goal.runtime-proof.v1',
   goal_key: state.goal_key,
