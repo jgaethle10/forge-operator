@@ -11,7 +11,7 @@ Official MCP Registry namespace: `io.github.jgaethle10`
 Universal MCP registry name: `io.github.jgaethle10/evercraft-machine-commerce`
 
 Remote MCP:
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+`https://findmypart.base44.app/functions/evercraftMachineCommerceMcp`
 
 ## Pain-to-capability map
 
