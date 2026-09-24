@@ -8,6 +8,9 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - CHUM pain-first routing index: /.well-known/evercraft-pain-index.json
 - CHUM pain-first text index: /chum/pain-index.txt
 - Problem-to-product directory: /.well-known/evercraft-products.json
+- Sell-now revenue watershed: /chum/revenue.txt
+- Machine-readable sell-now index: /chum/revenue.json
+- Read-only natural-language router: GET /api/discover?q={problem}
 - Forge capability contract: /.well-known/evercraft-capabilities.json
 - Portfolio registry catalog: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
 - Official MCP namespace: io.github.jgaethle10
