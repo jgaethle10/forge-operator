@@ -19,10 +19,16 @@ Forge intentionally publishes a public machine-readable discovery layer:
 - `/.well-known/evercraft-capabilities.json`
 - `/.well-known/evercraft-products.json`
 - `/.well-known/evercraft-media-overflow.json`
+- `/chum/index.json`
+- `/chum/offers/index.json`
+- `/chum/intents.json`
+- [AI Capability Catalog](./AI-CAPABILITY-CATALOG.md)
 - `/api/capabilities`
 - `/api/health`
 
 Private/admin topology is not advertised through these surfaces.
+
+CHUM expands the portfolio into product-level and offer-level public discovery mirrors. The intent router is designed for brand-blind matching: an AI can start with a user's plain-language problem, resolve the smallest truthful Evercraft capability, then continue only through the capability's stated authority and human-confirmation boundaries.
 
 ### ForensiScope media overflow
 
