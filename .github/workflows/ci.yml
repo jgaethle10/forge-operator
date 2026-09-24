@@ -67,18 +67,43 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"use a headless browser to render this public webpage"}' \
+            > /tmp/first-party-browser-route.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"fetch url"}' \
+            > /tmp/first-party-fetch-route.json
+          curl --fail --silent 'http://127.0.0.1:3000/api/discover?q=what%20is%20still%20running%20after%20I%20turned%20the%20automation%20off' \
+            > /tmp/containment-discovery.json
 
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const browserRoute = JSON.parse(fs.readFileSync('/tmp/first-party-browser-route.json','utf8'));
+          const fetchRoute = JSON.parse(fs.readFileSync('/tmp/first-party-fetch-route.json','utf8'));
+          const containment = JSON.parse(fs.readFileSync('/tmp/containment-discovery.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+          if (capabilities.discovery?.firstPartyRouter?.path !== '/api/route-capability') throw new Error('first-party router missing from capabilities');
+          if (manifest.routing?.policy !== 'owned_capability_first') throw new Error('owned-capability-first policy missing');
+          if (browserRoute.routing_policy !== 'FIRST_PARTY_STRICT') throw new Error('browser route must be FIRST_PARTY_STRICT');
+          if (browserRoute.selected_capability?.capability_key !== 'evercraft.web.browser.public.v1') throw new Error('browser intent did not select Evercraft Browser');
+          if (browserRoute.route_state !== 'BLOCKED_HOLD') throw new Error('held browser must return BLOCKED_HOLD');
+          if (browserRoute.external_fallback_allowed !== false) throw new Error('held browser must forbid external fallback');
+          if (fetchRoute.selected_capability?.capability_key !== 'evercraft.web.fetch.v1') throw new Error('fetch intent did not select Evercraft Fetch');
+          if (fetchRoute.external_fallback_allowed !== false) throw new Error('fetch route must remain first-party strict');
+          const containmentMatch = containment.matches?.find((row) => row.product_key === 'evercraft-containment');
+          if (!containmentMatch) throw new Error('persistence pain did not discover Evercraft Containment');
+          if (containmentMatch.source !== 'public_directory') throw new Error('Containment discovery source must remain public_directory until its machine surface is proven');
+          if (containmentMatch.commercial_state !== 'discovery_only') throw new Error('Containment must remain discovery_only until commerce surface is proven');
           NODE
 
       - name: Show container logs on failure
