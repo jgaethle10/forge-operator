@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jgaethle10/forge-operator/blob/main/conformance/standard.schema.json",
+  "title": "Evercraft Cross-LLM Product Conformance Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "product",
+    "canonical_url",
+    "purpose",
+    "providers",
+    "dimensions",
+    "required_truths",
+    "forbidden_claims",
+    "probe_cases",
+    "entry_points",
+    "receipt_rule",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "product": {
+      "type": "string",
+      "minLength": 1
+    },
+    "canonical_url": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "surface_state",
+          "behavioral_probe_state"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "surface_state": {
+            "enum": [
+              "ready_for_probe",
+              "not_ready",
+              "blocked"
+            ]
+          },
+          "behavioral_probe_state": {
+            "enum": [
+              "not_run",
+              "pass",
+              "partial",
+              "fail",
+              "blocked"
+            ]
+          },
+          "receipt_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_truths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "probe_cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "case_id",
+          "user_intent",
+          "expected_fit",
+          "expected_next_action"
+        ],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "user_intent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expected_fit": {
+            "type": "boolean"
+          },
+          "expected_product": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expected_next_action": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "entry_points": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "receipt_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "updated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}"
+    }
+  },
+  "additionalProperties": true
+}
