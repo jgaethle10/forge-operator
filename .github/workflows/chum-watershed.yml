@@ -73,6 +73,9 @@ jobs:
           npm run check:ai
           npm run chum:validate
 
+      - name: Test CHUM attribution invariants
+        run: npm run test:chum-attribution
+
       - name: Probe static AI doorways
         id: static
         continue-on-error: true
