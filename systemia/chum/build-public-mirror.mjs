@@ -107,6 +107,7 @@ for (const product of directory.products || []) {
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
+    commercial: product.commercial || null,
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
@@ -134,6 +135,7 @@ for (const product of directory.products || []) {
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
+    commercial: product.commercial || null,
     provider_behavior_state: 'not_inferred_from_publication'
   };
 
@@ -155,6 +157,15 @@ for (const product of directory.products || []) {
     '## Authority',
     '',
     product.authority || 'Public discovery only.',
+    ...(product.commercial ? [
+      '',
+      '## Commercial state',
+      '',
+      `- Status: ${product.commercial.status || 'unspecified'}`,
+      ...(product.commercial.offer ? [`- Offer: ${product.commercial.offer}`] : []),
+      ...(product.commercial.pricing ? [`- Pricing: ${product.commercial.pricing}`] : []),
+      ...(product.commercial.payment_state ? [`- Payment state: ${product.commercial.payment_state}`] : [])
+    ] : []),
     '',
     '## Boundaries',
     '',
@@ -229,6 +240,14 @@ for (const product of directory.products || []) {
     '<li><a href="./ai-discovery.json">Discovery JSON</a></li>',
     '<li><a href="./ai-conformance.json">AI conformance</a></li>',
     '</ul></div>',
+    ...(product.commercial ? [
+      '<div class="card"><h2>Commercial state</h2>',
+      `<p><strong>Status:</strong> ${escapeHtml(product.commercial.status || 'unspecified')}</p>`,
+      ...(product.commercial.offer ? [`<p><strong>Offer:</strong> ${escapeHtml(product.commercial.offer)}</p>`] : []),
+      ...(product.commercial.pricing ? [`<p><strong>Pricing:</strong> ${escapeHtml(product.commercial.pricing)}</p>`] : []),
+      ...(product.commercial.payment_state ? [`<p><strong>Payment state:</strong> ${escapeHtml(product.commercial.payment_state)}</p>`] : []),
+      '</div>'
+    ] : []),
     '<div class="card"><h2>Authority and boundaries</h2>',
     `<p>${escapeHtml(product.authority || 'Public discovery only.')}</p>`,
     '<ul>',
@@ -249,7 +268,8 @@ for (const product of directory.products || []) {
     conformance_url: discovery.mirror.conformance,
     page_url: `/chum/products/${key}/`,
     registry_name: discovery.registry_name,
-    mcp: discovery.mcp
+    mcp: discovery.mcp,
+    commercial: product.commercial || null
   });
 }
 
@@ -450,6 +470,13 @@ for (const product of directory.products || []) {
   for (const intent of product.intents || []) llmsLines.push(`- ${intent}`);
   llmsLines.push('Authority:');
   llmsLines.push(product.authority || 'Public discovery only.');
+  if (product.commercial) {
+    llmsLines.push('Commercial state:');
+    llmsLines.push(`- Status: ${product.commercial.status || 'unspecified'}`);
+    if (product.commercial.offer) llmsLines.push(`- Offer: ${product.commercial.offer}`);
+    if (product.commercial.pricing) llmsLines.push(`- Pricing: ${product.commercial.pricing}`);
+    if (product.commercial.payment_state) llmsLines.push(`- Payment state: ${product.commercial.payment_state}`);
+  }
   llmsLines.push('Boundaries:');
   for (const boundary of product.boundaries || []) llmsLines.push(`- ${boundary}`);
   llmsLines.push('');
@@ -467,7 +494,8 @@ for (const product of directory.products || []) {
     conformance_url: `${mirrorBase}/ai-conformance.json`,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     authority: product.authority,
-    boundaries: product.boundaries || []
+    boundaries: product.boundaries || [],
+    commercial: product.commercial || null
   });
 
   schemaServices.push({

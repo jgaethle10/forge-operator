@@ -11,6 +11,13 @@ if(index.universal_front_door?.read_only_registry_name!=='io.github.jgaethle10/e
 const serialized=JSON.stringify(index);
 if(serialized.includes('systemiacommandcenters.com')) fail('Marketing Agency route leaked into canonical pain index');
 
+const dayTrade=index.entries.find((e)=>e.capability_id==='product:daytrade-lens');
+if(!dayTrade) fail('DayTrade Lens product entry missing');
+if(dayTrade.pricing!=='$19/month') fail('DayTrade pricing missing');
+const eps=index.entries.find((e)=>e.capability_id==='product:evercraft-property-services');
+if(!eps) fail('EPS product entry missing');
+if(eps.pricing!=='Quote required after scope review') fail('EPS quote pricing state missing');
+
 const sellNow=index.entries.filter((e)=>e.kind==='machine_offer'&&e.commercial_state==='sell_now');
 for(const entry of sellNow){
   if(!(entry.pain_phrases||[]).length) fail(`sell-now offer has no pain language: ${entry.capability_id}`);
@@ -42,6 +49,14 @@ const cases=[
   {
     query:'I have a job interview tomorrow and want role specific mock questions and feedback on my answers.',
     expected:'career-command'
+  },
+  {
+    query:'I want to practice day trading and position sizing without risking real money, then journal my trades and review tilt.',
+    expected:'daytrade-lens'
+  },
+  {
+    query:'I am in the Yakima Valley and need yard cleanup, sprinkler help, trimming and a property service estimate.',
+    expected:'evercraft-property-services'
   }
 ];
 
