@@ -50,6 +50,7 @@ jobs:
           npm run chum:mirror
 
       - name: Publish changed CHUM mirrors
+        id: publish
         if: github.ref == 'refs/heads/main'
         shell: bash
         run: |
@@ -61,10 +62,20 @@ jobs:
             echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
             exit 0
           fi
-          git add public/chum public/.well-known/evercraft-machine-catalog.json
+          git add \
+            public/chum \
+            public/.well-known/evercraft-machine-catalog.json \
+            public/.well-known/evercraft-agent-directory.json \
+            public/.well-known/evercraft-discovery.json \
+            public/ai-discovery.json \
+            public/llms-full.txt \
+            llms-full.txt \
+            public/schema.jsonld
           if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "CHUM public mirrors are current."
           else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
             git commit -m "CHUM refresh public discovery mirrors [skip ci]"
             git push origin HEAD:main
           fi
@@ -112,7 +123,7 @@ jobs:
       - name: Announce updated central discovery surfaces
         id: announce
         continue-on-error: true
-        if: ${{ github.event_name != 'schedule' && steps.static.outcome == 'success' && steps.crawlers.outcome == 'success' && steps.mcp.outcome == 'success' && steps.mesh.outcome == 'success' }}
+        if: ${{ (github.event_name == 'workflow_dispatch' || steps.publish.outputs.changed == 'true') && steps.static.outcome == 'success' && steps.crawlers.outcome == 'success' && steps.mcp.outcome == 'success' && steps.mesh.outcome == 'success' }}
         run: npm run chum:announce
 
       - name: Write watershed summary
