@@ -439,6 +439,44 @@
         "checkout creation is not payment proof",
         "fulfillment requires verified payment"
       ]
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "class": "micro_purchase_text_pressure_test",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "intents": [
+        "roast this text",
+        "pressure test this text",
+        "make this writing sharper",
+        "give me a gentle or professional critique"
+      ],
+      "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "checkout requires explicit human agreement to pay",
+        "checkout creation is not payment proof",
+        "paid result retrieval requires the issued share token"
+      ]
+    },
+    {
+      "product_key": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "class": "enterprise_operations_discovery_and_handoff",
+      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "intents": [
+        "audit an enterprise operations process",
+        "route an enterprise operations problem",
+        "map business process patterns",
+        "prepare a privacy-safe operations handoff"
+      ],
+      "authority": "public discovery, intent routing and privacy-preserving human handoff only",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "do not send private customer records",
+        "external business writes are disabled",
+        "handoff does not execute business actions"
+      ]
     }
   ],
   "coverage": {
