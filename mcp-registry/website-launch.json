@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/website-launch",
+  "title": "Website Launch",
+  "description": "Business website planning and launch assistance with human-confirmed next steps.",
+  "version": "1.0.0",
+  "websiteUrl": "https://instant-website-builder-usa-6feac193.base44.app/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
+    }
+  ]
+}
