@@ -6,7 +6,8 @@
   "description": "Dependency-free NodeSeed + Saban compute-fabric proof.",
   "scripts": {
     "proof:10": "node ./saban-network-proof.mjs --agents 10 --out ./proof-output-10",
-    "proof:10000": "node ./saban-network-proof.mjs --agents 10000 --out ./proof-output-10000"
+    "proof:10000": "node ./saban-network-proof.mjs --agents 10000 --out ./proof-output-10000",
+    "test": "node ./test/compute-fabric.test.mjs"
   },
   "engines": {
     "node": ">=18"
