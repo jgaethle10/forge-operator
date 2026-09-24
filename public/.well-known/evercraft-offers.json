@@ -1,0 +1,347 @@
+{
+  "schema": "evercraft.public-offers.v1",
+  "provider": "Evercraft",
+  "updated_at": "2026-09-24T08:05:00.000Z",
+  "purpose": "Public/share-safe sell-now projections synced from Systemia Core. This catalog exposes verified commercial state and terms without exposing private control-plane data.",
+  "rules": {
+    "discovery_creates_payment_obligation": false,
+    "explicit_human_confirmation_required_before_checkout": true,
+    "checkout_is_payment_proof": false,
+    "paid_fulfillment_requires_provider_verification": true,
+    "quote_ready_is_not_payment_ready": true
+  },
+  "offers": [
+    {
+      "product_key": "website-launch",
+      "public_id": "website-launch-service-v1",
+      "name": "Evercraft Website Launch Service",
+      "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "intent_terms": [
+        "build me a business website",
+        "launch a website for my company",
+        "replace my bad website",
+        "make me a professional business site",
+        "handle my website for me"
+      ],
+      "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+      "offers": [
+        {
+          "name": "Human-Finished Pro Site",
+          "price": "$500",
+          "billing": "one_time"
+        },
+        {
+          "name": "Premium Custom Build",
+          "price": "$999",
+          "billing": "one_time"
+        },
+        {
+          "name": "Total Business Launch",
+          "price": "$1,999",
+          "billing": "one_time"
+        }
+      ],
+      "confirmation": "Buyer explicitly chooses a tier and confirms payment before checkout. Fulfillment begins only after independent payment verification."
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "public_id": "audit-center-website-audit-machine-v1",
+      "name": "Systemia Website Audit",
+      "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "intent_terms": [
+        "why is my website not getting leads",
+        "audit my website",
+        "why is my contractor website not ranking",
+        "check my local SEO",
+        "why is my site slow on mobile",
+        "website traffic but no leads"
+      ],
+      "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "offers": [
+        {
+          "name": "Free Preview",
+          "price": "$0",
+          "billing": "free"
+        },
+        {
+          "name": "Complete Audit",
+          "price": "$500",
+          "billing": "one_time"
+        },
+        {
+          "name": "Audit + Patch",
+          "price": "$1,200",
+          "billing": "one_time"
+        }
+      ],
+      "confirmation": "Free preview creates no obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment."
+    },
+    {
+      "product_key": "aliev",
+      "public_id": "aliev-site-opportunity-snapshot-v1",
+      "name": "AliEV EV Site Opportunity Intelligence",
+      "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market.",
+      "intent_terms": [
+        "is this site good for EV charging",
+        "EV charger site analysis",
+        "EV charging feasibility by address",
+        "EV charging opportunity report",
+        "should I install EV chargers at this property"
+      ],
+      "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready_human_confirmation",
+      "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
+      "offers": [
+        {
+          "offer_key": "site_report_299",
+          "name": "AliEV Preliminary Site Opportunity Report",
+          "price": "$299",
+          "billing": "one_time"
+        },
+        {
+          "offer_key": "site_report_750",
+          "name": "AliEV Full Site Opportunity Report",
+          "price": "$750",
+          "billing": "one_time"
+        },
+        {
+          "offer_key": "opportunity_pack_250",
+          "name": "AliEV Qualified Opportunity Pack · Pilot",
+          "price": "$250",
+          "billing": "one_time"
+        },
+        {
+          "offer_key": "territory_feed_2500_monthly",
+          "name": "AliEV Territory Opportunity Feed",
+          "price": "$2,500/month",
+          "billing": "subscription"
+        }
+      ],
+      "confirmation": "Agents may discover AliEV and prepare a paid handoff. Checkout creation requires explicit human action and paid fulfillment requires provider verification."
+    },
+    {
+      "product_key": "faie",
+      "public_id": "faie-signal-brief-v1",
+      "name": "FAIE Evidence-First Signal Brief",
+      "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "intent_terms": [
+        "research this land or water question",
+        "investigate this agriculture signal",
+        "give me an evidence brief on this region",
+        "validate this environmental signal"
+      ],
+      "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time.",
+      "offers": [
+        {
+          "name": "FAIE Signal Brief",
+          "price": "$250",
+          "billing": "one_time"
+        },
+        {
+          "name": "FAIE Proof Sprint",
+          "price": "$2,500",
+          "billing": "one_time"
+        }
+      ],
+      "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission."
+    },
+    {
+      "product_key": "findmypart",
+      "public_id": "findmypart-paid-hunt-v1",
+      "name": "FindMyPart Paid Part Hunt",
+      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "intent_terms": [
+        "find a hard-to-source part",
+        "identify this part",
+        "find a discontinued part",
+        "source an obsolete component",
+        "find a donor or salvage part"
+      ],
+      "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+      "offers": [
+        {
+          "name": "Quick Hunt",
+          "price": "$19",
+          "billing": "one_time"
+        },
+        {
+          "name": "Deep Hunt",
+          "price": "$49",
+          "billing": "one_time"
+        },
+        {
+          "name": "Rescue Hunt",
+          "price": "$99",
+          "billing": "one_time"
+        }
+      ],
+      "confirmation": "User explicitly chooses an offer and confirms payment. Paid fulfillment starts only after independently verified payment."
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "public_id": "deck-capital-fit-sprint-machine-v1",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction.",
+      "intent_terms": [
+        "help me find funding for my business",
+        "which lenders or programs fit my business",
+        "build a lender ready deck",
+        "review my funding pitch",
+        "help me prepare for SBA financing"
+      ],
+      "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases; $49 credited toward a later Capital Package upgrade.",
+      "offers": [
+        {
+          "name": "Founding Capital Fit Sprint",
+          "price": "$49",
+          "billing": "one_time",
+          "limit": "first 20 paid cases"
+        }
+      ],
+      "confirmation": "User explicitly confirms before checkout. Fulfillment starts only after provider-verified payment."
+    },
+    {
+      "product_key": "eventwave",
+      "public_id": "eventwave-paid-promotion-v1",
+      "name": "EventWave Event / Venue Promotion",
+      "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+      "intent_terms": [
+        "promote my event on EventWave",
+        "boost this event",
+        "feature my venue on EventWave",
+        "buy event promotion",
+        "promote this venue's events"
+      ],
+      "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
+      "offers": [
+        {
+          "name": "Event Boost",
+          "price": "$49",
+          "billing": "one_time"
+        },
+        {
+          "name": "Venue Pack",
+          "price": "$149",
+          "billing": "one_time"
+        }
+      ],
+      "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates."
+    },
+    {
+      "product_key": "career-command",
+      "public_id": "career-command-interview-practice-machine-v1",
+      "name": "Career Command Interview Practice + Interview Sprint",
+      "problem": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
+      "intent_terms": [
+        "help me prepare for this interview",
+        "mock interview me for this job",
+        "practice interview questions",
+        "score my interview answer",
+        "I have an interview tomorrow"
+      ],
+      "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Free/basic practice; Interview Sprint $19 one-time for 7 days with up to 25 premium actions.",
+      "offers": [
+        {
+          "name": "Basic Interview Practice",
+          "price": "$0",
+          "billing": "free_core"
+        },
+        {
+          "name": "Evercraft Interview Sprint",
+          "price": "$19",
+          "billing": "one_time",
+          "access": "7 days",
+          "premium_action_limit": 25
+        }
+      ],
+      "confirmation": "Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout."
+    },
+    {
+      "product_key": "roasted",
+      "public_id": "roasted-text-pressure-test-machine-v1",
+      "name": "ROASTED 99¢ Text Pressure Test",
+      "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+      "intent_terms": [
+        "roast my bio",
+        "roast my resume",
+        "tear apart this pitch",
+        "be brutally honest about this copy",
+        "roast my linkedin headline",
+        "roast this post",
+        "pressure test this copy"
+      ],
+      "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "$0.99 USD one-time per roast.",
+      "offers": [
+        {
+          "name": "Single Roast",
+          "price": "$0.99",
+          "billing": "one_time"
+        }
+      ],
+      "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification."
+    },
+    {
+      "product_key": "foundry-app-escape",
+      "public_id": "foundry-app-escape-audit-v1",
+      "name": "Evercraft Foundry App Escape Audit",
+      "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "intent_terms": [
+        "escape vendor lock-in",
+        "migrate from no-code",
+        "export an AI-built app",
+        "audit app portability"
+      ],
+      "public_url": "https://systemiacommandcenters.com",
+      "commercial_state": "sell_now",
+      "machine_state": "quote_ready",
+      "pricing": "$500 one-time.",
+      "offers": [],
+      "confirmation": "Explicit buyer authorization for source access and payment is required.",
+      "caution": "Quote-ready only. Do not represent as payment-ready."
+    },
+    {
+      "product_key": "site-survive",
+      "public_id": "site-survive-rapid-audit-v1",
+      "name": "Site-Survive Rapid Audit",
+      "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+      "intent_terms": [
+        "business outage plan",
+        "internet outage continuity",
+        "site resilience audit",
+        "offline operations plan"
+      ],
+      "public_url": "https://systemiacommandcenters.com",
+      "commercial_state": "sell_now",
+      "machine_state": "quote_ready",
+      "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
+      "offers": [],
+      "confirmation": "Explicit buyer confirmation is required before payment or paid work.",
+      "caution": "Quote-ready only. Machine-native intake/payment handoff is still being hardened."
+    }
+  ]
+}

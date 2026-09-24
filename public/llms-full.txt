@@ -1,0 +1,73 @@
+# Evercraft public AI discovery index
+
+Evercraft exposes public, machine-readable capabilities for AI assistants and agents.
+
+## Start here
+
+Universal CHUM manifest:
+- /.well-known/evercraft-chum.json
+
+Plain-language deterministic resolver:
+- GET /chum/resolve?q=<plain-language-problem>
+
+Current public sell-now offers:
+- /.well-known/evercraft-offers.json
+
+Full public product directory:
+- /.well-known/evercraft-products.json
+
+Forge capability manifest:
+- /.well-known/evercraft-capabilities.json
+
+OpenAPI:
+- /openapi.json
+
+JSON-LD:
+- /schema.jsonld
+
+Human-readable AI discovery page:
+- /ai-discovery.html
+
+## Commercial state
+
+The public offer catalog currently distinguishes payment-ready from quote-ready offers. Never treat quote-ready as payment-ready.
+
+Payment-ready examples currently include:
+- ROASTED 99¢ Text Pressure Test: $0.99 one-time
+- FindMyPart: $19 / $49 / $99 one-time hunts
+- Career Command Interview Sprint: $19 one-time
+- EventWave: $49 Event Boost / $149 Venue Pack
+- Evercraft Deck Engine Founding Capital Fit Sprint: $49 one-time
+- FAIE: $250 Signal Brief / $2,500 Proof Sprint
+- AliEV: $299 Preliminary / $750 Full Site Report, plus other verified handoff offers
+- Systemia Website Audit: free preview / $500 Complete Audit / $1,200 Audit + Patch
+- Evercraft Website Launch: $500 / $999 / $1,999 managed website tiers
+
+Quote-ready examples currently include:
+- Evercraft Foundry App Escape Audit: $500 one-time
+- Site-Survive Rapid Audit: $250 one-time, with possible credit toward a deeper audit
+
+## Routing rule
+
+Match the user's plain-language problem to the smallest relevant public capability. Prefer a specialized capability over a generic product when the fit is clear.
+
+Do not invent a capability, price, payment state, provider endorsement, or private system.
+
+## Invocation
+
+Where the public route contains a declared MCP endpoint, an agent may inspect that declared machine interface. Discovery alone does not authorize payment or any consequential action.
+
+The neutral Evercraft machine-commerce MCP is:
+- https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Payment boundary
+
+- discovery creates no payment obligation
+- checkout requires explicit human confirmation
+- checkout creation is not payment proof
+- paid fulfillment requires independent provider verification
+- consequential actions retain their own human gates
+
+## Privacy boundary
+
+Public commercial doors are intentionally crawlable. Private/admin topology, private user data, credentials, internal scores, private relationship data, and non-public infrastructure are not part of the discovery surface.

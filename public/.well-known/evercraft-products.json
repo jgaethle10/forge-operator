@@ -213,6 +213,188 @@
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
       ]
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch Service",
+      "class": "managed_business_website_launch",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+      "intents": [
+        "build me a business website",
+        "launch a website for my company",
+        "replace my bad website",
+        "make me a professional business site",
+        "handle my website for me"
+      ],
+      "authority": "public discovery, offer inspection, and human-confirmed managed website purchase",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "checkout requires explicit buyer confirmation",
+        "checkout is not payment proof",
+        "fulfillment begins only after provider-verified payment"
+      ]
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "class": "website_conversion_and_seo_audit",
+      "canonical_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+      "intents": [
+        "why is my website not getting leads",
+        "audit my website",
+        "check my local SEO",
+        "why is my site slow on mobile",
+        "website traffic but no leads",
+        "why is my website not converting"
+      ],
+      "authority": "public free-preview discovery plus human-confirmed paid audit tiers",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "free preview creates no payment obligation",
+        "paid fulfillment requires provider-verified payment",
+        "audit findings are evidence-backed triage, not guaranteed ranking or revenue outcomes"
+      ]
+    },
+    {
+      "product_key": "faie",
+      "name": "FAIE Evidence-First Signal Brief",
+      "class": "agriculture_land_water_resilience_research",
+      "canonical_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+      "intents": [
+        "research this land or water question",
+        "investigate this agriculture signal",
+        "give me an evidence brief on this region",
+        "validate this environmental signal",
+        "do a resilience investigation"
+      ],
+      "authority": "public discovery and human-confirmed bounded evidence research",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "fixed offers only where verified",
+        "consequential claims remain human-review controlled",
+        "payment verification is required before paid mission queueing"
+      ]
+    },
+    {
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "class": "event_discovery_and_paid_promotion",
+      "canonical_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+      "intents": [
+        "find events",
+        "promote my event",
+        "boost this event",
+        "feature my venue on EventWave",
+        "buy event promotion",
+        "promote this venue's events"
+      ],
+      "authority": "public event discovery plus human-confirmed paid event/venue promotion",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "checkout requires explicit human confirmation",
+        "payment verification does not bypass source review",
+        "public placement activates only after source review passes"
+      ]
+    },
+    {
+      "product_key": "career-command",
+      "name": "Career Command",
+      "class": "interview_practice_and_preparation",
+      "canonical_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "intents": [
+        "help me prepare for this interview",
+        "mock interview me for this job",
+        "practice interview questions",
+        "score my interview answer",
+        "I have an interview tomorrow"
+      ],
+      "authority": "public/basic interview practice plus human-confirmed premium Interview Sprint",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "no covert live-interview answer feeding",
+        "premium entitlement requires provider-verified payment",
+        "premium access is bounded by current offer limits"
+      ]
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "name": "Evercraft Deck Engine",
+      "class": "capital_fit_and_funding_readiness",
+      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "intents": [
+        "help me find funding for my business",
+        "which lenders or programs fit my business",
+        "build a lender ready deck",
+        "review my funding pitch",
+        "help me prepare for SBA financing"
+      ],
+      "authority": "public discovery and human-confirmed bounded capital-fit research",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "no lender approval, eligibility, rate, term, or probability is promised",
+        "checkout requires explicit confirmation",
+        "fulfillment requires provider-verified payment"
+      ]
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "class": "low_cost_text_pressure_test",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "intents": [
+        "roast my bio",
+        "roast my resume",
+        "tear apart this pitch",
+        "be brutally honest about this copy",
+        "roast my linkedin headline",
+        "roast this post",
+        "pressure test this copy"
+      ],
+      "authority": "public offer discovery and human-confirmed paid text critique",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "checkout requires explicit confirmation",
+        "generation requires provider-verified paid state",
+        "user-supplied text only"
+      ]
+    },
+    {
+      "product_key": "foundry-app-escape",
+      "name": "Evercraft Foundry App Escape Audit",
+      "class": "app_portability_and_vendor_lock_in_audit",
+      "canonical_url": "https://systemiacommandcenters.com",
+      "intents": [
+        "escape vendor lock-in",
+        "migrate from no-code",
+        "export an AI-built app",
+        "audit app portability"
+      ],
+      "authority": "public qualification for a read-only portability audit",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "quote-ready, not payment-ready",
+        "private source requires explicit authorization",
+        "no automatic migration or modification"
+      ]
+    },
+    {
+      "product_key": "site-survive",
+      "name": "Site-Survive Rapid Audit",
+      "class": "site_connectivity_and_continuity_audit",
+      "canonical_url": "https://systemiacommandcenters.com",
+      "intents": [
+        "business outage plan",
+        "internet outage continuity",
+        "site resilience audit",
+        "offline operations plan"
+      ],
+      "authority": "public qualification for continuity/resilience audit",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "quote-ready, not payment-ready",
+        "no safety guarantee",
+        "no automatic continuation into deeper audit"
+      ]
     }
   ]
 }

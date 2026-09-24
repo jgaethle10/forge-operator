@@ -17,6 +17,9 @@ COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/server.ts ./server.ts
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/public ./public
+COPY --from=build /app/registry ./registry
+COPY --from=build /app/systemia/chum ./systemia/chum
 
 EXPOSE 3000
 
