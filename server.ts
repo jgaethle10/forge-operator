@@ -5,7 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
-import { rankOffers } from './systemia/chum/discovery-router.mjs';
+import { rankDiscoveryCandidates } from './systemia/chum/discovery-router.mjs';
 
 dotenv.config();
 
@@ -86,6 +86,14 @@ function loadPublicMachineCatalog(): any {
   const file = path.resolve(
     __dirname,
     isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json'
+  );
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function loadPublicProductDirectory(): any {
+  const file = path.resolve(
+    __dirname,
+    isProd ? 'dist/.well-known/evercraft-products.json' : 'public/.well-known/evercraft-products.json'
   );
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
@@ -218,20 +226,29 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
 
   try {
     const catalog = loadPublicMachineCatalog();
-    const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
+    const directory = loadPublicProductDirectory();
+    const matches = rankDiscoveryCandidates(catalog, directory, q, { limit: requestedLimit, minimumScore: 8 });
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json({
-      schema: 'evercraft.chum.intent-routing.v1',
+      schema: 'evercraft.chum.intent-routing.v2',
       ok: true,
       query: q,
       match_count: matches.length,
       doctrine: {
         match_problem_first: true,
+        search_union_of_public_capabilities_and_sell_now_offers: true,
         discovery_creates_obligation: false,
+        discovery_only_is_not_callable: true,
+        callable_is_not_paid: true,
         human_confirmation_preserved: true,
         checkout_is_not_payment_proof: true,
       },
       matches,
+      state_guide: {
+        sell_now: 'A current public commercial offer exists. Preserve explicit human confirmation before checkout.',
+        callable: 'A separately verified machine invocation surface exists.',
+        discovery_only: 'The capability may be surfaced and explained, but no machine invocation is claimed here.'
+      },
       fallback: matches.length
         ? null
         : {
@@ -243,7 +260,7 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
   } catch (error: any) {
     res.status(503).json({
       ok: false,
-      error: 'Public machine catalog is unavailable.',
+      error: 'Public discovery watershed is unavailable.',
       detail: error?.message || String(error),
     });
   }
