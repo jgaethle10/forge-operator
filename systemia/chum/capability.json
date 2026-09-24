@@ -3,7 +3,7 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "owner": "Systemia",
   "status": "live_in_forge_operator",
   "contract": {
@@ -46,7 +46,8 @@
     "freshness_broadcast": "receipt_backed",
     "provider_pickup": "receipt_required",
     "conversion_attribution": "receipt_required",
-    "pain_index": "deterministic_build_and_brand_blind_tests"
+    "pain_index": "deterministic_build_and_brand_blind_tests",
+    "expanded_agent_reachability": "receipt_backed"
   },
   "compatibility": {
     "provider_targets": [
@@ -56,7 +57,11 @@
       "copilot",
       "perplexity",
       "grok",
-      "generic_agent"
+      "generic_agent",
+      "apple_search",
+      "apple_intelligence",
+      "google_vertex_agents",
+      "gemini_notebook"
     ],
     "crawler_targets": [
       "OAI-SearchBot",
@@ -67,7 +72,12 @@
       "Googlebot",
       "Google-Extended",
       "bingbot",
-      "PerplexityBot"
+      "PerplexityBot",
+      "Applebot",
+      "Applebot-Extended",
+      "Google-CloudVertexBot",
+      "Google-Agent",
+      "Google-GeminiNotebook"
     ]
   },
   "rollback": {
