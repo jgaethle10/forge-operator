@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Guardian Pilot",
+  "product_key": "guardian-pilot",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://guardian-pilot.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public safety-resource discovery and Guardian Pilot navigation only; reports, provider contact, case creation, location sharing, or other consequential handoffs remain user-controlled",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "not emergency dispatch and does not guarantee response or provider availability",
+    "for immediate danger, use local emergency services; crisis resources shown by Guardian must be independently current for the user's situation",
+    "AI assistants and agents must not submit reports, contact providers, create cases, share identity, or transmit precise location without explicit user action",
+    "public discovery exposes no private report, child, family, account, device, support-circle, case narrative, or precise-location data",
+    "resource eligibility, hours, geography, and availability can change and should be verified with the provider"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}
