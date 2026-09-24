@@ -163,6 +163,17 @@
       "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
     },
     {
+      "product_key": "guardian-pilot",
+      "name": "Guardian Pilot",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian-pilot/ai-conformance.json",
+      "page_url": "/chum/products/guardian-pilot/",
+      "registry_name": null,
+      "mcp": null
+    },
+    {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "canonical_url": "https://infiniteclassroom.base44.app/",
