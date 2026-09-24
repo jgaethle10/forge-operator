@@ -38,6 +38,15 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-kn
 CHUM public mirror:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json
 
+
+Master buyer-intent index:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents/index.json
+
+Plain-text buyer-intent index:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents/index.txt
+
+Live natural-language router: /api/discover?q={natural-language-problem}
+
 Human-readable portfolio:
 https://github.com/jgaethle10/forge-operator/tree/main/registry
 
