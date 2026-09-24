@@ -46,6 +46,9 @@ const portfolioKeys = Array.from(new Set([
 const liveProviderProbe = fs.existsSync('artifacts/chum/provider-probe-latest.json')
   ? readJson('artifacts/chum/provider-probe-latest.json')
   : null;
+const distributionReceipt = fs.existsSync('artifacts/chum/distribution-latest.json')
+  ? readJson('artifacts/chum/distribution-latest.json')
+  : null;
 const liveProviderObservationsByKey = new Map();
 for (const result of liveProviderProbe?.results || []) {
   const key = result.product_key;
@@ -296,9 +299,17 @@ const receipt = {
     invalid_surfaces: invalid.length,
     machine_catalog_offers: machineOffers.length,
     machine_catalog_sell_now: machineOffers.filter((x) => x.commercial_state === 'sell_now').length,
-    machine_catalog_offers_needing_repair: machineCatalogRepair.length
+    machine_catalog_offers_needing_repair: machineCatalogRepair.length,
+    distribution_targets: Number(distributionReceipt?.summary?.targets || 0),
+    distribution_active: Number(distributionReceipt?.summary?.active || 0),
+    distribution_pending: Number(distributionReceipt?.summary?.pending || 0),
+    distribution_repair: Number(distributionReceipt?.summary?.repair || 0),
+    distribution_blocked: Number(distributionReceipt?.summary?.blocked || 0),
+    distribution_human_gates: Number(distributionReceipt?.summary?.human_gates || 0),
+    distribution_founder_attention_required: Boolean(distributionReceipt?.summary?.founder_attention_required)
   },
   provider_targets: providerTargets,
+  distribution: distributionReceipt,
   machine_catalog: {
     source: machineCatalog.source_url || null,
     snapshot_schema: machineCatalog.schema || null,
@@ -324,6 +335,13 @@ const md = [
   `Machine catalog offers: ${receipt.summary.machine_catalog_offers}`,
   `Sell-now machine offers: ${receipt.summary.machine_catalog_sell_now}`,
   `Machine offers needing discovery repair: ${receipt.summary.machine_catalog_offers_needing_repair}`,
+  `Distribution targets: ${receipt.summary.distribution_targets}`,
+  `Distribution active: ${receipt.summary.distribution_active}`,
+  `Distribution pending: ${receipt.summary.distribution_pending}`,
+  `Distribution repair: ${receipt.summary.distribution_repair}`,
+  `Distribution blocked: ${receipt.summary.distribution_blocked}`,
+  `Distribution human gates: ${receipt.summary.distribution_human_gates}`,
+  `Distribution founder attention required: ${receipt.summary.distribution_founder_attention_required ? 'yes' : 'no'}`,
   '',
   '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
@@ -333,6 +351,12 @@ const md = [
     const g = p.readiness.gates;
     return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.distribution_state.official_registry} | ${p.distribution_state.public_web_discovery} | ${p.distribution_state.provider_observations} |`;
   }),
+  '',
+  '## Distribution targets',
+  '',
+  ...(distributionReceipt?.targets?.length
+    ? distributionReceipt.targets.map((target) => `- ${target.key || 'unknown'}: ${target.state || 'unknown'}; ${target.next || ''}`)
+    : ['- Distribution receipt not present for this run.']),
   '',
   '## Machine catalog repair queue',
   '',
