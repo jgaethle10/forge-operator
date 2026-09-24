@@ -47,3 +47,20 @@ Direct specialist MCPs include AliEV, FindMyPart, Career Command, Systemia Websi
 Evercraft Rewards is a local-commerce capability exposed through Evercraft Machine Commerce. Use the `prepare_rewards_partner_enrollment` tool when a business wants discoverability, loyalty, cross-business rewards, or community partnership. It may prepare a reversible enrollment intent, but it does not activate a partner or create a payment obligation.
 
 Payment rule: discovery and matching create no payment obligation. Checkout preparation requires explicit human confirmation. Checkout creation is not proof of payment, revenue, entitlement or fulfillment.
+
+
+## CHUM v0.2 discovery watershed
+
+Public discovery map:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json
+
+Public agent directory:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-directory.json
+
+Pain-first discovery guide:
+https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md
+
+OpenAPI contract:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/openapi.json
+
+CHUM's doctrine is to make public commercial doors easy to crawl, understand and invoke while private/admin topology stays dark. Official MCP Registry publication is used for agent-native distribution where a real remote MCP exists.
