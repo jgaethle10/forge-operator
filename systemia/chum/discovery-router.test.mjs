@@ -13,7 +13,11 @@ const cases = [
   ['escape vendor lock in migrate from no code app portability', 'foundry-app-escape-audit-v1'],
   ['internet outage continuity offline operations plan', 'site-survive-rapid-audit-v1'],
   ['promote my local event boost visibility', 'eventwave-paid-promotion-v1'],
-  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1']
+  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1'],
+  ['this video is too large for the AI and I need full source timestamped analysis', 'forensiscope-evidence-review-v1'],
+  ['protect my bank account from AI scams and suspicious transfer instructions', 'raven-nexus-pain-router-v1'],
+  ['we need an ERP but cannot survive a huge implementation and want to modernize without replacing everything', 'buildflow-enterprise-ops-router-v1'],
+  ['the same vendors exist in multiple systems and we need safe deduplication without silent merges', 'buildflow-entity-resolution-machine-v1']
 ];
 
 let failed = 0;
