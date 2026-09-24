@@ -10,6 +10,8 @@ on:
       - "chum-probes/**"
       - "conformance/**"
       - "registry/**"
+      - "server.ts"
+      - "AI-DISCOVERY.md"
       - "public/llms.txt"
       - "public/llms-full.txt"
       - "public/robots.txt"
