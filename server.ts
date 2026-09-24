@@ -131,10 +131,23 @@ function isPublicDiscoveryPath(pathname: string): boolean {
 }
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  if ((req.method === 'GET' || req.method === 'HEAD') && isPublicDiscoveryPath(req.path)) {
+  if (!isPublicDiscoveryPath(req.path)) {
+    next();
+    return;
+  }
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+
+  if (req.method === 'GET' || req.method === 'HEAD') {
     for (const link of DISCOVERY_LINKS) res.append('Link', link);
     res.setHeader('X-Robots-Tag', 'index, follow');
-    res.setHeader('Access-Control-Allow-Origin', '*');
   }
   next();
 });
@@ -407,8 +420,9 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
 
 function handleDiscoveryRequest(req: Request, res: Response) {
   const body = req.method === 'POST' && req.body && typeof req.body === 'object' ? req.body : {};
-  const q = String(req.method === 'POST' ? (body.problem || body.intent || body.q || '') : (req.query.q || '')).trim();
-  const requestedLimit = Number(req.method === 'POST' ? (body.limit || 5) : (req.query.limit || 5));
+  const q = String(req.method === 'POST' ? (body.problem || body.intent || body.q || '') : (req.query.q || '')).trim().slice(0, 4000);
+  const rawLimit = Number(req.method === 'POST' ? (body.limit || 5) : (req.query.limit || 5));
+  const requestedLimit = Math.min(10, Math.max(1, Number.isFinite(rawLimit) ? Math.floor(rawLimit) : 5));
   res.setHeader('Cache-Control', 'no-store');
 
   if (!q) {
