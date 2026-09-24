@@ -32,10 +32,11 @@
     "check:workflow-noise": "node scripts/validate-workflow-noise.mjs",
     "chum:revenue": "node systemia/chum/build-revenue-watershed.mjs",
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
-    "chum:llms": "node systemia/chum/build-llms-full.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store",
+    "goal": "node systemia/organism/goal-cli.mjs",
+    "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
     "test:chum-index": "npm run chum:index && node tests/chum-pain-index.test.mjs"
   },
