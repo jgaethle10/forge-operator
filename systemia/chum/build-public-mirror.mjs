@@ -100,6 +100,7 @@ for (const product of directory.products || []) {
     schema: 'evercraft.chum.product-discovery.v1',
     product_key: key,
     name: product.name,
+    aliases: Array.isArray(product.aliases) ? product.aliases : [],
     class: product.class,
     canonical_url: canonicalUrl,
     intents: product.intents || [],
@@ -123,6 +124,7 @@ for (const product of directory.products || []) {
     schema: 'evercraft.cross-llm-product.v1',
     product: product.name,
     product_key: key,
+    aliases: Array.isArray(product.aliases) ? product.aliases : [],
     providers,
     canonical_url: canonicalUrl,
     llms_url: discovery.mirror.llms,
@@ -139,6 +141,7 @@ for (const product of directory.products || []) {
     `# ${product.name}`,
     '',
     `Product key: ${key}`,
+    Array.isArray(product.aliases) && product.aliases.length ? `Aliases: ${product.aliases.join(', ')}` : null,
     `Canonical product: ${canonicalUrl}`,
     discovery.registry_name ? `Official MCP Registry: ${discovery.registry_name}` : null,
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
@@ -177,6 +180,7 @@ for (const product of directory.products || []) {
         '@type': 'Service',
         '@id': `${canonicalUrl}#evercraft-capability`,
         name: product.name,
+        alternateName: Array.isArray(product.aliases) ? product.aliases : [],
         serviceType: product.class,
         url: canonicalUrl,
         provider: {
@@ -238,6 +242,7 @@ for (const product of directory.products || []) {
   index.products.push({
     product_key: key,
     name: product.name,
+    aliases: Array.isArray(product.aliases) ? product.aliases : [],
     canonical_url: canonicalUrl,
     llms_url: discovery.mirror.llms,
     discovery_url: discovery.mirror.discovery,
@@ -423,6 +428,7 @@ for (const product of directory.products || []) {
 
   llmsLines.push(`### ${product.name}`);
   llmsLines.push(`Product key: ${key}`);
+  if (Array.isArray(product.aliases) && product.aliases.length) llmsLines.push(`Aliases: ${product.aliases.join(', ')}`);
   llmsLines.push(`Canonical: ${safeCanonical}`);
   llmsLines.push(`Machine state: ${invocation.mode}`);
   if (invocation.registry_name) llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
@@ -440,6 +446,7 @@ for (const product of directory.products || []) {
   agentProducts.push({
     product_key: key,
     name: product.name,
+    aliases: Array.isArray(product.aliases) ? product.aliases : [],
     class: product.class,
     canonical_url: safeCanonical,
     intents: product.intents || [],
@@ -456,6 +463,7 @@ for (const product of directory.products || []) {
     '@type': 'Service',
     '@id': `${safeCanonical}#evercraft-service`,
     name: product.name,
+    alternateName: Array.isArray(product.aliases) ? product.aliases : [],
     url: safeCanonical,
     provider: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
     serviceType: product.class,
