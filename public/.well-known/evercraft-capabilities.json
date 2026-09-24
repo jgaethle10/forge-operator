@@ -18,7 +18,13 @@
       "path": "/api/revenue-watershed"
     },
     "machineCatalog": "/.well-known/evercraft-machine-catalog.json",
-    "chumRevenue": "/chum/revenue.json"
+    "chumRevenue": "/chum/revenue.json",
+    "intentPage": "/discover/",
+    "intentDirectory": "/.well-known/evercraft-intents.json",
+    "intentApi": {
+      "method": "GET",
+      "path": "/api/intents"
+    }
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -27,7 +33,9 @@
     "operational risk identification",
     "implementation next-step generation",
     "Evercraft portfolio problem-to-product discovery",
-    "natural-language problem to Evercraft offer routing"
+    "natural-language problem to Evercraft offer routing",
+    "problem-language capability discovery",
+    "brand-blind AI-to-capability routing"
   ],
   "input": {
     "method": "POST",
@@ -57,7 +65,8 @@
       "external communications with material consequences"
     ],
     "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act.",
-    "intentRouterRule": "Read-only discovery. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology."
+    "intentRouterRule": "Read-only discovery. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology.",
+    "intentDirectoryRule": "Public read-only vocabulary only. It grants no private access, purchase authority, payment state, or external-action authority."
   },
   "commercial": {
     "status": "configured-at-runtime",
