@@ -6,6 +6,8 @@ Start from the user problem. The user does not need to know an Evercraft product
 ## Universal routing
 
 Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+A2A 1.0 Agent Card: /.well-known/agent-card.json
+A2A pain router: POST /a2a using JSON-RPC SendMessage
 Product directory: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
 CHUM public mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json
 AI discovery watershed: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/ai-discovery.json

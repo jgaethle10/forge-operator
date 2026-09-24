@@ -19,7 +19,9 @@
     "sell_now_revenue_text": "/chum/revenue.txt",
     "intent_router": "/api/discover?q={natural-language-problem}",
     "revenue_router": "/api/revenue-watershed",
-    "chum": "/.well-known/evercraft-chum.json"
+    "chum": "/.well-known/evercraft-chum.json",
+    "a2a_agent_card": "/.well-known/agent-card.json",
+    "a2a_endpoint": "/a2a"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
@@ -44,6 +46,11 @@
       "provider": "OpenAI / ChatGPT Search",
       "robots_token": "OAI-SearchBot",
       "intent": "allow public search discovery"
+    },
+    {
+      "provider": "OpenAI / user-directed ChatGPT fetch",
+      "robots_token": "ChatGPT-User",
+      "intent": "allow user-directed retrieval; automatic Search inclusion is controlled by OAI-SearchBot"
     },
     {
       "provider": "Anthropic / Claude Search",
