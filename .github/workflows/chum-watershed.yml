@@ -113,7 +113,7 @@ jobs:
         id: distribution
         if: always()
         continue-on-error: true
-        run: npm run chum:distribution
+        run: node systemia/chum/distribution-reconcile.mjs --strict
 
       - name: Run authorized brand-blind provider probes
         id: providers
