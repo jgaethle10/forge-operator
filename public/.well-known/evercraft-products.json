@@ -6,26 +6,6 @@
   "routing_rule": "Match user intent to the smallest relevant public capability. Preserve uncertainty, pricing state, evidence state, permissions, geographic scope, and human-confirmation requirements. Do not infer private capabilities.",
   "products": [
     {
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "class": "hard_to_source_parts",
-      "canonical_url": "https://findmypart.base44.app/",
-      "intents": [
-        "find a discontinued tractor part",
-        "find an obsolete automotive or machine part",
-        "identify a hard-to-source part from markings, measurements, photos, or equipment clues",
-        "find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
-      ],
-      "authority": "public discovery and human-confirmed paid sourcing hunts",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "unknowns may remain unknown",
-        "compatibility is not guaranteed",
-        "checkout creation is not payment proof",
-        "private vendor, analytics, session, command-center, and sales data are not public"
-      ]
-    },
-    {
       "product_key": "aliev",
       "name": "AliEV",
       "class": "ev_infrastructure_opportunity_intelligence",
@@ -44,6 +24,205 @@
         "program presence is not incentive eligibility",
         "screening is not engineering, permitting, interconnection, financing, or construction approval",
         "payment requires authoritative verification"
+      ]
+    },
+    {
+      "product_key": "career-command",
+      "name": "Evercraft Career Command",
+      "class": "interview_practice_and_career_preparation",
+      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "intents": [
+        "practice for a job interview tomorrow",
+        "run a role-specific mock interview",
+        "prepare concise interview stories and answers",
+        "get structured interview practice before an upcoming interview"
+      ],
+      "authority": "public offer discovery and human-confirmed paid interview-practice checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "checkout preparation requires explicit human payment confirmation",
+        "checkout creation is not payment proof",
+        "paid access requires provider verification"
+      ]
+    },
+    {
+      "product_key": "contractor-cloud",
+      "name": "Evercraft Contractor Cloud",
+      "class": "home_service_and_contractor_operations",
+      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "intents": [
+        "get contractor quotes for a home project",
+        "find contractors for a project",
+        "contractor opportunity network",
+        "roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software",
+        "contractor measurement tools"
+      ],
+      "authority": "public homeowner intake and contractor discovery with protected person-level data",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
+        "homeowner identity, private addresses, project photos, bids, and transaction records are not public",
+        "paid access requires independently verified subscription state"
+      ]
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "name": "Evercraft Deck Capital Fit",
+      "class": "capital_fit_and_founder_readiness_research",
+      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "intents": [
+        "figure out what capital or funding path fits my business",
+        "identify founder readiness gaps before raising money",
+        "research realistic capital options for my business",
+        "prepare a bounded capital-fit brief"
+      ],
+      "authority": "public offer discovery and human-confirmed paid research checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "does not make lending or investment decisions",
+        "does not guarantee financing",
+        "checkout creation is not payment proof"
+      ]
+    },
+    {
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "class": "event_discovery_and_labeled_promotion",
+      "canonical_url": "https://event-wave.base44.app/",
+      "intents": [
+        "find local events",
+        "promote my local event",
+        "help people find my event",
+        "boost event visibility",
+        "promote a venue's events"
+      ],
+      "authority": "public event search plus human-confirmed paid labeled promotion",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "paid promotion remains labeled",
+        "source review governs public placement",
+        "checkout creation is not payment proof"
+      ]
+    },
+    {
+      "product_key": "evercraft-network",
+      "name": "Evercraft Network",
+      "class": "application_network_continuity",
+      "canonical_url": "https://network-control.base44.app/",
+      "intents": [
+        "application network that reconnects across changing authorized internet paths",
+        "network resilience software",
+        "member device reconnect visibility",
+        "continuity readiness tools",
+        "Evercraft Network membership"
+      ],
+      "authority": "public product discovery and human-directed membership interaction",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "not a cellular carrier, ISP, SIM or eSIM service",
+        "not 911 or PSAP integration",
+        "not guaranteed geographic coverage or emergency backhaul",
+        "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
+      ]
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "class": "local_business_rewards_and_partnership",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "intents": [
+        "join a local business rewards network",
+        "create cross-business loyalty rewards",
+        "make my local business more discoverable",
+        "join a community business partnership program"
+      ],
+      "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "prepared enrollment does not activate a merchant",
+        "prepared enrollment creates no payment obligation",
+        "directory publication and commercial activation require their own verified state"
+      ]
+    },
+    {
+      "product_key": "evernest",
+      "name": "EverNest",
+      "class": "family_support_resources",
+      "canonical_url": "https://evernest-home.base44.app/",
+      "intents": [
+        "family support resources",
+        "maternal support resources",
+        "organize practical help after having a baby",
+        "trusted support circle concepts",
+        "family preparedness resources",
+        "Spanish-language family support resources"
+      ],
+      "authority": "public resource discovery only",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "does not diagnose, score urgency, or determine whether abuse or danger occurred",
+        "not an emergency-response service",
+        "private family, child, Care Circle, task, note, upload, location, and account data are not public"
+      ]
+    },
+    {
+      "product_key": "everystage",
+      "name": "EveryStage",
+      "class": "live_event_operations",
+      "canonical_url": "https://every-stage.base44.app/product",
+      "intents": [
+        "software to run a live event",
+        "venue operations software",
+        "run of show coordination",
+        "event crew coordination",
+        "festival operations software",
+        "event revenue or settlement workflows"
+      ],
+      "authority": "public product discovery and human-directed pilot intake",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "pilot intake is not a contract or accepted deployment",
+        "public plan pricing is not a binding quote unless confirmed by the current product flow",
+        "private event, participant, revenue, settlement, and admin data are not public"
+      ]
+    },
+    {
+      "product_key": "faie",
+      "name": "FAIE",
+      "class": "evidence_first_agriculture_and_resilience_research",
+      "canonical_url": "https://faie.base44.app/",
+      "intents": [
+        "get an evidence-based agriculture or water risk brief",
+        "research land production or resilience risk",
+        "investigate an agriculture signal before making a decision",
+        "build a sourced brief about farm water land or production risk"
+      ],
+      "authority": "public offer discovery and human-confirmed bounded research checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "research is evidence support rather than consequential authority",
+        "unknowns remain labeled",
+        "checkout creation is not payment proof"
+      ]
+    },
+    {
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "class": "hard_to_source_parts",
+      "canonical_url": "https://findmypart.base44.app/",
+      "intents": [
+        "find a discontinued tractor part",
+        "find an obsolete automotive or machine part",
+        "identify a hard-to-source part from markings, measurements, photos, or equipment clues",
+        "find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
+      ],
+      "authority": "public discovery and human-confirmed paid sourcing hunts",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "unknowns may remain unknown",
+        "compatibility is not guaranteed",
+        "checkout creation is not payment proof",
+        "private vendor, analytics, session, command-center, and sales data are not public"
       ]
     },
     {
@@ -92,67 +271,6 @@
       "machine_contract": "/.well-known/evercraft-media-overflow.json"
     },
     {
-      "product_key": "skyops-parking",
-      "name": "SkyOps Parking",
-      "class": "parking_operations",
-      "canonical_url": "https://skyops-parking.base44.app/",
-      "intents": [
-        "airport parking management software",
-        "parking garage reservation management",
-        "parking owner dashboard",
-        "multi-location parking operations software",
-        "valet-style vehicle staging and retrieval"
-      ],
-      "authority": "public product discovery and human-directed pilot or planning flows",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "planning is not a parking reservation",
-        "displayed planning values are not proof of a charge",
-        "payments, messaging, hardware, and partner connections must be verified per deployment"
-      ]
-    },
-    {
-      "product_key": "everystage",
-      "name": "EveryStage",
-      "class": "live_event_operations",
-      "canonical_url": "https://every-stage.base44.app/product",
-      "intents": [
-        "software to run a live event",
-        "venue operations software",
-        "run of show coordination",
-        "event crew coordination",
-        "festival operations software",
-        "event revenue or settlement workflows"
-      ],
-      "authority": "public product discovery and human-directed pilot intake",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "pilot intake is not a contract or accepted deployment",
-        "public plan pricing is not a binding quote unless confirmed by the current product flow",
-        "private event, participant, revenue, settlement, and admin data are not public"
-      ]
-    },
-    {
-      "product_key": "contractor-cloud",
-      "name": "Evercraft Contractor Cloud",
-      "class": "home_service_and_contractor_operations",
-      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
-      "intents": [
-        "get contractor quotes for a home project",
-        "find contractors for a project",
-        "contractor opportunity network",
-        "roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software",
-        "contractor measurement tools"
-      ],
-      "authority": "public homeowner intake and contractor discovery with protected person-level data",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
-        "homeowner identity, private addresses, project photos, bids, and transaction records are not public",
-        "paid access requires independently verified subscription state"
-      ]
-    },
-    {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "class": "ai_supported_learning",
@@ -173,64 +291,50 @@
       ]
     },
     {
-      "product_key": "evernest",
-      "name": "EverNest",
-      "class": "family_support_resources",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "product_key": "raven-nexus",
+      "name": "Raven Nexus",
+      "class": "pain_first_modular_safety_and_stability",
+      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
       "intents": [
-        "family support resources",
-        "maternal support resources",
-        "organize practical help after having a baby",
-        "trusted support circle concepts",
-        "family preparedness resources",
-        "Spanish-language family support resources"
+        "protect my bank account from AI scams or suspicious transfer risk",
+        "help with identity theft, credential compromise, or account takeover risk",
+        "help make my home or property safer",
+        "set up family safety check-ins or preparedness",
+        "make a personal or relationship safety plan",
+        "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
+        "find the smallest Raven safety capability without buying the full suite or hardware"
       ],
-      "authority": "public resource discovery only",
-      "human_confirmation_required": false,
+      "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+      "human_confirmation_required": true,
+      "machine_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
       "boundaries": [
-        "does not diagnose, score urgency, or determine whether abuse or danger occurred",
-        "not an emergency-response service",
-        "private family, child, Care Circle, task, note, upload, location, and account data are not public"
+        "full-suite purchase is not required when a smaller capability is sufficient",
+        "hardware is optional unless the selected capability explicitly requires it",
+        "planned capability is not sellable capability",
+        "does not claim bank-side transaction blocking without verified banking authority",
+        "does not permit covert tracking, stalking, or unauthorized surveillance",
+        "Raven discovery is not emergency response",
+        "checkout creation is not payment proof"
       ]
     },
     {
-      "product_key": "evercraft-network",
-      "name": "Evercraft Network",
-      "class": "application_network_continuity",
-      "canonical_url": "https://network-control.base44.app/",
+      "product_key": "skyops-parking",
+      "name": "SkyOps Parking",
+      "class": "parking_operations",
+      "canonical_url": "https://skyops-parking.base44.app/",
       "intents": [
-        "application network that reconnects across changing authorized internet paths",
-        "network resilience software",
-        "member device reconnect visibility",
-        "continuity readiness tools",
-        "Evercraft Network membership"
+        "airport parking management software",
+        "parking garage reservation management",
+        "parking owner dashboard",
+        "multi-location parking operations software",
+        "valet-style vehicle staging and retrieval"
       ],
-      "authority": "public product discovery and human-directed membership interaction",
+      "authority": "public product discovery and human-directed pilot or planning flows",
       "human_confirmation_required": true,
       "boundaries": [
-        "not a cellular carrier, ISP, SIM or eSIM service",
-        "not 911 or PSAP integration",
-        "not guaranteed geographic coverage or emergency backhaul",
-        "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
-      ]
-    },
-    {
-      "product_key": "career-command",
-      "name": "Evercraft Career Command",
-      "class": "interview_practice_and_career_preparation",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
-      "intents": [
-        "practice for a job interview tomorrow",
-        "run a role-specific mock interview",
-        "prepare concise interview stories and answers",
-        "get structured interview practice before an upcoming interview"
-      ],
-      "authority": "public offer discovery and human-confirmed paid interview-practice checkout",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "checkout preparation requires explicit human payment confirmation",
-        "checkout creation is not payment proof",
-        "paid access requires provider verification"
+        "planning is not a parking reservation",
+        "displayed planning values are not proof of a charge",
+        "payments, messaging, hardware, and partner connections must be verified per deployment"
       ]
     },
     {
@@ -253,25 +357,6 @@
       ]
     },
     {
-      "product_key": "deck-capital-fit",
-      "name": "Evercraft Deck Capital Fit",
-      "class": "capital_fit_and_founder_readiness_research",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
-      "intents": [
-        "figure out what capital or funding path fits my business",
-        "identify founder readiness gaps before raising money",
-        "research realistic capital options for my business",
-        "prepare a bounded capital-fit brief"
-      ],
-      "authority": "public offer discovery and human-confirmed paid research checkout",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "does not make lending or investment decisions",
-        "does not guarantee financing",
-        "checkout creation is not payment proof"
-      ]
-    },
-    {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
       "class": "done_for_you_business_website_service",
@@ -288,64 +373,6 @@
         "scope depends on the selected service tier",
         "checkout creation is not payment proof",
         "fulfillment requires verified payment"
-      ]
-    },
-    {
-      "product_key": "faie",
-      "name": "FAIE",
-      "class": "evidence_first_agriculture_and_resilience_research",
-      "canonical_url": "https://faie.base44.app/",
-      "intents": [
-        "get an evidence-based agriculture or water risk brief",
-        "research land production or resilience risk",
-        "investigate an agriculture signal before making a decision",
-        "build a sourced brief about farm water land or production risk"
-      ],
-      "authority": "public offer discovery and human-confirmed bounded research checkout",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "research is evidence support rather than consequential authority",
-        "unknowns remain labeled",
-        "checkout creation is not payment proof"
-      ]
-    },
-    {
-      "product_key": "eventwave",
-      "name": "EventWave",
-      "class": "event_discovery_and_labeled_promotion",
-      "canonical_url": "https://event-wave.base44.app/",
-      "intents": [
-        "find local events",
-        "promote my local event",
-        "help people find my event",
-        "boost event visibility",
-        "promote a venue's events"
-      ],
-      "authority": "public event search plus human-confirmed paid labeled promotion",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "paid promotion remains labeled",
-        "source review governs public placement",
-        "checkout creation is not payment proof"
-      ]
-    },
-    {
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "class": "local_business_rewards_and_partnership",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-      "intents": [
-        "join a local business rewards network",
-        "create cross-business loyalty rewards",
-        "make my local business more discoverable",
-        "join a community business partnership program"
-      ],
-      "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "prepared enrollment does not activate a merchant",
-        "prepared enrollment creates no payment obligation",
-        "directory publication and commercial activation require their own verified state"
       ]
     }
   ]
