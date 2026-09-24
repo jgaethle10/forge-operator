@@ -9,6 +9,11 @@ const timeoutMs = 12000;
 const conformance = readJson('conformance/products.json');
 const directory = readJson('public/.well-known/evercraft-products.json');
 const catalog = readJson('registry/catalog.json');
+const machineCatalogPath = 'public/.well-known/evercraft-machine-catalog.json';
+const machineCatalog = fs.existsSync(machineCatalogPath)
+  ? readJson(machineCatalogPath)
+  : { schema: 'evercraft.machine-catalog.snapshot.v1', offers: [] };
+const officialRegistryBase = 'https://registry.modelcontextprotocol.io/v0.1/servers';
 
 const readJsonDir = (dir) => {
   if (!fs.existsSync(dir)) return [];
@@ -107,7 +112,58 @@ async function probe(url, kind) {
   }
 }
 
-function readiness({ product, publicEntry, catalogEntry, checks }) {
+async function probeOfficialRegistry(registryName) {
+  if (!registryName) {
+    return { declared: false, checked: false, active: false, latest: false, version: null, reason: 'not_declared' };
+  }
+  if (offline) {
+    return { declared: true, checked: false, active: null, latest: null, version: null, reason: 'offline' };
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const url = new URL(officialRegistryBase);
+    url.searchParams.set('search', registryName);
+    url.searchParams.set('version', 'latest');
+    const response = await fetch(url, {
+      headers: {
+        accept: 'application/json',
+        'user-agent': 'Evercraft-CHUM/0.2 (+official-registry-verifier)'
+      },
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => null);
+    const row = Array.isArray(body?.servers)
+      ? body.servers.find((x) => x?.server?.name === registryName)
+      : null;
+    const meta = row?._meta?.['io.modelcontextprotocol.registry/official'] || {};
+    return {
+      declared: true,
+      checked: true,
+      active: response.ok && meta.status === 'active',
+      latest: Boolean(meta.isLatest),
+      version: row?.server?.version || null,
+      published_at: meta.publishedAt || null,
+      status: meta.status || null,
+      http_status: response.status,
+      reason: row ? 'ok' : 'not_found'
+    };
+  } catch (error) {
+    return {
+      declared: true,
+      checked: true,
+      active: false,
+      latest: false,
+      version: null,
+      reason: error instanceof Error ? error.message : String(error)
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function readiness({ product, publicEntry, catalogEntry, checks, registryCheck }) {
   const gates = [
     ['public_directory', Boolean(publicEntry)],
     ['canonical_surface', checks.canonical?.valid === true],
@@ -117,7 +173,8 @@ function readiness({ product, publicEntry, catalogEntry, checks }) {
       checks.conformance?.valid === true ||
       checks.openapi?.valid === true
     )],
-    ['agent_invocation_declared', Boolean(catalogEntry?.mcp)]
+    ['agent_invocation_declared', Boolean(catalogEntry?.mcp)],
+    ['official_registry_active', catalogEntry?.mcp ? registryCheck?.active === true : false]
   ];
   const passed = gates.filter(([, ok]) => ok).length;
   return {
@@ -132,6 +189,8 @@ async function inspectProduct(product) {
   const catalogEntry = catalogByKey.get(product.product_key);
   const registryReceipts = registryReceiptsByKey.get(product.product_key) || [];
   const providerObservations = providerObservationsByKey.get(product.product_key) || [];
+  const registryName = catalogEntry?.registry_name || null;
+  const registryCheck = await probeOfficialRegistry(registryName);
 
   const entries = [
     ['canonical', product.canonical_url],
@@ -152,17 +211,20 @@ async function inspectProduct(product) {
     intents: publicEntry?.intents || [],
     mcp: catalogEntry?.mcp || null,
     checks,
-    readiness: readiness({ product, publicEntry, catalogEntry, checks }),
+    readiness: readiness({ product, publicEntry, catalogEntry, checks, registryCheck }),
     distribution_state: {
-      official_registry: registryReceipts.some((r) => r.evidence_state === 'receipt_backed' && r.run_conclusion === 'success')
-        ? 'published_receipt_backed'
-        : 'not_receipt_backed',
+      official_registry: registryCheck?.active === true
+        ? 'active_live_verified'
+        : (registryReceipts.some((r) => r.evidence_state === 'receipt_backed' && r.run_conclusion === 'success')
+          ? 'published_receipt_backed'
+          : 'not_receipt_backed'),
       public_web_discovery: product.public_web_discovery_state || 'not_measured',
       provider_observations: providerObservations.length,
       provider_surface_state: providerObservations.some((r) => r.surfaced_forensiscope === false)
         ? 'negative_observation_recorded'
         : (providerObservations.length ? 'observation_recorded' : 'not_measured')
     },
+    registry_check: registryCheck,
     registry_publication_receipts: registryReceipts,
     provider_observation_receipts: providerObservations,
     signal_plan: [
@@ -206,6 +268,40 @@ const checked = allChecks.filter((x) => x.checked);
 const valid = checked.filter((x) => x.valid === true);
 const invalid = checked.filter((x) => x.valid === false);
 
+const registryChecks = [];
+for (const entry of catalog.products || []) {
+  registryChecks.push({
+    registry_name: entry.registry_name,
+    mcp: entry.mcp || null,
+    ...(await probeOfficialRegistry(entry.registry_name))
+  });
+}
+
+const machineOffers = Array.isArray(machineCatalog.offers) ? machineCatalog.offers : [];
+const machineCatalogIssues = machineOffers.map((offer) => {
+  const issues = [];
+  if (!Array.isArray(offer.intent_terms) || offer.intent_terms.length < 3) issues.push('thin_intent_coverage');
+  if (!String(offer.public_url || '').trim()) issues.push('missing_public_url');
+  if (!String(offer.problem || '').trim()) issues.push('missing_problem_statement');
+  if (!String(offer.inputs || '').trim()) issues.push('missing_inputs');
+  if (!String(offer.outputs || '').trim()) issues.push('missing_outputs');
+  if (offer.commercial_state === 'sell_now' && !String(offer.pricing || '').trim()) issues.push('sell_now_missing_pricing');
+  return {
+    public_id: offer.public_id,
+    name: offer.name,
+    commercial_state: offer.commercial_state,
+    machine_state: offer.machine_state,
+    intent_count: Array.isArray(offer.intent_terms) ? offer.intent_terms.length : 0,
+    public_url: offer.public_url || null,
+    issues,
+    discovery_score: Math.max(0, 100 - issues.length * 20)
+  };
+});
+
+const weakMachineOffers = machineCatalogIssues.filter((x) => x.issues.length);
+const activeRegistryChecks = registryChecks.filter((x) => x.active === true);
+const missingRegistryChecks = registryChecks.filter((x) => x.checked && x.active !== true);
+
 const receipt = {
   schema: 'evercraft.chum.receipt.v1',
   name: 'CHUM',
@@ -224,9 +320,24 @@ const receipt = {
     declared_surfaces: allChecks.length,
     checked_surfaces: checked.length,
     valid_surfaces: valid.length,
-    invalid_surfaces: invalid.length
+    invalid_surfaces: invalid.length,
+    machine_catalog_offers: machineOffers.length,
+    machine_catalog_sell_now: machineOffers.filter((x) => x.commercial_state === 'sell_now').length,
+    machine_catalog_offers_needing_discovery_repair: weakMachineOffers.length,
+    registry_declared: registryChecks.length,
+    registry_active_live_verified: activeRegistryChecks.length,
+    registry_missing_or_inactive: missingRegistryChecks.length
   },
   provider_targets: providerTargets,
+  official_registry: {
+    namespace: 'io.github.jgaethle10',
+    checks: registryChecks
+  },
+  machine_catalog: {
+    source: machineCatalog.source_url || null,
+    snapshot_schema: machineCatalog.schema || null,
+    offers: machineCatalogIssues
+  },
   products
 };
 
@@ -243,6 +354,10 @@ const md = [
   `Checked surfaces: ${receipt.summary.checked_surfaces}`,
   `Valid surfaces: ${receipt.summary.valid_surfaces}`,
   `Invalid surfaces: ${receipt.summary.invalid_surfaces}`,
+  `Machine catalog offers: ${receipt.summary.machine_catalog_offers}`,
+  `Sell-now offers: ${receipt.summary.machine_catalog_sell_now}`,
+  `Machine offers needing discovery repair: ${receipt.summary.machine_catalog_offers_needing_discovery_repair}`,
+  `Official MCP registry active/live verified: ${receipt.summary.registry_active_live_verified}/${receipt.summary.registry_declared}`,
   '',
   '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
@@ -253,7 +368,19 @@ const md = [
     return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.distribution_state.official_registry} | ${p.distribution_state.public_web_discovery} | ${p.distribution_state.provider_observations} |`;
   }),
   '',
-  '## Repair queue',
+  '## Official MCP registry',
+  '',
+  ...(missingRegistryChecks.length
+    ? missingRegistryChecks.map((x) => `- ${x.registry_name}: ${x.reason || x.status || 'not active'}`)
+    : ['- All declared registry entries are active.']),
+  '',
+  '## Machine catalog repair queue',
+  '',
+  ...(weakMachineOffers.length
+    ? weakMachineOffers.map((x) => `- ${x.public_id}: ${x.issues.join(', ')}`)
+    : ['- All public machine offers meet the CHUM discovery baseline.']),
+  '',
+  '## Surface repair queue',
   '',
   ...(invalid.length
     ? invalid.map((x) => `- ${x.product_key} / ${x.kind}: ${x.reason || x.status}`)
