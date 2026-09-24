@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "faie",
   "name": "FAIE",
+  "aliases": [],
   "class": "evidence_first_agriculture_and_resilience_research",
   "canonical_url": "https://faie.base44.app/",
   "intents": [

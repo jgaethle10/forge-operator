@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "evercraft-network",
   "name": "Evercraft Network",
+  "aliases": [],
   "class": "application_network_continuity",
   "canonical_url": "https://network-control.base44.app/",
   "intents": [

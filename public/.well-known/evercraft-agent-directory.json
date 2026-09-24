@@ -26,6 +26,7 @@
     {
       "product_key": "aliev",
       "name": "AliEV",
+      "aliases": [],
       "class": "ev_infrastructure_opportunity_intelligence",
       "canonical_url": "https://aliev.base44.app/",
       "intents": [
@@ -55,6 +56,7 @@
     {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
+      "aliases": [],
       "class": "interview_practice_and_career_preparation",
       "canonical_url": "https://evercraft-career-command.base44.app/",
       "intents": [
@@ -82,6 +84,7 @@
     {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
+      "aliases": [],
       "class": "home_service_and_contractor_operations",
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
       "intents": [
@@ -112,6 +115,7 @@
     {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
+      "aliases": [],
       "class": "capital_fit_and_founder_readiness_research",
       "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
       "intents": [
@@ -139,6 +143,7 @@
     {
       "product_key": "eventwave",
       "name": "EventWave",
+      "aliases": [],
       "class": "event_discovery_and_labeled_promotion",
       "canonical_url": "https://event-wave.base44.app/",
       "intents": [
@@ -167,6 +172,10 @@
     {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
+      "aliases": [
+        "Spider Society",
+        "Agent Watershed"
+      ],
       "class": "ai_persistence_and_automation_security_diagnostics",
       "canonical_url": "https://evercraft.base44.app/containment",
       "intents": [
@@ -197,6 +206,7 @@
     {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
+      "aliases": [],
       "class": "application_network_continuity",
       "canonical_url": "https://network-control.base44.app/",
       "intents": [
@@ -226,6 +236,7 @@
     {
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
+      "aliases": [],
       "class": "local_business_rewards_and_partnership",
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
       "intents": [
@@ -253,6 +264,7 @@
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
+      "aliases": [],
       "class": "ai_web_fetch_search_browser_infrastructure",
       "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
       "intents": [
@@ -289,6 +301,7 @@
     {
       "product_key": "evernest",
       "name": "EverNest",
+      "aliases": [],
       "class": "family_support_resources",
       "canonical_url": "https://evernest-home.base44.app/",
       "intents": [
@@ -318,6 +331,7 @@
     {
       "product_key": "everystage",
       "name": "EveryStage",
+      "aliases": [],
       "class": "live_event_operations",
       "canonical_url": "https://every-stage.base44.app/product",
       "intents": [
@@ -347,6 +361,7 @@
     {
       "product_key": "faie",
       "name": "FAIE",
+      "aliases": [],
       "class": "evidence_first_agriculture_and_resilience_research",
       "canonical_url": "https://faie.base44.app/",
       "intents": [
@@ -374,6 +389,7 @@
     {
       "product_key": "findmypart",
       "name": "FindMyPart",
+      "aliases": [],
       "class": "hard_to_source_parts",
       "canonical_url": "https://findmypart.base44.app/",
       "intents": [
@@ -402,6 +418,7 @@
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
+      "aliases": [],
       "class": "ai_media_overflow_and_analysis",
       "canonical_url": "https://evercraft-forensiscope.base44.app/",
       "intents": [
@@ -444,6 +461,7 @@
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
+      "aliases": [],
       "class": "ai_supported_learning",
       "canonical_url": "https://infiniteclassroom.base44.app/",
       "intents": [
@@ -472,6 +490,7 @@
     {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
+      "aliases": [],
       "class": "pain_first_modular_safety_and_stability",
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
       "intents": [
@@ -506,6 +525,7 @@
     {
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
+      "aliases": [],
       "class": "parking_operations",
       "canonical_url": "https://skyopsparking.base44.app/",
       "intents": [
@@ -534,6 +554,7 @@
     {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
+      "aliases": [],
       "class": "website_conversion_and_technical_audit",
       "canonical_url": "https://systemia-audit-pro.base44.app/",
       "intents": [
@@ -561,6 +582,7 @@
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
+      "aliases": [],
       "class": "done_for_you_business_website_service",
       "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
       "intents": [

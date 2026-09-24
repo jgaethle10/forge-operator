@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "forensiscope",
   "name": "ForensiScope",
+  "aliases": [],
   "class": "ai_media_overflow_and_analysis",
   "canonical_url": "https://evercraft-forensiscope.base44.app/",
   "intents": [

@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Evercraft Contractor Cloud",
   "product_key": "contractor-cloud",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

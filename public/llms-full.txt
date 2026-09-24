@@ -875,6 +875,7 @@ Boundaries:
 
 ### Evercraft Containment
 Product key: evercraft-containment
+Aliases: Spider Society, Agent Watershed
 Canonical: https://evercraft.base44.app/containment
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json

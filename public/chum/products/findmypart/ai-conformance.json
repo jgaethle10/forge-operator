@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "FindMyPart",
   "product_key": "findmypart",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Raven Nexus",
   "product_key": "raven-nexus",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

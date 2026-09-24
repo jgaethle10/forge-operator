@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "systemia-website-audit",
   "name": "Systemia Website Audit",
+  "aliases": [],
   "class": "website_conversion_and_technical_audit",
   "canonical_url": "https://systemia-audit-pro.base44.app/",
   "intents": [

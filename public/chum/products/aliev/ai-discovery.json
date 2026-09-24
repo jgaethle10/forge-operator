@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "aliev",
   "name": "AliEV",
+  "aliases": [],
   "class": "ev_infrastructure_opportunity_intelligence",
   "canonical_url": "https://aliev.base44.app/",
   "intents": [

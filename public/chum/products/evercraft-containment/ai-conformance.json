@@ -2,6 +2,10 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Evercraft Containment",
   "product_key": "evercraft-containment",
+  "aliases": [
+    "Spider Society",
+    "Agent Watershed"
+  ],
   "providers": [
     "chatgpt",
     "claude",

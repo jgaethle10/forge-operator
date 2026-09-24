@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Evercraft Rewards",
   "product_key": "evercraft-rewards",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

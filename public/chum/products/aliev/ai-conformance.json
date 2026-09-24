@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "AliEV",
   "product_key": "aliev",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Evercraft Deck Capital Fit",
   "product_key": "deck-capital-fit",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

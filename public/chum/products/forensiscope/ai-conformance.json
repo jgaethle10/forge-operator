@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "ForensiScope",
   "product_key": "forensiscope",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

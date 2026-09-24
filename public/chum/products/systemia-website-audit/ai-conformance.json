@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Systemia Website Audit",
   "product_key": "systemia-website-audit",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

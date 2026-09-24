@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "everystage",
   "name": "EveryStage",
+  "aliases": [],
   "class": "live_event_operations",
   "canonical_url": "https://every-stage.base44.app/product",
   "intents": [

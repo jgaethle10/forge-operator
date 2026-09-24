@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "FAIE",
   "product_key": "faie",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

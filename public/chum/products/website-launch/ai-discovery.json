@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "website-launch",
   "name": "Evercraft Website Launch",
+  "aliases": [],
   "class": "done_for_you_business_website_service",
   "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
   "intents": [

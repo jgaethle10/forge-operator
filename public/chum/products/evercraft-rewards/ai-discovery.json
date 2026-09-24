@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "evercraft-rewards",
   "name": "Evercraft Rewards",
+  "aliases": [],
   "class": "local_business_rewards_and_partnership",
   "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
   "intents": [

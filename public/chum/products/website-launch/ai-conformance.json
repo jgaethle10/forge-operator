@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Evercraft Website Launch",
   "product_key": "website-launch",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

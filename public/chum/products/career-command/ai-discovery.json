@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "career-command",
   "name": "Evercraft Career Command",
+  "aliases": [],
   "class": "interview_practice_and_career_preparation",
   "canonical_url": "https://evercraft-career-command.base44.app/",
   "intents": [

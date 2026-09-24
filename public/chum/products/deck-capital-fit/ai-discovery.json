@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "deck-capital-fit",
   "name": "Evercraft Deck Capital Fit",
+  "aliases": [],
   "class": "capital_fit_and_founder_readiness_research",
   "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
   "intents": [

@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "findmypart",
   "name": "FindMyPart",
+  "aliases": [],
   "class": "hard_to_source_parts",
   "canonical_url": "https://findmypart.base44.app/",
   "intents": [

@@ -2,6 +2,7 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "skyops-parking",
   "name": "SkyOps Parking",
+  "aliases": [],
   "class": "parking_operations",
   "canonical_url": "https://skyopsparking.base44.app/",
   "intents": [

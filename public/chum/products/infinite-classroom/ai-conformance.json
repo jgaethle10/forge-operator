@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Infinite Classroom",
   "product_key": "infinite-classroom",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

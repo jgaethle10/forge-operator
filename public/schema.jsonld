@@ -24,6 +24,7 @@
       "@type": "Service",
       "@id": "https://aliev.base44.app/#evercraft-service",
       "name": "AliEV",
+      "alternateName": [],
       "url": "https://aliev.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -35,6 +36,7 @@
       "@type": "Service",
       "@id": "https://evercraft-career-command.base44.app/#evercraft-service",
       "name": "Evercraft Career Command",
+      "alternateName": [],
       "url": "https://evercraft-career-command.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -46,6 +48,7 @@
       "@type": "Service",
       "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud#evercraft-service",
       "name": "Evercraft Contractor Cloud",
+      "alternateName": [],
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -57,6 +60,7 @@
       "@type": "Service",
       "@id": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs#evercraft-service",
       "name": "Evercraft Deck Capital Fit",
+      "alternateName": [],
       "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -68,6 +72,7 @@
       "@type": "Service",
       "@id": "https://event-wave.base44.app/#evercraft-service",
       "name": "EventWave",
+      "alternateName": [],
       "url": "https://event-wave.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -79,6 +84,10 @@
       "@type": "Service",
       "@id": "https://evercraft.base44.app/containment#evercraft-service",
       "name": "Evercraft Containment",
+      "alternateName": [
+        "Spider Society",
+        "Agent Watershed"
+      ],
       "url": "https://evercraft.base44.app/containment",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -90,6 +99,7 @@
       "@type": "Service",
       "@id": "https://network-control.base44.app/#evercraft-service",
       "name": "Evercraft Network",
+      "alternateName": [],
       "url": "https://network-control.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -101,6 +111,7 @@
       "@type": "Service",
       "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs#evercraft-service",
       "name": "Evercraft Rewards",
+      "alternateName": [],
       "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -112,6 +123,7 @@
       "@type": "Service",
       "@id": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway#evercraft-service",
       "name": "Evercraft Web",
+      "alternateName": [],
       "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -123,6 +135,7 @@
       "@type": "Service",
       "@id": "https://evernest-home.base44.app/#evercraft-service",
       "name": "EverNest",
+      "alternateName": [],
       "url": "https://evernest-home.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -134,6 +147,7 @@
       "@type": "Service",
       "@id": "https://every-stage.base44.app/product#evercraft-service",
       "name": "EveryStage",
+      "alternateName": [],
       "url": "https://every-stage.base44.app/product",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -145,6 +159,7 @@
       "@type": "Service",
       "@id": "https://faie.base44.app/#evercraft-service",
       "name": "FAIE",
+      "alternateName": [],
       "url": "https://faie.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -156,6 +171,7 @@
       "@type": "Service",
       "@id": "https://findmypart.base44.app/#evercraft-service",
       "name": "FindMyPart",
+      "alternateName": [],
       "url": "https://findmypart.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -167,6 +183,7 @@
       "@type": "Service",
       "@id": "https://evercraft-forensiscope.base44.app/#evercraft-service",
       "name": "ForensiScope",
+      "alternateName": [],
       "url": "https://evercraft-forensiscope.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -178,6 +195,7 @@
       "@type": "Service",
       "@id": "https://infiniteclassroom.base44.app/#evercraft-service",
       "name": "Infinite Classroom",
+      "alternateName": [],
       "url": "https://infiniteclassroom.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -189,6 +207,7 @@
       "@type": "Service",
       "@id": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter#evercraft-service",
       "name": "Raven Nexus",
+      "alternateName": [],
       "url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -200,6 +219,7 @@
       "@type": "Service",
       "@id": "https://skyopsparking.base44.app/#evercraft-service",
       "name": "SkyOps Parking",
+      "alternateName": [],
       "url": "https://skyopsparking.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -211,6 +231,7 @@
       "@type": "Service",
       "@id": "https://systemia-audit-pro.base44.app/#evercraft-service",
       "name": "Systemia Website Audit",
+      "alternateName": [],
       "url": "https://systemia-audit-pro.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -222,6 +243,7 @@
       "@type": "Service",
       "@id": "https://instant-website-builder-usa-6feac193.base44.app/#evercraft-service",
       "name": "Evercraft Website Launch",
+      "alternateName": [],
       "url": "https://instant-website-builder-usa-6feac193.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"

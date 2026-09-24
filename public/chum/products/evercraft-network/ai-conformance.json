@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Evercraft Network",
   "product_key": "evercraft-network",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",

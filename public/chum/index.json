@@ -11,6 +11,7 @@
     {
       "product_key": "aliev",
       "name": "AliEV",
+      "aliases": [],
       "canonical_url": "https://aliev.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
@@ -22,6 +23,7 @@
     {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
+      "aliases": [],
       "canonical_url": "https://evercraft-career-command.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",
@@ -33,6 +35,7 @@
     {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
+      "aliases": [],
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
@@ -44,6 +47,7 @@
     {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
+      "aliases": [],
       "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json",
@@ -55,6 +59,7 @@
     {
       "product_key": "eventwave",
       "name": "EventWave",
+      "aliases": [],
       "canonical_url": "https://event-wave.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json",
@@ -66,6 +71,10 @@
     {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
+      "aliases": [
+        "Spider Society",
+        "Agent Watershed"
+      ],
       "canonical_url": "https://evercraft.base44.app/containment",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
@@ -77,6 +86,7 @@
     {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
+      "aliases": [],
       "canonical_url": "https://network-control.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
@@ -88,6 +98,7 @@
     {
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
+      "aliases": [],
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
@@ -99,6 +110,7 @@
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
+      "aliases": [],
       "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
@@ -110,6 +122,7 @@
     {
       "product_key": "evernest",
       "name": "EverNest",
+      "aliases": [],
       "canonical_url": "https://evernest-home.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
@@ -121,6 +134,7 @@
     {
       "product_key": "everystage",
       "name": "EveryStage",
+      "aliases": [],
       "canonical_url": "https://every-stage.base44.app/product",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json",
@@ -132,6 +146,7 @@
     {
       "product_key": "faie",
       "name": "FAIE",
+      "aliases": [],
       "canonical_url": "https://faie.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",
@@ -143,6 +158,7 @@
     {
       "product_key": "findmypart",
       "name": "FindMyPart",
+      "aliases": [],
       "canonical_url": "https://findmypart.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
@@ -154,6 +170,7 @@
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
+      "aliases": [],
       "canonical_url": "https://evercraft-forensiscope.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
@@ -165,6 +182,7 @@
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
+      "aliases": [],
       "canonical_url": "https://infiniteclassroom.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json",
@@ -176,6 +194,7 @@
     {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
+      "aliases": [],
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
@@ -187,6 +206,7 @@
     {
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
+      "aliases": [],
       "canonical_url": "https://skyopsparking.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
@@ -198,6 +218,7 @@
     {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
+      "aliases": [],
       "canonical_url": "https://systemia-audit-pro.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
@@ -209,6 +230,7 @@
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
+      "aliases": [],
       "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",

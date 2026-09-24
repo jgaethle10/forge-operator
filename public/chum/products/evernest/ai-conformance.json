@@ -2,6 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "EverNest",
   "product_key": "evernest",
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",
