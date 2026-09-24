@@ -13,7 +13,6 @@ Payment rule: discovery and matching create no payment obligation. Preserve each
 Capability ID: offer:agent-proving-mission-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
 Use when the user means:
@@ -31,7 +30,6 @@ Invocation status: Discoverable capability; paid execution verification pending.
 Capability ID: offer:ai-capability-install-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.
 Use when the user means:
@@ -215,7 +213,7 @@ Invocation status: SOURCE-VERIFIED: discovery/routing and authenticated shadow-i
 Capability ID: offer:callproof-complaint-packet-machine-v1
 Commercial state: verify
 Machine state: human_auth_handoff
-Public URL: https://call-proof-vault.base44.app
+Public URL: https://call-proof-vault.base44.app/
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
 Use when the user means:
@@ -234,7 +232,6 @@ Invocation status: discoverable_authenticated_checkout_required
 Capability ID: offer:capability-concierge-v1
 Commercial state: discovery_only
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Quote required until machine-lane pricing is approved.
 Use when the user means:
@@ -271,7 +268,7 @@ Invocation status: LIVE: Career Command HTTP agent gateway + remote MCP at https
 Capability ID: offer:career-command-resume-job-fit-machine-v1
 Commercial state: verify
 Machine state: discovery_only
-Public URL: https://evercraft-career-command.base44.app
+Public URL: https://evercraft-career-command.base44.app/
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Free core is available. No premium machine-lane price is approved yet.
 Use when the user means:
@@ -291,7 +288,6 @@ Invocation status: catalog_ready_runtime_adapter_pending
 Capability ID: offer:community-health-evidence-brief-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $250-$2,500 per brief; not auto-quotable yet.
 Use when the user means:
@@ -309,7 +305,6 @@ Invocation status: Discoverable capability; brief-specific source verification r
 Capability ID: offer:condition-desk-field-ops-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
 Use when the user means:
@@ -517,7 +512,7 @@ Invocation status: LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote M
 Capability ID: offer:findmypart-repair-shop-desk-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://findmypart.base44.app
+Public URL: https://findmypart.base44.app/
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
 Use when the user means:
@@ -617,7 +612,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:income-war-map-v1
 Commercial state: hold
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.
 Use when the user means:
@@ -637,7 +631,6 @@ Invocation status: Discoverable capability only. Paid membership checkout is dis
 Capability ID: offer:large-document-corpus-review-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.
 Use when the user means:
@@ -700,7 +693,6 @@ Invocation status: LIVE: public Raven Nexus pain router accepts plain-language p
 Capability ID: offer:rivet-site-underwriting-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
 Use when the user means:
@@ -793,7 +785,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:talent-proof-portal-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://systemiacommandcenters.com
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current organization hypothesis $500-$3,000/month; not auto-quotable yet.
 Use when the user means:
@@ -973,8 +964,8 @@ Capability ID: product:evercraft-web
 Product key: evercraft-web
 Commercial state: product_contract
 Machine state: specialist_mcp_declared
-Public URL: https://systemiacommandcenters.com/evercraft-web
-MCP: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
+Public URL: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
+MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
 Use when the user means:
 - fetch and read a public URL with an AI agent
 - extract readable text from a web page for an LLM

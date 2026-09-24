@@ -1,9 +1,9 @@
 # Evercraft Web
 
 Product key: evercraft-web
-Canonical product: https://systemiacommandcenters.com/evercraft-web
+Canonical product: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
 Official MCP Registry: io.github.jgaethle10/evercraft-web
-Remote MCP: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
+Remote MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json
 
@@ -30,6 +30,8 @@ public discovery plus receipt-backed Official MCP Registry publication; Fetch im
 - Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass
 - public discovery does not expose private Systemia topology or credentials
 - payment does not expand permissions
+- the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route
+- search and browser automation remain held unless current runtime evidence says otherwise
 
 ## Universal Evercraft routing
 

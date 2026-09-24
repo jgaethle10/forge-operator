@@ -3,7 +3,7 @@
   "product_key": "evercraft-web",
   "name": "Evercraft Web",
   "class": "ai_web_fetch_search_browser_infrastructure",
-  "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+  "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
   "intents": [
     "fetch and read a public URL with an AI agent",
     "extract readable text from a web page for an LLM",
@@ -22,10 +22,12 @@
     "Evercraft Search remains held until independently verified",
     "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
     "public discovery does not expose private Systemia topology or credentials",
-    "payment does not expand permissions"
+    "payment does not expand permissions",
+    "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
+    "search and browser automation remain held unless current runtime evidence says otherwise"
   ],
   "registry_name": "io.github.jgaethle10/evercraft-web",
-  "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+  "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "source": "CHUM public mirror",
   "mirror": {

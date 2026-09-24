@@ -12,6 +12,8 @@
   "purpose": "Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.",
   "routing_rule": "Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.",
   "universal_front_door": {
+    "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "read_only_purpose": "Read-only matching from user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported."
@@ -29,7 +31,8 @@
     "entries_with_pain_language": 60,
     "sell_now_machine_offers": 11,
     "entries_with_declared_mcp": 53,
-    "callable_or_routable_entries": 32
+    "callable_or_routable_entries": 32,
+    "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
     {
@@ -49,7 +52,8 @@
       "problem": "Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.",
       "inputs": "Agent/workflow under test, bounded mission, success criteria, allowed tools/environment and authority boundaries.",
       "outputs": "Mission criteria, observed attempts, competency evidence, decision traces and concise pass/gap report.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -87,7 +91,8 @@
       "problem": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
       "inputs": "Authorized target environment, desired bounded capability, integration constraints and security/authority requirements.",
       "outputs": "Versioned capability artifacts, execution contract, install verification receipt, health check and rollback path.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -130,6 +135,7 @@
       "inputs": "Street address for public site screening. Paid-depth site reports use the same address context. Opportunity packs and territory feeds use an agreed market/territory.",
       "outputs": "Free source-backed address screen with nearby mapped charging context, evidence-state labels and source provenance; paid preliminary/full site reports; qualified opportunity packs; recurring territory opportunity intelligence.",
       "canonical_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -201,6 +207,7 @@
       "inputs": "Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.",
       "outputs": "Observed website findings, deterministic category scores and breakdowns, prioritized audit findings, deeper fix plan/report for paid tier, and remediation scope for Audit + Patch.",
       "canonical_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -256,6 +263,7 @@
       "inputs": "Authenticated ProposedAction, exact subject version, AuthorizationGrant and required approvals.",
       "outputs": "Policy disposition, internal ApprovalRequest where allowed and ActionExecutionReceipt for bounded internal actions.",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -296,6 +304,7 @@
       "inputs": "A non-sensitive problem description for public routing. Private business data is collected only after authenticated tenant handoff.",
       "outputs": "Ranked smallest-fit BuildFlow capability, safety boundary and human-authentication handoff guidance.",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -335,6 +344,7 @@
       "inputs": "Authenticated source records and mapping candidates.",
       "outputs": "MappingCandidate confidence, conflict flags, MappingDecision lineage and review work items.",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -376,6 +386,7 @@
       "inputs": "Tenant-scoped process observations/events and optional process/source-system scope.",
       "outputs": "Candidate step sequence, sample size, median duration, exception rate, confidence, evidence refs and review state. No policy change or external action.",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -416,6 +427,7 @@
       "inputs": "Authenticated vendors, purchase requests, approvals, purchase-order references, receipts and invoice references.",
       "outputs": "Process timeline, approval gaps, invoice/receipt exceptions, recommendations and reconciliation context.",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -455,6 +467,7 @@
       "inputs": "Authenticated tenant CSV/structured exports or connector-fed records.",
       "outputs": "ImportRun, SourceRecord, mapping preview, explicit ImportConflict records and review state.",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -493,7 +506,8 @@
       "problem": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
       "inputs": "Authenticated user-owned incident records, with optional contact details, notes and evidence references.",
       "outputs": "Downloadable factual incident packet. CallProof does not file the complaint or determine that a law was violated.",
-      "canonical_url": "https://call-proof-vault.base44.app",
+      "canonical_url": "https://call-proof-vault.base44.app/",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -549,7 +563,8 @@
       "problem": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
       "inputs": "Desired outcome, constraints, existing systems and optional budget/urgency context.",
       "outputs": "The smallest evidence-backed Evercraft capability set that fits the requested outcome.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -590,6 +605,7 @@
       "inputs": "Target job description and candidate background. Optional company context and prior practice. Answer evaluation requires the candidate's practice answer.",
       "outputs": "Role-specific practice question, answer verdict, what landed, weaknesses, evidence gaps, improved answer structure, pressure follow-up and re-drill instruction.",
       "canonical_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -642,7 +658,8 @@
       "problem": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
       "inputs": "Candidate-supplied resume or background plus the target job description. Optional skills, achievements and company context.",
       "outputs": "Strongest proof anchors, job-fit evidence, generic or unsupported claims, missing evidence, highest-impact edits and a truthful rewritten summary.",
-      "canonical_url": "https://evercraft-career-command.base44.app",
+      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -686,7 +703,8 @@
       "problem": "Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.",
       "inputs": "Geography, planning/grant question, target population where appropriate and requested public indicators.",
       "outputs": "Geography-specific public-health evidence brief with indicator provenance, gaps, comparisons and uncertainty.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -725,7 +743,8 @@
       "problem": "Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.",
       "inputs": "Locations, work type, customer-defined thresholds/tolerances and operating window.",
       "outputs": "Conditions and hazards evaluated against defined thresholds with source health and evidence snapshot.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -765,6 +784,7 @@
       "inputs": "Authorized dataset/domain plus decision question; optional geography, population scope, metric/subject and source refs.",
       "outputs": "Explicit gaps and types, severity, evidence/confidence, affected decisions, source conflicts, collection options/effort, governance constraints and next actions.",
       "canonical_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -806,6 +826,7 @@
       "inputs": "Company/project name, contact email and use of funds. Optional capital goal, website, business summary, existing pitch, revenue/profit/collateral context and timeline.",
       "outputs": "Research summary, capital-readiness notes, 3-6 public-source provider/program candidates, requirements and evidence links, recommended audience and a 6-14 slide deck outline.",
       "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -853,6 +874,7 @@
       "inputs": "Service key and quantity/scope; optional property, measurements/inputs, site-verification state, tax, travel and other direct costs.",
       "outputs": "Estimated cost, sell price or range, confidence, assumptions, inclusions/exclusions and site-review state, with revision/proposal lineage available downstream.",
       "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -897,6 +919,7 @@
       "inputs": "Choose Event Boost or Venue Pack, provide contact email and the relevant public event or venue identifiers/URL.",
       "outputs": "Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.",
       "canonical_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -953,6 +976,7 @@
       "inputs": "For discovery, a plain-language continuity or reconnect need. Human membership interaction occurs through the public Evercraft Network UI. Public presence requests use only the evidence-safe public presence surface.",
       "outputs": "Current capability boundary, member-device reconnect/health visibility, continuity-readiness context, verified public Network presence, and a human-directed Founding Membership handoff.",
       "canonical_url": "https://network-control.base44.app/join",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1007,6 +1031,7 @@
       "inputs": "Public URL, search/navigation intent, or browser task. Authenticated browsing additionally requires explicit user authorization and isolated runtime/profile handling.",
       "outputs": "Current capability state and protocol surfaces; public fetch/extraction where production-verified; later search/browser execution only when their independent runtime gates pass.",
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1046,6 +1071,7 @@
       "inputs": "Projection family and geography/subject; optional time window, service category and public-safe-only filter.",
       "outputs": "Map-ready geometry/coordinates and attributes with evidence state, confidence, freshness, source refs, cautions and publication state.",
       "canonical_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1084,6 +1110,7 @@
       "inputs": "Defined question, buyer email and selected fixed offer. Geography, organization and use case are optional scope context.",
       "outputs": "A bounded evidence-first mission packet with findings, source references, uncertainty/evidence-needed items, challenge notes and human-review items.",
       "canonical_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1133,6 +1160,7 @@
       "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
       "outputs": "Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.",
       "canonical_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1186,7 +1214,8 @@
       "problem": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
       "inputs": "Shop identity, part requests, asset/equipment context and preferred service level.",
       "outputs": "Recurring difficult-part sourcing with saved case memory, vendor/salvage research, compatibility evidence and resolved-case reuse.",
-      "canonical_url": "https://findmypart.base44.app",
+      "canonical_url": "https://findmypart.base44.app/",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1234,6 +1263,7 @@
       "inputs": "Authorized evidence set, case context and requested review scope.",
       "outputs": "Source-lineage-preserving evidence analysis with custody events, timestamped findings and integrity review.",
       "canonical_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1271,6 +1301,7 @@
       "inputs": "Authorized read-only project access or exported source/schema information.",
       "outputs": "Dependency map, route/schema inventory, security findings, provider-neutral architecture candidate, reconstruction manifest and migration/rollback plan.",
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1317,6 +1348,7 @@
       "inputs": "Authorized organization scope plus load/freight context; optional documents, carrier, route, compliance and Foundry-derived freight signals.",
       "outputs": "Exception types/severity, estimated impact and recoverable amount when recorded, document/compliance state, risk flags, evidence refs, unknowns and review actions.",
       "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1356,6 +1388,7 @@
       "inputs": "One or more countries plus a domain/question; optional metric slugs, comparison set and as-of date.",
       "outputs": "Sourced observations, evidence state/confidence, source URLs, reconciliation findings, methodology context, signals and limitations.",
       "canonical_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1395,7 +1428,8 @@
       "problem": "A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.",
       "inputs": "User-provided income, expenses, debt, skills, available time, risk tolerance, work context, location and revenue target.",
       "outputs": "Personalized planning opportunities, modeled revenue/startup/time/risk estimates, prioritized missions and progress tracking.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1433,7 +1467,8 @@
       "problem": "Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.",
       "inputs": "Public or owner-authorized corpus, review question/scope and applicable privilege/privacy boundaries.",
       "outputs": "Corpus ingestion, subdocument mapping, deduplication, evidence index and review packets with provenance.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1472,6 +1507,7 @@
       "inputs": "Book/project identifier, interior page count and trim size; optional paper type and cover dimensions/DPI.",
       "outputs": "Page-count validity, cover-geometry validity, effective DPI, check timestamp and notes.",
       "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1519,6 +1555,7 @@
       "inputs": "Plain-language pain plus optional audience: home, business or both.",
       "outputs": "Pain-ranked Raven capabilities with availability, independent sellability, verified-offer state, direct-checkout presence, human-gate requirements, safety boundaries and optional expansion capabilities.",
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1556,7 +1593,8 @@
       "problem": "A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.",
       "inputs": "Site/address, intended project context, buyer decision question and authorized site-specific inputs.",
       "outputs": "Address-specific siting and underwriting package with evidence-state labels, economics, competition, power/incentive context and next diligence.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1600,6 +1638,7 @@
       "inputs": "Text to critique and optional roast style.",
       "outputs": "A roast, three practical fixes and a shareable result.",
       "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1643,6 +1682,7 @@
       "inputs": "Site/business context, critical workflows and a realistic outage scenario.",
       "outputs": "One-site continuity map with the three largest failure points and a prioritized action plan.",
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1687,6 +1727,7 @@
       "inputs": "Authenticated owner, eligible active execution request key, requested additional seconds and optional spend cap.",
       "outputs": "Request-bound server quote, quote digest, payment requirement, bounded runtime entitlement, receipt and updated lease expiry.",
       "canonical_url": null,
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1726,6 +1767,7 @@
       "inputs": "Person/prospect identifier, domain and supplied/authorized evidence; optional target opportunity and consent grant for nonpublic material.",
       "outputs": "Strengths, weaknesses, patterns, skills, development questions, evidence confidence, inference limits, opportunity bridge and missing proof.",
       "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1764,7 +1806,8 @@
       "problem": "Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.",
       "inputs": "Authorized candidate/profile evidence, competency model, target role/opportunity and organization privacy requirements.",
       "outputs": "Evidence-backed profiles, competency proof, opportunity routing and outcomes tracking.",
-      "canonical_url": "https://systemiacommandcenters.com",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1804,6 +1847,7 @@
       "inputs": "Research question and requester identity; optional organization, sector, geography, decision context, urgency, evidence standard and deliverable type.",
       "outputs": "Decision brief/report/evidence map/dataset/validation memo with findings, uncertainties, recommendations, evidence count, confidence and underlying evidence records.",
       "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1842,6 +1886,7 @@
       "inputs": "Choose one verified service tier and provide customer name/email, business name and a useful project brief. Current website and phone are optional.",
       "outputs": "A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.",
       "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
       "registry_name": null,
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
@@ -1903,6 +1948,7 @@
         "preferred": "specialist_mcp",
         "target": "https://aliev.base44.app/functions/alievMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public screening plus bounded machine invocation and human-confirmed paid depth",
       "boundaries": [
         "missing is not zero",
@@ -1949,6 +1995,7 @@
         "preferred": "specialist_mcp",
         "target": "https://evercraft-career-command.base44.app/functions/careerMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery and human-confirmed paid interview-practice checkout",
       "boundaries": [
         "checkout preparation requires explicit human payment confirmation",
@@ -1991,6 +2038,7 @@
         "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified",
       "boundaries": [
         "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
@@ -2036,6 +2084,7 @@
         "preferred": "specialist_mcp",
         "target": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery and human-confirmed paid research checkout",
       "boundaries": [
         "does not make lending or investment decisions",
@@ -2081,6 +2130,7 @@
         "preferred": "specialist_mcp",
         "target": "https://event-wave.base44.app/functions/eventWaveMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public event search plus human-confirmed paid labeled promotion",
       "boundaries": [
         "paid promotion remains labeled",
@@ -2123,6 +2173,7 @@
         "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery and human-directed membership interaction",
       "boundaries": [
         "not a cellular carrier, ISP, SIM or eSIM service",
@@ -2169,6 +2220,7 @@
         "preferred": "specialist_mcp",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
       "boundaries": [
         "prepared enrollment does not activate a merchant",
@@ -2218,13 +2270,14 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
       "routing": {
         "preferred": "specialist_mcp",
-        "target": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp"
+        "target": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
       "boundaries": [
         "registry publication is not proof that the remote MCP successfully executes Fetch",
@@ -2232,7 +2285,9 @@
         "Evercraft Search remains held until independently verified",
         "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
         "public discovery does not expose private Systemia topology or credentials",
-        "payment does not expand permissions"
+        "payment does not expand permissions",
+        "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
+        "search and browser automation remain held unless current runtime evidence says otherwise"
       ],
       "commercial_state": "product_contract",
       "machine_state": "specialist_mcp_declared",
@@ -2271,6 +2326,7 @@
         "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public resource discovery only",
       "boundaries": [
         "does not diagnose, score urgency, or determine whether abuse or danger occurred",
@@ -2313,6 +2369,7 @@
         "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery and human-directed pilot intake",
       "boundaries": [
         "pilot intake is not a contract or accepted deployment",
@@ -2357,6 +2414,7 @@
         "preferred": "specialist_mcp",
         "target": "https://faie.base44.app/functions/faieMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery and human-confirmed bounded research checkout",
       "boundaries": [
         "research is evidence support rather than consequential authority",
@@ -2402,6 +2460,7 @@
         "preferred": "specialist_mcp",
         "target": "https://findmypart.base44.app/functions/findMyPartMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and human-confirmed paid sourcing hunts",
       "boundaries": [
         "unknowns may remain unknown",
@@ -2466,6 +2525,7 @@
         "preferred": "specialist_mcp",
         "target": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and human-submitted media analysis",
       "boundaries": [
         "the user must submit media themselves",
@@ -2510,6 +2570,7 @@
         "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public learning-product discovery only",
       "boundaries": [
         "not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service",
@@ -2553,6 +2614,7 @@
         "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
       "boundaries": [
         "full-suite purchase is not required when a smaller capability is sufficient",
@@ -2598,6 +2660,7 @@
         "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery and human-directed pilot or planning flows",
       "boundaries": [
         "planning is not a parking reservation",
@@ -2641,6 +2704,7 @@
         "preferred": "specialist_mcp",
         "target": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public audit offer discovery and human-confirmed paid checkout",
       "boundaries": [
         "audit findings do not guarantee revenue or rankings",
@@ -2685,6 +2749,7 @@
         "preferred": "specialist_mcp",
         "target": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
       },
+      "legacy_marketing_route_suppressed": false,
       "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
       "boundaries": [
         "scope depends on the selected service tier",
