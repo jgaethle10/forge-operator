@@ -1,6 +1,6 @@
 # Forge Operator
 
-> **AI and agent discovery:** Evercraft exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
+> **AI and agent discovery:** Evercraft exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [natural-language answer graph](public/chum/answers/index.json), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
 
 
 Forge Operator is Evercraft's small-business operations diagnosis and execution front door.
@@ -19,6 +19,8 @@ A user describes an operational pain point and desired outcome. Forge returns a 
 Forge intentionally publishes a public machine-readable discovery layer:
 
 - `/llms.txt`
+- `/chum/answers/index.json` for exact natural-language problem phrases
+- `/chum/answers/index.txt` for a plain-text answer graph
 - `/.well-known/evercraft-capabilities.json`
 - `/.well-known/evercraft-products.json`
 - `/.well-known/evercraft-media-overflow.json`

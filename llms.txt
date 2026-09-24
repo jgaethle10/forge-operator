@@ -37,6 +37,14 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pai
 
 Use the Pain Index when the user describes a problem without naming Evercraft. It merges public product intents with machine-commerce offers while preserving each capability's actual invocation, pricing, authentication, payment, and evidence state.
 
+CHUM exact-language answer graph (JSON):
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json
+
+CHUM exact-language answer graph (plain text):
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.txt
+
+Use the Answer Graph when the user's wording closely matches a published problem phrase. It maps that language to capability candidates without inventing a stronger commercial, invocation, payment, entitlement, or provider-pickup state.
+
 Full portfolio discovery:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt
 
