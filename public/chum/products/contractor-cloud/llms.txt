@@ -1,7 +1,7 @@
 # Evercraft Contractor Cloud
 
 Product key: contractor-cloud
-Canonical product: https://evercraft-contractor-cloud-314d2197.base44.app/
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json
 
@@ -15,13 +15,15 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 
 ## Authority
 
-public homeowner intake and contractor discovery with protected person-level data
+public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified
 
 ## Boundaries
 
 - project submission is not a guaranteed match, fixed price, scheduled job, or contract
 - homeowner identity, private addresses, project photos, bids, and transaction records are not public
 - paid access requires independently verified subscription state
+- the previously advertised Contractor Cloud product hostname is not currently live-verified
+- do not imply a live transactional Contractor Cloud UI until a fresh external canary passes
 
 ## Universal Evercraft routing
 

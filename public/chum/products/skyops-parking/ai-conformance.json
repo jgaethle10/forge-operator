@@ -11,7 +11,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://skyops-parking.base44.app/",
+  "canonical_url": "https://skyopsparking.base44.app/",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
   "registry_name": null,

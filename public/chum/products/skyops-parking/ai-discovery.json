@@ -3,7 +3,7 @@
   "product_key": "skyops-parking",
   "name": "SkyOps Parking",
   "class": "parking_operations",
-  "canonical_url": "https://skyops-parking.base44.app/",
+  "canonical_url": "https://skyopsparking.base44.app/",
   "intents": [
     "airport parking management software",
     "parking garage reservation management",

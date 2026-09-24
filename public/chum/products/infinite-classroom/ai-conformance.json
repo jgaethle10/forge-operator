@@ -11,7 +11,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+  "canonical_url": "https://infiniteclassroom.base44.app/",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json",
   "registry_name": null,
