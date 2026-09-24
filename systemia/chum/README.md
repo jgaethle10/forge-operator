@@ -25,7 +25,7 @@ Live mode probes declared public surfaces and writes:
 
 Offline mode builds the routing and signaling plan without network requests.
 
-## Current v0.1 lanes
+## Current v0.2 lanes
 
 - **Crawl lane**: canonical pages, `llms.txt`, structured discovery JSON, conformance and OpenAPI surfaces.
 - **Registry lane**: the existing Evercraft capability catalog and MCP registry.
@@ -37,3 +37,17 @@ Offline mode builds the routing and signaling plan without network requests.
 CHUM is designed so provider adapters can be added without coupling the portfolio to one model vendor. Candidates include standards-based freshness notification where supported, MCP registry publication, provider-specific discovery surfaces, authorized model probes, referral attribution, and revenue receipts.
 
 The governing rule is simple: **broadcast facts, never fabricate pickup.**
+
+
+## Watershed lane
+
+CHUM v0.2 generates and maintains a crawlable pain-first public directory under `/ai/`, a unified discovery map, a public agent directory, and an OpenAPI contract. It also treats Official MCP Registry publication as a first-class agent-distribution lane when a live specialist MCP exists.
+
+The design goal is deliberately asymmetric:
+
+- public commercial capability facts: bright, redundant and easy to find
+- private/admin topology, credentials and user data: dark
+- provider pickup claims: receipt-gated
+- checkout/payment state: authoritative and human-confirmed
+
+Run `npm run chum:build` to regenerate public semantic discovery pages before build.
