@@ -5,4 +5,11 @@
   <url><loc>/llms.txt</loc></url>
   <url><loc>/.well-known/evercraft-products.json</loc></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc></url>
+  <url><loc>/.well-known/evercraft-chum.json</loc></url>
+  <url><loc>/.well-known/evercraft-offers.json</loc></url>
+  <url><loc>/chum/health</loc></url>
+  <url><loc>/llms-full.txt</loc></url>
+  <url><loc>/openapi.json</loc></url>
+  <url><loc>/schema.jsonld</loc></url>
+  <url><loc>/ai-discovery.html</loc></url>
 </urlset>
