@@ -1,0 +1,46 @@
+{
+  "id": "demo-commercial-001",
+  "title": "Demo Commercial",
+  "brief": {
+    "prompt": "Create an energetic 30-second commercial that opens with the strongest visual, shows the work clearly, builds trust, and ends with a clean invitation to book.",
+    "format": "commercial",
+    "durationSec": 30,
+    "aspectRatio": "9:16",
+    "audience": "Local homeowners",
+    "cta": "Book your estimate",
+    "style": "Cinematic but grounded, natural movement, confident pacing, no fake claims"
+  },
+  "assets": [
+    {
+      "id": "hero-image",
+      "path": "./media/hero.jpg",
+      "kind": "image",
+      "rights": "owned",
+      "tags": [
+        "hero",
+        "brand"
+      ]
+    },
+    {
+      "id": "work-video",
+      "path": "./media/work.mp4",
+      "kind": "video",
+      "rights": "owned",
+      "tags": [
+        "work",
+        "detail",
+        "proof"
+      ]
+    },
+    {
+      "id": "finished-image",
+      "path": "./media/finished.jpg",
+      "kind": "image",
+      "rights": "owned",
+      "tags": [
+        "result",
+        "after"
+      ]
+    }
+  ]
+}
