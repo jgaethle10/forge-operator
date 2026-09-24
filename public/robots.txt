@@ -1,6 +1,44 @@
+# Evercraft public machine-discovery policy
+# Commercial/public surfaces are intentionally open. Private/admin surfaces stay dark.
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 User-agent: *
 Allow: /
-Allow: /llms.txt
-Allow: /.well-known/evercraft-capabilities.json
-Allow: /.well-known/evercraft-products.json
-Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /private/
+Disallow: /auth/
+Disallow: /api/admin/
+Disallow: /api/internal/
