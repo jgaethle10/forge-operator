@@ -142,6 +142,29 @@
       ],
       "tool": "prepare_rewards_partner_enrollment",
       "product": "Evercraft Rewards"
+    },
+    {
+      "product_key": "evercraft-web",
+      "name": "Evercraft Web",
+      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "triggers": [
+        "fetch URL for AI",
+        "read web page",
+        "web search API",
+        "browser automation API",
+        "cloud browser",
+        "headless browser",
+        "web agent",
+        "Playwright API",
+        "Puppeteer API",
+        "CDP browser",
+        "TinyFish alternative"
+      ],
+      "registry_publication_state": "published_receipt_backed",
+      "registry_receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
+      "runtime_state": "fetch_external_canary_pending_search_and_browser_held"
     }
   ],
   "payment_boundary": {
