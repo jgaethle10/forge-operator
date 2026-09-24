@@ -147,7 +147,13 @@ export function rankDiscoveryCandidates(machineCatalog, productDirectory, query,
     offers: (Array.isArray(productDirectory?.products) ? productDirectory.products : [])
       .map(productAsDiscoveryOffer)
   };
-  const directory = rankOffers(directoryCatalog, query, { limit: expandedLimit, minimumScore });
+  const directory = rankOffers(directoryCatalog, query, { limit: expandedLimit, minimumScore })
+    .map((row) => ({
+      ...row,
+      raw_score: row.score,
+      score: Math.max(1, Math.round(row.score * 0.4))
+    }))
+    .filter((row) => row.score >= minimumScore);
 
   const combined = [...commercial, ...directory]
     .sort((a,b) =>
