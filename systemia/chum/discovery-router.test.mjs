@@ -13,7 +13,9 @@ const cases = [
   ['escape vendor lock in migrate from no code app portability', 'foundry-app-escape-audit-v1'],
   ['internet outage continuity offline operations plan', 'site-survive-rapid-audit-v1'],
   ['promote my local event boost visibility', 'eventwave-paid-promotion-v1'],
-  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1']
+  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1'],
+  ['my video is too large for the AI transcribe analyze long footage timestamp timeline', 'forensiscope-evidence-review-v1'],
+  ['protect my family online identity theft home safety account takeover', 'raven-nexus-pain-router-v1']
 ];
 
 let failed = 0;
