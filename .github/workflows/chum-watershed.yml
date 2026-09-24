@@ -17,7 +17,6 @@ on:
       - "public/sitemap.xml"
       - "public/ai-discovery.json"
       - "public/openapi.json"
-      - "public/chum/**"
       - "public/.well-known/**"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
