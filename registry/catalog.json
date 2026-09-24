@@ -149,5 +149,16 @@
     "human_confirmation_required_for_checkout": true,
     "checkout_is_payment_proof": false,
     "provider_verification_required_for_paid_state": true
+  },
+  "public_discovery_front_door": {
+    "coordinator": "CHUM",
+    "pain_language_http": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=discover",
+    "docs": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+    "llms": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
+    "catalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
+    "openapi": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=openapi",
+    "source_agent_manifest": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-discovery.json",
+    "source_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
+    "rule": "Use pain-language discovery when the user does not know an Evercraft product name. Discovery itself creates no payment obligation."
   }
 }
