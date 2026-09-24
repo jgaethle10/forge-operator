@@ -1,0 +1,223 @@
+import fs from 'node:fs';
+
+const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+const hasFlag = (flag) => process.argv.includes(flag);
+const offline = hasFlag('--offline');
+const strict = hasFlag('--strict');
+const timeoutMs = 12000;
+
+const conformance = readJson('conformance/products.json');
+const directory = readJson('public/.well-known/evercraft-products.json');
+const catalog = readJson('registry/catalog.json');
+
+const publicByKey = new Map((directory.products || []).map((p) => [p.product_key, p]));
+const catalogByKey = new Map(
+  (catalog.products || []).map((p) => [String(p.registry_name || '').split('/').pop(), p])
+);
+
+const providerTargets = (conformance.baseline_providers || []).map((provider) => ({
+  provider,
+  behavior_state: 'not_run',
+  signaling_state: 'public_surfaces_available',
+  note: 'CHUM does not claim provider discovery, recommendation, invocation, or conversion without a receipt-backed probe.'
+}));
+
+async function probe(url, kind) {
+  if (!url) return { declared: false, checked: false, valid: false, status: null, reason: 'not_declared' };
+  if (offline) return { declared: true, checked: false, valid: null, status: null, reason: 'offline' };
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'user-agent': 'Evercraft-CHUM/0.1 (+public-discovery-canary)',
+        accept: 'text/plain, application/json;q=0.9, text/html;q=0.7, */*;q=0.3'
+      },
+      signal: controller.signal
+    });
+    const body = await response.text();
+    const contentType = response.headers.get('content-type') || '';
+    const reasons = [];
+
+    if (!response.ok) reasons.push(`http_${response.status}`);
+    if (kind === 'llms') {
+      if (/^\s*<!doctype html|^\s*<html/i.test(body)) reasons.push('html_instead_of_text');
+      if (!/text\/plain/i.test(contentType)) reasons.push('unexpected_content_type');
+    }
+    if (['discovery', 'conformance', 'openapi'].includes(kind) && response.ok) {
+      try { JSON.parse(body); } catch { reasons.push('invalid_json'); }
+    }
+
+    return {
+      declared: true,
+      checked: true,
+      valid: reasons.length === 0,
+      status: response.status,
+      content_type: contentType,
+      bytes: Buffer.byteLength(body),
+      reason: reasons.join(',') || 'ok'
+    };
+  } catch (error) {
+    return {
+      declared: true,
+      checked: true,
+      valid: false,
+      status: 0,
+      reason: error instanceof Error ? error.message : String(error)
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function readiness({ product, publicEntry, catalogEntry, checks }) {
+  const gates = [
+    ['public_directory', Boolean(publicEntry)],
+    ['canonical_surface', checks.canonical?.valid === true],
+    ['llms_surface', checks.llms?.valid === true],
+    ['machine_contract', Boolean(
+      checks.discovery?.valid === true ||
+      checks.conformance?.valid === true ||
+      checks.openapi?.valid === true
+    )],
+    ['agent_invocation_declared', Boolean(catalogEntry?.mcp)]
+  ];
+  const passed = gates.filter(([, ok]) => ok).length;
+  return {
+    surface_readiness_percent: Math.round((passed / gates.length) * 100),
+    gates: Object.fromEntries(gates),
+    provider_behavior_state: product.provider_behavior_state || 'not_run'
+  };
+}
+
+async function inspectProduct(product) {
+  const publicEntry = publicByKey.get(product.product_key);
+  const catalogEntry = catalogByKey.get(product.product_key);
+
+  const entries = [
+    ['canonical', product.canonical_url],
+    ['llms', product.llms_url],
+    ['conformance', product.conformance_url],
+    ['discovery', product.discovery_url],
+    ['openapi', product.openapi_url]
+  ];
+
+  const pairs = await Promise.all(entries.map(async ([kind, url]) => [kind, await probe(url, kind)]));
+  const checks = Object.fromEntries(pairs);
+
+  return {
+    product_key: product.product_key,
+    name: product.name,
+    class: product.class,
+    canonical_url: product.canonical_url,
+    intents: publicEntry?.intents || [],
+    mcp: catalogEntry?.mcp || null,
+    checks,
+    readiness: readiness({ product, publicEntry, catalogEntry, checks }),
+    signal_plan: [
+      {
+        lane: 'crawl',
+        state: checks.canonical?.valid === true && checks.llms?.valid === true ? 'ready' : 'repair_needed',
+        action: 'Keep canonical pages, llms.txt and structured discovery surfaces public, accurate and fresh.'
+      },
+      {
+        lane: 'agent_registry',
+        state: catalogEntry?.mcp ? 'declared' : 'not_declared',
+        action: catalogEntry?.mcp
+          ? 'Maintain the specialist MCP entry and route compatible natural-language intent to it.'
+          : 'Evaluate whether this capability should expose a bounded MCP or HTTP invocation surface.'
+      },
+      {
+        lane: 'provider_probe',
+        state: 'not_run',
+        action: 'Run provider-specific buyer-intent probes only through authorized interfaces and store receipts before claiming pickup.'
+      },
+      {
+        lane: 'conversion',
+        state: 'human_gate_preserved',
+        action: 'Attribute AI-originated handoffs and preserve explicit human confirmation for checkout or payment obligations.'
+      }
+    ]
+  };
+}
+
+const products = [];
+for (const product of conformance.products || []) {
+  products.push(await inspectProduct(product));
+}
+
+const allChecks = products.flatMap((p) =>
+  Object.entries(p.checks)
+    .filter(([, v]) => v.declared)
+    .map(([kind, v]) => ({ product_key: p.product_key, kind, ...v }))
+);
+const checked = allChecks.filter((x) => x.checked);
+const valid = checked.filter((x) => x.valid === true);
+const invalid = checked.filter((x) => x.valid === false);
+
+const receipt = {
+  schema: 'evercraft.chum.receipt.v1',
+  name: 'CHUM',
+  expansion: 'Capability Handoff & Utility Mesh',
+  generated_at: new Date().toISOString(),
+  mode: offline ? 'offline' : 'live_surface_probe',
+  doctrine: {
+    goal: 'Make legitimate public capabilities easy for AI systems and agents to discover, understand, route to, invoke where authorized, and hand off to human-confirmed commerce.',
+    no_spam: true,
+    no_private_topology_exposure: true,
+    no_unverified_provider_claims: true,
+    human_confirmation_for_payment_obligations: true
+  },
+  summary: {
+    products: products.length,
+    declared_surfaces: allChecks.length,
+    checked_surfaces: checked.length,
+    valid_surfaces: valid.length,
+    invalid_surfaces: invalid.length
+  },
+  provider_targets: providerTargets,
+  products
+};
+
+fs.mkdirSync('artifacts/chum', { recursive: true });
+fs.writeFileSync('artifacts/chum/chum-latest.json', JSON.stringify(receipt, null, 2) + '\n');
+
+const md = [
+  '# CHUM Signal Mesh Receipt',
+  '',
+  `Generated: ${receipt.generated_at}`,
+  `Mode: ${receipt.mode}`,
+  `Products: ${receipt.summary.products}`,
+  `Declared public surfaces: ${receipt.summary.declared_surfaces}`,
+  `Checked surfaces: ${receipt.summary.checked_surfaces}`,
+  `Valid surfaces: ${receipt.summary.valid_surfaces}`,
+  `Invalid surfaces: ${receipt.summary.invalid_surfaces}`,
+  '',
+  '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
+  '',
+  '| Product | Surface readiness | Canonical | llms.txt | Contract | MCP declared | Provider behavior |',
+  '|---|---:|---|---|---|---|---|',
+  ...products.map((p) => {
+    const g = p.readiness.gates;
+    return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.readiness.provider_behavior_state} |`;
+  }),
+  '',
+  '## Repair queue',
+  '',
+  ...(invalid.length
+    ? invalid.map((x) => `- ${x.product_key} / ${x.kind}: ${x.reason || x.status}`)
+    : ['- No invalid checked surfaces detected.']),
+  ''
+];
+
+fs.writeFileSync('artifacts/chum/chum-latest.md', md.join('\n'));
+
+console.log(JSON.stringify(receipt.summary));
+console.log('CHUM receipt: artifacts/chum/chum-latest.json');
+
+if (strict && invalid.length) {
+  throw new Error(`CHUM found ${invalid.length} invalid declared public surface(s)`);
+}
