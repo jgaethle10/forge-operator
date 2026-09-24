@@ -4,6 +4,7 @@
 
 User-agent: OAI-SearchBot
 User-agent: GPTBot
+User-agent: ChatGPT-User
 User-agent: Claude-SearchBot
 User-agent: Claude-User
 User-agent: ClaudeBot
@@ -13,11 +14,17 @@ User-agent: bingbot
 User-agent: PerplexityBot
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /ai-discovery.json
+Allow: /schema.jsonld
+Allow: /openapi.json
 Allow: /.well-known/
 Allow: /api/health
 Allow: /api/capabilities
 Allow: /api/commercial
 Allow: /api/discover
+Allow: /api/resolve
+Allow: /api/resolve/media-overflow
 Allow: /api/revenue-watershed
 Allow: /chum/
 Disallow: /api/
@@ -25,11 +32,17 @@ Disallow: /api/
 User-agent: *
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /ai-discovery.json
+Allow: /schema.jsonld
+Allow: /openapi.json
 Allow: /.well-known/
 Allow: /api/health
 Allow: /api/capabilities
 Allow: /api/commercial
 Allow: /api/discover
+Allow: /api/resolve
+Allow: /api/resolve/media-overflow
 Allow: /api/revenue-watershed
 Allow: /chum/
 Disallow: /api/
