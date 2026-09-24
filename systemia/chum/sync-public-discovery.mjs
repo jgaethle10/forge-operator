@@ -7,7 +7,7 @@ const LIVE_CATALOG_URL =
 const OUTPUT = 'public/.well-known/evercraft-machine-catalog.json';
 const MACHINE_COMMERCE_GATEWAY_URL =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-  LIVE_CATALOG_URL.replace(/\\?.*$/, '');
+  LIVE_CATALOG_URL.split('?', 1)[0];
 const TIMEOUT_MS = 20000;
 
 function stable(value) {
