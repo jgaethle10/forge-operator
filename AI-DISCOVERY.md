@@ -43,6 +43,7 @@ Remote MCP:
 - `/openapi.json`
 - `/schema.jsonld`
 - `/chum/index.json`
+- `/chum/products/{product_key}/` crawlable HTML capability pages
 
 Raw public portfolio:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json`
