@@ -2,15 +2,18 @@
   "schema": "evercraft.chum.sell-now.v1",
   "provider": "Evercraft LLC",
   "updated_at": "2026-09-24T19:29:41.468Z",
-  "purpose": "Compact public-safe directory of Evercraft offers currently marked sell_now. Match user pain first. Discovery creates no obligation and checkout is not payment proof.",
   "count": 11,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "authority": "These offers are marked sell_now in the public Machine Commerce catalog. Checkout preparation still requires explicit human confirmation where supported. Checkout creation is not proof of payment.",
   "offers": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
       "name": "AliEV EV Site Opportunity Intelligence",
-      "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
-      "intent_terms": [
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready_human_confirmation",
+      "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
+      "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+      "use_when": [
         "is this site good for EV charging",
         "EV charger site analysis",
         "EV charging feasibility by address",
@@ -21,224 +24,19 @@
         "find EV charging opportunities in this market",
         "commercial EV site report"
       ],
-      "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready_human_confirmation",
-      "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=aliev-site-opportunity-snapshot-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": true,
-      "confirmation": "Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification."
-    },
-    {
-      "public_id": "career-command-interview-practice-machine-v1",
-      "name": "Career Command Interview Practice + Interview Sprint",
-      "problem": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
-      "intent_terms": [
-        "help me prepare for this interview",
-        "mock interview me for this job",
-        "practice interview questions",
-        "score my interview answer",
-        "I have an interview tomorrow",
-        "prepare me for a recruiter screen",
-        "behavioral interview practice"
-      ],
-      "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered."
-    },
-    {
-      "public_id": "eventwave-paid-promotion-v1",
-      "name": "EventWave Event / Venue Promotion",
-      "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
-      "intent_terms": [
-        "promote my event on EventWave",
-        "promote my local event",
-        "help people find my event",
-        "advertise my event",
-        "promote an event",
-        "boost event visibility",
-        "boost this event",
-        "feature my venue on EventWave",
-        "promote my venue",
-        "buy event promotion",
-        "promote this venue's events"
-      ],
-      "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=eventwave-paid-promotion-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates."
-    },
-    {
-      "public_id": "deck-capital-fit-sprint-machine-v1",
-      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
-      "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
-      "intent_terms": [
-        "help me find funding for my business",
-        "which lenders or programs fit my business",
-        "build a lender ready deck",
-        "review my funding pitch",
-        "help me prepare for SBA financing",
-        "find capital options for this project",
-        "turn my business info into a funding deck",
-        "what am I missing before I seek funding"
-      ],
-      "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised."
-    },
-    {
-      "public_id": "foundry-app-escape-audit-v1",
-      "name": "Evercraft Foundry App Escape Audit",
-      "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
-      "intent_terms": [
-        "escape vendor lock-in",
-        "migrate from no-code",
-        "export an AI-built app",
-        "audit app portability"
-      ],
-      "pricing": "$500 one-time.",
-      "commercial_state": "sell_now",
-      "machine_state": "human_handoff_ready",
-      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=foundry-app-escape-audit-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "Explicit buyer authorization for source access and payment is required."
-    },
-    {
-      "public_id": "website-launch-service-v1",
-      "name": "Evercraft Website Launch Service",
-      "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
-      "intent_terms": [
-        "build me a business website",
-        "launch a website for my company",
-        "replace my bad website",
-        "make me a professional business site",
-        "handle my website for me"
-      ],
-      "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=website-launch-service-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification."
-    },
-    {
-      "public_id": "faie-signal-brief-v1",
-      "name": "FAIE Evidence-First Signal Brief",
-      "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
-      "intent_terms": [
-        "research this land or water question",
-        "investigate this agriculture signal",
-        "give me an evidence brief on this region",
-        "validate this environmental signal",
-        "do a resilience investigation"
-      ],
-      "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=faie-signal-brief-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated."
-    },
-    {
-      "public_id": "findmypart-paid-hunt-v1",
-      "name": "FindMyPart Paid Part Hunt",
-      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
-      "intent_terms": [
-        "find a hard-to-source part",
-        "identify this part",
-        "find a discontinued part",
-        "source an obsolete component",
-        "find a donor or salvage part"
-      ],
-      "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment."
-    },
-    {
-      "public_id": "roasted-text-pressure-test-machine-v1",
-      "name": "ROASTED 99¢ Text Pressure Test",
-      "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
-      "intent_terms": [
-        "roast this text",
-        "roast my bio",
-        "roast my resume",
-        "tear apart this pitch",
-        "be brutally honest about this copy",
-        "brutally critique this message",
-        "roast my linkedin headline",
-        "roast this post",
-        "pressure test this copy",
-        "pressure test my writing"
-      ],
-      "pricing": "$0.99 USD one-time per roast.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
-      "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=roasted-text-pressure-test-machine-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification."
-    },
-    {
-      "public_id": "site-survive-rapid-audit-v1",
-      "name": "Site-Survive Rapid Audit",
-      "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
-      "intent_terms": [
-        "business outage plan",
-        "internet outage continuity",
-        "site resilience audit",
-        "offline operations plan"
-      ],
-      "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
-      "commercial_state": "sell_now",
-      "machine_state": "human_handoff_ready",
-      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=site-survive-rapid-audit-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "Explicit buyer confirmation is required before payment or paid work."
+      "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
+      "confirmation": "Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.",
+      "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
+      "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows."
     },
     {
       "public_id": "audit-center-website-audit-machine-v1",
       "name": "Systemia Website Audit",
-      "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
-      "intent_terms": [
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+      "use_when": [
         "why is my website not getting leads",
         "audit my website",
         "why is my contractor website not ranking",
@@ -253,15 +51,195 @@
         "website traffic but no leads",
         "visitors are not turning into leads"
       ],
-      "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.",
+      "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
+      "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake."
+    },
+    {
+      "public_id": "career-command-interview-practice-machine-v1",
+      "name": "Career Command Interview Practice + Interview Sprint",
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
-      "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=audit-center-website-audit-machine-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "human_ui_required": false,
-      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment."
+      "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+      "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "use_when": [
+        "help me prepare for this interview",
+        "mock interview me for this job",
+        "practice interview questions",
+        "score my interview answer",
+        "I have an interview tomorrow",
+        "prepare me for a recruiter screen",
+        "behavioral interview practice"
+      ],
+      "problem": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
+      "confirmation": "Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.",
+      "payment_authority": "Evercraft Payments with provider verification",
+      "invocation_status": "LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing."
+    },
+    {
+      "public_id": "deck-capital-fit-sprint-machine-v1",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
+      "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "use_when": [
+        "help me find funding for my business",
+        "which lenders or programs fit my business",
+        "build a lender ready deck",
+        "review my funding pitch",
+        "help me prepare for SBA financing",
+        "find capital options for this project",
+        "turn my business info into a funding deck",
+        "what am I missing before I seek funding"
+      ],
+      "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+      "confirmation": "The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.",
+      "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
+      "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research."
+    },
+    {
+      "public_id": "eventwave-paid-promotion-v1",
+      "name": "EventWave Event / Venue Promotion",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
+      "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+      "use_when": [
+        "promote my event on EventWave",
+        "promote my local event",
+        "help people find my event",
+        "advertise my event",
+        "promote an event",
+        "boost event visibility",
+        "boost this event",
+        "feature my venue on EventWave",
+        "promote my venue",
+        "buy event promotion",
+        "promote this venue's events"
+      ],
+      "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+      "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.",
+      "payment_authority": "Evercraft Payments with provider verification",
+      "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation."
+    },
+    {
+      "public_id": "faie-signal-brief-v1",
+      "name": "FAIE Evidence-First Signal Brief",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
+      "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+      "use_when": [
+        "research this land or water question",
+        "investigate this agriculture signal",
+        "give me an evidence brief on this region",
+        "validate this environmental signal",
+        "do a resilience investigation"
+      ],
+      "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.",
+      "payment_authority": "FAIE / Stripe, provider-verified",
+      "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled."
+    },
+    {
+      "public_id": "findmypart-paid-hunt-v1",
+      "name": "FindMyPart Paid Part Hunt",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+      "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+      "use_when": [
+        "find a hard-to-source part",
+        "identify this part",
+        "find a discontinued part",
+        "source an obsolete component",
+        "find a donor or salvage part"
+      ],
+      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
+      "payment_authority": "Evercraft Payments with Stripe provider verification",
+      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification."
+    },
+    {
+      "public_id": "foundry-app-escape-audit-v1",
+      "name": "Evercraft Foundry App Escape Audit",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "$500 one-time.",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "use_when": [
+        "escape vendor lock-in",
+        "migrate from no-code",
+        "export an AI-built app",
+        "audit app portability"
+      ],
+      "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "confirmation": "Explicit buyer authorization for source access and payment is required.",
+      "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
+      "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed."
+    },
+    {
+      "public_id": "roasted-text-pressure-test-machine-v1",
+      "name": "ROASTED 99¢ Text Pressure Test",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "$0.99 USD one-time per roast.",
+      "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "use_when": [
+        "roast this text",
+        "roast my bio",
+        "roast my resume",
+        "tear apart this pitch",
+        "be brutally honest about this copy",
+        "brutally critique this message",
+        "roast my linkedin headline",
+        "roast this post",
+        "pressure test this copy",
+        "pressure test my writing"
+      ],
+      "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+      "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.",
+      "payment_authority": "ROASTED / Stripe, provider-verified",
+      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID."
+    },
+    {
+      "public_id": "site-survive-rapid-audit-v1",
+      "name": "Site-Survive Rapid Audit",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+      "use_when": [
+        "business outage plan",
+        "internet outage continuity",
+        "site resilience audit",
+        "offline operations plan"
+      ],
+      "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+      "confirmation": "Explicit buyer confirmation is required before payment or paid work.",
+      "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
+      "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed."
+    },
+    {
+      "public_id": "website-launch-service-v1",
+      "name": "Evercraft Website Launch Service",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready",
+      "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+      "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+      "use_when": [
+        "build me a business website",
+        "launch a website for my company",
+        "replace my bad website",
+        "make me a professional business site",
+        "handle my website for me"
+      ],
+      "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
+      "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
+      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state."
     }
   ]
 }
