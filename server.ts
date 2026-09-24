@@ -96,7 +96,7 @@ const DISCOVERY_LINKS = [
   '</.well-known/evercraft-pain-index.json>; rel="service-desc"; type="application/json"',
   '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
   '</openapi.json>; rel="service-desc"; type="application/json"',
-  \`<\${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"\`,
+  `<${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"`,
 ];
 
 function publicAssetRoot(): string {
@@ -109,7 +109,7 @@ function requestOrigin(req: Request): string {
   const forwardedHost = String(req.headers['x-forwarded-host'] || '').split(',')[0].trim();
   const host = forwardedHost || String(req.headers.host || '').trim();
   if (!/^[a-z0-9.-]+(?::\d+)?$/i.test(host)) return '';
-  return \`\${proto}://\${host}\`;
+  return `${proto}://${host}`;
 }
 
 function isPublicDiscoveryPath(pathname: string): boolean {
@@ -143,7 +143,7 @@ app.get('/robots.txt', (req: Request, res: Response) => {
   const file = path.join(publicAssetRoot(), 'robots.txt');
   let body = fs.readFileSync(file, 'utf8').replace(/^Sitemap:.*$/gmi, '').trimEnd();
   const origin = requestOrigin(req);
-  if (origin) body += \`\\n\\nSitemap: \${origin}/sitemap.xml\\n\`;
+  if (origin) body += `\n\nSitemap: ${origin}/sitemap.xml\n`;
   res.type('text/plain; charset=utf-8').send(body);
 });
 
@@ -156,7 +156,7 @@ app.get('/sitemap.xml', (req: Request, res: Response) => {
 
   const staticSitemap = path.join(publicAssetRoot(), 'sitemap.xml');
   const source = fs.existsSync(staticSitemap) ? fs.readFileSync(staticSitemap, 'utf8') : '';
-  const paths = [...source.matchAll(/<loc>([^<]+)<\\/loc>/g)]
+  const paths = [...source.matchAll(/<loc>([^<]+)<\/loc>/g)]
     .map((match) => String(match[1] || '').trim())
     .filter(Boolean)
     .map((value) => {
@@ -164,7 +164,7 @@ app.get('/sitemap.xml', (req: Request, res: Response) => {
         const parsed = new URL(value);
         return parsed.pathname + parsed.search;
       } catch {
-        return value.startsWith('/') ? value : \`/\${value}\`;
+        return value.startsWith('/') ? value : `/${value}`;
       }
     });
 
@@ -180,15 +180,14 @@ app.get('/sitemap.xml', (req: Request, res: Response) => {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...[...new Set(publicPaths)].sort().map((pathname) =>
-      \`  <url><loc>\${escapeXml(new URL(pathname, origin).toString())}</loc></url>\`
+      `  <url><loc>${escapeXml(new URL(pathname, origin).toString())}</loc></url>`
     ),
     '</urlset>',
     ''
-  ].join('\\n');
+  ].join('\n');
 
   res.type('application/xml; charset=utf-8').send(xml);
 });
-
 
 // CHUM attribution public CORS. Authentication still gates trusted ingestion.
 app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
@@ -223,20 +222,25 @@ function loadPublicDiscoveryCatalog(): any {
   const offers = Array.isArray(catalog?.offers) ? [...catalog.offers] : [];
   const directory = loadPublicProductDirectory();
   const normalize = (value: unknown) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const trimSlash = (value: unknown) => {
+    const text = String(value || '');
+    return text.endsWith('/') ? text.slice(0, -1) : text;
+  };
   const knownNames = new Set(offers.map((offer: any) => normalize(offer?.name)).filter(Boolean));
-  const knownUrls = new Set(offers.map((offer: any) => String(offer?.public_url || '').replace(/\\/$/, '')).filter(Boolean));
+  const knownUrls = new Set(offers.map((offer: any) => trimSlash(offer?.public_url)).filter(Boolean));
 
   for (const product of directory?.products || []) {
     const name = String(product?.name || '').trim();
     const canonical = String(product?.canonical_url || '').trim();
     if (!name || !canonical) continue;
-    if (knownNames.has(normalize(name)) || knownUrls.has(canonical.replace(/\\/$/, ''))) continue;
+    if (knownNames.has(normalize(name)) || knownUrls.has(trimSlash(canonical))) continue;
 
     const intents = Array.isArray(product?.intents) ? product.intents.map(String).filter(Boolean) : [];
+    const slug = String(product?.product_key || normalize(name).split(' ').filter(Boolean).join('-'));
     offers.push({
-      public_id: \`product-\${String(product?.product_key || normalize(name).replace(/\\s+/g, '-'))}-discovery\`,
+      public_id: `product-${slug}-discovery`,
       name,
-      problem: intents[0] || \`Public Evercraft capability: \${name}\`,
+      problem: intents[0] || `Public Evercraft capability: ${name}`,
       intent_terms: intents,
       commercial_state: 'discovery_only',
       machine_state: String(product?.mode || 'discovery_only'),
