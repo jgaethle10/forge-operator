@@ -1,0 +1,26 @@
+# FindMyPart
+
+Provider: Evercraft
+Product key: findmypart
+Class: hard_to_source_parts
+Canonical URL: https://findmypart.base44.app/
+Authority: public discovery and human-confirmed paid sourcing hunts
+Human confirmation required: yes
+Runtime llms.txt: https://findmypart.base44.app/llms.txt
+Declared MCP: https://findmypart.base44.app/functions/findMyPartMcp
+
+## Natural-language intents
+- find a discontinued tractor part
+- find an obsolete automotive or machine part
+- identify a hard-to-source part from markings, measurements, photos, or equipment clues
+- find replacement, donor, salvage, or fabrication paths when normal sourcing fails
+
+## Boundaries
+- unknowns may remain unknown
+- compatibility is not guaranteed
+- checkout creation is not payment proof
+- private vendor, analytics, session, command-center, and sales data are not public
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
