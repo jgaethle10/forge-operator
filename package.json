@@ -19,7 +19,7 @@
     "chum:validate": "node scripts/validate-chum-probes.mjs",
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
-    "chum:all": "npm run chum && npm run chum:crawlers && npm run chum:mcp",
+    "chum:all": "npm run chum:mirror && npm run chum:sync && npm run chum && npm run chum:crawlers && npm run chum:mcp",
     "check": "npm run test:release-policy && npm run test:media-studio && npm run check:ai && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
