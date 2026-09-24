@@ -127,6 +127,7 @@ console.log(JSON.stringify({ products: index.products.length, output: 'public/ch
 // claiming invocation, sale, payment, or authority that the source records do not declare.
 
 const universalMcp = catalog.universal_front_door?.mcp || null;
+const readOnlyDiscoveryRegistry = 'io.github.jgaethle10/evercraft-capability-discovery';
 const rawBase = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main';
 
 const llmsLines = [
@@ -137,6 +138,10 @@ const llmsLines = [
   '',
   '## Universal routing',
   '',
+  `Problem-language landing page: ${rawBase}/public/discover/index.html`,
+  `Intent graph: ${rawBase}/public/.well-known/evercraft-intents.json`,
+  `Intent vocabulary: ${rawBase}/public/discover/intents.txt`,
+  `Read-only Official MCP Registry: ${readOnlyDiscoveryRegistry}`,
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
@@ -227,10 +232,15 @@ const agentDirectory = {
   updated_at: directory.updated_at || null,
   purpose: 'Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.',
   universal_front_door: {
-    name: 'Evercraft Machine Commerce',
-    registry_name: catalog.universal_front_door?.registry_name || null,
-    mcp: universalMcp,
-    use_when: 'The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits.'
+    name: 'Evercraft discovery watershed',
+    read_only_registry_name: readOnlyDiscoveryRegistry,
+    intent_page: '/discover/',
+    intent_directory: '/.well-known/evercraft-intents.json',
+    intent_api: '/api/intents',
+    live_router: '/api/discover?q={natural-language-problem}',
+    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
+    machine_commerce_mcp: universalMcp,
+    use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when current commercial state or a human-confirmed paid continuation is relevant.'
   },
   routing_policy: {
     pain_first: true,
@@ -253,6 +263,11 @@ const discoveryWatershed = {
   updated_at: directory.updated_at || null,
   purpose: 'One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.',
   start_here: {
+    intent_page: '/discover/',
+    intent_directory: '/.well-known/evercraft-intents.json',
+    intent_api: '/api/intents',
+    live_problem_router: '/api/discover?q={natural-language-problem}',
+    read_only_registry_name: readOnlyDiscoveryRegistry,
     llms: '/llms.txt',
     llms_full: '/llms-full.txt',
     products: '/.well-known/evercraft-products.json',
@@ -265,8 +280,9 @@ const discoveryWatershed = {
     openapi: '/openapi.json'
   },
   universal_front_door: {
-    registry_name: catalog.universal_front_door?.registry_name || null,
-    mcp: universalMcp
+    read_only_registry_name: readOnlyDiscoveryRegistry,
+    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
+    machine_commerce_mcp: universalMcp
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',
