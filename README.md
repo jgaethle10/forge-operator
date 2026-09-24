@@ -38,6 +38,28 @@ Forge intentionally publishes a public machine-readable discovery layer:
 
 Private/admin topology is not advertised through these surfaces.
 
+## Cross-LLM conformance
+
+Forge Operator now carries the portfolio-level Evercraft cross-LLM conformance standard under `conformance/`.
+
+The standard separates:
+
+```
+machine surface exists
+  -> source build passes
+  -> public doorway is live
+  -> provider behavior is probed
+  -> correct understanding is observed
+  -> safe handoff works
+  -> payment or outcome is independently verified
+```
+
+`conformance/products.json` is the current machine-discovery product index.
+
+`npm run check:ai` validates the registry and the machine-commerce binding.
+
+The scheduled `AI doorway canary` independently probes public `llms.txt`, discovery, and conformance endpoints. A passing build is never treated as live deployment proof, and endpoint availability is never treated as proof that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider actually surfaced the product.
+
 ## Human gates
 
 Forge is decision support. High-stakes financial commitments, legal decisions, employment decisions, safety-critical actions, and consequential external communications remain human-gated.
