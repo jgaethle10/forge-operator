@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/eventwave",
+  "title": "EventWave",
+  "description": "Event discovery and promotion workflows with human-controlled publishing and commerce.",
+  "version": "1.0.0",
+  "websiteUrl": "https://event-wave.base44.app/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://event-wave.base44.app/functions/eventWaveMcp"
+    }
+  ]
+}
