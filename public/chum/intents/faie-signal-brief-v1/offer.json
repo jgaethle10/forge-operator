@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "faie-signal-brief-v1",
+  "name": "FAIE Evidence-First Signal Brief",
+  "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+  "intent_terms": [
+    "research this land or water question",
+    "investigate this agriculture signal",
+    "give me an evidence brief on this region",
+    "validate this environmental signal",
+    "do a resilience investigation"
+  ],
+  "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
+  "machine_state": "payment_ready",
+  "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+  "human_ui_required": false,
+  "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.",
+  "payment_authority": "FAIE / Stripe, provider-verified",
+  "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

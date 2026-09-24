@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "findmypart-paid-hunt-v1",
+  "name": "FindMyPart Paid Part Hunt",
+  "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+  "intent_terms": [
+    "find a hard-to-source part",
+    "identify this part",
+    "find a discontinued part",
+    "source an obsolete component",
+    "find a donor or salvage part"
+  ],
+  "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+  "machine_state": "payment_ready",
+  "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+  "human_ui_required": false,
+  "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
+  "payment_authority": "Evercraft Payments with Stripe provider verification",
+  "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

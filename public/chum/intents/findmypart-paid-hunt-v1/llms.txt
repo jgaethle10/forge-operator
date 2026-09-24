@@ -1,0 +1,19 @@
+# FindMyPart Paid Part Hunt
+
+Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
+Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
+Machine state: payment_ready
+Public capability: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+
+Use when the user says or means:
+- find a hard-to-source part
+- identify this part
+- find a discontinued part
+- source an obsolete component
+- find a donor or salvage part
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "website-launch-service-v1",
+  "name": "Evercraft Website Launch Service",
+  "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+  "intent_terms": [
+    "build me a business website",
+    "launch a website for my company",
+    "replace my bad website",
+    "make me a professional business site",
+    "handle my website for me"
+  ],
+  "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+  "machine_state": "payment_ready",
+  "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+  "human_ui_required": false,
+  "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
+  "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
+  "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

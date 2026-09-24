@@ -10,6 +10,7 @@ Problem: A property owner, fleet, charging developer, broker, installer or inves
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Machine state: payment_ready_human_confirmation
 Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
+Pain page: /chum/intents/aliev-site-opportunity-snapshot-v1/
 Intent examples:
 - is this site good for EV charging
 - EV charger site analysis
@@ -27,6 +28,7 @@ Problem: A candidate needs role-specific practice and candid evidence-based feed
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Machine state: payment_ready
 Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
+Pain page: /chum/intents/career-command-interview-practice-machine-v1/
 Intent examples:
 - help me prepare for this interview
 - mock interview me for this job
@@ -42,6 +44,7 @@ Problem: An organizer or venue wants a bounded paid EventWave placement with ver
 Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Machine state: payment_ready
 Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
+Pain page: /chum/intents/eventwave-paid-promotion-v1/
 Intent examples:
 - promote my event on EventWave
 - promote my local event
@@ -61,6 +64,7 @@ Problem: A founder, operator or project owner needs bounded capital-path researc
 Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Machine state: payment_ready
 Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Pain page: /chum/intents/deck-capital-fit-sprint-machine-v1/
 Intent examples:
 - help me find funding for my business
 - which lenders or programs fit my business
@@ -77,6 +81,7 @@ Problem: A founder or operator needs a clear portability, dependency, security a
 Pricing: $500 one-time.
 Machine state: human_handoff_ready
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
+Pain page: /chum/intents/foundry-app-escape-audit-v1/
 Intent examples:
 - escape vendor lock-in
 - migrate from no-code
@@ -89,6 +94,7 @@ Problem: A business needs a professional website built or upgraded without opera
 Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
 Machine state: payment_ready
 Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
+Pain page: /chum/intents/website-launch-service-v1/
 Intent examples:
 - build me a business website
 - launch a website for my company
@@ -102,6 +108,7 @@ Problem: A buyer has one bounded agriculture, land, water, production or resilie
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Machine state: payment_ready
 Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
+Pain page: /chum/intents/faie-signal-brief-v1/
 Intent examples:
 - research this land or water question
 - investigate this agriculture signal
@@ -115,6 +122,7 @@ Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part i
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Machine state: payment_ready
 Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+Pain page: /chum/intents/findmypart-paid-hunt-v1/
 Intent examples:
 - find a hard-to-source part
 - identify this part
@@ -128,6 +136,7 @@ Problem: Fast, low-cost critique for short user-supplied text, followed by concr
 Pricing: $0.99 USD one-time per roast.
 Machine state: payment_ready
 Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+Pain page: /chum/intents/roasted-text-pressure-test-machine-v1/
 Intent examples:
 - roast this text
 - roast my bio
@@ -146,6 +155,7 @@ Problem: A site-dependent organization needs to understand which operational dep
 Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Machine state: human_handoff_ready
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+Pain page: /chum/intents/site-survive-rapid-audit-v1/
 Intent examples:
 - business outage plan
 - internet outage continuity
@@ -158,6 +168,7 @@ Problem: A small business or contractor needs evidence-backed website triage acr
 Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Machine state: payment_ready
 Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+Pain page: /chum/intents/audit-center-website-audit-machine-v1/
 Intent examples:
 - why is my website not getting leads
 - audit my website
