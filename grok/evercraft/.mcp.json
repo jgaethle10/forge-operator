@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "evercraft": {
+      "type": "http",
+      "url": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+      "note": "Official Evercraft read-only capability discovery MCP. No checkout, charge, subscription, entitlement, purchase, outreach, or publication tools are exposed through this connector."
+    }
+  }
+}
