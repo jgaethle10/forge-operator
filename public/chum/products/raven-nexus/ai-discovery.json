@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "raven-nexus",
+  "name": "Raven Nexus",
+  "class": "pain_first_modular_safety_and_stability",
+  "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+  "intents": [
+    "protect my bank account from AI scams or suspicious transfer risk",
+    "help with identity theft, credential compromise, or account takeover risk",
+    "help make my home or property safer",
+    "set up family safety check-ins or preparedness",
+    "make a personal or relationship safety plan",
+    "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
+    "find the smallest Raven safety capability without buying the full suite or hardware"
+  ],
+  "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "full-suite purchase is not required when a smaller capability is sufficient",
+    "hardware is optional unless the selected capability explicitly requires it",
+    "planned capability is not sellable capability",
+    "does not claim bank-side transaction blocking without verified banking authority",
+    "does not permit covert tracking, stalking, or unauthorized surveillance",
+    "Raven discovery is not emergency response",
+    "checkout creation is not payment proof"
+  ],
+  "registry_name": null,
+  "mcp": null,
+  "http_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-conformance.json"
+  }
+}
