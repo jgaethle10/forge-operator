@@ -1,0 +1,11 @@
+{
+  "openapi":"3.1.0",
+  "info":{"title":"Evercraft CHUM + Forge Public API","version":"1.0.0","description":"Public discovery and bounded invocation surfaces for Evercraft. CHUM maps plain-language pain to public capabilities. Discovery never creates a payment obligation."},
+  "servers":[{"url":"/"}],
+  "paths":{
+    "/chum/health":{"get":{"summary":"CHUM public health and catalog counts","responses":{"200":{"description":"CHUM health"}}}},
+    "/chum/resolve":{"get":{"summary":"Resolve plain-language intent to ranked public Evercraft capabilities","parameters":[{"name":"q","in":"query","required":true,"schema":{"type":"string"}},{"name":"limit","in":"query","required":false,"schema":{"type":"integer","minimum":1,"maximum":10,"default":5}}],"responses":{"200":{"description":"Ranked capability routes"},"400":{"description":"Query required"}}}},
+    "/api/forge":{"post":{"summary":"Generate a Forge small-business operations diagnosis","requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["businessProblem","desiredOutcome"],"properties":{"businessProblem":{"type":"string"},"desiredOutcome":{"type":"string"},"businessContext":{"type":"string"}}}}}},"responses":{"200":{"description":"Forge report"},"400":{"description":"Invalid request"}}}},
+    "/api/resolve/media-overflow":{"post":{"summary":"Resolve an explicit AI media-processing limit to the ForensiScope continuation path","responses":{"200":{"description":"Media overflow resolution"}}}}
+  }
+}
