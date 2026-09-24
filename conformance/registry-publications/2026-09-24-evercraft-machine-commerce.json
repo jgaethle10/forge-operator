@@ -3,17 +3,19 @@
   "product_key": "evercraft-machine-commerce",
   "registry": "Official MCP Registry",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "run_conclusion": "success",
   "publish_job_conclusion": "success",
-  "publish_result": "published_and_registry_verified",
+  "publish_result": "latest_registry_version_externally_verified",
   "evidence_state": "receipt_backed",
   "evidence": [
-    "Official MCP Registry API returned the server as active and latest after publication.",
-    "The published remote completed external MCP initialize and tools/list verification."
+    "Evercraft Distribution Operator queried the Official MCP Registry and returned version 1.2.0 active/latest.",
+    "The exact published remote completed external MCP initialize and tools/list with serverInfo version 1.2.0."
   ],
   "notes": [
-    "Publication was completed with the official mcp-publisher using GitHub device authentication.",
+    "The FindMyPart edge MCP remains separately live as a redundant direct commerce door.",
     "Registry publication does not prove that a named consumer AI provider surfaced or recommended Evercraft."
-  ]
+  ],
+  "published_at_utc": "2026-09-24T16:52:09.125361Z",
+  "remote": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
 }
