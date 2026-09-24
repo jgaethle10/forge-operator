@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/roasted",
+  "title": "ROASTED",
+  "description": "99-cent text pressure tests with human-confirmed checkout and paid-result retrieval.",
+  "version": "1.0.0",
+  "websiteUrl": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
+    }
+  ]
+}
