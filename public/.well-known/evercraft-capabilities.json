@@ -18,7 +18,11 @@
       "path": "/api/revenue-watershed"
     },
     "machineCatalog": "/.well-known/evercraft-machine-catalog.json",
-    "chumRevenue": "/chum/revenue.json"
+    "chumRevenue": "/chum/revenue.json",
+    "firstPartyRouter": {
+      "method": "POST",
+      "path": "/api/route-capability"
+    }
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -27,7 +31,8 @@
     "operational risk identification",
     "implementation next-step generation",
     "Evercraft portfolio problem-to-product discovery",
-    "natural-language problem to Evercraft offer routing"
+    "natural-language problem to Evercraft offer routing",
+    "Evercraft-owned provider selection before external tooling"
   ],
   "input": {
     "method": "POST",
@@ -57,12 +62,19 @@
       "external communications with material consequences"
     ],
     "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act.",
-    "intentRouterRule": "Read-only discovery. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology."
+    "intentRouterRule": "Read-only discovery. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology.",
+    "firstPartyRoutingRule": "FIRST_PARTY_STRICT capabilities do not silently fall back to external providers when unavailable or unproven."
   },
   "commercial": {
     "status": "configured-at-runtime",
     "checkout": "/api/checkout",
     "discovery": "/api/commercial",
     "pricingState": "human-gated"
+  },
+  "routing": {
+    "policy": "owned_capability_first",
+    "strict_state": "BLOCKED_HOLD",
+    "external_fallback_for_first_party_strict": false,
+    "rule": "When Evercraft owns the matching capability, use it if independently proven runnable. Otherwise a FIRST_PARTY_STRICT match returns BLOCKED_HOLD instead of silently substituting an external provider."
   }
 }
