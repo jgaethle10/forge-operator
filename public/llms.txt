@@ -6,6 +6,9 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 - Universal agent manifest: /.well-known/evercraft-agent.json
 - Problem-to-product directory: /.well-known/evercraft-products.json
+- Full offer index: /chum/offers/index.json
+- Natural-language pain index: /chum/intents.json
+- Human/GitHub capability catalog: https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
 - Read-only natural-language router: GET /api/discover?q={problem}
