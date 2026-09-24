@@ -1,26 +1,97 @@
 name: Publish Evercraft Web to MCP Registry
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
     paths:
       - "mcp/evercraft-web/server.json"
       - ".github/workflows/publish-evercraft-web-mcp.yml"
+      - "systemia/release/**"
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Exact main-branch commit SHA to publish
+        required: true
+        type: string
+      approval:
+        description: Type RELEASE for a human-approved trust/destructive publication
+        required: true
+        type: string
+      approval_ref:
+        description: Human approval reference or reason
+        required: true
+        type: string
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
-  publish:
+  authorize:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    outputs:
+      sha: ${{ steps.gate.outputs.sha }}
+      release_allowed: ${{ steps.gate.outputs.release_allowed }}
+      risk_class: ${{ steps.gate.outputs.risk_class }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - name: Resolve revision
+        id: revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then SHA="${{ inputs.sha }}"; else SHA="${{ github.sha }}"; fi
+          printf '%s' "$SHA" | grep -Eq '^[0-9a-fA-F]{40}$'
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.revision.outputs.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify and authorize
+        id: gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHA="${{ steps.revision.outputs.sha }}"
+          git fetch origin main --quiet
+          git merge-base --is-ancestor "$SHA" origin/main || { echo "Requested SHA is not on main."; exit 1; }
+          BASE="$(git rev-parse "$SHA^")"
+          npm install --no-audit --no-fund
+          npm run check
+          node systemia/release/release-policy.mjs --base "$BASE" --head "$SHA" > release-classification.json
+          RISK="$(node -p "require('./release-classification.json').riskClass")"
+          AUTO="$(node -p "require('./release-classification.json').autoReleaseAllowed")"
+          ALLOWED="false"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            [ "${{ inputs.approval }}" = "RELEASE" ] && [ -n "${{ inputs.approval_ref }}" ] && ALLOWED="true"
+          elif [ "$RISK" = "routine_public" ] && [ "$AUTO" = "true" ]; then
+            ALLOWED="true"
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "release_allowed=$ALLOWED" >> "$GITHUB_OUTPUT"
+          echo "risk_class=$RISK" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Systemia ReleaseAuthorization"
+            echo "- Revision: \`$SHA\`"
+            echo "- Risk class: **$RISK**"
+            echo "- Release allowed: **$ALLOWED**"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  publish:
+    needs: authorize
+    if: needs.authorize.outputs.release_allowed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.authorize.outputs.sha }}
 
       - name: Install MCP publisher
         shell: bash
@@ -30,7 +101,6 @@ jobs:
           OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
           curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_${OS}_${ARCH}.tar.gz" | tar xz mcp-publisher
           chmod +x mcp-publisher
-          ./mcp-publisher --help >/dev/null
 
       - name: Validate Evercraft Web manifest
         run: ./mcp-publisher validate mcp/evercraft-web/server.json
@@ -54,10 +124,8 @@ jobs:
               echo "MCP_REGISTRY_PUBLISH_VERIFIED ${NAME}"
               exit 0
             fi
-            echo "Registry entry not visible yet; attempt ${attempt}/6"
             sleep 10
           done
-          echo "Published command returned but registry entry was not observed."
           cat registry-receipt.json
           exit 1
 
@@ -68,4 +136,11 @@ jobs:
           name: evercraft-web-mcp-registry-receipt
           path: registry-receipt.json
           if-no-files-found: ignore
-          retention-days: 30
+          retention-days: 90
+
+  held:
+    needs: authorize
+    if: needs.authorize.outputs.release_allowed != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Systemia held this publication for explicit approval." >> "$GITHUB_STEP_SUMMARY"
