@@ -18,4 +18,7 @@
   <url><loc>/.well-known/evercraft-chum.json</loc></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc></url>
+  <url><loc>/chum/revenue.html</loc></url>
+  <url><loc>/chum/revenue.txt</loc></url>
+  <url><loc>/chum/revenue.json</loc></url>
 </urlset>
