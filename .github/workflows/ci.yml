@@ -118,6 +118,15 @@ jobs:
           curl --fail --silent --get \
             --data-urlencode "q=I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots" \
             http://127.0.0.1:3000/api/discover > /tmp/forensiscope-route.json
+          curl --fail --silent \
+            -H 'Host: discovery.example.test' \
+            -H 'X-Forwarded-Proto: https' \
+            http://127.0.0.1:3000/.well-known/agent-card.json > /tmp/a2a-card.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/a2a \
+            -H 'Content-Type: application/json' \
+            -H 'A2A-Version: 1.0' \
+            --data '{"jsonrpc":"2.0","id":"smoke-a2a","method":"SendMessage","params":{"message":{"messageId":"smoke-msg","role":"ROLE_USER","parts":[{"text":"My video is too large and too long for this AI to fully process."}]}}}' \
+            > /tmp/a2a-route.json
 
           node - <<'NODE'
           const fs = require('fs');
@@ -137,6 +146,8 @@ jobs:
           const forensiscopeOffer = JSON.parse(fs.readFileSync('/tmp/forensiscope-offer.json','utf8'));
           const forensiscopeRoute = JSON.parse(fs.readFileSync('/tmp/forensiscope-route.json','utf8'));
           const forensiscopeLlms = fs.readFileSync('/tmp/forensiscope-llms.txt','utf8');
+          const a2aCard = JSON.parse(fs.readFileSync('/tmp/a2a-card.json','utf8'));
+          const a2aRoute = JSON.parse(fs.readFileSync('/tmp/a2a-route.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
@@ -174,6 +185,16 @@ jobs:
           if (forensiscopeOffer.commercial_state !== 'sell_now' && forensiscopeOffer.machine_offer_url !== null) {
             throw new Error('Verification-gated ForensiScope exposed checkout');
           }
+          if (capabilities.discovery?.a2a?.path !== '/a2a') throw new Error('A2A discovery route missing from capabilities');
+          if (a2aCard.protocolVersion !== undefined) throw new Error('A2A v1 Agent Card must not use the removed top-level protocolVersion field');
+          if (a2aCard.supportedInterfaces?.[0]?.protocolVersion !== '1.0') throw new Error('A2A supported interface must advertise protocol 1.0');
+          if (a2aCard.supportedInterfaces?.[0]?.url !== 'https://discovery.example.test/a2a') throw new Error('A2A Agent Card public interface URL is wrong');
+          if (!a2aCard.skills?.some((skill) => skill.id === 'discover_evercraft_capability')) throw new Error('A2A discovery skill missing');
+          if (a2aRoute.jsonrpc !== '2.0' || a2aRoute.id !== 'smoke-a2a') throw new Error('A2A JSON-RPC envelope invalid');
+          const a2aData = a2aRoute.result?.message?.parts?.find((part) => part.data)?.data;
+          if (!a2aData || !JSON.stringify(a2aData).includes('ForensiScope')) throw new Error('A2A brand-blind media pain did not surface ForensiScope');
+          if (a2aData.doctrine?.discoveryCreatesPaymentObligation !== false) throw new Error('A2A discovery must not create payment obligation');
+          if (a2aData.doctrine?.externalActionAuthorityGranted !== false) throw new Error('A2A discovery must not grant external-action authority');
           NODE
 
       - name: Show container logs on failure
