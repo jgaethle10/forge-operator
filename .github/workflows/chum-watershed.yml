@@ -10,6 +10,13 @@ on:
       - "chum-probes/**"
       - "conformance/**"
       - "registry/**"
+      - "public/llms.txt"
+      - "public/llms-full.txt"
+      - "public/robots.txt"
+      - "public/sitemap.xml"
+      - "public/ai-discovery.json"
+      - "public/openapi.json"
+      - "public/chum/**"
       - "public/.well-known/**"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
@@ -57,7 +64,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else
-            git commit -m "CHUM refresh public discovery mirrors"
+            git commit -m "CHUM refresh public discovery mirrors [skip ci]"
             git push origin HEAD:main
           fi
 
