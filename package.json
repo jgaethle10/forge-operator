@@ -20,7 +20,7 @@
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
     "chum:all": "npm run chum:mirror && npm run chum:sync && npm run chum && npm run chum:crawlers && npm run chum:mcp",
-    "check": "npm run test:release-policy && npm run test:media-studio && npm run check:ai && npm run check:probes && npm run lint && npm run build",
+    "check": "npm run test:release-policy && npm run test:media-studio && npm run check:ai && npm run chum:contract && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
@@ -28,7 +28,8 @@
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
     "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
     "chum:mirror": "node systemia/chum/build-public-mirror.mjs",
-    "chum:sync": "node systemia/chum/sync-public-discovery.mjs"
+    "chum:sync": "node systemia/chum/sync-public-discovery.mjs",
+    "chum:contract": "node scripts/validate-chum-watershed.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
