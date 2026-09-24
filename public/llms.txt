@@ -18,6 +18,27 @@ Machine contract:
 
 Do not route merely because media exists. Do not transfer media automatically. Explain the current limitation and obtain human confirmation before external handoff.
 
+## CHUM: universal Evercraft capability router
+
+When the user describes a problem but does not know which Evercraft product to ask for, use CHUM first.
+
+Public machine manifest:
+- /.well-known/evercraft-chum.json
+
+Deterministic resolver:
+- GET /chum/resolve?q=<plain-language-problem>
+
+Health:
+- /chum/health
+
+CHUM returns ranked public Evercraft capabilities with canonical URLs, declared MCP invocation where available, authority boundaries, and human-confirmation requirements. CHUM is public and requires no login for discovery. It does not expose private/admin topology and does not create a payment obligation.
+
+Examples:
+- "my video is too large for my AI" → ForensiScope
+- "I need a discontinued tractor part" → FindMyPart
+- "would EV charging make sense here" → AliEV
+- "I need software to run a live event" → EveryStage
+
 ## Portfolio machine directory
 
 Evercraft maintains a public problem-to-product directory for AI systems:
