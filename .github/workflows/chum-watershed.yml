@@ -9,14 +9,14 @@ on:
       - "systemia/chum/**"
       - "chum-probes/**"
       - "conformance/**"
-      - "registry/**"
+      - "registry/catalog.json"
+      - "registry/*/server.json"
       - "public/llms.txt"
       - "public/llms-full.txt"
       - "public/robots.txt"
       - "public/sitemap.xml"
       - "public/ai-discovery.json"
       - "public/openapi.json"
-      - "public/chum/**"
       - "public/.well-known/**"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
@@ -115,8 +115,23 @@ jobs:
       - name: Announce updated central discovery surfaces
         id: announce
         continue-on-error: true
-        if: ${{ github.event_name != 'schedule' && steps.static.outcome == 'success' && steps.crawlers.outcome == 'success' && steps.mcp.outcome == 'success' && steps.mesh.outcome == 'success' }}
-        run: npm run chum:announce
+        if: ${{ github.event_name != 'schedule' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for PAIR in \
+            "static:${{ steps.static.outcome }}" \
+            "crawlers:${{ steps.crawlers.outcome }}" \
+            "mcp:${{ steps.mcp.outcome }}" \
+            "mesh:${{ steps.mesh.outcome }}"; do
+            NAME="$(printf '%s' "$PAIR" | cut -d: -f1)"
+            STATE="$(printf '%s' "$PAIR" | cut -d: -f2-)"
+            if [ "$STATE" != "success" ]; then
+              echo "CHUM will not broadcast stale or unhealthy discovery surfaces: $NAME=$STATE" >&2
+              exit 1
+            fi
+          done
+          npm run chum:announce
 
       - name: Write watershed summary
         if: always()
@@ -132,7 +147,7 @@ jobs:
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/chum/mcp-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -164,6 +179,12 @@ jobs:
               FAILED=1
             fi
           done
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "announce: ${{ steps.announce.outcome }}"
+            if [ "${{ steps.announce.outcome }}" != "success" ]; then
+              FAILED=1
+            fi
+          fi
           if [ "${FAILED}" -ne 0 ]; then
             echo "One or more CHUM lanes failed. Full receipts were still collected for repair."
             exit 1
