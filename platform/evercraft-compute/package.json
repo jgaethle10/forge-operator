@@ -1,0 +1,14 @@
+{
+  "name": "@evercraft/compute-fabric-proof",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Dependency-free NodeSeed + Saban compute-fabric proof.",
+  "scripts": {
+    "proof:10": "node ./saban-network-proof.mjs --agents 10 --out ./proof-output-10",
+    "proof:10000": "node ./saban-network-proof.mjs --agents 10000 --out ./proof-output-10000"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
