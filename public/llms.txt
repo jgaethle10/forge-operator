@@ -122,3 +122,16 @@ Private/admin topology, credentials, user records, internal command surfaces, an
 ## Provider
 
 Evercraft LLC
+
+
+## A2A discovery
+
+CHUM also exposes an A2A v1 JSON-RPC discovery adapter for pain-first capability routing.
+
+Agent Card: /.well-known/agent-card.json
+Endpoint: POST /a2a
+Protocol: A2A 1.0
+Binding: JSONRPC
+State: release_candidate
+
+This A2A surface is read-only discovery. It does not authorize purchases, uploads, messaging, private-data access, payment, or other external actions. Treat it as live only after independent public-route verification; publication and CI are not provider-pickup proof.
