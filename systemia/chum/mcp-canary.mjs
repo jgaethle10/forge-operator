@@ -56,8 +56,7 @@ async function registryState(name) {
   }
 }
 
-const rows = [];
-for (const t of targets) {
+async function checkTarget(t) {
   try {
     const init = await postMcp(t.mcp, {
       jsonrpc: '2.0',
@@ -66,23 +65,27 @@ for (const t of targets) {
       params: { protocolVersion: '2025-03-26', capabilities: {}, clientInfo: { name: 'evercraft-chum-canary', version: '0.2' } }
     });
     const initValid = init.ok && /serverInfo/.test(init.text);
-    const tools = initValid ? await postMcp(t.mcp, { jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} }) : { ok: false, status: 0, text: '' };
+    const tools = initValid
+      ? await postMcp(t.mcp, { jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} })
+      : { ok: false, status: 0, text: '' };
     const toolsValid = tools.ok && /\"tools\"/.test(tools.text);
-    rows.push({
+    return {
       ...t,
       initialize: { ok: init.ok, status: init.status, valid: initValid },
       tools_list: { ok: tools.ok, status: tools.status, valid: toolsValid },
       registry: await registryState(t.registry_name)
-    });
+    };
   } catch (error) {
-    rows.push({
+    return {
       ...t,
       initialize: { ok: false, status: 0, valid: false, error: error instanceof Error ? error.message : String(error) },
       tools_list: { ok: false, status: 0, valid: false },
       registry: await registryState(t.registry_name)
-    });
+    };
   }
 }
+
+const rows = await Promise.all(targets.map(checkTarget));
 
 const failed = rows.filter((r) => !r.initialize.valid || !r.tools_list.valid);
 const registryMissing = rows.filter((r) =>
