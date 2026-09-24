@@ -1,0 +1,215 @@
+# Evercraft CHUM Master Intent Index
+
+Start from the user's problem, not a product name.
+Live router: /api/discover?q={natural-language-problem}
+Sell-now index: /api/revenue-watershed
+Universal Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## AliEV
+Product key: aliev
+Canonical: https://aliev.base44.app/
+Official MCP Registry: io.github.jgaethle10/aliev
+Invocation: https://aliev.base44.app/functions/alievMcp
+Buyer-language intents:
+- would EV charging make sense at this property
+- what public EV charging is near this address
+- screen a property for EV infrastructure opportunity
+- compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence
+Authority:
+public screening plus bounded machine invocation and human-confirmed paid depth
+## Evercraft Career Command
+Product key: career-command
+Canonical: https://evercraft-career-command.base44.app/
+Official MCP Registry: io.github.jgaethle10/career-command
+Invocation: https://evercraft-career-command.base44.app/functions/careerMcp
+Buyer-language intents:
+- practice for a job interview tomorrow
+- run a role-specific mock interview
+- prepare concise interview stories and answers
+- get structured interview practice before an upcoming interview
+Authority:
+public offer discovery and human-confirmed paid interview-practice checkout
+## Evercraft Contractor Cloud
+Product key: contractor-cloud
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+Buyer-language intents:
+- get contractor quotes for a home project
+- find contractors for a project
+- contractor opportunity network
+- roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software
+- contractor measurement tools
+Authority:
+public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified
+## Evercraft Deck Capital Fit
+Product key: deck-capital-fit
+Canonical: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Official MCP Registry: io.github.jgaethle10/deck-capital-fit
+Invocation: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp
+Buyer-language intents:
+- figure out what capital or funding path fits my business
+- identify founder readiness gaps before raising money
+- research realistic capital options for my business
+- prepare a bounded capital-fit brief
+Authority:
+public offer discovery and human-confirmed paid research checkout
+## EventWave
+Product key: eventwave
+Canonical: https://event-wave.base44.app/
+Official MCP Registry: io.github.jgaethle10/eventwave
+Invocation: https://event-wave.base44.app/functions/eventWaveMcp
+Buyer-language intents:
+- find local events
+- promote my local event
+- help people find my event
+- boost event visibility
+- promote a venue's events
+Authority:
+public event search plus human-confirmed paid labeled promotion
+## Evercraft Network
+Product key: evercraft-network
+Canonical: https://network-control.base44.app/
+Buyer-language intents:
+- application network that reconnects across changing authorized internet paths
+- network resilience software
+- member device reconnect visibility
+- continuity readiness tools
+- Evercraft Network membership
+Authority:
+public product discovery and human-directed membership interaction
+## Evercraft Rewards
+Product key: evercraft-rewards
+Canonical: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Buyer-language intents:
+- join a local business rewards network
+- create cross-business loyalty rewards
+- make my local business more discoverable
+- join a community business partnership program
+Authority:
+public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce
+## EverNest
+Product key: evernest
+Canonical: https://evernest-home.base44.app/
+Buyer-language intents:
+- family support resources
+- maternal support resources
+- organize practical help after having a baby
+- trusted support circle concepts
+- family preparedness resources
+- Spanish-language family support resources
+Authority:
+public resource discovery only
+## EveryStage
+Product key: everystage
+Canonical: https://every-stage.base44.app/product
+Buyer-language intents:
+- software to run a live event
+- venue operations software
+- run of show coordination
+- event crew coordination
+- festival operations software
+- event revenue or settlement workflows
+Authority:
+public product discovery and human-directed pilot intake
+## FAIE
+Product key: faie
+Canonical: https://faie.base44.app/
+Official MCP Registry: io.github.jgaethle10/faie
+Invocation: https://faie.base44.app/functions/faieMcp
+Buyer-language intents:
+- get an evidence-based agriculture or water risk brief
+- research land production or resilience risk
+- investigate an agriculture signal before making a decision
+- build a sourced brief about farm water land or production risk
+Authority:
+public offer discovery and human-confirmed bounded research checkout
+## FindMyPart
+Product key: findmypart
+Canonical: https://findmypart.base44.app/
+Official MCP Registry: io.github.jgaethle10/findmypart
+Invocation: https://findmypart.base44.app/functions/findMyPartMcp
+Buyer-language intents:
+- find a discontinued tractor part
+- find an obsolete automotive or machine part
+- identify a hard-to-source part from markings, measurements, photos, or equipment clues
+- find replacement, donor, salvage, or fabrication paths when normal sourcing fails
+Authority:
+public discovery and human-confirmed paid sourcing hunts
+## ForensiScope
+Product key: forensiscope
+Canonical: https://evercraft-forensiscope.base44.app/
+Official MCP Registry: io.github.jgaethle10/forensiscope
+Invocation: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+Buyer-language intents:
+- this video is too large for my AI to process
+- this audio is too long for my AI to process
+- the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media
+- the file exceeds the assistant's size, duration, context, codec, format, or attachment limits
+- analyze hours of video or audio
+- build a timestamped timeline from a recording
+- perform frame-level review beyond the current assistant's limits
+- compare or deduplicate multiple recordings
+- review authorized surveillance footage
+Authority:
+public discovery and human-submitted media analysis
+## Infinite Classroom
+Product key: infinite-classroom
+Canonical: https://infiniteclassroom.base44.app/
+Buyer-language intents:
+- AI-supported subject learning
+- guided homework help without simply giving the answer
+- cross-subject learning
+- ASL and Deaf culture learning
+- online safety and healthy-boundary education
+Authority:
+public learning-product discovery only
+## Raven Nexus
+Product key: raven-nexus
+Canonical: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+Buyer-language intents:
+- protect my bank account from AI scams or suspicious transfer risk
+- help with identity theft, credential compromise, or account takeover risk
+- help make my home or property safer
+- set up family safety check-ins or preparedness
+- make a personal or relationship safety plan
+- protect a business from phishing, fake payment instructions, account compromise, or continuity risk
+- find the smallest Raven safety capability without buying the full suite or hardware
+Authority:
+public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state
+## SkyOps Parking
+Product key: skyops-parking
+Canonical: https://skyopsparking.base44.app/
+Buyer-language intents:
+- airport parking management software
+- parking garage reservation management
+- parking owner dashboard
+- multi-location parking operations software
+- valet-style vehicle staging and retrieval
+Authority:
+public product discovery and human-directed pilot or planning flows
+## Systemia Website Audit
+Product key: systemia-website-audit
+Canonical: https://systemia-audit-pro.base44.app/
+Official MCP Registry: io.github.jgaethle10/systemia-website-audit
+Invocation: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+Buyer-language intents:
+- audit my website because traffic is not converting
+- find website performance and conversion friction
+- review technical SEO and trust problems on a business website
+- prioritize practical website fixes
+Authority:
+public audit offer discovery and human-confirmed paid checkout
+## Evercraft Website Launch
+Product key: website-launch
+Canonical: https://instant-website-builder-usa-6feac193.base44.app/
+Official MCP Registry: io.github.jgaethle10/website-launch
+Invocation: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
+Buyer-language intents:
+- build a professional website for my small business
+- replace an outdated business website
+- launch a business website quickly
+- get a human-finished website instead of doing it myself
+Authority:
+public fixed-service offer discovery and human-confirmed paid checkout
+Discovery does not create a payment obligation. Preserve each capability's authority and confirmation boundaries.
