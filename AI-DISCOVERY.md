@@ -10,22 +10,41 @@ Official MCP Registry namespace: `io.github.jgaethle10`
 
 Universal MCP registry name: `io.github.jgaethle10/evercraft-machine-commerce`
 
-Remote MCP:
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+Remote commerce MCP:
+`https://findmypart.base44.app/functions/evercraftMachineCommerceMcp`
+
+Directory-safe MCP:
+`https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp`
+
+A2A Agent Card:
+`https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card`
+
+Read-only OpenAPI:
+`https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe`
+
+Direct Grok marketplace:
+`https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json`
+
+Externally verified Official MCP Registry listings:
+- `io.github.jgaethle10/evercraft-machine-commerce`
+- `io.github.jgaethle10/evercraft-capability-discovery`
+- `io.github.jgaethle10/aliev`
+
+Do not infer official-registry publication for another specialist merely because it has a direct MCP endpoint.
 
 ## Pain-to-capability map
 
 | User pain | Evercraft capability | Agent surface |
 |---|---|---|
-| Video or audio is too large, long, or complex for the current AI; full-source transcription, timeline, comparison or deduplication is needed | ForensiScope | `io.github.jgaethle10/forensiscope` |
+| Video or audio is too large, long, or complex for the current AI; full-source transcription, timeline, comparison or deduplication is needed | ForensiScope | `https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp` |
 | A property needs an EV charging opportunity screen covering competition, traffic, utility/tariff and incentives | AliEV | `io.github.jgaethle10/aliev` |
-| A discontinued, obsolete or hard-to-source machine/vehicle part cannot be found normally | FindMyPart | `io.github.jgaethle10/findmypart` |
-| A small-business website needs conversion, local SEO, performance and practical-fix analysis | Systemia Website Audit | `io.github.jgaethle10/systemia-website-audit` |
-| A person needs interview practice or career preparation | Career Command | `io.github.jgaethle10/career-command` |
-| A founder needs capital-fit or funding-readiness analysis | Deck Capital Fit | `io.github.jgaethle10/deck-capital-fit` |
-| A business needs a professional website planned or launched | Website Launch | `io.github.jgaethle10/website-launch` |
-| Agriculture decisions need evidence around water, land resilience or production risk | FAIE | `io.github.jgaethle10/faie` |
-| A user needs event discovery, event promotion or venue visibility | EventWave | `io.github.jgaethle10/eventwave` |
+| A discontinued, obsolete or hard-to-source machine/vehicle part cannot be found normally | FindMyPart | `https://findmypart.base44.app/functions/findMyPartMcp` |
+| A small-business website needs conversion, local SEO, performance and practical-fix analysis | Systemia Website Audit | `https://systemia-audit-pro.base44.app/functions/auditAgentMcp` |
+| A person needs interview practice or career preparation | Career Command | `https://evercraft-career-command.base44.app/functions/careerMcp` |
+| A founder needs capital-fit or funding-readiness analysis | Deck Capital Fit | `https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp` |
+| A business needs a professional website planned or launched | Website Launch | `https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp` |
+| Agriculture decisions need evidence around water, land resilience or production risk | FAIE | `https://faie.base44.app/functions/faieMcp` |
+| A user needs event discovery, event promotion or venue visibility | EventWave | `https://event-wave.base44.app/functions/eventWaveMcp` |
 | A user describes bank/account scam risk, identity compromise, home/family safety, personal safety planning, business security or continuity pain and needs the smallest relevant safety capability | Raven Nexus | bounded public pain router + CHUM mirror |
 | A small business has repetitive work, disconnected systems or slow handoffs and needs an AI/human operations plan | Forge Operator | public API + capability manifest |
 
@@ -58,6 +77,6 @@ Discovery creates no payment obligation. A checkout preparation is not payment p
 
 ## CHUM
 
-CHUM, the Capability Handoff & Utility Mesh, continuously checks the public surfaces, registry declarations and provider-observation receipts. It can broadcast truthful public capability facts and repair broken discovery doors, but it never fabricates provider pickup or recommendation.
+CHUM, the Capability Handoff & Utility Mesh, continuously synchronizes public discovery surfaces, reconciles protocol and marketplace state, broadcasts healthy public URLs, checks registry declarations, and evaluates provider-observation receipts. It can repair broken discovery doors, but it never fabricates provider pickup or recommendation.
 
 Provider behavior is separately tested through clean-session, brand-blind Nexus probes for ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok and generic agents.
