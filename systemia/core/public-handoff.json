@@ -1,0 +1,63 @@
+{
+  "schema": "evercraft.systemia.core.public-handoff.v1",
+  "identity": {
+    "systemia_core": "private_internal_control_plane",
+    "systemia_marketing_agency": "separate_public_marketing_product",
+    "forge_operator": "public_yard_and_release_bridge",
+    "machine_commerce": "neutral_public_evercraft_authority"
+  },
+  "repository_boundary": {
+    "this_repository": "public",
+    "contains_systemia_core_source": false,
+    "private_core_repository_required": true,
+    "private_core_repository_state": "provisioning_required",
+    "allowed_content": [
+      "provider-neutral deployment contracts",
+      "public-safe schemas and interface descriptions",
+      "conformance rules",
+      "public machine-discovery metadata",
+      "opaque release references",
+      "deployment receipt requirements"
+    ],
+    "forbidden_content": [
+      "private workspace or app identifiers",
+      "private endpoints or internal topology",
+      "credentials or secrets",
+      "private customer or mission data",
+      "privileged execution state",
+      "private Systemia Raven or Collider records"
+    ]
+  },
+  "release_path": [
+    "systemia_admission",
+    "private_core_source_release",
+    "ci",
+    "immutable_artifact",
+    "yard_operator",
+    "evercraft_compute",
+    "route_and_health_verification",
+    "deployment_receipt"
+  ],
+  "required_gates": [
+    "ci_pass",
+    "immutable_release_ref",
+    "runtime_admission_pass",
+    "health_pass",
+    "route_verification_pass",
+    "rollback_target_present"
+  ],
+  "authority_invariants": [
+    "source_control_does_not_grant_runtime_authority",
+    "discovery_is_not_authorization",
+    "payment_requires_explicit_confirmation",
+    "revenue_requires_provider_verified_payment",
+    "payment_success_is_not_fulfillment_success",
+    "sensitive_privileged_and_consequential_actions_keep_existing_gates"
+  ],
+  "machine_commerce": {
+    "authority": "Evercraft Machine Commerce",
+    "registry_manifest": "../../mcp-registry/evercraft-machine-commerce.json",
+    "public_safe_only": true
+  },
+  "status": "active_public_boundary"
+}

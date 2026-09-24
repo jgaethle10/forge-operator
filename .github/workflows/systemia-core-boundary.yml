@@ -1,0 +1,26 @@
+name: Systemia Core public boundary
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/core/**'
+      - 'scripts/validate-systemia-core-boundary.mjs'
+      - '.github/workflows/systemia-core-boundary.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/core/**'
+      - 'scripts/validate-systemia-core-boundary.mjs'
+      - '.github/workflows/systemia-core-boundary.yml'
+
+jobs:
+  boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/validate-systemia-core-boundary.mjs
