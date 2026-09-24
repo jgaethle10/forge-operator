@@ -213,6 +213,140 @@
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
       ]
+    },
+    {
+      "product_key": "career-command",
+      "name": "Evercraft Career Command",
+      "class": "interview_practice_and_career_preparation",
+      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "intents": [
+        "practice for a job interview tomorrow",
+        "run a role-specific mock interview",
+        "prepare concise interview stories and answers",
+        "get structured interview practice before an upcoming interview"
+      ],
+      "authority": "public offer discovery and human-confirmed paid interview-practice checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "checkout preparation requires explicit human payment confirmation",
+        "checkout creation is not payment proof",
+        "paid access requires provider verification"
+      ]
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "class": "website_conversion_and_technical_audit",
+      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "intents": [
+        "audit my website because traffic is not converting",
+        "find website performance and conversion friction",
+        "review technical SEO and trust problems on a business website",
+        "prioritize practical website fixes"
+      ],
+      "authority": "public audit offer discovery and human-confirmed paid checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "audit findings do not guarantee revenue or rankings",
+        "checkout creation is not payment proof",
+        "paid state requires provider verification"
+      ]
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "name": "Evercraft Deck Capital Fit",
+      "class": "capital_fit_and_founder_readiness_research",
+      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "intents": [
+        "figure out what capital or funding path fits my business",
+        "identify founder readiness gaps before raising money",
+        "research realistic capital options for my business",
+        "prepare a bounded capital-fit brief"
+      ],
+      "authority": "public offer discovery and human-confirmed paid research checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "does not make lending or investment decisions",
+        "does not guarantee financing",
+        "checkout creation is not payment proof"
+      ]
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch",
+      "class": "done_for_you_business_website_service",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "intents": [
+        "build a professional website for my small business",
+        "replace an outdated business website",
+        "launch a business website quickly",
+        "get a human-finished website instead of doing it myself"
+      ],
+      "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "scope depends on the selected service tier",
+        "checkout creation is not payment proof",
+        "fulfillment requires verified payment"
+      ]
+    },
+    {
+      "product_key": "faie",
+      "name": "FAIE",
+      "class": "evidence_first_agriculture_and_resilience_research",
+      "canonical_url": "https://faie.base44.app/",
+      "intents": [
+        "get an evidence-based agriculture or water risk brief",
+        "research land production or resilience risk",
+        "investigate an agriculture signal before making a decision",
+        "build a sourced brief about farm water land or production risk"
+      ],
+      "authority": "public offer discovery and human-confirmed bounded research checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "research is evidence support rather than consequential authority",
+        "unknowns remain labeled",
+        "checkout creation is not payment proof"
+      ]
+    },
+    {
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "class": "event_discovery_and_labeled_promotion",
+      "canonical_url": "https://event-wave.base44.app/",
+      "intents": [
+        "find local events",
+        "promote my local event",
+        "help people find my event",
+        "boost event visibility",
+        "promote a venue's events"
+      ],
+      "authority": "public event search plus human-confirmed paid labeled promotion",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "paid promotion remains labeled",
+        "source review governs public placement",
+        "checkout creation is not payment proof"
+      ]
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "class": "local_business_rewards_and_partnership",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "intents": [
+        "join a local business rewards network",
+        "create cross-business loyalty rewards",
+        "make my local business more discoverable",
+        "join a community business partnership program"
+      ],
+      "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "prepared enrollment does not activate a merchant",
+        "prepared enrollment creates no payment obligation",
+        "directory publication and commercial activation require their own verified state"
+      ]
     }
   ]
 }
