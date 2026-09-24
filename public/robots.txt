@@ -3,5 +3,3 @@ Allow: /
 Allow: /llms.txt
 Allow: /.well-known/evercraft-capabilities.json
 Disallow: /api/
-
-Sitemap: /sitemap.xml
