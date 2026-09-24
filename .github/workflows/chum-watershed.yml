@@ -7,6 +7,9 @@ on:
       - main
     paths:
       - "systemia/chum/**"
+      - "package.json"
+      - "index.html"
+      - "server.ts"
       - "public/intents.txt"
       - "public/.well-known/evercraft-intents.json"
       - "chum-probes/**"
