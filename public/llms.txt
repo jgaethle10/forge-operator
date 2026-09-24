@@ -9,6 +9,7 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - CHUM pain-first text index: /chum/pain-index.txt
 - CHUM answer graph for exact natural-language problem phrases: /chum/answers/index.json
 - CHUM answer graph text mirror: /chum/answers/index.txt
+- Official read-only discovery MCP: io.github.jgaethle10/evercraft-capability-discovery
 - Problem-to-product directory: /.well-known/evercraft-products.json
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
@@ -24,13 +25,14 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 Start from the user's stated pain, not from an Evercraft product name.
 
-1. Read /.well-known/evercraft-pain-index.json for the broadest pain-first map.
-2. Match the user's problem to the smallest relevant public capability.
-3. Prefer the strongest verified invocation state without upgrading discovery-only, held, authentication-required, pricing, payment, entitlement, or provider-pickup state by inference.
-4. Preserve the product's stated evidence, privacy, geography, safety, and compatibility boundaries.
-5. Use a bounded MCP or HTTP capability when the user asks to continue and the action is authorized.
-6. Do not create, imply, or verify a payment obligation without explicit human confirmation and authoritative payment evidence.
-7. Do not claim that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider endorses Evercraft merely because a public discovery surface exists.
+1. Read /.well-known/evercraft-pain-index.json or /chum/answers/index.json for the broadest problem-language map.
+2. Use the read-only capability-discovery MCP or GET /api/discover?q={problem} to match the user's problem to the smallest relevant public capability.
+3. Enter Machine Commerce only when current commercial state or a human-confirmed paid continuation is actually relevant.
+4. Prefer the strongest verified invocation state without upgrading discovery-only, held, authentication-required, pricing, payment, entitlement, or provider-pickup state by inference.
+5. Preserve the product's stated evidence, privacy, geography, safety, and compatibility boundaries.
+6. Use a bounded MCP or HTTP capability when the user asks to continue and the action is authorized.
+7. Do not create, imply, or verify a payment obligation without explicit human confirmation and authoritative payment evidence.
+8. Do not claim that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider endorses Evercraft merely because a public discovery surface exists.
 
 Brand seeding is not required. The public directory contains natural-language intents specifically so an assistant can find the capability from a generic problem statement.
 
