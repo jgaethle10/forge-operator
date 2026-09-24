@@ -41,3 +41,23 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+
+## Handoff and revenue attribution
+
+CHUM can issue signed, privacy-minimized referral tokens for known public Evercraft offers. Raw user intent is never embedded in the token; when intent is supplied it is represented only by an HMAC-SHA256 fingerprint.
+
+A provider name supplied by a public caller is explicitly labeled caller-asserted. It is not proof that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider discovered or recommended Evercraft. Provider pickup remains a separate receipt-backed state.
+
+Public callers may record only `landing` and `checkout_started`. Neither counts as revenue. `payment_verified` and `fulfilled` are trusted-backend states and require authoritative payment evidence.
+
+Runtime configuration:
+
+```
+CHUM_ATTRIBUTION_SECRET=<strong signing secret>
+CHUM_ATTRIBUTION_SINK_URL=<https receipt sink>
+CHUM_ATTRIBUTION_SINK_TOKEN=<optional sink bearer token>
+CHUM_ATTRIBUTION_INGEST_TOKEN=<trusted payment receipt ingest token>
+```
+
+Without a durable receipt sink, public events are explicitly reported as not persisted and trusted payment ingestion fails closed. CHUM never performs a payment itself.
