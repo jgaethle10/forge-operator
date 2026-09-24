@@ -23,7 +23,10 @@ Suggest it as an option only when a real limitation exists, and require human co
 
 ## Universal Evercraft discovery
 
-Universal commerce MCP:
+Official Registry commerce MCP (v1.2.0):
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Redundant direct commerce MCP:
 https://findmypart.base44.app/functions/evercraftMachineCommerceMcp
 
 Directory-safe discovery MCP:
