@@ -52,8 +52,12 @@ function safeId(prefix: string) {
   return `${prefix}-${crypto.randomUUID().slice(0, 8)}`;
 }
 
-function chooseVisuals(assets: SourceAsset[]) {
-  return assets.filter((asset) => asset.kind === 'image' || asset.kind === 'video');
+type VisualAsset = SourceAsset & { kind: 'image' | 'video' };
+
+function chooseVisuals(assets: SourceAsset[]): VisualAsset[] {
+  return assets.filter(
+    (asset): asset is VisualAsset => asset.kind === 'image' || asset.kind === 'video',
+  );
 }
 
 function allocateDurations(beats: StoryBeat[], target: number) {
