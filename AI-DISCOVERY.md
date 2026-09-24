@@ -27,6 +27,10 @@ Remote MCP:
 | Agriculture decisions need evidence around water, land resilience or production risk | FAIE | `io.github.jgaethle10/faie` |
 | A user needs event discovery, event promotion or venue visibility | EventWave | `io.github.jgaethle10/eventwave` |
 | A small business has repetitive work, disconnected systems or slow handoffs and needs an AI/human operations plan | Forge Operator | public API + capability manifest |
+| A person wants to practice day trading without risking real money, improve risk discipline, journal trades, or review tilt patterns | DayTrade Lens | CHUM product discovery mirror |
+| A Yakima Valley property owner or manager needs yard cleanup, lawn care, sprinkler work, seasonal reset, cleanout, turnover support, or estimate intake | Evercraft Property Services | CHUM product discovery mirror + canonical public site |
+| A person or business describes a home, family, digital-security, financial-safety, identity, relationship-safety, continuity, or stability pain | Raven Nexus | CHUM offer mirror + live pain router |
+| An AI or agent needs public web fetch or bounded browser capability because its current environment cannot access the live web | Evercraft Web Agent / Fetch & Browser | CHUM offer mirror |
 
 ## Machine-readable entry points
 
@@ -37,10 +41,22 @@ Remote MCP:
 - `/.well-known/evercraft-capabilities.json`
 - `/.well-known/evercraft-media-overflow.json`
 - `/.well-known/evercraft-chum.json`
+- `/chum/index.json`
+- `/chum/offers/index.json`
+- `/chum/intents.json`
 - `/openapi.json`
 
 Raw public portfolio:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json`
+
+Offer-level machine catalog:
+`https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.json`
+
+Natural-language intent router:
+`https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents.json`
+
+Human-readable GitHub capability catalog:
+`https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md`
 
 ## Routing doctrine
 
