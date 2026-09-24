@@ -117,6 +117,85 @@ function publicOfferProjection(offer: any) {
   };
 }
 
+function requestOrigin(req: Request) {
+  const configured = String(process.env.FORGE_PUBLIC_BASE_URL || '').trim();
+  if (configured) {
+    try {
+      const parsed = new URL(configured);
+      if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return parsed.origin;
+    } catch {}
+  }
+
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const protocol = forwardedProto || req.protocol || 'https';
+  return `${protocol}://${req.get('host')}`;
+}
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const file = path.resolve(__dirname, isProd ? 'dist/robots.txt' : 'public/robots.txt');
+  let body = 'User-agent: *\\nAllow: /\\n';
+  try {
+    body = fs.readFileSync(file, 'utf8').trimEnd() + '\\n';
+  } catch {}
+  body += `\\nSitemap: ${requestOrigin(req)}/sitemap.xml\\n`;
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.type('text/plain').send(body);
+});
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  let directory: any = { products: [] };
+  try {
+    directory = loadPublicProductDirectory();
+  } catch {}
+
+  const fixedPaths = [
+    '/',
+    '/chum/',
+    '/chum/index.json',
+    '/chum/revenue.html',
+    '/chum/revenue.txt',
+    '/chum/revenue.json',
+    '/forensiscope/',
+    '/llms.txt',
+    '/llms-full.txt',
+    '/ai-discovery.json',
+    '/schema.jsonld',
+    '/openapi.json',
+    '/.well-known/evercraft-agent.json',
+    '/.well-known/evercraft-agent-directory.json',
+    '/.well-known/evercraft-agent-interfaces.json',
+    '/.well-known/evercraft-discovery.json',
+    '/.well-known/evercraft-products.json',
+    '/.well-known/evercraft-machine-catalog.json',
+    '/.well-known/evercraft-chum.json',
+    '/.well-known/evercraft-media-overflow.json',
+    '/.well-known/evercraft-capabilities.json',
+  ];
+  const productPaths = (directory.products || [])
+    .map((product: any) => String(product.product_key || '').trim())
+    .filter(Boolean)
+    .map((key: string) => `/chum/products/${encodeURIComponent(key)}/`);
+
+  const escapeXml = (value: string) => value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+  const urls = Array.from(new Set([...fixedPaths, ...productPaths]));
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...urls.map((pathname) => `  <url><loc>${escapeXml(origin + pathname)}</loc></url>`),
+    '</urlset>',
+    '',
+  ].join('\\n');
+
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.type('application/xml').send(xml);
+});
+
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
