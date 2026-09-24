@@ -1,3 +1,19 @@
+# Evercraft CHUM discovery front door
+
+If a user describes a problem instead of naming an Evercraft product, start with CHUM.
+
+Human/search-readable directory:
+- /ai
+
+Deterministic natural-language resolver:
+- GET /api/discover?q={natural_language_problem}
+
+Machine-readable agent manifest:
+- /.well-known/evercraft-agent-discovery.json
+
+CHUM routes only to public declared capabilities, preserves each product's human-confirmation and payment boundaries, and does not expose private/admin topology. Discovery is not payment, provider endorsement, or proof of fulfillment.
+
+
 # Evercraft MCP Directory
 
 Evercraft provides agent-callable tools for business, property, media, research and workflow problems.
