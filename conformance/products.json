@@ -21,7 +21,10 @@
       "conformance_url": "https://findmypart.base44.app/ai-conformance.json",
       "doorway_state": "source_build_green",
       "conformance_state": "reference_implementation",
-      "provider_behavior_state": "not_run"
+      "provider_behavior_state": "not_run",
+      "central_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/findmypart/llms.txt",
+      "central_conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/findmypart/ai-conformance.json",
+      "machine_discovery_policy": "Prefer the product-host surface when valid; use the Evercraft-owned central mirror when the legacy host is missing, stale, or serves an SPA shell."
     },
     {
       "product_key": "aliev",
@@ -33,7 +36,10 @@
       "openapi_url": "https://aliev.base44.app/openapi.json",
       "doorway_state": "source_build_green",
       "conformance_state": "reference_implementation",
-      "provider_behavior_state": "not_run"
+      "provider_behavior_state": "not_run",
+      "central_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/aliev/llms.txt",
+      "central_conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/aliev/ai-conformance.json",
+      "machine_discovery_policy": "Prefer the product-host surface when valid; use the Evercraft-owned central mirror when the legacy host is missing, stale, or serves an SPA shell."
     },
     {
       "product_key": "forensiscope",
@@ -56,7 +62,10 @@
         "published_at_utc": "2026-09-24T17:45:44Z"
       },
       "public_web_discovery_state": "not_yet_observed",
-      "provider_observation_state": "negative_observations_recorded"
+      "provider_observation_state": "negative_observations_recorded",
+      "central_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/forensiscope/llms.txt",
+      "central_conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/forensiscope/ai-conformance.json",
+      "machine_discovery_policy": "Prefer the product-host surface when valid; use the Evercraft-owned central mirror when the legacy host is missing, stale, or serves an SPA shell."
     },
     {
       "product_key": "skyops-parking",
