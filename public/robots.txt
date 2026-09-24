@@ -6,4 +6,5 @@ Allow: /.well-known/evercraft-products.json
 Allow: /.well-known/evercraft-chum.json
 Allow: /chum/health
 Allow: /chum/resolve
+Allow: /.well-known/evercraft-offers.json
 Disallow: /api/
