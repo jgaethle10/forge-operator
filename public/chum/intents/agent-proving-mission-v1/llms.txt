@@ -4,7 +4,7 @@ Problem: Teams can demo an agent but struggle to prove what it can reliably do u
 Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: https://systemiacommandcenters.com
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=agent-proving-mission-v1
 Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=agent-proving-mission-v1
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp

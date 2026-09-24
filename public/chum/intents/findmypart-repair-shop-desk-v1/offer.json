@@ -14,7 +14,7 @@
   "pricing": "Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.",
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": "https://findmypart.base44.app",
+  "public_url": "https://findmypart.base44.app/",
   "human_ui_required": false,
   "confirmation": "Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.",
   "payment_authority": "Evercraft Payments",

@@ -4,7 +4,7 @@ Problem: Field teams need operational go/no-go decision support against their ow
 Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: https://systemiacommandcenters.com
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=condition-desk-field-ops-v1
 Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=condition-desk-field-ops-v1
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp

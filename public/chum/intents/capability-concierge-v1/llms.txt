@@ -4,7 +4,7 @@ Problem: A buyer knows the desired outcome but should not need to know Evercraft
 Pricing: Quote required until machine-lane pricing is approved.
 Commercial state: discovery_only
 Machine state: discovery_only
-Public capability: https://systemiacommandcenters.com
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1
 Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp

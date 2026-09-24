@@ -16,7 +16,7 @@
   "pricing": "Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.",
   "commercial_state": "hold",
   "machine_state": "discovery_only",
-  "public_url": "https://systemiacommandcenters.com",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=income-war-map-v1",
   "human_ui_required": false,
   "confirmation": "Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.",
   "payment_authority": "Stripe legacy adapter; checkout paused",

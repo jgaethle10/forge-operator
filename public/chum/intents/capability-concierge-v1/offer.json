@@ -13,7 +13,7 @@
   "pricing": "Quote required until machine-lane pricing is approved.",
   "commercial_state": "discovery_only",
   "machine_state": "discovery_only",
-  "public_url": "https://systemiacommandcenters.com",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1",
   "human_ui_required": false,
   "confirmation": "Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.",
   "payment_authority": "Evercraft Payments",
