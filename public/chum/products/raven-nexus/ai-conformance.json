@@ -16,7 +16,6 @@
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
   "registry_name": null,
   "mcp": null,
-  "http_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
   "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
   "human_confirmation_required": true,
   "boundaries": [
@@ -28,5 +27,6 @@
     "Raven discovery is not emergency response",
     "checkout creation is not payment proof"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

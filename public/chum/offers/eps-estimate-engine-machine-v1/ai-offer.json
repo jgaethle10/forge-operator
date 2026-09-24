@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "eps-estimate-engine-machine-v1",
+  "name": "Field-Service Estimate Engine",
+  "problem": "A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.",
+  "intent_terms": [
+    "estimate this service job",
+    "build a contractor estimate from this scope",
+    "what should this job cost",
+    "turn these measurements into an estimate",
+    "give me a rough customer range",
+    "calculate margin and price for this job"
+  ],
+  "inputs": "Service key and quantity/scope; optional property, measurements/inputs, site-verification state, tax, travel and other direct costs.",
+  "outputs": "Estimated cost, sell price or range, confidence, assumptions, inclusions/exclusions and site-review state, with revision/proposal lineage available downstream.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Rough estimate generation does not authorize sending a proposal, accepting work or creating a customer obligation. Proposal/payment actions retain separate authority gates.",
+  "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path for external estimator access.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "catalog_version": "2026-09-23.12",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/eps-estimate-engine-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/eps-estimate-engine-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/eps-estimate-engine-machine-v1/index.html"
+  }
+}

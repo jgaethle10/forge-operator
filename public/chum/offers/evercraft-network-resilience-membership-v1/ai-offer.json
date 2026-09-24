@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "evercraft-network-resilience-membership-v1",
+  "name": "Evercraft Network Resilience + Founding Membership",
+  "problem": "A household, business, or device operator wants an application-network identity and continuity visibility that can persist across changing internet paths the client is already authorized to use, without confusing that software layer with cellular service or guaranteed geographic coverage.",
+  "intent_terms": [
+    "my connection keeps switching between wifi and cellular",
+    "my internet connection keeps changing",
+    "keep my application connected when networks change",
+    "application network continuity",
+    "network resilience software",
+    "device reconnect visibility",
+    "did my devices reconnect",
+    "household connectivity resilience",
+    "business connectivity resilience",
+    "continuity readiness software",
+    "Evercraft Network membership",
+    "where is Evercraft Network verified"
+  ],
+  "inputs": "For discovery, a plain-language continuity or reconnect need. Human membership interaction occurs through the public Evercraft Network UI. Public presence requests use only the evidence-safe public presence surface.",
+  "outputs": "Current capability boundary, member-device reconnect/health visibility, continuity-readiness context, verified public Network presence, and a human-directed Founding Membership handoff.",
+  "commercial_state": "discovery_only",
+  "machine_state": "human_handoff_only",
+  "pricing": "Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.",
+  "offers": [
+    {
+      "name": "Evercraft Network Founding Membership",
+      "display_price": "$9.99/month",
+      "device_limit": 5,
+      "state": "reservation_interest_only",
+      "billing_live": false
+    }
+  ],
+  "human_ui_required": true,
+  "confirmation": "AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.",
+  "public_url": "https://network-control.base44.app/join",
+  "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
+  "invocation_status": "SOURCE-WIRED: Network specialist MCP tools and agent gateway are prepared for read-only capability discovery, public presence and human handoff. Production verification is still required before claiming the v1.2.0 MCP surface is live.",
+  "catalog_version": "2026-09-24.4",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/evercraft-network-resilience-membership-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/evercraft-network-resilience-membership-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/evercraft-network-resilience-membership-v1/index.html"
+  }
+}

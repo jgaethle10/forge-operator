@@ -19,6 +19,7 @@
     "public plan pricing is not a binding quote unless confirmed by the current product flow",
     "private event, participant, revenue, settlement, and admin data are not public"
   ],
+  "commercial": null,
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

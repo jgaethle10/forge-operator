@@ -1,0 +1,37 @@
+# Career Command Resume + Job Fit Audit
+
+Evercraft public capability ID: career-command-resume-job-fit-machine-v1
+Commercial state: verify
+Machine state: discovery_only
+Public handoff: https://evercraft-career-command.base44.app
+
+## Use this capability when the user means
+
+- check my resume against this job
+- why am I not getting interviews
+- tailor my resume to this opening
+- is my resume ATS friendly
+- what am I missing for this job
+- resume job match
+- audit my resume
+
+## Problem
+
+A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.
+
+## Inputs
+
+Candidate-supplied resume or background plus the target job description. Optional skills, achievements and company context.
+
+## Outputs
+
+Strongest proof anchors, job-fit evidence, generic or unsupported claims, missing evidence, highest-impact edits and a truthful rewritten summary.
+
+## Commercial truth
+
+- Pricing: Free core is available. No premium machine-lane price is approved yet.
+- Human UI required: no
+- Confirmation: No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.
+- Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

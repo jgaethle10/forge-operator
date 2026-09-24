@@ -23,5 +23,6 @@
     "not an emergency-response service",
     "private family, child, Care Circle, task, note, upload, location, and account data are not public"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

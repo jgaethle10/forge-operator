@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "site-survive-rapid-audit-v1",
+  "name": "Site-Survive Rapid Audit",
+  "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+  "intent_terms": [
+    "business outage plan",
+    "internet outage continuity",
+    "site resilience audit",
+    "offline operations plan"
+  ],
+  "inputs": "Site/business context, critical workflows and a realistic outage scenario.",
+  "outputs": "One-site continuity map with the three largest failure points and a prioritized action plan.",
+  "commercial_state": "sell_now",
+  "machine_state": "human_handoff_ready",
+  "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
+  "offers": [
+    {
+      "name": "Site-Survive Rapid Audit",
+      "price": "$250",
+      "billing": "one_time",
+      "checkout": "human_handoff"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "Explicit buyer confirmation is required before payment or paid work.",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
+  "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed.",
+  "catalog_version": "2026-09-23",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/site-survive-rapid-audit-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/site-survive-rapid-audit-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/site-survive-rapid-audit-v1/index.html"
+  }
+}

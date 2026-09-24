@@ -1,7 +1,7 @@
 # Evercraft Deck Capital Fit
 
 Product key: deck-capital-fit
-Canonical product: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Canonical product/discovery surface: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
 Official MCP Registry: io.github.jgaethle10/deck-capital-fit
 Remote MCP: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json

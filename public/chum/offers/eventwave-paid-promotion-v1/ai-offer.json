@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "eventwave-paid-promotion-v1",
+  "name": "EventWave Event / Venue Promotion",
+  "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+  "intent_terms": [
+    "promote my event on EventWave",
+    "promote my local event",
+    "help people find my event",
+    "advertise my event",
+    "promote an event",
+    "boost event visibility",
+    "boost this event",
+    "feature my venue on EventWave",
+    "promote my venue",
+    "buy event promotion",
+    "promote this venue's events"
+  ],
+  "inputs": "Choose Event Boost or Venue Pack, provide contact email and the relevant public event or venue identifiers/URL.",
+  "outputs": "Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
+  "offers": [
+    {
+      "name": "Event Boost",
+      "price": "$49",
+      "billing": "one_time"
+    },
+    {
+      "name": "Venue Pack",
+      "price": "$149",
+      "billing": "one_time"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.",
+  "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+  "payment_authority": "Evercraft Payments with provider verification",
+  "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
+  "catalog_version": "2026-09-23.12",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/eventwave-paid-promotion-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/eventwave-paid-promotion-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/eventwave-paid-promotion-v1/index.html"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "website-launch-service-v1",
+  "name": "Evercraft Website Launch Service",
+  "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+  "intent_terms": [
+    "build me a business website",
+    "launch a website for my company",
+    "replace my bad website",
+    "make me a professional business site",
+    "handle my website for me"
+  ],
+  "inputs": "Choose one verified service tier and provide customer name/email, business name and a useful project brief. Current website and phone are optional.",
+  "outputs": "A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+  "offers": [
+    {
+      "name": "Human-Finished Pro Site",
+      "price": "$500",
+      "billing": "one_time"
+    },
+    {
+      "name": "Premium Custom Build",
+      "price": "$999",
+      "billing": "one_time"
+    },
+    {
+      "name": "Total Business Launch",
+      "price": "$1,999",
+      "billing": "one_time"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
+  "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+  "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
+  "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
+  "catalog_version": "2026-09-23.13",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/website-launch-service-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/website-launch-service-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/website-launch-service-v1/index.html"
+  }
+}

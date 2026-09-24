@@ -19,6 +19,7 @@
     "not guaranteed geographic coverage or emergency backhaul",
     "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
   ],
+  "commercial": null,
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

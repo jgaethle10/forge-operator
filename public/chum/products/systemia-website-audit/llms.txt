@@ -1,7 +1,7 @@
 # Systemia Website Audit
 
 Product key: systemia-website-audit
-Canonical product: https://systemia-audit-pro.base44.app/
+Canonical product/discovery surface: https://systemia-audit-pro.base44.app/
 Official MCP Registry: io.github.jgaethle10/systemia-website-audit
 Remote MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json

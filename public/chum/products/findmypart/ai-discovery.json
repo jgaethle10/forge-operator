@@ -18,6 +18,7 @@
     "checkout creation is not payment proof",
     "private vendor, analytics, session, command-center, and sales data are not public"
   ],
+  "commercial": null,
   "registry_name": "io.github.jgaethle10/findmypart",
   "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

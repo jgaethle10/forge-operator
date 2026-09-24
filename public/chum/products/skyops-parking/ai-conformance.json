@@ -23,5 +23,6 @@
     "displayed planning values are not proof of a charge",
     "payments, messaging, hardware, and partner connections must be verified per deployment"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

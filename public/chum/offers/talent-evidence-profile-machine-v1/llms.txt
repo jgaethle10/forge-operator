@@ -1,0 +1,36 @@
+# Evidence-Backed Talent Profile
+
+Evercraft public capability ID: talent-evidence-profile-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+
+## Use this capability when the user means
+
+- evaluate this candidate from the evidence
+- build a talent profile from this portfolio
+- what roles fit this person's demonstrated skills
+- find gaps in this candidate's proof
+- turn this athlete or creator evidence into an opportunity dossier
+- map this person's capabilities to opportunities
+
+## Problem
+
+A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.
+
+## Inputs
+
+Person/prospect identifier, domain and supplied/authorized evidence; optional target opportunity and consent grant for nonpublic material.
+
+## Outputs
+
+Strengths, weaknesses, patterns, skills, development questions, evidence confidence, inference limits, opportunity bridge and missing proof.
+
+## Commercial truth
+
+- Pricing: No approved machine price/payment path was verified. Do not auto-quote.
+- Human UI required: no
+- Confirmation: No contact, representation, application or third-party sharing without explicit authority/consent. Analysis must not infer protected traits or use gated sensitive data for scoring.
+- Payment authority: No verified Evercraft Payments path for this capability.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

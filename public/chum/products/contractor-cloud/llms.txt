@@ -1,7 +1,7 @@
 # Evercraft Contractor Cloud
 
 Product key: contractor-cloud
-Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+Canonical product/discovery surface: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json
 

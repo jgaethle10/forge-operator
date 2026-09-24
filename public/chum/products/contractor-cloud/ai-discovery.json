@@ -20,6 +20,7 @@
     "the previously advertised Contractor Cloud product hostname is not currently live-verified",
     "do not imply a live transactional Contractor Cloud UI until a fresh external canary passes"
   ],
+  "commercial": null,
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
