@@ -55,3 +55,8 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+
+## Wide-open discovery rule
+
+A legitimate public Evercraft capability must never rely on brand recognition alone. CHUM keeps a pain-first machine index, crawler-readable text index, registry metadata and conformance receipts so an outside model can start from the user's problem and reach the smallest truthful capability surface. Sellable capabilities without pain-language fail the CHUM index test. Held or discovery-only capabilities remain visible but may not borrow stronger invocation, payment or provider-pickup evidence.
