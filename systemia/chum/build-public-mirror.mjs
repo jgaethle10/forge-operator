@@ -155,6 +155,8 @@ for (const product of directory.products || []) {
   fs.mkdirSync(dir, { recursive: true });
   const canonicalUrl = safePublicUrl(product.canonical_url, base + '/index.html');
   const specialistMcp = safePublicUrl(registry?.mcp, null);
+  const declaredRegistryName = registry?.registry_name || conf?.mcp_registry?.name || null;
+  const registryPublication = registryPublicationState(key, declaredRegistryName);
 
   const discovery = {
     schema: 'evercraft.chum.product-discovery.v1',
@@ -168,7 +170,9 @@ for (const product of directory.products || []) {
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
     commercial: product.commercial || null,
-    registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
+    registry_name: registryPublication.registry_name,
+    declared_registry_name: registryPublication.declared_registry_name,
+    registry_publication_state: registryPublication.state,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
     source: 'CHUM public mirror',
@@ -191,6 +195,8 @@ for (const product of directory.products || []) {
     llms_url: discovery.mirror.llms,
     discovery_url: discovery.mirror.discovery,
     registry_name: discovery.registry_name,
+    declared_registry_name: discovery.declared_registry_name,
+    registry_publication_state: discovery.registry_publication_state,
     mcp: discovery.mcp,
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
