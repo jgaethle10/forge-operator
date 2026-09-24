@@ -20,6 +20,8 @@ const index = {
   updated_at: directory.updated_at || null,
   purpose: 'Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.',
   universal_mcp: catalog.universal_front_door?.mcp || null,
+  a2a_agent_card: '/.well-known/agent-card.json',
+  universal_a2a: '/a2a',
   products: []
 };
 
@@ -138,6 +140,8 @@ const llmsLines = [
   '## Universal routing',
   '',
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
+  'A2A 1.0 Agent Card: /.well-known/agent-card.json',
+  'A2A pain router: POST /a2a using JSON-RPC SendMessage',
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
@@ -230,6 +234,9 @@ const agentDirectory = {
     name: 'Evercraft Machine Commerce',
     registry_name: catalog.universal_front_door?.registry_name || null,
     mcp: universalMcp,
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a: '/a2a',
+    a2a_protocol: '1.0',
     use_when: 'The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits.'
   },
   routing_policy: {
@@ -247,7 +254,7 @@ const agentDirectory = {
 fs.writeFileSync('public/.well-known/evercraft-agent-directory.json', JSON.stringify(agentDirectory, null, 2) + '\n');
 
 const discoveryWatershed = {
-  schema: 'evercraft.discovery-watershed.v2',
+  schema: 'evercraft.discovery-watershed.v3',
   provider: 'Evercraft LLC',
   coordinator: 'CHUM',
   updated_at: directory.updated_at || null,
@@ -262,11 +269,23 @@ const discoveryWatershed = {
     chum: '/.well-known/evercraft-chum.json',
     chum_public_mirror: '/chum/index.json',
     schema: '/schema.jsonld',
-    openapi: '/openapi.json'
+    openapi: '/openapi.json',
+    sell_now_revenue: '/chum/revenue.json',
+    sell_now_revenue_text: '/chum/revenue.txt',
+    intent_router: '/api/discover?q={natural-language-problem}',
+    revenue_router: '/api/revenue-watershed',
+    chum_manifest: '/.well-known/evercraft-chum.json',
+    revenue_watershed: '/chum/revenue.json',
+    revenue_watershed_text: '/chum/revenue.txt',
+    revenue_watershed_html: '/chum/revenue.html',
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a_endpoint: '/a2a'
   },
   universal_front_door: {
     registry_name: catalog.universal_front_door?.registry_name || null,
-    mcp: universalMcp
+    mcp: universalMcp,
+    a2a: '/a2a',
+    a2a_protocol: '1.0'
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',
@@ -275,8 +294,13 @@ const discoveryWatershed = {
     checkout_ready: 'An exact current checkout rail exists for that offer.',
     paid: 'Authoritative provider payment verification exists.'
   },
-  routing_rule: 'Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
-  private_surfaces: 'not advertised'
+  routing_rule: 'Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  private_surfaces: 'not advertised',
+  freshness_broadcast: {
+    coordinator: 'CHUM',
+    mechanism: 'IndexNow',
+    semantics: 'Healthy public capability pages are announced for freshness. Submission is not proof of indexing, recommendation, citation or conversion.'
+  }
 };
 fs.writeFileSync('public/.well-known/evercraft-discovery.json', JSON.stringify(discoveryWatershed, null, 2) + '\n');
 fs.writeFileSync('public/ai-discovery.json', JSON.stringify(discoveryWatershed, null, 2) + '\n');
