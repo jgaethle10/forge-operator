@@ -39,7 +39,8 @@
     "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
     "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "discovery_router": "/api/discover?q={natural-language-problem}",
+    "handoff_attribution": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json"
   },
   "freshness_broadcast": {
     "mechanism": "IndexNow",
@@ -67,7 +68,10 @@
     "registry_presence": "Official MCP Registry plus external MCP handshake canaries",
     "freshness_broadcast": "receipt-backed IndexNow submission after public-surface preflight",
     "provider_pickup": "receipt-backed brand-blind provider probes through authorized interfaces",
-    "conversion": "AI-originated attribution only after human-confirmed commercial flow"
+    "conversion": "AI-originated attribution only after human-confirmed commercial flow",
+    "handoff_attribution": "signed CHUM referrals plus public landing/checkout-start receipts",
+    "verified_revenue": "trusted payment-authority receipt only",
+    "provider_identity": "caller-asserted in referrals unless separately verified by a provider receipt"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
@@ -77,7 +81,9 @@
     "no external message, purchase, subscription, upload, or payment action during discovery probes",
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
-    "paid state requires authoritative provider verification"
+    "paid state requires authoritative provider verification",
+    "caller-supplied provider identity is not provider pickup proof",
+    "public attribution callers cannot assert verified payment or revenue"
   ],
   "routing_doctrine": {
     "pain_first": true,
