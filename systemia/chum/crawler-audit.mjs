@@ -65,10 +65,40 @@ const crawlerProfiles = [
     robots_token: 'PerplexityBot',
     user_agent: 'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)',
     lane: 'search'
+  },
+  {
+    provider: 'apple_search_and_ai_context',
+    robots_token: 'Applebot',
+    user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15 (Applebot/0.1; +http://www.apple.com/go/applebot)',
+    lane: 'search'
+  },
+  {
+    provider: 'apple_foundation_model_policy',
+    robots_token: 'Applebot-Extended',
+    user_agent: null,
+    lane: 'robots_policy_only'
+  },
+  {
+    provider: 'google_vertex_agent_crawl',
+    robots_token: 'Google-CloudVertexBot',
+    user_agent: 'Google-CloudVertexBot',
+    lane: 'agent_crawl'
+  },
+  {
+    provider: 'google_agent_user_fetch',
+    robots_token: 'Google-Agent',
+    user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko; compatible; Google-Agent; +https://developers.google.com/crawling/docs/crawlers-fetchers/google-agent) Chrome/140.0.0.0 Safari/537.36',
+    lane: 'user_fetch'
+  },
+  {
+    provider: 'gemini_notebook_user_fetch',
+    robots_token: 'Google-GeminiNotebook',
+    user_agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 (compatible; Google-GeminiNotebook; +https://developers.google.com/crawling/docs/crawlers-fetchers/google-gemininotebook)',
+    lane: 'user_fetch'
   }
 ];
 
-async function fetchText(url, userAgent = 'Evercraft-CHUM-CrawlerAudit/0.3') {
+async function fetchText(url, userAgent = 'Evercraft-CHUM-CrawlerAudit/0.4') {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -207,7 +237,7 @@ async function inspectProduct(product) {
     };
   }));
 
-  const searchProfiles = crawlers.filter((c) => c.lane === 'search' || c.lane === 'user_fetch');
+  const searchProfiles = crawlers.filter((c) => ['search','user_fetch','agent_crawl'].includes(c.lane));
   const blocked = searchProfiles.filter((c) => c.robots_allowed === false || (c.live.checked && c.live.ok === false));
 
   return {
@@ -237,7 +267,7 @@ for (let i = 0; i < sourceProducts.length; i += PRODUCT_CONCURRENCY) {
 
 const blockedRows = products.flatMap((product) =>
   product.crawlers
-    .filter((crawler) => (crawler.lane === 'search' || crawler.lane === 'user_fetch') &&
+    .filter((crawler) => ['search','user_fetch','agent_crawl'].includes(crawler.lane) &&
       (crawler.robots_allowed === false || (crawler.live.checked && crawler.live.ok === false)))
     .map((crawler) => ({
       product_key: product.product_key,
