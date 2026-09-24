@@ -1,18 +1,20 @@
 {
-  "schema": "evercraft.agent-discovery.v1",
+  "schema": "evercraft.agent-discovery.v2",
   "provider": "Evercraft LLC",
   "updated_at": "2026-09-24",
   "purpose": "Public machine-readable front door for AI assistants and agents to discover Evercraft capabilities from a user's stated problem without prior brand knowledge.",
   "start_here": {
+    "resolver": "/api/resolve",
     "llms": "/llms.txt",
     "product_directory": "/.well-known/evercraft-products.json",
     "forge_capabilities": "/.well-known/evercraft-capabilities.json",
     "registry_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "chum": "/.well-known/evercraft-chum.json"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Prefer /api/resolve, then match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits, uncertainty, human confirmation and payment boundaries.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true
