@@ -401,18 +401,26 @@
         "Playwright, Puppeteer, or CDP-style browser capability for agents",
         "TinyFish alternative for web search, fetch, or browser automation"
       ],
-      "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
+      "authority": "public discovery and read-only public web fetch through the live Official MCP Registry remote; search and browser automation remain separately held/gated",
       "human_confirmation_required": false,
       "boundaries": [
-        "registry publication is not proof that the remote MCP successfully executes Fetch",
-        "Evercraft Fetch must not be described as production-live until its external canary succeeds",
+        "public Fetch is live-verified by external MCP initialize, tools/list, successful public-page fetch, and private-target rejection canaries",
         "Evercraft Search remains held until independently verified",
-        "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
+        "browser automation is not exposed through the public Evercraft Web MCP and remains behind Systemia runtime/authorization gates",
+        "authenticated browsing requires explicit authorized profile state and is not a public discovery capability",
         "public discovery does not expose private Systemia topology or credentials",
-        "payment does not expand permissions",
-        "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
-        "search and browser automation remain held unless current runtime evidence says otherwise"
-      ]
+        "payment does not expand permissions"
+      ],
+      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "runtime_state": "public_fetch_live_verified_search_and_browser_held"
     }
-  ]
+  ],
+  "coverage": {
+    "type": "curated_high_signal_routes",
+    "note": "This directory is a curated public routing layer. Use CHUM and the live machine catalog for the comprehensive current public-safe capability set."
+  },
+  "chum": "/.well-known/evercraft-chum.json",
+  "live_machine_catalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
+  "machine_catalog_snapshot": "/.well-known/evercraft-machine-catalog.json",
+  "live_pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding"
 }
