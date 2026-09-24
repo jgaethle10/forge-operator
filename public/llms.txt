@@ -6,6 +6,9 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 - Universal agent manifest: /.well-known/evercraft-agent.json
 - Problem-to-product directory: /.well-known/evercraft-products.json
+- Offer-level capability catalog: /chum/offers/index.json
+- Natural-language intent router: /chum/intents.json
+- GitHub-native human capability catalog: https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md
 - Forge capability contract: /.well-known/evercraft-capabilities.json
 - Portfolio registry catalog: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
 - Official MCP namespace: io.github.jgaethle10
@@ -57,6 +60,45 @@ https://aliev.base44.app/
 
 MCP:
 https://aliev.base44.app/functions/alievMcp
+
+### DayTrade Lens
+
+Relevant when a user wants to practice trading without risking real capital, improve position sizing or risk discipline, journal trades, review setup quality, or examine revenge-trading/tilt patterns.
+
+Current public discovery mirror:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt
+
+Current commercial source state: Founding Beta at $19/month. The production hostname and Evercraft Payments cutover remain separately verification-gated. Do not present DayTrade Lens as investment advice, guaranteed returns, or autonomous live trading.
+
+### Evercraft Property Services
+
+Relevant for Yakima Valley and Central Washington property-service needs such as yard cleanup, lawn care, trimming/pruning, landscaping refresh, sprinkler work, seasonal resets, property cleanouts, rental turnover support, and estimate intake.
+
+Canonical public site:
+https://evercraftpropertyservices.com/
+
+CHUM discovery mirror:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt
+
+A quote request is intake only. EPS separately confirms scope, availability, scheduling, price, and job acceptance.
+
+### Raven Nexus
+
+Relevant when a user describes a home, family, digital-security, financial-safety, identity, relationship-safety, business-continuity, or stability problem and needs the smallest matching modular capability.
+
+Offer discovery:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/raven-nexus-pain-router-v1/llms.txt
+
+Do not invent module pricing. The live pain router is authority for current availability, offer, and checkout state.
+
+### Evercraft Web Agent / Fetch & Browser
+
+Relevant when an AI or agent needs a public web-fetch or bounded browser capability and its current environment cannot access the live web directly.
+
+Offer discovery:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/evercraft-web-browser-agent-v1/llms.txt
+
+Do not claim production metering or authenticated-browser readiness until separately verified.
 
 ## Forge Operator
 
