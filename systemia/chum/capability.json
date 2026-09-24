@@ -15,7 +15,10 @@
       "Official MCP Registry",
       "public capability endpoints",
       "robots.txt policies",
-      "authorized provider-probe bridge receipts"
+      "authorized provider-probe bridge receipts",
+      "systemia/chum/crawler-policy.json",
+      "public/openapi.json",
+      "public/llms-full.txt"
     ],
     "outputs": [
       "surface-readiness receipts",
@@ -24,7 +27,10 @@
       "repair queue",
       "provider signal plan",
       "receipt-backed provider pickup state",
-      "AI-originated conversion attribution inputs"
+      "AI-originated conversion attribution inputs",
+      "crawler-policy conformance receipts",
+      "OpenAPI machine contract",
+      "coherent runtime discovery graph"
     ]
   },
   "permissions": {
@@ -61,7 +67,9 @@
       "Googlebot",
       "Google-Extended",
       "bingbot",
-      "PerplexityBot"
+      "PerplexityBot",
+      "ChatGPT-User",
+      "Perplexity-User"
     ]
   },
   "rollback": {
