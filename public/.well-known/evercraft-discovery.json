@@ -15,7 +15,13 @@
     "forge": "/.well-known/evercraft-capabilities.json",
     "media_overflow": "/.well-known/evercraft-media-overflow.json",
     "chum": "/.well-known/evercraft-chum.json",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "llms_full": "/llms-full.txt",
+    "agent_front_door": "/.well-known/evercraft-agent.json",
+    "agent_interfaces": "/.well-known/evercraft-agent-interfaces.json",
+    "runtime_discovery": "/api/discovery",
+    "robots": "/robots.txt",
+    "sitemap": "/sitemap.xml"
   },
   "registry": {
     "namespace": "io.github.jgaethle10",
