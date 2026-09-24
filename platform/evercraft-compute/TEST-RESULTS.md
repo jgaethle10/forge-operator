@@ -44,3 +44,38 @@ Wire NodeSeed offers into the Systemia Compute capacity pipeline:
 `NodeSeed/Network -> ComputeSharePolicy -> ComputeCapacityOffer -> ComputeCapacityRequest -> MatchReceipt -> Lease -> SabanWorkCell -> Checkpoint/Rebind`
 
 A host may advertise `linux_runtime` when proven, but `ephemeral_workspace` must be independently attested before Saban coding cells may execute.
+
+
+## Provider-neutral policy-core tests
+
+The Base44-specific scheduler logic was extracted into `lib/compute-fabric.mjs` and validated independently with Node.
+
+Result: **PASS**
+
+Covered checks:
+- safe CPU/RAM/storage headroom calculation
+- memory ceiling precedence over nominal max allocation
+- NodeSeed workspace attestation gate
+- `linux_runtime` does not automatically imply `ephemeral_workspace`
+- tenant-isolation contract
+- outbound-only network policy
+- no-peer-discovery requirement
+- internet-egress denial
+- zero-spend default
+- conservative capacity-offer occupancy / overbooking guard
+- preferred backing-class selection
+- 10,000 logical workers -> 1,000 ten-agent work cells
+- logical ceiling rejects 10,001 workers
+
+Test output:
+```json
+{
+  "status": "PASS",
+  "tests": 13,
+  "logical_10k_cell_count": 1000,
+  "parallel_cells_admitted": 250,
+  "overbooking_guard": "PASS",
+  "workspace_attestation_gate": "PASS",
+  "network_policy_gate": "PASS"
+}
+```
