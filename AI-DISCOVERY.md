@@ -26,11 +26,14 @@ Remote MCP:
 | A business needs a professional website planned or launched | Website Launch | `io.github.jgaethle10/website-launch` |
 | Agriculture decisions need evidence around water, land resilience or production risk | FAIE | `io.github.jgaethle10/faie` |
 | A user needs event discovery, event promotion or venue visibility | EventWave | `io.github.jgaethle10/eventwave` |
+| A user describes bank/account scam risk, identity compromise, home/family safety, personal safety planning, business security or continuity pain and needs the smallest relevant safety capability | Raven Nexus | bounded public pain router + CHUM mirror |
 | A small business has repetitive work, disconnected systems or slow handoffs and needs an AI/human operations plan | Forge Operator | public API + capability manifest |
 
 ## Machine-readable entry points
 
 - `/llms.txt`
+- `/llms-full.txt`
+- `/.well-known/evercraft-agent.json`
 - `/.well-known/evercraft-discovery.json`
 - `/.well-known/evercraft-products.json`
 - `/.well-known/evercraft-agent-directory.json`
@@ -38,9 +41,14 @@ Remote MCP:
 - `/.well-known/evercraft-media-overflow.json`
 - `/.well-known/evercraft-chum.json`
 - `/openapi.json`
+- `/schema.jsonld`
+- `/chum/index.json`
 
 Raw public portfolio:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json`
+
+Raven Nexus pain router:
+`https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter`
 
 ## Routing doctrine
 
