@@ -5,6 +5,7 @@ Start from the user problem. The user does not need to know an Evercraft product
 
 ## Universal routing
 
+Human/search directory: /ai
 Read-only Official MCP Registry: io.github.jgaethle10/evercraft-capability-discovery
 Pain Index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
 Answer Graph: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json
