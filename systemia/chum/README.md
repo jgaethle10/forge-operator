@@ -44,16 +44,11 @@ Broadcast facts. Keep legitimate public doors open. Measure whether models actua
 
 ## AI-originated conversion attribution
 
-CHUM can issue a signed, privacy-minimized referral token for a known public Evercraft offer. Raw user intent is not embedded in the token; when intent is supplied, only a SHA-256 digest is carried.
+CHUM issues signed, privacy-minimized referral tokens for known public Evercraft offers. Raw user intent is not embedded in the token. When intent is supplied, only a SHA-256 digest is carried.
 
-Public callers may record only:
+Public callers may record only `landing` and `checkout_started`. Neither state counts as revenue.
 
-- `landing`
-- `checkout_started`
-
-Neither state counts as revenue.
-
-`payment_verified` and `fulfilled` are trusted-backend states. A verified payment event requires a payment authority, provider verification reference, amount and currency. The trusted ingestion path is intentionally omitted from the public machine manifest and must be configured separately.
+`payment_verified` and `fulfilled` are trusted-backend states. Verified payment requires a payment authority, provider verification reference, amount and currency. Trusted ingestion is intentionally omitted from the public machine manifest.
 
 Runtime configuration:
 
@@ -64,10 +59,6 @@ CHUM_ATTRIBUTION_SINK_TOKEN=<optional sink bearer token>
 CHUM_ATTRIBUTION_INGEST_TOKEN=<trusted payment receipt ingest token>
 ```
 
-If the receipt sink is not configured, public events may be validated but are explicitly reported as not durably persisted. Trusted payment ingestion fails closed without a sink.
+Without a durable receipt sink, public events are explicitly reported as not persisted and trusted payment ingestion fails closed.
 
-Run the invariant tests with:
-
-```bash
-npm run test:chum-attribution
-```
+Run `npm run test:chum-attribution` to verify the attribution boundary.
