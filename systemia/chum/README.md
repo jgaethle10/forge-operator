@@ -41,3 +41,21 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+## Public watershed v0.2
+
+CHUM also owns the inbound discovery path:
+
+`crawler/search/LLM -> /ai or llms.txt -> agent discovery manifest -> /api/discover -> public capability -> MCP/HTTP/human handoff -> verified commerce`
+
+The resolver is deterministic. It does not spend model tokens to decide which Evercraft product fits a pain query.
+
+Public runtime surfaces:
+- `/ai` searchable human-readable portfolio
+- `/ai/products/{product_key}` crawlable pain-specific pages
+- `/.well-known/evercraft-agent-discovery.json` unified agent map
+- `/api/discover?q=...` deterministic pain-to-capability routing
+- `/sitemap.xml` absolute runtime URLs
+- `/robots.txt` explicit AI/search crawler access
+
+GitHub remains a source-visible fallback. Runtime availability and provider pickup still require independent receipts.
