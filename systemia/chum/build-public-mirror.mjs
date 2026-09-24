@@ -11,6 +11,8 @@ const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key 
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
 const providers = conformance.baseline_providers || [];
 const root = 'public/chum/products';
+const offerRoot = 'public/chum/offers';
+const githubRawChumRoot = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum';
 
 
 function escapeHtml(value) {
@@ -33,6 +35,14 @@ function escapeXml(value) {
   }[ch]));
 }
 
+function cleanKey(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function pageDescription(product) {
   const intents = Array.isArray(product.intents) ? product.intents.filter(Boolean) : [];
   const lead = intents.slice(0, 3).join('; ');
@@ -42,15 +52,25 @@ function pageDescription(product) {
 }
 
 fs.rmSync(root, { recursive: true, force: true });
+fs.rmSync(offerRoot, { recursive: true, force: true });
 fs.mkdirSync(root, { recursive: true });
+fs.mkdirSync(offerRoot, { recursive: true });
 
 const index = {
-  schema: 'evercraft.chum.public-mirror.v1',
+  schema: 'evercraft.chum.public-mirror.v2',
   provider: 'Evercraft LLC',
-  updated_at: directory.updated_at || null,
-  purpose: 'Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.',
+  coordinator: 'CHUM',
+  updated_at: directory.updated_at || machineCatalog.generated_at || null,
+  purpose: 'Public product and offer discovery mirrors generated from approved Evercraft contracts. Mirrors preserve discovery when a product host cannot reliably serve machine files.',
   universal_mcp: catalog.universal_front_door?.mcp || null,
-  products: []
+  products: [],
+  offers: [],
+  indexes: {
+    product_index: `${githubRawChumRoot}/index.json`,
+    offer_index: `${githubRawChumRoot}/offers/index.json`,
+    pain_intent_index: `${githubRawChumRoot}/intents.json`,
+    capability_catalog: 'https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md'
+  }
 };
 
 for (const product of directory.products || []) {
@@ -214,6 +234,250 @@ for (const product of directory.products || []) {
   });
 }
 
+
+const intentRows = [];
+for (const offer of machineCatalog.offers || []) {
+  const key = cleanKey(offer.public_id);
+  if (!key || !offer.name) continue;
+
+  const dir = path.join(offerRoot, key);
+  const base = `${githubRawChumRoot}/offers/${key}`;
+  const pageUrl = `/chum/offers/${key}/`;
+  fs.mkdirSync(dir, { recursive: true });
+
+  const publicOffer = {
+    schema: 'evercraft.chum.offer-discovery.v1',
+    provider: 'Evercraft LLC',
+    public_id: String(offer.public_id || ''),
+    name: String(offer.name || ''),
+    problem: String(offer.problem || ''),
+    intent_terms: Array.isArray(offer.intent_terms) ? offer.intent_terms.map(String) : [],
+    inputs: String(offer.inputs || ''),
+    outputs: String(offer.outputs || ''),
+    commercial_state: String(offer.commercial_state || ''),
+    machine_state: String(offer.machine_state || ''),
+    pricing: String(offer.pricing || ''),
+    offers: Array.isArray(offer.offers) ? offer.offers : [],
+    human_ui_required: Boolean(offer.human_ui_required),
+    confirmation: String(offer.confirmation || ''),
+    public_url: String(offer.public_url || ''),
+    payment_authority: String(offer.payment_authority || ''),
+    invocation_status: String(offer.invocation_status || ''),
+    catalog_version: String(offer.catalog_version || ''),
+    discovery_creates_payment_obligation: false,
+    checkout_is_payment_proof: false,
+    authoritative_payment_verification_required: true,
+    private_topology_exposed: false,
+    mirror: {
+      llms: `${base}/llms.txt`,
+      offer: `${base}/ai-offer.json`,
+      page: pageUrl
+    }
+  };
+
+  const offerLlms = [
+    `# ${publicOffer.name}`,
+    '',
+    `Evercraft public capability ID: ${publicOffer.public_id}`,
+    `Commercial state: ${publicOffer.commercial_state || 'unspecified'}`,
+    `Machine state: ${publicOffer.machine_state || 'unspecified'}`,
+    publicOffer.public_url ? `Public handoff: ${publicOffer.public_url}` : 'Public handoff: not currently declared',
+    `Machine contract: ${publicOffer.mirror.offer}`,
+    '',
+    '## Use this when',
+    '',
+    ...publicOffer.intent_terms.map((intent) => `- ${intent}`),
+    '',
+    publicOffer.problem ? '## Problem' : null,
+    publicOffer.problem ? '' : null,
+    publicOffer.problem || null,
+    '',
+    publicOffer.inputs ? '## Inputs' : null,
+    publicOffer.inputs ? '' : null,
+    publicOffer.inputs || null,
+    '',
+    publicOffer.outputs ? '## Outputs' : null,
+    publicOffer.outputs ? '' : null,
+    publicOffer.outputs || null,
+    '',
+    '## Commercial truth',
+    '',
+    `- Pricing: ${publicOffer.pricing || 'No approved public machine price declared.'}`,
+    `- Human UI required: ${publicOffer.human_ui_required ? 'yes' : 'no'}`,
+    `- Confirmation: ${publicOffer.confirmation || 'Follow the capability contract.'}`,
+    `- Payment authority: ${publicOffer.payment_authority || 'Authoritative payment verification is required before paid state.'}`,
+    '',
+    'Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.',
+    ''
+  ].filter((value) => value !== null).join('\n');
+
+  const offerJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: publicOffer.name,
+    description: publicOffer.problem || publicOffer.intent_terms.slice(0, 3).join('; '),
+    identifier: publicOffer.public_id,
+    provider: {
+      '@type': 'Organization',
+      name: 'Evercraft LLC',
+      url: 'https://github.com/jgaethle10/forge-operator'
+    },
+    url: publicOffer.public_url || pageUrl
+  };
+
+  const offerHtml = [
+    '<!doctype html>',
+    '<html lang="en"><head><meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    `<title>${escapeHtml(publicOffer.name)} | Evercraft capability</title>`,
+    `<meta name="description" content="${escapeHtml((publicOffer.problem || publicOffer.intent_terms[0] || publicOffer.name).slice(0, 220))}">`,
+    '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+    '<link rel="alternate" type="text/plain" href="./llms.txt">',
+    '<link rel="alternate" type="application/json" href="./ai-offer.json">',
+    `<script type="application/ld+json">${JSON.stringify(offerJsonLd).replace(/</g, '\\u003c')}</script>`,
+    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
+    '</head><body><main>',
+    '<p class="muted">EVERCRAFT · MACHINE-COMMERCE CAPABILITY</p>',
+    `<h1>${escapeHtml(publicOffer.name)}</h1>`,
+    `<p><code>${escapeHtml(publicOffer.public_id)}</code></p>`,
+    `<p>${escapeHtml(publicOffer.problem || 'Public Evercraft capability discovery surface.')}</p>`,
+    '<div class="card"><h2>Useful when</h2><ul>',
+    ...publicOffer.intent_terms.map((intent) => `<li>${escapeHtml(intent)}</li>`),
+    '</ul></div>',
+    '<div class="card"><h2>Commercial state</h2>',
+    `<p>${escapeHtml(publicOffer.commercial_state || 'unspecified')} · ${escapeHtml(publicOffer.machine_state || 'unspecified')}</p>`,
+    `<p><strong>Pricing:</strong> ${escapeHtml(publicOffer.pricing || 'No approved public machine price declared.')}</p>`,
+    publicOffer.public_url ? `<p><a href="${escapeHtml(publicOffer.public_url)}">Continue to the public Evercraft handoff</a></p>` : '<p>No public handoff URL is currently declared.</p>',
+    '</div>',
+    '<div class="card"><h2>Machine-readable doors</h2><ul>',
+    '<li><a href="./ai-offer.json">Capability JSON</a></li>',
+    '<li><a href="./llms.txt">LLM guide</a></li>',
+    '<li><a href="/chum/intents.json">Pain-intent index</a></li>',
+    '</ul></div>',
+    '<p class="muted">Discovery creates no payment obligation. Checkout creation is not payment proof. Paid state requires authoritative provider verification.</p>',
+    '</main></body></html>'
+  ].join('\n');
+
+  fs.writeFileSync(path.join(dir, 'ai-offer.json'), JSON.stringify(publicOffer, null, 2) + '\n');
+  fs.writeFileSync(path.join(dir, 'llms.txt'), offerLlms);
+  fs.writeFileSync(path.join(dir, 'index.html'), offerHtml + '\n');
+
+  const row = {
+    public_id: publicOffer.public_id,
+    name: publicOffer.name,
+    commercial_state: publicOffer.commercial_state,
+    machine_state: publicOffer.machine_state,
+    pricing: publicOffer.pricing,
+    public_url: publicOffer.public_url,
+    page_url: pageUrl,
+    llms_url: publicOffer.mirror.llms,
+    offer_url: publicOffer.mirror.offer,
+    intent_terms: publicOffer.intent_terms
+  };
+  index.offers.push(row);
+
+  for (const intent of publicOffer.intent_terms) {
+    intentRows.push({
+      intent,
+      normalized_intent: String(intent).toLowerCase(),
+      public_id: publicOffer.public_id,
+      name: publicOffer.name,
+      commercial_state: publicOffer.commercial_state,
+      machine_state: publicOffer.machine_state,
+      page_url: pageUrl,
+      offer_url: publicOffer.mirror.offer,
+      llms_url: publicOffer.mirror.llms,
+      public_url: publicOffer.public_url
+    });
+  }
+}
+
+index.offers.sort((a, b) => a.public_id.localeCompare(b.public_id));
+intentRows.sort((a, b) => a.normalized_intent.localeCompare(b.normalized_intent));
+
+const offerIndex = {
+  schema: 'evercraft.chum.offer-index.v1',
+  provider: 'Evercraft LLC',
+  coordinator: 'CHUM',
+  generated_from: '/.well-known/evercraft-machine-catalog.json',
+  offer_count: index.offers.length,
+  offers: index.offers
+};
+
+const intentIndex = {
+  schema: 'evercraft.chum.intent-router.v1',
+  provider: 'Evercraft LLC',
+  coordinator: 'CHUM',
+  rule: 'Match the user\'s actual pain to the smallest truthful capability. Discovery alone grants no execution or payment authority.',
+  intent_count: intentRows.length,
+  intents: intentRows
+};
+
+const offerDirectoryHtml = [
+  '<!doctype html>',
+  '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+  '<title>Evercraft AI Capability Catalog</title>',
+  '<meta name="description" content="Public Evercraft capability catalog for AI assistants, agents, search engines and humans.">',
+  '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+  '<link rel="alternate" type="application/json" href="./index.json">',
+  '<link rel="alternate" type="application/json" href="../intents.json">',
+  '</head><body><main>',
+  '<h1>Evercraft AI Capability Catalog</h1>',
+  '<p>CHUM maps natural-language problems to public Evercraft capabilities. Discovery creates no payment or execution authority.</p>',
+  '<ul>',
+  ...index.offers.map((offer) => `<li><a href="${escapeHtml(offer.page_url)}">${escapeHtml(offer.name)}</a> · ${escapeHtml(offer.commercial_state || 'unspecified')}</li>`),
+  '</ul>',
+  '</main></body></html>'
+].join('\n') + '\n';
+
+const capabilityCatalog = [
+  '# Evercraft AI Capability Catalog',
+  '',
+  'This is the public, GitHub-native CHUM catalog for AI assistants, agents, search systems, developers, and humans.',
+  '',
+  '**Routing rule:** start from the user\'s actual problem. Match the smallest truthful Evercraft capability. Discovery does not grant execution authority and creates no payment obligation.',
+  '',
+  `Current machine-commerce offers mirrored: **${index.offers.length}**`,
+  '',
+  '- Machine offer index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.json',
+  '- Natural-language pain index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents.json',
+  '- Product index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json',
+  '- Universal machine-commerce MCP: ' + (catalog.universal_front_door?.mcp || 'not declared'),
+  '',
+  '## Capabilities',
+  '',
+  ...index.offers.flatMap((offer) => [
+    `### ${offer.name}`,
+    '',
+    `- Public ID: \`${offer.public_id}\``,
+    `- Commercial state: ${offer.commercial_state || 'unspecified'}`,
+    `- Machine state: ${offer.machine_state || 'unspecified'}`,
+    `- Pricing: ${offer.pricing || 'No approved public machine price declared.'}`,
+    `- Machine contract: ${offer.offer_url}`,
+    `- LLM guide: ${offer.llms_url}`,
+    `- Public page: ${offer.page_url}`,
+    ...(offer.public_url ? [`- Public handoff: ${offer.public_url}`] : []),
+    '',
+    'User intents:',
+    ...(offer.intent_terms || []).map((intent) => `- ${intent}`),
+    ''
+  ]),
+  '## Boundaries',
+  '',
+  '- Public discovery does not mean a provider endorses Evercraft.',
+  '- Public discovery does not expose private/admin topology.',
+  '- Do not invent pricing, availability, authority, or payment state.',
+  '- Financial obligations require explicit human confirmation.',
+  '- Checkout creation is not payment proof.',
+  '- Paid state requires authoritative provider verification.',
+  ''
+].join('\n');
+
+fs.writeFileSync(path.join(offerRoot, 'index.json'), JSON.stringify(offerIndex, null, 2) + '\n');
+fs.writeFileSync(path.join(offerRoot, 'index.html'), offerDirectoryHtml);
+fs.writeFileSync('public/chum/intents.json', JSON.stringify(intentIndex, null, 2) + '\n');
+fs.writeFileSync('AI-CAPABILITY-CATALOG.md', capabilityCatalog + '\n');
+
 index.products.sort((a, b) => a.product_key.localeCompare(b.product_key));
 fs.mkdirSync('public/chum', { recursive: true });
 fs.writeFileSync('public/chum/index.json', JSON.stringify(index, null, 2) + '\n');
@@ -232,10 +496,12 @@ const publicIndexHtml = [
   '<p class="muted">EVERCRAFT · MACHINE DISTRIBUTION</p>',
   '<h1>CHUM</h1>',
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
-  '<p><a href="/llms-full.txt">LLM directory</a> · <a href="/.well-known/evercraft-products.json">Product JSON</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p><a href="/llms-full.txt">LLM directory</a> · <a href="/.well-known/evercraft-products.json">Product JSON</a> · <a href="/chum/offers/">All offer pages</a> · <a href="/chum/intents.json">Pain-intent JSON</a> · <a href="/chum/revenue.html">Current sell-now offers</a> · <a href="/openapi.json">OpenAPI</a></p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
   '</div>',
+  '<h2>Machine-commerce capability graph</h2>',
+  `<p><a href="/chum/offers/">Browse all ${index.offers.length} offer pages</a> · <a href="/chum/intents.json">Read the pain-intent index</a></p>`,
   '<p class="muted">Public discovery is deliberately open. Private/admin topology, secrets and customer data remain private. Discovery is not proof of provider pickup or payment.</p>',
   '</main></body></html>'
 ].join('\n');
@@ -245,6 +511,10 @@ const sitemapStatic = [
   '/',
   '/chum/',
   '/chum/index.json',
+  '/chum/offers/',
+  '/chum/offers/index.html',
+  '/chum/offers/index.json',
+  '/chum/intents.json',
   '/chum/revenue.html',
   '/chum/revenue.txt',
   '/chum/revenue.json',
@@ -272,7 +542,15 @@ const sitemapUrls = Array.from(new Set([
     `/chum/products/${product.product_key}/llms.txt`,
     `/chum/products/${product.product_key}/ai-discovery.json`,
     `/chum/products/${product.product_key}/ai-conformance.json`
-  ])
+  ]),
+  ...index.offers.flatMap((offer) => {
+    const key = cleanKey(offer.public_id);
+    return [
+      offer.page_url,
+      `/chum/offers/${key}/llms.txt`,
+      `/chum/offers/${key}/ai-offer.json`
+    ];
+  })
 ]));
 const sitemap = [
   '<?xml version="1.0" encoding="UTF-8"?>',
@@ -288,7 +566,14 @@ for (const product of index.products) {
   if (!fs.existsSync(pagePath)) throw new Error(`CHUM public page missing: ${pagePath}`);
   if (!sitemap.includes(product.page_url)) throw new Error(`CHUM sitemap missing: ${product.page_url}`);
 }
-console.log(JSON.stringify({ products: index.products.length, output: 'public/chum' }));
+for (const offer of index.offers) {
+  const key = cleanKey(offer.public_id);
+  const pagePath = path.join('public/chum/offers', key, 'index.html');
+  const contractPath = path.join('public/chum/offers', key, 'ai-offer.json');
+  if (!fs.existsSync(pagePath) || !fs.existsSync(contractPath)) throw new Error(`CHUM offer mirror missing: ${key}`);
+  if (!sitemap.includes(offer.page_url)) throw new Error(`CHUM offer sitemap missing: ${offer.page_url}`);
+}
+console.log(JSON.stringify({ products: index.products.length, offers: index.offers.length, intents: intentRows.length, output: 'public/chum' }));
 
 
 // CHUM_WATERSHED_COMPILER_V2
@@ -310,6 +595,9 @@ const llmsLines = [
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
+  `CHUM offer index: ${rawBase}/public/chum/offers/index.json`,
+  `CHUM pain-intent index: ${rawBase}/public/chum/intents.json`,
+  'GitHub capability catalog: https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md',
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
   '',
   'State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.',
@@ -464,6 +752,10 @@ const discoveryWatershed = {
     machine_catalog: '/.well-known/evercraft-machine-catalog.json',
     chum: '/.well-known/evercraft-chum.json',
     chum_public_mirror: '/chum/index.json',
+    offer_index: '/chum/offers/index.json',
+    offer_directory: '/chum/offers/',
+    pain_intent_index: '/chum/intents.json',
+    capability_catalog: 'https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md',
     revenue_watershed: '/chum/revenue.json',
     revenue_watershed_text: '/chum/revenue.txt',
     revenue_watershed_html: '/chum/revenue.html',

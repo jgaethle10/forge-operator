@@ -8,6 +8,10 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - CHUM pain-first routing index: /.well-known/evercraft-pain-index.json
 - CHUM pain-first text index: /chum/pain-index.txt
 - Problem-to-product directory: /.well-known/evercraft-products.json
+- Full machine-offer index: /chum/offers/index.json
+- Crawlable offer directory: /chum/offers/
+- Natural-language pain-intent index: /chum/intents.json
+- GitHub capability catalog: https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
 - Read-only natural-language router: GET /api/discover?q={problem}

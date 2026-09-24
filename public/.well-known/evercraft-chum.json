@@ -41,7 +41,11 @@
     "discovery_router": "/api/discover?q={natural-language-problem}",
     "pain_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
     "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
-    "handoff_attribution": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json"
+    "handoff_attribution": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json",
+    "offer_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.json",
+    "offer_directory": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/offers",
+    "pain_intent_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents.json",
+    "capability_catalog": "https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md"
   },
   "verified_crawler_controls": [
     {
@@ -55,6 +59,30 @@
       "token": "Google-Extended",
       "purpose": "Gemini training and Google Search grounding control; separate from ordinary Google Search inclusion",
       "evidence": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
+    },
+    {
+      "provider": "OpenAI",
+      "token": "ChatGPT-User",
+      "purpose": "User-triggered ChatGPT retrieval; separate from automatic Search crawling",
+      "evidence": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "Anthropic",
+      "token": "Claude-SearchBot",
+      "purpose": "Claude search indexing and result quality",
+      "evidence": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Anthropic",
+      "token": "Claude-User",
+      "purpose": "User-directed Claude web retrieval",
+      "evidence": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Perplexity",
+      "token": "PerplexityBot",
+      "purpose": "Perplexity search crawling",
+      "evidence": "https://www.perplexity.ai/hub/blog/architecting-and-evaluating-an-ai-first-search-api"
     }
   ],
   "measurement": {

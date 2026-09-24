@@ -34,6 +34,57 @@ jobs:
       - name: Typecheck and build
         run: npm run check
 
+      - name: Verify CHUM offer fanout
+        run: |
+          set -euo pipefail
+          npm run chum:mirror
+          node - <<'NODE'
+          const fs = require('fs');
+          const products = JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
+          const machine = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+          const index = JSON.parse(fs.readFileSync('public/chum/index.json','utf8'));
+          const offers = JSON.parse(fs.readFileSync('public/chum/offers/index.json','utf8'));
+          const intents = JSON.parse(fs.readFileSync('public/chum/intents.json','utf8'));
+          const expectedIntents = (machine.offers || []).reduce((n, offer) => n + (Array.isArray(offer.intent_terms) ? offer.intent_terms.length : 0), 0);
+          if ((index.products || []).length !== (products.products || []).length) throw new Error('CHUM product count drift');
+          if ((index.offers || []).length !== (machine.offers || []).length) throw new Error('CHUM offer count drift');
+          if (offers.offer_count !== (machine.offers || []).length) throw new Error('CHUM offer index drift');
+          if (intents.intent_count !== expectedIntents) throw new Error('CHUM pain-intent count drift');
+          if (!fs.existsSync('AI-CAPABILITY-CATALOG.md')) throw new Error('CHUM capability catalog missing');
+
+          const allowed = new Set([
+            'schema','provider','public_id','name','problem','intent_terms','inputs','outputs',
+            'commercial_state','machine_state','pricing','offers','human_ui_required','confirmation',
+            'public_url','payment_authority','invocation_status','catalog_version',
+            'discovery_creates_payment_obligation','checkout_is_payment_proof',
+            'authoritative_payment_verification_required','private_topology_exposed','mirror'
+          ]);
+          const cleanKey = (value) => String(value || '').trim().toLowerCase()
+            .replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+
+          for (const offer of machine.offers || []) {
+            const key = cleanKey(offer.public_id);
+            const contractPath = `public/chum/offers/${key}/ai-offer.json`;
+            const pagePath = `public/chum/offers/${key}/index.html`;
+            const llmsPath = `public/chum/offers/${key}/llms.txt`;
+            for (const p of [contractPath, pagePath, llmsPath]) {
+              if (!fs.existsSync(p)) throw new Error(`CHUM offer surface missing: ${p}`);
+            }
+            const contract = JSON.parse(fs.readFileSync(contractPath,'utf8'));
+            for (const field of Object.keys(contract)) {
+              if (!allowed.has(field)) throw new Error(`Non-public field leaked into ${contractPath}: ${field}`);
+            }
+            if (contract.private_topology_exposed !== false) throw new Error(`Private-topology boundary missing: ${contractPath}`);
+            if (contract.discovery_creates_payment_obligation !== false) throw new Error(`Discovery/payment boundary missing: ${contractPath}`);
+          }
+          console.log(JSON.stringify({
+            products: index.products.length,
+            offers: index.offers.length,
+            pain_intents: intents.intent_count,
+            public_field_allowlist: 'passed'
+          }));
+          NODE
+
       - name: Verify CHUM discovery doors
         run: |
           set -euo pipefail
