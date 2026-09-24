@@ -32,11 +32,11 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalo
 Full portfolio discovery:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt
 
-A2A Agent Card:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/agent-card.json
-
 Human-readable portfolio:
 https://github.com/jgaethle10/forge-operator/tree/main/registry
+
+Verified agent interfaces:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-interfaces.json
 
 Official MCP Registry namespace:
 io.github.jgaethle10
