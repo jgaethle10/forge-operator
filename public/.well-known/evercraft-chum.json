@@ -40,7 +40,9 @@
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
     "discovery_router": "/api/discover?q={natural-language-problem}",
     "pain_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
-    "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt"
+    "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
+    "failure_routes": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-failure-routes.json",
+    "failure_routes_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/failure-routes.txt"
   },
   "verified_crawler_controls": [
     {
@@ -61,7 +63,8 @@
     "registry_presence": "Official MCP Registry plus external MCP handshake canaries",
     "provider_pickup": "receipt-backed brand-blind provider probes through authorized interfaces",
     "conversion": "AI-originated attribution only after human-confirmed commercial flow",
-    "brand_blind_routing": "deterministic pain-index build plus receipt-backed provider probes"
+    "brand_blind_routing": "deterministic pain-index build plus receipt-backed provider probes",
+    "failure_state_routing": "catalog-backed AI exit routes with CI verification"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
@@ -81,6 +84,8 @@
     "routing_without_human_gate": true,
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
-    "irreversible_financial_or_authority_actions_require_human_confirmation": true
+    "irreversible_financial_or_authority_actions_require_human_confirmation": true,
+    "explicit_failure_state_exits": true,
+    "automatic_purchase_from_failure_route": false
   }
 }
