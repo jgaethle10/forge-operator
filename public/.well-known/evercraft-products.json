@@ -190,6 +190,27 @@
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
       ]
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "class": "local_business_rewards_and_partnerships",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-rewards",
+      "intents": [
+        "join a local rewards network",
+        "create a local business loyalty program",
+        "build cross-business rewards and referrals",
+        "find community business partnership opportunities",
+        "help customers discover participating Yakima businesses"
+      ],
+      "authority": "public discovery and reversible owner-confirmed enrollment preparation",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "prepared enrollment is not partner activation",
+        "discovery does not create a discount, offer, checkout, charge, payment obligation, or proof of revenue",
+        "business authority must be confirmed before downstream activation",
+        "private merchant, customer, transaction, wallet, analytics, and admin data are not public"
+      ]
     }
   ]
 }
