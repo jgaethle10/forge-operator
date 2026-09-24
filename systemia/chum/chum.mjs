@@ -46,6 +46,9 @@ const portfolioKeys = Array.from(new Set([
 const liveProviderProbe = fs.existsSync('artifacts/chum/provider-probe-latest.json')
   ? readJson('artifacts/chum/provider-probe-latest.json')
   : null;
+const distributionReceipt = fs.existsSync('artifacts/chum/distribution-latest.json')
+  ? readJson('artifacts/chum/distribution-latest.json')
+  : null;
 const liveProviderObservationsByKey = new Map();
 for (const result of liveProviderProbe?.results || []) {
   const key = result.product_key;
@@ -296,9 +299,17 @@ const receipt = {
     invalid_surfaces: invalid.length,
     machine_catalog_offers: machineOffers.length,
     machine_catalog_sell_now: machineOffers.filter((x) => x.commercial_state === 'sell_now').length,
-    machine_catalog_offers_needing_repair: machineCatalogRepair.length
+    machine_catalog_offers_needing_repair: machineCatalogRepair.length,
+    distribution_targets: Number(distributionReceipt?.summary?.targets || 0),
+    distribution_active: Number(distributionReceipt?.summary?.active || 0),
+    distribution_pending: Number(distributionReceipt?.summary?.pending || 0),
+    distribution_repair: Number(distributionReceipt?.summary?.repair || 0),
+    distribution_blocked: Number(distributionReceipt?.summary?.blocked || 0),
+    distribution_human_gates: Number(distributionReceipt?.summary?.human_gates || 0),
+    distribution_founder_attention_required: Boolean(distributionReceipt?.summary?.founder_attention_required)
   },
   provider_targets: providerTargets,
+  distribution: distributionReceipt,
   machine_catalog: {
     source: machineCatalog.source_url || null,
     snapshot_schema: machineCatalog.schema || null,
