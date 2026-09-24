@@ -9,6 +9,7 @@ const pass = (message) => console.log('PASS:', message);
 
 const registry = readJson('conformance/products.json');
 const binding = readJson('registry/evercraft-machine-commerce/conformance.json');
+const publicDirectory = readJson('public/.well-known/evercraft-products.json');
 
 const requiredProviders = ['chatgpt','claude','gemini','copilot','perplexity','grok','generic_agent'];
 
@@ -61,6 +62,20 @@ for (const rule of [
   else pass(`machine-commerce rule present: ${rule}`);
 }
 
+const publicKeys = new Set((publicDirectory.products || []).map(p => p.product_key));
+for (const key of keys) {
+  if (!publicKeys.has(key)) fail(`public product directory missing: ${key}`);
+  else pass(`public product directory includes: ${key}`);
+}
+
+for (const product of publicDirectory.products || []) {
+  if (!keys.has(product.product_key)) fail(`public directory contains unregistered product: ${product.product_key}`);
+  if (!Array.isArray(product.intents) || product.intents.length === 0) fail(`${product.product_key} has no natural-language intents`);
+  if (!String(product.canonical_url || '').startsWith('https://')) fail(`${product.product_key} public canonical URL is invalid`);
+  if (!product.authority) fail(`${product.product_key} missing machine authority statement`);
+  if (!Array.isArray(product.boundaries) || product.boundaries.length === 0) fail(`${product.product_key} missing machine boundaries`);
+}
+
 if (process.exitCode) throw new Error('AI conformance registry validation failed');
 
-console.log(`AI CONFORMANCE REGISTRY PASS: ${registry.products.length} products indexed`);
+console.log(`AI CONFORMANCE REGISTRY PASS: ${registry.products.length} products indexed and publicly routable`);
