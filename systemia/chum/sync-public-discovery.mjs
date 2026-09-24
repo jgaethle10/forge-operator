@@ -5,6 +5,9 @@ const LIVE_CATALOG_URL =
   process.env.EVERCRAFT_MACHINE_CATALOG_URL ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog';
 const OUTPUT = 'public/.well-known/evercraft-machine-catalog.json';
+const MACHINE_COMMERCE_GATEWAY_URL =
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
+  LIVE_CATALOG_URL.split('?', 1)[0];
 const TIMEOUT_MS = 20000;
 
 function stable(value) {
@@ -22,8 +25,13 @@ function semanticSnapshot(snapshot) {
 }
 
 function publicOffer(offer) {
+  const publicId = String(offer.public_id || '');
+  const sourcePublicUrl = String(offer.public_url || '').trim();
+  const fallbackPublicUrl = publicId
+    ? `${MACHINE_COMMERCE_GATEWAY_URL}?view=service&public_id=${encodeURIComponent(publicId)}`
+    : '';
   return {
-    public_id: String(offer.public_id || ''),
+    public_id: publicId,
     name: String(offer.name || ''),
     intent_terms: Array.isArray(offer.intent_terms) ? offer.intent_terms.map(String) : [],
     problem: String(offer.problem || ''),
@@ -35,7 +43,8 @@ function publicOffer(offer) {
     offers: Array.isArray(offer.offers) ? offer.offers : [],
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
-    public_url: String(offer.public_url || ''),
+    public_url: sourcePublicUrl || fallbackPublicUrl,
+    public_url_source: sourcePublicUrl ? 'source_catalog' : 'machine_commerce_review_fallback',
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: String(offer.invocation_status || ''),
     catalog_version: String(offer.catalog_version || '')
