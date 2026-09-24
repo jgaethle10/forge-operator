@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Website Launch",
+  "product_key": "website-launch",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
+  "registry_name": "io.github.jgaethle10/website-launch",
+  "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+  "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "scope depends on the selected service tier",
+    "checkout creation is not payment proof",
+    "fulfillment requires verified payment"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

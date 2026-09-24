@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Website Audit",
+  "product_key": "systemia-website-audit",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://systemia-audit-pro.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
+  "registry_name": "io.github.jgaethle10/systemia-website-audit",
+  "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+  "authority": "public audit offer discovery and human-confirmed paid checkout",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "audit findings do not guarantee revenue or rankings",
+    "checkout creation is not payment proof",
+    "paid state requires provider verification"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

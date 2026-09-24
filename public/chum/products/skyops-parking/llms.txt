@@ -1,0 +1,30 @@
+# SkyOps Parking
+
+Product key: skyops-parking
+Canonical product: https://skyops-parking.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-conformance.json
+
+## Use this capability when the user means
+
+- airport parking management software
+- parking garage reservation management
+- parking owner dashboard
+- multi-location parking operations software
+- valet-style vehicle staging and retrieval
+
+## Authority
+
+public product discovery and human-directed pilot or planning flows
+
+## Boundaries
+
+- planning is not a parking reservation
+- displayed planning values are not proof of a charge
+- payments, messaging, hardware, and partner connections must be verified per deployment
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

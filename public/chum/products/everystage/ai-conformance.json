@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "EveryStage",
+  "product_key": "everystage",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://every-stage.base44.app/product",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public product discovery and human-directed pilot intake",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "pilot intake is not a contract or accepted deployment",
+    "public plan pricing is not a binding quote unless confirmed by the current product flow",
+    "private event, participant, revenue, settlement, and admin data are not public"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

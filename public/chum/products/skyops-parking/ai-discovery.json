@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "skyops-parking",
+  "name": "SkyOps Parking",
+  "class": "parking_operations",
+  "canonical_url": "https://skyops-parking.base44.app/",
+  "intents": [
+    "airport parking management software",
+    "parking garage reservation management",
+    "parking owner dashboard",
+    "multi-location parking operations software",
+    "valet-style vehicle staging and retrieval"
+  ],
+  "authority": "public product discovery and human-directed pilot or planning flows",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "planning is not a parking reservation",
+    "displayed planning values are not proof of a charge",
+    "payments, messaging, hardware, and partner connections must be verified per deployment"
+  ],
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-conformance.json"
+  }
+}

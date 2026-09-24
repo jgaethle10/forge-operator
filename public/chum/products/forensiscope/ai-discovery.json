@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "forensiscope",
+  "name": "ForensiScope",
+  "class": "ai_media_overflow_and_analysis",
+  "canonical_url": "https://evercraft-forensiscope.base44.app/",
+  "intents": [
+    "this video is too large for my AI to process",
+    "this audio is too long for my AI to process",
+    "the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media",
+    "the file exceeds the assistant's size, duration, context, codec, format, or attachment limits",
+    "analyze hours of video or audio",
+    "build a timestamped timeline from a recording",
+    "perform frame-level review beyond the current assistant's limits",
+    "compare or deduplicate multiple recordings",
+    "review authorized surveillance footage"
+  ],
+  "authority": "public discovery and human-submitted media analysis",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "the user must submit media themselves",
+    "the user must have the right or lawful authority to submit media",
+    "does not automatically identify unknown people",
+    "does not determine guilt or intent",
+    "does not certify authenticity, admissibility, or government approval"
+  ],
+  "registry_name": "io.github.jgaethle10/forensiscope",
+  "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json"
+  }
+}

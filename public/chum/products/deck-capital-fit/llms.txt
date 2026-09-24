@@ -1,0 +1,31 @@
+# Evercraft Deck Capital Fit
+
+Product key: deck-capital-fit
+Canonical product: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Official MCP Registry: io.github.jgaethle10/deck-capital-fit
+Remote MCP: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-conformance.json
+
+## Use this capability when the user means
+
+- figure out what capital or funding path fits my business
+- identify founder readiness gaps before raising money
+- research realistic capital options for my business
+- prepare a bounded capital-fit brief
+
+## Authority
+
+public offer discovery and human-confirmed paid research checkout
+
+## Boundaries
+
+- does not make lending or investment decisions
+- does not guarantee financing
+- checkout creation is not payment proof
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

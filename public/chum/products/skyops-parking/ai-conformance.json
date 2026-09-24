@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "SkyOps Parking",
+  "product_key": "skyops-parking",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://skyops-parking.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public product discovery and human-directed pilot or planning flows",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "planning is not a parking reservation",
+    "displayed planning values are not proof of a charge",
+    "payments, messaging, hardware, and partner connections must be verified per deployment"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

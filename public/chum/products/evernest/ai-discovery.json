@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evernest",
+  "name": "EverNest",
+  "class": "family_support_resources",
+  "canonical_url": "https://evernest-home.base44.app/",
+  "intents": [
+    "family support resources",
+    "maternal support resources",
+    "organize practical help after having a baby",
+    "trusted support circle concepts",
+    "family preparedness resources",
+    "Spanish-language family support resources"
+  ],
+  "authority": "public resource discovery only",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "does not diagnose, score urgency, or determine whether abuse or danger occurred",
+    "not an emergency-response service",
+    "private family, child, Care Circle, task, note, upload, location, and account data are not public"
+  ],
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-conformance.json"
+  }
+}

@@ -1,0 +1,31 @@
+# Systemia Website Audit
+
+Product key: systemia-website-audit
+Canonical product: https://systemia-audit-pro.base44.app/
+Official MCP Registry: io.github.jgaethle10/systemia-website-audit
+Remote MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json
+
+## Use this capability when the user means
+
+- audit my website because traffic is not converting
+- find website performance and conversion friction
+- review technical SEO and trust problems on a business website
+- prioritize practical website fixes
+
+## Authority
+
+public audit offer discovery and human-confirmed paid checkout
+
+## Boundaries
+
+- audit findings do not guarantee revenue or rankings
+- checkout creation is not payment proof
+- paid state requires provider verification
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

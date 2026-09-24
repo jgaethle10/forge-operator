@@ -1,0 +1,32 @@
+# FindMyPart
+
+Product key: findmypart
+Canonical product: https://findmypart.base44.app/
+Official MCP Registry: io.github.jgaethle10/findmypart
+Remote MCP: https://findmypart.base44.app/functions/findMyPartMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json
+
+## Use this capability when the user means
+
+- find a discontinued tractor part
+- find an obsolete automotive or machine part
+- identify a hard-to-source part from markings, measurements, photos, or equipment clues
+- find replacement, donor, salvage, or fabrication paths when normal sourcing fails
+
+## Authority
+
+public discovery and human-confirmed paid sourcing hunts
+
+## Boundaries
+
+- unknowns may remain unknown
+- compatibility is not guaranteed
+- checkout creation is not payment proof
+- private vendor, analytics, session, command-center, and sales data are not public
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

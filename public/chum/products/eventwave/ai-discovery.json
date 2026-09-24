@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "eventwave",
+  "name": "EventWave",
+  "class": "event_discovery_and_labeled_promotion",
+  "canonical_url": "https://event-wave.base44.app/",
+  "intents": [
+    "find local events",
+    "promote my local event",
+    "help people find my event",
+    "boost event visibility",
+    "promote a venue's events"
+  ],
+  "authority": "public event search plus human-confirmed paid labeled promotion",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "paid promotion remains labeled",
+    "source review governs public placement",
+    "checkout creation is not payment proof"
+  ],
+  "registry_name": "io.github.jgaethle10/eventwave",
+  "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-conformance.json"
+  }
+}

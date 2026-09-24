@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "systemia-website-audit",
+  "name": "Systemia Website Audit",
+  "class": "website_conversion_and_technical_audit",
+  "canonical_url": "https://systemia-audit-pro.base44.app/",
+  "intents": [
+    "audit my website because traffic is not converting",
+    "find website performance and conversion friction",
+    "review technical SEO and trust problems on a business website",
+    "prioritize practical website fixes"
+  ],
+  "authority": "public audit offer discovery and human-confirmed paid checkout",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "audit findings do not guarantee revenue or rankings",
+    "checkout creation is not payment proof",
+    "paid state requires provider verification"
+  ],
+  "registry_name": "io.github.jgaethle10/systemia-website-audit",
+  "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json"
+  }
+}

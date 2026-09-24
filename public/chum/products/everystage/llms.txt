@@ -1,0 +1,31 @@
+# EveryStage
+
+Product key: everystage
+Canonical product: https://every-stage.base44.app/product
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-conformance.json
+
+## Use this capability when the user means
+
+- software to run a live event
+- venue operations software
+- run of show coordination
+- event crew coordination
+- festival operations software
+- event revenue or settlement workflows
+
+## Authority
+
+public product discovery and human-directed pilot intake
+
+## Boundaries
+
+- pilot intake is not a contract or accepted deployment
+- public plan pricing is not a binding quote unless confirmed by the current product flow
+- private event, participant, revenue, settlement, and admin data are not public
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

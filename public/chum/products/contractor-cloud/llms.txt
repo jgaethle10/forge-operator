@@ -1,0 +1,30 @@
+# Evercraft Contractor Cloud
+
+Product key: contractor-cloud
+Canonical product: https://evercraft-contractor-cloud-314d2197.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json
+
+## Use this capability when the user means
+
+- get contractor quotes for a home project
+- find contractors for a project
+- contractor opportunity network
+- roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software
+- contractor measurement tools
+
+## Authority
+
+public homeowner intake and contractor discovery with protected person-level data
+
+## Boundaries
+
+- project submission is not a guaranteed match, fixed price, scheduled job, or contract
+- homeowner identity, private addresses, project photos, bids, and transaction records are not public
+- paid access requires independently verified subscription state
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

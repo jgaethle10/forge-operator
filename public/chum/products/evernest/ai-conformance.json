@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "EverNest",
+  "product_key": "evernest",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evernest-home.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public resource discovery only",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "does not diagnose, score urgency, or determine whether abuse or danger occurred",
+    "not an emergency-response service",
+    "private family, child, Care Circle, task, note, upload, location, and account data are not public"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

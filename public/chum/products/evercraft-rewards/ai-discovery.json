@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-rewards",
+  "name": "Evercraft Rewards",
+  "class": "local_business_rewards_and_partnership",
+  "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+  "intents": [
+    "join a local business rewards network",
+    "create cross-business loyalty rewards",
+    "make my local business more discoverable",
+    "join a community business partnership program"
+  ],
+  "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "prepared enrollment does not activate a merchant",
+    "prepared enrollment creates no payment obligation",
+    "directory publication and commercial activation require their own verified state"
+  ],
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "infinite-classroom",
+  "name": "Infinite Classroom",
+  "class": "ai_supported_learning",
+  "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+  "intents": [
+    "AI-supported subject learning",
+    "guided homework help without simply giving the answer",
+    "cross-subject learning",
+    "ASL and Deaf culture learning",
+    "online safety and healthy-boundary education"
+  ],
+  "authority": "public learning-product discovery only",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service",
+    "does not guarantee grades or outcomes",
+    "learner profiles, progress, tutoring history, household data, and safety disclosures are private"
+  ],
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-conformance.json"
+  }
+}

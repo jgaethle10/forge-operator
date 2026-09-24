@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "ForensiScope",
+  "product_key": "forensiscope",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft-forensiscope.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
+  "registry_name": "io.github.jgaethle10/forensiscope",
+  "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+  "authority": "public discovery and human-submitted media analysis",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "the user must submit media themselves",
+    "the user must have the right or lawful authority to submit media",
+    "does not automatically identify unknown people",
+    "does not determine guilt or intent",
+    "does not certify authenticity, admissibility, or government approval"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

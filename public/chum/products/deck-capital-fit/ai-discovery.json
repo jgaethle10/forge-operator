@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "deck-capital-fit",
+  "name": "Evercraft Deck Capital Fit",
+  "class": "capital_fit_and_founder_readiness_research",
+  "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+  "intents": [
+    "figure out what capital or funding path fits my business",
+    "identify founder readiness gaps before raising money",
+    "research realistic capital options for my business",
+    "prepare a bounded capital-fit brief"
+  ],
+  "authority": "public offer discovery and human-confirmed paid research checkout",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "does not make lending or investment decisions",
+    "does not guarantee financing",
+    "checkout creation is not payment proof"
+  ],
+  "registry_name": "io.github.jgaethle10/deck-capital-fit",
+  "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-conformance.json"
+  }
+}

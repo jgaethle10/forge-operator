@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "aliev",
+  "name": "AliEV",
+  "class": "ev_infrastructure_opportunity_intelligence",
+  "canonical_url": "https://aliev.base44.app/",
+  "intents": [
+    "would EV charging make sense at this property",
+    "what public EV charging is near this address",
+    "screen a property for EV infrastructure opportunity",
+    "compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence"
+  ],
+  "authority": "public screening plus bounded machine invocation and human-confirmed paid depth",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "missing is not zero",
+    "mapped charger inventory is not utilization",
+    "program presence is not incentive eligibility",
+    "screening is not engineering, permitting, interconnection, financing, or construction approval",
+    "payment requires authoritative verification"
+  ],
+  "registry_name": "io.github.jgaethle10/aliev",
+  "mcp": "https://aliev.base44.app/functions/alievMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json"
+  }
+}

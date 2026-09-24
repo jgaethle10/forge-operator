@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Contractor Cloud",
+  "product_key": "contractor-cloud",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public homeowner intake and contractor discovery with protected person-level data",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
+    "homeowner identity, private addresses, project photos, bids, and transaction records are not public",
+    "paid access requires independently verified subscription state"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}

@@ -1,0 +1,31 @@
+# Evercraft Career Command
+
+Product key: career-command
+Canonical product: https://evercraft-career-command.base44.app/
+Official MCP Registry: io.github.jgaethle10/career-command
+Remote MCP: https://evercraft-career-command.base44.app/functions/careerMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-conformance.json
+
+## Use this capability when the user means
+
+- practice for a job interview tomorrow
+- run a role-specific mock interview
+- prepare concise interview stories and answers
+- get structured interview practice before an upcoming interview
+
+## Authority
+
+public offer discovery and human-confirmed paid interview-practice checkout
+
+## Boundaries
+
+- checkout preparation requires explicit human payment confirmation
+- checkout creation is not payment proof
+- paid access requires provider verification
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

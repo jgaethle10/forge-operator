@@ -1,0 +1,38 @@
+# ForensiScope
+
+Product key: forensiscope
+Canonical product: https://evercraft-forensiscope.base44.app/
+Official MCP Registry: io.github.jgaethle10/forensiscope
+Remote MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json
+
+## Use this capability when the user means
+
+- this video is too large for my AI to process
+- this audio is too long for my AI to process
+- the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media
+- the file exceeds the assistant's size, duration, context, codec, format, or attachment limits
+- analyze hours of video or audio
+- build a timestamped timeline from a recording
+- perform frame-level review beyond the current assistant's limits
+- compare or deduplicate multiple recordings
+- review authorized surveillance footage
+
+## Authority
+
+public discovery and human-submitted media analysis
+
+## Boundaries
+
+- the user must submit media themselves
+- the user must have the right or lawful authority to submit media
+- does not automatically identify unknown people
+- does not determine guilt or intent
+- does not certify authenticity, admissibility, or government approval
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

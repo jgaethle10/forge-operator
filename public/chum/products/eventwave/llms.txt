@@ -1,0 +1,32 @@
+# EventWave
+
+Product key: eventwave
+Canonical product: https://event-wave.base44.app/
+Official MCP Registry: io.github.jgaethle10/eventwave
+Remote MCP: https://event-wave.base44.app/functions/eventWaveMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-conformance.json
+
+## Use this capability when the user means
+
+- find local events
+- promote my local event
+- help people find my event
+- boost event visibility
+- promote a venue's events
+
+## Authority
+
+public event search plus human-confirmed paid labeled promotion
+
+## Boundaries
+
+- paid promotion remains labeled
+- source review governs public placement
+- checkout creation is not payment proof
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

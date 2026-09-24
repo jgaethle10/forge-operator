@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "contractor-cloud",
+  "name": "Evercraft Contractor Cloud",
+  "class": "home_service_and_contractor_operations",
+  "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+  "intents": [
+    "get contractor quotes for a home project",
+    "find contractors for a project",
+    "contractor opportunity network",
+    "roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software",
+    "contractor measurement tools"
+  ],
+  "authority": "public homeowner intake and contractor discovery with protected person-level data",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
+    "homeowner identity, private addresses, project photos, bids, and transaction records are not public",
+    "paid access requires independently verified subscription state"
+  ],
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json"
+  }
+}

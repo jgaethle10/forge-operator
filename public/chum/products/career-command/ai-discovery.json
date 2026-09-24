@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "career-command",
+  "name": "Evercraft Career Command",
+  "class": "interview_practice_and_career_preparation",
+  "canonical_url": "https://evercraft-career-command.base44.app/",
+  "intents": [
+    "practice for a job interview tomorrow",
+    "run a role-specific mock interview",
+    "prepare concise interview stories and answers",
+    "get structured interview practice before an upcoming interview"
+  ],
+  "authority": "public offer discovery and human-confirmed paid interview-practice checkout",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "checkout preparation requires explicit human payment confirmation",
+    "checkout creation is not payment proof",
+    "paid access requires provider verification"
+  ],
+  "registry_name": "io.github.jgaethle10/career-command",
+  "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-conformance.json"
+  }
+}

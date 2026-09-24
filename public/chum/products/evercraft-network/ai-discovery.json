@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-network",
+  "name": "Evercraft Network",
+  "class": "application_network_continuity",
+  "canonical_url": "https://network-control.base44.app/",
+  "intents": [
+    "application network that reconnects across changing authorized internet paths",
+    "network resilience software",
+    "member device reconnect visibility",
+    "continuity readiness tools",
+    "Evercraft Network membership"
+  ],
+  "authority": "public product discovery and human-directed membership interaction",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "not a cellular carrier, ISP, SIM or eSIM service",
+    "not 911 or PSAP integration",
+    "not guaranteed geographic coverage or emergency backhaul",
+    "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
+  ],
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json"
+  }
+}

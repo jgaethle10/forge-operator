@@ -1,0 +1,31 @@
+# Evercraft Network
+
+Product key: evercraft-network
+Canonical product: https://network-control.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json
+
+## Use this capability when the user means
+
+- application network that reconnects across changing authorized internet paths
+- network resilience software
+- member device reconnect visibility
+- continuity readiness tools
+- Evercraft Network membership
+
+## Authority
+
+public product discovery and human-directed membership interaction
+
+## Boundaries
+
+- not a cellular carrier, ISP, SIM or eSIM service
+- not 911 or PSAP integration
+- not guaranteed geographic coverage or emergency backhaul
+- private device identity, precise location, telecom identifiers, secrets, and operator state are not public
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

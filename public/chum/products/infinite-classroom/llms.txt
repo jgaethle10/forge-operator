@@ -1,0 +1,30 @@
+# Infinite Classroom
+
+Product key: infinite-classroom
+Canonical product: https://infinite-classroom-fe2d1357.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-conformance.json
+
+## Use this capability when the user means
+
+- AI-supported subject learning
+- guided homework help without simply giving the answer
+- cross-subject learning
+- ASL and Deaf culture learning
+- online safety and healthy-boundary education
+
+## Authority
+
+public learning-product discovery only
+
+## Boundaries
+
+- not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service
+- does not guarantee grades or outcomes
+- learner profiles, progress, tutoring history, household data, and safety disclosures are private
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

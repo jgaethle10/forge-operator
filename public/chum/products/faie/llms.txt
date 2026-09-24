@@ -1,0 +1,31 @@
+# FAIE
+
+Product key: faie
+Canonical product: https://faie.base44.app/
+Official MCP Registry: io.github.jgaethle10/faie
+Remote MCP: https://faie.base44.app/functions/faieMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json
+
+## Use this capability when the user means
+
+- get an evidence-based agriculture or water risk brief
+- research land production or resilience risk
+- investigate an agriculture signal before making a decision
+- build a sourced brief about farm water land or production risk
+
+## Authority
+
+public offer discovery and human-confirmed bounded research checkout
+
+## Boundaries
+
+- research is evidence support rather than consequential authority
+- unknowns remain labeled
+- checkout creation is not payment proof
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

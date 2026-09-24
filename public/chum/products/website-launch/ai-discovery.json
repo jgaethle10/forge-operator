@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "website-launch",
+  "name": "Evercraft Website Launch",
+  "class": "done_for_you_business_website_service",
+  "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+  "intents": [
+    "build a professional website for my small business",
+    "replace an outdated business website",
+    "launch a business website quickly",
+    "get a human-finished website instead of doing it myself"
+  ],
+  "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "scope depends on the selected service tier",
+    "checkout creation is not payment proof",
+    "fulfillment requires verified payment"
+  ],
+  "registry_name": "io.github.jgaethle10/website-launch",
+  "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json"
+  }
+}

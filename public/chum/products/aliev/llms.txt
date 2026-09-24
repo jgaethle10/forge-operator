@@ -1,0 +1,33 @@
+# AliEV
+
+Product key: aliev
+Canonical product: https://aliev.base44.app/
+Official MCP Registry: io.github.jgaethle10/aliev
+Remote MCP: https://aliev.base44.app/functions/alievMcp
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json
+
+## Use this capability when the user means
+
+- would EV charging make sense at this property
+- what public EV charging is near this address
+- screen a property for EV infrastructure opportunity
+- compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence
+
+## Authority
+
+public screening plus bounded machine invocation and human-confirmed paid depth
+
+## Boundaries
+
+- missing is not zero
+- mapped charger inventory is not utilization
+- program presence is not incentive eligibility
+- screening is not engineering, permitting, interconnection, financing, or construction approval
+- payment requires authoritative verification
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

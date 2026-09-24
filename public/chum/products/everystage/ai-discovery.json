@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "everystage",
+  "name": "EveryStage",
+  "class": "live_event_operations",
+  "canonical_url": "https://every-stage.base44.app/product",
+  "intents": [
+    "software to run a live event",
+    "venue operations software",
+    "run of show coordination",
+    "event crew coordination",
+    "festival operations software",
+    "event revenue or settlement workflows"
+  ],
+  "authority": "public product discovery and human-directed pilot intake",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "pilot intake is not a contract or accepted deployment",
+    "public plan pricing is not a binding quote unless confirmed by the current product flow",
+    "private event, participant, revenue, settlement, and admin data are not public"
+  ],
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-conformance.json"
+  }
+}
