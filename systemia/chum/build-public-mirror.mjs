@@ -308,7 +308,7 @@ const agentDirectory = {
 fs.writeFileSync('public/.well-known/evercraft-agent-directory.json', JSON.stringify(agentDirectory, null, 2) + '\n');
 
 const discoveryWatershed = {
-  schema: 'evercraft.discovery-watershed.v2',
+  schema: 'evercraft.discovery-watershed.v3',
   provider: 'Evercraft LLC',
   coordinator: 'CHUM',
   updated_at: directory.updated_at || null,
@@ -316,8 +316,10 @@ const discoveryWatershed = {
   start_here: {
     discover: '/api/discover?q={natural-language-problem}',
     resolve_alias: '/api/resolve?q={natural-language-problem}',
-    revenue_watershed: '/api/revenue-watershed',
-    revenue_text: '/chum/revenue.txt',
+    revenue_router: '/api/revenue-watershed',
+    sell_now_revenue: '/chum/revenue.json',
+    sell_now_revenue_text: '/chum/revenue.txt',
+    revenue_watershed_html: '/chum/revenue.html',
     llms: '/llms.txt',
     llms_full: '/llms-full.txt',
     products: '/.well-known/evercraft-products.json',
@@ -340,8 +342,13 @@ const discoveryWatershed = {
     checkout_ready: 'An exact current checkout rail exists for that offer.',
     paid: 'Authoritative provider payment verification exists.'
   },
-  routing_rule: 'Start from the user problem. Prefer /api/discover, which checks current machine offers and broader public product families. Choose the smallest truthful capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
-  private_surfaces: 'not advertised'
+  routing_rule: 'Start from the user problem. Prefer /api/discover, which checks current machine offers and broader public product families. Choose the smallest truthful capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  private_surfaces: 'not advertised',
+  freshness_broadcast: {
+    coordinator: 'CHUM',
+    mechanism: 'IndexNow',
+    semantics: 'Healthy public capability pages are announced for freshness. Submission is not proof of indexing, recommendation, citation or conversion.'
+  }
 };
 fs.writeFileSync('public/.well-known/evercraft-discovery.json', JSON.stringify(discoveryWatershed, null, 2) + '\n');
 fs.writeFileSync('public/ai-discovery.json', JSON.stringify(discoveryWatershed, null, 2) + '\n');
