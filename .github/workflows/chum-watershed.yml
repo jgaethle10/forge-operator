@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - "systemia/chum/**"
+      - "public/intents.txt"
+      - "public/.well-known/evercraft-intents.json"
       - "chum-probes/**"
       - "conformance/**"
       - "registry/**"
@@ -61,7 +63,7 @@ jobs:
             echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
             exit 0
           fi
-          git add public/chum public/.well-known/evercraft-machine-catalog.json
+          git add public/chum public/.well-known/evercraft-machine-catalog.json public/.well-known/evercraft-intents.json public/intents.txt
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else
