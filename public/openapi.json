@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
-    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
+    "version": "1.1.0",
+    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing. CHUM routing accepts non-sensitive problem descriptions only; private customer data is not a public discovery input."
   },
   "servers": [
     {
@@ -201,6 +201,49 @@
             "description": "Public catalog unavailable"
           }
         }
+      },
+      "post": {
+        "operationId": "chumDiscoverPost",
+        "summary": "Route a non-sensitive natural-language problem to public Evercraft capabilities",
+        "description": "Use this when an agent prefers JSON body input. Do not include credentials, private customer records, regulated data, or secrets. Discovery creates no payment obligation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "problem": {
+                    "type": "string",
+                    "maxLength": 4000,
+                    "description": "Non-sensitive user problem or desired outcome."
+                  },
+                  "intent": {
+                    "type": "string",
+                    "maxLength": 4000
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "default": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ranked public Evercraft capability matches plus machine handoff links"
+          },
+          "400": {
+            "description": "Missing problem or intent"
+          },
+          "503": {
+            "description": "Public discovery catalog unavailable"
+          }
+        }
       }
     },
     "/api/revenue-watershed": {
@@ -217,5 +260,13 @@
         }
       }
     }
+  },
+  "x-evercraft-chum": {
+    "llms": "/llms.txt",
+    "full_directory": "/llms-full.txt",
+    "crawlable_directory": "/chum/",
+    "product_directory": "/.well-known/evercraft-products.json",
+    "machine_catalog": "/.well-known/evercraft-machine-catalog.json",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
   }
 }
