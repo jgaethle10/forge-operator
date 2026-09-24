@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { githubWorkflowRunToSignal } from './adapters/github-actions.mjs';
-import { classify } from './router.mjs';
+import { githubWorkflowRunToSignal } from './github-actions.mjs';
+import { classify } from '../router.mjs';
 
 const cancelled=githubWorkflowRunToSignal({id:1,name:'Forge checks',head_branch:'systemia/foo',conclusion:'cancelled',updated_at:'2026-09-24T20:00:00Z'});
 assert.equal(classify(cancelled),'receipt');
