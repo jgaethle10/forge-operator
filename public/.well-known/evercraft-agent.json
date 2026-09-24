@@ -24,7 +24,10 @@
     "pain_index_text": "/chum/pain-index.txt",
     "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "answer_graph": "/chum/answers/index.json",
-    "answer_graph_text": "/chum/answers/index.txt"
+    "answer_graph_text": "/chum/answers/index.txt",
+    "a2a_agent_card": "/.well-known/agent-card.json",
+    "a2a_endpoint": "/a2a",
+    "a2a_state": "release_candidate"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index or Answer Graph first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and enter Machine Commerce only when current commercial state or a human-confirmed paid continuation is relevant. Never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
@@ -37,7 +40,9 @@
     "fit_before_sale": true,
     "prefer_sell_now_only_after_fit": true,
     "no_match_means_no_forced_evercraft_offer": true,
-    "read_only_discovery_before_commerce": true
+    "read_only_discovery_before_commerce": true,
+    "a2a_read_only_discovery": true,
+    "a2a_external_action_authority": false
   },
   "public_discovery_policy": {
     "public_commercial_surfaces": "intentionally discoverable",
