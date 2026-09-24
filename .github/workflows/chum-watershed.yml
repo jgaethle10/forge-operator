@@ -49,6 +49,7 @@ jobs:
           npm run chum:llms
           npm run chum:revenue
           npm run chum:mirror
+          npm run chum:crawl-pages
 
       - name: Publish changed CHUM mirrors
         if: github.ref == 'refs/heads/main'
@@ -73,6 +74,7 @@ jobs:
       - name: Validate machine-discovery contracts
         run: |
           npm run check:ai
+          npm run test:chum-surfaces
           npm run test:chum-router
           npm run chum:validate
 
