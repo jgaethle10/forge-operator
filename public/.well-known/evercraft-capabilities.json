@@ -30,7 +30,17 @@
     "chum": "/.well-known/evercraft-chum.json",
     "liveMachineCatalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
     "livePainIndex": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
-    "universalMcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "universalMcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "a2aAgentCard": "/.well-known/agent-card.json",
+    "a2a": {
+      "method": "POST",
+      "path": "/a2a",
+      "protocol": "A2A",
+      "version": "1.0",
+      "binding": "JSONRPC",
+      "state": "release_candidate",
+      "liveVerificationRequired": true
+    }
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -72,7 +82,8 @@
     ],
     "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act.",
     "intentRouterRule": "Read-only discovery across the canonical CHUM Pain Index. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology. Machine Commerce is a separate next-stage door when commercial state is actually relevant.",
-    "firstPartyRoutingRule": "FIRST_PARTY_STRICT capabilities do not silently fall back to external providers when unavailable or unproven."
+    "firstPartyRoutingRule": "FIRST_PARTY_STRICT capabilities do not silently fall back to external providers when unavailable or unproven.",
+    "a2aRule": "A2A is read-only capability discovery. It does not grant purchase, upload, messaging, private-data, payment, or other external-action authority."
   },
   "commercial": {
     "status": "configured-at-runtime",

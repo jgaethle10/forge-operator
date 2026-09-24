@@ -45,6 +45,8 @@ High-signal examples:
 
 - `/llms.txt`
 - `/llms-full.txt`
+- `/.well-known/agent-card.json` (A2A 1.0 Agent Card, release candidate)
+- `/a2a` (A2A 1.0 JSON-RPC discovery endpoint, release candidate)
 - `/.well-known/evercraft-agent.json`
 - `/.well-known/evercraft-discovery.json`
 - `/.well-known/evercraft-products.json`
@@ -84,3 +86,12 @@ Discovery creates no payment obligation. A checkout preparation is not payment p
 CHUM, the Capability Handoff & Utility Mesh, continuously checks the public surfaces, registry declarations and provider-observation receipts. It can broadcast truthful public capability facts and repair broken discovery doors, but it never fabricates provider pickup or recommendation.
 
 Provider behavior is separately tested through clean-session, brand-blind Nexus probes for ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok and generic agents.
+
+
+## A2A discovery
+
+CHUM includes a bounded A2A 1.0 JSON-RPC adapter over the current machine catalog, product directory, and pain index. The Agent Card is served at `/.well-known/agent-card.json` and the endpoint is `POST /a2a`.
+
+The A2A interface is read-only and pain-first. It can discover and explain matching public Evercraft capabilities, but it cannot create payment obligations, transfer user files, send external messages, access private topology, or grant other external-action authority.
+
+Repository and production-container tests gate the interface. The public interface ledger remains `release_candidate` until the deployed route is independently verified. Publication, CI success, and Agent Card reachability are not provider-pickup proof.

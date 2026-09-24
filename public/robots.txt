@@ -26,6 +26,7 @@ Allow: /api/commercial
 Allow: /api/discover
 Allow: /api/route-capability
 Allow: /api/revenue-watershed
+Allow: /a2a
 Allow: /chum/
 Disallow: /api/
 
@@ -39,5 +40,6 @@ Allow: /api/commercial
 Allow: /api/discover
 Allow: /api/route-capability
 Allow: /api/revenue-watershed
+Allow: /a2a
 Allow: /chum/
 Disallow: /api/

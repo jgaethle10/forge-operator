@@ -53,7 +53,10 @@
     "capability_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities.json",
     "capability_directory_page": "/chum/capabilities/",
     "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
-    "sell_now_directory_page": "/chum/sell-now.html"
+    "sell_now_directory_page": "/chum/sell-now.html",
+    "a2a_agent_card": "/.well-known/agent-card.json",
+    "a2a_endpoint": "/a2a",
+    "a2a_state": "release_candidate"
   },
   "verified_crawler_controls": [
     {
@@ -113,5 +116,15 @@
   "routing_policy": {
     "owned_capability_first": true,
     "first_party_strict_fails_closed": true
+  },
+  "protocol_posture": {
+    "a2a": {
+      "state": "release_candidate",
+      "protocol_version": "1.0",
+      "binding": "JSONRPC",
+      "agent_card": "/.well-known/agent-card.json",
+      "endpoint": "/a2a",
+      "live_verification_required": true
+    }
   }
 }

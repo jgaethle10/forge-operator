@@ -21,8 +21,25 @@
     "capabilities_path": "/api/capabilities",
     "commercial_path": "/api/commercial",
     "public_discovery": [
+      "/ai",
+      "/chum/",
       "/llms.txt",
-      "/.well-known/evercraft-capabilities.json"
+      "/llms-full.txt",
+      "/ai-discovery.json",
+      "/openapi.json",
+      "/sitemap.xml",
+      "/robots.txt",
+      "/.well-known/agent-card.json",
+      "/.well-known/evercraft-agent.json",
+      "/.well-known/evercraft-capabilities.json",
+      "/.well-known/evercraft-discovery.json",
+      "/.well-known/evercraft-products.json",
+      "/.well-known/evercraft-pain-index.json",
+      "/.well-known/evercraft-machine-catalog.json",
+      "/.well-known/evercraft-chum.json",
+      "/api/discover",
+      "/api/revenue-watershed",
+      "/a2a"
     ]
   },
   "environment": {
@@ -42,7 +59,10 @@
     "ci_pass",
     "health_pass",
     "capability_manifest_present",
-    "public_route_verified"
+    "public_route_verified",
+    "a2a_contract_pass",
+    "a2a_container_smoke_pass",
+    "crawler_surface_smoke_pass"
   ],
   "receipt_requirements": [
     "release_sha",

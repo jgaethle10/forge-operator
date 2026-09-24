@@ -7,6 +7,7 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-router.mjs';
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
+import { A2A_PROTOCOL_VERSION, buildAgentCard, discoveryLinkHeader, handleA2ARequest } from './systemia/chum/a2a.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 
 dotenv.config();
@@ -153,6 +154,13 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+app.use((_req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('Link', discoveryLinkHeader());
+  res.setHeader('X-Evercraft-Discovery', '/.well-known/evercraft-discovery.json');
+  res.setHeader('X-Evercraft-Agent-Card', '/.well-known/agent-card.json');
+  next();
+});
+
 function requestOrigin(req: Request): string {
   const configured = String(process.env.PUBLIC_BASE_URL || '').trim();
   if (configured) {
@@ -254,6 +262,62 @@ function loadPublicPainIndex(): any {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
+app.get('/.well-known/agent-card.json', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  if (!origin) {
+    res.status(503).json({ error: 'Public origin unavailable.' });
+    return;
+  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.json(buildAgentCard(origin));
+});
+
+app.post('/a2a', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const requestedVersion = String(req.get('A2A-Version') || '').trim();
+  if (requestedVersion && requestedVersion !== A2A_PROTOCOL_VERSION) {
+    res.status(400).json({
+      jsonrpc: '2.0',
+      id: req.body?.id ?? null,
+      error: {
+        code: -32009,
+        message: 'Version not supported',
+        data: [{
+          '@type': 'type.googleapis.com/google.rpc.ErrorInfo',
+          reason: 'VERSION_NOT_SUPPORTED',
+          domain: 'a2a-protocol.org',
+          metadata: {
+            requestedVersion,
+            supportedVersions: A2A_PROTOCOL_VERSION,
+          },
+        }],
+      },
+    });
+    return;
+  }
+
+  try {
+    const catalog = loadPublicMachineCatalog();
+    const directory = loadPublicProductDirectory();
+    const painIndex = loadPublicPainIndex();
+    const response = handleA2ARequest(req.body, catalog, directory, painIndex);
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('A2A-Version', A2A_PROTOCOL_VERSION);
+    res.status(response.status).json(response.body);
+  } catch (error: any) {
+    res.status(503).json({
+      jsonrpc: '2.0',
+      id: req.body?.id ?? null,
+      error: {
+        code: -32000,
+        message: 'Evercraft public discovery data is temporarily unavailable.',
+        data: { detail: error?.message || String(error) },
+      },
+    });
+  }
+});
+
 function publicOfferProjection(offer: any) {
   return {
     public_id: offer.public_id,
@@ -348,6 +412,8 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumRevenueText: '/chum/revenue.txt',
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
+      a2aAgentCard: '/.well-known/agent-card.json',
+      a2a: { method: 'POST', path: '/a2a', protocol: 'A2A', version: '1.0', binding: 'JSONRPC' },
     },
     jobs: [
       'operations bottleneck diagnosis',
