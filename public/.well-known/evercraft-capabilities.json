@@ -8,7 +8,16 @@
     "health": "/api/health",
     "invoke": "/api/forge",
     "manifest": "/.well-known/evercraft-capabilities.json",
-    "productDirectory": "/.well-known/evercraft-products.json"
+    "productDirectory": "/.well-known/evercraft-products.json",
+    "chumManifest": "/.well-known/evercraft-chum.json",
+    "chumOffers": "/.well-known/evercraft-offers.json",
+    "chumResolver": {
+      "method": "GET",
+      "path": "/chum/resolve?q=<plain-language-problem>",
+      "auth": "none"
+    },
+    "chumHealth": "/chum/health",
+    "llmsFull": "/llms-full.txt"
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -16,7 +25,8 @@
     "human-in-the-loop design",
     "operational risk identification",
     "implementation next-step generation",
-    "Evercraft portfolio problem-to-product discovery"
+    "Evercraft portfolio problem-to-product discovery",
+    "public AI problem-to-capability routing through CHUM"
   ],
   "input": {
     "method": "POST",
