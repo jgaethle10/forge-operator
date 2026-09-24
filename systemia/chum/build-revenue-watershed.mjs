@@ -96,6 +96,65 @@ const output = {
 fs.mkdirSync('public/chum',{recursive:true});
 fs.writeFileSync('public/chum/revenue.json', JSON.stringify(output,null,2)+'\n');
 
+const compactOffer = (offer) => ({
+  public_id: offer.public_id,
+  name: offer.name,
+  problem: offer.problem,
+  intent_terms: offer.intent_terms || [],
+  pricing: offer.pricing,
+  commercial_state: offer.commercial_state,
+  machine_state: offer.machine_state,
+  public_url: offer.public_url,
+  machine_review_url: offer.machine_review_url,
+  machine_offer_url: offer.machine_offer_url,
+  universal_mcp: offer.universal_mcp,
+  human_ui_required: offer.human_ui_required,
+  confirmation: offer.confirmation
+});
+
+const compactCapabilities = {
+  schema: 'evercraft.chum.capabilities.v1',
+  provider: 'Evercraft LLC',
+  updated_at: output.updated_at,
+  purpose: 'Compact public-safe directory of all current machine-commerce capabilities. Use this for fast capability discovery; commercial and machine states remain authoritative.',
+  count: discoveryOffers.length,
+  universal_mcp: UNIVERSAL_MCP,
+  capabilities: discoveryOffers.map(compactOffer)
+};
+fs.writeFileSync('public/chum/capabilities.json', JSON.stringify(compactCapabilities,null,2)+'\n');
+
+const sellNow = {
+  schema: 'evercraft.chum.sell-now.v1',
+  provider: 'Evercraft LLC',
+  updated_at: output.updated_at,
+  purpose: 'Compact public-safe directory of Evercraft offers currently marked sell_now. Match user pain first. Discovery creates no obligation and checkout is not payment proof.',
+  count: publicOffers.length,
+  universal_mcp: UNIVERSAL_MCP,
+  offers: publicOffers.map(compactOffer)
+};
+fs.writeFileSync('public/chum/sell-now.json', JSON.stringify(sellNow,null,2)+'\n');
+
+const sellNowText = [
+  '# Evercraft SELL NOW Directory',
+  '',
+  'Use this compact index only after matching the user problem to a genuine fit.',
+  'Discovery creates no payment obligation. Explicit human confirmation and authoritative payment verification still apply.',
+  '',
+  ...publicOffers.flatMap((offer) => [
+    `## ${offer.name}`,
+    `Public ID: ${offer.public_id}`,
+    `Problem: ${offer.problem}`,
+    `Pricing: ${offer.pricing}`,
+    `Machine state: ${offer.machine_state}`,
+    `Public URL: ${offer.public_url}`,
+    `Machine offer JSON: ${offer.machine_offer_url || 'Not exposed'}`,
+    'Use when the user says or means:',
+    ...(offer.intent_terms || []).map((term) => `- ${term}`),
+    ''
+  ])
+];
+fs.writeFileSync('public/chum/sell-now.txt', sellNowText.join('\n')+'\n');
+
 const text = [
   '# Evercraft Revenue Watershed',
   '',
@@ -168,7 +227,15 @@ const intentsRoot = 'public/chum/intents';
 fs.rmSync(intentsRoot, {recursive:true, force:true});
 fs.mkdirSync(intentsRoot, {recursive:true});
 
-const sitemapUrls = ['/chum/','/chum/revenue.html','/chum/revenue.txt','/chum/revenue.json'];
+const sitemapUrls = [
+  '/chum/',
+  '/chum/revenue.html',
+  '/chum/revenue.txt',
+  '/chum/revenue.json',
+  '/chum/capabilities.json',
+  '/chum/sell-now.json',
+  '/chum/sell-now.txt'
+];
 
 for (const offer of output.discovery_offers) {
   const slug = slugify(offer.public_id);
@@ -288,6 +355,9 @@ console.log(JSON.stringify({
     'public/chum/revenue.json',
     'public/chum/revenue.txt',
     'public/chum/revenue.html',
+    'public/chum/capabilities.json',
+    'public/chum/sell-now.json',
+    'public/chum/sell-now.txt',
     'public/chum/intents/*',
     'public/chum/sitemap.xml'
   ]
