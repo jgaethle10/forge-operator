@@ -22,19 +22,6 @@
       ]
     },
     {
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "canonical_url": "https://findmypart.base44.app/",
-      "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "triggers": [
-        "hard-to-find part",
-        "obsolete part",
-        "replacement part",
-        "salvage part"
-      ]
-    },
-    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "canonical_url": "https://evercraft-career-command.base44.app/",
@@ -44,18 +31,6 @@
         "job interview practice",
         "mock interview",
         "interview tomorrow"
-      ]
-    },
-    {
-      "product_key": "systemia-website-audit",
-      "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
-      "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
-      "triggers": [
-        "website audit",
-        "conversion problems",
-        "technical SEO audit"
       ]
     },
     {
@@ -71,15 +46,58 @@
       ]
     },
     {
-      "product_key": "website-launch",
-      "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
-      "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "canonical_url": "https://event-wave.base44.app/",
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
       "triggers": [
-        "build my business website",
-        "professional website",
-        "website launch"
+        "find events",
+        "promote my event",
+        "boost event visibility",
+        "venue promotion"
+      ]
+    },
+    {
+      "product_key": "evercraft-capability-discovery",
+      "name": "Evercraft Capability Discovery",
+      "canonical_url": "https://systemiacommandcenters.com/",
+      "registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+      "mcp": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+      "triggers": [
+        "find an Evercraft capability",
+        "match this problem to a public capability",
+        "what Evercraft tool can solve this",
+        "discover an AI capability"
+      ]
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "triggers": [
+        "join a local rewards network",
+        "local business loyalty program",
+        "cross-business rewards",
+        "business partnership rewards",
+        "Yakima local business discovery"
+      ],
+      "tool": "prepare_rewards_partner_enrollment",
+      "product": "Evercraft Rewards"
+    },
+    {
+      "product_key": "evercraft-web",
+      "name": "Evercraft Web",
+      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "triggers": [
+        "fetch this public web page",
+        "read this website",
+        "browse a website with an agent",
+        "web research requiring browser interaction"
       ]
     },
     {
@@ -96,16 +114,16 @@
       ]
     },
     {
-      "product_key": "eventwave",
-      "name": "EventWave",
-      "canonical_url": "https://event-wave.base44.app/",
-      "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "canonical_url": "https://findmypart.base44.app/",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
       "triggers": [
-        "find events",
-        "promote my event",
-        "boost event visibility",
-        "venue promotion"
+        "hard-to-find part",
+        "obsolete part",
+        "replacement part",
+        "salvage part"
       ]
     },
     {
@@ -128,20 +146,28 @@
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
     {
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
       "triggers": [
-        "join a local rewards network",
-        "local business loyalty program",
-        "cross-business rewards",
-        "business partnership rewards",
-        "Yakima local business discovery"
-      ],
-      "tool": "prepare_rewards_partner_enrollment",
-      "product": "Evercraft Rewards"
+        "website audit",
+        "conversion problems",
+        "technical SEO audit"
+      ]
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "triggers": [
+        "build my business website",
+        "professional website",
+        "website launch"
+      ]
     }
   ],
   "payment_boundary": {
