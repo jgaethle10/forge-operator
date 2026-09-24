@@ -47,6 +47,7 @@ jobs:
         run: |
           npm run chum:sync
           npm run chum:revenue
+          npm run chum:answers
           npm run chum:index
           npm run chum:mirror
 
@@ -76,6 +77,7 @@ jobs:
           npm run test:chum-router
           npm run chum:validate
           npm run test:chum-index
+          npm run test:chum-answers
 
       - name: Probe static AI doorways
         id: static

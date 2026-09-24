@@ -7,6 +7,8 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - Universal agent manifest: /.well-known/evercraft-agent.json
 - CHUM pain-first routing index: /.well-known/evercraft-pain-index.json
 - CHUM pain-first text index: /chum/pain-index.txt
+- CHUM answer graph for exact natural-language problem phrases: /chum/answers/index.json
+- CHUM answer graph text mirror: /chum/answers/index.txt
 - Problem-to-product directory: /.well-known/evercraft-products.json
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
