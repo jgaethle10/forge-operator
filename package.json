@@ -11,7 +11,8 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "check:ai": "node scripts/validate-ai-conformance.mjs",
-    "check": "npm run check:ai && npm run lint && npm run build"
+    "check": "npm run check:ai && npm run check:platform && npm run lint && npm run build",
+    "check:platform": "npm --prefix platform/evercraft-access test && npm --prefix platform/evercraft-compute test"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
