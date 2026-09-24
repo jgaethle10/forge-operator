@@ -32,5 +32,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run deterministic organism proof
-        run: node systemia/organism/proof.mjs
+      - name: Run deterministic organism and goal-runtime proofs
+        run: npm run proof:systemia
