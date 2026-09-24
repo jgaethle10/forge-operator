@@ -19,11 +19,22 @@
       "protocol": "MCP",
       "state": "live",
       "name": "Evercraft Machine Commerce",
+      "version": "1.2.0",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "transport": "streamable-http",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "authority": "official_registry_commerce_router",
+      "evidence": "Official MCP Registry returned v1.2.0 active/latest, and the exact published remote externally passed initialize and tools/list."
+    },
+    {
+      "protocol": "MCP",
+      "state": "live",
+      "name": "Evercraft Machine Commerce Edge",
+      "version": "1.1.0",
+      "transport": "streamable-http",
       "url": "https://findmypart.base44.app/functions/evercraftMachineCommerceMcp",
-      "authority": "discovery_plus_human_confirmed_checkout_routing",
-      "evidence": "Externally canaried initialize/tools/list and Official MCP Registry publication receipt-backed. Product gateways independently enforce payment and fulfillment truth."
+      "authority": "redundant_direct_commerce_router",
+      "evidence": "Externally live-verified initialize and tools/list. Kept as a redundant direct door; not represented as the latest Official Registry remote."
     },
     {
       "protocol": "A2A",
