@@ -2,18 +2,6 @@ name: AI doorway canary
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - "conformance/**"
-      - "registry/**"
-      - "public/.well-known/**"
-      - "systemia/chum/**"
-      - "scripts/check-ai-doorways.mjs"
-      - ".github/workflows/ai-doorway-canary.yml"
-  schedule:
-    - cron: "17 */6 * * *"
 
 permissions:
   contents: read
