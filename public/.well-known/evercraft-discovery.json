@@ -5,6 +5,10 @@
   "updated_at": "2026-09-24",
   "purpose": "One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.",
   "start_here": {
+    "discover": "/api/discover?q={natural-language-problem}",
+    "resolve_alias": "/api/resolve?q={natural-language-problem}",
+    "revenue_watershed": "/api/revenue-watershed",
+    "revenue_text": "/chum/revenue.txt",
     "llms": "/llms.txt",
     "llms_full": "/llms-full.txt",
     "products": "/.well-known/evercraft-products.json",
@@ -27,6 +31,6 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
-  "routing_rule": "Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
+  "routing_rule": "Start from the user problem. Prefer /api/discover, which checks current machine offers and broader public product families. Choose the smallest truthful capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
   "private_surfaces": "not advertised"
 }
