@@ -96,5 +96,12 @@
     "irreversible_financial_or_authority_actions_require_human_confirmation": true,
     "read_only_discovery_before_commerce": true,
     "problem_language_is_primary_entry": true
+  },
+  "public_surfaces": {
+    "first_party_router": "/api/route-capability"
+  },
+  "routing_policy": {
+    "owned_capability_first": true,
+    "first_party_strict_fails_closed": true
   }
 }

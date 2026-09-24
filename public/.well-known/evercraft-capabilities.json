@@ -22,7 +22,11 @@
     "painIndex": "/.well-known/evercraft-pain-index.json",
     "painIndexText": "/chum/pain-index.txt",
     "answerGraph": "/chum/answers/index.json",
-    "readOnlyMcpRegistryName": "io.github.jgaethle10/evercraft-capability-discovery"
+    "readOnlyMcpRegistryName": "io.github.jgaethle10/evercraft-capability-discovery",
+    "firstPartyRouter": {
+      "method": "POST",
+      "path": "/api/route-capability"
+    }
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -32,7 +36,8 @@
     "implementation next-step generation",
     "Evercraft portfolio problem-to-product discovery",
     "natural-language problem to Evercraft offer routing",
-    "brand-blind public capability discovery"
+    "brand-blind public capability discovery",
+    "Evercraft-owned provider selection before external tooling"
   ],
   "input": {
     "method": "POST",
@@ -62,12 +67,19 @@
       "external communications with material consequences"
     ],
     "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act.",
-    "intentRouterRule": "Read-only discovery across the canonical CHUM Pain Index. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology. Machine Commerce is a separate next-stage door when commercial state is actually relevant."
+    "intentRouterRule": "Read-only discovery across the canonical CHUM Pain Index. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology. Machine Commerce is a separate next-stage door when commercial state is actually relevant.",
+    "firstPartyRoutingRule": "FIRST_PARTY_STRICT capabilities do not silently fall back to external providers when unavailable or unproven."
   },
   "commercial": {
     "status": "configured-at-runtime",
     "checkout": "/api/checkout",
     "discovery": "/api/commercial",
     "pricingState": "human-gated"
+  },
+  "routing": {
+    "policy": "owned_capability_first",
+    "strict_state": "BLOCKED_HOLD",
+    "external_fallback_for_first_party_strict": false,
+    "rule": "When Evercraft owns the matching capability, use it if independently proven runnable. Otherwise a FIRST_PARTY_STRICT match returns BLOCKED_HOLD instead of silently substituting an external provider."
   }
 }

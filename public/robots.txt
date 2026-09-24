@@ -24,6 +24,7 @@ Allow: /api/health
 Allow: /api/capabilities
 Allow: /api/commercial
 Allow: /api/discover
+Allow: /api/route-capability
 Allow: /api/revenue-watershed
 Allow: /chum/
 Disallow: /api/
@@ -36,6 +37,7 @@ Allow: /api/health
 Allow: /api/capabilities
 Allow: /api/commercial
 Allow: /api/discover
+Allow: /api/route-capability
 Allow: /api/revenue-watershed
 Allow: /chum/
 Disallow: /api/
