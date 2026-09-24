@@ -34,7 +34,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "chum:llms": "node systemia/chum/build-llms-full.mjs",
     "chum:intents": "node systemia/chum/build-intent-watershed.mjs",
-    "test:chum-intents": "node systemia/chum/intent-watershed.test.mjs"
+    "test:chum-intents": "node systemia/chum/build-intent-watershed.mjs && node systemia/chum/intent-watershed.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
