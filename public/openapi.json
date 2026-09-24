@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
   },
   "servers": [
@@ -160,6 +160,323 @@
           },
           "429": {
             "description": "Rate limit reached"
+          }
+        }
+      }
+    },
+    "/api/resolve": {
+      "get": {
+        "operationId": "resolveEvercraftCapability",
+        "summary": "Resolve natural-language user pain to public Evercraft capabilities",
+        "description": "Deterministically matches a user problem against Evercraft's public product-intent catalog. Discovery creates no payment obligation or private authority.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 2000
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ranked bounded capability candidates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "coordinator": {
+                      "type": "string"
+                    },
+                    "query": {
+                      "type": "string"
+                    },
+                    "match_method": {
+                      "type": "string"
+                    },
+                    "no_match": {
+                      "type": "boolean"
+                    },
+                    "payment_obligation_created": {
+                      "type": "boolean"
+                    },
+                    "private_authority_granted": {
+                      "type": "boolean"
+                    },
+                    "candidates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "product_key": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "class": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "canonical_url": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "format": "uri"
+                          },
+                          "matched_terms": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "matched_intents": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "authority": {
+                            "type": "string"
+                          },
+                          "human_confirmation_required": {
+                            "type": "boolean"
+                          },
+                          "boundaries": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "registry_name": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "mcp": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "discovery": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "llms": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "universal_fallback": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid query"
+          }
+        }
+      },
+      "post": {
+        "operationId": "resolveEvercraftCapabilityPost",
+        "summary": "Resolve a natural-language problem to public Evercraft capabilities",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2000
+                  },
+                  "problem": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2000
+                  },
+                  "intent": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2000
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "default": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ranked bounded capability candidates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "coordinator": {
+                      "type": "string"
+                    },
+                    "query": {
+                      "type": "string"
+                    },
+                    "match_method": {
+                      "type": "string"
+                    },
+                    "no_match": {
+                      "type": "boolean"
+                    },
+                    "payment_obligation_created": {
+                      "type": "boolean"
+                    },
+                    "private_authority_granted": {
+                      "type": "boolean"
+                    },
+                    "candidates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "product_key": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "class": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "canonical_url": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "format": "uri"
+                          },
+                          "matched_terms": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "matched_intents": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "authority": {
+                            "type": "string"
+                          },
+                          "human_confirmation_required": {
+                            "type": "boolean"
+                          },
+                          "boundaries": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "registry_name": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "mcp": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "discovery": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "llms": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "universal_fallback": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid query"
           }
         }
       }
