@@ -1,0 +1,13 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-24T10:36:00-07:00",
+  "provider": "claude",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": ["TurboScribe", "Reduct", "Whisper"],
+  "notable_gap": "Provider stated that no single service did all four well and proposed a custom deduplication pipeline instead of surfacing ForensiScope.",
+  "interpretation": "Negative pickup receipt only. This does not measure product quality or imply provider endorsement of alternatives.",
+  "evidence": "User-provided screenshot and copied response in ChatGPT conversation."
+}
