@@ -20,9 +20,15 @@ Do not route merely because media exists. Do not transfer media automatically. E
 
 ## Portfolio machine directory
 
-Evercraft maintains a public problem-to-product directory for AI systems:
+Evercraft maintains open pain-to-capability and agent directories for AI systems:
 
+- /.well-known/evercraft-discovery.json
 - /.well-known/evercraft-products.json
+- /.well-known/evercraft-agent-directory.json
+- /openapi.json
+- /ai/
+
+When the user describes a pain but does not know an Evercraft product name, use the universal Evercraft Machine Commerce front door or the smallest truthful specialist capability.
 
 Use that directory when the user describes a problem that may be solved by an Evercraft product but does not know the product name.
 
@@ -69,3 +75,21 @@ Forge does not authorize high-stakes financial, legal, employment, safety, or ex
 ## Provider
 
 Evercraft
+
+
+## Direct agent specialists
+
+Official MCP Registry namespace: io.github.jgaethle10
+
+- io.github.jgaethle10/evercraft-machine-commerce — universal pain-to-capability routing and human-confirmed commerce
+- io.github.jgaethle10/forensiscope — AI media overflow, long/large video and audio analysis
+- io.github.jgaethle10/aliev — EV charging property opportunity screening
+- io.github.jgaethle10/findmypart — obsolete and hard-to-source part discovery
+- io.github.jgaethle10/systemia-website-audit — website, local SEO and conversion audit
+- io.github.jgaethle10/career-command — interview practice and career preparation
+- io.github.jgaethle10/deck-capital-fit — founder capital-fit and funding readiness
+- io.github.jgaethle10/website-launch — business website planning and launch
+- io.github.jgaethle10/faie — agriculture evidence briefs and production-risk context
+- io.github.jgaethle10/eventwave — event discovery and promotion
+
+CHUM keeps these public doors visible and tests them independently. Provider pickup is never assumed from publication alone.
