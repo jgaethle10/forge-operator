@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
+  <url><loc>/chum/</loc></url>
   <url><loc>/forensiscope/</loc></url>
   <url><loc>/llms.txt</loc></url>
+  <url><loc>/llms-full.txt</loc></url>
+  <url><loc>/ai-discovery.json</loc></url>
+  <url><loc>/openapi.json</loc></url>
+  <url><loc>/.well-known/agent-card.json</loc></url>
+  <url><loc>/.well-known/evercraft-capabilities.json</loc></url>
   <url><loc>/.well-known/evercraft-products.json</loc></url>
+  <url><loc>/.well-known/evercraft-chum.json</loc></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc></url>
 </urlset>
