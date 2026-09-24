@@ -48,6 +48,7 @@ jobs:
           npm run chum:sync
           npm run chum:revenue
           npm run chum:mirror
+          npm run chum:offers
 
       - name: Publish changed CHUM mirrors
         if: github.ref == 'refs/heads/main'
@@ -61,7 +62,7 @@ jobs:
             echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
             exit 0
           fi
-          git add public/chum public/.well-known/evercraft-machine-catalog.json
+          git add public/chum public/.well-known/evercraft-machine-catalog.json public/.well-known/evercraft-discovery.json public/ai-discovery.json AI-CAPABILITY-CATALOG.md
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else
