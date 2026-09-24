@@ -260,7 +260,6 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
-      painIndex: '/.well-known/evercraft-pain-index.json',
       failureRoutes: '/.well-known/evercraft-failure-routes.json',
       failureRoutesText: '/chum/failure-routes.txt',
       sitemap: '/sitemap.xml',
