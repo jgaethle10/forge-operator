@@ -74,6 +74,7 @@ jobs:
       - name: Validate machine-discovery contracts
         run: |
           npm run check:ai
+          npm run test:chum-surfaces
           npm run test:chum-router
           npm run chum:validate
           npm run test:chum-index
