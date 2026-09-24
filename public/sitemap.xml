@@ -3,6 +3,12 @@
   <url><loc>/</loc></url>
   <url><loc>/forensiscope/</loc></url>
   <url><loc>/llms.txt</loc></url>
+  <url><loc>/llms-full.txt</loc></url>
+  <url><loc>/schema.jsonld</loc></url>
+  <url><loc>/.well-known/agent-card.json</loc></url>
+  <url><loc>/.well-known/evercraft-capabilities.json</loc></url>
   <url><loc>/.well-known/evercraft-products.json</loc></url>
+  <url><loc>/.well-known/evercraft-chum.json</loc></url>
+  <url><loc>/.well-known/evercraft-watershed.json</loc></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc></url>
 </urlset>
