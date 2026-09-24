@@ -19,6 +19,8 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - Problem-to-product directory: /.well-known/evercraft-products.json
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
+- Complete offer/service mirror directory: /chum/offers/index.json
+- Complete offer/service text directory: /chum/offers/index.txt
 - Read-only natural-language router: GET /api/discover?q={problem}
 - Evercraft-first provider selector: POST /api/route-capability with {"intent":"..."}
 - Handoff attribution contract: /.well-known/evercraft-chum-attribution.json
