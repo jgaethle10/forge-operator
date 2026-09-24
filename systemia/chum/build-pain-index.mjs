@@ -45,6 +45,25 @@ export function buildPainIndex(){
   const registry=safeRead(REGISTRY,{products:[],universal_front_door:null});
 
   const registryByKey=new Map((registry.products||[]).map((p)=>[p.product_key,p]));
+  const declaredFrontDoor=registry.universal_front_door||{};
+  const publicUniversalFrontDoor={
+    read_only_registry_name:declaredFrontDoor.read_only_registry_name||null,
+    read_only_mcp:safePublicUrl(declaredFrontDoor.read_only_mcp),
+    registry_name:declaredFrontDoor.registry_name||null,
+    mcp:safePublicUrl(declaredFrontDoor.mcp),
+    registry_mcp:safePublicUrl(declaredFrontDoor.registry_mcp),
+    redundant_edge_mcp:safePublicUrl(declaredFrontDoor.redundant_edge_mcp),
+    gateway:safePublicUrl(declaredFrontDoor.gateway),
+    pain_index:safePublicUrl(declaredFrontDoor.pain_index),
+    a2a_agent_card:safePublicUrl(declaredFrontDoor.a2a_agent_card),
+    a2a_endpoint:safePublicUrl(declaredFrontDoor.a2a_endpoint),
+    openapi_safe:safePublicUrl(declaredFrontDoor.openapi_safe),
+    openapi_full:safePublicUrl(declaredFrontDoor.openapi_full),
+    distribution_operator:safePublicUrl(declaredFrontDoor.distribution_operator),
+    grok_marketplace:safePublicUrl(declaredFrontDoor.grok_marketplace),
+    purpose:declaredFrontDoor.purpose||null,
+    read_only_purpose:declaredFrontDoor.read_only_purpose||null
+  };
   const entries=[];
 
   for(const product of directory.products||[]){
@@ -146,7 +165,7 @@ export function buildPainIndex(){
     },
     purpose:'Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.',
     routing_rule:'Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.',
-    universal_front_door:registry.universal_front_door||null,
+    universal_front_door:publicUniversalFrontDoor,
     payment_boundary:registry.payment_boundary||machine.safety||null,
     summary:{
       entries:entries.length,
