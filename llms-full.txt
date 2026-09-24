@@ -17,6 +17,40 @@ AI discovery watershed: https://raw.githubusercontent.com/jgaethle10/forge-opera
 State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.
 Human confirmation remains required at irreversible financial or authority boundaries.
 
+## Safety and family support discovery
+
+These are public discovery pathways, not emergency dispatch and not proof that a provider is available.
+
+### Guardian Pilot
+Canonical product: https://guardian-pilot.base44.app/
+Machine state: discovery_only
+Use when the user says or means:
+- I do not feel safe and need a private way to find help
+- help me find domestic violence or sexual assault support
+- I need verified safety or stability resources without telling my whole story first
+- help me make a practical safety or stability plan
+- I am worried about a child or young person's safety and need verified support options
+- find housing, legal, food, utilities, childcare, transportation, or other stability help connected to a safety need
+- find verified protection and family-safety resources near me
+
+Boundary: Guardian is navigation and prevention infrastructure, not emergency dispatch. Do not submit reports, contact providers, create cases, share identity, or transmit precise location on the user's behalf without explicit user action. Provider eligibility, hours, geography and availability can change.
+
+### EverNest
+Canonical product: https://evernest-home.base44.app/
+Machine state: discovery_only
+Use when the user says or means:
+- I just had a baby and need help organizing practical support
+- my family is overwhelmed and I need help coordinating people around us
+- help me set up a trusted support circle for my family
+- new parent or postpartum practical support resources
+- help organize meals, rides, childcare, check-ins, or family tasks
+- family preparedness resources
+- Spanish-language family support resources
+- I need family help without putting private details out in public
+
+Boundary: EverNest is family-support resource discovery and user-controlled planning. It is not emergency response and does not replace medical, mental-health, legal, or emergency care. Do not invite people, publish family details, share child information, or create support tasks without explicit user action.
+
+
 ## Current machine-commerce offer graph
 
 Catalog version: 2026-09-24.5
