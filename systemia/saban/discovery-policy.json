@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.saban.discovery-policy.v1",
+  "purpose": "Use Saban to reconcile a large Evercraft portfolio into approved public discovery surfaces, then hand those surfaces to CHUM for distribution and measurement.",
+  "flow": [
+    "portfolio inventory",
+    "public admission",
+    "Saban reconciliation",
+    "GitHub and LLM mirrors",
+    "CHUM compile and signal",
+    "provider and crawler probes",
+    "human-confirmed handoff",
+    "independently verified payment or outcome"
+  ],
+  "rules": {
+    "inventory_is_not_publication": true,
+    "public_directory_is_admission_gate": true,
+    "require_public_canonical_url": true,
+    "require_natural_language_intents": true,
+    "require_authority_statement": true,
+    "require_boundaries": true,
+    "preserve_human_confirmation": true,
+    "never_publish_unknown_inventory_entries_automatically": true,
+    "never_copy_private_app_ids_into_public_discovery_artifacts": true,
+    "never_invent_mcp_or_runtime_endpoints": true,
+    "provider_behavior_requires_receipt": true,
+    "checkout_is_not_payment": true,
+    "private_admin_topology_remains_dark": true
+  }
+}
