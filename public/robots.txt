@@ -1,6 +1,59 @@
+# Evercraft public commercial discovery is intentionally open to legitimate search and AI retrieval.
+# Private/admin topology is not exposed through these public routes.
+
+User-agent: OAI-SearchBot
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: GPTBot
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: Claude-SearchBot
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: Claude-User
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: Perplexity-User
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: Googlebot
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Allow: /api/discover
+Disallow: /api/
+
 User-agent: *
 Allow: /
-Allow: /llms.txt
-Allow: /.well-known/evercraft-capabilities.json
-Allow: /.well-known/evercraft-products.json
+Allow: /api/discover
 Disallow: /api/
+
+# The running server appends the absolute Sitemap URL dynamically.
