@@ -43,7 +43,9 @@
     "pain_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
     "handoff_attribution": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json",
     "answer_graph": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json",
-    "answer_graph_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.txt"
+    "answer_graph_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.txt",
+    "failure_routes": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-failure-routes.json",
+    "failure_routes_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/failure-routes.txt"
   },
   "verified_crawler_controls": [
     {
@@ -68,7 +70,8 @@
     "handoff_attribution": "signed CHUM referrals plus public landing/checkout-start receipts",
     "verified_revenue": "trusted payment-authority receipt only",
     "provider_identity": "caller-asserted in referrals unless separately verified by a provider receipt",
-    "answer_doors": "deterministic natural-language intent graph generated from the public machine-commerce catalog; duplicate phrases are grouped, not multiplied"
+    "answer_doors": "deterministic natural-language intent graph generated from the public machine-commerce catalog; duplicate phrases are grouped, not multiplied",
+    "failure_state_routing": "catalog-backed exit routes converged with CHUM answer doors and CI verification"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
@@ -90,6 +93,8 @@
     "routing_without_human_gate": true,
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
-    "irreversible_financial_or_authority_actions_require_human_confirmation": true
+    "irreversible_financial_or_authority_actions_require_human_confirmation": true,
+    "explicit_failure_state_exits": true,
+    "automatic_purchase_from_failure_route": false
   }
 }
