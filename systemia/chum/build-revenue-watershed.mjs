@@ -4,6 +4,25 @@ import path from 'node:path';
 const MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const UNIVERSAL_MCP = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
 
+const BLOCKED_PUBLIC_HOSTS = new Set([
+  'systemiacommandcenters.com',
+  'www.systemiacommandcenters.com'
+]);
+
+function safeOfferUrl(offer) {
+  const fallback = MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer?.public_id || ''));
+  const value = String(offer?.public_url || '').trim();
+  if (!value) return fallback;
+  try {
+    const url = new URL(value);
+    if (!['http:', 'https:'].includes(url.protocol)) return fallback;
+    if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
+    return url.toString();
+  } catch {
+    return fallback;
+  }
+}
+
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const offers = (catalog.offers || [])
   .filter((offer) => offer && offer.public_id && offer.name)
@@ -28,7 +47,7 @@ const toPublicOffer = (offer) => ({
   offers: offer.offers || [],
   commercial_state: offer.commercial_state,
   machine_state: offer.machine_state,
-  public_url: offer.public_url,
+  public_url: safeOfferUrl(offer),
   human_ui_required: Boolean(offer.human_ui_required),
   confirmation: offer.confirmation,
   payment_authority: offer.payment_authority,
