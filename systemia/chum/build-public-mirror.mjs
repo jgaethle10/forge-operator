@@ -217,7 +217,9 @@ llmsLines.push(
   '- Private/admin topology remains private.',
   ''
 );
-fs.writeFileSync('public/llms-full.txt', llmsLines.join('\n'));
+const llmsFullText = llmsLines.join('\n');
+fs.writeFileSync('public/llms-full.txt', llmsFullText);
+fs.writeFileSync('llms-full.txt', llmsFullText);
 
 const agentDirectory = {
   schema: 'evercraft.agent-directory.v2',
