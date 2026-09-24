@@ -71,3 +71,22 @@ This proof is source/runtime-kernel evidence only. It does not by itself prove a
 Planning and continuity are separate from capability availability. Phone calls, advertising, payments, publishing, or other consequential actions may enter a goal plan only when a real adapter exists, and their existing human or product-specific gates remain authoritative.
 
 Run `npm run proof:goal-runtime` for the deterministic continuity proof, or `npm run proof:systemia` for the full organism plus goal-runtime proof set.
+
+
+### Durable file adapter and CLI
+
+`goal-store.mjs` provides an atomic JSON-file persistence adapter with optimistic revision checks. It is intentionally storage-simple so Yard Operator or another runtime adapter can swap in a database later without changing the goal-state contract. The file adapter survives process and chat boundaries and rejects stale writers instead of silently overwriting newer mission state.
+
+`goal-cli.mjs` exposes the runtime as a small operator surface:
+
+```bash
+npm run goal -- init ./state/customer-goal.json customer-goal "Finish the requested outcome"
+npm run goal -- plan ./state/customer-goal.json ./plan.json
+npm run goal -- status ./state/customer-goal.json
+npm run goal -- authorize ./state/customer-goal.json gated-work authorization:ref
+npm run goal -- start ./state/customer-goal.json work-key
+npm run goal -- outcome ./state/customer-goal.json work-key complete exec:receipt "" evidence:ref
+npm run goal -- receipt ./state/customer-goal.json acceptance:ref
+```
+
+The CLI does not create new external authority. It only persists and advances work that the goal runtime already admits.
