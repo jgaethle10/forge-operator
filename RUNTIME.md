@@ -10,6 +10,21 @@ Systemia → Forge/Yard release → CI → immutable image → Yard Operator →
 
 See `evercraft.compute.json` and `YARD_OPERATOR.md`.
 
+## One-organism coordination
+
+Systemia's provider-independent coordination kernel lives under `systemia/organism/`.
+
+A release that can dispatch multi-agent or elastic-agent work must preserve these invariants before runtime admission:
+
+- one canonical mission state;
+- human/authority gates before execution;
+- required assigned-agent memory freshness before ordinary work;
+- memory-repair exemption so stale memory can heal without deadlock;
+- equivalent-work suppression before execution;
+- observed postflight reconciliation with a coordination receipt.
+
+`npm run proof:organism` is part of the repository's required `npm run check` path. A green source proof does not itself prove Yard deployment.
+
 ## Release artifact
 
 `ghcr.io/jgaethle10/forge-operator:latest`
