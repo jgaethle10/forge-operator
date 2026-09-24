@@ -38,7 +38,12 @@ jobs:
         run: |
           set -euo pipefail
           npm run chum:revenue
+          npm run chum:index
+          npm run chum:answers
+          npm run chum:mirror
           test -f public/chum/intents/forensiscope-evidence-review-v1/offer.json
+          test -f public/.well-known/evercraft-pain-index.json
+          test -f public/chum/answers/index.json
           node - <<'NODE'
           const fs = require('fs');
           const revenue = JSON.parse(fs.readFileSync('public/chum/revenue.json','utf8'));
@@ -87,6 +92,14 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
+          curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-pain-index.json > /tmp/pain-index.json
+          curl --fail --silent http://127.0.0.1:3000/chum/answers/index.json > /tmp/answer-graph.json
+          curl --fail --silent http://127.0.0.1:3000/chum/ > /tmp/chum.html
+          curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
+          curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
+          curl --fail --silent --get \
+            --data-urlencode "q=I cannot find a discontinued machine part and I only have markings measurements and a photo" \
+            http://127.0.0.1:3000/api/discover > /tmp/portfolio-route.json
           curl --fail --silent http://127.0.0.1:3000/forensiscope/llms.txt > /tmp/forensiscope-llms.txt
           curl --fail --silent http://127.0.0.1:3000/forensiscope/discovery.json > /tmp/forensiscope-discovery.json
           curl --fail --silent http://127.0.0.1:3000/chum/intents/forensiscope-evidence-review-v1/offer.json > /tmp/forensiscope-offer.json
@@ -99,6 +112,12 @@ jobs:
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const painIndex = JSON.parse(fs.readFileSync('/tmp/pain-index.json','utf8'));
+          const answerGraph = JSON.parse(fs.readFileSync('/tmp/answer-graph.json','utf8'));
+          const portfolioRoute = JSON.parse(fs.readFileSync('/tmp/portfolio-route.json','utf8'));
+          const chumHtml = fs.readFileSync('/tmp/chum.html','utf8');
+          const robots = fs.readFileSync('/tmp/robots.txt','utf8');
+          const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
           const forensiscopeDiscovery = JSON.parse(fs.readFileSync('/tmp/forensiscope-discovery.json','utf8'));
           const forensiscopeOffer = JSON.parse(fs.readFileSync('/tmp/forensiscope-offer.json','utf8'));
           const forensiscopeRoute = JSON.parse(fs.readFileSync('/tmp/forensiscope-route.json','utf8'));
@@ -109,6 +128,21 @@ jobs:
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+          if (painIndex.schema !== 'evercraft.chum.pain-index.v1') throw new Error('pain index missing');
+          if (painIndex.universal_front_door?.read_only_registry_name !== 'io.github.jgaethle10/evercraft-capability-discovery') throw new Error('read-only discovery MCP missing from pain index');
+          if (JSON.stringify(painIndex).includes('systemiacommandcenters.com')) throw new Error('Marketing Agency route leaked into pain index');
+          if (answerGraph.schema !== 'evercraft.chum.answer-graph.v2') throw new Error('answer graph v2 missing');
+          if (answerGraph.summary?.pain_index_entries !== painIndex.entries?.length) throw new Error('answer graph/pain index parity failed');
+          if (!chumHtml.includes('Describe the problem')) throw new Error('CHUM problem-language form missing');
+          if (!chumHtml.includes('io.github.jgaethle10/evercraft-capability-discovery')) throw new Error('CHUM read-only MCP door missing');
+          if (!Array.isArray(portfolioRoute.capability_matches) || !portfolioRoute.capability_matches.some((x) => x.product_key === 'findmypart')) {
+            throw new Error('Full-portfolio brand-blind route did not surface FindMyPart');
+          }
+          if (!robots.includes('User-agent: OAI-SearchBot')) throw new Error('OAI-SearchBot policy missing');
+          if (!robots.includes('Sitemap: https://discovery.example.test/sitemap.xml')) throw new Error('absolute runtime sitemap declaration missing');
+          if (!sitemap.includes('<loc>https://discovery.example.test/chum/</loc>')) throw new Error('absolute CHUM sitemap URL missing');
+          if (!sitemap.includes('/chum/intents/findmypart-paid-hunt-v1/')) throw new Error('machine-offer pain page missing from root sitemap');
+          if (sitemap.includes('<loc>/')) throw new Error('relative sitemap URL leaked from runtime');
           if (forensiscopeDiscovery.product_key !== 'forensiscope') throw new Error('ForensiScope discovery manifest missing');
           if (!forensiscopeLlms.includes('files too large for normal chatbots')) throw new Error('ForensiScope brand-blind pain language missing');
           if (forensiscopeRoute.matches?.[0]?.public_id !== 'forensiscope-evidence-review-v1') {
