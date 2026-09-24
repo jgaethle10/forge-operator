@@ -45,8 +45,9 @@ jobs:
 
       - name: Regenerate CHUM public mirrors
         run: |
-          npm run chum:mirror
           npm run chum:sync
+          npm run chum:revenue
+          npm run chum:mirror
 
       - name: Publish changed CHUM mirrors
         if: github.ref == 'refs/heads/main'
@@ -71,6 +72,7 @@ jobs:
       - name: Validate machine-discovery contracts
         run: |
           npm run check:ai
+          npm run test:chum-router
           npm run chum:validate
 
       - name: Probe static AI doorways
