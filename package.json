@@ -50,7 +50,8 @@
     "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
     "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs",
     "chum:router-recall": "node systemia/chum/router-recall.mjs",
-    "proof:offline-continuity": "node systemia/network/offline-continuity-proof.mjs --require-local-inference --out ./offline-continuity-output"
+    "proof:offline-continuity": "node systemia/network/offline-continuity-proof.mjs --require-local-inference --out ./offline-continuity-output",
+    "chum:commerce-canary": "node systemia/chum/commerce-canary.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
