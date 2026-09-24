@@ -123,6 +123,76 @@
       "doorway_state": "source_build_green",
       "conformance_state": "not_yet_propagated",
       "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "career-command",
+      "name": "Evercraft Career Command",
+      "class": "interview_practice_and_career_preparation",
+      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "llms_url": "https://evercraft-career-command.base44.app/llms.txt",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "class": "website_conversion_and_technical_audit",
+      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "llms_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=llms",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "name": "Evercraft Deck Capital Fit",
+      "class": "capital_fit_and_founder_readiness_research",
+      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "llms_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=llms",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch",
+      "class": "done_for_you_business_website_service",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "llms_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=llms",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "faie",
+      "name": "FAIE",
+      "class": "evidence_first_agriculture_and_resilience_research",
+      "canonical_url": "https://faie.base44.app/",
+      "llms_url": "https://faie.base44.app/functions/faieAgentGateway?view=llms",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "class": "event_discovery_and_labeled_promotion",
+      "canonical_url": "https://event-wave.base44.app/",
+      "llms_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=llms",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "class": "local_business_rewards_and_partnership",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "llms_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
     }
   ],
   "state_semantics": {
