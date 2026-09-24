@@ -9,4 +9,8 @@
   <url><loc>/chum/health</loc></url>
   <url><loc>/chum/resolve?q=video%20too%20large%20for%20AI</loc></url>
   <url><loc>/.well-known/evercraft-offers.json</loc></url>
+  <url><loc>/llms-full.txt</loc></url>
+  <url><loc>/openapi.json</loc></url>
+  <url><loc>/schema.jsonld</loc></url>
+  <url><loc>/ai-discovery.html</loc></url>
 </urlset>
