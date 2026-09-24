@@ -15,6 +15,8 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
 - Read-only natural-language router: GET /api/discover?q={problem}
+- Handoff attribution contract: /.well-known/evercraft-chum-attribution.json
+- Optional signed referral creation: POST /api/chum/referral
 - Forge capability contract: /.well-known/evercraft-capabilities.json
 - Portfolio registry catalog: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
 - Official MCP namespace: io.github.jgaethle10
@@ -98,7 +100,7 @@ Evercraft uses CHUM, the Capability Handoff & Utility Mesh, to measure these sta
 
 surface ready -> crawler reachable -> registry published -> provider pickup observed -> AI handoff attributed -> payment verified
 
-A reachable page is not proof of indexing. Indexing is not proof of recommendation. A recommendation is not proof of payment.
+A reachable page is not proof of indexing. Indexing is not proof of recommendation. A recommendation is not proof of payment. A provider label on a public referral is caller-asserted unless a separate provider receipt verifies it.
 
 ## Public/private boundary
 
