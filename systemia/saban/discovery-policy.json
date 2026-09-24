@@ -1,0 +1,24 @@
+{
+  "schema": "evercraft.saban.discovery-policy.v1",
+  "purpose": "Scale public product discovery without leaking private Evercraft topology or inventing capabilities.",
+  "rules": {
+    "inventory_is_not_publication": true,
+    "public_directory_is_admission_gate": true,
+    "require_public_canonical_url": true,
+    "require_natural_language_intents": true,
+    "require_authority_statement": true,
+    "require_boundaries": true,
+    "preserve_human_confirmation": true,
+    "never_publish_unknown_inventory_entries_automatically": true,
+    "never_copy_private_app_ids_into_public_discovery_artifacts": true,
+    "never_invent_mcp_or_runtime_endpoints": true,
+    "provider_behavior_requires_receipt": true,
+    "checkout_is_not_payment": true
+  },
+  "outputs": [
+    "registry/<product_key>/README.md",
+    "registry/<product_key>/llms.txt",
+    "artifacts/saban-discovery/latest.json",
+    "artifacts/saban-discovery/latest.md"
+  ]
+}
