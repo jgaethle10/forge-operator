@@ -9,8 +9,12 @@ on:
       - "conformance/**"
       - "registry/**"
       - "public/.well-known/**"
+      - "public/discovery/**"
+      - "public/llms.txt"
+      - "public/robots.txt"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
+      - "scripts/validate-ai-conformance.mjs"
       - ".github/workflows/chum-watershed.yml"
   schedule:
     - cron: "17 */6 * * *"
@@ -36,14 +40,26 @@ jobs:
           npm run chum:validate
 
       - name: Probe static AI doorways
-        id: static-doorways
+        id: static
         continue-on-error: true
         run: node scripts/check-ai-doorways.mjs
 
       - name: Canary live MCP and Official Registry doors
+        id: mcp
+        if: always()
+        continue-on-error: true
         run: npm run chum:mcp
 
+      - name: Audit crawler and AI-search reachability
+        id: crawlers
+        if: always()
+        continue-on-error: true
+        run: npm run chum:crawlers
+
       - name: Run authorized brand-blind provider probes
+        id: providers
+        if: always()
+        continue-on-error: true
         env:
           CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
           CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
@@ -52,10 +68,14 @@ jobs:
         run: npm run chum:providers
 
       - name: Run CHUM portfolio mesh
+        id: mesh
+        if: always()
+        continue-on-error: true
         run: npm run chum
 
       - name: Announce updated central discovery surfaces
-        if: github.event_name != 'schedule'
+        if: ${{ github.event_name != 'schedule' && steps.static.outcome == 'success' && steps.mcp.outcome == 'success' && steps.crawlers.outcome == 'success' && steps.mesh.outcome == 'success' }}
+        continue-on-error: true
         run: npm run chum:announce
 
       - name: Write watershed summary
@@ -65,9 +85,13 @@ jobs:
           {
             echo "## CHUM watershed"
             echo
-            echo "Static doorway step: ${{ steps.static-doorways.outcome }}"
+            echo "Static doorway: ${{ steps.static.outcome }}"
+            echo "MCP / registry: ${{ steps.mcp.outcome }}"
+            echo "Crawler reachability: ${{ steps.crawlers.outcome }}"
+            echo "Provider probes: ${{ steps.providers.outcome }}"
+            echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo
-            for FILE in artifacts/chum/mcp-canary-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/mcp-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -84,3 +108,20 @@ jobs:
             artifacts/chum/**
             artifacts/ai-doorway-canary.*
           if-no-files-found: warn
+
+      - name: Enforce watershed health
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          FAILED=0
+          for PAIR in             "static:${{ steps.static.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
+            NAME="${PAIR%%:*}"
+            STATE="${PAIR#*:}"
+            echo "${NAME}: ${STATE}"
+            if [ "${STATE}" != "success" ]; then FAILED=1; fi
+          done
+          if [ "${FAILED}" -ne 0 ]; then
+            echo "One or more CHUM lanes failed. Receipts were still collected for repair."
+            exit 1
+          fi
