@@ -7,4 +7,8 @@ Allow: /.well-known/evercraft-chum.json
 Allow: /chum/health
 Allow: /chum/resolve
 Allow: /.well-known/evercraft-offers.json
+Allow: /llms-full.txt
+Allow: /openapi.json
+Allow: /schema.jsonld
+Allow: /ai-discovery.html
 Disallow: /api/
