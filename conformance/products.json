@@ -123,6 +123,111 @@
       "doorway_state": "source_build_green",
       "conformance_state": "not_yet_propagated",
       "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "career-command",
+      "name": "Evercraft Career Command",
+      "class": "agent_commerce",
+      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "llms_url": "https://evercraft-career-command.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/career-command",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "class": "agent_commerce",
+      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "llms_url": "https://systemia-audit-pro.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/systemia-website-audit",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "deck-capital-fit",
+      "name": "Evercraft Deck Capital Fit",
+      "class": "agent_commerce",
+      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "llms_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=llms",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/deck-capital-fit",
+        "version": "2.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch",
+      "class": "agent_commerce",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "llms_url": "https://instant-website-builder-usa-6feac193.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/website-launch",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "faie",
+      "name": "FAIE",
+      "class": "evidence_aware_agent_commerce",
+      "canonical_url": "https://faie.base44.app/",
+      "llms_url": "https://faie.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/faie",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "class": "agent_commerce",
+      "canonical_url": "https://event-wave.base44.app/",
+      "llms_url": "https://event-wave.base44.app/llms.txt",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/eventwave",
+        "version": "1.0.0",
+        "publication_state": "published"
+      }
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "class": "bounded_membership_discovery",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "llms_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
+      "doorway_state": "machine_commerce_live",
+      "conformance_state": "machine_commerce_live",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.1.0",
+        "publication_state": "published"
+      }
     }
   ],
   "state_semantics": {
