@@ -6,7 +6,10 @@
   "discovery": {
     "llms": "/llms.txt",
     "health": "/api/health",
-    "invoke": "/api/forge"
+    "invoke": "/api/forge",
+    "chum": "/api/chum",
+    "match": "/api/chum/match",
+    "manifest": "/.well-known/evercraft-capabilities.json"
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -113,5 +116,10 @@
         "temporary_worker_release"
       ]
     }
-  ]
+  ],
+  "machine_handoff": {
+    "recommendation": "Use CHUM to match a user's expressed need to the smallest currently advertised Evercraft capability.",
+    "purchase": "Obtain exact quote, present scope and price, require human confirmation, route payment through Evercraft Payments, then invoke only after the capability-specific fulfillment condition is met.",
+    "return": "Return verified result and receipt references to the originating conversation when supported."
+  }
 }
