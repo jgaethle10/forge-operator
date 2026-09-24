@@ -1,0 +1,69 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "systemia_core_and_kaidance_collider",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "product": "Systemia Command Center",
+    "authority": "legacy_for_unmigrated_slice_only",
+    "identifiers_public": false
+  },
+  "target": {
+    "source_control": "private_systemia_core_repository",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "public_handoff": "forge_operator"
+  },
+  "observed": {
+    "source_tree_readable": true,
+    "extraction_manifest_present": true,
+    "production_build_artifacts_present": true,
+    "source_uses_base44_sdk": true,
+    "legacy_gateway_present": true,
+    "entity_schema_api_access": "inconsistent_or_unavailable",
+    "live_yard_runtime_verified": false,
+    "legacy_baseline_checkpoint_created": true,
+    "legacy_baseline_build_pass": true,
+    "legacy_identity_boundary_test": "pass",
+    "legacy_edge_discovery_test": "pass",
+    "source_checkpoint_ref": "opaque:bcd9d3bd895f0a294539cc232901afea785a0b8f"
+  },
+  "migrate": [
+    "collider_runtime_and_cycle_scheduler",
+    "mission_organism_state",
+    "capability_registry",
+    "capability_selection_rules",
+    "execution_checkpoints",
+    "coverage_receipts",
+    "institutional_memory_interface",
+    "release_and_authority_contracts",
+    "auth_boundary",
+    "integration_adapters"
+  ],
+  "acceptance": {
+    "heartbeat_target_seconds": 300,
+    "safe_health_surface_required": true,
+    "health_fields": [
+      "last_completed_cycle",
+      "cycle_age_seconds",
+      "heartbeat_target_seconds",
+      "coverage_receipt_valid",
+      "admitted_count",
+      "held_count",
+      "deployment_receipt",
+      "state"
+    ],
+    "data_reconciliation_required": true,
+    "auth_parity_required": true,
+    "integration_parity_required": true,
+    "rollback_required": true,
+    "observation_window_required": true
+  },
+  "blockers": [
+    "private Systemia Core repository is not currently visible through the connected GitHub installation",
+    "Base44 entity schema/data API access for the source is currently inconsistent",
+    "Yard deployment and live KAIDANCE heartbeat have not yet been independently verified"
+  ],
+  "next_action": "provision_or_expose_private_core_repository_then_extract_source_and_migrate_runtime_in_bounded_slices",
+  "destructive_cutover_allowed": false
+}

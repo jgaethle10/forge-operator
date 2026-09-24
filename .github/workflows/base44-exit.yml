@@ -1,0 +1,31 @@
+name: Base44 exit and KAIDANCE proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/migrations/base44-exit/**'
+      - 'systemia/collider/**'
+      - 'scripts/validate-base44-exit.mjs'
+      - '.github/workflows/base44-exit.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/migrations/base44-exit/**'
+      - 'systemia/collider/**'
+      - 'scripts/validate-base44-exit.mjs'
+      - '.github/workflows/base44-exit.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Base44 exit policy
+        run: node scripts/validate-base44-exit.mjs
+      - name: Prove KAIDANCE collider
+        run: node systemia/collider/proof.mjs
