@@ -23,6 +23,9 @@ const chumDirectory = JSON.parse(
 const chumCatalog = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, 'registry', 'catalog.json'), 'utf8')
 );
+const chumOffers = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'public', '.well-known', 'evercraft-offers.json'), 'utf8')
+);
 
 
 const forensiScopeHandoff = {
@@ -98,9 +101,12 @@ app.get('/chum/health', (_req: Request, res: Response) => {
     provider: 'Evercraft',
     public: true,
     product_count: Array.isArray(chumDirectory.products) ? chumDirectory.products.length : 0,
+    sell_now_offer_count: Array.isArray(chumOffers.offers) ? chumOffers.offers.length : 0,
+    payment_ready_offer_count: Array.isArray(chumOffers.offers) ? chumOffers.offers.filter((offer: any) => String(offer.machine_state || '').startsWith('payment_ready')).length : 0,
     universal_front_door: chumCatalog.universal_front_door || null,
     directory: '/.well-known/evercraft-products.json',
     manifest: '/.well-known/evercraft-chum.json',
+    offers: '/.well-known/evercraft-offers.json',
     resolver: '/chum/resolve?q=<plain-language-problem>',
     timestamp: new Date().toISOString(),
   });
@@ -109,7 +115,7 @@ app.get('/chum/health', (_req: Request, res: Response) => {
 app.get('/chum/resolve', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
   const query = String(req.query.q || req.query.query || '').trim();
   const limit = Number(req.query.limit || 5);
-  const result = resolveChumIntent(chumDirectory, chumCatalog, query, limit);
+  const result = resolveChumIntent(chumDirectory, chumCatalog, query, limit, chumOffers);
   res.status(query ? 200 : 400).json(result);
 });
 
