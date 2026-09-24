@@ -1,0 +1,60 @@
+name: CHUM master intent index
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "public/.well-known/evercraft-products.json"
+      - "registry/catalog.json"
+      - "systemia/chum/build-intent-index.mjs"
+  schedule:
+    - cron: "29 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chum-master-intent-index
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build master buyer-intent index
+        run: node systemia/chum/build-intent-index.mjs
+
+      - name: Validate generated index
+        shell: bash
+        run: |
+          node -e "const fs=require('fs');const i=JSON.parse(fs.readFileSync('public/chum/intents/index.json','utf8'));const p=JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));if(i.schema!=='evercraft.chum.intent-index.v1'||i.products.length!==p.products.length)process.exit(1);"
+
+      - name: Publish refreshed index
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Evercraft CHUM"
+          git config user.email "chum@users.noreply.github.com"
+          git fetch origin main --quiet
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "Newer main exists; newer run will publish."
+            exit 0
+          fi
+          git add public/chum/intents/index.json public/chum/intents/index.txt public/.well-known/evercraft-intents.json
+          if git diff --cached --quiet; then
+            echo "Master intent index is current."
+          else
+            git commit -m "CHUM refresh master buyer-intent index [skip ci]"
+            git push origin HEAD:main
+          fi
