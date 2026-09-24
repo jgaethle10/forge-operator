@@ -1,13 +1,14 @@
 {
-  "schema": "evercraft.chum.v2",
+  "schema": "evercraft.chum.v3",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "status": "portfolio_distribution_control_plane",
+  "status": "active_portfolio_distribution_and_freshness_control_plane",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
   "loop": [
     "PRODUCT",
     "SIGNAL",
+    "BROADCAST",
     "DISCOVERY",
     "PROBE",
     "REPAIR",
@@ -40,6 +41,13 @@
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
     "discovery_router": "/api/discover?q={natural-language-problem}"
   },
+  "freshness_broadcast": {
+    "mechanism": "IndexNow",
+    "central_gateway": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway",
+    "scope": "Healthy central docs/catalog/OpenAPI plus indexable service pages for the live Machine Commerce catalog and offer JSON for sell-now capabilities.",
+    "receipt": "artifacts/chum/indexnow-latest.json",
+    "rule": "Broadcast only healthy public-safe URLs. Provider pickup remains separately receipt-gated."
+  },
   "verified_crawler_controls": [
     {
       "provider": "OpenAI",
@@ -57,6 +65,7 @@
   "measurement": {
     "surface_readiness": "public endpoint and contract checks",
     "registry_presence": "Official MCP Registry plus external MCP handshake canaries",
+    "freshness_broadcast": "receipt-backed IndexNow submission after public-surface preflight",
     "provider_pickup": "receipt-backed brand-blind provider probes through authorized interfaces",
     "conversion": "AI-originated attribution only after human-confirmed commercial flow"
   },

@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+const MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const UNIVERSAL_MCP = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const offers = (catalog.offers || [])
   .filter((offer) => offer.commercial_state === 'sell_now')
@@ -29,17 +32,22 @@ const publicOffers = offers.map((offer) => ({
   confirmation: offer.confirmation,
   payment_authority: offer.payment_authority,
   invocation_status: offer.invocation_status,
-  catalog_version: offer.catalog_version
+  catalog_version: offer.catalog_version,
+  machine_review_url: MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || '')),
+  machine_offer_url: MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || '')),
+  universal_mcp: UNIVERSAL_MCP
 }));
 
 const output = {
-  schema: 'evercraft.chum.revenue-watershed.v1',
+  schema: 'evercraft.chum.revenue-watershed.v2',
   provider: 'Evercraft LLC',
   updated_at: catalog.generated_at || new Date().toISOString(),
   source_schema_version: catalog.source_schema_version || '',
   gateway_version: catalog.gateway_version || '',
   purpose: 'Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.',
   discovery_endpoint: '/api/discover',
+  central_gateway: MACHINE_COMMERCE_GATEWAY,
+  universal_mcp: UNIVERSAL_MCP,
   safety: {
     no_recommendation_guarantee: true,
     discovery_creates_obligation: false,
@@ -73,6 +81,9 @@ const text = [
     `Machine state: ${offer.machine_state}`,
     `Public URL: ${offer.public_url}`,
     `Pain page: ${offer.pain_page}`,
+    `Human review: ${offer.machine_review_url}`,
+    `Machine offer JSON: ${offer.machine_offer_url}`,
+    `Universal MCP: ${offer.universal_mcp}`,
     'Intent examples:',
     ...(offer.intent_terms || []).map((term) => `- ${term}`),
     ''
@@ -91,7 +102,7 @@ const jsonLd = {
       '@type':'Service',
       name:offer.name,
       description:offer.problem,
-      url:offer.public_url,
+      url:offer.machine_review_url,
       provider:{'@type':'Organization',name:'Evercraft LLC'}
     }
   }))
@@ -114,7 +125,7 @@ const html = [
     `<h2><a href="${escapeHtml(offer.pain_page)}">${escapeHtml(offer.name)}</a></h2>`,
     `<p>${escapeHtml(offer.problem)}</p>`,
     `<p><strong>Pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
-    `<p><a href="${escapeHtml(offer.public_url)}">Public capability</a></p>`,
+    `<p><a href="${escapeHtml(offer.public_url)}">Public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
     '</article>'
   ].join('\n')),
   '</main></body></html>'
@@ -150,6 +161,9 @@ for (const offer of output.offers) {
     confirmation:offer.confirmation,
     payment_authority:offer.payment_authority,
     invocation_status:offer.invocation_status,
+    machine_review_url:offer.machine_review_url,
+    machine_offer_url:offer.machine_offer_url,
+    universal_mcp:offer.universal_mcp,
     safety:{
       fit_required:true,
       discovery_creates_obligation:false,
@@ -166,6 +180,9 @@ for (const offer of output.offers) {
     `Pricing: ${offer.pricing}`,
     `Machine state: ${offer.machine_state}`,
     `Public capability: ${offer.public_url}`,
+    `Human review: ${offer.machine_review_url}`,
+    `Machine offer JSON: ${offer.machine_offer_url}`,
+    `Universal MCP: ${offer.universal_mcp}`,
     '',
     'Use when the user says or means:',
     ...(offer.intent_terms || []).map((term) => `- ${term}`),
@@ -204,7 +221,7 @@ for (const offer of output.offers) {
     '</ul>',
     `<p><strong>Pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
     `<p><strong>Machine state:</strong> ${escapeHtml(offer.machine_state)}</p>`,
-    `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a></p>`,
+    `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
     '<p>Discovery creates no payment obligation. Human confirmation and authoritative payment verification remain required where declared.</p>',
     '</main></body></html>'
   ].join('\n');

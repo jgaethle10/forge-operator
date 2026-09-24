@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.discovery-watershed.v2",
+  "schema": "evercraft.discovery-watershed.v3",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
   "updated_at": "2026-09-24",
@@ -19,7 +19,10 @@
     "sell_now_revenue_text": "/chum/revenue.txt",
     "intent_router": "/api/discover?q={natural-language-problem}",
     "revenue_router": "/api/revenue-watershed",
-    "chum_manifest": "/.well-known/evercraft-chum.json"
+    "chum_manifest": "/.well-known/evercraft-chum.json",
+    "revenue_watershed": "/chum/revenue.json",
+    "revenue_watershed_text": "/chum/revenue.txt",
+    "revenue_watershed_html": "/chum/revenue.html"
   },
   "universal_front_door": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
@@ -33,5 +36,10 @@
     "paid": "Authoritative provider payment verification exists."
   },
   "routing_rule": "Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
-  "private_surfaces": "not advertised"
+  "private_surfaces": "not advertised",
+  "freshness_broadcast": {
+    "coordinator": "CHUM",
+    "mechanism": "IndexNow",
+    "semantics": "Healthy public capability pages are announced for freshness. Submission is not proof of indexing, recommendation, citation or conversion."
+  }
 }
