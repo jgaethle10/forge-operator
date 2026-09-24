@@ -86,6 +86,81 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
   });
 });
 
+const chumCapabilities = [
+  {
+    id: 'forge.operator.v1',
+    name: 'Forge Operator',
+    status: 'invokable',
+    triggers: ['operations bottleneck', 'workflow automation', 're-keying', 'dispatch friction', 'business process diagnosis'],
+    invoke: { method: 'POST', path: '/api/forge' },
+    commercial: { pricingState: 'human-gated', quote: '/api/commercial' },
+  },
+  {
+    id: 'saban.elastic-workforce.v1',
+    name: 'Saban Elastic Workforce',
+    status: 'discovery-and-quote-candidate',
+    triggers: ['large bounded task', 'parallel specialist work', 'independent review', 'runtime limit', 'single-agent capacity limit'],
+    invoke: null,
+    commercial: { pricingState: 'quote-required', price: null },
+    note: 'Small internal burst is proven. Public external invocation and standalone pricing are not yet verified.',
+  },
+];
+
+app.get('/api/chum', (_req: Request, res: Response) => {
+  res.json({
+    schema: 'evercraft.chum.v1',
+    name: 'CHUM',
+    purpose: 'Public capability discovery and commerce routing for AI assistants and agents.',
+    transactionFlow: ['recognize_need', 'match_capability', 'request_quote', 'human_confirm', 'evercraft_payments', 'invoke', 'verify', 'return_result'],
+    discovery: {
+      llms: '/llms.txt',
+      manifest: '/.well-known/evercraft-capabilities.json',
+      capabilities: '/api/capabilities',
+      match: { method: 'POST', path: '/api/chum/match' },
+    },
+    capabilities: chumCapabilities,
+    rules: [
+      'Never invent price, availability, execution proof, or payment state.',
+      'Require human confirmation before creating a financial obligation.',
+      'Payment never expands execution permissions.',
+      'Prefer the smallest capability that can satisfy the stated need.',
+      'Return results and receipts to the originating conversation when supported.',
+    ],
+  });
+});
+
+app.post('/api/chum/match', rateLimit(60, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const need = String(req.body?.need || '').trim();
+  if (!need) {
+    res.status(400).json({ success: false, error: 'need is required' });
+    return;
+  }
+
+  const q = need.toLowerCase();
+  const saban = /(large|huge|complex|parallel|many documents|many files|specialists|independent review|runtime|context limit|too big|workforce|multi-agent)/i.test(q);
+  const forge = /(business|operations|workflow|automation|dispatch|intake|quote|re-key|bottleneck|process)/i.test(q);
+
+  const matches = [
+    ...(saban ? [chumCapabilities[1]] : []),
+    ...(forge ? [chumCapabilities[0]] : []),
+  ];
+
+  res.json({
+    success: true,
+    need,
+    matches,
+    fallback: matches.length ? null : {
+      status: 'no_verified_match',
+      message: 'CHUM does not currently advertise a verified capability match for this need.',
+    },
+    purchasePolicy: {
+      humanConfirmationRequired: true,
+      exactQuoteRequired: true,
+      paymentAuthority: 'Evercraft Payments',
+    },
+  });
+});
+
 app.get('/api/commercial', (_req: Request, res: Response) => {
   res.json({
     product: 'Forge Operator',
