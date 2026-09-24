@@ -29,4 +29,8 @@
   <url><loc>/chum/revenue.html</loc></url>
   <url><loc>/chum/revenue.txt</loc></url>
   <url><loc>/chum/revenue.json</loc></url>
+  <url><loc>/chum/products/guardian-pilot/</loc></url>
+  <url><loc>/chum/products/guardian-pilot/llms.txt</loc></url>
+  <url><loc>/chum/products/guardian-pilot/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/guardian-pilot/ai-conformance.json</loc></url>
 </urlset>
