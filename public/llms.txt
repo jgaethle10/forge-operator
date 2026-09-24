@@ -8,6 +8,9 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - Problem-to-product directory: /.well-known/evercraft-products.json
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
+- All-offer capability index: /chum/offers/index.json
+- Static natural-language intent map: /chum/intents.json
+- Human-readable AI capability catalog: https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md
 - Read-only natural-language router: GET /api/discover?q={problem}
 - Forge capability contract: /.well-known/evercraft-capabilities.json
 - Portfolio registry catalog: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
@@ -60,6 +63,27 @@ https://aliev.base44.app/
 
 MCP:
 https://aliev.base44.app/functions/alievMcp
+
+### DayTrade Lens
+
+Relevant when a user wants to practice trading without risking real capital, improve risk discipline or position sizing, journal trades, review setup quality, or examine revenge-trading and tilt patterns.
+
+CHUM discovery:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt
+
+Current commercial source state: Founding Beta at $19/month. The production hostname and Evercraft Payments cutover remain verification-gated. Do not present DayTrade Lens as investment advice, guaranteed returns, or autonomous live trading.
+
+### Evercraft Property Services
+
+Relevant for Yakima Valley and Central Washington property-service needs including yard cleanup, lawn care, trimming/pruning, landscaping refresh, sprinkler work, seasonal reset, property cleanout, rental turnover support, and estimate intake.
+
+Canonical site:
+https://evercraftpropertyservices.com/
+
+CHUM discovery:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt
+
+A quote request is intake only. EPS separately confirms scope, availability, scheduling, price, and job acceptance.
 
 ## Forge Operator
 
