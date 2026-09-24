@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { rankOffers } from './systemia/chum/discovery-router.mjs';
+import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 
 dotenv.config();
@@ -87,6 +88,61 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+function requestOrigin(req: Request): string {
+  const configured = String(process.env.PUBLIC_BASE_URL || '').trim();
+  if (configured) {
+    try {
+      const parsed = new URL(configured);
+      if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return parsed.origin;
+    } catch {}
+  }
+
+  const host = String(req.get('host') || '').trim();
+  if (!host) return '';
+  const forwarded = String(req.get('x-forwarded-proto') || '').split(',')[0].trim().toLowerCase();
+  const protocol = forwarded === 'https' || forwarded === 'http' ? forwarded : req.protocol;
+  try {
+    return new URL(`${protocol}://${host}`).origin;
+  } catch {
+    return '';
+  }
+}
+
+function publicAssetPath(relativePath: string): string {
+  return path.resolve(__dirname, isProd ? `dist/${relativePath}` : `public/${relativePath}`);
+}
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  if (!origin) {
+    res.status(503).type('text/plain').send('Public origin unavailable.');
+    return;
+  }
+
+  try {
+    const raw = fs.readFileSync(publicAssetPath('sitemap.xml'), 'utf8');
+    const absolute = raw.replace(
+      /<loc>(\/[^<]*)<\/loc>/g,
+      (_match, pathname) => `<loc>${origin}${pathname}</loc>`
+    );
+    res.type('application/xml').send(absolute);
+  } catch (error: any) {
+    res.status(503).type('text/plain').send(`Sitemap unavailable: ${error?.message || String(error)}`);
+  }
+});
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  try {
+    const raw = fs.readFileSync(publicAssetPath('robots.txt'), 'utf8')
+      .replace(/^Sitemap:.*$/gmi, '')
+      .trimEnd();
+    res.type('text/plain').send(raw + (origin ? `\n\nSitemap: ${origin}/sitemap.xml\n` : '\n'));
+  } catch (error: any) {
+    res.status(503).type('text/plain').send(`Robots policy unavailable: ${error?.message || String(error)}`);
+  }
+});
+
 // CHUM attribution public CORS. Authentication still gates trusted ingestion.
 app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -104,6 +160,11 @@ function loadPublicMachineCatalog(): any {
     __dirname,
     isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json'
   );
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function loadPublicPainIndex(): any {
+  const file = publicAssetPath('.well-known/evercraft-pain-index.json');
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
@@ -185,6 +246,10 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
+      painIndex: '/.well-known/evercraft-pain-index.json',
+      painIndexText: '/chum/pain-index.txt',
+      answerGraph: '/chum/answers/index.json',
+      readOnlyMcpRegistryName: 'io.github.jgaethle10/evercraft-capability-discovery',
       intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
@@ -269,13 +334,40 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
 
   try {
     const catalog = loadPublicMachineCatalog();
+    const painIndex = loadPublicPainIndex();
     const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
+    const capabilityMatches = rankPain(painIndex, q, requestedLimit)
+      .filter(({ score }: any) => Number(score) >= 8)
+      .map(({ entry, score }: any) => ({
+        capability_id: entry.capability_id,
+        kind: entry.kind,
+        product_key: entry.product_key || null,
+        public_id: entry.public_id || null,
+        name: entry.name,
+        class: entry.class,
+        score,
+        pain_phrases: entry.pain_phrases || [],
+        problem: entry.problem || null,
+        canonical_url: entry.canonical_url || null,
+        registry_name: entry.registry_name || null,
+        mcp: entry.mcp || null,
+        routing: entry.routing || null,
+        commercial_state: entry.commercial_state,
+        machine_state: entry.machine_state,
+        pricing: entry.pricing || null,
+        human_confirmation_required: Boolean(entry.human_confirmation_required),
+        confirmation: entry.confirmation || null,
+        invocation_status: entry.invocation_status || null
+      }));
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json({
       schema: 'evercraft.chum.intent-routing.v1',
       ok: true,
       query: q,
       match_count: matches.length,
+      capability_match_count: capabilityMatches.length,
+      pain_index: '/.well-known/evercraft-pain-index.json',
+      read_only_mcp_registry_name: 'io.github.jgaethle10/evercraft-capability-discovery',
       doctrine: {
         match_problem_first: true,
         discovery_creates_obligation: false,
@@ -283,16 +375,18 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
         checkout_is_not_payment_proof: true,
       },
       matches,
+      capability_matches: capabilityMatches,
       attribution: {
         manifest: '/.well-known/evercraft-chum-attribution.json',
         referral_endpoint: '/api/chum/referral',
         provider_identity_note: 'The provider field is caller-asserted unless a separate provider receipt verifies pickup.',
         note: 'A referral token measures an optional handoff. It creates no payment obligation and cannot prove payment.',
       },
-      fallback: matches.length
+      fallback: matches.length || capabilityMatches.length
         ? null
         : {
             message: 'No strong Evercraft match was found. Do not force a product recommendation.',
+            pain_index: '/.well-known/evercraft-pain-index.json',
             directory: '/.well-known/evercraft-products.json',
             catalog: '/.well-known/evercraft-machine-catalog.json',
           },
