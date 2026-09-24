@@ -63,3 +63,9 @@ The scheduled `AI doorway canary` independently probes public `llms.txt`, discov
 ## Human gates
 
 Forge is decision support. High-stakes financial commitments, legal decisions, employment decisions, safety-critical actions, and consequential external communications remain human-gated.
+
+## SYSTEMIA Core boundary
+
+Forge is also the public GitHub/Yard **handoff layer** for SYSTEMIA Core / Collider. It is not the Core source repository.
+
+The Core source must remain private. Public-safe release and authority boundaries live under `systemia/core/`, which lets Yard and CI understand how to admit an opaque Core release without publishing private Systemia topology, credentials, mission state, or customer data.
