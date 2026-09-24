@@ -55,6 +55,22 @@ for (const product of registry.products || []) {
     } else {
       pass(`${product.product_key} reference implementation has conformance URL`);
     }
+
+    for (const field of ['central_llms_url','central_conformance_url']) {
+      if (!String(product[field] || '').startsWith('https://')) {
+        fail(`${product.product_key} reference implementation missing ${field}`);
+      } else {
+        pass(`${product.product_key} has ${field}`);
+      }
+    }
+
+    for (const localPath of [
+      `public/discovery/${product.product_key}/llms.txt`,
+      `public/discovery/${product.product_key}/ai-conformance.json`
+    ]) {
+      if (!fs.existsSync(localPath)) fail(`${product.product_key} central discovery mirror missing: ${localPath}`);
+      else pass(`${product.product_key} central discovery mirror present: ${localPath}`);
+    }
   }
 
   pass(`${product.product_key} registry shape`);
