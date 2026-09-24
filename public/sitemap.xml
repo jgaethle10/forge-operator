@@ -20,6 +20,7 @@
   <url><loc>/chum/pain-index.txt</loc></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc></url>
   <url><loc>/.well-known/evercraft-chum.json</loc></url>
+  <url><loc>/.well-known/evercraft-chum-attribution.json</loc></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc></url>
   <url><loc>/chum/revenue.html</loc></url>
