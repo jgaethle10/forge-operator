@@ -31,6 +31,11 @@ jobs:
       - name: Install
         run: npm install --no-audit --no-fund
 
+      - name: Regenerate deterministic CHUM public artifacts
+        run: |
+          npm run chum:revenue
+          npm run chum:mirror
+
       - name: Typecheck and build
         run: npm run check
 
@@ -67,18 +72,60 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
+          curl --fail --silent --get --data-urlencode "q=this video is too large for my AI to fully process and I need the whole recording analyzed" http://127.0.0.1:3000/api/discover > /tmp/discover-media.json
+          curl --fail --silent -X POST -H 'content-type: application/json' --data '{"problem":"I need guided homework help without just giving me the answer"}' http://127.0.0.1:3000/api/resolve > /tmp/discover-learning.json
+          curl --fail --silent http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
+          curl --fail --silent http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
+          curl --fail --silent http://127.0.0.1:3000/chum/products/forensiscope/ > /tmp/forensiscope.html
+          curl --fail --silent http://127.0.0.1:3000/chum/products/infinite-classroom/ > /tmp/classroom.html
 
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const media = JSON.parse(fs.readFileSync('/tmp/discover-media.json','utf8'));
+          const learning = JSON.parse(fs.readFileSync('/tmp/discover-learning.json','utf8'));
+          const robots = fs.readFileSync('/tmp/robots.txt','utf8');
+          const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
+          const forensiscope = fs.readFileSync('/tmp/forensiscope.html','utf8');
+          const classroom = fs.readFileSync('/tmp/classroom.html','utf8');
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
+          if (capabilities.discovery?.intentRouter?.path !== '/api/discover') throw new Error('CHUM discovery router missing from capabilities');
+          if (capabilities.discovery?.intentRouter?.compatibilityAlias !== '/api/resolve') throw new Error('generic resolver alias missing from capabilities');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+
+          if (media.ok !== true) throw new Error('media discovery did not succeed');
+          if (media.matches?.[0]?.public_id !== 'forensiscope-evidence-review-v1') {
+            throw new Error('brand-blind media overflow did not route to ForensiScope');
+          }
+          if (media.doctrine?.discovery_creates_obligation !== false) throw new Error('discovery created a payment obligation');
+          if (media.doctrine?.private_authority_granted !== false) throw new Error('discovery granted private authority');
+
+          if (learning.ok !== true) throw new Error('learning discovery did not succeed');
+          if (learning.product_matches?.[0]?.product_key !== 'infinite-classroom') {
+            throw new Error('broader product-family discovery did not preserve Infinite Classroom');
+          }
+
+          for (const token of ['OAI-SearchBot','ChatGPT-User','Claude-SearchBot','Claude-User','PerplexityBot']) {
+            if (!robots.includes(token)) throw new Error(`crawler policy missing ${token}`);
+          }
+          if (!robots.includes('Allow: /api/discover')) throw new Error('robots policy does not expose CHUM discover');
+          if (!robots.includes('Allow: /api/resolve')) throw new Error('robots policy does not expose resolver alias');
+          if (!robots.includes('Sitemap: http://127.0.0.1:3000/sitemap.xml')) throw new Error('robots did not publish absolute live sitemap');
+
+          for (const url of [
+            'http://127.0.0.1:3000/chum/products/forensiscope/',
+            'http://127.0.0.1:3000/chum/products/infinite-classroom/'
+          ]) {
+            if (!sitemap.includes(url)) throw new Error(`absolute sitemap URL missing: ${url}`);
+          }
+          if (!forensiscope.includes('ForensiScope')) throw new Error('crawlable ForensiScope mirror missing');
+          if (!classroom.includes('Infinite Classroom')) throw new Error('crawlable Infinite Classroom mirror missing');
           NODE
 
       - name: Show container logs on failure
