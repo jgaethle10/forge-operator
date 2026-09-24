@@ -320,24 +320,32 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
-      "doorway_state": "registry_published_runtime_canary_pending",
+      "doorway_state": "registry_published_runtime_canary_passed",
       "conformance_state": "registry_publication_receipt_backed",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-web",
-        "version": "0.1.0",
+        "version": "0.1.1",
         "publication_state": "published_receipt_backed",
         "receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
         "published_at_utc": "2026-09-24T16:49:21Z"
       },
       "public_web_discovery_state": "not_yet_observed",
       "runtime_evidence_state": {
-        "fetch": "build_passed_external_canary_pending",
+        "fetch": "external_canary_passed_public_read_only",
         "search": "held_not_production_verified",
-        "browser": "held_runtime_activation_pending",
+        "browser": "held_runtime_activation_and_authorization_required",
         "authenticated_browser": "held_user_authorization_and_isolation_required"
       },
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "runtime_canary": {
+        "official_remote": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+        "initialize": "pass",
+        "tools_list": "pass",
+        "public_fetch": "pass",
+        "private_target_rejection": "pass",
+        "observed_on": "2026-09-24"
+      }
     }
   ],
   "state_semantics": {
