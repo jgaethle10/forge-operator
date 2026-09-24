@@ -6,7 +6,9 @@ on:
     branches:
       - main
     paths:
-      - "systemia/chum/**"\n      - "public/intents.txt"\n      - "public/.well-known/evercraft-intents.json"
+      - "systemia/chum/**"
+      - "public/intents.txt"
+      - "public/.well-known/evercraft-intents.json"
       - "chum-probes/**"
       - "conformance/**"
       - "registry/**"
@@ -45,6 +47,7 @@ jobs:
 
       - name: Regenerate CHUM public mirrors
         run: |
+          npm run chum:intents
           npm run chum:mirror
           npm run chum:sync
 
