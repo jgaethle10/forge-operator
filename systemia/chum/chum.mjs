@@ -335,6 +335,13 @@ const md = [
   `Machine catalog offers: ${receipt.summary.machine_catalog_offers}`,
   `Sell-now machine offers: ${receipt.summary.machine_catalog_sell_now}`,
   `Machine offers needing discovery repair: ${receipt.summary.machine_catalog_offers_needing_repair}`,
+  `Distribution targets: ${receipt.summary.distribution_targets}`,
+  `Distribution active: ${receipt.summary.distribution_active}`,
+  `Distribution pending: ${receipt.summary.distribution_pending}`,
+  `Distribution repair: ${receipt.summary.distribution_repair}`,
+  `Distribution blocked: ${receipt.summary.distribution_blocked}`,
+  `Distribution human gates: ${receipt.summary.distribution_human_gates}`,
+  `Distribution founder attention required: ${receipt.summary.distribution_founder_attention_required ? 'yes' : 'no'}`,
   '',
   '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
@@ -344,6 +351,12 @@ const md = [
     const g = p.readiness.gates;
     return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.distribution_state.official_registry} | ${p.distribution_state.public_web_discovery} | ${p.distribution_state.provider_observations} |`;
   }),
+  '',
+  '## Distribution targets',
+  '',
+  ...(distributionReceipt?.targets?.length
+    ? distributionReceipt.targets.map((target) => `- ${target.key || 'unknown'}: ${target.state || 'unknown'}; ${target.next || ''}`)
+    : ['- Distribution receipt not present for this run.']),
   '',
   '## Machine catalog repair queue',
   '',
