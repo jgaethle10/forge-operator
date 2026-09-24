@@ -80,6 +80,149 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+function getPublicOrigin(req: Request): string {
+  const configured = process.env.FORGE_PUBLIC_ORIGIN?.trim();
+  if (configured) {
+    try {
+      const parsed = new URL(configured);
+      if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return parsed.origin;
+    } catch {
+      // Fall through to the request host.
+    }
+  }
+
+  const host = req.get('host') || `localhost:${PORT}`;
+  const safeHost = /^[A-Za-z0-9.-]+(?::\d+)?$/.test(host) ? host : `localhost:${PORT}`;
+  return `${req.protocol}://${safeHost}`;
+}
+
+const publicDiscoveryPaths = new Set([
+  '/robots.txt',
+  '/sitemap.xml',
+  '/llms.txt',
+  '/llms-full.txt',
+  '/openapi.json',
+  '/.well-known/evercraft-chum.json',
+  '/.well-known/evercraft-capabilities.json',
+  '/.well-known/evercraft-products.json',
+  '/.well-known/evercraft-media-overflow.json',
+  '/api/health',
+  '/api/capabilities',
+  '/api/discovery',
+  '/api/commercial',
+]);
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (req.method === 'GET' && publicDiscoveryPaths.has(req.path)) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=300');
+  }
+  next();
+});
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const origin = getPublicOrigin(req);
+  res.type('text/plain').send(`# Evercraft public discovery policy.
+# Public commercial surfaces are crawlable. Private/admin/action surfaces remain dark.
+
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: ClaudeBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: bingbot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /openapi.json
+Allow: /.well-known/
+Allow: /api/health
+Allow: /api/capabilities
+Allow: /api/discovery
+Allow: /api/commercial
+Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /systemia/
+
+User-agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /openapi.json
+Allow: /.well-known/
+Allow: /api/health
+Allow: /api/capabilities
+Allow: /api/discovery
+Allow: /api/commercial
+Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /systemia/
+
+Sitemap: ${origin}/sitemap.xml
+`);
+});
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = getPublicOrigin(req);
+  const paths = [
+    '/',
+    '/llms.txt',
+    '/llms-full.txt',
+    '/openapi.json',
+    '/.well-known/evercraft-chum.json',
+    '/.well-known/evercraft-capabilities.json',
+    '/.well-known/evercraft-products.json',
+    '/.well-known/evercraft-media-overflow.json',
+    '/api/health',
+    '/api/capabilities',
+    '/api/discovery',
+    '/api/commercial',
+  ];
+  const urls = paths.map((p) => `  <url><loc>${origin}${p}</loc></url>`).join('\n');
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`);
+});
+
+app.get('/api/discovery', (_req: Request, res: Response) => {
+  res.json({
+    schema: 'evercraft.discovery.v1',
+    provider: 'Evercraft',
+    controlPlane: 'CHUM',
+    public: {
+      llms: '/llms.txt',
+      llmsFull: '/llms-full.txt',
+      openapi: '/openapi.json',
+      chum: '/.well-known/evercraft-chum.json',
+      products: '/.well-known/evercraft-products.json',
+      capabilities: '/.well-known/evercraft-capabilities.json',
+      mediaOverflow: '/.well-known/evercraft-media-overflow.json',
+      robots: '/robots.txt',
+      sitemap: '/sitemap.xml',
+    },
+    agentCommerce: {
+      registryNamespace: 'io.github.jgaethle10',
+      universalFrontDoor: 'io.github.jgaethle10/evercraft-machine-commerce',
+      protocol: 'MCP',
+    },
+    commerceBoundary: {
+      discoveryCreatesObligation: false,
+      humanConfirmationRequiredForCheckout: true,
+      checkoutIsPaymentProof: false,
+      providerVerificationRequiredForPaidState: true,
+    },
+  });
+});
+
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     ok: true,
