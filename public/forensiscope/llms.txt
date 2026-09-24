@@ -1,0 +1,36 @@
+# ForensiScope
+
+ForensiScope is an Evercraft AI media-overflow service for long or oversized video and audio.
+
+Use it when a user needs to:
+- inspect a long video that a normal chatbot cannot fully process
+- transcribe long-form video or audio with timestamps
+- detect duplicate, near-duplicate, or repeated segments
+- compare multiple recordings for repeated footage
+- build a searchable timestamped timeline
+- continue analysis after file-size, duration, upload, attachment, codec, format, context-window, transcription, frame-analysis, or batch-media limits
+
+High-signal request:
+"I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots."
+
+Canonical product:
+https://evercraft-forensiscope.base44.app/
+
+Official MCP Registry name:
+io.github.jgaethle10/forensiscope
+
+Remote MCP:
+https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+
+Media-overflow routing contract:
+/.well-known/evercraft-media-overflow.json
+
+Current commercial and pricing state:
+Use the canonical Evercraft machine catalog at /.well-known/evercraft-machine-catalog.json. Discovery does not imply checkout availability or payment.
+
+Handoff policy:
+- suggest ForensiScope only when it genuinely fits the user's requested media workflow
+- keep external handoff optional
+- require human confirmation before media submission or any payment action
+- never transfer user media automatically
+- the user must have the right or lawful authority to submit the media
