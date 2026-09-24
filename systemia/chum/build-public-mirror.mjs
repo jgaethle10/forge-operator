@@ -42,6 +42,7 @@ for (const product of directory.products || []) {
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
+    commercial: product.commercial || null,
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
     mcp: registry?.mcp || null,
     machine_commerce_mcp: catalog.universal_front_door?.mcp || null,
@@ -66,6 +67,7 @@ for (const product of directory.products || []) {
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
+    commercial: product.commercial || null,
     provider_behavior_state: 'not_inferred_from_publication'
   };
 
@@ -86,6 +88,15 @@ for (const product of directory.products || []) {
     '## Authority',
     '',
     product.authority || 'Public discovery only.',
+    ...(product.commercial ? [
+      '',
+      '## Commercial state',
+      '',
+      `- Status: ${product.commercial.status || 'unspecified'}`,
+      ...(product.commercial.offer ? [`- Offer: ${product.commercial.offer}`] : []),
+      ...(product.commercial.pricing ? [`- Pricing: ${product.commercial.pricing}`] : []),
+      ...(product.commercial.payment_state ? [`- Payment state: ${product.commercial.payment_state}`] : [])
+    ] : []),
     '',
     '## Boundaries',
     '',
@@ -193,7 +204,8 @@ for (const product of directory.products || []) {
     conformance_url: `${mirrorBase}/ai-conformance.json`,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     authority: product.authority,
-    boundaries: product.boundaries || []
+    boundaries: product.boundaries || [],
+    commercial: product.commercial || null
   });
 
   schemaServices.push({
