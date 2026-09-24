@@ -81,6 +81,32 @@ jobs:
             git push origin HEAD:main
           fi
 
+          if [ -n "$(git status --short -- \
+            public/chum \
+            public/.well-known/evercraft-machine-catalog.json \
+            public/.well-known/evercraft-pain-index.json \
+            public/.well-known/evercraft-agent-directory.json \
+            public/.well-known/evercraft-discovery.json \
+            public/ai-discovery.json \
+            public/schema.jsonld \
+            public/sitemap.xml \
+            public/llms-full.txt \
+            llms-full.txt)" ]; then
+            echo "CHUM compiler-owned public outputs remain unpublished." >&2
+            git status --short -- \
+              public/chum \
+              public/.well-known/evercraft-machine-catalog.json \
+              public/.well-known/evercraft-pain-index.json \
+              public/.well-known/evercraft-agent-directory.json \
+              public/.well-known/evercraft-discovery.json \
+              public/ai-discovery.json \
+              public/schema.jsonld \
+              public/sitemap.xml \
+              public/llms-full.txt \
+              llms-full.txt
+            exit 1
+          fi
+
       - name: Validate machine-discovery contracts
         run: |
           npm run check:ai
