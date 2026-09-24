@@ -42,6 +42,9 @@ const portfolioKeys = Array.from(new Set([
 const liveProviderProbe = fs.existsSync('artifacts/chum/provider-probe-latest.json')
   ? readJson('artifacts/chum/provider-probe-latest.json')
   : null;
+const distributionReceipt = fs.existsSync('artifacts/chum/distribution-latest.json')
+  ? readJson('artifacts/chum/distribution-latest.json')
+  : null;
 const liveProviderObservationsByKey = new Map();
 for (const result of liveProviderProbe?.results || []) {
   const key = result.product_key;
@@ -267,8 +270,14 @@ const receipt = {
     declared_surfaces: allChecks.length,
     checked_surfaces: checked.length,
     valid_surfaces: valid.length,
-    invalid_surfaces: invalid.length
+    invalid_surfaces: invalid.length,
+    distribution_targets: Number(distributionReceipt?.summary?.targets || 0),
+    distribution_active: Number(distributionReceipt?.summary?.active || 0),
+    distribution_pending: Number(distributionReceipt?.summary?.pending || 0),
+    distribution_repair: Number(distributionReceipt?.summary?.repair || 0),
+    founder_attention_required: Boolean(distributionReceipt?.summary?.founder_attention_required)
   },
+  distribution: distributionReceipt,
   provider_targets: providerTargets,
   products
 };
@@ -286,6 +295,11 @@ const md = [
   `Checked surfaces: ${receipt.summary.checked_surfaces}`,
   `Valid surfaces: ${receipt.summary.valid_surfaces}`,
   `Invalid surfaces: ${receipt.summary.invalid_surfaces}`,
+  `Distribution targets: ${receipt.summary.distribution_targets}`,
+  `Distribution active: ${receipt.summary.distribution_active}`,
+  `Distribution pending: ${receipt.summary.distribution_pending}`,
+  `Distribution repair: ${receipt.summary.distribution_repair}`,
+  `Founder attention required: ${receipt.summary.founder_attention_required ? 'yes' : 'no'}`,
   '',
   '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
@@ -296,6 +310,18 @@ const md = [
     return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.distribution_state.official_registry} | ${p.distribution_state.public_web_discovery} | ${p.distribution_state.provider_observations} |`;
   }),
   '',
+  '## Distribution',
+  '',
+  ...(distributionReceipt?.targets?.length
+    ? [
+        '| Target | State | Automation | Human gate |',
+        '|---|---|---|---|',
+        ...distributionReceipt.targets.map((t) =>
+          `| ${String(t.key || '')} | ${String(t.state || '')} | ${String(t.automation || '')} | ${t.human_gate ? 'yes' : 'no'} |`
+        ),
+        ''
+      ]
+    : ['- Distribution receipt not present for this run.', '']),
   '## Repair queue',
   '',
   ...(invalid.length
