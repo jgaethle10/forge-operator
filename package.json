@@ -13,8 +13,9 @@
     "check:ai": "node scripts/validate-ai-conformance.mjs",
     "chum": "node systemia/chum/chum.mjs",
     "chum:offline": "node systemia/chum/chum.mjs --offline",
-    "check": "npm run check:ai && npm run lint && npm run build",
-    "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output"
+    "check": "npm run check:systemia-core && npm run check:ai && npm run lint && npm run build",
+    "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
+    "check:systemia-core": "node scripts/validate-systemia-core-boundary.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
