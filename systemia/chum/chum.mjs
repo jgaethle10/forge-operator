@@ -10,10 +10,44 @@ const conformance = readJson('conformance/products.json');
 const directory = readJson('public/.well-known/evercraft-products.json');
 const catalog = readJson('registry/catalog.json');
 
+const readJsonDir = (dir) => {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter((name) => name.endsWith('.json'))
+    .sort()
+    .map((name) => {
+      try {
+        return readJson(`${dir}/${name}`);
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
+};
+
+const registryPublicationReceipts = readJsonDir('conformance/registry-publications');
+const providerObservationReceipts = readJsonDir('conformance/provider-observations');
+
 const publicByKey = new Map((directory.products || []).map((p) => [p.product_key, p]));
 const catalogByKey = new Map(
   (catalog.products || []).map((p) => [String(p.registry_name || '').split('/').pop(), p])
 );
+const registryReceiptsByKey = new Map();
+for (const receipt of registryPublicationReceipts) {
+  const key = receipt.product_key;
+  if (!key) continue;
+  const list = registryReceiptsByKey.get(key) || [];
+  list.push(receipt);
+  registryReceiptsByKey.set(key, list);
+}
+const providerObservationsByKey = new Map();
+for (const receipt of providerObservationReceipts) {
+  const key = receipt.product_key;
+  if (!key) continue;
+  const list = providerObservationsByKey.get(key) || [];
+  list.push(receipt);
+  providerObservationsByKey.set(key, list);
+}
 
 const providerTargets = (conformance.baseline_providers || []).map((provider) => ({
   provider,
@@ -96,6 +130,8 @@ function readiness({ product, publicEntry, catalogEntry, checks }) {
 async function inspectProduct(product) {
   const publicEntry = publicByKey.get(product.product_key);
   const catalogEntry = catalogByKey.get(product.product_key);
+  const registryReceipts = registryReceiptsByKey.get(product.product_key) || [];
+  const providerObservations = providerObservationsByKey.get(product.product_key) || [];
 
   const entries = [
     ['canonical', product.canonical_url],
@@ -117,6 +153,18 @@ async function inspectProduct(product) {
     mcp: catalogEntry?.mcp || null,
     checks,
     readiness: readiness({ product, publicEntry, catalogEntry, checks }),
+    distribution_state: {
+      official_registry: registryReceipts.some((r) => r.evidence_state === 'receipt_backed' && r.run_conclusion === 'success')
+        ? 'published_receipt_backed'
+        : 'not_receipt_backed',
+      public_web_discovery: product.public_web_discovery_state || 'not_measured',
+      provider_observations: providerObservations.length,
+      provider_surface_state: providerObservations.some((r) => r.surfaced_forensiscope === false)
+        ? 'negative_observation_recorded'
+        : (providerObservations.length ? 'observation_recorded' : 'not_measured')
+    },
+    registry_publication_receipts: registryReceipts,
+    provider_observation_receipts: providerObservations,
     signal_plan: [
       {
         lane: 'crawl',
@@ -198,11 +246,11 @@ const md = [
   '',
   '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
-  '| Product | Surface readiness | Canonical | llms.txt | Contract | MCP declared | Provider behavior |',
-  '|---|---:|---|---|---|---|---|',
+  '| Product | Surface readiness | Canonical | llms.txt | Contract | MCP declared | Official registry | Web discovery | Provider observations |',
+  '|---|---:|---|---|---|---|---|---|---|',
   ...products.map((p) => {
     const g = p.readiness.gates;
-    return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.readiness.provider_behavior_state} |`;
+    return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.distribution_state.official_registry} | ${p.distribution_state.public_web_discovery} | ${p.distribution_state.provider_observations} |`;
   }),
   '',
   '## Repair queue',
