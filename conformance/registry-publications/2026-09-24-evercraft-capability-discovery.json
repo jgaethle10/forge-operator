@@ -1,0 +1,21 @@
+{
+  "schema": "evercraft.registry-publication.receipt.v1",
+  "product_key": "evercraft-capability-discovery",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+  "version": "1.0.0",
+  "run_conclusion": "success",
+  "publish_job_conclusion": "success",
+  "publish_result": "latest_registry_version_externally_verified",
+  "published_at_utc": "2026-09-24T11:27:41.077893Z",
+  "evidence_state": "receipt_backed",
+  "remote": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+  "evidence": [
+    "Evercraft Distribution Operator returned version 1.0.0 active/latest from the Official MCP Registry.",
+    "The published read-only remote externally passed MCP initialize and tools/list."
+  ],
+  "notes": [
+    "This server is deliberately non-transactional.",
+    "Registry publication does not prove that a named consumer AI provider surfaced or recommended Evercraft."
+  ]
+}
