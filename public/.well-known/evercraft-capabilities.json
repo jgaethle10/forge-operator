@@ -10,15 +10,23 @@
     "manifest": "/.well-known/evercraft-capabilities.json",
     "productDirectory": "/.well-known/evercraft-products.json",
     "intentRouter": {
-      "method": "GET",
-      "path": "/api/discover?q={natural-language-problem}"
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "path": "/api/discover",
+      "query_example": "/api/discover?q={natural-language-problem}",
+      "compatibility_alias": "/api/resolve"
     },
     "revenueWatershed": {
       "method": "GET",
       "path": "/api/revenue-watershed"
     },
     "machineCatalog": "/.well-known/evercraft-machine-catalog.json",
-    "chumRevenue": "/chum/revenue.json"
+    "chumRevenue": "/chum/revenue.json",
+    "watershed": "/.well-known/evercraft-discovery.json",
+    "chum": "/.well-known/evercraft-chum.json",
+    "publicMirror": "/chum/index.json"
   },
   "jobs": [
     "operations bottleneck diagnosis",
