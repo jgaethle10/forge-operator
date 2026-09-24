@@ -193,6 +193,9 @@ const llmsLines = [
   '',
   '## Universal routing',
   '',
+  'Natural-language router: /api/discover?q=<problem>',
+  'Compatibility resolver: /api/resolve?q=<problem>',
+  'Sell-now index: /chum/revenue.txt',
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
@@ -286,6 +289,8 @@ const agentDirectory = {
     name: 'Evercraft Machine Commerce',
     registry_name: catalog.universal_front_door?.registry_name || null,
     mcp: universalMcp,
+    discovery_router: '/api/discover?q={natural-language-problem}',
+    compatibility_resolver: '/api/resolve?q={natural-language-problem}',
     use_when: 'The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits.'
   },
   routing_policy: {
@@ -309,6 +314,10 @@ const discoveryWatershed = {
   updated_at: directory.updated_at || null,
   purpose: 'One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.',
   start_here: {
+    discover: '/api/discover?q={natural-language-problem}',
+    resolve_alias: '/api/resolve?q={natural-language-problem}',
+    revenue_watershed: '/api/revenue-watershed',
+    revenue_text: '/chum/revenue.txt',
     llms: '/llms.txt',
     llms_full: '/llms-full.txt',
     products: '/.well-known/evercraft-products.json',
@@ -331,7 +340,7 @@ const discoveryWatershed = {
     checkout_ready: 'An exact current checkout rail exists for that offer.',
     paid: 'Authoritative provider payment verification exists.'
   },
-  routing_rule: 'Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  routing_rule: 'Start from the user problem. Prefer /api/discover, which checks current machine offers and broader public product families. Choose the smallest truthful capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
   private_surfaces: 'not advertised'
 };
 fs.writeFileSync('public/.well-known/evercraft-discovery.json', JSON.stringify(discoveryWatershed, null, 2) + '\n');
