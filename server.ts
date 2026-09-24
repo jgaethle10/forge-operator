@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import crypto from 'node:crypto';
 
 dotenv.config();
 
@@ -50,6 +51,226 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb' }));
+
+
+type SystemiaChallenge = {
+  nodeId: string;
+  publicKeyPem: string;
+  payload: string;
+  expiresAtMs: number;
+};
+
+type SystemiaBootstrapLease = {
+  leaseId: string;
+  workloadType: 'saban.logical-cell.v1';
+  iterations: number;
+  issuedAt: string;
+  expiresAt: string;
+  status: 'issued' | 'completed';
+};
+
+type SystemiaNodeSession = {
+  nodeId: string;
+  publicKeyPem: string;
+  tokenHash: string;
+  capacityOffer: unknown;
+  admittedAt: string;
+  lastSeenAt: string;
+  bootstrapLease: SystemiaBootstrapLease;
+};
+
+const systemiaChallenges = new Map<string, SystemiaChallenge>();
+const systemiaSessions = new Map<string, SystemiaNodeSession>();
+
+function systemiaNodeIdFromPublicKey(publicKeyPem: string): string {
+  const key = crypto.createPublicKey(publicKeyPem);
+  const der = key.export({ type: 'spki', format: 'der' });
+  return 'evnode_' + crypto.createHash('sha256').update(der).digest('hex').slice(0, 24);
+}
+
+function systemiaBearer(req: Request): string {
+  const auth = req.header('authorization') || '';
+  return auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+}
+
+function systemiaSessionForBearer(req: Request): SystemiaNodeSession | null {
+  const token = systemiaBearer(req);
+  if (!token) return null;
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  return systemiaSessions.get(tokenHash) || null;
+}
+
+function cleanSystemiaChallenges() {
+  const now = Date.now();
+  for (const [id, challenge] of systemiaChallenges.entries()) {
+    if (challenge.expiresAtMs <= now) systemiaChallenges.delete(id);
+  }
+}
+
+app.post('/api/systemia/network/challenge', rateLimit(60, 60 * 60 * 1000), (req: Request, res: Response) => {
+  try {
+    cleanSystemiaChallenges();
+    const nodeId = String(req.body?.nodeId || '');
+    const publicKeyPem = String(req.body?.publicKeyPem || '');
+    if (!nodeId || !publicKeyPem) {
+      res.status(400).json({ ok: false, error: 'nodeId and publicKeyPem are required' });
+      return;
+    }
+
+    const derivedNodeId = systemiaNodeIdFromPublicKey(publicKeyPem);
+    if (derivedNodeId !== nodeId) {
+      res.status(400).json({ ok: false, error: 'node identity does not match public key' });
+      return;
+    }
+
+    const challengeId = 'challenge_' + crypto.randomUUID();
+    const nonce = crypto.randomBytes(32).toString('base64url');
+    const expiresAtMs = Date.now() + 2 * 60 * 1000;
+    const expiresAt = new Date(expiresAtMs).toISOString();
+    const signaturePayload = JSON.stringify({
+      schema: 'evercraft.systemia.challenge.v1',
+      challengeId,
+      nodeId,
+      nonce,
+      expiresAt,
+    });
+
+    systemiaChallenges.set(challengeId, {
+      nodeId,
+      publicKeyPem,
+      payload: signaturePayload,
+      expiresAtMs,
+    });
+
+    res.status(201).json({
+      ok: true,
+      schema: 'evercraft.systemia.challenge.v1',
+      challengeId,
+      nonce,
+      expiresAt,
+      signaturePayload,
+    });
+  } catch {
+    res.status(400).json({ ok: false, error: 'invalid public key' });
+  }
+});
+
+app.post('/api/systemia/network/admit', rateLimit(60, 60 * 60 * 1000), (req: Request, res: Response) => {
+  cleanSystemiaChallenges();
+  const challengeId = String(req.body?.challengeId || '');
+  const signature = String(req.body?.signature || '');
+  const capacityOffer = req.body?.capacityOffer;
+  const challenge = systemiaChallenges.get(challengeId);
+
+  if (!challenge) {
+    res.status(410).json({ ok: false, error: 'challenge missing or expired' });
+    return;
+  }
+  if (!signature || capacityOffer?.protocol !== 'evercraft.capacity.v1') {
+    res.status(400).json({ ok: false, error: 'valid signature and evercraft.capacity.v1 offer are required' });
+    return;
+  }
+
+  try {
+    const verified = crypto.verify(
+      null,
+      Buffer.from(challenge.payload),
+      challenge.publicKeyPem,
+      Buffer.from(signature, 'base64'),
+    );
+    if (!verified) {
+      res.status(401).json({ ok: false, error: 'challenge signature verification failed' });
+      return;
+    }
+  } catch {
+    res.status(401).json({ ok: false, error: 'challenge signature verification failed' });
+    return;
+  }
+
+  systemiaChallenges.delete(challengeId);
+  const token = crypto.randomBytes(32).toString('base64url');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const issuedAt = new Date().toISOString();
+  const bootstrapLease: SystemiaBootstrapLease = {
+    leaseId: 'lease_' + crypto.randomUUID(),
+    workloadType: 'saban.logical-cell.v1',
+    iterations: 150000,
+    issuedAt,
+    expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
+    status: 'issued',
+  };
+
+  const session: SystemiaNodeSession = {
+    nodeId: challenge.nodeId,
+    publicKeyPem: challenge.publicKeyPem,
+    tokenHash,
+    capacityOffer,
+    admittedAt: issuedAt,
+    lastSeenAt: issuedAt,
+    bootstrapLease,
+  };
+  systemiaSessions.set(tokenHash, session);
+
+  res.status(201).json({
+    ok: true,
+    schema: 'evercraft.systemia.admission.v1',
+    nodeId: challenge.nodeId,
+    admissionToken: token,
+    heartbeatPath: '/api/systemia/network/heartbeat',
+    receiptPath: '/api/systemia/network/receipt',
+    bootstrapLease,
+  });
+});
+
+app.post('/api/systemia/network/heartbeat', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const session = systemiaSessionForBearer(req);
+  if (!session) {
+    res.status(401).json({ ok: false, error: 'invalid admission token' });
+    return;
+  }
+  session.lastSeenAt = new Date().toISOString();
+  res.json({
+    ok: true,
+    schema: 'evercraft.systemia.heartbeat-ack.v1',
+    nodeId: session.nodeId,
+    lastSeenAt: session.lastSeenAt,
+    bootstrapLease: session.bootstrapLease.status === 'issued' ? session.bootstrapLease : null,
+  });
+});
+
+app.post('/api/systemia/network/receipt', rateLimit(120, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const session = systemiaSessionForBearer(req);
+  if (!session) {
+    res.status(401).json({ ok: false, error: 'invalid admission token' });
+    return;
+  }
+
+  const leaseId = String(req.body?.leaseId || '');
+  const receiptSha256 = String(req.body?.receiptSha256 || '');
+  const checkpointSha256 = String(req.body?.checkpointSha256 || '');
+  if (
+    leaseId !== session.bootstrapLease.leaseId ||
+    !/^[a-f0-9]{64}$/.test(receiptSha256) ||
+    !/^[a-f0-9]{64}$/.test(checkpointSha256)
+  ) {
+    res.status(400).json({ ok: false, error: 'receipt does not match active bootstrap lease' });
+    return;
+  }
+  if (Date.parse(session.bootstrapLease.expiresAt) <= Date.now()) {
+    res.status(410).json({ ok: false, error: 'bootstrap lease expired' });
+    return;
+  }
+
+  session.bootstrapLease.status = 'completed';
+  session.lastSeenAt = new Date().toISOString();
+  res.json({
+    ok: true,
+    schema: 'evercraft.systemia.receipt-ack.v1',
+    nodeId: session.nodeId,
+    leaseId,
+    acceptedAt: session.lastSeenAt,
+  });
+});
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
