@@ -103,6 +103,19 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "evercraft-containment",
+      "name": "Evercraft Containment",
+      "class": "agent_persistence_diagnostic",
+      "canonical_url": "https://evercraft.base44.app/containment",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
+      "doorway_state": "public_product_page_live_machine_surface_pending",
+      "conformance_state": "chum_discovery_mirror",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "bounded_membership_discovery",
@@ -134,6 +147,33 @@
       "origin_llms_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
+      "product_key": "evercraft-web",
+      "name": "Evercraft Web",
+      "class": "web_agent_infrastructure",
+      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
+      "doorway_state": "registry_published_runtime_canary_pending",
+      "conformance_state": "registry_publication_receipt_backed",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-web",
+        "version": "0.1.0",
+        "publication_state": "published_receipt_backed",
+        "receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
+        "published_at_utc": "2026-09-24T16:49:21Z"
+      },
+      "public_web_discovery_state": "not_yet_observed",
+      "runtime_evidence_state": {
+        "fetch": "build_passed_external_canary_pending",
+        "search": "held_not_production_verified",
+        "browser": "held_runtime_activation_pending",
+        "authenticated_browser": "held_user_authorization_and_isolation_required"
+      },
       "chum_mirror_state": "generated_public_fallback"
     },
     {
@@ -310,33 +350,6 @@
       "origin_llms_url": "https://instant-website-builder-usa-6feac193.base44.app/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback"
-    },
-    {
-      "product_key": "evercraft-web",
-      "name": "Evercraft Web",
-      "class": "web_agent_infrastructure",
-      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
-      "doorway_state": "registry_published_runtime_canary_pending",
-      "conformance_state": "registry_publication_receipt_backed",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/evercraft-web",
-        "version": "0.1.0",
-        "publication_state": "published_receipt_backed",
-        "receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
-        "published_at_utc": "2026-09-24T16:49:21Z"
-      },
-      "public_web_discovery_state": "not_yet_observed",
-      "runtime_evidence_state": {
-        "fetch": "build_passed_external_canary_pending",
-        "search": "held_not_production_verified",
-        "browser": "held_runtime_activation_pending",
-        "authenticated_browser": "held_user_authorization_and_isolation_required"
-      },
       "chum_mirror_state": "generated_public_fallback"
     }
   ],
