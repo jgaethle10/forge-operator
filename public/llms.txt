@@ -24,6 +24,10 @@ When the user describes a problem but does not know which Evercraft product to a
 
 Public machine manifest:
 - /.well-known/evercraft-chum.json
+- /llms-full.txt
+- /openapi.json
+- /schema.jsonld
+- /ai-discovery.html
 
 Current public sell-now offers:
 - /.well-known/evercraft-offers.json
