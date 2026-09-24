@@ -1,0 +1,89 @@
+name: CHUM watershed
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "systemia/chum/**"
+      - "chum-probes/**"
+      - "conformance/**"
+      - "registry/**"
+      - "public/.well-known/**"
+      - "scripts/check-ai-doorways.mjs"
+      - "scripts/validate-chum-probes.mjs"
+      - ".github/workflows/chum-watershed.yml"
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  watershed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm ci
+
+      - name: Validate machine-discovery contracts
+        run: |
+          npm run check:ai
+          npm run chum:validate
+
+      - name: Probe static AI doorways
+        id: static-doorways
+        continue-on-error: true
+        run: node scripts/check-ai-doorways.mjs
+
+      - name: Canary live MCP and Official Registry doors
+        run: npm run chum:mcp
+
+      - name: Run authorized brand-blind provider probes
+        env:
+          CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
+          CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
+          NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
+          NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
+        run: npm run chum:providers
+
+      - name: Run CHUM portfolio mesh
+        run: npm run chum
+
+      - name: Announce updated central discovery surfaces
+        if: github.event_name != 'schedule'
+        run: npm run chum:announce
+
+      - name: Write watershed summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## CHUM watershed"
+            echo
+            echo "Static doorway step: ${{ steps.static-doorways.outcome }}"
+            echo
+            for FILE in artifacts/chum/mcp-canary-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+              if [ -f "$FILE" ]; then
+                echo
+                cat "$FILE"
+              fi
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload CHUM receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-watershed-receipts
+          path: |
+            artifacts/chum/**
+            artifacts/ai-doorway-canary.*
+          if-no-files-found: warn
