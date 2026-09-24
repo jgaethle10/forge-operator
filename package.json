@@ -31,7 +31,8 @@
     "chum:sync": "node systemia/chum/sync-public-discovery.mjs",
     "check:workflow-noise": "node scripts/validate-workflow-noise.mjs",
     "chum:revenue": "node systemia/chum/build-revenue-watershed.mjs",
-    "test:chum-router": "node systemia/chum/discovery-router.test.mjs"
+    "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
+    "chum:offers": "node systemia/chum/build-offer-watershed.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
