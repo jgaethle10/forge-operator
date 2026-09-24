@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.cross-llm-conformance.v1",
+  "product": "FindMyPart",
+  "product_key": "findmypart",
+  "provider": "Evercraft LLC",
+  "canonical_url": "https://findmypart.base44.app/",
+  "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "mirror_role": "central_machine_fallback",
+  "source_of_truth": "jgaethle10/forge-operator",
+  "intents": [
+    "hard-to-find part",
+    "obsolete part",
+    "discontinued part",
+    "replacement part",
+    "salvage part",
+    "identify a part from photos, markings, measurements, or equipment clues"
+  ],
+  "boundaries": [
+    "Compatibility is not guaranteed.",
+    "Unknowns may remain unknown.",
+    "Checkout creation is not payment proof.",
+    "Paid sourcing requires explicit human confirmation."
+  ],
+  "human_confirmation_required": true,
+  "payment_state_rule": "Checkout creation or a payment URL is not proof of payment.",
+  "provider_behavior_rule": "Public availability is not proof that any AI provider discovered, cited, recommended, or invoked this capability."
+}
