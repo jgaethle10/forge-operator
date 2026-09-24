@@ -1,0 +1,15 @@
+{
+  "schema":"systemia.signal-fabric.adoption.v1",
+  "default":"required_for_new_automation",
+  "lanes":[
+    {"lane":"engineering_ci","required":true,"adapter":"github-actions","direct_human_notifications":false},
+    {"lane":"deployments_runtime","required":true,"adapter":"runtime-health","direct_human_notifications":false},
+    {"lane":"public_ai_discovery","required":true,"adapter":"chum","direct_human_notifications":false},
+    {"lane":"security","required":true,"adapter":"security-events","direct_human_notifications":false},
+    {"lane":"payments_finance","required":true,"adapter":"finance-events","direct_human_notifications":false,"human_gate_preserved":true},
+    {"lane":"legal_compliance","required":true,"adapter":"compliance-events","direct_human_notifications":false,"human_gate_preserved":true},
+    {"lane":"customer_operations","required":true,"adapter":"customer-ops","direct_human_notifications":false},
+    {"lane":"field_operations","required":true,"adapter":"field-ops","direct_human_notifications":false}
+  ],
+  "rule":"Systems emit structured signals. Signal Fabric decides whether humans are paged, queued, digested, or only receipted."
+}
