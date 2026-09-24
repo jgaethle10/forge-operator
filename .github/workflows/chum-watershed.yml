@@ -16,7 +16,11 @@ on:
     - cron: "17 */6 * * *"
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: chum-watershed-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   watershed:
@@ -30,6 +34,31 @@ jobs:
         with:
           node-version: 22
 
+      - name: Regenerate CHUM public mirrors
+        run: |
+          npm run chum:mirror
+          npm run chum:sync
+
+      - name: Publish changed CHUM mirrors
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Evercraft CHUM"
+          git config user.email "chum@users.noreply.github.com"
+          git fetch origin main --quiet
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
+            exit 0
+          fi
+          git add public/chum public/.well-known/evercraft-machine-catalog.json
+          if git diff --cached --quiet; then
+            echo "CHUM public mirrors are current."
+          else
+            git commit -m "CHUM refresh public discovery mirrors"
+            git push origin HEAD:main
+          fi
+
       - name: Validate machine-discovery contracts
         run: |
           npm run check:ai
@@ -39,6 +68,11 @@ jobs:
         id: static-doorways
         continue-on-error: true
         run: node scripts/check-ai-doorways.mjs
+
+      - name: Audit crawler and AI-search reachability
+        id: crawler-audit
+        continue-on-error: true
+        run: npm run chum:crawlers
 
       - name: Canary live MCP and Official Registry doors
         run: npm run chum:mcp
@@ -55,6 +89,8 @@ jobs:
         run: npm run chum
 
       - name: Announce updated central discovery surfaces
+        id: announce
+        continue-on-error: true
         if: github.event_name != 'schedule'
         run: npm run chum:announce
 
