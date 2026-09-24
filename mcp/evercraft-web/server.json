@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/evercraft-web",
+  "title": "Evercraft Web",
+  "description": "Fetch and web-agent capabilities for AI, with browser automation behind safety gates.",
+  "repository": {
+    "url": "https://github.com/jgaethle10/forge-operator",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "websiteUrl": "https://systemiacommandcenters.com/evercraft-web",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+name: Publish Evercraft Web to MCP Registry
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "mcp/evercraft-web/server.json"
+      - ".github/workflows/publish-evercraft-web-mcp.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install MCP publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARCH="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
+          OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_${OS}_${ARCH}.tar.gz" | tar xz mcp-publisher
+          chmod +x mcp-publisher
+          ./mcp-publisher --help >/dev/null
+
+      - name: Validate Evercraft Web manifest
+        run: ./mcp-publisher validate mcp/evercraft-web/server.json
+
+      - name: Authenticate with GitHub OIDC
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish Evercraft Web
+        run: ./mcp-publisher publish mcp/evercraft-web/server.json
+
+      - name: Verify Registry receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          NAME='io.github.jgaethle10/evercraft-web'
+          URL="https://registry.modelcontextprotocol.io/v0.1/servers?search=${NAME}"
+          for attempt in 1 2 3 4 5 6; do
+            body="$(curl -fsSL "$URL")"
+            echo "$body" > registry-receipt.json
+            if grep -Fq '"name":"io.github.jgaethle10/evercraft-web"' registry-receipt.json || grep -Fq '"name": "io.github.jgaethle10/evercraft-web"' registry-receipt.json; then
+              echo "MCP_REGISTRY_PUBLISH_VERIFIED ${NAME}"
+              exit 0
+            fi
+            echo "Registry entry not visible yet; attempt ${attempt}/6"
+            sleep 10
+          done
+          echo "Published command returned but registry entry was not observed."
+          cat registry-receipt.json
+          exit 1
+
+      - name: Upload publication receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-web-mcp-registry-receipt
+          path: registry-receipt.json
+          if-no-files-found: ignore
+          retention-days: 30
