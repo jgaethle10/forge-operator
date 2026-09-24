@@ -263,6 +263,8 @@ const sitemapStatic = [
   '/.well-known/evercraft-machine-catalog.json',
   '/.well-known/evercraft-chum.json',
   '/.well-known/evercraft-media-overflow.json',
+  '/.well-known/evercraft-failure-routes.json',
+  '/chum/failure-routes.txt',
   '/.well-known/evercraft-capabilities.json'
 ];
 const sitemapUrls = Array.from(new Set([
@@ -469,6 +471,8 @@ const discoveryWatershed = {
     revenue_watershed_html: '/chum/revenue.html',
     intent_router: '/api/discover?q={natural-language-problem}',
     revenue_router: '/api/revenue-watershed',
+    failure_routes: '/.well-known/evercraft-failure-routes.json',
+    failure_routes_text: '/chum/failure-routes.txt',
     schema: '/schema.jsonld',
     openapi: '/openapi.json'
   },
