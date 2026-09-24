@@ -276,12 +276,22 @@ app.get('/.well-known/agent-card.json', (req: Request, res: Response) => {
 app.post('/a2a', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
   const requestedVersion = String(req.get('A2A-Version') || '').trim();
   if (requestedVersion && requestedVersion !== A2A_PROTOCOL_VERSION) {
-    res.status(400).type('application/problem+json').json({
-      type: 'https://a2a-protocol.org/errors/version-not-supported',
-      title: 'Protocol Version Not Supported',
-      status: 400,
-      detail: `A2A version ${requestedVersion} is not supported by this agent.`,
-      supportedVersions: [A2A_PROTOCOL_VERSION],
+    res.status(400).json({
+      jsonrpc: '2.0',
+      id: req.body?.id ?? null,
+      error: {
+        code: -32009,
+        message: 'Version not supported',
+        data: [{
+          '@type': 'type.googleapis.com/google.rpc.ErrorInfo',
+          reason: 'VERSION_NOT_SUPPORTED',
+          domain: 'a2a-protocol.org',
+          metadata: {
+            requestedVersion,
+            supportedVersions: A2A_PROTOCOL_VERSION,
+          },
+        }],
+      },
     });
     return;
   }
