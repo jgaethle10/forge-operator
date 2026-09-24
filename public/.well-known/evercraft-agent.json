@@ -9,13 +9,29 @@
     "forge_capabilities": "/.well-known/evercraft-capabilities.json",
     "registry_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "human_and_search_directory": "/discovery/",
+    "central_product_mirrors": {
+      "findmypart": {
+        "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/findmypart/llms.txt",
+        "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/findmypart/ai-conformance.json"
+      },
+      "aliev": {
+        "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/aliev/llms.txt",
+        "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/aliev/ai-conformance.json"
+      },
+      "forensiscope": {
+        "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/forensiscope/llms.txt",
+        "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/forensiscope/ai-conformance.json"
+      }
+    }
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
-    "human_confirmation_required_for_checkout_or_payment_obligation": true
+    "human_confirmation_required_for_checkout_or_payment_obligation": true,
+    "failover_instruction": "If a product-host machine surface is missing, stale, returns HTML instead of its declared machine format, or is otherwise invalid, use the Evercraft-owned central mirror when one is declared. Keep the broken primary in the repair queue rather than treating the product as undiscoverable."
   },
   "public_discovery_policy": {
     "public_commercial_surfaces": "intentionally discoverable",
