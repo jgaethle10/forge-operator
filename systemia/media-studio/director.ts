@@ -86,7 +86,7 @@ function scoreAssetForBeat(asset: SourceAsset, beat: StoryBeat, prompt: string) 
 }
 
 function pickAsset(
-  visuals: SourceAsset[],
+  visuals: VisualAsset[],
   beat: StoryBeat,
   prompt: string,
   usedCount: Map<string, number>,
