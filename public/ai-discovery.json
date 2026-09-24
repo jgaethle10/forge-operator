@@ -6,14 +6,14 @@
   "routes": {
     "product_directory": "/.well-known/evercraft-products.json",
     "universal_agent": "/.well-known/evercraft-agent.json",
-    "a2a_agent_card": "/.well-known/agent-card.json",
     "capability_manifest": "/.well-known/evercraft-capabilities.json",
     "chum": "/.well-known/evercraft-chum.json",
     "llms": "/llms.txt",
     "llms_full": "/llms-full.txt",
     "openapi": "/openapi.json",
     "health": "/api/health",
-    "commercial_state": "/api/commercial"
+    "commercial_state": "/api/commercial",
+    "agent_interfaces": "/.well-known/evercraft-agent-interfaces.json"
   },
   "machine_commerce": {
     "registry_namespace": "io.github.jgaethle10",
