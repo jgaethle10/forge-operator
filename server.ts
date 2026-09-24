@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import fs from 'node:fs';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -79,6 +80,212 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb' }));
+
+type PublicDiscoveryProduct = {
+  product_key: string;
+  name: string;
+  class?: string;
+  canonical_url?: string;
+  intents?: string[];
+  authority?: string;
+  human_confirmation_required?: boolean;
+  boundaries?: string[];
+};
+
+function readPublicJson<T>(relativePath: string): T | null {
+  const candidates = [
+    path.resolve(__dirname, 'public', relativePath),
+    path.resolve(__dirname, 'dist', relativePath),
+  ];
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(candidate)) {
+        return JSON.parse(fs.readFileSync(candidate, 'utf8')) as T;
+      }
+    } catch (error) {
+      console.warn(`[CHUM] Could not read ${candidate}:`, error);
+    }
+  }
+  return null;
+}
+
+const publicProductDirectory = readPublicJson<{ products?: PublicDiscoveryProduct[] }>('.well-known/evercraft-products.json') || { products: [] };
+const publicAgentDirectory = readPublicJson<any>('.well-known/evercraft-agent-directory.json') || {};
+const publicChumIndex = readPublicJson<any>('chum/index.json') || { products: [] };
+
+const specialistByKey = new Map(
+  (publicAgentDirectory.specialists || []).map((item: any) => [String(item.product_key || ''), item])
+);
+const mirrorByKey = new Map(
+  (publicChumIndex.products || []).map((item: any) => [String(item.product_key || ''), item])
+);
+
+const DISCOVERY_STOPWORDS = new Set([
+  'a','an','and','are','as','at','be','because','but','by','can','do','does','for','from','get','have','help',
+  'how','i','in','is','it','me','my','of','on','or','our','please','the','this','to','want','we','what','with','you'
+]);
+
+const DISCOVERY_ALIASES: Record<string, string> = {
+  oversized: 'large',
+  huge: 'large',
+  massive: 'large',
+  footage: 'video',
+  recording: 'video',
+  recordings: 'video',
+  site: 'website',
+  webpage: 'website',
+  webpages: 'website',
+  charger: 'charging',
+  chargers: 'charging',
+  vehicle: 'ev',
+  vehicles: 'ev',
+  interviewee: 'interview',
+  interviews: 'interview',
+  contractors: 'contractor',
+  parts: 'part',
+  events: 'event',
+  parkinglot: 'parking',
+};
+
+function normalizeDiscoveryText(value: unknown) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9+.#-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function discoveryTokens(value: unknown) {
+  return Array.from(new Set(
+    normalizeDiscoveryText(value)
+      .split(' ')
+      .map((token) => DISCOVERY_ALIASES[token] || token)
+      .filter((token) => token.length >= 2 && !DISCOVERY_STOPWORDS.has(token))
+  ));
+}
+
+function resolveEvercraftCapability(query: string, requestedLimit = 5) {
+  const normalizedQuery = normalizeDiscoveryText(query);
+  const queryTokens = discoveryTokens(query);
+  const limit = Math.max(1, Math.min(10, Number.isFinite(requestedLimit) ? Math.floor(requestedLimit) : 5));
+
+  const candidates = (publicProductDirectory.products || []).map((product) => {
+    const intents = Array.isArray(product.intents) ? product.intents : [];
+    const corpusParts = [product.name, product.class, ...intents].filter(Boolean).map(String);
+    const corpus = normalizeDiscoveryText(corpusParts.join(' '));
+    const corpusTokens = new Set(discoveryTokens(corpus));
+
+    const matchedTokens = queryTokens.filter((token) => corpusTokens.has(token));
+    const exactIntentHits = intents.filter((intent) => {
+      const normalizedIntent = normalizeDiscoveryText(intent);
+      return normalizedIntent && (
+        normalizedQuery.includes(normalizedIntent) ||
+        (normalizedQuery.length >= 12 && normalizedIntent.includes(normalizedQuery))
+      );
+    });
+    const nameTokens = discoveryTokens(product.name);
+    const matchedNameTokens = nameTokens.filter((token) => queryTokens.includes(token));
+
+    let score = matchedTokens.length * 3 + exactIntentHits.length * 12 + matchedNameTokens.length * 5;
+    if (normalizedQuery && corpus.includes(normalizedQuery)) score += 8;
+
+    const specialist = specialistByKey.get(product.product_key) as any;
+    const mirror = mirrorByKey.get(product.product_key) as any;
+    return {
+      score,
+      product_key: product.product_key,
+      name: product.name,
+      class: product.class || null,
+      canonical_url: product.canonical_url || null,
+      matched_terms: matchedTokens,
+      matched_intents: exactIntentHits,
+      authority: product.authority || 'public discovery only',
+      human_confirmation_required: Boolean(product.human_confirmation_required),
+      boundaries: Array.isArray(product.boundaries) ? product.boundaries : [],
+      registry_name: specialist?.registry_name || mirror?.registry_name || null,
+      mcp: specialist?.mcp || mirror?.mcp || null,
+      discovery: mirror?.discovery_url || null,
+      llms: mirror?.llms_url || null,
+    };
+  }).filter((candidate) => candidate.score > 0)
+    .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
+    .slice(0, limit);
+
+  return {
+    schema: 'evercraft.chum.resolve.v1',
+    provider: 'Evercraft LLC',
+    coordinator: 'CHUM',
+    query,
+    routing_rule: 'Match the user pain to the smallest truthful public capability. Preserve authority, evidence, privacy, human-confirmation and payment boundaries.',
+    match_method: 'deterministic public-catalog lexical routing',
+    candidates,
+    universal_fallback: publicAgentDirectory.universal_front_door || null,
+    no_match: candidates.length === 0,
+    payment_obligation_created: false,
+    private_authority_granted: false,
+  };
+}
+
+function handleCapabilityResolve(req: Request, res: Response) {
+  const rawQuery = req.method === 'GET'
+    ? (req.query.q ?? req.query.query ?? req.query.problem ?? '')
+    : (req.body?.query ?? req.body?.problem ?? req.body?.intent ?? '');
+  const query = String(rawQuery || '').trim().slice(0, 2000);
+  const requestedLimit = Number(req.method === 'GET' ? req.query.limit : req.body?.limit);
+
+  if (query.length < 2) {
+    res.status(400).json({
+      success: false,
+      error: 'Provide a natural-language problem or intent using q, query, problem, or intent.',
+    });
+    return;
+  }
+
+  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+  res.json({ success: true, ...resolveEvercraftCapability(query, requestedLimit || 5) });
+}
+
+app.get('/api/resolve', rateLimit(180, 60 * 60 * 1000), handleCapabilityResolve);
+app.post('/api/resolve', rateLimit(180, 60 * 60 * 1000), handleCapabilityResolve);
+
+function requestOrigin(req: Request) {
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const proto = forwardedProto || req.protocol || 'https';
+  return `${proto}://${req.get('host')}`;
+}
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const source = path.resolve(__dirname, 'public', 'robots.txt');
+  const fallback = 'User-agent: *\\nAllow: /\\n';
+  let body = fallback;
+  try { body = fs.readFileSync(source, 'utf8').trimEnd() + '\\n'; } catch {}
+  body += `\\nSitemap: ${requestOrigin(req)}/sitemap.xml\\n`;
+  res.type('text/plain').send(body);
+});
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  const fixedPaths = [
+    '/', '/chum/', '/forensiscope/', '/llms.txt', '/llms-full.txt', '/ai-discovery.json', '/openapi.json',
+    '/.well-known/evercraft-agent.json', '/.well-known/evercraft-agent-interfaces.json',
+    '/.well-known/evercraft-agent-directory.json', '/.well-known/evercraft-products.json',
+    '/.well-known/evercraft-machine-catalog.json', '/.well-known/evercraft-chum.json',
+    '/.well-known/evercraft-discovery.json', '/.well-known/evercraft-media-overflow.json'
+  ];
+  const productPaths = (publicChumIndex.products || [])
+    .map((product: any) => `/chum/products/${encodeURIComponent(String(product.product_key || ''))}/`)
+    .filter((value: string) => !value.endsWith('//'));
+  const paths = Array.from(new Set([...fixedPaths, ...productPaths]));
+  const escapeXml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...paths.map((pathname) => `  <url><loc>${escapeXml(origin + pathname)}</loc></url>`),
+    '</urlset>',
+    ''
+  ].join('\\n');
+  res.type('application/xml').send(xml);
+});
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
