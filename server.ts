@@ -147,6 +147,121 @@ async function persistChumAttributionEvent(event: unknown) {
 }
 
 
+const configuredPublicOrigin = (process.env.PUBLIC_ORIGIN || '').trim().replace(/\/+$/, '');
+
+function publicOrigin(req: Request): string {
+  if (/^https?:\/\//i.test(configuredPublicOrigin)) return configuredPublicOrigin;
+  const forwarded = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
+  const protocol = forwarded === 'https' || forwarded === 'http' ? forwarded : req.protocol;
+  const host = req.get('host') || '';
+  if (!/^[a-z0-9.-]+(?::\d+)?$/i.test(host)) return 'http://localhost:' + PORT;
+  return protocol + '://' + host;
+}
+
+function sitemapSourcePath(relativePath: string): string {
+  return path.resolve(__dirname, isProd ? path.join('dist', relativePath) : path.join('public', relativePath));
+}
+
+function sitemapPaths(): string[] {
+  const paths = new Set<string>([
+    '/',
+    '/llms.txt',
+    '/llms-full.txt',
+    '/.well-known/evercraft-discovery.json',
+    '/.well-known/evercraft-products.json',
+    '/.well-known/evercraft-pain-index.json',
+    '/.well-known/evercraft-failure-routes.json',
+    '/chum/',
+    '/chum/pain-index.txt',
+    '/chum/failure-routes.txt',
+    '/chum/revenue.html'
+  ]);
+  for (const relative of ['sitemap.xml', 'chum/sitemap.xml']) {
+    try {
+      const xml = fs.readFileSync(sitemapSourcePath(relative), 'utf8');
+      for (const match of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+        const value = String(match[1] || '').trim()
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>');
+        if (value.startsWith('/')) paths.add(value);
+      }
+    } catch {
+      // Generated sitemap may not exist in early development; fallback paths remain available.
+    }
+  }
+  return [...paths].sort();
+}
+
+function xmlEscape(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const origin = publicOrigin(req);
+  const publicApi = [
+    'Allow: /api/health',
+    'Allow: /api/capabilities',
+    'Allow: /api/commercial',
+    'Allow: /api/discover',
+    'Allow: /api/revenue-watershed'
+  ];
+  const lines = [
+    '# Evercraft public AI/search discovery policy.',
+    '# Public commercial surfaces are intentionally discoverable. Private/admin topology is not advertised.',
+    '',
+    'User-agent: OAI-SearchBot',
+    'User-agent: GPTBot',
+    'User-agent: ChatGPT-User',
+    'User-agent: Claude-SearchBot',
+    'User-agent: Claude-User',
+    'User-agent: ClaudeBot',
+    'User-agent: Googlebot',
+    'User-agent: Google-Extended',
+    'User-agent: bingbot',
+    'User-agent: PerplexityBot',
+    'Allow: /',
+    'Allow: /llms.txt',
+    'Allow: /llms-full.txt',
+    'Allow: /.well-known/',
+    'Allow: /chum/',
+    ...publicApi,
+    'Disallow: /api/',
+    '',
+    'User-agent: *',
+    'Allow: /',
+    'Allow: /llms.txt',
+    'Allow: /llms-full.txt',
+    'Allow: /.well-known/',
+    'Allow: /chum/',
+    ...publicApi,
+    'Disallow: /api/',
+    '',
+    'Sitemap: ' + origin + '/sitemap.xml',
+    ''
+  ];
+  res.type('text/plain').send(lines.join('\n'));
+});
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = publicOrigin(req);
+  const urls = sitemapPaths().map((pathname) => new URL(pathname, origin).toString());
+  const body = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...urls.map((url) => '  <url><loc>' + xmlEscape(url) + '</loc></url>'),
+    '</urlset>',
+    ''
+  ].join('\n');
+  res.type('application/xml').send(body);
+});
+
+
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     ok: true,
@@ -176,6 +291,11 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
+      painIndex: '/.well-known/evercraft-pain-index.json',
+      failureRoutes: '/.well-known/evercraft-failure-routes.json',
+      failureRoutesText: '/chum/failure-routes.txt',
+      sitemap: '/sitemap.xml',
+      robots: '/robots.txt',
       chumRevenueJson: '/chum/revenue.json',
       chumRevenueText: '/chum/revenue.txt',
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
