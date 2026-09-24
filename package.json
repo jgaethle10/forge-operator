@@ -19,7 +19,7 @@
     "chum:validate": "node scripts/validate-chum-probes.mjs",
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
-    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run chum:mirror && npm run test:chum-router && npm run chum && npm run chum:crawlers && npm run chum:mcp",
+    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run chum:mirror && npm run test:chum-router && npm run chum:distribution && npm run chum && npm run chum:crawlers && npm run chum:mcp",
     "check": "npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run test:media-studio && npm run check:ai && npm run test:chum-router && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
@@ -36,7 +36,10 @@
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
     "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store",
     "goal": "node systemia/organism/goal-cli.mjs",
-    "proof:goal-store": "node systemia/organism/goal-store.proof.mjs"
+    "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
+    "chum:distribution": "node systemia/chum/distribution-reconcile.mjs",
+    "chum:distribution:strict": "node systemia/chum/distribution-reconcile.mjs --strict",
+    "chum:watershed": "npm run chum:all && npm run chum:providers && npm run chum:announce"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
