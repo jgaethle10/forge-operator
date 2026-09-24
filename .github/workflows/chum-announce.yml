@@ -1,0 +1,33 @@
+name: CHUM announce discovery changes
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'public/llms.txt'
+      - 'public/llms-full.txt'
+      - 'public/ai-discovery.json'
+      - 'public/openapi.json'
+      - 'public/.well-known/**'
+      - 'registry/**'
+      - 'conformance/**'
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Validate discovery state
+        run: npm run chum:check
+      - name: Notify supported public search infrastructure
+        run: npm run chum:announce
