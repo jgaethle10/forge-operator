@@ -63,3 +63,11 @@ The deterministic proof exercises:
 - failed reconciliation back to amber.
 
 This proof is source/runtime-kernel evidence only. It does not by itself prove a production Yard deployment. Production promotion still requires the repository release contract: CI pass, immutable artifact, Yard deployment, live route/runtime verification, and a deployment receipt.
+
+## Persistent goal runtime
+
+`goal-runtime.mjs` adds a serializable, provider-independent outcome loop on top of the organism model. A goal can be planned into dependency-aware work, paused, persisted by a runtime adapter, resumed after the original chat or worker is gone, held at explicit human gates, retried after observed blockers, and completed only with evidence or execution receipts.
+
+Planning and continuity are separate from capability availability. Phone calls, advertising, payments, publishing, or other consequential actions may enter a goal plan only when a real adapter exists, and their existing human or product-specific gates remain authoritative.
+
+Run `npm run proof:goal-runtime` for the deterministic continuity proof, or `npm run proof:systemia` for the full organism plus goal-runtime proof set.
