@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
-    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
+    "version": "1.1.0",
+    "description": "Public discovery, problem-to-capability routing and bounded invocation surface for Forge Operator and Evercraft capabilities."
   },
   "servers": [
     {
@@ -213,6 +213,21 @@
           },
           "503": {
             "description": "Public catalog unavailable"
+          }
+        }
+      }
+    },
+    "/api/intents": {
+      "get": {
+        "operationId": "chumIntentDirectory",
+        "summary": "List the public problem-language vocabulary understood by CHUM",
+        "description": "Read-only public intent graph. Use it to discover capability language without knowing an Evercraft brand name.",
+        "responses": {
+          "200": {
+            "description": "Public intent graph with candidate capabilities and machine/commercial state"
+          },
+          "503": {
+            "description": "Intent graph unavailable"
           }
         }
       }
