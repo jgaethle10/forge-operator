@@ -137,6 +137,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
       intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
+      routerManifest: '/.well-known/evercraft-router.json',
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
       chumRevenueJson: '/chum/revenue.json',
@@ -220,8 +221,10 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
     const catalog = loadPublicMachineCatalog();
     const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    res.setHeader('Link', '</.well-known/evercraft-router.json>; rel="service-desc"; type="application/json", </openapi.json>; rel="service-desc"; type="application/json", </llms.txt>; rel="alternate"; type="text/plain"');
     res.json({
-      schema: 'evercraft.chum.intent-routing.v1',
+      schema: 'evercraft.chum.intent-routing.v2',
       ok: true,
       query: q,
       match_count: matches.length,
@@ -230,13 +233,18 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
         discovery_creates_obligation: false,
         human_confirmation_preserved: true,
         checkout_is_not_payment_proof: true,
+        attributed_handoffs_enabled: true,
+        raw_user_query_in_handoff_url: false,
       },
+      router_manifest: '/.well-known/evercraft-router.json',
+      revenue_watershed: '/api/revenue-watershed',
       matches,
       fallback: matches.length
         ? null
         : {
             message: 'No strong Evercraft match was found. Do not force a product recommendation.',
             directory: '/.well-known/evercraft-products.json',
+            router_manifest: '/.well-known/evercraft-router.json',
             catalog: '/.well-known/evercraft-machine-catalog.json',
           },
     });

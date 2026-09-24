@@ -19,7 +19,8 @@
     "sell_now_revenue_text": "/chum/revenue.txt",
     "intent_router": "/api/discover?q={natural-language-problem}",
     "revenue_router": "/api/revenue-watershed",
-    "chum": "/.well-known/evercraft-chum.json"
+    "chum": "/.well-known/evercraft-chum.json",
+    "router_manifest": "/.well-known/evercraft-router.json"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
@@ -31,7 +32,10 @@
     "callable_is_not_paid": true,
     "fit_before_sale": true,
     "prefer_sell_now_only_after_fit": true,
-    "no_match_means_no_forced_evercraft_offer": true
+    "no_match_means_no_forced_evercraft_offer": true,
+    "prefer_router_first_when_product_unknown": true,
+    "attributed_handoff_field": "attributed_handoff_url",
+    "raw_user_query_in_handoff_url": false
   },
   "public_discovery_policy": {
     "public_commercial_surfaces": "intentionally discoverable",

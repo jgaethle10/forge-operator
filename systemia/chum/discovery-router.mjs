@@ -4,6 +4,28 @@ const STOP_WORDS = new Set([
   'what','when','where','which','who','why','with','would','you'
 ]);
 
+const TOKEN_EQUIVALENCE_GROUPS = [
+  ['video','videos','mp4','mov','footage','recording','recordings','clip','clips'],
+  ['audio','mp3','wav','recording','recordings'],
+  ['large','larger','huge','big','oversized','oversize'],
+  ['long','longform','lengthy','duration','hour','hours'],
+  ['website','websites','site','sites','webpage','webpages'],
+  ['charger','chargers','charging','evse'],
+  ['ev','electric','vehicle','vehicles'],
+  ['part','parts','component','components'],
+  ['obsolete','discontinued','legacy','unavailable'],
+  ['interview','interviews','recruiter','screen','screening'],
+  ['event','events','festival','conference','concert'],
+  ['funding','capital','financing','loan','loans','lender','lenders','investor','investors'],
+  ['outage','offline','downtime','disruption','connectivity'],
+  ['audit','review','assessment','analysis'],
+];
+
+const TOKEN_EQUIVALENTS = new Map();
+for (const group of TOKEN_EQUIVALENCE_GROUPS) {
+  for (const token of group) TOKEN_EQUIVALENTS.set(token, group);
+}
+
 export function normalizeText(value) {
   return String(value || '')
     .toLowerCase()
@@ -12,10 +34,29 @@ export function normalizeText(value) {
     .trim();
 }
 
+function singularVariant(token) {
+  if (token.length > 4 && token.endsWith('ies')) return `${token.slice(0, -3)}y`;
+  if (token.length > 4 && token.endsWith('s') && !/(ss|us|is)$/.test(token)) return token.slice(0, -1);
+  return token;
+}
+
+function tokenVariants(token) {
+  const singular = singularVariant(token);
+  const seeds = new Set([token, singular]);
+  const expanded = new Set(seeds);
+  for (const seed of seeds) {
+    const equivalents = TOKEN_EQUIVALENTS.get(seed) || [];
+    for (const equivalent of equivalents) expanded.add(equivalent);
+  }
+  return [...expanded];
+}
+
 export function meaningfulTokens(value) {
-  return normalizeText(value)
+  const raw = normalizeText(value)
     .split(' ')
     .filter((token) => token.length >= 3 && !STOP_WORDS.has(token));
+
+  return [...new Set(raw.flatMap(tokenVariants))];
 }
 
 function overlapScore(queryTokens, text, weight) {
@@ -25,6 +66,22 @@ function overlapScore(queryTokens, text, weight) {
     if (tokens.has(token)) matched += 1;
   }
   return matched * weight;
+}
+
+function attributedHandoffUrl(rawUrl, publicId) {
+  if (!rawUrl) return null;
+  try {
+    const url = new URL(String(rawUrl));
+    if (!['http:', 'https:'].includes(url.protocol)) return null;
+    url.searchParams.set('utm_source', 'chum');
+    url.searchParams.set('utm_medium', 'ai_discovery');
+    url.searchParams.set('utm_campaign', 'evercraft_watershed');
+    url.searchParams.set('utm_content', String(publicId || 'unknown'));
+    url.searchParams.set('ec_ref', 'chum');
+    return url.toString();
+  } catch {
+    return null;
+  }
 }
 
 export function scoreOffer(offer, query) {
@@ -55,20 +112,19 @@ export function scoreOffer(offer, query) {
     if (coverage >= 0.8 && matched.length >= 2) intentScore += 10;
 
     if (intentScore > 0) {
-      score += intentScore;
       matchedIntents.push({ intent: rawIntent, score: intentScore });
     }
   }
+
+  const strongestIntents = matchedIntents.sort((a,b) => b.score - a.score).slice(0,3);
+  score += strongestIntents.reduce((sum, item) => sum + item.score, 0);
 
   if (score > 0 && offer.commercial_state === 'sell_now') score += 3;
   if (score > 0 && /payment_ready|human_handoff_ready/.test(String(offer.machine_state || ''))) score += 1;
 
   return {
     score,
-    matched_intents: matchedIntents
-      .sort((a,b) => b.score - a.score)
-      .slice(0,3)
-      .map((item) => item.intent)
+    matched_intents: strongestIntents.map((item) => item.intent)
   };
 }
 
@@ -100,6 +156,14 @@ export function rankOffers(catalog, query, options = {}) {
       human_ui_required: Boolean(offer.human_ui_required),
       confirmation: offer.confirmation,
       public_url: offer.public_url,
+      attributed_handoff_url: attributedHandoffUrl(offer.public_url, offer.public_id),
+      attribution: {
+        source: 'chum',
+        medium: 'ai_discovery',
+        campaign: 'evercraft_watershed',
+        content: offer.public_id,
+        raw_user_query_included: false,
+      },
       payment_authority: offer.payment_authority,
       invocation_status: offer.invocation_status,
       catalog_version: offer.catalog_version
