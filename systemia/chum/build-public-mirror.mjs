@@ -7,14 +7,80 @@ const conformance = readJson('conformance/products.json');
 const catalog = readJson('registry/catalog.json');
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json');
 
+const readJsonDir = (dir) => {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter((name) => name.endsWith('.json'))
+    .sort()
+    .map((name) => {
+      try { return readJson(dir + '/' + name); } catch { return null; }
+    })
+    .filter(Boolean);
+};
+
+const registryPublicationReceipts = readJsonDir('conformance/registry-publications');
+const verifiedRegistryByProduct = new Map();
+const verifiedRegistryNames = new Set();
+
+for (const receipt of registryPublicationReceipts) {
+  if (
+    receipt?.evidence_state === 'receipt_backed' &&
+    receipt?.run_conclusion === 'success' &&
+    receipt?.registry_name
+  ) {
+    verifiedRegistryNames.add(String(receipt.registry_name));
+    if (receipt.product_key) {
+      verifiedRegistryByProduct.set(String(receipt.product_key), String(receipt.registry_name));
+    }
+  }
+}
+
+function registryPublicationState(productKey, declaredName) {
+  const declared = declaredName ? String(declaredName) : null;
+  const direct = verifiedRegistryByProduct.get(String(productKey || '')) || null;
+
+  if (direct && (!declared || direct === declared)) {
+    return {
+      registry_name: direct,
+      declared_registry_name: declared || direct,
+      state: 'receipt_backed'
+    };
+  }
+
+  if (declared && verifiedRegistryNames.has(declared)) {
+    return {
+      registry_name: declared,
+      declared_registry_name: declared,
+      state: 'shared_verified_route'
+    };
+  }
+
+  return {
+    registry_name: null,
+    declared_registry_name: declared,
+    state: declared ? 'declared_unverified' : 'not_declared'
+  };
+}
+
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
 const providers = conformance.baseline_providers || [];
 const root = 'public/chum/products';
-const READ_ONLY_DISCOVERY_REGISTRY =
+const DECLARED_READ_ONLY_DISCOVERY_REGISTRY =
   catalog.universal_front_door?.read_only_registry_name ||
   'io.github.jgaethle10/evercraft-capability-discovery';
+const READ_ONLY_DISCOVERY_REGISTRY =
+  verifiedRegistryNames.has(DECLARED_READ_ONLY_DISCOVERY_REGISTRY)
+    ? DECLARED_READ_ONLY_DISCOVERY_REGISTRY
+    : null;
+const DECLARED_MACHINE_COMMERCE_REGISTRY =
+  catalog.universal_front_door?.registry_name || null;
+const MACHINE_COMMERCE_REGISTRY =
+  DECLARED_MACHINE_COMMERCE_REGISTRY && verifiedRegistryNames.has(DECLARED_MACHINE_COMMERCE_REGISTRY)
+    ? DECLARED_MACHINE_COMMERCE_REGISTRY
+    : null;
 const MACHINE_COMMERCE_GATEWAY =
+  catalog.universal_front_door?.gateway ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
