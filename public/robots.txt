@@ -3,4 +3,6 @@ Allow: /
 Allow: /llms.txt
 Allow: /.well-known/evercraft-capabilities.json
 Allow: /.well-known/evercraft-products.json
+Allow: /.well-known/evercraft-chum.json
+Allow: /.well-known/evercraft-machine-catalog.json
 Disallow: /api/
