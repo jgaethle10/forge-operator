@@ -9,6 +9,10 @@ on:
       - "conformance/**"
       - "registry/**"
       - "public/.well-known/**"
+      - "public/robots.txt"
+      - "public/llms.txt"
+      - "public/llms-full.txt"
+      - "public/openapi.json"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
       - ".github/workflows/chum-watershed.yml"
@@ -34,6 +38,9 @@ jobs:
         run: |
           npm run check:ai
           npm run chum:validate
+
+      - name: Audit crawler watershed
+        run: npm run chum:crawlers
 
       - name: Probe static AI doorways
         id: static-doorways
