@@ -72,6 +72,26 @@
       ]
     },
     {
+      "product_key": "evercraft-containment",
+      "name": "Evercraft Containment",
+      "canonical_url": "https://evercraft.base44.app/containment",
+      "mode": "discovery_only",
+      "triggers": [
+        "automation persistence",
+        "agent persistence",
+        "AI agents still running",
+        "orphaned automations",
+        "webhook cleanup",
+        "cron job audit",
+        "n8n cleanup",
+        "Make automation cleanup",
+        "Zapier cleanup",
+        "cloud function cleanup",
+        "prove the agent stays dead",
+        "find what can respawn"
+      ]
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "canonical_url": "https://network-control.base44.app/",
