@@ -69,6 +69,36 @@
       "origin_product_url": "https://evercraft-contractor-cloud-314d2197.base44.app/"
     },
     {
+      "product_key": "daytrade-lens",
+      "name": "DayTrade Lens",
+      "class": "paper_trading_risk_discipline_and_journaling",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+      "intents": [
+        "practice day trading without risking real money",
+        "paper trade before using real capital",
+        "build better trading risk discipline",
+        "journal and review my trades",
+        "review whether I am revenge trading or tilting",
+        "practice position sizing and setup quality",
+        "find a trading journal with behavioral coaching"
+      ],
+      "authority": "public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "not personalized investment advice",
+        "no guaranteed returns or profit claims",
+        "no autonomous live trading",
+        "simulation results do not guarantee future live performance",
+        "live broker execution and unverified real-time market-data claims remain outside the public discovery contract"
+      ],
+      "commercial": {
+        "status": "source_ready_origin_unresolved",
+        "offer": "Founding Beta",
+        "pricing": "$19/month",
+        "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
+      }
+    },
+    {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
       "class": "capital_fit_and_founder_readiness_research",
@@ -127,6 +157,36 @@
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
       ]
+    },
+    {
+      "product_key": "evercraft-property-services",
+      "name": "Evercraft Property Services",
+      "class": "local_property_services_and_estimate_intake",
+      "canonical_url": "https://evercraftpropertyservices.com/",
+      "intents": [
+        "yard cleanup in the Yakima Valley",
+        "lawn care or recurring property maintenance",
+        "trimming or pruning",
+        "landscaping refresh",
+        "sprinkler repair startup or seasonal blowout",
+        "property cleanout or debris removal",
+        "rental turnover property support",
+        "get a property service estimate in Central Washington"
+      ],
+      "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "a quote request is intake only and does not create a contract or payment obligation",
+        "specific service availability at a property requires EPS review",
+        "current origin machine files are not treated as authoritative until release and readback converge",
+        "private customer, lead, uploaded media, admin and payment data remain outside public discovery"
+      ],
+      "commercial": {
+        "status": "human_quote_intake",
+        "offer": "Property-service estimate intake",
+        "pricing": "Quote required after scope review",
+        "payment_state": "No payment required for public estimate intake"
+      }
     },
     {
       "product_key": "evercraft-rewards",
