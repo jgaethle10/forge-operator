@@ -311,6 +311,13 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',
+      watershed: '/.well-known/evercraft-discovery.json',
+      products: '/.well-known/evercraft-products.json',
+      chum: '/.well-known/evercraft-chum.json',
+      resolver: {
+        get: '/api/resolve?q=<natural-language-problem>',
+        post: '/api/resolve',
+      },
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
     },
