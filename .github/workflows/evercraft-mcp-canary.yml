@@ -3,12 +3,18 @@ name: Evercraft MCP External Canary
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - ".github/workflows/evercraft-mcp-canary.yml"
       - "registry/**/server.json"
 
 permissions:
   contents: read
+
+concurrency:
+  group: evercraft-mcp-external-canary-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   canary:

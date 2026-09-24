@@ -3,6 +3,8 @@ name: CHUM watershed
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - "systemia/chum/**"
       - "chum-probes/**"
@@ -55,7 +57,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else
-            git commit -m "CHUM refresh public discovery mirrors"
+            git commit -m "CHUM refresh public discovery mirrors [skip ci]"
             git push origin HEAD:main
           fi
 
