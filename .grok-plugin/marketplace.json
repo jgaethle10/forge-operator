@@ -1,0 +1,28 @@
+{
+  "name": "evercraft",
+  "description": "Official Evercraft plugin marketplace for Grok Build.",
+  "owner": {
+    "name": "Evercraft"
+  },
+  "plugins": [
+    {
+      "name": "evercraft",
+      "description": "Read-only Evercraft capability discovery. Match real-world user problems to current public Evercraft tools and services.",
+      "category": "development",
+      "source": {
+        "type": "local",
+        "path": "./grok/evercraft"
+      },
+      "homepage": "https://systemiacommandcenters.com",
+      "keywords": [
+        "evercraft",
+        "evercraft capability discovery",
+        "evercraft tools",
+        "evercraft mcp"
+      ],
+      "domains": [
+        "systemiacommandcenters.com"
+      ]
+    }
+  ]
+}
