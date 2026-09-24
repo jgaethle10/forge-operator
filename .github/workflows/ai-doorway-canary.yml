@@ -1,0 +1,41 @@
+name: AI doorway canary
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "conformance/**"
+      - "registry/evercraft-machine-commerce/conformance.json"
+      - "scripts/check-ai-doorways.mjs"
+      - ".github/workflows/ai-doorway-canary.yml"
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate conformance registry
+        run: node scripts/validate-ai-conformance.mjs
+
+      - name: Probe public AI doorways
+        run: node scripts/check-ai-doorways.mjs
+
+      - name: Upload canary receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-doorway-canary
+          path: artifacts/ai-doorway-canary.*
+          if-no-files-found: warn
