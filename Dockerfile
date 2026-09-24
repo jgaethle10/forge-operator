@@ -16,6 +16,9 @@ ENV PORT=3000
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/server.ts ./server.ts
+COPY --from=build /app/systemia/chum/public-resolver.mjs ./systemia/chum/public-resolver.mjs
+COPY --from=build /app/public/.well-known/evercraft-products.json ./public/.well-known/evercraft-products.json
+COPY --from=build /app/registry/catalog.json ./registry/catalog.json
 COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
