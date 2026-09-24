@@ -9,7 +9,7 @@ export type AttributionStage =
 type ReferralInput = {
   productKey: string;
   publicId: string;
-  provider: string;
+  providerClaim: string;
   surface: string;
   targetUrl: string;
   intent?: string;
@@ -22,10 +22,11 @@ type ReferralPayload = {
   referral_id: string;
   product_key: string;
   public_id: string;
-  provider: string;
+  provider_claim: string;
+  provider_evidence_state: 'caller_asserted';
   surface: string;
   target_url: string;
-  intent_sha256: string | null;
+  intent_hmac_sha256: string | null;
   issued_at: string;
   expires_at: string;
 };
@@ -37,14 +38,12 @@ type PaymentEvidence = {
   currency: string;
 };
 
-const b64url = (value: string | Buffer) =>
-  Buffer.from(value).toString('base64url');
-
-const sha256 = (value: string) =>
-  crypto.createHash('sha256').update(value).digest('hex');
-
+const b64url = (value: string | Buffer) => Buffer.from(value).toString('base64url');
+const sha256 = (value: string) => crypto.createHash('sha256').update(value).digest('hex');
 const sign = (body: string, secret: string) =>
   crypto.createHmac('sha256', secret).update(body).digest('base64url');
+const fingerprintIntent = (value: string, secret: string) =>
+  crypto.createHmac('sha256', secret).update(value.trim().toLowerCase()).digest('hex');
 
 function requireSecret(secret: string) {
   if (!secret || secret.length < 24) {
@@ -66,12 +65,31 @@ function safeEqual(a: string, b: string) {
   return left.length === right.length && crypto.timingSafeEqual(left, right);
 }
 
+function requirePaymentEvidence(payment: PaymentEvidence | undefined) {
+  if (
+    !payment ||
+    !payment.authority ||
+    !payment.verification_ref ||
+    !Number.isInteger(payment.amount_cents) ||
+    payment.amount_cents < 0 ||
+    !/^[A-Za-z]{3}$/.test(payment.currency)
+  ) {
+    throw new Error(
+      'Trusted revenue stages require authoritative verification reference, amount_cents, 3-letter currency, and payment authority.',
+    );
+  }
+  return payment;
+}
+
 export function issueReferralToken(input: ReferralInput, secret: string) {
   requireSecret(secret);
   requireHttps(input.targetUrl);
 
   const now = input.now ?? new Date();
-  const ttlSeconds = Math.max(60, Math.min(input.ttlSeconds ?? 60 * 60 * 24 * 7, 60 * 60 * 24 * 30));
+  const ttlSeconds = Math.max(
+    60,
+    Math.min(input.ttlSeconds ?? 60 * 60 * 24 * 7, 60 * 60 * 24 * 30),
+  );
   const expires = new Date(now.getTime() + ttlSeconds * 1000);
 
   const payload: ReferralPayload = {
@@ -79,10 +97,11 @@ export function issueReferralToken(input: ReferralInput, secret: string) {
     referral_id: crypto.randomUUID(),
     product_key: String(input.productKey || '').trim(),
     public_id: String(input.publicId || '').trim(),
-    provider: String(input.provider || 'unknown').trim().toLowerCase(),
+    provider_claim: String(input.providerClaim || 'unknown').trim().toLowerCase(),
+    provider_evidence_state: 'caller_asserted',
     surface: String(input.surface || 'unknown').trim().toLowerCase(),
     target_url: input.targetUrl,
-    intent_sha256: input.intent ? sha256(input.intent.trim().toLowerCase()) : null,
+    intent_hmac_sha256: input.intent ? fingerprintIntent(input.intent, secret) : null,
     issued_at: now.toISOString(),
     expires_at: expires.toISOString(),
   };
@@ -132,22 +151,19 @@ export function createAttributionEvent(args: {
   const payload = verifyReferralToken(args.token, args.secret, args.now);
   const now = args.now ?? new Date();
   const tokenHash = sha256(args.token);
-  const publicStage = PUBLIC_ATTRIBUTION_STAGES.includes(args.stage as (typeof PUBLIC_ATTRIBUTION_STAGES)[number]);
+  const publicStage = PUBLIC_ATTRIBUTION_STAGES.includes(
+    args.stage as (typeof PUBLIC_ATTRIBUTION_STAGES)[number],
+  );
 
   if (publicStage && args.payment) {
     throw new Error('Public attribution stages cannot carry payment evidence.');
   }
 
-  if (args.stage === 'payment_verified') {
-    const p = args.payment;
-    if (!p || !p.authority || !p.verification_ref || !Number.isInteger(p.amount_cents) || p.amount_cents < 0 || !p.currency) {
-      throw new Error('payment_verified requires authoritative verification reference, amount_cents, currency, and payment authority.');
-    }
-  }
-
-  if (args.stage === 'fulfilled' && !args.payment?.verification_ref) {
-    throw new Error('fulfilled requires a verified payment reference.');
-  }
+  const trustedPayment = TRUSTED_ATTRIBUTION_STAGES.includes(
+    args.stage as (typeof TRUSTED_ATTRIBUTION_STAGES)[number],
+  )
+    ? requirePaymentEvidence(args.payment)
+    : null;
 
   return {
     schema: 'evercraft.chum.attribution-event.v1',
@@ -156,18 +172,19 @@ export function createAttributionEvent(args: {
     referral_token_sha256: tokenHash,
     product_key: payload.product_key,
     public_id: payload.public_id,
-    provider: payload.provider,
+    provider_claim: payload.provider_claim,
+    provider_evidence_state: payload.provider_evidence_state,
     surface: payload.surface,
     stage: args.stage,
     occurred_at: now.toISOString(),
     target_host: new URL(payload.target_url).host,
-    revenue: args.stage === 'payment_verified' || args.stage === 'fulfilled'
+    revenue: trustedPayment
       ? {
           verified: true,
-          authority: args.payment!.authority,
-          verification_ref: args.payment!.verification_ref,
-          amount_cents: args.payment!.amount_cents,
-          currency: args.payment!.currency.toUpperCase(),
+          authority: trustedPayment.authority,
+          verification_ref: trustedPayment.verification_ref,
+          amount_cents: trustedPayment.amount_cents,
+          currency: trustedPayment.currency.toUpperCase(),
         }
       : {
           verified: false,
@@ -176,6 +193,7 @@ export function createAttributionEvent(args: {
         },
     doctrine: {
       checkout_is_not_payment: true,
+      provider_claim_is_not_provider_pickup_proof: true,
       revenue_requires_authoritative_payment_verification: true,
     },
   };
@@ -189,8 +207,14 @@ export function summarizeAttribution(events: Array<ReturnType<typeof createAttri
     verified_payments: 0,
     fulfilled: 0,
     verified_revenue_cents: 0,
-    by_provider: {} as Record<string, { events: number; verified_payments: number; verified_revenue_cents: number }>,
-    by_product: {} as Record<string, { events: number; verified_payments: number; verified_revenue_cents: number }>,
+    by_provider_claim: {} as Record<
+      string,
+      { events: number; verified_payments: number; verified_revenue_cents: number }
+    >,
+    by_product: {} as Record<
+      string,
+      { events: number; verified_payments: number; verified_revenue_cents: number }
+    >,
   };
 
   for (const event of events) {
@@ -203,7 +227,7 @@ export function summarizeAttribution(events: Array<ReturnType<typeof createAttri
     }
 
     for (const [bucket, key] of [
-      [summary.by_provider, event.provider],
+      [summary.by_provider_claim, event.provider_claim],
       [summary.by_product, event.product_key],
     ] as const) {
       bucket[key] ||= { events: 0, verified_payments: 0, verified_revenue_cents: 0 };
