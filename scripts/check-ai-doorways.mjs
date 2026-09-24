@@ -76,14 +76,14 @@ for (const product of registry.products) {
   for (const [kind,url] of checks) {
     const result = await probe(url);
     const validation = validateSurface(product,kind,result);
-    const hard = product.conformance_state === 'reference_implementation' && (kind === 'llms' || kind === 'conformance');
+    const hard = product.doorway_state === 'live_verified' && product.conformance_state === 'reference_implementation' && (kind === 'llms' || kind === 'conformance');
     if (!validation.valid && hard) hardFailures += 1;
 
     const row = {
       product: product.product_key,
       kind,
       url,
-      expected: hard ? 'required_live_and_valid' : 'observe',
+      expected: hard ? 'required_live_and_valid' : (product.conformance_state === 'reference_implementation' ? 'observe_until_live_verified' : 'observe'),
       ok: result.ok,
       valid: validation.valid,
       status: result.status,
