@@ -4,6 +4,7 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 ## Start here
 
+- Simple public AI directory: /ai
 - Universal agent manifest: /.well-known/evercraft-agent.json
 - CHUM pain-first routing index: /.well-known/evercraft-pain-index.json
 - CHUM pain-first text index: /chum/pain-index.txt
