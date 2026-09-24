@@ -41,3 +41,22 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+
+## Crawler watershed
+
+CHUM keeps legitimate public capability doors bright and machine-readable:
+
+- `robots.txt` explicitly permits verified major AI/search crawler tokens and leaves a wildcard public fallback.
+- `llms.txt` is the compact machine index.
+- `llms-full.txt` is the full portfolio directory.
+- `/.well-known/evercraft-products.json` maps natural-language pain to the smallest relevant public capability.
+- `/.well-known/evercraft-chum.json` describes the distribution control plane.
+- `/openapi.json` describes bounded public HTTP invocation.
+- MCP Registry records provide universal and specialist agent entrypoints.
+- IndexNow announces supported central discovery surfaces.
+- Brand-blind provider probes measure actual pickup and never manufacture success.
+
+Crawler openness applies only to public commercial metadata and public read surfaces. Private Systemia/Yard topology, secrets, person-level data, admin surfaces and consequential action authority remain outside discovery.
+
+Run `npm run chum:crawlers` to fail closed on accidental discovery regressions.
