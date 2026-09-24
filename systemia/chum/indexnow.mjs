@@ -1,11 +1,26 @@
 const gateway = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const keyResponse = await fetch(`${gateway}?action=indexnow-key`);
-if (!keyResponse.ok) throw new Error(`IndexNow key endpoint HTTP ${keyResponse.status}`);
-const keyBody = await keyResponse.json();
-const key = keyBody.key;
-if (!key) throw new Error('IndexNow key missing');
+const painIndex = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding';
+const indexNow = 'https://api.indexnow.org/indexnow';
+const host = 'evercraft-ai-suite-08c4d2b8.base44.app';
 
-const urlList = [
+async function submit({ key, keyLocation, urlList, label }) {
+  const response = await fetch(indexNow, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json; charset=utf-8' },
+    body: JSON.stringify({ host, key, keyLocation, urlList })
+  });
+  const body = await response.text();
+  if (!response.ok) throw new Error(`${label} IndexNow HTTP ${response.status}: ${body}`);
+  return { label, status: response.status, submitted: urlList.length };
+}
+
+const gatewayKeyResponse = await fetch(`${gateway}?action=indexnow-key`);
+if (!gatewayKeyResponse.ok) throw new Error(`Gateway IndexNow key endpoint HTTP ${gatewayKeyResponse.status}`);
+const gatewayKeyBody = await gatewayKeyResponse.json();
+const gatewayKey = gatewayKeyBody.key;
+if (!gatewayKey) throw new Error('Gateway IndexNow key missing');
+
+const gatewayUrls = [
   `${gateway}?view=docs`,
   `${gateway}?view=llms`,
   `${gateway}?action=catalog`,
@@ -13,15 +28,42 @@ const urlList = [
   `${gateway}?action=discover`
 ];
 
-const response = await fetch('https://api.indexnow.org/indexnow', {
-  method: 'POST',
-  headers: { 'content-type': 'application/json; charset=utf-8' },
-  body: JSON.stringify({
-    host: 'evercraft-ai-suite-08c4d2b8.base44.app',
-    key,
-    keyLocation: `${gateway}?action=indexnow-key`,
-    urlList
-  })
+const gatewayReceipt = await submit({
+  key: gatewayKey,
+  keyLocation: `${gateway}?action=indexnow-key`,
+  urlList: gatewayUrls,
+  label: 'gateway'
 });
-if (!response.ok) throw new Error(`IndexNow HTTP ${response.status}: ${await response.text()}`);
-console.log(JSON.stringify({ ok: true, status: response.status, submitted: urlList.length }));
+
+const painKeyResponse = await fetch(`${painIndex}?view=indexnow-key`);
+if (!painKeyResponse.ok) throw new Error(`Pain-index IndexNow key endpoint HTTP ${painKeyResponse.status}`);
+const painKey = (await painKeyResponse.text()).trim();
+if (!painKey) throw new Error('Pain-index IndexNow key missing');
+
+const painDirectoryResponse = await fetch(painIndex, { headers: { accept: 'application/json' } });
+if (!painDirectoryResponse.ok) throw new Error(`Pain-index directory HTTP ${painDirectoryResponse.status}`);
+const painDirectory = await painDirectoryResponse.json();
+const declaredPainUrls = Array.isArray(painDirectory?.pages)
+  ? painDirectory.pages.map((x) => String(x?.url || '')).filter(Boolean)
+  : [];
+
+const painUrls = Array.from(new Set([
+  painIndex,
+  `${painIndex}?view=llms`,
+  `${painIndex}?view=sitemap`,
+  ...declaredPainUrls
+]));
+
+const painReceipt = await submit({
+  key: painKey,
+  keyLocation: `${painIndex}?view=indexnow-key`,
+  urlList: painUrls,
+  label: 'pain_index'
+});
+
+console.log(JSON.stringify({
+  ok: true,
+  gateway: gatewayReceipt,
+  pain_index: painReceipt,
+  total_submitted: gatewayReceipt.submitted + painReceipt.submitted
+}));
