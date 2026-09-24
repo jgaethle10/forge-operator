@@ -25,13 +25,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 61,
-    "product_entries": 19,
+    "entries": 63,
+    "product_entries": 21,
     "machine_offer_entries": 42,
-    "entries_with_pain_language": 61,
+    "entries_with_pain_language": 63,
     "sell_now_machine_offers": 11,
-    "entries_with_declared_mcp": 53,
-    "callable_or_routable_entries": 32,
+    "entries_with_declared_mcp": 55,
+    "callable_or_routable_entries": 34,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -1971,6 +1971,50 @@
       ]
     },
     {
+      "capability_id": "product:buildflow",
+      "product_key": "buildflow",
+      "kind": "product",
+      "name": "BuildFlow Enterprise Operations",
+      "class": "enterprise_operations_discovery_and_handoff",
+      "pain_phrases": [
+        "audit an enterprise operations process",
+        "route an enterprise operations problem",
+        "map business process patterns",
+        "prepare a privacy-safe operations handoff",
+        "route an operations problem",
+        "prepare a privacy-safe enterprise operations handoff"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "routing": {
+        "preferred": "specialist_mcp",
+        "target": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery, intent routing and privacy-preserving human handoff only",
+      "boundaries": [
+        "do not send private customer records",
+        "external business writes are disabled",
+        "handoff does not execute business actions"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "pricing": null,
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
+      ]
+    },
+    {
       "capability_id": "product:career-command",
       "product_key": "career-command",
       "kind": "product",
@@ -2689,6 +2733,49 @@
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:roasted",
+      "product_key": "roasted",
+      "kind": "product",
+      "name": "ROASTED",
+      "class": "micro_purchase_text_pressure_test",
+      "pain_phrases": [
+        "roast this text",
+        "pressure test this text",
+        "make this writing sharper",
+        "give me a gentle or professional critique",
+        "professional text critique"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/roasted",
+      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "routing": {
+        "preferred": "specialist_mcp",
+        "target": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
+      "boundaries": [
+        "checkout requires explicit human agreement to pay",
+        "checkout creation is not payment proof",
+        "paid result retrieval requires the issued share token"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "pricing": null,
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
       ]
     },
     {

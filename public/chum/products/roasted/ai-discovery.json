@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "roasted",
+  "name": "ROASTED",
+  "aliases": [],
+  "class": "micro_purchase_text_pressure_test",
+  "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "intents": [
+    "roast this text",
+    "pressure test this text",
+    "make this writing sharper",
+    "give me a gentle or professional critique"
+  ],
+  "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "checkout requires explicit human agreement to pay",
+    "checkout creation is not payment proof",
+    "paid result retrieval requires the issued share token"
+  ],
+  "registry_name": "io.github.jgaethle10/roasted",
+  "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
+    "page": "/chum/products/roasted/"
+  }
+}

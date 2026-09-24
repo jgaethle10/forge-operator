@@ -21,6 +21,18 @@
       "mcp": "https://aliev.base44.app/functions/alievMcp"
     },
     {
+      "product_key": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "aliases": [],
+      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
+      "page_url": "/chum/products/buildflow/",
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp"
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "aliases": [],
@@ -202,6 +214,18 @@
       "page_url": "/chum/products/raven-nexus/",
       "registry_name": null,
       "mcp": null
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "aliases": [],
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
+      "page_url": "/chum/products/roasted/",
+      "registry_name": "io.github.jgaethle10/roasted",
+      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
     },
     {
       "product_key": "skyops-parking",

@@ -604,6 +604,62 @@
         "checkout creation is not payment proof",
         "fulfillment requires verified payment"
       ]
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "aliases": [],
+      "class": "micro_purchase_text_pressure_test",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "intents": [
+        "roast this text",
+        "pressure test this text",
+        "make this writing sharper",
+        "give me a gentle or professional critique"
+      ],
+      "invocation": {
+        "mode": "mcp",
+        "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+        "registry_name": "io.github.jgaethle10/roasted"
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
+      "boundaries": [
+        "checkout requires explicit human agreement to pay",
+        "checkout creation is not payment proof",
+        "paid result retrieval requires the issued share token"
+      ]
+    },
+    {
+      "product_key": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "aliases": [],
+      "class": "enterprise_operations_discovery_and_handoff",
+      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "intents": [
+        "audit an enterprise operations process",
+        "route an enterprise operations problem",
+        "map business process patterns",
+        "prepare a privacy-safe operations handoff"
+      ],
+      "invocation": {
+        "mode": "mcp",
+        "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "registry_name": "io.github.jgaethle10/buildflow"
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery, intent routing and privacy-preserving human handoff only",
+      "boundaries": [
+        "do not send private customer records",
+        "external business writes are disabled",
+        "handoff does not execute business actions"
+      ]
     }
   ],
   "privacy_boundary": "Only approved public commercial capability metadata is compiled. Private/admin topology, secrets and customer records are excluded."

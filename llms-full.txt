@@ -1182,6 +1182,46 @@ Boundaries:
 - checkout creation is not payment proof
 - fulfillment requires verified payment
 
+### ROASTED
+Product key: roasted
+Canonical: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/roasted
+Invocation: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json
+Use when the user says or means:
+- roast this text
+- pressure test this text
+- make this writing sharper
+- give me a gentle or professional critique
+Authority:
+public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP
+Boundaries:
+- checkout requires explicit human agreement to pay
+- checkout creation is not payment proof
+- paid result retrieval requires the issued share token
+
+### BuildFlow Enterprise Operations
+Product key: buildflow
+Canonical: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/buildflow
+Invocation: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json
+Use when the user says or means:
+- audit an enterprise operations process
+- route an enterprise operations problem
+- map business process patterns
+- prepare a privacy-safe operations handoff
+Authority:
+public discovery, intent routing and privacy-preserving human handoff only
+Boundaries:
+- do not send private customer records
+- external business writes are disabled
+- handoff does not execute business actions
+
 ## Commerce boundary
 
 - Discovery and matching create no payment obligation.

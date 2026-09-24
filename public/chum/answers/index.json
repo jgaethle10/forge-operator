@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 61,
-    "unique_user_phrases": 454,
-    "mapped_candidate_edges": 461,
-    "ambiguous_phrases": 7,
-    "product_candidates": 19,
+    "pain_index_entries": 63,
+    "unique_user_phrases": 464,
+    "mapped_candidate_edges": 472,
+    "ambiguous_phrases": 8,
+    "product_candidates": 21,
     "machine_offer_candidates": 42
   },
   "doors": [
@@ -685,6 +685,28 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0e1ca78c9c",
+      "user_language": "audit an enterprise operations process",
+      "normalized": "audit an enterprise operations process",
+      "relative_json": "/chum/answers/doors/audit-an-enterprise-operations-process-0e1ca78c9c.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-an-enterprise-operations-process-0e1ca78c9c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:buildflow",
+          "kind": "product",
+          "product_key": "buildflow",
+          "public_id": null,
+          "name": "BuildFlow Enterprise Operations",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/buildflow/",
+          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": "io.github.jgaethle10/buildflow"
         }
       ]
     },
@@ -3959,6 +3981,28 @@
       ]
     },
     {
+      "answer_id": "intent:a7ca36e4e2",
+      "user_language": "give me a gentle or professional critique",
+      "normalized": "give me a gentle or professional critique",
+      "relative_json": "/chum/answers/doors/give-me-a-gentle-or-professional-critique-a7ca36e4e2.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-a-gentle-or-professional-critique-a7ca36e4e2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:roasted",
+          "kind": "product",
+          "product_key": "roasted",
+          "public_id": null,
+          "name": "ROASTED",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/roasted/",
+          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "registry_name": "io.github.jgaethle10/roasted"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fc777ed404",
       "user_language": "give me a rough customer range",
       "normalized": "give me a rough customer range",
@@ -5445,6 +5489,28 @@
       ]
     },
     {
+      "answer_id": "intent:17ad4913a5",
+      "user_language": "make this writing sharper",
+      "normalized": "make this writing sharper",
+      "relative_json": "/chum/answers/doors/make-this-writing-sharper-17ad4913a5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-this-writing-sharper-17ad4913a5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:roasted",
+          "kind": "product",
+          "product_key": "roasted",
+          "public_id": null,
+          "name": "ROASTED",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/roasted/",
+          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "registry_name": "io.github.jgaethle10/roasted"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5fc74bef45",
       "user_language": "map a public records production",
       "normalized": "map a public records production",
@@ -5463,6 +5529,28 @@
           "pain_page": "/chum/intents/large-document-corpus-review-v1/",
           "public_url": null,
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:17c5066e27",
+      "user_language": "map business process patterns",
+      "normalized": "map business process patterns",
+      "relative_json": "/chum/answers/doors/map-business-process-patterns-17c5066e27.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-business-process-patterns-17c5066e27.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:buildflow",
+          "kind": "product",
+          "product_key": "buildflow",
+          "public_id": null,
+          "name": "BuildFlow Enterprise Operations",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/buildflow/",
+          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": "io.github.jgaethle10/buildflow"
         }
       ]
     },
@@ -6469,6 +6557,50 @@
       ]
     },
     {
+      "answer_id": "intent:e56794c90f",
+      "user_language": "prepare a privacy-safe enterprise operations handoff",
+      "normalized": "prepare a privacy safe enterprise operations handoff",
+      "relative_json": "/chum/answers/doors/prepare-a-privacy-safe-enterprise-operations-handoff-e56794c90f.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prepare-a-privacy-safe-enterprise-operations-handoff-e56794c90f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:buildflow",
+          "kind": "product",
+          "product_key": "buildflow",
+          "public_id": null,
+          "name": "BuildFlow Enterprise Operations",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/buildflow/",
+          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": "io.github.jgaethle10/buildflow"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6d7a50ce0c",
+      "user_language": "prepare a privacy-safe operations handoff",
+      "normalized": "prepare a privacy safe operations handoff",
+      "relative_json": "/chum/answers/doors/prepare-a-privacy-safe-operations-handoff-6d7a50ce0c.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prepare-a-privacy-safe-operations-handoff-6d7a50ce0c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:buildflow",
+          "kind": "product",
+          "product_key": "buildflow",
+          "public_id": null,
+          "name": "BuildFlow Enterprise Operations",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/buildflow/",
+          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": "io.github.jgaethle10/buildflow"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:99fc7e6281",
       "user_language": "prepare concise interview stories and answers",
       "normalized": "prepare concise interview stories and answers",
@@ -6579,6 +6711,28 @@
       ]
     },
     {
+      "answer_id": "intent:1aeb05c28e",
+      "user_language": "pressure test this text",
+      "normalized": "pressure test this text",
+      "relative_json": "/chum/answers/doors/pressure-test-this-text-1aeb05c28e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/pressure-test-this-text-1aeb05c28e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:roasted",
+          "kind": "product",
+          "product_key": "roasted",
+          "public_id": null,
+          "name": "ROASTED",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/roasted/",
+          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "registry_name": "io.github.jgaethle10/roasted"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e2e7bbd632",
       "user_language": "prevent stale approvals in agent workflows",
       "normalized": "prevent stale approvals in agent workflows",
@@ -6663,6 +6817,28 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://faie.base44.app/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:2a8f002ec1",
+      "user_language": "professional text critique",
+      "normalized": "professional text critique",
+      "relative_json": "/chum/answers/doors/professional-text-critique-2a8f002ec1.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/professional-text-critique-2a8f002ec1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:roasted",
+          "kind": "product",
+          "product_key": "roasted",
+          "public_id": null,
+          "name": "ROASTED",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/roasted/",
+          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "registry_name": "io.github.jgaethle10/roasted"
         }
       ]
     },
@@ -7894,7 +8070,7 @@
       "normalized": "roast this text",
       "relative_json": "/chum/answers/doors/roast-this-text-2bc1522bb2.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/roast-this-text-2bc1522bb2.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:roasted-text-pressure-test-machine-v1",
@@ -7907,6 +8083,18 @@
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
           "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:roasted",
+          "kind": "product",
+          "product_key": "roasted",
+          "public_id": null,
+          "name": "ROASTED",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/roasted/",
+          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "registry_name": "io.github.jgaethle10/roasted"
         }
       ]
     },
@@ -7951,6 +8139,50 @@
           "pain_page": "/chum/intents/condition-desk-field-ops-v1/",
           "public_url": null,
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:06c3c59ccc",
+      "user_language": "route an enterprise operations problem",
+      "normalized": "route an enterprise operations problem",
+      "relative_json": "/chum/answers/doors/route-an-enterprise-operations-problem-06c3c59ccc.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/route-an-enterprise-operations-problem-06c3c59ccc.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:buildflow",
+          "kind": "product",
+          "product_key": "buildflow",
+          "public_id": null,
+          "name": "BuildFlow Enterprise Operations",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/buildflow/",
+          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": "io.github.jgaethle10/buildflow"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:2f0115c3c2",
+      "user_language": "route an operations problem",
+      "normalized": "route an operations problem",
+      "relative_json": "/chum/answers/doors/route-an-operations-problem-2f0115c3c2.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/route-an-operations-problem-2f0115c3c2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:buildflow",
+          "kind": "product",
+          "product_key": "buildflow",
+          "public_id": null,
+          "name": "BuildFlow Enterprise Operations",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/buildflow/",
+          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": "io.github.jgaethle10/buildflow"
         }
       ]
     },

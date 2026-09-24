@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 61
-Product entries: 19
+Entries: 63
+Product entries: 21
 Machine-offer entries: 42
 Sell-now machine offers: 11
 
@@ -854,6 +854,23 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
+## BuildFlow Enterprise Operations
+Capability ID: product:buildflow
+Product key: buildflow
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+MCP: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
+Use when the user means:
+- audit an enterprise operations process
+- route an enterprise operations problem
+- map business process patterns
+- prepare a privacy-safe operations handoff
+- route an operations problem
+- prepare a privacy-safe enterprise operations handoff
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
 ## Evercraft Career Command
 Capability ID: product:career-command
 Product key: career-command
@@ -1155,6 +1172,22 @@ Use when the user means:
 - find the smallest Raven safety capability without buying the full suite or hardware
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## ROASTED
+Capability ID: product:roasted
+Product key: roasted
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+MCP: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
+Use when the user means:
+- roast this text
+- pressure test this text
+- make this writing sharper
+- give me a gentle or professional critique
+- professional text critique
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## SkyOps Parking
 Capability ID: product:skyops-parking
