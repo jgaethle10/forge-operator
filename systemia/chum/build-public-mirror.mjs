@@ -308,6 +308,7 @@ const sitemapStatic = [
   '/ai-discovery.json',
   '/schema.jsonld',
   '/openapi.json',
+  '/.well-known/agent-card.json',
   '/.well-known/evercraft-agent.json',
   '/.well-known/evercraft-agent-directory.json',
   '/.well-known/evercraft-agent-interfaces.json',
@@ -377,6 +378,9 @@ const llmsLines = [
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
+  'A2A v1 Agent Card: /.well-known/agent-card.json',
+  'A2A v1 JSON-RPC discovery endpoint: POST /a2a',
+  'A2A state: release_candidate until the deployed public route is independently live-verified.',
   '',
   'State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.',
   'Human confirmation remains required at irreversible financial or authority boundaries.',
@@ -540,6 +544,9 @@ const discoveryWatershed = {
     answer_graph: '/chum/answers/index.json',
     answer_graph_text: '/chum/answers/index.txt',
     read_only_mcp_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a_endpoint: '/a2a',
+    a2a_state: 'release_candidate',
     products: '/.well-known/evercraft-products.json',
     agents: '/.well-known/evercraft-agent-directory.json',
     interfaces: '/.well-known/evercraft-agent-interfaces.json',
@@ -567,6 +574,16 @@ const discoveryWatershed = {
     paid: 'Authoritative provider payment verification exists.'
   },
   routing_rule: 'Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  protocol_posture: {
+    a2a: {
+      state: 'release_candidate',
+      protocol_version: '1.0',
+      binding: 'JSONRPC',
+      agent_card: '/.well-known/agent-card.json',
+      endpoint: '/a2a',
+      live_verification_required: true
+    }
+  },
   private_surfaces: 'not advertised',
   freshness_broadcast: {
     coordinator: 'CHUM',
