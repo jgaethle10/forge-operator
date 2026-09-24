@@ -8,7 +8,12 @@
     "health": "/api/health",
     "invoke": "/api/forge",
     "manifest": "/.well-known/evercraft-capabilities.json",
-    "productDirectory": "/.well-known/evercraft-products.json"
+    "productDirectory": "/.well-known/evercraft-products.json",
+    "intentMap": "/.well-known/evercraft-intents.json",
+    "intentResolver": {
+      "get": "/api/resolve?q={plain-language-problem}",
+      "post": "/api/resolve"
+    }
   },
   "jobs": [
     "operations bottleneck diagnosis",
