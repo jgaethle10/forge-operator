@@ -11,7 +11,7 @@ permissions:
 jobs:
   discovery:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,17 +19,25 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+
       - name: Validate public discovery watershed
         run: npm run chum:check
-      - name: Probe declared public surfaces
+
+      - name: Validate CHUM provider probe suite
+        run: npm run chum:validate
+
+      - name: Probe declared public web surfaces
         run: npm run chum
-      - name: Validate provider probe contract
-        run: npm run check:probes
-      - name: Run authorized cross-LLM probes when bridge is configured
+
+      - name: Canary live MCP endpoints and registry state
+        run: npm run chum:mcp
+
+      - name: Run authorized brand-blind provider probes
         env:
-          NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
-          NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
-        run: npm run probe:cross-llm
+          CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
+          CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
+        run: npm run chum:providers
+
       - name: Upload CHUM receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -38,4 +46,3 @@ jobs:
           if-no-files-found: warn
           path: |
             artifacts/chum/**
-            probe-receipts/**
