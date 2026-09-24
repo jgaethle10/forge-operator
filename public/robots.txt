@@ -1,8 +1,10 @@
 # Evercraft public AI/search discovery policy.
 # Public commercial surfaces are intentionally discoverable.
 # Private/admin topology must never be advertised here.
+# robots.txt is a crawl signal, not an authorization mechanism.
 
 User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
 User-agent: GPTBot
 User-agent: Claude-SearchBot
 User-agent: Claude-User
@@ -11,19 +13,32 @@ User-agent: Googlebot
 User-agent: Google-Extended
 User-agent: bingbot
 User-agent: PerplexityBot
+User-agent: Perplexity-User
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /openapi.json
 Allow: /.well-known/
 Allow: /api/health
 Allow: /api/capabilities
+Allow: /api/discovery
 Allow: /api/commercial
 Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /systemia/
 
 User-agent: *
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /openapi.json
 Allow: /.well-known/
 Allow: /api/health
 Allow: /api/capabilities
+Allow: /api/discovery
 Allow: /api/commercial
 Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /systemia/
