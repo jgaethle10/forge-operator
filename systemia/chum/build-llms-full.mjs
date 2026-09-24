@@ -21,6 +21,8 @@ const lines = [
   'Problem-to-product directory: /.well-known/evercraft-products.json',
   'Machine offer catalog: /.well-known/evercraft-machine-catalog.json',
   'CHUM public mirror: /chum/index.json',
+  'Master buyer-intent index: /chum/intents/index.json',
+  'Master buyer-intent text: /chum/intents/index.txt',
   'Sell-now revenue watershed: /chum/revenue.txt',
   'Read-only intent router: GET /api/discover?q={natural-language-problem}',
   'OpenAPI: /openapi.json',
