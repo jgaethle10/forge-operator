@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
   },
   "servers": [
@@ -213,6 +213,103 @@
           },
           "503": {
             "description": "Public catalog unavailable"
+          }
+        }
+      }
+    },
+    "/api/chum/attribution": {
+      "get": {
+        "operationId": "chumAttributionContract",
+        "summary": "Read CHUM attribution capabilities and trust boundaries",
+        "responses": {
+          "200": {
+            "description": "Attribution contract"
+          }
+        }
+      }
+    },
+    "/api/chum/referral": {
+      "post": {
+        "operationId": "chumIssueReferral",
+        "summary": "Issue a signed, privacy-minimized referral token for a known public Evercraft offer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "publicId": {
+                    "type": "string"
+                  },
+                  "provider": {
+                    "type": "string"
+                  },
+                  "surface": {
+                    "type": "string"
+                  },
+                  "intent": {
+                    "type": "string",
+                    "description": "Optional intent. Raw text is not embedded in the token."
+                  }
+                },
+                "required": [
+                  "publicId",
+                  "provider"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signed referral and landing URL"
+          },
+          "404": {
+            "description": "Unknown public Evercraft offer"
+          },
+          "503": {
+            "description": "Attribution signing is not configured"
+          }
+        }
+      }
+    },
+    "/api/chum/attribution/event": {
+      "post": {
+        "operationId": "chumRecordPublicAttributionEvent",
+        "summary": "Record a landing or checkout-start event for a signed CHUM referral",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "referralToken": {
+                    "type": "string"
+                  },
+                  "stage": {
+                    "type": "string",
+                    "enum": [
+                      "landing",
+                      "checkout_started"
+                    ]
+                  }
+                },
+                "required": [
+                  "referralToken",
+                  "stage"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Attribution event accepted. Checkout is not payment."
+          },
+          "403": {
+            "description": "Public callers cannot assert payment verification"
           }
         }
       }
