@@ -1,31 +1,110 @@
 {
-  "schema": "evercraft.chum.v2",
+  "schema": "evercraft.chum.v3",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
   "status": "portfolio_distribution_control_plane",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": ["PRODUCT","SIGNAL","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","LEARNING"],
-  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
+  "loop": [
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
+    "LEARNING"
+  ],
+  "provider_targets": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
   "public_entrypoints": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "runtime_llms": "/llms.txt",
+    "runtime_llms_full": "/llms-full.txt",
+    "runtime_openapi": "/openapi.json",
+    "runtime_robots": "/robots.txt",
+    "runtime_sitemap": "/sitemap.xml",
+    "runtime_discovery": "/api/discovery",
+    "capability_manifest": "/.well-known/evercraft-capabilities.json",
+    "product_directory_runtime": "/.well-known/evercraft-products.json"
   },
   "verified_crawler_controls": [
     {
-      "provider": "OpenAI",
+      "provider": "OpenAI ChatGPT Search",
       "token": "OAI-SearchBot",
-      "purpose": "ChatGPT Search discovery",
+      "purpose": "search discovery",
       "evidence": "https://developers.openai.com/api/docs/bots"
     },
     {
-      "provider": "Google",
+      "provider": "OpenAI user-directed fetch",
+      "token": "ChatGPT-User",
+      "purpose": "user-directed retrieval",
+      "evidence": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "OpenAI model development",
+      "token": "GPTBot",
+      "purpose": "public model-development crawl",
+      "evidence": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "Anthropic Claude Search",
+      "token": "Claude-SearchBot",
+      "purpose": "search discovery",
+      "evidence": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Anthropic user-directed fetch",
+      "token": "Claude-User",
+      "purpose": "user-directed retrieval",
+      "evidence": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Anthropic model development",
+      "token": "ClaudeBot",
+      "purpose": "public model-development crawl",
+      "evidence": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Perplexity Search",
+      "token": "PerplexityBot",
+      "purpose": "search discovery",
+      "evidence": "https://docs.perplexity.ai/guides/bots"
+    },
+    {
+      "provider": "Perplexity user-directed fetch",
+      "token": "Perplexity-User",
+      "purpose": "user-directed retrieval",
+      "evidence": "https://docs.perplexity.ai/guides/bots"
+    },
+    {
+      "provider": "Google Search",
+      "token": "Googlebot",
+      "purpose": "search indexing",
+      "evidence": "https://developers.google.com/crawling"
+    },
+    {
+      "provider": "Google Gemini/Vertex control",
       "token": "Google-Extended",
-      "purpose": "Gemini training and Google Search grounding control; separate from ordinary Google Search inclusion",
+      "purpose": "Gemini grounding/model-development control token",
       "evidence": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
+    },
+    {
+      "provider": "Microsoft Bing/Copilot web grounding",
+      "token": "bingbot",
+      "purpose": "Bing index discovery",
+      "evidence": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-ai-public-websites"
     }
   ],
   "measurement": {
@@ -43,5 +122,14 @@
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification"
-  ]
+  ],
+  "updated_at": "2026-09-24",
+  "unverified_crawler_tokens": {
+    "grok": "No official public Grok web-search crawler token is asserted; wildcard public policy remains open."
+  },
+  "protocol_state": {
+    "mcp": "live specialist and universal registry paths are canary-tested by CHUM",
+    "openapi": "published at /openapi.json",
+    "agent_card": "metadata exists, but A2A runtime conformance is not claimed until handshake evidence is receipt-backed"
+  }
 }
