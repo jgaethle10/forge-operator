@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
   },
   "servers": [
@@ -201,6 +201,52 @@
             "description": "Public catalog unavailable"
           }
         }
+      },
+      "post": {
+        "operationId": "chumDiscoverPost",
+        "summary": "Match a natural-language problem to public Evercraft capabilities",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string"
+                  },
+                  "query": {
+                    "type": "string"
+                  },
+                  "problem": {
+                    "type": "string"
+                  },
+                  "intent": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "default": 5
+                  }
+                },
+                "description": "Provide at least one of q, query, problem, or intent."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ranked machine-offer and public-product matches"
+          },
+          "400": {
+            "description": "Missing query"
+          },
+          "503": {
+            "description": "Public discovery catalogs unavailable"
+          }
+        }
       }
     },
     "/api/revenue-watershed": {
@@ -213,6 +259,91 @@
           },
           "503": {
             "description": "Public catalog unavailable"
+          }
+        }
+      }
+    },
+    "/api/resolve": {
+      "get": {
+        "operationId": "chumResolveAlias",
+        "summary": "Compatibility alias for CHUM natural-language discovery",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Natural-language user problem. Do not seed an Evercraft product name."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ranked public Evercraft capability matches with commercial and safety state"
+          },
+          "400": {
+            "description": "Missing query"
+          },
+          "503": {
+            "description": "Public catalog unavailable"
+          }
+        }
+      },
+      "post": {
+        "operationId": "chumResolveAliasPost",
+        "summary": "Compatibility alias for CHUM natural-language discovery",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string"
+                  },
+                  "query": {
+                    "type": "string"
+                  },
+                  "problem": {
+                    "type": "string"
+                  },
+                  "intent": {
+                    "type": "string"
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "default": 5
+                  }
+                },
+                "description": "Provide at least one of q, query, problem, or intent."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ranked machine-offer and public-product matches"
+          },
+          "400": {
+            "description": "Missing query"
+          },
+          "503": {
+            "description": "Public discovery catalogs unavailable"
           }
         }
       }
