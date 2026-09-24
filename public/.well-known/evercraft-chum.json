@@ -5,14 +5,39 @@
   "status": "portfolio_distribution_control_plane",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": ["PRODUCT","SIGNAL","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","LEARNING"],
-  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
+  "loop": [
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
+    "LEARNING"
+  ],
+  "provider_targets": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
   "public_entrypoints": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "chum_manifest": "/.well-known/evercraft-chum.json",
+    "offers": "/.well-known/evercraft-offers.json",
+    "resolver": "/chum/resolve?q=<plain-language-problem>",
+    "health": "/chum/health",
+    "llms_full": "/llms-full.txt",
+    "openapi": "/openapi.json",
+    "jsonld": "/schema.jsonld",
+    "ai_discovery": "/ai-discovery.html"
   },
   "verified_crawler_controls": [
     {
@@ -43,5 +68,14 @@
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification"
-  ]
+  ],
+  "commercial_routing": {
+    "sell_now_source": "/.well-known/evercraft-offers.json",
+    "resolver": "/chum/resolve?q=<plain-language-problem>",
+    "rule": "Prefer the smallest relevant public capability. Keep payment-ready and quote-ready distinct.",
+    "discovery_creates_payment_obligation": false,
+    "explicit_human_confirmation_required_before_checkout": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_provider_verification": true
+  }
 }
