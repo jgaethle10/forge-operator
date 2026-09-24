@@ -1,0 +1,26 @@
+# Evercraft Network
+
+Provider: Evercraft
+Product key: evercraft-network
+Class: application_network_continuity
+Canonical URL: https://network-control.base44.app/
+Authority: public product discovery and human-directed membership interaction
+Human confirmation required: yes
+Runtime llms.txt: https://network-control.base44.app/llms.txt
+
+## Natural-language intents
+- application network that reconnects across changing authorized internet paths
+- network resilience software
+- member device reconnect visibility
+- continuity readiness tools
+- Evercraft Network membership
+
+## Boundaries
+- not a cellular carrier, ISP, SIM or eSIM service
+- not 911 or PSAP integration
+- not guaranteed geographic coverage or emergency backhaul
+- private device identity, precise location, telecom identifiers, secrets, and operator state are not public
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
