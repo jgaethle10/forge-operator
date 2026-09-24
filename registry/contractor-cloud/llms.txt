@@ -1,0 +1,25 @@
+# Evercraft Contractor Cloud
+
+Provider: Evercraft
+Product key: contractor-cloud
+Class: home_service_and_contractor_operations
+Canonical URL: https://evercraft-contractor-cloud-314d2197.base44.app/
+Authority: public homeowner intake and contractor discovery with protected person-level data
+Human confirmation required: yes
+Runtime llms.txt: https://evercraft-contractor-cloud-314d2197.base44.app/llms.txt
+
+## Natural-language intents
+- get contractor quotes for a home project
+- find contractors for a project
+- contractor opportunity network
+- roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software
+- contractor measurement tools
+
+## Boundaries
+- project submission is not a guaranteed match, fixed price, scheduled job, or contract
+- homeowner identity, private addresses, project photos, bids, and transaction records are not public
+- paid access requires independently verified subscription state
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
