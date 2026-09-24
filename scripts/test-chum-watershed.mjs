@@ -24,6 +24,21 @@ assert.equal(ev.results[0].product_key, 'aliev');
 const network = discoverCapabilities('I need network resilience software that can reconnect across changing internet paths');
 assert.equal(network.results[0].product_key, 'evercraft-network');
 
+const parking = discoverCapabilities('I need airport parking management software for reservations and multiple locations');
+assert.equal(parking.results[0].product_key, 'skyops-parking');
+
+const eventOps = discoverCapabilities('I need software to run a live event and coordinate the run of show');
+assert.equal(eventOps.results[0].product_key, 'everystage');
+
+const contractor = discoverCapabilities('I need contractor quotes for a home project and help finding contractors');
+assert.equal(contractor.results[0].product_key, 'contractor-cloud');
+
+const learning = discoverCapabilities('I want guided homework help without simply giving the answer');
+assert.equal(learning.results[0].product_key, 'infinite-classroom');
+
+const family = discoverCapabilities('I need maternal support resources and practical help after having a baby');
+assert.equal(family.results[0].product_key, 'evernest');
+
 assert.equal(discoverCapabilities('').match, false);
 
 const manifest = agentDiscoveryDocument('https://example.com');
@@ -56,7 +71,7 @@ assert.equal(productPageHtml('does-not-exist', 'https://example.com'), null);
 console.log(JSON.stringify({
   status: 'PASS',
   product_count: publicProducts.length,
-  pain_routes: ['forensiscope','findmypart','aliev','evercraft-network'],
+  pain_routes: ['forensiscope','findmypart','aliev','evercraft-network','skyops-parking','everystage','contractor-cloud','infinite-classroom','evernest'],
   explicit_ai_crawlers: ['OAI-SearchBot','GPTBot','ChatGPT-User','ClaudeBot','Claude-SearchBot','Claude-User','PerplexityBot','Perplexity-User','Googlebot','Google-Extended'],
   absolute_sitemap_urls: true,
   public_intent_resolver: true,
