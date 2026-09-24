@@ -3,7 +3,7 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "owner": "Systemia",
   "status": "live_in_forge_operator",
   "contract": {
@@ -15,9 +15,12 @@
       "Official MCP Registry",
       "public capability endpoints",
       "robots.txt policies",
-      "authorized provider-probe bridge receipts"
+      "authorized provider-probe bridge receipts",
+      "public/.well-known/evercraft-machine-catalog.json"
     ],
     "outputs": [
+      "brand-blind pain-first routing index",
+      "plain-text LLM routing index",
       "surface-readiness receipts",
       "crawler and AI-search reachability receipts",
       "MCP handshake and registry receipts",
@@ -40,7 +43,8 @@
     "crawler_reachability": "receipt_backed",
     "mcp_external_canary": "receipt_backed",
     "provider_pickup": "receipt_required",
-    "conversion_attribution": "receipt_required"
+    "conversion_attribution": "receipt_required",
+    "pain_index": "deterministic_build_and_brand_blind_tests"
   },
   "compatibility": {
     "provider_targets": [
