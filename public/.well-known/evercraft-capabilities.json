@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.capability.v1",
+  "schema": "evercraft.capability-commerce.v1",
   "product": "Forge Operator",
   "provider": "Evercraft",
   "status": "public",
@@ -48,5 +48,70 @@
     "checkout": "/api/checkout",
     "discovery": "/api/commercial",
     "pricingState": "human-gated"
-  }
+  },
+  "transaction_model": {
+    "flow": [
+      "recognize_need",
+      "match_capability",
+      "request_quote",
+      "human_confirm",
+      "evercraft_payments",
+      "invoke",
+      "verify",
+      "return_result"
+    ],
+    "rules": [
+      "Present exact scope and price before purchase.",
+      "Require human confirmation before creating a financial obligation.",
+      "Payment never expands execution permissions.",
+      "Checkout existence is not verified payment.",
+      "Return results and receipts to the originating conversation when the host supports it."
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "saban.elastic-workforce.v1",
+      "name": "Saban Elastic Workforce",
+      "trigger": "Use when a bounded task exceeds the calling AI's practical single-thread, runtime, specialist, parallelism, or independent-review capacity.",
+      "request": [
+        "mission_request_key",
+        "objective",
+        "acceptance_criteria",
+        "authorized_inputs",
+        "resource_ceiling",
+        "allowed_side_effects"
+      ],
+      "response": [
+        "admission_state",
+        "scope",
+        "quote",
+        "required_confirmation",
+        "execution_state",
+        "result",
+        "receipt_refs",
+        "release_state"
+      ],
+      "commercial_state": "quote_required",
+      "price": null,
+      "price_note": "No standalone Saban rate is approved. Obtain a canonical quote through Evercraft Payments.",
+      "authority": "Systemia",
+      "workforce_layer": "Saban",
+      "evidence": {
+        "proven": "Small internal burst: 8 temporary production workers plus 2 temporary independent officials.",
+        "not_proven": [
+          "10,000-agent execution",
+          "large-scale concurrency",
+          "public external invocation"
+        ]
+      },
+      "safety": [
+        "least_privilege",
+        "bounded_resources",
+        "human_financial_gate",
+        "no_uncontrolled_recursive_spawn",
+        "independent_review",
+        "temporary_worker_release"
+      ]
+    }
+  ]
 }
