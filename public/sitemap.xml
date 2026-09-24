@@ -8,4 +8,5 @@
   <url><loc>/.well-known/evercraft-chum.json</loc></url>
   <url><loc>/chum/health</loc></url>
   <url><loc>/chum/resolve?q=video%20too%20large%20for%20AI</loc></url>
+  <url><loc>/.well-known/evercraft-offers.json</loc></url>
 </urlset>
