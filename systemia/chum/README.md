@@ -17,11 +17,25 @@ CHUM intentionally separates:
 
 ## Portfolio rule
 
-CHUM inventories the **union** of the Evercraft conformance registry, public product directory and agent/MCP registry catalog. A product does not disappear from distribution because one list was not manually synchronized.
+CHUM inventories the **union** of the Evercraft conformance registry, public product directory, public machine-commerce catalog and agent/MCP registry catalog. A product or bounded offer does not disappear from distribution because one list was not manually synchronized.
+
+## Pain Index
+
+CHUM publishes a brand-blind watershed map at:
+
+- `public/.well-known/evercraft-pain-index.json`
+- `public/chum/pain-index.json`
+- `public/chum/pain-index.txt`
+
+The index starts from the user's problem rather than an Evercraft brand. Product intents and machine-commerce offer terms are merged into one routing surface while preserving actual `commercial_state`, `machine_state`, pricing, authentication, payment, evidence and human-confirmation boundaries.
+
+Sellable capabilities must have pain-language. Discovery-only and held capabilities remain discoverable but may not borrow a stronger capability's evidence state.
 
 ## Commands
 
 ```bash
+npm run chum:index
+npm run test:chum-index
 npm run chum
 npm run chum:offline
 npm run chum:mcp
