@@ -4,6 +4,9 @@ Problem: A small business or contractor needs evidence-backed website triage acr
 Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Machine state: payment_ready
 Public capability: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=audit-center-website-audit-machine-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Use when the user says or means:
 - why is my website not getting leads

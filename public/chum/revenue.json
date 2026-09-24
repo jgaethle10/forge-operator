@@ -1,16 +1,18 @@
 {
-  "schema": "evercraft.chum.revenue-watershed.v1",
+  "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
   "updated_at": "2026-09-24T18:52:46.997Z",
   "source_schema_version": "2026-09-24.5",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.6.0",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
   "discovery_endpoint": "/api/discover",
+  "central_gateway": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway",
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "safety": {
     "no_recommendation_guarantee": true,
     "discovery_creates_obligation": false,
     "explicit_human_confirmation_required_where_declared": true,
-    "checkout_is_payment_proof": false,
+    "checkout_is_not_payment_proof": true,
     "authoritative_provider_verification_required_for_paid_state": true,
     "private_topology_exposed": false
   },
@@ -65,6 +67,9 @@
       "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
       "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.",
       "catalog_version": "2026-09-23.16",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=aliev-site-opportunity-snapshot-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/"
     },
     {
@@ -102,6 +107,9 @@
       "payment_authority": "Evercraft Payments with provider verification",
       "invocation_status": "LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.",
       "catalog_version": "2026-09-23.17",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/"
     },
     {
@@ -141,6 +149,9 @@
       "payment_authority": "Evercraft Payments with provider verification",
       "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
       "catalog_version": "2026-09-23.12",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=eventwave-paid-promotion-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/eventwave-paid-promotion-v1/"
     },
     {
@@ -174,6 +185,9 @@
       "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
       "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
       "catalog_version": "2026-09-23.15",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/"
     },
     {
@@ -202,6 +216,9 @@
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
       "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.",
       "catalog_version": "2026-09-23",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=foundry-app-escape-audit-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/foundry-app-escape-audit-v1/"
     },
     {
@@ -240,6 +257,9 @@
       "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "catalog_version": "2026-09-23.13",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=website-launch-service-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/website-launch-service-v1/"
     },
     {
@@ -273,6 +293,9 @@
       "payment_authority": "FAIE / Stripe, provider-verified",
       "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.",
       "catalog_version": "2026-09-23.14",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=faie-signal-brief-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/faie-signal-brief-v1/"
     },
     {
@@ -311,6 +334,9 @@
       "payment_authority": "Evercraft Payments with Stripe provider verification",
       "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
       "catalog_version": "2026-09-23.6",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/findmypart-paid-hunt-v1/"
     },
     {
@@ -344,6 +370,9 @@
       "payment_authority": "ROASTED / Stripe, provider-verified",
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.",
       "catalog_version": "2026-09-23.10",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=roasted-text-pressure-test-machine-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/"
     },
     {
@@ -372,6 +401,9 @@
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
       "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed.",
       "catalog_version": "2026-09-23",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=site-survive-rapid-audit-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/site-survive-rapid-audit-v1/"
     },
     {
@@ -418,6 +450,9 @@
       "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
       "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.",
       "catalog_version": "2026-09-23.16",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
+      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=audit-center-website-audit-machine-v1",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/"
     }
   ]
