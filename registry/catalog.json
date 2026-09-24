@@ -101,7 +101,7 @@
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
     {
-      "registry_name": "io.github.jgaethle10/evercraft-rewards",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "triggers": [
         "join a local rewards network",
@@ -109,7 +109,9 @@
         "cross-business rewards",
         "business partnership rewards",
         "Yakima local business discovery"
-      ]
+      ],
+      "tool": "prepare_rewards_partner_enrollment",
+      "product": "Evercraft Rewards"
     }
   ],
   "payment_boundary": {
