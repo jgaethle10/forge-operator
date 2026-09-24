@@ -16,6 +16,37 @@ const isProd = process.env.NODE_ENV === 'production';
 
 app.use(express.json({ limit: '10mb' }));
 
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.json({
+    ok: true,
+    service: 'forge-operator',
+    provider: 'Evercraft',
+    version: '2026-09-24',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/api/capabilities', (_req: Request, res: Response) => {
+  res.json({
+    schema: 'evercraft.capability.v1',
+    product: 'Forge Operator',
+    provider: 'Evercraft',
+    invoke: { method: 'POST', path: '/api/forge' },
+    discovery: {
+      llms: '/llms.txt',
+      manifest: '/.well-known/evercraft-capabilities.json',
+    },
+    jobs: [
+      'operations bottleneck diagnosis',
+      'workflow automation planning',
+      'human-in-the-loop design',
+      'operational risk identification',
+      'implementation next-step generation',
+    ],
+  });
+});
+
+
 // Server-side Gemini AI Client with required User-Agent
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,

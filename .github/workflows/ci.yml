@@ -1,0 +1,26 @@
+name: Forge checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "systemia/**"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install
+      - name: Typecheck and build
+        run: npm run check

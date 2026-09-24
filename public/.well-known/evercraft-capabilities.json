@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.capability.v1",
+  "product": "Forge Operator",
+  "provider": "Evercraft",
+  "status": "public",
+  "discovery": {
+    "llms": "/llms.txt",
+    "health": "/api/health",
+    "invoke": "/api/forge"
+  },
+  "jobs": [
+    "operations bottleneck diagnosis",
+    "workflow automation planning",
+    "human-in-the-loop design",
+    "operational risk identification",
+    "implementation next-step generation"
+  ],
+  "input": {
+    "method": "POST",
+    "path": "/api/forge",
+    "contentType": "application/json",
+    "fields": {
+      "businessProblem": {
+        "type": "string",
+        "required": true
+      },
+      "desiredOutcome": {
+        "type": "string",
+        "required": true
+      },
+      "businessContext": {
+        "type": "string",
+        "required": false
+      }
+    }
+  },
+  "safety": {
+    "humanGateRequiredFor": [
+      "financial commitments",
+      "legal decisions",
+      "employment decisions",
+      "safety-critical actions",
+      "external communications with material consequences"
+    ]
+  }
+}
