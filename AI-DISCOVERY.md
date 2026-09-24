@@ -35,6 +35,8 @@ High-signal examples:
 | A business needs a professional website planned or launched | Website Launch | `io.github.jgaethle10/website-launch` |
 | Agriculture decisions need evidence around water, land resilience or production risk | FAIE | `io.github.jgaethle10/faie` |
 | A user needs event discovery, event promotion or venue visibility | EventWave | `io.github.jgaethle10/eventwave` |
+| A person does not feel safe, needs domestic-violence or sexual-assault support, needs verified protection/stability resources, or wants help finding safer ground without telling a full case story first | Guardian Pilot | public discovery-only safety navigation |
+| A family or new parent needs practical support coordination, a trusted support circle, family preparedness resources, or Spanish-language family-support resources | EverNest | public discovery-only family support |
 | A user describes bank/account scam risk, identity compromise, home/family safety, personal safety planning, business security or continuity pain and needs the smallest relevant safety capability | Raven Nexus | bounded public pain router + CHUM mirror |
 | A small business has repetitive work, disconnected systems or slow handoffs and needs an AI/human operations plan | Forge Operator | public API + capability manifest |
 
@@ -57,6 +59,12 @@ High-signal examples:
 
 Raw public portfolio:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json`
+
+Guardian Pilot:
+`https://guardian-pilot.base44.app/`
+
+EverNest:
+`https://evernest-home.base44.app/`
 
 Raven Nexus pain router:
 `https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter`
