@@ -163,6 +163,59 @@
           }
         }
       }
+    },
+    "/api/discover": {
+      "get": {
+        "operationId": "chumDiscover",
+        "summary": "Match a natural-language problem to public Evercraft capabilities",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Natural-language user problem. Do not seed an Evercraft product name."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ranked public Evercraft capability matches with commercial and safety state"
+          },
+          "400": {
+            "description": "Missing query"
+          },
+          "503": {
+            "description": "Public catalog unavailable"
+          }
+        }
+      }
+    },
+    "/api/revenue-watershed": {
+      "get": {
+        "operationId": "chumRevenueWatershed",
+        "summary": "List current public Evercraft offers marked sell_now",
+        "responses": {
+          "200": {
+            "description": "Public-safe sell-now offer index"
+          },
+          "503": {
+            "description": "Public catalog unavailable"
+          }
+        }
+      }
     }
   }
 }
