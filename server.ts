@@ -81,8 +81,6 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb' }));
-app.set('trust proxy', true);
-
 const discoverySitemapPaths = [
   '/',
   '/discover/',
@@ -120,7 +118,13 @@ function requestOrigin(req: Request): string {
   }
   const host = String(req.get('host') || '').trim();
   if (!host) return '';
-  return `${req.protocol}://${host}`;
+  const forwarded = String(req.get('x-forwarded-proto') || '').split(',')[0].trim().toLowerCase();
+  const protocol = forwarded === 'https' || forwarded === 'http' ? forwarded : req.protocol;
+  try {
+    return new URL(`${protocol}://${host}`).origin;
+  } catch {
+    return '';
+  }
 }
 
 app.get('/sitemap.xml', (req: Request, res: Response) => {
