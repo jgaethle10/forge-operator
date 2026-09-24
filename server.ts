@@ -82,10 +82,88 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+const discoverySitemapPaths = [
+  '/',
+  '/discover/',
+  '/discover/intents.json',
+  '/discover/intents.txt',
+  '/llms.txt',
+  '/llms-full.txt',
+  '/ai-discovery.json',
+  '/schema.jsonld',
+  '/openapi.json',
+  '/.well-known/evercraft-agent.json',
+  '/.well-known/evercraft-agent-directory.json',
+  '/.well-known/evercraft-agent-interfaces.json',
+  '/.well-known/evercraft-discovery.json',
+  '/.well-known/evercraft-products.json',
+  '/.well-known/evercraft-machine-catalog.json',
+  '/.well-known/evercraft-intents.json',
+  '/.well-known/evercraft-chum.json',
+  '/.well-known/evercraft-media-overflow.json',
+  '/.well-known/evercraft-capabilities.json',
+  '/chum/revenue.html',
+  '/chum/revenue.txt',
+  '/chum/revenue.json',
+];
+
+function requestOrigin(req: Request): string {
+  const configured = String(process.env.PUBLIC_BASE_URL || '').trim();
+  if (configured) {
+    try {
+      const parsed = new URL(configured);
+      if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return parsed.origin;
+    } catch {}
+  }
+
+  const host = String(req.get('host') || '').trim();
+  if (!host) return '';
+  const forwarded = String(req.get('x-forwarded-proto') || '').split(',')[0].trim().toLowerCase();
+  const protocol = forwarded === 'https' || forwarded === 'http' ? forwarded : req.protocol;
+  try {
+    return new URL(`${protocol}://${host}`).origin;
+  } catch {
+    return '';
+  }
+}
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  if (!origin) {
+    res.status(503).type('text/plain').send('Public origin unavailable.');
+    return;
+  }
+  const urls = discoverySitemapPaths
+    .map((pathname) => `  <url><loc>${origin}${pathname}</loc></url>`)
+    .join('\n');
+  res.type('application/xml').send(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`
+  );
+});
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const source = path.resolve(
+    __dirname,
+    isProd ? 'dist/robots.txt' : 'public/robots.txt'
+  );
+  const origin = requestOrigin(req);
+  const body = fs.readFileSync(source, 'utf8').trimEnd();
+  const sitemap = origin ? `\n\nSitemap: ${origin}/sitemap.xml\n` : '\n';
+  res.type('text/plain').send(body + sitemap);
+});
+
 function loadPublicMachineCatalog(): any {
   const file = path.resolve(
     __dirname,
     isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json'
+  );
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function loadPublicIntentGraph(): any {
+  const file = path.resolve(
+    __dirname,
+    isProd ? 'dist/.well-known/evercraft-intents.json' : 'public/.well-known/evercraft-intents.json'
   );
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
@@ -136,6 +214,8 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
+      intentDirectory: { method: 'GET', path: '/api/intents' },
+      intentPage: '/discover/',
       intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
@@ -203,6 +283,24 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
 });
 
 
+app.get('/api/intents', rateLimit(240, 60 * 60 * 1000), (_req: Request, res: Response) => {
+  try {
+    const graph = loadPublicIntentGraph();
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.json({
+      ...graph,
+      live_router: '/api/discover?q={natural-language-problem}',
+      note: 'This is a read-only public vocabulary. It grants no payment, account, private-data, publication, or external-action authority.',
+    });
+  } catch (error: any) {
+    res.status(503).json({
+      ok: false,
+      error: 'Public intent graph is unavailable.',
+      detail: error?.message || String(error),
+    });
+  }
+});
+
 app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
   const q = String(req.query.q || '').trim();
   const requestedLimit = Number(req.query.limit || 5);
@@ -231,6 +329,8 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
         human_confirmation_preserved: true,
         checkout_is_not_payment_proof: true,
       },
+      intent_directory: '/api/intents',
+      machine_catalog: '/.well-known/evercraft-machine-catalog.json',
       matches,
       fallback: matches.length
         ? null
