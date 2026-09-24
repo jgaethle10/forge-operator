@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.chum.v2",
+  "schema": "evercraft.chum.v3",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
   "status": "portfolio_distribution_control_plane",
@@ -25,12 +25,12 @@
     "generic_agent"
   ],
   "public_entrypoints": {
-    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "official_mcp_namespace": "io.github.jgaethle10",
-    "llms_full": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt",
+    "llms_full": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms-full.txt",
     "discovery_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json",
     "agent_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-directory.json",
     "public_mirror": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json",
@@ -38,7 +38,11 @@
     "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
     "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "discovery_router": "/api/discover?q={natural-language-problem}",
+    "discovery_guide": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md",
+    "discovery_router_post": "POST /api/discover",
+    "resolver_alias": "/api/resolve?q={natural-language-problem}",
+    "revenue_api": "/api/revenue-watershed"
   },
   "verified_crawler_controls": [
     {
@@ -68,7 +72,9 @@
     "no external message, purchase, subscription, upload, or payment action during discovery probes",
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
-    "paid state requires authoritative provider verification"
+    "paid state requires authoritative provider verification",
+    "discovery matching creates no payment obligation or private authority",
+    "A2A conformance is not claimed until an A2A protocol endpoint implements the required operations"
   ],
   "routing_doctrine": {
     "pain_first": true,
@@ -79,5 +85,14 @@
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
     "irreversible_financial_or_authority_actions_require_human_confirmation": true
+  },
+  "protocol_posture": {
+    "web": true,
+    "structured_json": true,
+    "llms_txt": true,
+    "openapi": true,
+    "mcp_registry": true,
+    "remote_mcp": true,
+    "a2a": "not_advertised_until_required_protocol_operations_are_implemented"
   }
 }
