@@ -1,0 +1,24 @@
+{
+  "schema": "evercraft.agent-interfaces.v1",
+  "provider": "Evercraft LLC",
+  "updated_at": "2026-09-24",
+  "interfaces": [
+    {
+      "protocol": "MCP",
+      "state": "live",
+      "name": "Evercraft Machine Commerce",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "transport": "streamable-http",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "evidence": "Externally canaried initialize and tools/list; Official MCP Registry publication receipt-backed."
+    },
+    {
+      "protocol": "A2A",
+      "state": "not_live",
+      "name": "Evercraft Machine Commerce A2A adapter",
+      "url": null,
+      "evidence": "No production A2A JSON-RPC endpoint has been live-verified. Do not infer A2A support from MCP availability."
+    }
+  ],
+  "rule": "Advertise only interfaces whose protocol endpoint has been independently live-verified."
+}
