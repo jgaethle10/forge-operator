@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.2.0",
-    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
+    "version": "1.3.0",
+    "description": "Public pain-first discovery and bounded invocation surface for Forge Operator and the Evercraft capability portfolio."
   },
   "servers": [
     {
@@ -167,7 +167,7 @@
     "/api/discover": {
       "get": {
         "operationId": "chumDiscover",
-        "summary": "Match a natural-language problem to public Evercraft capabilities",
+        "summary": "Match a natural-language problem across the full public CHUM Pain Index",
         "parameters": [
           {
             "name": "q",
@@ -192,7 +192,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Ranked public Evercraft capability matches with commercial and safety state"
+            "description": "Ranked machine-offer matches and full-portfolio capability matches with commercial, invocation and safety state"
           },
           "400": {
             "description": "Missing query"
@@ -200,7 +200,8 @@
           "503": {
             "description": "Public catalog unavailable"
           }
-        }
+        },
+        "description": "Returns backward-compatible machine-offer matches plus capability_matches from the complete public Pain Index. Read-only discovery creates no purchase or external-action authority."
       }
     },
     "/api/revenue-watershed": {
@@ -315,5 +316,12 @@
         }
       }
     }
+  },
+  "x-evercraft-discovery": {
+    "pain_index": "/.well-known/evercraft-pain-index.json",
+    "answer_graph": "/chum/answers/index.json",
+    "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "rule": "Read-only discovery first; commerce only after genuine fit and explicit human confirmation where an obligation would be created."
   }
 }
