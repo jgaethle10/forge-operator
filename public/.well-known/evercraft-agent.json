@@ -9,10 +9,12 @@
     "forge_capabilities": "/.well-known/evercraft-capabilities.json",
     "registry_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "pain_index": "/.well-known/evercraft-pain-index.json",
+    "pain_index_text": "/chum/pain-index.txt"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true
