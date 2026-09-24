@@ -3,11 +3,11 @@
 Provider: Evercraft
 Product key: evercraft-web
 Class: ai_web_fetch_search_browser_infrastructure
-Canonical URL: https://systemiacommandcenters.com/evercraft-web
+Canonical URL: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
 Authority: public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held
 Human confirmation required: no
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt
-Declared MCP: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
+Declared MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
 
 ## Natural-language intents
 - fetch and read a public URL with an AI agent
@@ -26,6 +26,8 @@ Declared MCP: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
 - Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass
 - public discovery does not expose private Systemia topology or credentials
 - payment does not expand permissions
+- the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route
+- search and browser automation remain held unless current runtime evidence says otherwise
 
 Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
