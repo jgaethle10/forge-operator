@@ -20,7 +20,11 @@
       "signed CHUM referral tokens",
       "trusted payment verification receipts",
       "public/.well-known/evercraft-pain-index.json",
-      "public/chum/answers/index.json"
+      "public/chum/answers/index.json",
+      "Evercraft Distribution Operator",
+      "Systemia canonical public machine-commerce catalog",
+      "Evercraft AI Suite public distribution catalog and pain index",
+      "conformance/registry-publications receipt directory"
     ],
     "outputs": [
       "plain-text LLM routing index",
@@ -38,7 +42,10 @@
       "exact natural-language answer graph",
       "read-only Official MCP Registry discovery front door",
       "full-portfolio live pain matcher",
-      "crawlable CHUM problem-entry page"
+      "crawlable CHUM problem-entry page",
+      "AI registry, directory and marketplace distribution receipts",
+      "reconciled public machine catalog with Systemia commercial authority",
+      "IndexNow edge-protocol freshness receipts"
     ]
   },
   "permissions": {
@@ -50,7 +57,10 @@
     "private_topology_access": false,
     "public_referral_issue": true,
     "public_payment_claims": false,
-    "trusted_payment_receipt_ingest": true
+    "trusted_payment_receipt_ingest": true,
+    "directory_submission_orchestration": true,
+    "public_index_announcement": true,
+    "commerce_authority_mutation": false
   },
   "evidence_state": {
     "public_surface_probes": "receipt_backed",
@@ -64,7 +74,11 @@
     "provider_identity_in_referral": "caller_asserted_unless_separately_receipted",
     "expanded_agent_reachability": "receipt_backed",
     "answer_graph": "deterministic_build_from_canonical_pain_index",
-    "read_only_mcp_registry": "published_receipt_required_for_registry_claim"
+    "read_only_mcp_registry": "published_receipt_required_for_registry_claim",
+    "distribution_state": "receipt_backed",
+    "registry_claims": "publication_receipt_required",
+    "catalog_reconciliation": "systemia_authority_on_overlap",
+    "edge_protocol_freshness": "receipt_backed_indexnow_acceptance_not_indexing_proof"
   },
   "compatibility": {
     "provider_targets": [
@@ -103,11 +117,27 @@
       "live_router": "GET /api/discover?q={natural-language-problem}",
       "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
       "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
-    }
+    },
+    "protocol_targets": [
+      "MCP",
+      "A2A",
+      "OpenAPI",
+      "HTTP",
+      "Agent Plugins"
+    ],
+    "directory_targets": [
+      "Official MCP Registry",
+      "Grok marketplace",
+      "OpenAI plugin directory",
+      "Claude connectors",
+      "Gemini remote MCP/A2A",
+      "Perplexity connectors",
+      "Microsoft 365/Copilot"
+    ]
   },
   "rollback": {
     "safe_disable": "disable the CHUM watershed workflow or run CHUM with --offline",
     "data_mutation": "public referral/event APIs can be disabled by removing attribution secrets; CHUM never performs payment actions"
   },
-  "intended_adoption": "Default distribution, freshness-broadcast and discovery feedback layer for every legitimate public Evercraft capability. A cold AI should be able to start from ordinary problem-language, traverse read-only discovery, and reach the smallest truthful capability without prior Evercraft brand knowledge."
+  "intended_adoption": "Default outward distribution, freshness-broadcast, pain-first discovery, registry/directory reconciliation, provider-pickup measurement and conversion-attribution layer for every legitimate public Evercraft capability. Systemia governs overlapping commercial authority while CHUM maximizes truthful public reach."
 }
