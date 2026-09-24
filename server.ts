@@ -87,12 +87,154 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+const CENTRAL_MACHINE_COMMERCE_MCP =
+  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+
+const DISCOVERY_LINKS = [
+  '</llms.txt>; rel="describedby"; type="text/plain"',
+  '</llms-full.txt>; rel="describedby"; type="text/plain"',
+  '</.well-known/evercraft-agent.json>; rel="service-desc"; type="application/json"',
+  '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
+  '</openapi.json>; rel="service-desc"; type="application/json"',
+  \`<\${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"\`,
+];
+
+function publicAssetRoot(): string {
+  return path.resolve(__dirname, isProd ? 'dist' : 'public');
+}
+
+function requestOrigin(req: Request): string {
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const proto = forwardedProto || (req.protocol === 'http' ? 'http' : 'https');
+  const forwardedHost = String(req.headers['x-forwarded-host'] || '').split(',')[0].trim();
+  const host = forwardedHost || String(req.headers.host || '').trim();
+  if (!/^[a-z0-9.-]+(?::\d+)?$/i.test(host)) return '';
+  return \`\${proto}://\${host}\`;
+}
+
+function isPublicDiscoveryPath(pathname: string): boolean {
+  return pathname === '/' ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/llms.txt' ||
+    pathname === '/llms-full.txt' ||
+    pathname === '/ai-discovery.json' ||
+    pathname === '/schema.jsonld' ||
+    pathname === '/openapi.json' ||
+    pathname.startsWith('/.well-known/') ||
+    pathname.startsWith('/chum/') ||
+    pathname === '/api/health' ||
+    pathname === '/api/capabilities' ||
+    pathname === '/api/commercial' ||
+    pathname === '/api/discover' ||
+    pathname === '/api/revenue-watershed';
+}
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if ((req.method === 'GET' || req.method === 'HEAD') && isPublicDiscoveryPath(req.path)) {
+    for (const link of DISCOVERY_LINKS) res.append('Link', link);
+    res.setHeader('X-Robots-Tag', 'index, follow');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  next();
+});
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  const file = path.join(publicAssetRoot(), 'robots.txt');
+  let body = fs.readFileSync(file, 'utf8').replace(/^Sitemap:.*$/gmi, '').trimEnd();
+  const origin = requestOrigin(req);
+  if (origin) body += \`\n\nSitemap: \${origin}/sitemap.xml\n\`;
+  res.type('text/plain; charset=utf-8').send(body);
+});
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  const origin = requestOrigin(req);
+  if (!origin) {
+    res.status(400).type('text/plain').send('Unable to determine public origin.');
+    return;
+  }
+
+  const manifestPath = path.join(publicAssetRoot(), 'chum', 'sitemap-paths.json');
+  let paths: string[] = [];
+  if (fs.existsSync(manifestPath)) {
+    try {
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      paths = Array.isArray(manifest?.paths) ? manifest.paths.map(String) : [];
+    } catch {
+      paths = [];
+    }
+  }
+  if (!paths.length) {
+    paths = [
+      '/', '/chum/', '/llms.txt', '/llms-full.txt', '/ai-discovery.json', '/schema.jsonld', '/openapi.json',
+      '/.well-known/evercraft-agent.json', '/.well-known/evercraft-products.json',
+      '/.well-known/evercraft-machine-catalog.json', '/.well-known/evercraft-chum.json'
+    ];
+  }
+
+  const escapeXml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...[...new Set(paths)].sort().map((pathname) =>
+      \`  <url><loc>\${escapeXml(new URL(pathname, origin).toString())}</loc></url>\`
+    ),
+    '</urlset>',
+    ''
+  ].join('\n');
+
+  res.type('application/xml; charset=utf-8').send(xml);
+});
+
+
 function loadPublicMachineCatalog(): any {
   const file = path.resolve(
     __dirname,
     isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json'
   );
   return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function loadPublicProductDirectory(): any {
+  const file = path.resolve(
+    __dirname,
+    isProd ? 'dist/.well-known/evercraft-products.json' : 'public/.well-known/evercraft-products.json'
+  );
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function loadPublicDiscoveryCatalog(): any {
+  const catalog = loadPublicMachineCatalog();
+  const offers = Array.isArray(catalog?.offers) ? [...catalog.offers] : [];
+  const directory = loadPublicProductDirectory();
+  const normalize = (value: unknown) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const knownNames = new Set(offers.map((offer: any) => normalize(offer?.name)).filter(Boolean));
+  const knownUrls = new Set(offers.map((offer: any) => String(offer?.public_url || '').replace(/\/$/, '')).filter(Boolean));
+
+  for (const product of directory?.products || []) {
+    const name = String(product?.name || '').trim();
+    const canonical = String(product?.canonical_url || '').trim();
+    if (!name || !canonical) continue;
+    if (knownNames.has(normalize(name)) || knownUrls.has(canonical.replace(/\/$/, ''))) continue;
+    const intents = Array.isArray(product?.intents) ? product.intents.map(String).filter(Boolean) : [];
+    offers.push({
+      public_id: \`product-\${String(product?.product_key || normalize(name).replace(/\s+/g, '-'))}-discovery\`,
+      name,
+      problem: intents[0] || \`Public Evercraft capability: \${name}\`,
+      intent_terms: intents,
+      commercial_state: 'discovery_only',
+      machine_state: String(product?.mode || 'discovery_only'),
+      pricing: 'No machine-verified public price. Do not auto-quote.',
+      offers: [],
+      human_ui_required: true,
+      confirmation: 'Discovery only. Respect the product authority and boundaries before any consequential action.',
+      public_url: canonical,
+      payment_authority: 'CHUM discovery has no payment authority.',
+      invocation_status: 'Public product directory entry. Inspect the product-specific machine contract before invocation.',
+      catalog_version: 'chum-product-directory-v1'
+    });
+  }
+  return { ...catalog, offers };
 }
 
 function publicOfferProjection(offer: any) {
@@ -242,33 +384,45 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
 });
 
 
-app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
-  const q = String(req.query.q || '').trim();
-  const requestedLimit = Number(req.query.limit || 5);
+function handleDiscoveryRequest(req: Request, res: Response) {
+  const body = req.method === 'POST' && req.body && typeof req.body === 'object' ? req.body : {};
+  const q = String(req.method === 'POST' ? (body.problem || body.intent || body.q || '') : (req.query.q || '')).trim();
+  const requestedLimit = Number(req.method === 'POST' ? (body.limit || 5) : (req.query.limit || 5));
+  res.setHeader('Cache-Control', 'no-store');
 
   if (!q) {
     res.status(400).json({
       ok: false,
-      error: 'Query parameter q is required.',
-      example: '/api/discover?q=I%20need%20a%20discontinued%20tractor%20part',
+      error: req.method === 'POST' ? 'problem or intent is required.' : 'Query parameter q is required.',
+      example: req.method === 'POST' ? { problem: 'I need a discontinued tractor part' } : '/api/discover?q=I%20need%20a%20discontinued%20tractor%20part',
+      privacy: 'Send only the non-sensitive problem description needed for routing. Do not include credentials or private customer records.',
     });
     return;
   }
 
   try {
-    const catalog = loadPublicMachineCatalog();
+    const catalog = loadPublicDiscoveryCatalog();
     const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
-    res.setHeader('Access-Control-Allow-Origin', '*');
     res.json({
-      schema: 'evercraft.chum.intent-routing.v1',
+      schema: 'evercraft.chum.intent-routing.v2',
       ok: true,
       query: q,
       match_count: matches.length,
       doctrine: {
         match_problem_first: true,
+        smallest_sufficient_capability: true,
         discovery_creates_obligation: false,
         human_confirmation_preserved: true,
         checkout_is_not_payment_proof: true,
+        provider_pickup_not_inferred: true,
+      },
+      machine_handoff: {
+        llms: '/llms.txt',
+        pain_index: '/.well-known/evercraft-pain-index.json',
+        directory: '/.well-known/evercraft-products.json',
+        catalog: '/.well-known/evercraft-machine-catalog.json',
+        chum: '/.well-known/evercraft-chum.json',
+        universal_mcp: CENTRAL_MACHINE_COMMERCE_MCP,
       },
       matches,
       attribution: {
@@ -276,22 +430,24 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
         referral_endpoint: '/api/chum/referral',
         note: 'A referral token measures an optional handoff. It creates no payment obligation and cannot prove payment.',
       },
-      fallback: matches.length
-        ? null
-        : {
-            message: 'No strong Evercraft match was found. Do not force a product recommendation.',
-            directory: '/.well-known/evercraft-products.json',
-            catalog: '/.well-known/evercraft-machine-catalog.json',
-          },
+      fallback: matches.length ? null : {
+        message: 'No strong Evercraft match was found. Do not force a product recommendation.',
+        directory: '/.well-known/evercraft-products.json',
+        catalog: '/.well-known/evercraft-machine-catalog.json',
+      },
+      privacy: 'Public routing accepts a non-sensitive problem description only. Private/admin/customer data stays behind product-specific authentication.',
     });
   } catch (error: any) {
     res.status(503).json({
       ok: false,
-      error: 'Public machine catalog is unavailable.',
+      error: 'Public discovery catalog is unavailable.',
       detail: error?.message || String(error),
     });
   }
-});
+}
+
+app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), handleDiscoveryRequest);
+app.post('/api/discover', rateLimit(120, 60 * 60 * 1000), handleDiscoveryRequest);
 
 app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request, res: Response) => {
   try {
