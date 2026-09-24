@@ -25,7 +25,10 @@
     "intent_router": "/api/discover?q={natural-language-problem}",
     "revenue_router": "/api/revenue-watershed",
     "schema": "/schema.jsonld",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "a2a_agent_card": "/.well-known/agent-card.json",
+    "a2a_endpoint": "/a2a",
+    "a2a_state": "release_candidate"
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -45,5 +48,15 @@
     "coordinator": "CHUM",
     "mechanism": "IndexNow",
     "semantics": "Healthy public capability pages are announced for freshness. Submission is not proof of indexing, recommendation, citation or conversion."
+  },
+  "protocol_posture": {
+    "a2a": {
+      "state": "release_candidate",
+      "protocol_version": "1.0",
+      "binding": "JSONRPC",
+      "agent_card": "/.well-known/agent-card.json",
+      "endpoint": "/a2a",
+      "live_verification_required": true
+    }
   }
 }
