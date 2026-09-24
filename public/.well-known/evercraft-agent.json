@@ -9,7 +9,12 @@
     "forge_capabilities": "/.well-known/evercraft-capabilities.json",
     "registry_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "llms_full": "/llms-full.txt",
+    "ai_discovery": "/ai-discovery.json",
+    "openapi": "/openapi.json",
+    "chum": "/.well-known/evercraft-chum.json",
+    "chum_page": "/chum/"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
