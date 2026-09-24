@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import githubBridge from './githubBridge.js';
 
 dotenv.config();
 
@@ -50,6 +51,10 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb' }));
+
+// Guarded GitHub runtime bridge. Reads require a credential; writes also require
+// explicit enablement plus an exact repository allowlist.
+app.use('/api/github', githubBridge);
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
