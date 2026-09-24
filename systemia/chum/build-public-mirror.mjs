@@ -5,6 +5,7 @@ const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const directory = readJson('public/.well-known/evercraft-products.json');
 const conformance = readJson('conformance/products.json');
 const catalog = readJson('registry/catalog.json');
+const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json');
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
@@ -145,9 +146,42 @@ const llmsLines = [
   'State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.',
   'Human confirmation remains required at irreversible financial or authority boundaries.',
   '',
-  '## Portfolio',
+  '## Current machine-commerce offer graph',
+  '',
+  `Catalog version: ${machineCatalog.source_schema_version || ''}`,
+  `Gateway version: ${machineCatalog.gateway_version || ''}`,
+  `Current public offers: ${(machineCatalog.offers || []).length}`,
+  `Current sell-now offers: ${(machineCatalog.offers || []).filter((offer) => offer.commercial_state === 'sell_now').length}`,
   ''
 ];
+
+const commercialStateOrder = ['sell_now', 'verify', 'verification_required', 'discovery_only'];
+for (const state of commercialStateOrder) {
+  const offers = (machineCatalog.offers || [])
+    .filter((offer) => offer.commercial_state === state)
+    .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+  if (!offers.length) continue;
+
+  llmsLines.push(`### Commercial state: ${state}`, '');
+  for (const offer of offers) {
+    llmsLines.push(
+      `#### ${offer.name}`,
+      `Public ID: ${offer.public_id}`,
+      `Problem: ${offer.problem || ''}`,
+      `Machine state: ${offer.machine_state || ''}`,
+      `Pricing: ${offer.pricing || ''}`,
+      `Public URL: ${offer.public_url || ''}`,
+      `Human UI required: ${Boolean(offer.human_ui_required)}`,
+      `Confirmation: ${offer.confirmation || ''}`,
+      `Payment authority: ${offer.payment_authority || ''}`,
+      'Use when the user says or means:'
+    );
+    for (const term of offer.intent_terms || []) llmsLines.push(`- ${term}`);
+    llmsLines.push('');
+  }
+}
+
+llmsLines.push('## Public product contracts', '');
 
 const agentProducts = [];
 const schemaServices = [];
@@ -247,7 +281,7 @@ const agentDirectory = {
 fs.writeFileSync('public/.well-known/evercraft-agent-directory.json', JSON.stringify(agentDirectory, null, 2) + '\n');
 
 const discoveryWatershed = {
-  schema: 'evercraft.discovery-watershed.v2',
+  schema: 'evercraft.discovery-watershed.v3',
   provider: 'Evercraft LLC',
   coordinator: 'CHUM',
   updated_at: directory.updated_at || null,
@@ -261,6 +295,11 @@ const discoveryWatershed = {
     machine_catalog: '/.well-known/evercraft-machine-catalog.json',
     chum: '/.well-known/evercraft-chum.json',
     chum_public_mirror: '/chum/index.json',
+    revenue_watershed: '/chum/revenue.json',
+    revenue_watershed_text: '/chum/revenue.txt',
+    revenue_watershed_html: '/chum/revenue.html',
+    intent_router: '/api/discover?q={natural-language-problem}',
+    revenue_router: '/api/revenue-watershed',
     schema: '/schema.jsonld',
     openapi: '/openapi.json'
   },
@@ -275,11 +314,28 @@ const discoveryWatershed = {
     checkout_ready: 'An exact current checkout rail exists for that offer.',
     paid: 'Authoritative provider payment verification exists.'
   },
-  routing_rule: 'Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
-  private_surfaces: 'not advertised'
+  routing_rule: 'Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  private_surfaces: 'not advertised',
+  freshness_broadcast: {
+    coordinator: 'CHUM',
+    mechanism: 'IndexNow',
+    semantics: 'Healthy public capability pages are announced for freshness. Submission is not proof of indexing, recommendation, citation or conversion.'
+  }
 };
 fs.writeFileSync('public/.well-known/evercraft-discovery.json', JSON.stringify(discoveryWatershed, null, 2) + '\n');
 fs.writeFileSync('public/ai-discovery.json', JSON.stringify(discoveryWatershed, null, 2) + '\n');
+
+const sellNowSchemaServices = (machineCatalog.offers || [])
+  .filter((offer) => offer.commercial_state === 'sell_now')
+  .map((offer) => ({
+    '@type': 'Service',
+    '@id': `https://github.com/jgaethle10/forge-operator#offer-${offer.public_id}`,
+    name: offer.name,
+    description: offer.problem || '',
+    url: offer.public_url || '',
+    provider: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
+    serviceType: 'Evercraft machine-commerce offer'
+  }));
 
 const schemaGraph = {
   '@context': 'https://schema.org',
@@ -301,7 +357,8 @@ const schemaGraph = {
       provider: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
       description: 'Evercraft machine-distribution control plane for routing AI assistants and agents from natural-language pain to public capabilities.'
     },
-    ...schemaServices
+    ...schemaServices,
+    ...sellNowSchemaServices
   ]
 };
 fs.writeFileSync('public/schema.jsonld', JSON.stringify(schemaGraph, null, 2) + '\n');
@@ -309,6 +366,8 @@ fs.writeFileSync('public/schema.jsonld', JSON.stringify(schemaGraph, null, 2) + 
 console.log(JSON.stringify({
   watershed_compiled: true,
   products: agentProducts.length,
+  machine_offers: (machineCatalog.offers || []).length,
+  sell_now_offers: (machineCatalog.offers || []).filter((offer) => offer.commercial_state === 'sell_now').length,
   llms_full: 'public/llms-full.txt',
   agent_directory: 'public/.well-known/evercraft-agent-directory.json',
   discovery_watershed: 'public/.well-known/evercraft-discovery.json',
