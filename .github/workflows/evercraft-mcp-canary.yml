@@ -1,0 +1,46 @@
+name: Evercraft MCP External Canary
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/evercraft-mcp-canary.yml"
+      - "registry/**/server.json"
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify remote MCP handshakes
+        shell: bash
+        run: |
+          set -euo pipefail
+          PAYLOAD='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"evercraft-registry-canary","version":"1.0"}}}'
+
+          check() {
+            NAME="$1"
+            URL="$2"
+            echo "::group::$NAME"
+            BODY="$(curl -fsS --max-time 20 -X POST "$URL"               -H 'Content-Type: application/json'               -H 'Accept: application/json, text/event-stream'               --data "$PAYLOAD")"
+            printf '%s\n' "$BODY" | head -c 2500
+            echo
+            printf '%s' "$BODY" | grep -q '"serverInfo"' || {
+              echo "MCP initialize did not return serverInfo for $NAME" >&2
+              exit 1
+            }
+            echo "::endgroup::"
+          }
+
+          check "Evercraft Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+          check "AliEV" "https://aliev.base44.app/functions/alievMcp"
+          check "Career Command" "https://evercraft-career-command.base44.app/functions/careerMcp"
+          check "FindMyPart" "https://findmypart.base44.app/functions/findMyPartMcp"
+          check "Systemia Website Audit" "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
+          check "Deck Capital Fit" "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+          check "Website Launch" "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
+          check "FAIE" "https://faie.base44.app/functions/faieMcp"
+          check "EventWave" "https://event-wave.base44.app/functions/eventWaveMcp"
+          check "ForensiScope" "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
