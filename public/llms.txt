@@ -5,6 +5,12 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 ## Start here
 
 - Universal agent manifest: /.well-known/evercraft-agent.json
+- CHUM control-plane beacon: /.well-known/evercraft-chum.json
+- Live comprehensive machine catalog: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog
+- Public machine-catalog snapshot: /.well-known/evercraft-machine-catalog.json
+- Live buyer-pain index: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding
+- Live buyer-pain LLM map: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=llms
+- Live buyer-pain sitemap: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=sitemap
 - CHUM pain-first routing index: /.well-known/evercraft-pain-index.json
 - CHUM pain-first text index: /chum/pain-index.txt
 - CHUM answer graph for exact natural-language problem phrases: /chum/answers/index.json
