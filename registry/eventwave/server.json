@@ -1,0 +1,9 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/eventwave",
+  "title": "EventWave",
+  "description": "Search public events and buy labeled promotion with human-confirmed checkout.",
+  "version": "1.0.0",
+  "websiteUrl": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+  "remotes": [{"type":"streamable-http","url":"https://event-wave.base44.app/functions/eventWaveMcp"}]
+}

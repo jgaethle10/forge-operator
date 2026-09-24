@@ -1,0 +1,9 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/systemia-website-audit",
+  "title": "Systemia Website Audit",
+  "description": "Website audits and prioritized fixes with human-confirmed checkout.",
+  "version": "1.0.0",
+  "websiteUrl": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+  "remotes": [{"type":"streamable-http","url":"https://systemia-audit-pro.base44.app/functions/auditAgentMcp"}]
+}

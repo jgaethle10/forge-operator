@@ -1,10 +1,10 @@
-name: Publish Evercraft Machine Commerce to MCP Registry
+name: Publish Evercraft MCP Registry
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "registry/evercraft-machine-commerce/server.json"
+      - "registry/**/server.json"
 
 permissions:
   contents: read
@@ -21,24 +21,35 @@ jobs:
         run: |
           curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
 
-      - name: Validate registry manifest
-        run: ./mcp-publisher validate registry/evercraft-machine-commerce/server.json
+      - name: Validate all Evercraft registry manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' FILE; do
+            echo "Validating $FILE"
+            ./mcp-publisher validate "$FILE"
+          done < <(find registry -name server.json -print0 | sort -z)
 
       - name: Authenticate with GitHub OIDC
         run: ./mcp-publisher login github-oidc
 
-      - name: Publish Evercraft Machine Commerce
+      - name: Publish all Evercraft registry manifests
         shell: bash
         run: |
-          set +e
-          OUTPUT="$(./mcp-publisher publish registry/evercraft-machine-commerce/server.json 2>&1)"
-          CODE=$?
-          printf '%s\n' "$OUTPUT"
-          if [ "$CODE" -eq 0 ]; then
-            exit 0
-          fi
-          if printf '%s' "$OUTPUT" | grep -qi "cannot publish duplicate version"; then
-            echo "Registry already contains this version; treating publish as idempotent success."
-            exit 0
-          fi
-          exit "$CODE"
+          set -euo pipefail
+          while IFS= read -r -d '' FILE; do
+            echo "Publishing $FILE"
+            set +e
+            OUTPUT="$(./mcp-publisher publish "$FILE" 2>&1)"
+            CODE=$?
+            set -e
+            printf '%s\n' "$OUTPUT"
+            if [ "$CODE" -eq 0 ]; then
+              continue
+            fi
+            if printf '%s' "$OUTPUT" | grep -qi "cannot publish duplicate version"; then
+              echo "Already published; continuing."
+              continue
+            fi
+            exit "$CODE"
+          done < <(find registry -name server.json -print0 | sort -z)

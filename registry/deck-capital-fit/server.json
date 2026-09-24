@@ -1,0 +1,9 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/deck-capital-fit",
+  "title": "Evercraft Deck Capital Fit",
+  "description": "Capital-fit research and founder readiness with human-confirmed checkout.",
+  "version": "2.0.0",
+  "websiteUrl": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+  "remotes": [{"type":"streamable-http","url":"https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"}]
+}

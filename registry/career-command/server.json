@@ -1,0 +1,9 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/career-command",
+  "title": "Evercraft Career Command",
+  "description": "Role-specific interview practice with human-confirmed Interview Sprint checkout.",
+  "version": "1.0.0",
+  "websiteUrl": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=docs",
+  "remotes": [{"type":"streamable-http","url":"https://evercraft-career-command.base44.app/functions/careerMcp"}]
+}
