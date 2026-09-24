@@ -38,6 +38,28 @@ const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (ch) => ({
   '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
 }[ch]));
 
+
+function priceUsd(tier) {
+  const numeric = Number(tier?.price_usd);
+  if (Number.isFinite(numeric) && numeric >= 0) return numeric;
+  const raw = String(tier?.price || '').trim();
+  const match = raw.match(/^\$([0-9][0-9,]*(?:\.[0-9]+)?)/);
+  if (!match) return null;
+  const parsed = Number(match[1].replace(/,/g, ''));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function entryPaidOffer(offer) {
+  const tiers = Array.isArray(offer?.offers) ? offer.offers : [];
+  const paid = tiers
+    .map((tier) => ({ tier, usd: priceUsd(tier) }))
+    .filter((row) => Number.isFinite(row.usd) && row.usd > 0)
+    .sort((a, b) => a.usd - b.usd);
+  if (!paid.length) return null;
+  const { tier, usd } = paid[0];
+  return { ...tier, price_usd_normalized: usd };
+}
+
 const toPublicOffer = (offer) => ({
   public_id: offer.public_id,
   name: offer.name,
@@ -45,6 +67,7 @@ const toPublicOffer = (offer) => ({
   intent_terms: offer.intent_terms || [],
   pricing: offer.pricing,
   offers: offer.offers || [],
+  entry_paid_offer: entryPaidOffer(offer),
   commercial_state: offer.commercial_state,
   machine_state: offer.machine_state,
   public_url: safeOfferUrl(offer),
@@ -102,6 +125,8 @@ const compactOffer = (offer) => ({
   problem: offer.problem,
   intent_terms: offer.intent_terms || [],
   pricing: offer.pricing,
+  offers: Array.isArray(offer.offers) ? offer.offers : [],
+  entry_paid_offer: offer.entry_paid_offer || entryPaidOffer(offer),
   commercial_state: offer.commercial_state,
   machine_state: offer.machine_state,
   public_url: offer.public_url,
@@ -253,6 +278,8 @@ for (const offer of output.discovery_offers) {
     problem:offer.problem,
     intent_terms:offer.intent_terms,
     pricing:offer.pricing,
+    offers:Array.isArray(offer.offers) ? offer.offers : [],
+    entry_paid_offer:offer.entry_paid_offer || entryPaidOffer(offer),
     commercial_state:offer.commercial_state,
     machine_state:offer.machine_state,
     public_url:offer.public_url,

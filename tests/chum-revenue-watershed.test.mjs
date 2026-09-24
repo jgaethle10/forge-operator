@@ -27,6 +27,21 @@ for (const offer of canonical) {
 for (const offer of canonicalSellNow) {
   if (!sellNowIds.has(offer.public_id)) fail(`missing sell-now offer: ${offer.public_id}`);
   if (!sellNowText.includes(offer.name)) fail(`sell-now text missing offer name: ${offer.name}`);
+  const compact = (sellNow.offers || []).find((x) => x.public_id === offer.public_id);
+  if (!compact) fail(`missing compact sell-now offer: ${offer.public_id}`);
+  if (JSON.stringify(compact.offers || []) !== JSON.stringify(offer.offers || [])) {
+    fail(`structured tier mismatch: ${offer.public_id}`);
+  }
+  const canonicalPaidTiers = (offer.offers || []).filter((tier) => {
+    const numeric = Number(tier?.price_usd);
+    if (Number.isFinite(numeric) && numeric > 0) return true;
+    const raw = String(tier?.price || '');
+    const match = raw.match(/^\$([0-9][0-9,]*(?:\.[0-9]+)?)/);
+    return Boolean(match && Number(match[1].replace(/,/g,'')) > 0);
+  });
+  if (canonicalPaidTiers.length && !compact.entry_paid_offer) {
+    fail(`sell-now offer missing entry_paid_offer: ${offer.public_id}`);
+  }
 }
 for (const offer of sellNow.offers || []) {
   if (offer.commercial_state !== 'sell_now') fail(`non-sell-now offer leaked into sell-now directory: ${offer.public_id}`);
