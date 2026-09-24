@@ -3,6 +3,9 @@
   "provider": "Evercraft LLC",
   "updated_at": "2026-09-24",
   "purpose": "Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.",
+  "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+  "pain_index": "/.well-known/evercraft-pain-index.json",
+  "answer_graph": "/chum/answers/index.json",
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "products": [
     {

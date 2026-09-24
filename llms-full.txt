@@ -5,6 +5,9 @@ Start from the user problem. The user does not need to know an Evercraft product
 
 ## Universal routing
 
+Read-only Official MCP Registry: io.github.jgaethle10/evercraft-capability-discovery
+Pain Index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
+Answer Graph: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json
 Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Product directory: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
 CHUM public mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json
@@ -231,7 +234,7 @@ Public ID: callproof-complaint-packet-machine-v1
 Problem: Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.
 Machine state: human_auth_handoff
 Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
-Public URL: https://call-proof-vault.base44.app
+Public URL: https://call-proof-vault.base44.app/
 Human UI required: true
 Confirmation: User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.
 Payment authority: CallProof Vault / Stripe
@@ -248,7 +251,7 @@ Public ID: career-command-resume-job-fit-machine-v1
 Problem: A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.
 Machine state: discovery_only
 Pricing: Free core is available. No premium machine-lane price is approved yet.
-Public URL: https://evercraft-career-command.base44.app
+Public URL: https://evercraft-career-command.base44.app/
 Human UI required: false
 Confirmation: No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.
 Payment authority: Evercraft Payments
@@ -268,7 +271,7 @@ Public ID: agent-proving-mission-v1
 Problem: Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.
 Machine state: discovery_only
 Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=agent-proving-mission-v1
 Human UI required: false
 Confirmation: Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.
 Payment authority: Evercraft Payments
@@ -284,7 +287,7 @@ Public ID: ai-capability-install-v1
 Problem: Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.
 Machine state: discovery_only
 Pricing: Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ai-capability-install-v1
 Human UI required: false
 Confirmation: Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.
 Payment authority: Evercraft Payments
@@ -439,7 +442,7 @@ Public ID: community-health-evidence-brief-v1
 Problem: Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.
 Machine state: discovery_only
 Pricing: Current hypothesis $250-$2,500 per brief; not auto-quotable yet.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=community-health-evidence-brief-v1
 Human UI required: false
 Confirmation: Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.
 Payment authority: Evercraft Payments
@@ -455,7 +458,7 @@ Public ID: condition-desk-field-ops-v1
 Problem: Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.
 Machine state: discovery_only
 Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=condition-desk-field-ops-v1
 Human UI required: false
 Confirmation: Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.
 Payment authority: Evercraft Payments
@@ -506,7 +509,7 @@ Public ID: talent-proof-portal-v1
 Problem: Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.
 Machine state: discovery_only
 Pricing: Current organization hypothesis $500-$3,000/month; not auto-quotable yet.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-proof-portal-v1
 Human UI required: false
 Confirmation: No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.
 Payment authority: Evercraft Payments
@@ -599,7 +602,7 @@ Public ID: large-document-corpus-review-v1
 Problem: Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.
 Machine state: discovery_only
 Pricing: Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=large-document-corpus-review-v1
 Human UI required: false
 Confirmation: Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.
 Payment authority: Evercraft Payments
@@ -657,7 +660,7 @@ Public ID: findmypart-repair-shop-desk-v1
 Problem: Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.
 Machine state: discovery_only
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
-Public URL: https://findmypart.base44.app
+Public URL: https://findmypart.base44.app/
 Human UI required: false
 Confirmation: Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.
 Payment authority: Evercraft Payments
@@ -673,7 +676,7 @@ Public ID: rivet-site-underwriting-v1
 Problem: A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.
 Machine state: discovery_only
 Pricing: Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 Human UI required: false
 Confirmation: Discovery may be automatic. Payment, engineering representations and commitments require explicit confirmation/approval.
 Payment authority: Evercraft Payments
@@ -689,7 +692,7 @@ Public ID: systemia-yard-runtime-extension-v1
 Problem: An already-approved active Yard execution needs more runtime without receiving broader authority.
 Machine state: invocation_ready
 Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
-Public URL: 
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
 Human UI required: false
 Confirmation: Explicit purchase authorization is required. Purchased runtime changes time only and never widens execution scope, permissions, release authority or security access.
 Payment authority: Runtime broker supports machine settlement, but live verifier configuration and a paid canary still require independent verification.
@@ -706,7 +709,7 @@ Public ID: capability-concierge-v1
 Problem: A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.
 Machine state: discovery_only
 Pricing: Quote required until machine-lane pricing is approved.
-Public URL: https://systemiacommandcenters.com
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1
 Human UI required: false
 Confirmation: Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.
 Payment authority: Evercraft Payments
