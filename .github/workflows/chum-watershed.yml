@@ -10,6 +10,8 @@ on:
       - "chum-probes/**"
       - "conformance/**"
       - "registry/**"
+      - "server.ts"
+      - "AI-DISCOVERY.md"
       - "public/llms.txt"
       - "public/llms-full.txt"
       - "public/robots.txt"
@@ -72,6 +74,7 @@ jobs:
       - name: Validate machine-discovery contracts
         run: |
           npm run check:ai
+          npm run chum:contract
           npm run test:chum-router
           npm run chum:validate
 
