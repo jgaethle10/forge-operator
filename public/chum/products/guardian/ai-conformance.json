@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Guardian",
+  "product_key": "guardian",
+  "aliases": [
+    "Guardian by Evercraft"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://guardian-pilot.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "not an emergency-response service",
+    "does not guarantee provider availability or service acceptance",
+    "does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability",
+    "GuardianLink school operations are a separate authorized deployment lane",
+    "private case data, precise locations, protected identities, and admin topology are not public"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

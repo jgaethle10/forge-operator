@@ -18,7 +18,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
       "page_url": "/chum/products/aliev/",
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "https://aliev.base44.app/functions/alievMcp"
+      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "commercial": null
     },
     {
       "product_key": "buildflow",
@@ -30,7 +31,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
       "page_url": "/chum/products/buildflow/",
       "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp"
+      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "commercial": null
     },
     {
       "product_key": "career-command",
@@ -42,7 +44,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-conformance.json",
       "page_url": "/chum/products/career-command/",
       "registry_name": "io.github.jgaethle10/career-command",
-      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp"
+      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "commercial": null
     },
     {
       "product_key": "contractor-cloud",
@@ -54,7 +57,26 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json",
       "page_url": "/chum/products/contractor-cloud/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
+    },
+    {
+      "product_key": "daytrade-lens",
+      "name": "DayTrade Lens",
+      "aliases": [],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-conformance.json",
+      "page_url": "/chum/products/daytrade-lens/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "source_ready_origin_unresolved",
+        "offer": "Founding Beta",
+        "pricing": "$19/month",
+        "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
+      }
     },
     {
       "product_key": "deck-capital-fit",
@@ -66,7 +88,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-conformance.json",
       "page_url": "/chum/products/deck-capital-fit/",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "commercial": null
     },
     {
       "product_key": "eventwave",
@@ -78,7 +101,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-conformance.json",
       "page_url": "/chum/products/eventwave/",
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp"
+      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "commercial": null
     },
     {
       "product_key": "evercraft-containment",
@@ -93,7 +117,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
       "page_url": "/chum/products/evercraft-containment/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
     },
     {
       "product_key": "evercraft-network",
@@ -105,7 +130,28 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json",
       "page_url": "/chum/products/evercraft-network/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
+    },
+    {
+      "product_key": "evercraft-property-services",
+      "name": "Evercraft Property Services",
+      "aliases": [
+        "EPS"
+      ],
+      "canonical_url": "https://evercraftpropertyservices.com/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-property-services/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "human_quote_intake",
+        "offer": "Property-service estimate intake",
+        "pricing": "Quote required after scope review",
+        "payment_state": "No payment required for public estimate intake"
+      }
     },
     {
       "product_key": "evercraft-rewards",
@@ -117,7 +163,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json",
       "page_url": "/chum/products/evercraft-rewards/",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "commercial": null
     },
     {
       "product_key": "evercraft-web",
@@ -129,7 +176,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
       "page_url": "/chum/products/evercraft-web/",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
+      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "commercial": null
     },
     {
       "product_key": "evernest",
@@ -141,7 +189,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-conformance.json",
       "page_url": "/chum/products/evernest/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
     },
     {
       "product_key": "everystage",
@@ -153,7 +202,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-conformance.json",
       "page_url": "/chum/products/everystage/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
     },
     {
       "product_key": "faie",
@@ -165,7 +215,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json",
       "page_url": "/chum/products/faie/",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": "https://faie.base44.app/functions/faieMcp"
+      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "commercial": null
     },
     {
       "product_key": "findmypart",
@@ -177,7 +228,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json",
       "page_url": "/chum/products/findmypart/",
       "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp"
+      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "commercial": null
     },
     {
       "product_key": "forensiscope",
@@ -189,7 +241,23 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json",
       "page_url": "/chum/products/forensiscope/",
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
+      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "commercial": null
+    },
+    {
+      "product_key": "guardian",
+      "name": "Guardian",
+      "aliases": [
+        "Guardian by Evercraft"
+      ],
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-conformance.json",
+      "page_url": "/chum/products/guardian/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
     },
     {
       "product_key": "infinite-classroom",
@@ -201,7 +269,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-conformance.json",
       "page_url": "/chum/products/infinite-classroom/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
     },
     {
       "product_key": "raven-nexus",
@@ -213,7 +282,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-conformance.json",
       "page_url": "/chum/products/raven-nexus/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
     },
     {
       "product_key": "roasted",
@@ -225,7 +295,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
       "page_url": "/chum/products/roasted/",
       "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
+      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "commercial": null
     },
     {
       "product_key": "skyops-parking",
@@ -237,7 +308,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-conformance.json",
       "page_url": "/chum/products/skyops-parking/",
       "registry_name": null,
-      "mcp": null
+      "mcp": null,
+      "commercial": null
     },
     {
       "product_key": "systemia-website-audit",
@@ -249,7 +321,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json",
       "page_url": "/chum/products/systemia-website-audit/",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
+      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "commercial": null
     },
     {
       "product_key": "website-launch",
@@ -261,7 +334,8 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json",
       "page_url": "/chum/products/website-launch/",
       "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
+      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "commercial": null
     }
   ]
 }

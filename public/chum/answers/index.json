@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 63,
-    "unique_user_phrases": 464,
-    "mapped_candidate_edges": 472,
+    "pain_index_entries": 66,
+    "unique_user_phrases": 491,
+    "mapped_candidate_edges": 499,
     "ambiguous_phrases": 8,
-    "product_candidates": 21,
+    "product_candidates": 24,
     "machine_offer_candidates": 42
   },
   "doors": [
@@ -1303,6 +1303,28 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:723c5d160e",
+      "user_language": "build better trading risk discipline",
+      "normalized": "build better trading risk discipline",
+      "relative_json": "/chum/answers/doors/build-better-trading-risk-discipline-723c5d160e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-better-trading-risk-discipline-723c5d160e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:daytrade-lens",
+          "kind": "product",
+          "product_key": "daytrade-lens",
+          "public_id": null,
+          "name": "DayTrade Lens",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/daytrade-lens/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+          "registry_name": null
         }
       ]
     },
@@ -3299,6 +3321,28 @@
       ]
     },
     {
+      "answer_id": "intent:233a949aad",
+      "user_language": "find a trading journal with behavioral coaching",
+      "normalized": "find a trading journal with behavioral coaching",
+      "relative_json": "/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:daytrade-lens",
+          "kind": "product",
+          "product_key": "daytrade-lens",
+          "public_id": null,
+          "name": "DayTrade Lens",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/daytrade-lens/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c7133fab20",
       "user_language": "find an obsolete automotive or machine part",
       "normalized": "find an obsolete automotive or machine part",
@@ -3607,6 +3651,50 @@
       ]
     },
     {
+      "answer_id": "intent:f3e0d90d8d",
+      "user_language": "find outside support when I do not want to route through my school workplace family or usual authority",
+      "normalized": "find outside support when i do not want to route through my school workplace family or usual authority",
+      "relative_json": "/chum/answers/doors/find-outside-support-when-i-do-not-want-to-route-through-my-school-workplace-famil-f3e0d90d8d.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-outside-support-when-i-do-not-want-to-route-through-my-school-workplace-famil-f3e0d90d8d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:557a23e755",
+      "user_language": "find prevention and protective infrastructure resources",
+      "normalized": "find prevention and protective infrastructure resources",
+      "relative_json": "/chum/answers/doors/find-prevention-and-protective-infrastructure-resources-557a23e755.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-prevention-and-protective-infrastructure-resources-557a23e755.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:57334a96e5",
       "user_language": "find provenance problems in this data",
       "normalized": "find provenance problems in this data",
@@ -3624,6 +3712,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:fe963fb462",
+      "user_language": "find public safety or stability resources without creating an account",
+      "normalized": "find public safety or stability resources without creating an account",
+      "relative_json": "/chum/answers/doors/find-public-safety-or-stability-resources-without-creating-an-account-fe963fb462.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-public-safety-or-stability-resources-without-creating-an-account-fe963fb462.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
           "registry_name": null
         }
       ]
@@ -3695,6 +3805,28 @@
       ]
     },
     {
+      "answer_id": "intent:62ae11f473",
+      "user_language": "find Spanish-language or interpreter-supported help",
+      "normalized": "find spanish language or interpreter supported help",
+      "relative_json": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-62ae11f473.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-62ae11f473.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e8118ffd93",
       "user_language": "find talent by demonstrated ability",
       "normalized": "find talent by demonstrated ability",
@@ -3734,6 +3866,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/raven-nexus/",
           "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:229db803d4",
+      "user_language": "find verified help for housing shelter food benefits transportation childcare income or legal aid",
+      "normalized": "find verified help for housing shelter food benefits transportation childcare income or legal aid",
+      "relative_json": "/chum/answers/doors/find-verified-help-for-housing-shelter-food-benefits-transportation-childcare-inco-229db803d4.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-verified-help-for-housing-shelter-food-benefits-transportation-childcare-inco-229db803d4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
           "registry_name": null
         }
       ]
@@ -3889,6 +4043,28 @@
           "pain_page": "/chum/products/website-launch/",
           "public_url": "https://instant-website-builder-usa-6feac193.base44.app/",
           "registry_name": "io.github.jgaethle10/website-launch"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d59265141f",
+      "user_language": "get a property service estimate in Central Washington",
+      "normalized": "get a property service estimate in central washington",
+      "relative_json": "/chum/answers/doors/get-a-property-service-estimate-in-central-washington-d59265141f.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/get-a-property-service-estimate-in-central-washington-d59265141f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
         }
       ]
     },
@@ -4130,6 +4306,28 @@
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:def4fab1f0",
+      "user_language": "give my organization a privacy-minimized public doorway to verified help",
+      "normalized": "give my organization a privacy minimized public doorway to verified help",
+      "relative_json": "/chum/answers/doors/give-my-organization-a-privacy-minimized-public-doorway-to-verified-help-def4fab1f0.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-my-organization-a-privacy-minimized-public-doorway-to-verified-help-def4fab1f0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
           "registry_name": null
         }
       ]
@@ -5115,6 +5313,28 @@
       ]
     },
     {
+      "answer_id": "intent:42a3d685c4",
+      "user_language": "journal and review my trades",
+      "normalized": "journal and review my trades",
+      "relative_json": "/chum/answers/doors/journal-and-review-my-trades-42a3d685c4.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/journal-and-review-my-trades-42a3d685c4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:daytrade-lens",
+          "kind": "product",
+          "product_key": "daytrade-lens",
+          "public_id": null,
+          "name": "DayTrade Lens",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/daytrade-lens/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fb6ce2df55",
       "user_language": "keep my application connected when networks change",
       "normalized": "keep my application connected when networks change",
@@ -5181,6 +5401,28 @@
       ]
     },
     {
+      "answer_id": "intent:8f7672daf4",
+      "user_language": "landscaping refresh",
+      "normalized": "landscaping refresh",
+      "relative_json": "/chum/answers/doors/landscaping-refresh-8f7672daf4.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/landscaping-refresh-8f7672daf4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e73d20a32a",
       "user_language": "large legal document review",
       "normalized": "large legal document review",
@@ -5242,6 +5484,28 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
           "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0ce6dda194",
+      "user_language": "lawn care or recurring property maintenance",
+      "normalized": "lawn care or recurring property maintenance",
+      "relative_json": "/chum/answers/doors/lawn-care-or-recurring-property-maintenance-0ce6dda194.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/lawn-care-or-recurring-property-maintenance-0ce6dda194.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
           "registry_name": null
         }
       ]
@@ -6293,6 +6557,50 @@
       ]
     },
     {
+      "answer_id": "intent:4909c5cfd2",
+      "user_language": "outside support without routing through school workplace family or usual authority",
+      "normalized": "outside support without routing through school workplace family or usual authority",
+      "relative_json": "/chum/answers/doors/outside-support-without-routing-through-school-workplace-family-or-usual-authority-4909c5cfd2.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/outside-support-without-routing-through-school-workplace-family-or-usual-authority-4909c5cfd2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c3dec35245",
+      "user_language": "paper trade before using real capital",
+      "normalized": "paper trade before using real capital",
+      "relative_json": "/chum/answers/doors/paper-trade-before-using-real-capital-c3dec35245.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/paper-trade-before-using-real-capital-c3dec35245.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:daytrade-lens",
+          "kind": "product",
+          "product_key": "daytrade-lens",
+          "public_id": null,
+          "name": "DayTrade Lens",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/daytrade-lens/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ae6e3aeb45",
       "user_language": "parking garage reservation management",
       "normalized": "parking garage reservation management",
@@ -6491,6 +6799,28 @@
       ]
     },
     {
+      "answer_id": "intent:856d45f178",
+      "user_language": "practice day trading without risking real money",
+      "normalized": "practice day trading without risking real money",
+      "relative_json": "/chum/answers/doors/practice-day-trading-without-risking-real-money-856d45f178.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-day-trading-without-risking-real-money-856d45f178.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:daytrade-lens",
+          "kind": "product",
+          "product_key": "daytrade-lens",
+          "public_id": null,
+          "name": "DayTrade Lens",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/daytrade-lens/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:dd5d548b25",
       "user_language": "practice for a job interview tomorrow",
       "normalized": "practice for a job interview tomorrow",
@@ -6530,6 +6860,28 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
           "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8ac43cbf04",
+      "user_language": "practice position sizing and setup quality",
+      "normalized": "practice position sizing and setup quality",
+      "relative_json": "/chum/answers/doors/practice-position-sizing-and-setup-quality-8ac43cbf04.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-position-sizing-and-setup-quality-8ac43cbf04.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:daytrade-lens",
+          "kind": "product",
+          "product_key": "daytrade-lens",
+          "public_id": null,
+          "name": "DayTrade Lens",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/daytrade-lens/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
           "registry_name": null
         }
       ]
@@ -6755,6 +7107,28 @@
       ]
     },
     {
+      "answer_id": "intent:1e913d4055",
+      "user_language": "prevention and protective infrastructure resources",
+      "normalized": "prevention and protective infrastructure resources",
+      "relative_json": "/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:6dfcaa1d86",
       "user_language": "prioritize practical website fixes",
       "normalized": "prioritize practical website fixes",
@@ -6773,6 +7147,28 @@
           "pain_page": "/chum/products/systemia-website-audit/",
           "public_url": "https://systemia-audit-pro.base44.app/",
           "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:216d826ec1",
+      "user_language": "privacy-minimized public doorway to verified help",
+      "normalized": "privacy minimized public doorway to verified help",
+      "relative_json": "/chum/answers/doors/privacy-minimized-public-doorway-to-verified-help-216d826ec1.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/privacy-minimized-public-doorway-to-verified-help-216d826ec1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -7031,6 +7427,28 @@
       ]
     },
     {
+      "answer_id": "intent:13a9d4aa91",
+      "user_language": "property cleanout or debris removal",
+      "normalized": "property cleanout or debris removal",
+      "relative_json": "/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:4fdb4582c5",
       "user_language": "property EV fit",
       "normalized": "property ev fit",
@@ -7246,6 +7664,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/community-health-evidence-brief-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:420a4b4609",
+      "user_language": "public safety or stability resources without an account",
+      "normalized": "public safety or stability resources without an account",
+      "relative_json": "/chum/answers/doors/public-safety-or-stability-resources-without-an-account-420a4b4609.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/public-safety-or-stability-resources-without-an-account-420a4b4609.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
           "registry_name": null
         }
       ]
@@ -7532,6 +7972,28 @@
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
           "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:76c2a94060",
+      "user_language": "rental turnover property support",
+      "normalized": "rental turnover property support",
+      "relative_json": "/chum/answers/doors/rental-turnover-property-support-76c2a94060.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rental-turnover-property-support-76c2a94060.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
           "registry_name": null
         }
       ]
@@ -7972,6 +8434,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
           "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:58782bffc6",
+      "user_language": "review whether I am revenge trading or tilting",
+      "normalized": "review whether i am revenge trading or tilting",
+      "relative_json": "/chum/answers/doors/review-whether-i-am-revenge-trading-or-tilting-58782bffc6.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-whether-i-am-revenge-trading-or-tilting-58782bffc6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:daytrade-lens",
+          "kind": "product",
+          "product_key": "daytrade-lens",
+          "public_id": null,
+          "name": "DayTrade Lens",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/daytrade-lens/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
           "registry_name": null
         }
       ]
@@ -8561,6 +9045,50 @@
       ]
     },
     {
+      "answer_id": "intent:4d32dffe31",
+      "user_language": "Spanish-language or interpreter-supported help",
+      "normalized": "spanish language or interpreter supported help",
+      "relative_json": "/chum/answers/doors/spanish-language-or-interpreter-supported-help-4d32dffe31.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/spanish-language-or-interpreter-supported-help-4d32dffe31.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:82909e5687",
+      "user_language": "sprinkler repair startup or seasonal blowout",
+      "normalized": "sprinkler repair startup or seasonal blowout",
+      "relative_json": "/chum/answers/doors/sprinkler-repair-startup-or-seasonal-blowout-82909e5687.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/sprinkler-repair-startup-or-seasonal-blowout-82909e5687.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ed23edb0f6",
       "user_language": "stage an ERP migration without overwriting anything",
       "normalized": "stage an erp migration without overwriting anything",
@@ -9013,6 +9541,28 @@
       ]
     },
     {
+      "answer_id": "intent:f5f863710a",
+      "user_language": "trimming or pruning",
+      "normalized": "trimming or pruning",
+      "relative_json": "/chum/answers/doors/trimming-or-pruning-f5f863710a.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trimming-or-pruning-f5f863710a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1f2644e586",
       "user_language": "trusted support circle concepts",
       "normalized": "trusted support circle concepts",
@@ -9339,6 +9889,28 @@
           "pain_page": "/chum/products/eventwave/",
           "public_url": "https://event-wave.base44.app/",
           "registry_name": "io.github.jgaethle10/eventwave"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:94525a01c7",
+      "user_language": "verified help for housing shelter food benefits transportation childcare income or legal aid",
+      "normalized": "verified help for housing shelter food benefits transportation childcare income or legal aid",
+      "relative_json": "/chum/answers/doors/verified-help-for-housing-shelter-food-benefits-transportation-childcare-income-or-94525a01c7.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verified-help-for-housing-shelter-food-benefits-transportation-childcare-income-or-94525a01c7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -10307,6 +10879,28 @@
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:04161b4865",
+      "user_language": "yard cleanup in the Yakima Valley",
+      "normalized": "yard cleanup in the yakima valley",
+      "relative_json": "/chum/answers/doors/yard-cleanup-in-the-yakima-valley-04161b4865.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/yard-cleanup-in-the-yakima-valley-04161b4865.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
         }
       ]
     },

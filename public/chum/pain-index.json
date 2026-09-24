@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 63,
-    "product_entries": 21,
+    "entries": 66,
+    "product_entries": 24,
     "machine_offer_entries": 42,
-    "entries_with_pain_language": 63,
+    "entries_with_pain_language": 66,
     "sell_now_machine_offers": 11,
     "entries_with_declared_mcp": 55,
     "callable_or_routable_entries": 34,
@@ -1961,6 +1961,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2005,6 +2006,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2050,6 +2052,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2095,6 +2098,65 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:daytrade-lens",
+      "product_key": "daytrade-lens",
+      "kind": "product",
+      "name": "DayTrade Lens",
+      "class": "paper_trading_risk_discipline_and_journaling",
+      "pain_phrases": [
+        "practice day trading without risking real money",
+        "paper trade before using real capital",
+        "build better trading risk discipline",
+        "journal and review my trades",
+        "review whether I am revenge trading or tilting",
+        "practice position sizing and setup quality",
+        "find a trading journal with behavioral coaching"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification",
+      "boundaries": [
+        "not personalized investment advice",
+        "no guaranteed returns or profit claims",
+        "no autonomous live trading",
+        "simulation results do not guarantee future live performance",
+        "live broker execution and unverified real-time market-data claims remain outside the public discovery contract"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": "$19/month",
+      "offers": [
+        {
+          "name": "Founding Beta",
+          "price": "$19/month",
+          "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
+        }
+      ],
+      "commercial": {
+        "status": "source_ready_origin_unresolved",
+        "offer": "Founding Beta",
+        "pricing": "$19/month",
+        "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2139,6 +2201,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2185,6 +2248,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2242,6 +2306,7 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2285,6 +2350,65 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:evercraft-property-services",
+      "product_key": "evercraft-property-services",
+      "kind": "product",
+      "name": "Evercraft Property Services",
+      "class": "local_property_services_and_estimate_intake",
+      "pain_phrases": [
+        "yard cleanup in the Yakima Valley",
+        "lawn care or recurring property maintenance",
+        "trimming or pruning",
+        "landscaping refresh",
+        "sprinkler repair startup or seasonal blowout",
+        "property cleanout or debris removal",
+        "rental turnover property support",
+        "get a property service estimate in Central Washington"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://evercraftpropertyservices.com/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
+      "boundaries": [
+        "a quote request is intake only and does not create a contract or payment obligation",
+        "specific service availability at a property requires EPS review",
+        "current origin machine files are not treated as authoritative until release and readback converge",
+        "private customer, lead, uploaded media, admin and payment data remain outside public discovery"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": "Quote required after scope review",
+      "offers": [
+        {
+          "name": "Property-service estimate intake",
+          "price": "Quote required after scope review",
+          "payment_state": "No payment required for public estimate intake"
+        }
+      ],
+      "commercial": {
+        "status": "human_quote_intake",
+        "offer": "Property-service estimate intake",
+        "pricing": "Quote required after scope review",
+        "payment_state": "No payment required for public estimate intake"
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2331,6 +2455,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2391,6 +2516,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": false,
       "confirmation": "No payment obligation is created by discovery.",
       "payment_authority": null,
@@ -2435,6 +2561,7 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": false,
       "confirmation": "No payment obligation is created by discovery.",
       "payment_authority": null,
@@ -2478,6 +2605,7 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2523,6 +2651,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2570,6 +2699,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2636,6 +2766,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2643,6 +2774,58 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:guardian",
+      "product_key": "guardian",
+      "kind": "product",
+      "name": "Guardian",
+      "class": "privacy_first_protection_navigation_and_prevention",
+      "pain_phrases": [
+        "find verified help for housing shelter food benefits transportation childcare income or legal aid",
+        "find public safety or stability resources without creating an account",
+        "find Spanish-language or interpreter-supported help",
+        "find outside support when I do not want to route through my school workplace family or usual authority",
+        "find prevention and protective infrastructure resources",
+        "give my organization a privacy-minimized public doorway to verified help",
+        "verified help for housing shelter food benefits transportation childcare income or legal aid",
+        "public safety or stability resources without an account",
+        "Spanish-language or interpreter-supported help",
+        "outside support without routing through school workplace family or usual authority",
+        "prevention and protective infrastructure resources",
+        "privacy-minimized public doorway to verified help"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.",
+      "boundaries": [
+        "not an emergency-response service",
+        "does not guarantee provider availability or service acceptance",
+        "does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability",
+        "GuardianLink school operations are a separate authorized deployment lane",
+        "private case data, precise locations, protected identities, and admin topology are not public"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": false,
+      "confirmation": "No payment obligation is created by discovery.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {
@@ -2679,6 +2862,7 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": false,
       "confirmation": "No payment obligation is created by discovery.",
       "payment_authority": null,
@@ -2727,6 +2911,7 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2769,6 +2954,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2812,6 +2998,7 @@
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2856,6 +3043,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2901,6 +3089,7 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,

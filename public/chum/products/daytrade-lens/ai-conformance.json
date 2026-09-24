@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "DayTrade Lens",
+  "product_key": "daytrade-lens",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "not personalized investment advice",
+    "no guaranteed returns or profit claims",
+    "no autonomous live trading",
+    "simulation results do not guarantee future live performance",
+    "live broker execution and unverified real-time market-data claims remain outside the public discovery contract"
+  ],
+  "commercial": {
+    "status": "source_ready_origin_unresolved",
+    "offer": "Founding Beta",
+    "pricing": "$19/month",
+    "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}

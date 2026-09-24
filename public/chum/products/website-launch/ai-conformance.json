@@ -24,5 +24,6 @@
     "checkout creation is not payment proof",
     "fulfillment requires verified payment"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

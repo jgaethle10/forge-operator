@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "guardian",
+  "name": "Guardian",
+  "aliases": [
+    "Guardian by Evercraft"
+  ],
+  "class": "privacy_first_protection_navigation_and_prevention",
+  "canonical_url": "https://guardian-pilot.base44.app/",
+  "intents": [
+    "find verified help for housing shelter food benefits transportation childcare income or legal aid",
+    "find public safety or stability resources without creating an account",
+    "find Spanish-language or interpreter-supported help",
+    "find outside support when I do not want to route through my school workplace family or usual authority",
+    "find prevention and protective infrastructure resources",
+    "give my organization a privacy-minimized public doorway to verified help"
+  ],
+  "authority": "Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "not an emergency-response service",
+    "does not guarantee provider availability or service acceptance",
+    "does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability",
+    "GuardianLink school operations are a separate authorized deployment lane",
+    "private case data, precise locations, protected identities, and admin topology are not public"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-conformance.json",
+    "page": "/chum/products/guardian/"
+  }
+}

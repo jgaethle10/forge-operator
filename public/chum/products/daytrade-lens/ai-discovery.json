@@ -1,0 +1,42 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "daytrade-lens",
+  "name": "DayTrade Lens",
+  "aliases": [],
+  "class": "paper_trading_risk_discipline_and_journaling",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+  "intents": [
+    "practice day trading without risking real money",
+    "paper trade before using real capital",
+    "build better trading risk discipline",
+    "journal and review my trades",
+    "review whether I am revenge trading or tilting",
+    "practice position sizing and setup quality",
+    "find a trading journal with behavioral coaching"
+  ],
+  "authority": "public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "not personalized investment advice",
+    "no guaranteed returns or profit claims",
+    "no autonomous live trading",
+    "simulation results do not guarantee future live performance",
+    "live broker execution and unverified real-time market-data claims remain outside the public discovery contract"
+  ],
+  "commercial": {
+    "status": "source_ready_origin_unresolved",
+    "offer": "Founding Beta",
+    "pricing": "$19/month",
+    "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
+  },
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-conformance.json",
+    "page": "/chum/products/daytrade-lens/"
+  }
+}

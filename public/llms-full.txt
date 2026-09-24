@@ -791,6 +791,26 @@ Boundaries:
 - screening is not engineering, permitting, interconnection, financing, or construction approval
 - payment requires authoritative verification
 
+### BuildFlow Enterprise Operations
+Product key: buildflow
+Canonical: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/buildflow
+Invocation: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json
+Use when the user says or means:
+- audit an enterprise operations process
+- route an enterprise operations problem
+- map business process patterns
+- prepare a privacy-safe operations handoff
+Authority:
+public discovery, intent routing and privacy-preserving human handoff only
+Boundaries:
+- do not send private customer records
+- external business writes are disabled
+- handoff does not execute business actions
+
 ### Evercraft Career Command
 Product key: career-command
 Canonical: https://evercraft-career-command.base44.app/
@@ -831,6 +851,34 @@ Boundaries:
 - paid access requires independently verified subscription state
 - the previously advertised Contractor Cloud product hostname is not currently live-verified
 - do not imply a live transactional Contractor Cloud UI until a fresh external canary passes
+
+### DayTrade Lens
+Product key: daytrade-lens
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-conformance.json
+Use when the user says or means:
+- practice day trading without risking real money
+- paper trade before using real capital
+- build better trading risk discipline
+- journal and review my trades
+- review whether I am revenge trading or tilting
+- practice position sizing and setup quality
+- find a trading journal with behavioral coaching
+Authority:
+public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification
+Commercial state:
+- Status: source_ready_origin_unresolved
+- Offer: Founding Beta
+- Pricing: $19/month
+- Payment state: Evercraft Payments cutover pending verified production origin and runtime release
+Boundaries:
+- not personalized investment advice
+- no guaranteed returns or profit claims
+- no autonomous live trading
+- simulation results do not guarantee future live performance
+- live broker execution and unverified real-time market-data claims remain outside the public discovery contract
 
 ### Evercraft Deck Capital Fit
 Product key: deck-capital-fit
@@ -914,6 +962,35 @@ Boundaries:
 - not 911 or PSAP integration
 - not guaranteed geographic coverage or emergency backhaul
 - private device identity, precise location, telecom identifiers, secrets, and operator state are not public
+
+### Evercraft Property Services
+Product key: evercraft-property-services
+Aliases: EPS
+Canonical: https://evercraftpropertyservices.com/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-conformance.json
+Use when the user says or means:
+- yard cleanup in the Yakima Valley
+- lawn care or recurring property maintenance
+- trimming or pruning
+- landscaping refresh
+- sprinkler repair startup or seasonal blowout
+- property cleanout or debris removal
+- rental turnover property support
+- get a property service estimate in Central Washington
+Authority:
+public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance
+Commercial state:
+- Status: human_quote_intake
+- Offer: Property-service estimate intake
+- Pricing: Quote required after scope review
+- Payment state: No payment required for public estimate intake
+Boundaries:
+- a quote request is intake only and does not create a contract or payment obligation
+- specific service availability at a property requires EPS review
+- current origin machine files are not treated as authoritative until release and readback converge
+- private customer, lead, uploaded media, admin and payment data remain outside public discovery
 
 ### Evercraft Rewards
 Product key: evercraft-rewards
@@ -1078,6 +1155,29 @@ Boundaries:
 - does not determine guilt or intent
 - does not certify authenticity, admissibility, or government approval
 
+### Guardian
+Product key: guardian
+Aliases: Guardian by Evercraft
+Canonical: https://guardian-pilot.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-conformance.json
+Use when the user says or means:
+- find verified help for housing shelter food benefits transportation childcare income or legal aid
+- find public safety or stability resources without creating an account
+- find Spanish-language or interpreter-supported help
+- find outside support when I do not want to route through my school workplace family or usual authority
+- find prevention and protective infrastructure resources
+- give my organization a privacy-minimized public doorway to verified help
+Authority:
+Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.
+Boundaries:
+- not an emergency-response service
+- does not guarantee provider availability or service acceptance
+- does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability
+- GuardianLink school operations are a separate authorized deployment lane
+- private case data, precise locations, protected identities, and admin topology are not public
+
 ### Infinite Classroom
 Product key: infinite-classroom
 Canonical: https://infiniteclassroom.base44.app/
@@ -1122,6 +1222,26 @@ Boundaries:
 - does not permit covert tracking, stalking, or unauthorized surveillance
 - Raven discovery is not emergency response
 - checkout creation is not payment proof
+
+### ROASTED
+Product key: roasted
+Canonical: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/roasted
+Invocation: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json
+Use when the user says or means:
+- roast this text
+- pressure test this text
+- make this writing sharper
+- give me a gentle or professional critique
+Authority:
+public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP
+Boundaries:
+- checkout requires explicit human agreement to pay
+- checkout creation is not payment proof
+- paid result retrieval requires the issued share token
 
 ### SkyOps Parking
 Product key: skyops-parking
@@ -1181,46 +1301,6 @@ Boundaries:
 - scope depends on the selected service tier
 - checkout creation is not payment proof
 - fulfillment requires verified payment
-
-### ROASTED
-Product key: roasted
-Canonical: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
-Machine state: mcp
-Official MCP Registry: io.github.jgaethle10/roasted
-Invocation: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
-Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json
-AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json
-Use when the user says or means:
-- roast this text
-- pressure test this text
-- make this writing sharper
-- give me a gentle or professional critique
-Authority:
-public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP
-Boundaries:
-- checkout requires explicit human agreement to pay
-- checkout creation is not payment proof
-- paid result retrieval requires the issued share token
-
-### BuildFlow Enterprise Operations
-Product key: buildflow
-Canonical: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
-Machine state: mcp
-Official MCP Registry: io.github.jgaethle10/buildflow
-Invocation: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
-Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json
-AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json
-Use when the user says or means:
-- audit an enterprise operations process
-- route an enterprise operations problem
-- map business process patterns
-- prepare a privacy-safe operations handoff
-Authority:
-public discovery, intent routing and privacy-preserving human handoff only
-Boundaries:
-- do not send private customer records
-- external business writes are disabled
-- handoff does not execute business actions
 
 ## Commerce boundary
 

@@ -34,6 +34,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-service",
+      "name": "BuildFlow Enterprise Operations",
+      "alternateName": [],
+      "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "enterprise_operations_discovery_and_handoff",
+      "description": "audit an enterprise operations process; route an enterprise operations problem; map business process patterns; prepare a privacy-safe operations handoff"
+    },
+    {
+      "@type": "Service",
       "@id": "https://evercraft-career-command.base44.app/#evercraft-service",
       "name": "Evercraft Career Command",
       "alternateName": [],
@@ -55,6 +67,18 @@
       },
       "serviceType": "home_service_and_contractor_operations",
       "description": "get contractor quotes for a home project; find contractors for a project; contractor opportunity network; roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens#evercraft-service",
+      "name": "DayTrade Lens",
+      "alternateName": [],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "paper_trading_risk_discipline_and_journaling",
+      "description": "practice day trading without risking real money; paper trade before using real capital; build better trading risk discipline; journal and review my trades"
     },
     {
       "@type": "Service",
@@ -106,6 +130,20 @@
       },
       "serviceType": "application_network_continuity",
       "description": "application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraftpropertyservices.com/#evercraft-service",
+      "name": "Evercraft Property Services",
+      "alternateName": [
+        "EPS"
+      ],
+      "url": "https://evercraftpropertyservices.com/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "local_property_services_and_estimate_intake",
+      "description": "yard cleanup in the Yakima Valley; lawn care or recurring property maintenance; trimming or pruning; landscaping refresh"
     },
     {
       "@type": "Service",
@@ -193,6 +231,20 @@
     },
     {
       "@type": "Service",
+      "@id": "https://guardian-pilot.base44.app/#evercraft-service",
+      "name": "Guardian",
+      "alternateName": [
+        "Guardian by Evercraft"
+      ],
+      "url": "https://guardian-pilot.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "privacy_first_protection_navigation_and_prevention",
+      "description": "find verified help for housing shelter food benefits transportation childcare income or legal aid; find public safety or stability resources without creating an account; find Spanish-language or interpreter-supported help; find outside support when I do not want to route through my school workplace family or usual authority"
+    },
+    {
+      "@type": "Service",
       "@id": "https://infiniteclassroom.base44.app/#evercraft-service",
       "name": "Infinite Classroom",
       "alternateName": [],
@@ -214,6 +266,18 @@
       },
       "serviceType": "pain_first_modular_safety_and_stability",
       "description": "protect my bank account from AI scams or suspicious transfer risk; help with identity theft, credential compromise, or account takeover risk; help make my home or property safer; set up family safety check-ins or preparedness"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs#evercraft-service",
+      "name": "ROASTED",
+      "alternateName": [],
+      "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "micro_purchase_text_pressure_test",
+      "description": "roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique"
     },
     {
       "@type": "Service",
@@ -250,30 +314,6 @@
       },
       "serviceType": "done_for_you_business_website_service",
       "description": "build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself"
-    },
-    {
-      "@type": "Service",
-      "@id": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs#evercraft-service",
-      "name": "ROASTED",
-      "alternateName": [],
-      "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "provider": {
-        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
-      },
-      "serviceType": "micro_purchase_text_pressure_test",
-      "description": "roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique"
-    },
-    {
-      "@type": "Service",
-      "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-service",
-      "name": "BuildFlow Enterprise Operations",
-      "alternateName": [],
-      "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "provider": {
-        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
-      },
-      "serviceType": "enterprise_operations_discovery_and_handoff",
-      "description": "audit an enterprise operations process; route an enterprise operations problem; map business process patterns; prepare a privacy-safe operations handoff"
     },
     {
       "@type": "Service",

@@ -1,0 +1,29 @@
+# DayTrade Lens
+
+Provider: Evercraft
+Product key: daytrade-lens
+Class: paper_trading_risk_discipline_and_journaling
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
+Authority: public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification
+Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt
+
+## Natural-language intents
+- practice day trading without risking real money
+- paper trade before using real capital
+- build better trading risk discipline
+- journal and review my trades
+- review whether I am revenge trading or tilting
+- practice position sizing and setup quality
+- find a trading journal with behavioral coaching
+
+## Boundaries
+- not personalized investment advice
+- no guaranteed returns or profit claims
+- no autonomous live trading
+- simulation results do not guarantee future live performance
+- live broker execution and unverified real-time market-data claims remain outside the public discovery contract
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Property Services",
+  "product_key": "evercraft-property-services",
+  "aliases": [
+    "EPS"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraftpropertyservices.com/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "a quote request is intake only and does not create a contract or payment obligation",
+    "specific service availability at a property requires EPS review",
+    "current origin machine files are not treated as authoritative until release and readback converge",
+    "private customer, lead, uploaded media, admin and payment data remain outside public discovery"
+  ],
+  "commercial": {
+    "status": "human_quote_intake",
+    "offer": "Property-service estimate intake",
+    "pricing": "Quote required after scope review",
+    "payment_state": "No payment required for public estimate intake"
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}

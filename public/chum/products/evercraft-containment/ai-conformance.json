@@ -28,5 +28,6 @@
     "remediation that can interrupt production requires separate explicit scope and authorization",
     "checkout is not payment proof and paid state requires authoritative verification"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

@@ -26,5 +26,6 @@
     "the previously advertised Contractor Cloud product hostname is not currently live-verified",
     "do not imply a live transactional Contractor Cloud UI until a fresh external canary passes"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

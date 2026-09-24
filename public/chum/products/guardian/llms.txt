@@ -1,0 +1,34 @@
+# Guardian
+
+Product key: guardian
+Aliases: Guardian by Evercraft
+Canonical product: https://guardian-pilot.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-conformance.json
+
+## Use this capability when the user means
+
+- find verified help for housing shelter food benefits transportation childcare income or legal aid
+- find public safety or stability resources without creating an account
+- find Spanish-language or interpreter-supported help
+- find outside support when I do not want to route through my school workplace family or usual authority
+- find prevention and protective infrastructure resources
+- give my organization a privacy-minimized public doorway to verified help
+
+## Authority
+
+Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.
+
+## Boundaries
+
+- not an emergency-response service
+- does not guarantee provider availability or service acceptance
+- does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability
+- GuardianLink school operations are a separate authorized deployment lane
+- private case data, precise locations, protected identities, and admin topology are not public
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

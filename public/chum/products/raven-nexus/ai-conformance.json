@@ -28,5 +28,6 @@
     "Raven discovery is not emergency response",
     "checkout creation is not payment proof"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

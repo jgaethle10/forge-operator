@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 63
-Product entries: 21
+Entries: 66
+Product entries: 24
 Machine-offer entries: 42
 Sell-now machine offers: 11
 
@@ -904,6 +904,24 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## DayTrade Lens
+Capability ID: product:daytrade-lens
+Product key: daytrade-lens
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
+Pricing: $19/month
+Use when the user means:
+- practice day trading without risking real money
+- paper trade before using real capital
+- build better trading risk discipline
+- journal and review my trades
+- review whether I am revenge trading or tilting
+- practice position sizing and setup quality
+- find a trading journal with behavioral coaching
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Evercraft Deck Capital Fit
 Capability ID: product:deck-capital-fit
 Product key: deck-capital-fit
@@ -981,6 +999,25 @@ Use when the user means:
 - member device reconnect visibility
 - continuity readiness tools
 - Evercraft Network membership
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Property Services
+Capability ID: product:evercraft-property-services
+Product key: evercraft-property-services
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraftpropertyservices.com/
+Pricing: Quote required after scope review
+Use when the user means:
+- yard cleanup in the Yakima Valley
+- lawn care or recurring property maintenance
+- trimming or pruning
+- landscaping refresh
+- sprinkler repair startup or seasonal blowout
+- property cleanout or debris removal
+- rental turnover property support
+- get a property service estimate in Central Washington
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
@@ -1140,6 +1177,28 @@ Use when the user means:
 - full-source media workflow exceeds current assistant limits
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Guardian
+Capability ID: product:guardian
+Product key: guardian
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://guardian-pilot.base44.app/
+Use when the user means:
+- find verified help for housing shelter food benefits transportation childcare income or legal aid
+- find public safety or stability resources without creating an account
+- find Spanish-language or interpreter-supported help
+- find outside support when I do not want to route through my school workplace family or usual authority
+- find prevention and protective infrastructure resources
+- give my organization a privacy-minimized public doorway to verified help
+- verified help for housing shelter food benefits transportation childcare income or legal aid
+- public safety or stability resources without an account
+- Spanish-language or interpreter-supported help
+- outside support without routing through school workplace family or usual authority
+- prevention and protective infrastructure resources
+- privacy-minimized public doorway to verified help
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Infinite Classroom
 Capability ID: product:infinite-classroom

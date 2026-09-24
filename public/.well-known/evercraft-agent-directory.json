@@ -51,7 +51,37 @@
         "program presence is not incentive eligibility",
         "screening is not engineering, permitting, interconnection, financing, or construction approval",
         "payment requires authoritative verification"
-      ]
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "aliases": [],
+      "class": "enterprise_operations_discovery_and_handoff",
+      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "intents": [
+        "audit an enterprise operations process",
+        "route an enterprise operations problem",
+        "map business process patterns",
+        "prepare a privacy-safe operations handoff"
+      ],
+      "invocation": {
+        "mode": "mcp",
+        "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "registry_name": "io.github.jgaethle10/buildflow"
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery, intent routing and privacy-preserving human handoff only",
+      "boundaries": [
+        "do not send private customer records",
+        "external business writes are disabled",
+        "handoff does not execute business actions"
+      ],
+      "commercial": null
     },
     {
       "product_key": "career-command",
@@ -79,7 +109,8 @@
         "checkout preparation requires explicit human payment confirmation",
         "checkout creation is not payment proof",
         "paid access requires provider verification"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "contractor-cloud",
@@ -110,7 +141,47 @@
         "paid access requires independently verified subscription state",
         "the previously advertised Contractor Cloud product hostname is not currently live-verified",
         "do not imply a live transactional Contractor Cloud UI until a fresh external canary passes"
-      ]
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "daytrade-lens",
+      "name": "DayTrade Lens",
+      "aliases": [],
+      "class": "paper_trading_risk_discipline_and_journaling",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+      "intents": [
+        "practice day trading without risking real money",
+        "paper trade before using real capital",
+        "build better trading risk discipline",
+        "journal and review my trades",
+        "review whether I am revenge trading or tilting",
+        "practice position sizing and setup quality",
+        "find a trading journal with behavioral coaching"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification",
+      "boundaries": [
+        "not personalized investment advice",
+        "no guaranteed returns or profit claims",
+        "no autonomous live trading",
+        "simulation results do not guarantee future live performance",
+        "live broker execution and unverified real-time market-data claims remain outside the public discovery contract"
+      ],
+      "commercial": {
+        "status": "source_ready_origin_unresolved",
+        "offer": "Founding Beta",
+        "pricing": "$19/month",
+        "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
+      }
     },
     {
       "product_key": "deck-capital-fit",
@@ -138,7 +209,8 @@
         "does not make lending or investment decisions",
         "does not guarantee financing",
         "checkout creation is not payment proof"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "eventwave",
@@ -167,7 +239,8 @@
         "paid promotion remains labeled",
         "source review governs public placement",
         "checkout creation is not payment proof"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "evercraft-containment",
@@ -201,7 +274,8 @@
         "do not send passwords API keys cookies tokens or private credential material through public intake",
         "remediation that can interrupt production requires separate explicit scope and authorization",
         "checkout is not payment proof and paid state requires authoritative verification"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "evercraft-network",
@@ -231,7 +305,49 @@
         "not 911 or PSAP integration",
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
-      ]
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "evercraft-property-services",
+      "name": "Evercraft Property Services",
+      "aliases": [
+        "EPS"
+      ],
+      "class": "local_property_services_and_estimate_intake",
+      "canonical_url": "https://evercraftpropertyservices.com/",
+      "intents": [
+        "yard cleanup in the Yakima Valley",
+        "lawn care or recurring property maintenance",
+        "trimming or pruning",
+        "landscaping refresh",
+        "sprinkler repair startup or seasonal blowout",
+        "property cleanout or debris removal",
+        "rental turnover property support",
+        "get a property service estimate in Central Washington"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
+      "boundaries": [
+        "a quote request is intake only and does not create a contract or payment obligation",
+        "specific service availability at a property requires EPS review",
+        "current origin machine files are not treated as authoritative until release and readback converge",
+        "private customer, lead, uploaded media, admin and payment data remain outside public discovery"
+      ],
+      "commercial": {
+        "status": "human_quote_intake",
+        "offer": "Property-service estimate intake",
+        "pricing": "Quote required after scope review",
+        "payment_state": "No payment required for public estimate intake"
+      }
     },
     {
       "product_key": "evercraft-rewards",
@@ -259,7 +375,8 @@
         "prepared enrollment does not activate a merchant",
         "prepared enrollment creates no payment obligation",
         "directory publication and commercial activation require their own verified state"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "evercraft-web",
@@ -294,7 +411,8 @@
         "authenticated browsing requires explicit authorized profile state and credential isolation",
         "public discovery does not expose private Systemia topology or credentials",
         "payment does not expand permissions"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "evernest",
@@ -324,7 +442,8 @@
         "does not diagnose, score urgency, or determine whether abuse or danger occurred",
         "not an emergency-response service",
         "private family, child, Care Circle, task, note, upload, location, and account data are not public"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "everystage",
@@ -354,7 +473,8 @@
         "pilot intake is not a contract or accepted deployment",
         "public plan pricing is not a binding quote unless confirmed by the current product flow",
         "private event, participant, revenue, settlement, and admin data are not public"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "faie",
@@ -382,7 +502,8 @@
         "research is evidence support rather than consequential authority",
         "unknowns remain labeled",
         "checkout creation is not payment proof"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "findmypart",
@@ -411,7 +532,8 @@
         "compatibility is not guaranteed",
         "checkout creation is not payment proof",
         "private vendor, analytics, session, command-center, and sales data are not public"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "forensiscope",
@@ -454,7 +576,43 @@
         "does not automatically identify unknown people",
         "does not determine guilt or intent",
         "does not certify authenticity, admissibility, or government approval"
-      ]
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "guardian",
+      "name": "Guardian",
+      "aliases": [
+        "Guardian by Evercraft"
+      ],
+      "class": "privacy_first_protection_navigation_and_prevention",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "intents": [
+        "find verified help for housing shelter food benefits transportation childcare income or legal aid",
+        "find public safety or stability resources without creating an account",
+        "find Spanish-language or interpreter-supported help",
+        "find outside support when I do not want to route through my school workplace family or usual authority",
+        "find prevention and protective infrastructure resources",
+        "give my organization a privacy-minimized public doorway to verified help"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-conformance.json",
+      "human_confirmation_required": false,
+      "authority": "Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.",
+      "boundaries": [
+        "not an emergency-response service",
+        "does not guarantee provider availability or service acceptance",
+        "does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability",
+        "GuardianLink school operations are a separate authorized deployment lane",
+        "private case data, precise locations, protected identities, and admin topology are not public"
+      ],
+      "commercial": null
     },
     {
       "product_key": "infinite-classroom",
@@ -483,7 +641,8 @@
         "not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service",
         "does not guarantee grades or outcomes",
         "learner profiles, progress, tutoring history, household data, and safety disclosures are private"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "raven-nexus",
@@ -518,7 +677,37 @@
         "does not permit covert tracking, stalking, or unauthorized surveillance",
         "Raven discovery is not emergency response",
         "checkout creation is not payment proof"
-      ]
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "aliases": [],
+      "class": "micro_purchase_text_pressure_test",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "intents": [
+        "roast this text",
+        "pressure test this text",
+        "make this writing sharper",
+        "give me a gentle or professional critique"
+      ],
+      "invocation": {
+        "mode": "mcp",
+        "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+        "registry_name": "io.github.jgaethle10/roasted"
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
+      "boundaries": [
+        "checkout requires explicit human agreement to pay",
+        "checkout creation is not payment proof",
+        "paid result retrieval requires the issued share token"
+      ],
+      "commercial": null
     },
     {
       "product_key": "skyops-parking",
@@ -547,7 +736,8 @@
         "planning is not a parking reservation",
         "displayed planning values are not proof of a charge",
         "payments, messaging, hardware, and partner connections must be verified per deployment"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "systemia-website-audit",
@@ -575,7 +765,8 @@
         "audit findings do not guarantee revenue or rankings",
         "checkout creation is not payment proof",
         "paid state requires provider verification"
-      ]
+      ],
+      "commercial": null
     },
     {
       "product_key": "website-launch",
@@ -603,63 +794,8 @@
         "scope depends on the selected service tier",
         "checkout creation is not payment proof",
         "fulfillment requires verified payment"
-      ]
-    },
-    {
-      "product_key": "roasted",
-      "name": "ROASTED",
-      "aliases": [],
-      "class": "micro_purchase_text_pressure_test",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "intents": [
-        "roast this text",
-        "pressure test this text",
-        "make this writing sharper",
-        "give me a gentle or professional critique"
       ],
-      "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
-        "registry_name": "io.github.jgaethle10/roasted"
-      },
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
-      "human_confirmation_required": true,
-      "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
-      "boundaries": [
-        "checkout requires explicit human agreement to pay",
-        "checkout creation is not payment proof",
-        "paid result retrieval requires the issued share token"
-      ]
-    },
-    {
-      "product_key": "buildflow",
-      "name": "BuildFlow Enterprise Operations",
-      "aliases": [],
-      "class": "enterprise_operations_discovery_and_handoff",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "intents": [
-        "audit an enterprise operations process",
-        "route an enterprise operations problem",
-        "map business process patterns",
-        "prepare a privacy-safe operations handoff"
-      ],
-      "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
-        "registry_name": "io.github.jgaethle10/buildflow"
-      },
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
-      "human_confirmation_required": true,
-      "authority": "public discovery, intent routing and privacy-preserving human handoff only",
-      "boundaries": [
-        "do not send private customer records",
-        "external business writes are disabled",
-        "handoff does not execute business actions"
-      ]
+      "commercial": null
     }
   ],
   "privacy_boundary": "Only approved public commercial capability metadata is compiled. Private/admin topology, secrets and customer records are excluded."

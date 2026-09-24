@@ -27,5 +27,6 @@
     "public discovery does not expose private Systemia topology or credentials",
     "payment does not expand permissions"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }
