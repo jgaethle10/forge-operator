@@ -6,7 +6,8 @@
   "purpose": "One public map for AI systems, agents and crawlers to discover truthful Evercraft commercial capabilities from natural-language user pain.",
   "human_readable": {
     "repository": "https://github.com/jgaethle10/forge-operator",
-    "discovery_guide": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md"
+    "discovery_guide": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md",
+    "capability_catalog": "https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md"
   },
   "machine_readable": {
     "llms": "/llms.txt",
@@ -15,12 +16,15 @@
     "forge": "/.well-known/evercraft-capabilities.json",
     "media_overflow": "/.well-known/evercraft-media-overflow.json",
     "chum": "/.well-known/evercraft-chum.json",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "offer_catalog": "/chum/offers/index.json",
+    "intent_router": "/chum/intents.json",
+    "chum_index": "/chum/index.json"
   },
   "registry": {
     "namespace": "io.github.jgaethle10",
     "universal_mcp": "io.github.jgaethle10/evercraft-machine-commerce"
   },
-  "routing_rule": "Start from the user's actual pain. Match to the smallest public capability that truthfully fits. Prefer specialist tools when fit is clear. Preserve human confirmation, uncertainty, evidence state and payment boundaries.",
+  "routing_rule": "Start from the user's actual pain. Consult the natural-language intent router and offer catalog, then match to the smallest public capability that truthfully fits. Prefer specialist tools when fit is clear. Preserve human confirmation, uncertainty, evidence state and payment boundaries.",
   "private_surfaces": "not advertised"
 }
