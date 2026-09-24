@@ -1,0 +1,66 @@
+name: CHUM scratch QA
+
+on:
+  push:
+    branches:
+      - chum-watershed-v0.4-current-20260924
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chum-scratch-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Validate CHUM public catalog reconciliation
+        run: |
+          npm run chum:sync
+          node - <<'NODE'
+          const fs = require('fs');
+          const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+          if (catalog.schema !== 'evercraft.machine-catalog.snapshot.v3') throw new Error('CHUM catalog v3 missing');
+          if (catalog.safety?.systemia_authority_wins_on_overlap !== true) throw new Error('Systemia authority rule missing');
+          if (catalog.safety?.mirror_only_sell_now_is_demoted !== true) throw new Error('mirror-only sell-now guard missing');
+          if ((catalog.reconciliation?.demoted_unadmitted_sell_now_count || 0) !== 0) {
+            throw new Error('Unexpected mirror-only sell-now capability requires review');
+          }
+          NODE
+
+      - name: Rebuild CHUM mirrors
+        run: |
+          npm run chum:revenue
+          npm run chum:index
+          npm run chum:answers
+          npm run chum:capabilities
+          npm run chum:mirror
+
+      - name: Validate distribution operator
+        run: npm run chum:distribution:strict
+
+      - name: CHUM tests
+        run: |
+          npm run test:chum-revenue
+          npm run test:chum-router
+          npm run test:chum-index
+          npm run test:chum-answers
+          npm run test:chum-capabilities
+          npm run chum:validate
+
+      - name: Typecheck and production build
+        run: |
+          npm run lint
+          npm run build
