@@ -1,0 +1,30 @@
+name: Nexus Cross-LLM Behavioral Probes
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 15 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
+      NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run brand-blind provider probes through Nexus
+        run: node scripts/run-nexus-cross-llm-probes.mjs
+      - name: Preserve behavioral receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-cross-llm-receipts-${{ github.run_id }}
+          path: probe-receipts/*.json
+          if-no-files-found: error
+          retention-days: 30
