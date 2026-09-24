@@ -9,6 +9,8 @@ const timeoutMs = 12000;
 const conformance = readJson('conformance/products.json');
 const directory = readJson('public/.well-known/evercraft-products.json');
 const catalog = readJson('registry/catalog.json');
+const agentDirectory = readJson('public/.well-known/evercraft-agent-directory.json');
+const discoveryWatershed = readJson('public/.well-known/evercraft-discovery.json');
 
 const readJsonDir = (dir) => {
   if (!fs.existsSync(dir)) return [];
@@ -33,10 +35,12 @@ const publicByKey = new Map((directory.products || []).map((p) => [p.product_key
 const catalogByKey = new Map(
   (catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p])
 );
+const agentByKey = new Map((agentDirectory.specialists || []).map((p) => [p.product_key, p]));
 const portfolioKeys = Array.from(new Set([
   ...conformanceByKey.keys(),
   ...publicByKey.keys(),
-  ...catalogByKey.keys()
+  ...catalogByKey.keys(),
+  ...agentByKey.keys()
 ])).sort();
 
 const liveProviderProbe = fs.existsSync('artifacts/chum/provider-probe-latest.json')
@@ -125,7 +129,7 @@ async function probe(url, kind) {
   }
 }
 
-function readiness({ product, publicEntry, catalogEntry, checks }) {
+function readiness({ product, publicEntry, catalogEntry, agentEntry, checks }) {
   const gates = [
     ['public_directory', Boolean(publicEntry)],
     ['canonical_surface', checks.canonical?.valid === true],
@@ -133,9 +137,11 @@ function readiness({ product, publicEntry, catalogEntry, checks }) {
     ['machine_contract', Boolean(
       checks.discovery?.valid === true ||
       checks.conformance?.valid === true ||
-      checks.openapi?.valid === true
+      checks.openapi?.valid === true ||
+      catalogEntry?.mcp ||
+      agentEntry?.mcp
     )],
-    ['agent_invocation_declared', Boolean(catalogEntry?.mcp)]
+    ['agent_invocation_declared', Boolean(catalogEntry?.mcp || agentEntry?.mcp)]
   ];
   const passed = gates.filter(([, ok]) => ok).length;
   return {
@@ -148,6 +154,7 @@ function readiness({ product, publicEntry, catalogEntry, checks }) {
 async function inspectProduct(product) {
   const publicEntry = publicByKey.get(product.product_key);
   const catalogEntry = catalogByKey.get(product.product_key);
+  const agentEntry = agentByKey.get(product.product_key);
   const registryReceipts = registryReceiptsByKey.get(product.product_key) || [];
   const providerObservations = [
     ...(providerObservationsByKey.get(product.product_key) || []),
@@ -171,9 +178,9 @@ async function inspectProduct(product) {
     class: product.class,
     canonical_url: product.canonical_url,
     intents: publicEntry?.intents || [],
-    mcp: catalogEntry?.mcp || null,
+    mcp: catalogEntry?.mcp || agentEntry?.mcp || null,
     checks,
-    readiness: readiness({ product, publicEntry, catalogEntry, checks }),
+    readiness: readiness({ product, publicEntry, catalogEntry, agentEntry, checks }),
     distribution_state: {
       official_registry: registryReceipts.some((r) => r.evidence_state === 'receipt_backed' && r.run_conclusion === 'success')
         ? 'published_receipt_backed'
@@ -198,9 +205,9 @@ async function inspectProduct(product) {
       },
       {
         lane: 'agent_registry',
-        state: catalogEntry?.mcp ? 'declared' : 'not_declared',
-        action: catalogEntry?.mcp
-          ? 'Maintain the specialist MCP entry and route compatible natural-language intent to it.'
+        state: (catalogEntry?.mcp || agentEntry?.mcp) ? 'declared' : 'not_declared',
+        action: (catalogEntry?.mcp || agentEntry?.mcp)
+          ? 'Maintain the specialist MCP entry, Official MCP Registry manifest, and route compatible natural-language intent to it.'
           : 'Evaluate whether this capability should expose a bounded MCP or HTTP invocation surface.'
       },
       {
@@ -221,9 +228,10 @@ function mergedProduct(productKey) {
   const c = conformanceByKey.get(productKey) || {};
   const p = publicByKey.get(productKey) || {};
   const r = catalogByKey.get(productKey) || {};
+  const a = agentByKey.get(productKey) || {};
   return {
     product_key: productKey,
-    name: c.name || p.name || r.name || productKey,
+    name: c.name || p.name || a.name || r.name || productKey,
     class: c.class || p.class || r.class || 'registry_product',
     canonical_url: c.canonical_url || p.canonical_url || r.canonical_url || null,
     llms_url: c.llms_url || r.llms_url || null,
@@ -270,6 +278,13 @@ const receipt = {
     invalid_surfaces: invalid.length
   },
   provider_targets: providerTargets,
+  watershed: {
+    schema: discoveryWatershed.schema,
+    public_machine_surfaces: Object.values(discoveryWatershed.machine_readable || {}),
+    official_registry_namespace: discoveryWatershed.registry?.namespace || null,
+    universal_mcp: discoveryWatershed.registry?.universal_mcp || null,
+    public_agent_count: (agentDirectory.specialists || []).length
+  },
   products
 };
 
