@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import { agentDiscoveryDocument, discoverCapabilities, hubPageHtml, productPageHtml, robotsText, sitemapXml } from './systemia/chum/public-resolver.mjs';
 
 dotenv.config();
 
@@ -80,6 +81,59 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+function requestOrigin(req: Request): string {
+  const forwarded = String(req.get('x-forwarded-proto') || '').split(',')[0].trim();
+  const protocol = forwarded || req.protocol || 'https';
+  const host = req.get('host') || '';
+  return host ? protocol + '://' + host : '';
+}
+
+app.get('/robots.txt', (req: Request, res: Response) => {
+  res.type('text/plain').send(robotsText(requestOrigin(req)));
+});
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  try {
+    res.type('application/xml').send(sitemapXml(requestOrigin(req)));
+  } catch {
+    res.status(503).type('text/plain').send('Sitemap unavailable until the public host is resolved.');
+  }
+});
+
+app.get('/.well-known/evercraft-agent-discovery.json', (req: Request, res: Response) => {
+  res.json(agentDiscoveryDocument(requestOrigin(req)));
+});
+
+app.get('/ai', (req: Request, res: Response) => {
+  res.type('html').send(hubPageHtml(requestOrigin(req)));
+});
+
+app.get('/ai/products/:productKey', (req: Request, res: Response) => {
+  const page = productPageHtml(String(req.params.productKey || ''), requestOrigin(req));
+  if (!page) {
+    res.status(404).type('text/plain').send('Unknown public Evercraft capability.');
+    return;
+  }
+  res.type('html').send(page);
+});
+
+app.get('/api/discover', rateLimit(1200, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const query = String(req.query.q || req.query.query || '').trim();
+  const limit = Math.max(1, Math.min(10, Number(req.query.limit || 5)));
+  const resolution = discoverCapabilities(query, { limit });
+  if (!query) {
+    res.status(400).json(resolution);
+    return;
+  }
+  res.json({
+    ...resolution,
+    coordinator: 'CHUM',
+    manifest: '/.well-known/evercraft-agent-discovery.json',
+    human_directory: '/ai',
+    payment_obligation_created: false,
+  });
+});
+
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     ok: true,
@@ -104,6 +158,9 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',
+      agentDiscovery: '/.well-known/evercraft-agent-discovery.json',
+      humanDirectory: '/ai',
+      intentResolver: { method: 'GET', path: '/api/discover?q={natural_language_problem}' },
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
     },
