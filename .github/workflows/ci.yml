@@ -68,18 +68,41 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
+          curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-chum.json > /tmp/chum-manifest.json
+          curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-offers.json > /tmp/offers.json
+          curl --fail --silent http://127.0.0.1:3000/chum/health > /tmp/chum-health.json
+          curl --fail --silent --get --data-urlencode "q=roast my bio" http://127.0.0.1:3000/chum/resolve > /tmp/chum-roasted.json
+          curl --fail --silent --get --data-urlencode "q=find a discontinued tractor part" http://127.0.0.1:3000/chum/resolve > /tmp/chum-part.json
+          curl --fail --silent --get --data-urlencode "q=quantum submarine violin licensing" http://127.0.0.1:3000/chum/resolve > /tmp/chum-unknown.json
 
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const chumManifest = JSON.parse(fs.readFileSync('/tmp/chum-manifest.json','utf8'));
+          const offers = JSON.parse(fs.readFileSync('/tmp/offers.json','utf8'));
+          const chumHealth = JSON.parse(fs.readFileSync('/tmp/chum-health.json','utf8'));
+          const roasted = JSON.parse(fs.readFileSync('/tmp/chum-roasted.json','utf8'));
+          const part = JSON.parse(fs.readFileSync('/tmp/chum-part.json','utf8'));
+          const unknown = JSON.parse(fs.readFileSync('/tmp/chum-unknown.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+          if (chumManifest.schema !== 'evercraft.chum.v2') throw new Error('CHUM v2 manifest missing');
+          if (offers.schema !== 'evercraft.public-offers.v1' || offers.offers.length !== 11) throw new Error('public sell-now catalog stale');
+          if (chumHealth.ok !== true || chumHealth.service !== 'CHUM') throw new Error('CHUM health failed');
+          if (chumHealth.sell_now_offer_count !== 11) throw new Error('sell-now count stale');
+          if (chumHealth.payment_ready_offer_count !== 9) throw new Error('payment-ready count stale');
+          if (chumHealth.quote_ready_offer_count !== 2) throw new Error('quote-ready count stale');
+          if (roasted.routes?.[0]?.product_key !== 'roasted') throw new Error('ROASTED routing failed');
+          if (roasted.routes?.[0]?.commercial?.machine_state !== 'payment_ready') throw new Error('ROASTED not payment-ready');
+          if (roasted.routes?.[0]?.commercial?.offers?.[0]?.price !== '$0.99') throw new Error('ROASTED 99c offer missing');
+          if (part.routes?.[0]?.product_key !== 'findmypart') throw new Error('FindMyPart routing failed');
+          if (unknown.match !== false || unknown.routes?.length !== 0) throw new Error('CHUM fabricated unknown route');
           NODE
 
       - name: Show container logs on failure
