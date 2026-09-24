@@ -4,6 +4,9 @@
   <url><loc>/chum/revenue.html</loc></url>
   <url><loc>/chum/revenue.txt</loc></url>
   <url><loc>/chum/revenue.json</loc></url>
+  <url><loc>/chum/capabilities.json</loc></url>
+  <url><loc>/chum/sell-now.json</loc></url>
+  <url><loc>/chum/sell-now.txt</loc></url>
   <url><loc>/chum/intents/agent-proving-mission-v1/</loc></url>
   <url><loc>/chum/intents/ai-capability-install-v1/</loc></url>
   <url><loc>/chum/intents/aliev-site-opportunity-snapshot-v1/</loc></url>

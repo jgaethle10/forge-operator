@@ -8,7 +8,7 @@ Public ID: aliev-site-opportunity-snapshot-v1
 Problem: A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Machine state: payment_ready_human_confirmation
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1
+Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=aliev-site-opportunity-snapshot-v1
 Use when the user says or means:
 - is this site good for EV charging
@@ -26,7 +26,7 @@ Public ID: career-command-interview-practice-machine-v1
 Problem: A candidate needs role-specific practice and candid evidence-based feedback before an interview.
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
+Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1
 Use when the user says or means:
 - help me prepare for this interview
@@ -42,7 +42,7 @@ Public ID: eventwave-paid-promotion-v1
 Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
 Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1
+Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=eventwave-paid-promotion-v1
 Use when the user says or means:
 - promote my event on EventWave
@@ -62,7 +62,7 @@ Public ID: deck-capital-fit-sprint-machine-v1
 Problem: A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.
 Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
+Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1
 Use when the user says or means:
 - help me find funding for my business
@@ -92,7 +92,7 @@ Public ID: website-launch-service-v1
 Problem: A business needs a professional website built or upgraded without operating a site-builder interface.
 Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1
+Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=website-launch-service-v1
 Use when the user says or means:
 - build me a business website
@@ -106,7 +106,7 @@ Public ID: faie-signal-brief-v1
 Problem: A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
+Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=faie-signal-brief-v1
 Use when the user says or means:
 - research this land or water question
@@ -120,7 +120,7 @@ Public ID: findmypart-paid-hunt-v1
 Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1
+Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1
 Use when the user says or means:
 - find a hard-to-source part
@@ -134,7 +134,7 @@ Public ID: roasted-text-pressure-test-machine-v1
 Problem: Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
 Pricing: $0.99 USD one-time per roast.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1
+Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=roasted-text-pressure-test-machine-v1
 Use when the user says or means:
 - roast this text
@@ -166,7 +166,7 @@ Public ID: audit-center-website-audit-machine-v1
 Problem: A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.
 Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Machine state: payment_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1
+Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=audit-center-website-audit-machine-v1
 Use when the user says or means:
 - why is my website not getting leads
