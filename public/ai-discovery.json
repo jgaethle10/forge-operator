@@ -14,11 +14,14 @@
     "chum": "/.well-known/evercraft-chum.json",
     "chum_public_mirror": "/chum/index.json",
     "schema": "/schema.jsonld",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "intent_map": "/.well-known/evercraft-intents.json",
+    "intent_text": "/intents.txt"
   },
   "universal_front_door": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "intent_router": "/api/discover?q={natural-language-problem}"
   },
   "state_semantics": {
     "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",
