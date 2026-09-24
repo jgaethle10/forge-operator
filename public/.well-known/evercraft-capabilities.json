@@ -15,7 +15,8 @@
       "path": "/chum/resolve?q=<plain-language-problem>",
       "auth": "none"
     },
-    "chumHealth": "/chum/health"
+    "chumHealth": "/chum/health",
+    "publicOffers": "/.well-known/evercraft-offers.json"
   },
   "jobs": [
     "operations bottleneck diagnosis",
