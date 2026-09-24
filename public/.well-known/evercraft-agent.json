@@ -14,10 +14,12 @@
     "discovery_watershed": "/.well-known/evercraft-discovery.json",
     "agent_directory": "/.well-known/evercraft-agent-directory.json",
     "chum_public_mirror": "/chum/index.json",
-    "structured_data": "/schema.jsonld"
+    "structured_data": "/schema.jsonld",
+    "pain_index": "/.well-known/evercraft-pain-index.json",
+    "pain_index_text": "/chum/pain-index.txt"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true,
