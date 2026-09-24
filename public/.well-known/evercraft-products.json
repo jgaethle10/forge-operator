@@ -148,23 +148,51 @@
       ]
     },
     {
+      "product_key": "guardian-pilot",
+      "name": "Guardian Pilot",
+      "class": "safety_navigation_and_protection_resources",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "intents": [
+        "I do not feel safe and need a private way to find help",
+        "help me find domestic violence or sexual assault support",
+        "I need verified safety or stability resources without telling my whole story first",
+        "help me make a practical safety or stability plan",
+        "I am worried about a child or young person's safety and need verified support options",
+        "find housing, legal, food, utilities, childcare, transportation, or other stability help connected to a safety need",
+        "find verified protection and family-safety resources near me",
+        "school, counselor, youth program, or community organization safety support"
+      ],
+      "authority": "public safety-resource discovery and Guardian Pilot navigation only; reports, provider contact, case creation, location sharing, or other consequential handoffs remain user-controlled",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "not emergency dispatch and does not guarantee response or provider availability",
+        "for immediate danger, use local emergency services; United States crisis resources shown by Guardian must be independently current for the user's situation",
+        "AI assistants and agents must not submit reports, contact providers, create cases, share identity, or transmit precise location without explicit user action",
+        "public discovery exposes no private report, child, family, account, device, support-circle, case narrative, or precise-location data",
+        "resource eligibility, hours, geography, and availability can change and should be verified with the provider"
+      ]
+    },
+    {
       "product_key": "evernest",
       "name": "EverNest",
       "class": "family_support_resources",
       "canonical_url": "https://evernest-home.base44.app/",
       "intents": [
-        "family support resources",
-        "maternal support resources",
-        "organize practical help after having a baby",
-        "trusted support circle concepts",
+        "I just had a baby and need help organizing practical support",
+        "my family is overwhelmed and I need help coordinating people around us",
+        "help me set up a trusted support circle for my family",
+        "new parent or postpartum practical support resources",
+        "help organize meals, rides, childcare, check-ins, or family tasks",
         "family preparedness resources",
-        "Spanish-language family support resources"
+        "Spanish-language family support resources",
+        "I need family help without putting private details out in public"
       ],
-      "authority": "public resource discovery only",
+      "authority": "public family-support resource discovery and user-controlled support-circle planning",
       "human_confirmation_required": false,
       "boundaries": [
         "does not diagnose, score urgency, or determine whether abuse or danger occurred",
-        "not an emergency-response service",
+        "not an emergency-response service and does not replace medical, mental-health, legal, or emergency care",
+        "AI assistants and agents must not invite people, publish family details, share child information, or create support tasks without explicit user action",
         "private family, child, Care Circle, task, note, upload, location, and account data are not public"
       ]
     },
