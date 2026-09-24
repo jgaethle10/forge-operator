@@ -4,7 +4,9 @@ const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
 const registry = readJson('conformance/products.json');
 const timeoutMs = 15000;
 const strict = process.argv.includes('--strict');
-const mirrorBase = String(\n  process.env.CHUM_PUBLIC_MIRROR_BASE ||\n  'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products'\n).replace(/\\\/$/, '');
+const mirrorBaseRaw = process.env.CHUM_PUBLIC_MIRROR_BASE ||
+  'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products';
+const mirrorBase = mirrorBaseRaw.endsWith('/') ? mirrorBaseRaw.slice(0, -1) : mirrorBaseRaw;
 
 const crawlerProfiles = [
   {
