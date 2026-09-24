@@ -1,9 +1,12 @@
 {
-  "schema": "evercraft.agent-discovery.v1",
+  "schema": "evercraft.agent-discovery.v2",
   "provider": "Evercraft LLC",
   "updated_at": "2026-09-24",
   "purpose": "Public machine-readable front door for AI assistants and agents to discover Evercraft capabilities from a user's stated problem without prior brand knowledge.",
   "start_here": {
+    "discover": "/api/discover?q={natural-language-problem}",
+    "resolve_alias": "/api/resolve?q={natural-language-problem}",
+    "revenue_watershed": "/api/revenue-watershed",
     "llms": "/llms.txt",
     "product_directory": "/.well-known/evercraft-products.json",
     "forge_capabilities": "/.well-known/evercraft-capabilities.json",
@@ -17,7 +20,7 @@
     "structured_data": "/schema.jsonld"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Prefer /api/discover, which checks current machine offers and broader public product families, then choose the smallest truthful capability. Preserve stated authority, uncertainty, safety and payment boundaries.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true,
