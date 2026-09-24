@@ -84,3 +84,45 @@ test('response preserves the universal machine-commerce front door', () => {
   assert.equal(out.universal_front_door.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
   assert.equal(out.payment_boundary.human_confirmation_required_for_checkout, true);
 });
+
+
+test('returns commercial state for a payment-ready offer', () => {
+  const commercialDirectory = {
+    routing_rule: 'smallest capability first',
+    products: [
+      {
+        product_key: 'roasted',
+        name: 'ROASTED',
+        canonical_url: 'https://example.test/roasted',
+        intents: ['roast my bio', 'pressure test this copy'],
+        authority: 'public paid critique',
+        human_confirmation_required: true,
+        boundaries: ['payment confirmation required'],
+      },
+    ],
+  };
+  const offerCatalog = {
+    schema: 'evercraft.public-offers.v1',
+    updated_at: '2026-09-24',
+    rules: { human_confirmation_required: true },
+    offers: [
+      {
+        product_key: 'roasted',
+        public_id: 'roasted-text-pressure-test-machine-v1',
+        name: 'ROASTED 99¢ Text Pressure Test',
+        commercial_state: 'sell_now',
+        machine_state: 'payment_ready',
+        pricing: '$0.99 USD one-time per roast.',
+        offers: [{ name: 'Single Roast', price: '$0.99', billing: 'one_time' }],
+        confirmation: 'Explicit user confirmation is required before checkout.',
+        public_url: 'https://example.test/roasted/docs',
+      },
+    ],
+  };
+  const out = resolveChumIntent(commercialDirectory, catalog, 'roast my bio', 5, offerCatalog);
+  assert.equal(out.routes[0].product_key, 'roasted');
+  assert.equal(out.routes[0].commercial.state, 'sell_now');
+  assert.equal(out.routes[0].commercial.machine_state, 'payment_ready');
+  assert.equal(out.routes[0].commercial.pricing, '$0.99 USD one-time per roast.');
+  assert.equal(out.routes[0].commercial.offers[0].price, '$0.99');
+});
