@@ -19,7 +19,10 @@
     "source_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "source_portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "source_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
-    "source_repository": "https://github.com/jgaethle10/forge-operator"
+    "source_repository": "https://github.com/jgaethle10/forge-operator",
+    "live_machine_commerce_discover": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=discover",
+    "live_machine_commerce_docs": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+    "live_machine_commerce_openapi": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=openapi"
   },
   "routing": {
     "input": "natural-language problem or desired outcome",
