@@ -15,3 +15,17 @@ EVERCRAFT_CAPACITY_ENDPOINTS="https://capacity-a.example,https://capacity-b.exam
 The architectural target is broader than HTTP NodeSeeds. A Universal Capacity Resolver should normalize cloud, carrier edge, VM/container, browser/WASM, partner, marketplace, and other legitimately allocatable compute into one capacity contract.
 
 No Evercraft ownership or static enrollment is required. The scheduler cares about current allocatable capacity, workload compatibility, cost, latency, trust/evidence state, and lease lifetime.
+
+## Offline continuity
+
+The capacity proof above answers where Saban can run. The offline continuity layer answers whether an isolated operator can still reach trusted Evercraft roles and local runtimes when external internet is unavailable.
+
+Run the isolated proof:
+
+```bash
+npm run proof:offline-continuity
+```
+
+The proof requires verified local Nexus, Guardian, Hearth, and team roles, requires a local-inference-capable peer, executes a Saban mission locally, checkpoints through Hearth, reaches Guardian, reaches a team runtime, and records receipts without using external cloud services.
+
+See `OFFLINE-CONTINUITY.md` for the full continuity doctrine and the boundary between the local control-plane proof and future physical multi-hop field verification.
