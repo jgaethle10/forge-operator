@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.cross-llm-product-conformance.v1",
+  "product": "ForensiScope",
+  "product_key": "forensiscope",
+  "provider": "Evercraft LLC",
+  "description": "AI media overflow and analysis for authorized video/audio too large, long, complex, or unsupported by the current assistant. Media handoff remains human-confirmed.",
+  "canonical_url": "https://evercraft-forensiscope.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/llms-full.txt",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "machine_authority": "Public discovery and bounded capability routing only within the product's published authority.",
+  "evidence_rules": [
+    "machine surface must match real wired authority",
+    "publication is not proof of provider pickup",
+    "provider behavior claims require receipt-backed observation",
+    "checkout is not payment proof",
+    "private topology remains dark"
+  ],
+  "commerce_boundary": {
+    "discovery_creates_obligation": false,
+    "human_confirmation_required_for_checkout": true,
+    "provider_verification_required_for_paid_state": true
+  },
+  "updated_at": "2026-09-24"
+}
