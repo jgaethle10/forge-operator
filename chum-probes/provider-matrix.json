@@ -4,13 +4,81 @@
   "execution_owner": "CHUM",
   "orchestration_owner": "Systemia",
   "providers": [
-    {"provider":"chatgpt","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"claude","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"gemini","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"copilot","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"perplexity","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"grok","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"generic_agent","surface":"machine_client","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"}
+    {
+      "provider": "chatgpt",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required",
+      "crawler_tokens": [
+        "OAI-SearchBot",
+        "ChatGPT-User",
+        "GPTBot"
+      ],
+      "crawler_source": "https://developers.openai.com/api/docs/bots"
+    },
+    {
+      "provider": "claude",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required",
+      "crawler_tokens": [
+        "Claude-SearchBot",
+        "Claude-User",
+        "ClaudeBot"
+      ],
+      "crawler_source": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "gemini",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required",
+      "crawler_tokens": [
+        "Googlebot",
+        "Google-Extended"
+      ],
+      "crawler_source": "https://developers.google.com/crawling"
+    },
+    {
+      "provider": "copilot",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required",
+      "crawler_tokens": [
+        "bingbot"
+      ],
+      "crawler_source": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/generative-ai-public-websites"
+    },
+    {
+      "provider": "perplexity",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required",
+      "crawler_tokens": [
+        "PerplexityBot",
+        "Perplexity-User"
+      ],
+      "crawler_source": "https://docs.perplexity.ai/guides/bots"
+    },
+    {
+      "provider": "grok",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required",
+      "crawler_tokens": [],
+      "crawler_source": null,
+      "crawler_note": "No official public Grok search crawler token is asserted; wildcard public crawl policy remains open."
+    },
+    {
+      "provider": "generic_agent",
+      "surface": "machine_client",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required",
+      "crawler_tokens": [
+        "*"
+      ],
+      "crawler_source": null
+    }
   ],
   "rules": {
     "clean_session_required": true,
@@ -23,6 +91,9 @@
     "api_behavior_is_not_consumer_ui_behavior": true,
     "no_credential_exfiltration": true,
     "no_captcha_bypass": true,
-    "no_payment_or_external_message_actions": true
+    "no_payment_or_external_message_actions": true,
+    "public_crawl_doors_open": true,
+    "private_topology_excluded": true,
+    "unverified_crawler_tokens_forbidden": true
   }
 }
