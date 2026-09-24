@@ -31,6 +31,25 @@ jobs:
       - name: Install
         run: npm install --no-audit --no-fund
 
+      - name: Verify CHUM watershed compiler
+        run: |
+          npm run chum:mirror
+          node - <<'NODE'
+          const fs = require('fs');
+          const products = JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
+          const machine = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+          const index = JSON.parse(fs.readFileSync('public/chum/index.json','utf8'));
+          const offers = JSON.parse(fs.readFileSync('public/chum/offers/index.json','utf8'));
+          const intents = JSON.parse(fs.readFileSync('public/chum/intents.json','utf8'));
+          const expectedIntents = (machine.offers || []).reduce((n,o)=>n + (Array.isArray(o.intent_terms) ? o.intent_terms.length : 0), 0);
+          if ((index.products || []).length !== (products.products || []).length) throw new Error('CHUM product count drift');
+          if ((index.offers || []).length !== (machine.offers || []).length) throw new Error('CHUM offer count drift');
+          if (offers.offer_count !== (machine.offers || []).length) throw new Error('CHUM offer index drift');
+          if (intents.intent_count !== expectedIntents) throw new Error('CHUM intent count drift');
+          if (!fs.existsSync('AI-CAPABILITY-CATALOG.md')) throw new Error('CHUM GitHub capability catalog missing');
+          console.log(JSON.stringify({products:index.products.length,offers:index.offers.length,intents:intents.intent_count}));
+          NODE
+
       - name: Typecheck and build
         run: npm run check
 
