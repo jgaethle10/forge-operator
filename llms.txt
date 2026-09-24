@@ -67,6 +67,9 @@ https://github.com/jgaethle10/forge-operator/tree/main/registry
 Verified agent interfaces:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-interfaces.json
 
+AI referral attribution contract:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-attribution.json
+
 Official MCP Registry namespace:
 io.github.jgaethle10
 
