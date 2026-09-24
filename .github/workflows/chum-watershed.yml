@@ -88,6 +88,7 @@ jobs:
           npm run check:ai
           npm run test:chum-revenue
           npm run test:chum-router
+          npm run test:a2a
           npm run chum:validate
           npm run test:chum-index
           npm run test:chum-answers
