@@ -1,0 +1,136 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Evercraft Forge Operator Public API",
+    "version": "2026-09-24",
+    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft machine discovery."
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Verify Forge Operator health",
+        "responses": {
+          "200": {
+            "description": "Service health"
+          }
+        }
+      }
+    },
+    "/api/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "summary": "Read Forge Operator capabilities and discovery links",
+        "responses": {
+          "200": {
+            "description": "Capability document"
+          }
+        }
+      }
+    },
+    "/api/discovery": {
+      "get": {
+        "operationId": "getDiscovery",
+        "summary": "Read the Evercraft machine-discovery front door",
+        "responses": {
+          "200": {
+            "description": "Discovery entrypoints and commerce boundary"
+          }
+        }
+      }
+    },
+    "/api/commercial": {
+      "get": {
+        "operationId": "getCommercialState",
+        "summary": "Inspect current commercial availability without creating an obligation",
+        "responses": {
+          "200": {
+            "description": "Commercial state"
+          }
+        }
+      }
+    },
+    "/api/forge": {
+      "post": {
+        "operationId": "createForgeReport",
+        "summary": "Generate a bounded operations diagnosis and execution plan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "businessProblem",
+                  "desiredOutcome"
+                ],
+                "properties": {
+                  "businessProblem": {
+                    "type": "string"
+                  },
+                  "desiredOutcome": {
+                    "type": "string"
+                  },
+                  "businessContext": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Forge report"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "429": {
+            "description": "Rate limited"
+          }
+        }
+      }
+    },
+    "/api/resolve/media-overflow": {
+      "post": {
+        "operationId": "resolveMediaOverflow",
+        "summary": "Resolve a video/audio processing-limit handoff",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mediaType": {
+                    "type": "string",
+                    "enum": [
+                      "video",
+                      "audio",
+                      "media"
+                    ]
+                  },
+                  "assistantCanFullyProcess": {
+                    "type": "boolean"
+                  },
+                  "failureCode": {
+                    "type": "string"
+                  },
+                  "failureReason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Overflow routing decision"
+          }
+        }
+      }
+    }
+  }
+}
