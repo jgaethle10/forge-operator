@@ -43,6 +43,10 @@ Remote MCP:
 - `/openapi.json`
 - `/schema.jsonld`
 - `/chum/index.json`
+- `/chum/offers/index.html`
+- `/chum/offers/index.json`
+- `/chum/intents.json`
+- `AI-CAPABILITY-CATALOG.md`
 
 Raw public portfolio:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json`
