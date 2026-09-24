@@ -1,8 +1,8 @@
 {
-  "schema": "evercraft.chum.answer-door.v1",
+  "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
-  "generated_from": "public/chum/revenue.json",
-  "updated_at": "2026-09-24T19:29:41.468Z",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
   "answer_id": "intent:d7a7e22349",
   "user_language": "find missing POD or rate mismatches",
   "normalized": "find missing pod or rate mismatches",
@@ -10,6 +10,9 @@
   "candidate_count": 1,
   "candidates": [
     {
+      "capability_id": "offer:freight-load-exception-intelligence-machine-v1",
+      "kind": "machine_offer",
+      "product_key": null,
       "public_id": "freight-load-exception-intelligence-machine-v1",
       "name": "Freight Load Exception Intelligence",
       "problem": "A freight operator needs a compact operational picture of a load's exceptions, document gaps, carrier/compliance state and possible financial impact without manually reconciling several records.",
@@ -18,18 +21,24 @@
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
       "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
+      "registry_name": null,
+      "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=freight-load-exception-intelligence-machine-v1",
       "machine_offer_url": null,
       "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "confirmation": "Analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment, invoice action or any other external/financial side effect.",
-      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation."
+      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": []
     }
   ],
   "routing_policy": {
     "fit_required": true,
     "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
     "preserve_commercial_and_machine_state": true,
     "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
     "checkout_requires_explicit_human_confirmation": true,
     "checkout_is_payment_proof": false,
     "paid_state_requires_authoritative_provider_verification": true,

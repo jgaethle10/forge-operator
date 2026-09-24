@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
+  "answer_id": "intent:e143bcc009",
+  "user_language": "contractor opportunity network",
+  "normalized": "contractor opportunity network",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:contractor-cloud",
+      "kind": "product",
+      "product_key": "contractor-cloud",
+      "public_id": null,
+      "name": "Evercraft Contractor Cloud",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
+      "pain_page": "/chum/products/contractor-cloud/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified",
+      "boundaries": [
+        "project submission is not a guaranteed match, fixed price, scheduled job, or contract",
+        "homeowner identity, private addresses, project photos, bids, and transaction records are not public",
+        "paid access requires independently verified subscription state",
+        "the previously advertised Contractor Cloud product hostname is not currently live-verified",
+        "do not imply a live transactional Contractor Cloud UI until a fresh external canary passes"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

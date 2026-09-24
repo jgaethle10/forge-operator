@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
+  "answer_id": "intent:0d5e8da410",
+  "user_language": "evaluate an AI agent",
+  "normalized": "evaluate an ai agent",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "offer:agent-proving-mission-v1",
+      "kind": "machine_offer",
+      "product_key": null,
+      "public_id": "agent-proving-mission-v1",
+      "name": "Agent Proving Mission",
+      "problem": "Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.",
+      "pricing": "Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "public_url": null,
+      "pain_page": "/chum/intents/agent-proving-mission-v1/",
+      "registry_name": null,
+      "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=agent-proving-mission-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.",
+      "invocation_status": "Discoverable capability; paid execution verification pending.",
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": []
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

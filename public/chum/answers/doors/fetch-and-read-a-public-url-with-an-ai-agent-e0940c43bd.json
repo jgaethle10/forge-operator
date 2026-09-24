@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
+  "answer_id": "intent:e0940c43bd",
+  "user_language": "fetch and read a public URL with an AI agent",
+  "normalized": "fetch and read a public url with an ai agent",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:evercraft-web",
+      "kind": "product",
+      "product_key": "evercraft-web",
+      "public_id": null,
+      "name": "Evercraft Web",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
+      "pain_page": "/chum/products/evercraft-web/",
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "direct_mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "No payment obligation is created by discovery.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
+      "boundaries": [
+        "registry publication is not proof that the remote MCP successfully executes Fetch",
+        "Evercraft Fetch must not be described as production-live until its external canary succeeds",
+        "Evercraft Search remains held until independently verified",
+        "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
+        "public discovery does not expose private Systemia topology or credentials",
+        "payment does not expand permissions",
+        "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
+        "search and browser automation remain held unless current runtime evidence says otherwise"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

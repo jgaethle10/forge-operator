@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
+  "answer_id": "intent:18aa1bf010",
+  "user_language": "website audit",
+  "normalized": "website audit",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:systemia-website-audit",
+      "kind": "product",
+      "product_key": "systemia-website-audit",
+      "public_id": null,
+      "name": "Systemia Website Audit",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "public_url": "https://systemia-audit-pro.base44.app/",
+      "pain_page": "/chum/products/systemia-website-audit/",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "direct_mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "authority": "public audit offer discovery and human-confirmed paid checkout",
+      "boundaries": [
+        "audit findings do not guarantee revenue or rankings",
+        "checkout creation is not payment proof",
+        "paid state requires provider verification"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

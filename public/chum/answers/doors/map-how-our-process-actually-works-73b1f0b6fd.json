@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
+  "answer_id": "intent:73b1f0b6fd",
+  "user_language": "map how our process actually works",
+  "normalized": "map how our process actually works",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "offer:buildflow-process-audit-machine-v1",
+      "kind": "machine_offer",
+      "product_key": null,
+      "public_id": "buildflow-process-audit-machine-v1",
+      "name": "Business Process Pattern Audit",
+      "problem": "A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.",
+      "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
+      "commercial_state": "verification_required",
+      "machine_state": "human_auth_handoff",
+      "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+      "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
+      "registry_name": null,
+      "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-process-audit-machine-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.",
+      "invocation_status": "SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.",
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": []
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

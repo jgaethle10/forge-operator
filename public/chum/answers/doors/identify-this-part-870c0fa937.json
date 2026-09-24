@@ -1,8 +1,8 @@
 {
-  "schema": "evercraft.chum.answer-door.v1",
+  "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
-  "generated_from": "public/chum/revenue.json",
-  "updated_at": "2026-09-24T19:29:41.468Z",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
   "answer_id": "intent:870c0fa937",
   "user_language": "identify this part",
   "normalized": "identify this part",
@@ -10,6 +10,9 @@
   "candidate_count": 1,
   "candidates": [
     {
+      "capability_id": "offer:findmypart-paid-hunt-v1",
+      "kind": "machine_offer",
+      "product_key": null,
       "public_id": "findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
       "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
@@ -18,18 +21,24 @@
       "machine_state": "payment_ready",
       "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+      "registry_name": null,
+      "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
       "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1",
       "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
-      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification."
+      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": []
     }
   ],
   "routing_policy": {
     "fit_required": true,
     "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
     "preserve_commercial_and_machine_state": true,
     "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
     "checkout_requires_explicit_human_confirmation": true,
     "checkout_is_payment_proof": false,
     "paid_state_requires_authoritative_provider_verification": true,

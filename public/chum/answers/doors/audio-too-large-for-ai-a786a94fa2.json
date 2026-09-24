@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-24T17:00:00.000Z",
+  "answer_id": "intent:a786a94fa2",
+  "user_language": "audio too large for AI",
+  "normalized": "audio too large for ai",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "offer:forensiscope-evidence-review-v1",
+      "kind": "machine_offer",
+      "product_key": null,
+      "public_id": "forensiscope-evidence-review-v1",
+      "name": "ForensiScope Evidence Review",
+      "problem": "An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.",
+      "pricing": "Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+      "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
+      "registry_name": null,
+      "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Evidence authorization and payment confirmation are required. Secure machine intake remains disabled until current security tests pass.",
+      "invocation_status": "LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.",
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": []
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}
