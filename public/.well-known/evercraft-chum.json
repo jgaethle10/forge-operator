@@ -44,7 +44,12 @@
     "handoff_attribution": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json",
     "answer_graph": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json",
     "answer_graph_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.txt",
-    "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery"
+    "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "live_machine_catalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
+    "live_pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
+    "live_pain_index_llms": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=llms",
+    "live_pain_index_sitemap": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=sitemap",
+    "official_mcp_registry_search": "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.jgaethle10&version=latest"
   },
   "verified_crawler_controls": [
     {
