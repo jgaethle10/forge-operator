@@ -9,6 +9,7 @@ const timeoutMs = 12000;
 const conformance = readJson('conformance/products.json');
 const directory = readJson('public/.well-known/evercraft-products.json');
 const catalog = readJson('registry/catalog.json');
+const offerCatalog = readJson('public/.well-known/evercraft-offers.json');
 
 const readJsonDir = (dir) => {
   if (!fs.existsSync(dir)) return [];
@@ -33,10 +34,12 @@ const publicByKey = new Map((directory.products || []).map((p) => [p.product_key
 const catalogByKey = new Map(
   (catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p])
 );
+const offersByKey = new Map((offerCatalog.offers || []).map((p) => [p.product_key, p]));
 const portfolioKeys = Array.from(new Set([
   ...conformanceByKey.keys(),
   ...publicByKey.keys(),
-  ...catalogByKey.keys()
+  ...catalogByKey.keys(),
+  ...offersByKey.keys()
 ])).sort();
 
 const liveProviderProbe = fs.existsSync('artifacts/chum/provider-probe-latest.json')
@@ -148,6 +151,7 @@ function readiness({ product, publicEntry, catalogEntry, checks }) {
 async function inspectProduct(product) {
   const publicEntry = publicByKey.get(product.product_key);
   const catalogEntry = catalogByKey.get(product.product_key);
+  const commercialEntry = offersByKey.get(product.product_key);
   const registryReceipts = registryReceiptsByKey.get(product.product_key) || [];
   const providerObservations = [
     ...(providerObservationsByKey.get(product.product_key) || []),
@@ -172,6 +176,15 @@ async function inspectProduct(product) {
     canonical_url: product.canonical_url,
     intents: publicEntry?.intents || [],
     mcp: catalogEntry?.mcp || null,
+    commercial: commercialEntry ? {
+      state: commercialEntry.commercial_state,
+      machine_state: commercialEntry.machine_state,
+      pricing: commercialEntry.pricing || null,
+      offers: commercialEntry.offers || [],
+      public_url: commercialEntry.public_url || null,
+      confirmation: commercialEntry.confirmation || null,
+      caution: commercialEntry.caution || null
+    } : { state:'not_in_current_sell_now_catalog', machine_state:null, pricing:null, offers:[] },
     checks,
     readiness: readiness({ product, publicEntry, catalogEntry, checks }),
     distribution_state: {
@@ -248,6 +261,9 @@ const allChecks = products.flatMap((p) =>
 const checked = allChecks.filter((x) => x.checked);
 const valid = checked.filter((x) => x.valid === true);
 const invalid = checked.filter((x) => x.valid === false);
+const sellNow = [...offersByKey.values()];
+const paymentReady = sellNow.filter((x) => String(x.machine_state || '').startsWith('payment_ready'));
+const quoteReady = sellNow.filter((x) => String(x.machine_state || '') === 'quote_ready');
 
 const receipt = {
   schema: 'evercraft.chum.receipt.v2',
@@ -267,7 +283,10 @@ const receipt = {
     declared_surfaces: allChecks.length,
     checked_surfaces: checked.length,
     valid_surfaces: valid.length,
-    invalid_surfaces: invalid.length
+    invalid_surfaces: invalid.length,
+    sell_now_offers: sellNow.length,
+    payment_ready_offers: paymentReady.length,
+    quote_ready_offers: quoteReady.length
   },
   provider_targets: providerTargets,
   products

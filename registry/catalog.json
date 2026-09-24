@@ -142,6 +142,22 @@
       ],
       "tool": "prepare_rewards_partner_enrollment",
       "product": "Evercraft Rewards"
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/roasted",
+      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "triggers": [
+        "roast my bio",
+        "roast my resume",
+        "tear apart this pitch",
+        "be brutally honest about this copy",
+        "roast my linkedin headline",
+        "roast this post",
+        "pressure test this copy"
+      ]
     }
   ],
   "payment_boundary": {
