@@ -46,6 +46,15 @@ Use the Pain Index when the user describes a problem without naming Evercraft. I
 Full portfolio discovery:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt
 
+All public Machine Commerce capabilities:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities.json
+
+SELL NOW directory:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.txt
+
+Machine-readable SELL NOW offers:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json
+
 AI discovery watershed:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json
 
