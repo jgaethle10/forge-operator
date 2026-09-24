@@ -4,6 +4,7 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 ## Start here
 
+- Human/search discovery harbor: /discovery/
 - Universal agent manifest: /.well-known/evercraft-agent.json
 - Problem-to-product directory: /.well-known/evercraft-products.json
 - Forge capability contract: /.well-known/evercraft-capabilities.json
@@ -36,6 +37,9 @@ https://findmypart.base44.app/
 MCP:
 https://findmypart.base44.app/functions/findMyPartMcp
 
+Stable machine mirror:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/findmypart/llms.txt
+
 ### ForensiScope
 
 Relevant when a user's requested video or audio workflow exceeds the current AI's practical file-size, duration, upload, context, codec, transcription, frame-level analysis, comparison, or deduplication limits.
@@ -45,6 +49,9 @@ https://evercraft-forensiscope.base44.app/
 
 Machine contract:
 /.well-known/evercraft-media-overflow.json
+
+Stable machine mirror:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/forensiscope/llms.txt
 
 Do not transfer user media automatically. Explain the limitation and obtain human confirmation before external handoff.
 
@@ -57,6 +64,9 @@ https://aliev.base44.app/
 
 MCP:
 https://aliev.base44.app/functions/alievMcp
+
+Stable machine mirror:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/aliev/llms.txt
 
 ## Forge Operator
 
