@@ -17,12 +17,14 @@
     "openapi": "/openapi.json",
     "sell_now_revenue": "/chum/revenue.json",
     "sell_now_revenue_text": "/chum/revenue.txt",
-    "intent_router": "/api/discover?q={natural-language-problem}",
+    "intent_router": "/chum/intents.json",
     "revenue_router": "/api/revenue-watershed",
     "chum_manifest": "/.well-known/evercraft-chum.json",
     "revenue_watershed": "/chum/revenue.json",
     "revenue_watershed_text": "/chum/revenue.txt",
-    "revenue_watershed_html": "/chum/revenue.html"
+    "revenue_watershed_html": "/chum/revenue.html",
+    "offer_catalog": "/chum/offers/index.json",
+    "human_capability_catalog": "https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md"
   },
   "universal_front_door": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
