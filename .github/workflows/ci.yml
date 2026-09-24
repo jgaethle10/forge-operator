@@ -38,6 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           npm run chum:revenue
+          npm run test:chum-surfaces
           test -f public/chum/intents/forensiscope-evidence-review-v1/offer.json
           node - <<'NODE'
           const fs = require('fs');
@@ -90,9 +91,16 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/forensiscope/llms.txt > /tmp/forensiscope-llms.txt
           curl --fail --silent http://127.0.0.1:3000/forensiscope/discovery.json > /tmp/forensiscope-discovery.json
           curl --fail --silent http://127.0.0.1:3000/chum/intents/forensiscope-evidence-review-v1/offer.json > /tmp/forensiscope-offer.json
+          curl --fail --silent http://127.0.0.1:3000/chum/ > /tmp/chum-index.html
+          curl --fail --silent http://127.0.0.1:3000/chum/products/forensiscope/ > /tmp/chum-forensiscope.html
+          curl --fail --silent http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
+          curl --fail --silent -D /tmp/root-headers.txt -o /dev/null http://127.0.0.1:3000/
           curl --fail --silent --get \
             --data-urlencode "q=I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots" \
             http://127.0.0.1:3000/api/discover > /tmp/forensiscope-route.json
+          curl --fail --silent -H 'content-type: application/json' \
+            --data '{"problem":"we need an ERP but cannot survive a huge implementation and want to modernize without replacing everything","limit":3}' \
+            http://127.0.0.1:3000/api/discover > /tmp/buildflow-route.json
 
           node - <<'NODE'
           const fs = require('fs');
@@ -103,6 +111,11 @@ jobs:
           const forensiscopeOffer = JSON.parse(fs.readFileSync('/tmp/forensiscope-offer.json','utf8'));
           const forensiscopeRoute = JSON.parse(fs.readFileSync('/tmp/forensiscope-route.json','utf8'));
           const forensiscopeLlms = fs.readFileSync('/tmp/forensiscope-llms.txt','utf8');
+          const buildflowRoute = JSON.parse(fs.readFileSync('/tmp/buildflow-route.json','utf8'));
+          const chumIndex = fs.readFileSync('/tmp/chum-index.html','utf8');
+          const chumForensiscope = fs.readFileSync('/tmp/chum-forensiscope.html','utf8');
+          const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
+          const rootHeaders = fs.readFileSync('/tmp/root-headers.txt','utf8');
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
@@ -116,6 +129,13 @@ jobs:
           }
           if (forensiscopeOffer.commercial_state !== 'sell_now' && forensiscopeOffer.machine_offer_url !== null) {
             throw new Error('Verification-gated ForensiScope exposed checkout');
+          }
+          if (!chumIndex.includes('Evercraft')) throw new Error('CHUM HTML directory missing');
+          if (!chumForensiscope.includes('ForensiScope')) throw new Error('CHUM product HTML missing');
+          if (!sitemap.includes('<loc>http://127.0.0.1:3000/')) throw new Error('Runtime sitemap must use absolute URLs');
+          if (!/^link:.*\/llms\.txt/im.test(rootHeaders)) throw new Error('Public root missing LLM discovery Link header');
+          if (buildflowRoute.matches?.[0]?.public_id !== 'buildflow-enterprise-ops-router-v1') {
+            throw new Error('Brand-blind ERP modernization query did not resolve to BuildFlow first');
           }
           NODE
 
