@@ -7,6 +7,7 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { rankOffers } from './systemia/chum/discovery-router.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
+import { absolutizeSitemap, robotsWithSitemap } from './systemia/chum/public-doorways.mjs';
 
 dotenv.config();
 
@@ -99,6 +100,19 @@ app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+function requestOrigin(req: Request): string {
+  const forwardedProto = String(req.get('x-forwarded-proto') || '').split(',')[0].trim();
+  const protocol = forwardedProto || req.protocol || 'https';
+  const host = String(req.get('host') || '').trim();
+  return host ? `${protocol}://${host}` : '';
+}
+
+function loadPublicText(relativePath: string): string {
+  const clean = String(relativePath || '').replace(/^\/+/, '');
+  const file = path.resolve(__dirname, isProd ? `dist/${clean}` : `public/${clean}`);
+  return fs.readFileSync(file, 'utf8');
+}
+
 function loadPublicMachineCatalog(): any {
   const file = path.resolve(
     __dirname,
@@ -159,6 +173,37 @@ async function persistChumAttributionEvent(event: unknown) {
 }
 
 
+app.get('/robots.txt', (req: Request, res: Response) => {
+  try {
+    const origin = requestOrigin(req);
+    res.type('text/plain').send(robotsWithSitemap(loadPublicText('robots.txt'), origin));
+  } catch (error: any) {
+    res.status(503).type('text/plain').send(`Public crawler policy unavailable: ${error?.message || String(error)}`);
+  }
+});
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  try {
+    const origin = requestOrigin(req);
+    res.type('application/xml').send(absolutizeSitemap(loadPublicText('sitemap.xml'), origin));
+  } catch (error: any) {
+    res.status(503).type('text/plain').send(`Public sitemap unavailable: ${error?.message || String(error)}`);
+  }
+});
+
+app.get('/ai', (_req: Request, res: Response) => {
+  res.redirect(308, '/chum/');
+});
+
+app.get('/ai/products/:productKey', (req: Request, res: Response) => {
+  const productKey = encodeURIComponent(String(req.params.productKey || '').trim());
+  if (!productKey) {
+    res.redirect(308, '/chum/');
+    return;
+  }
+  res.redirect(308, `/chum/products/${productKey}/`);
+});
+
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     ok: true,
@@ -183,6 +228,10 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',
+      agentManifest: '/.well-known/evercraft-agent.json',
+      aiDirectory: '/ai',
+      sitemap: '/sitemap.xml',
+      robots: '/robots.txt',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
       intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
