@@ -3,6 +3,8 @@ name: AI doorway canary
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - "conformance/**"
       - "registry/**"
@@ -15,6 +17,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ai-doorway-canary-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   probe:
