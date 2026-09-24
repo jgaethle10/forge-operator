@@ -1,6 +1,15 @@
 import fs from 'node:fs';
 
 const gateway = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const edgeHost = 'findmypart.base44.app';
+const edgeKeyLocation = 'https://findmypart.base44.app/functions/indexNowKey';
+const edgeKey = '9f7c2a4e8b1d6f3a5c0e7b9d2f4a6c8e';
+const edgeUrls = [
+  'https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp',
+  'https://findmypart.base44.app/functions/evercraftMachineCommerceMcp',
+  'https://findmypart.base44.app/functions/evercraftCapabilityA2A',
+  'https://findmypart.base44.app/functions/evercraftUniversalAgentGateway'
+];
 const artifactsDir = 'artifacts/chum';
 fs.mkdirSync(artifactsDir, { recursive: true });
 
@@ -13,7 +22,9 @@ const receipt = {
   capability_pages: 0,
   sell_now_pages: 0,
   urls: [],
-  preflight_failed: []
+  preflight_failed: [],
+  edge_submitted: 0,
+  edge_http_status: null
 };
 
 function writeReceipt() {
@@ -27,6 +38,8 @@ function writeReceipt() {
     'Capability service pages: ' + receipt.capability_pages,
     'Sell-now offer pages: ' + receipt.sell_now_pages,
     receipt.http_status ? 'IndexNow HTTP: ' + receipt.http_status : null,
+    receipt.edge_http_status ? 'Edge IndexNow HTTP: ' + receipt.edge_http_status : null,
+    'Edge protocol URLs: ' + receipt.edge_submitted,
     receipt.error ? 'Error: ' + receipt.error : null,
     '',
     '## Submitted surfaces',
@@ -130,6 +143,27 @@ try {
   receipt.http_status = response.status;
   receipt.submitted = urlList.length;
   if (!response.ok) throw new Error('IndexNow HTTP ' + response.status + ': ' + await response.text());
+  const edgeKeyResponse = await fetch(edgeKeyLocation, {
+    headers: { 'user-agent': 'Evercraft-CHUM/0.4.1 (+edge-indexnow-key-check)' }
+  });
+  if (!edgeKeyResponse.ok) throw new Error('Edge IndexNow key endpoint HTTP ' + edgeKeyResponse.status);
+  if ((await edgeKeyResponse.text()).trim() !== edgeKey) throw new Error('Edge IndexNow key mismatch');
+
+  const edgeResponse = await fetch('https://api.indexnow.org/indexnow', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json; charset=utf-8' },
+    body: JSON.stringify({
+      host: edgeHost,
+      key: edgeKey,
+      keyLocation: edgeKeyLocation,
+      urlList: edgeUrls
+    })
+  });
+  receipt.edge_http_status = edgeResponse.status;
+  receipt.edge_submitted = edgeUrls.length;
+  receipt.urls = [...new Set([...receipt.urls, ...edgeUrls])];
+  if (!edgeResponse.ok) throw new Error('Edge IndexNow HTTP ' + edgeResponse.status + ': ' + await edgeResponse.text());
+
   receipt.status = 'accepted';
   writeReceipt();
   console.log(JSON.stringify({
@@ -138,7 +172,9 @@ try {
     submitted: urlList.length,
     capability_pages: receipt.capability_pages,
     sell_now_pages: receipt.sell_now_pages,
-    preflight_failed: receipt.preflight_failed.length
+    preflight_failed: receipt.preflight_failed.length,
+    edge_submitted: receipt.edge_submitted,
+    edge_http_status: receipt.edge_http_status
   }));
 } catch (error) {
   receipt.status = 'failed';
