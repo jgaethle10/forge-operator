@@ -86,6 +86,9 @@ jobs:
       - name: Canary live MCP and Official Registry doors
         run: npm run chum:mcp
 
+      - name: Reconcile AI distribution and marketplace doors
+        run: npm run chum:distribution
+
       - name: Run authorized brand-blind provider probes
         env:
           CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
@@ -112,7 +115,7 @@ jobs:
             echo
             echo "Static doorway step: ${{ steps.static-doorways.outcome }}"
             echo
-            for FILE in artifacts/chum/mcp-canary-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/mcp-canary-latest.md artifacts/chum/distribution-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
