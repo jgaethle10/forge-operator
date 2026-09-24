@@ -14,6 +14,14 @@
     "audit my resume"
   ],
   "pricing": "Free core is available. No premium machine-lane price is approved yet.",
+  "offers": [
+    {
+      "name": "Resume + Job Fit Audit",
+      "state": "free_core",
+      "price": "$0 core"
+    }
+  ],
+  "entry_paid_offer": null,
   "commercial_state": "verify",
   "machine_state": "discovery_only",
   "public_url": "https://evercraft-career-command.base44.app/",

@@ -20,6 +20,29 @@
     "visitors are not turning into leads"
   ],
   "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+  "offers": [
+    {
+      "name": "Free Preview",
+      "price": "$0",
+      "billing": "free"
+    },
+    {
+      "name": "Complete Audit",
+      "price": "$500",
+      "billing": "one_time"
+    },
+    {
+      "name": "Audit + Patch",
+      "price": "$1,200",
+      "billing": "one_time"
+    }
+  ],
+  "entry_paid_offer": {
+    "name": "Complete Audit",
+    "price": "$500",
+    "billing": "one_time",
+    "price_usd_normalized": 500
+  },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",

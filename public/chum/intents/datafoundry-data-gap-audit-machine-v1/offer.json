@@ -13,6 +13,8 @@
     "design a plan to close these data gaps"
   ],
   "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",

@@ -13,6 +13,8 @@
     "country benchmark with sources"
   ],
   "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",

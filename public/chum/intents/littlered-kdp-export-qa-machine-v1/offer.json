@@ -12,6 +12,8 @@
     "check page count and cover DPI"
   ],
   "pricing": "No approved external machine price/payment path was found. Do not auto-quote.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",

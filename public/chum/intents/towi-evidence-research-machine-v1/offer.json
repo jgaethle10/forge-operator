@@ -13,6 +13,8 @@
     "give me a sourced validation memo"
   ],
   "pricing": "No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",

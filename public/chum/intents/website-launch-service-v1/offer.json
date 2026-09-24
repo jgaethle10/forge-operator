@@ -12,6 +12,29 @@
     "handle my website for me"
   ],
   "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+  "offers": [
+    {
+      "name": "Human-Finished Pro Site",
+      "price": "$500",
+      "billing": "one_time"
+    },
+    {
+      "name": "Premium Custom Build",
+      "price": "$999",
+      "billing": "one_time"
+    },
+    {
+      "name": "Total Business Launch",
+      "price": "$1,999",
+      "billing": "one_time"
+    }
+  ],
+  "entry_paid_offer": {
+    "name": "Human-Finished Pro Site",
+    "price": "$500",
+    "billing": "one_time",
+    "price_usd_normalized": 500
+  },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",

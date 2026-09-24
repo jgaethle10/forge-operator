@@ -15,6 +15,23 @@
     "what am I missing before I seek funding"
   ],
   "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
+  "offers": [
+    {
+      "name": "Founding Capital Fit Sprint",
+      "price": "$49",
+      "billing": "one_time",
+      "limit": "first 20 paid cases",
+      "upgrade_credit": "$49"
+    }
+  ],
+  "entry_paid_offer": {
+    "name": "Founding Capital Fit Sprint",
+    "price": "$49",
+    "billing": "one_time",
+    "limit": "first 20 paid cases",
+    "upgrade_credit": "$49",
+    "price_usd_normalized": 49
+  },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",

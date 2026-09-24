@@ -11,6 +11,8 @@
     "give this approved execution more time"
   ],
   "pricing": "Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "invocation_ready",
   "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",

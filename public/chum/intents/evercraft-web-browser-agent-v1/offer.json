@@ -20,6 +20,8 @@
     "give my AI live web access"
   ],
   "pricing": "No public machine price is advertised until runtime metering and production verification are complete.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "discovery_only",
   "machine_state": "specialist_discovery_ready_runtime_gated",
   "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",

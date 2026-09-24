@@ -19,6 +19,16 @@
     "where is Evercraft Network verified"
   ],
   "pricing": "Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.",
+  "offers": [
+    {
+      "name": "Evercraft Network Founding Membership",
+      "display_price": "$9.99/month",
+      "device_limit": 5,
+      "state": "reservation_interest_only",
+      "billing_live": false
+    }
+  ],
+  "entry_paid_offer": null,
   "commercial_state": "discovery_only",
   "machine_state": "human_handoff_only",
   "public_url": "https://network-control.base44.app/join",

@@ -21,6 +21,8 @@
     "what Raven Nexus capability do I need"
   ],
   "pricing": "Varies by matched modular capability. The live pain router is the authority for current availability, offer and checkout state; do not invent a price.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "invocation_ready",
   "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",

@@ -13,6 +13,8 @@
     "find talent by demonstrated ability"
   ],
   "pricing": "Current organization hypothesis $500-$3,000/month; not auto-quotable yet.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-proof-portal-v1",

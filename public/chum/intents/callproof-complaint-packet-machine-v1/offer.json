@@ -13,6 +13,27 @@
     "turn my call log into a complaint packet"
   ],
   "pricing": "Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.",
+  "offers": [
+    {
+      "name": "Stop-The-Calls Packet",
+      "display_price": "$19",
+      "billing": "one_time",
+      "verification": "provider price authoritative"
+    },
+    {
+      "name": "Vault",
+      "display_price": "$7.99/month",
+      "billing": "subscription",
+      "verification": "provider price authoritative"
+    },
+    {
+      "name": "Pro",
+      "display_price": "$29/month",
+      "billing": "subscription",
+      "verification": "provider price authoritative"
+    }
+  ],
+  "entry_paid_offer": null,
   "commercial_state": "verify",
   "machine_state": "human_auth_handoff",
   "public_url": "https://call-proof-vault.base44.app/",

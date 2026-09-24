@@ -12,6 +12,8 @@
     "EV charging diligence"
   ],
   "pricing": "Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",

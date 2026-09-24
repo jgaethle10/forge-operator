@@ -13,6 +13,8 @@
     "plot verified infrastructure coverage"
   ],
   "pricing": "No approved machine price was found. Do not auto-quote.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",

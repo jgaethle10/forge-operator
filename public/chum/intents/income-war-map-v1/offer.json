@@ -14,6 +14,8 @@
     "how can I increase my income"
   ],
   "pricing": "Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "hold",
   "machine_state": "discovery_only",
   "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=income-war-map-v1",

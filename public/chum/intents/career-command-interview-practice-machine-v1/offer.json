@@ -14,6 +14,28 @@
     "behavioral interview practice"
   ],
   "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+  "offers": [
+    {
+      "name": "Basic Interview Practice",
+      "price": "$0",
+      "billing": "free_core"
+    },
+    {
+      "name": "Evercraft Interview Sprint",
+      "price": "$19",
+      "billing": "one_time",
+      "access": "7 days",
+      "premium_action_limit": 25
+    }
+  ],
+  "entry_paid_offer": {
+    "name": "Evercraft Interview Sprint",
+    "price": "$19",
+    "billing": "one_time",
+    "access": "7 days",
+    "premium_action_limit": 25,
+    "price_usd_normalized": 19
+  },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",

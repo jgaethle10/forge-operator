@@ -12,6 +12,29 @@
     "find a donor or salvage part"
   ],
   "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+  "offers": [
+    {
+      "name": "Quick Hunt",
+      "price_usd": 19,
+      "billing": "one_time"
+    },
+    {
+      "name": "Deep Hunt",
+      "price_usd": 49,
+      "billing": "one_time"
+    },
+    {
+      "name": "Rescue Hunt",
+      "price_usd": 99,
+      "billing": "one_time"
+    }
+  ],
+  "entry_paid_offer": {
+    "name": "Quick Hunt",
+    "price_usd": 19,
+    "billing": "one_time",
+    "price_usd_normalized": 19
+  },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",

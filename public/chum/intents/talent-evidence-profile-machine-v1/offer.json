@@ -13,6 +13,8 @@
     "map this person's capabilities to opportunities"
   ],
   "pricing": "No approved machine price/payment path was verified. Do not auto-quote.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",

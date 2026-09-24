@@ -13,6 +13,8 @@
     "what recoverable charges or detention issues exist"
   ],
   "pricing": "No approved machine price or payment path was verified. Do not auto-quote.",
+  "offers": [],
+  "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
   "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",

@@ -61,6 +61,13 @@
           "billing": "subscription"
         }
       ],
+      "entry_paid_offer": {
+        "offer_key": "opportunity_pack_250",
+        "name": "AliEV Qualified Opportunity Pack · Pilot",
+        "price": "$250",
+        "billing": "one_time",
+        "price_usd_normalized": 250
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready_human_confirmation",
       "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
@@ -102,6 +109,14 @@
           "premium_action_limit": 25
         }
       ],
+      "entry_paid_offer": {
+        "name": "Evercraft Interview Sprint",
+        "price": "$19",
+        "billing": "one_time",
+        "access": "7 days",
+        "premium_action_limit": 25,
+        "price_usd_normalized": 19
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
@@ -145,6 +160,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Event Boost",
+        "price": "$49",
+        "billing": "one_time",
+        "price_usd_normalized": 49
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
@@ -182,6 +203,14 @@
           "upgrade_credit": "$49"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Founding Capital Fit Sprint",
+        "price": "$49",
+        "billing": "one_time",
+        "limit": "first 20 paid cases",
+        "upgrade_credit": "$49",
+        "price_usd_normalized": 49
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
@@ -214,6 +243,13 @@
           "checkout": "human_handoff"
         }
       ],
+      "entry_paid_offer": {
+        "name": "App Escape Audit",
+        "price": "$500",
+        "billing": "one_time",
+        "checkout": "human_handoff",
+        "price_usd_normalized": 500
+      },
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
@@ -256,6 +292,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Human-Finished Pro Site",
+        "price": "$500",
+        "billing": "one_time",
+        "price_usd_normalized": 500
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
@@ -293,6 +335,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "FAIE Signal Brief",
+        "price": "$250",
+        "billing": "one_time",
+        "price_usd_normalized": 250
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
@@ -335,6 +383,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Quick Hunt",
+        "price_usd": 19,
+        "billing": "one_time",
+        "price_usd_normalized": 19
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
@@ -372,6 +426,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Single Roast",
+        "price": "$0.99",
+        "billing": "one_time",
+        "price_usd_normalized": 0.99
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
@@ -404,6 +464,13 @@
           "checkout": "human_handoff"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Site-Survive Rapid Audit",
+        "price": "$250",
+        "billing": "one_time",
+        "checkout": "human_handoff",
+        "price_usd_normalized": 250
+      },
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
@@ -454,6 +521,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Complete Audit",
+        "price": "$500",
+        "billing": "one_time",
+        "price_usd_normalized": 500
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
@@ -482,6 +555,7 @@
       ],
       "pricing": "Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=agent-proving-mission-v1",
@@ -508,6 +582,7 @@
       ],
       "pricing": "Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ai-capability-install-v1",
@@ -563,6 +638,13 @@
           "billing": "subscription"
         }
       ],
+      "entry_paid_offer": {
+        "offer_key": "opportunity_pack_250",
+        "name": "AliEV Qualified Opportunity Pack · Pilot",
+        "price": "$250",
+        "billing": "one_time",
+        "price_usd_normalized": 250
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready_human_confirmation",
       "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
@@ -589,6 +671,7 @@
       ],
       "pricing": "No approved external machine price/payment path was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
@@ -616,6 +699,7 @@
       ],
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
@@ -644,6 +728,7 @@
       ],
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
@@ -671,6 +756,7 @@
       ],
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
@@ -699,6 +785,7 @@
       ],
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
@@ -726,6 +813,7 @@
       ],
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
@@ -755,6 +843,7 @@
       ],
       "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "human_auth_handoff",
       "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
@@ -801,6 +890,7 @@
           "verification": "provider price authoritative"
         }
       ],
+      "entry_paid_offer": null,
       "commercial_state": "verify",
       "machine_state": "human_auth_handoff",
       "public_url": "https://call-proof-vault.base44.app/",
@@ -828,6 +918,7 @@
       ],
       "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
@@ -869,6 +960,14 @@
           "premium_action_limit": 25
         }
       ],
+      "entry_paid_offer": {
+        "name": "Evercraft Interview Sprint",
+        "price": "$19",
+        "billing": "one_time",
+        "access": "7 days",
+        "premium_action_limit": 25,
+        "price_usd_normalized": 19
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
@@ -903,6 +1002,7 @@
           "price": "$0 core"
         }
       ],
+      "entry_paid_offer": null,
       "commercial_state": "verify",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-career-command.base44.app/",
@@ -929,6 +1029,7 @@
       ],
       "pricing": "Current hypothesis $250-$2,500 per brief; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=community-health-evidence-brief-v1",
@@ -956,6 +1057,7 @@
       ],
       "pricing": "Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=condition-desk-field-ops-v1",
@@ -983,6 +1085,7 @@
       ],
       "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
@@ -1026,6 +1129,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Event Boost",
+        "price": "$49",
+        "billing": "one_time",
+        "price_usd_normalized": 49
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
@@ -1051,6 +1160,7 @@
       ],
       "pricing": "Quote required until machine-lane pricing is approved.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "discovery_only",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1",
@@ -1088,6 +1198,14 @@
           "upgrade_credit": "$49"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Founding Capital Fit Sprint",
+        "price": "$49",
+        "billing": "one_time",
+        "limit": "first 20 paid cases",
+        "upgrade_credit": "$49",
+        "price_usd_normalized": 49
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
@@ -1120,6 +1238,13 @@
           "checkout": "human_handoff"
         }
       ],
+      "entry_paid_offer": {
+        "name": "App Escape Audit",
+        "price": "$500",
+        "billing": "one_time",
+        "checkout": "human_handoff",
+        "price_usd_normalized": 500
+      },
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
@@ -1161,6 +1286,7 @@
           "billing_live": false
         }
       ],
+      "entry_paid_offer": null,
       "commercial_state": "discovery_only",
       "machine_state": "human_handoff_only",
       "public_url": "https://network-control.base44.app/join",
@@ -1195,6 +1321,7 @@
       ],
       "pricing": "No public machine price is advertised until runtime metering and production verification are complete.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "discovery_only",
       "machine_state": "specialist_discovery_ready_runtime_gated",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
@@ -1237,6 +1364,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Human-Finished Pro Site",
+        "price": "$500",
+        "billing": "one_time",
+        "price_usd_normalized": 500
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
@@ -1264,6 +1397,7 @@
       ],
       "pricing": "No approved machine price/payment path was verified. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
@@ -1291,6 +1425,7 @@
       ],
       "pricing": "Current organization hypothesis $500-$3,000/month; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-proof-portal-v1",
@@ -1318,6 +1453,7 @@
       ],
       "pricing": "No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
@@ -1355,6 +1491,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "FAIE Signal Brief",
+        "price": "$250",
+        "billing": "one_time",
+        "price_usd_normalized": 250
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
@@ -1382,6 +1524,7 @@
       ],
       "pricing": "No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
@@ -1424,6 +1567,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Quick Hunt",
+        "price_usd": 19,
+        "billing": "one_time",
+        "price_usd_normalized": 19
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
@@ -1459,6 +1608,7 @@
       ],
       "pricing": "Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
@@ -1486,6 +1636,7 @@
       ],
       "pricing": "No approved machine price or payment path was verified. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
@@ -1514,6 +1665,7 @@
       ],
       "pricing": "Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "hold",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=income-war-map-v1",
@@ -1540,6 +1692,7 @@
       ],
       "pricing": "Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=large-document-corpus-review-v1",
@@ -1567,6 +1720,7 @@
       ],
       "pricing": "No approved machine price was found. Do not auto-quote.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
@@ -1602,6 +1756,7 @@
       ],
       "pricing": "Varies by matched modular capability. The live pain router is the authority for current availability, offer and checkout state; do not invent a price.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
       "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
@@ -1628,6 +1783,7 @@
       ],
       "pricing": "Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://findmypart.base44.app/",
@@ -1654,6 +1810,7 @@
       ],
       "pricing": "Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
@@ -1691,6 +1848,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Single Roast",
+        "price": "$0.99",
+        "billing": "one_time",
+        "price_usd_normalized": 0.99
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
@@ -1723,6 +1886,13 @@
           "checkout": "human_handoff"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Site-Survive Rapid Audit",
+        "price": "$250",
+        "billing": "one_time",
+        "checkout": "human_handoff",
+        "price_usd_normalized": 250
+      },
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
@@ -1773,6 +1943,12 @@
           "billing": "one_time"
         }
       ],
+      "entry_paid_offer": {
+        "name": "Complete Audit",
+        "price": "$500",
+        "billing": "one_time",
+        "price_usd_normalized": 500
+      },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
@@ -1798,6 +1974,7 @@
       ],
       "pricing": "Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.",
       "offers": [],
+      "entry_paid_offer": null,
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",

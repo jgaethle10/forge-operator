@@ -12,6 +12,24 @@
     "do a resilience investigation"
   ],
   "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
+  "offers": [
+    {
+      "name": "FAIE Signal Brief",
+      "price": "$250",
+      "billing": "one_time"
+    },
+    {
+      "name": "FAIE Proof Sprint",
+      "price": "$2,500",
+      "billing": "one_time"
+    }
+  ],
+  "entry_paid_offer": {
+    "name": "FAIE Signal Brief",
+    "price": "$250",
+    "billing": "one_time",
+    "price_usd_normalized": 250
+  },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
