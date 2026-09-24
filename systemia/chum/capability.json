@@ -3,9 +3,9 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "owner": "Systemia",
-  "status": "prototype_live_in_repo",
+  "status": "active_distribution_layer_in_repo",
   "contract": {
     "inputs": [
       "conformance/products.json",
@@ -17,6 +17,10 @@
       "surface-readiness receipts",
       "repair queue",
       "provider signal plan",
+      "crawlable pain-first public directory",
+      "public agent directory",
+      "unified discovery watershed map",
+      "Official MCP Registry publication manifests",
       "receipt-gated provider behavior state"
     ]
   },
@@ -35,7 +39,8 @@
   "evidence_state": {
     "public_surface_probes": "receipt_backed",
     "provider_pickup": "not_run_until_authorized_probe",
-    "conversion_attribution": "planned"
+    "conversion_attribution": "planned",
+    "official_mcp_registry": "receipt_backed_per_publication"
   },
   "compatibility": {
     "product_classes": [
