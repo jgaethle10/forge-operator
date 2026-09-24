@@ -13,6 +13,12 @@ const crawlerProfiles = [
     lane: 'search'
   },
   {
+    provider: 'chatgpt_user_fetch',
+    robots_token: 'ChatGPT-User',
+    user_agent: 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot',
+    lane: 'user_fetch'
+  },
+  {
     provider: 'openai_model_crawl',
     robots_token: 'GPTBot',
     user_agent: 'Mozilla/5.0 (compatible; GPTBot/1.4; +https://openai.com/gptbot)',
