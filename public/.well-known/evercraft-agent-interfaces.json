@@ -14,11 +14,14 @@
     },
     {
       "protocol": "A2A",
-      "state": "not_live",
-      "name": "Evercraft Machine Commerce A2A adapter",
-      "url": null,
-      "evidence": "No production A2A JSON-RPC endpoint has been live-verified. Do not infer A2A support from MCP availability."
+      "state": "release_candidate",
+      "name": "Evercraft CHUM Discovery Agent",
+      "url": "/a2a",
+      "evidence": "A2A v1 contract tests and production-container smoke are release gates. State remains release_candidate until the deployed public route is independently live-verified.",
+      "version": "1.0",
+      "binding": "JSONRPC",
+      "agent_card": "/.well-known/agent-card.json"
     }
   ],
-  "rule": "Advertise only interfaces whose protocol endpoint has been independently live-verified."
+  "rule": "Advertise interface state exactly: live only after independent public verification; release_candidate may be documented without claiming production availability."
 }
