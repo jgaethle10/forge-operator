@@ -47,8 +47,8 @@ jobs:
         run: |
           npm run chum:sync
           npm run chum:revenue
-          npm run chum:answers
           npm run chum:index
+          npm run chum:answers
           npm run chum:mirror
 
       - name: Publish changed CHUM mirrors
