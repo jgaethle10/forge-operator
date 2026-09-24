@@ -23,5 +23,6 @@
     "checkout creation is not payment proof",
     "paid state requires provider verification"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

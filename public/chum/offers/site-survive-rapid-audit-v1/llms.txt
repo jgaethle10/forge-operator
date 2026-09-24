@@ -1,0 +1,34 @@
+# Site-Survive Rapid Audit
+
+Evercraft public capability ID: site-survive-rapid-audit-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public handoff: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+
+## Use this when
+
+- business outage plan
+- internet outage continuity
+- site resilience audit
+- offline operations plan
+
+## Problem
+
+A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.
+
+## Inputs
+
+Site/business context, critical workflows and a realistic outage scenario.
+
+## Outputs
+
+One-site continuity map with the three largest failure points and a prioritized action plan.
+
+## Commercial truth
+
+- Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
+- Human UI required: no
+- Confirmation: Explicit buyer confirmation is required before payment or paid work.
+- Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

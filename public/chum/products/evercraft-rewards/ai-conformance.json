@@ -23,5 +23,6 @@
     "prepared enrollment creates no payment obligation",
     "directory publication and commercial activation require their own verified state"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

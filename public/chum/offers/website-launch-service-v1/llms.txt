@@ -1,0 +1,35 @@
+# Evercraft Website Launch Service
+
+Evercraft public capability ID: website-launch-service-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public handoff: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
+
+## Use this when
+
+- build me a business website
+- launch a website for my company
+- replace my bad website
+- make me a professional business site
+- handle my website for me
+
+## Problem
+
+A business needs a professional website built or upgraded without operating a site-builder interface.
+
+## Inputs
+
+Choose one verified service tier and provide customer name/email, business name and a useful project brief. Current website and phone are optional.
+
+## Outputs
+
+A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.
+
+## Commercial truth
+
+- Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
+- Human UI required: no
+- Confirmation: The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
+- Payment authority: Evercraft Website Service / Stripe, provider-verified
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

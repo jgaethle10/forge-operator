@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "findmypart-paid-hunt-v1",
+  "name": "FindMyPart Paid Part Hunt",
+  "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+  "intent_terms": [
+    "find a hard-to-source part",
+    "identify this part",
+    "find a discontinued part",
+    "source an obsolete component",
+    "find a donor or salvage part"
+  ],
+  "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
+  "outputs": "Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+  "offers": [
+    {
+      "name": "Quick Hunt",
+      "price_usd": 19,
+      "billing": "one_time"
+    },
+    {
+      "name": "Deep Hunt",
+      "price_usd": 49,
+      "billing": "one_time"
+    },
+    {
+      "name": "Rescue Hunt",
+      "price_usd": 99,
+      "billing": "one_time"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
+  "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+  "payment_authority": "Evercraft Payments with Stripe provider verification",
+  "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+  "catalog_version": "2026-09-23.6",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/findmypart-paid-hunt-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/findmypart-paid-hunt-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/findmypart-paid-hunt-v1/index.html"
+  }
+}

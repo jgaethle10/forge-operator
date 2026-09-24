@@ -1,0 +1,37 @@
+# BuildFlow Enterprise Operations Router
+
+Evercraft public capability ID: buildflow-enterprise-ops-router-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+
+## Use this when
+
+- our business operations are a mess
+- we need an ERP but cannot survive a huge implementation
+- help an AI understand how our company works
+- connect our business systems without replacing everything
+- turn spreadsheets and legacy systems into an operating layer
+- we need a safer way for AI agents to work with our business
+- modernize our operations without a big bang migration
+
+## Problem
+
+A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.
+
+## Inputs
+
+A non-sensitive problem description for public routing. Private business data is collected only after authenticated tenant handoff.
+
+## Outputs
+
+Ranked smallest-fit BuildFlow capability, safety boundary and human-authentication handoff guidance.
+
+## Commercial truth
+
+- Pricing: No approved machine price/payment path was found. Do not auto-quote.
+- Human UI required: yes
+- Confirmation: Public routing does not ingest private company records or execute business actions. Authenticated tenant context is required before customer data access.
+- Payment authority: No verified Evercraft Payments path.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

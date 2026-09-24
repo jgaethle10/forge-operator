@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.chum.product-discovery.v2",
+  "product_key": "evercraft-property-services",
+  "name": "Evercraft Property Services",
+  "class": "local_property_services_and_estimate_intake",
+  "canonical_url": "https://evercraftpropertyservices.com/",
+  "intents": [
+    "yard cleanup in the Yakima Valley",
+    "lawn care or recurring property maintenance",
+    "trimming or pruning",
+    "landscaping refresh",
+    "sprinkler repair startup or seasonal blowout",
+    "property cleanout or debris removal",
+    "rental turnover property support",
+    "get a property service estimate in Central Washington"
+  ],
+  "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "a quote request is intake only and does not create a contract or payment obligation",
+    "specific service availability at a property requires EPS review",
+    "current origin machine files are not treated as authoritative until release/readback converges",
+    "private customer, lead, uploaded media, admin and payment data remain outside public discovery"
+  ],
+  "commercial": {
+    "status": "human_quote_intake",
+    "offer": "Property-service estimate intake",
+    "pricing": "Quote required after scope review",
+    "payment_state": "No payment required for public estimate intake"
+  },
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-conformance.json"
+  }
+}

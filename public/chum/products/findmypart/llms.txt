@@ -1,7 +1,7 @@
 # FindMyPart
 
 Product key: findmypart
-Canonical product: https://findmypart.base44.app/
+Canonical product/discovery surface: https://findmypart.base44.app/
 Official MCP Registry: io.github.jgaethle10/findmypart
 Remote MCP: https://findmypart.base44.app/functions/findMyPartMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json

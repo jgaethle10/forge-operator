@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "findmypart-repair-shop-desk-v1",
+  "name": "Repair Shop Sourcing Desk",
+  "problem": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
+  "intent_terms": [
+    "source difficult parts for my repair shop",
+    "parts sourcing desk",
+    "find obsolete parts for customers",
+    "repair shop hard part sourcing",
+    "recurring parts research"
+  ],
+  "inputs": "Shop identity, part requests, asset/equipment context and preferred service level.",
+  "outputs": "Recurring difficult-part sourcing with saved case memory, vendor/salvage research, compatibility evidence and resolved-case reuse.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.",
+  "public_url": "https://findmypart.base44.app",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; recurring entitlement/payment path still being verified.",
+  "catalog_version": "2026-09-23",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/findmypart-repair-shop-desk-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/findmypart-repair-shop-desk-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/findmypart-repair-shop-desk-v1/index.html"
+  }
+}

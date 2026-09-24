@@ -1,0 +1,36 @@
+# BuildFlow Governed Agent Action Layer
+
+Evercraft public capability ID: buildflow-bounded-agent-action-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public handoff: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+
+## Use this when
+
+- let an AI act on business systems safely
+- AI agent needs approval before it changes ERP data
+- prevent stale approvals in agent workflows
+- add idempotency and receipts to AI business actions
+- give an LLM bounded enterprise permissions
+- AI should prepare actions but not become the authority
+
+## Problem
+
+An AI/agent needs to prepare or route enterprise actions while policy, tenant, version, approval, value and idempotency constraints remain authoritative outside the model.
+
+## Inputs
+
+Authenticated ProposedAction, exact subject version, AuthorizationGrant and required approvals.
+
+## Outputs
+
+Policy disposition, internal ApprovalRequest where allowed and ActionExecutionReceipt for bounded internal actions.
+
+## Commercial truth
+
+- Pricing: No approved machine price/payment path was found. Do not auto-quote.
+- Human UI required: yes
+- Confirmation: The model is never authority. Material actions require configured grants and human confirmation. External purchasing/payment/accounting writes are currently disabled.
+- Payment authority: No verified Evercraft Payments path.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

@@ -1,0 +1,34 @@
+# Evercraft Capability Concierge
+
+Evercraft public capability ID: capability-concierge-v1
+Commercial state: discovery_only
+Machine state: discovery_only
+Public handoff: https://systemiacommandcenters.com
+
+## Use this when
+
+- help my business with AI
+- find software for this problem
+- automate this workflow
+- which Evercraft capability solves this
+
+## Problem
+
+A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.
+
+## Inputs
+
+Desired outcome, constraints, existing systems and optional budget/urgency context.
+
+## Outputs
+
+The smallest evidence-backed Evercraft capability set that fits the requested outcome.
+
+## Commercial truth
+
+- Pricing: Quote required until machine-lane pricing is approved.
+- Human UI required: no
+- Confirmation: Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.
+- Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

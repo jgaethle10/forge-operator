@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "towi-evidence-research-machine-v1",
+  "name": "Evidence-Controlled Research Brief",
+  "problem": "A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.",
+  "intent_terms": [
+    "research this question with sources",
+    "build me an evidence brief",
+    "validate this claim independently",
+    "make me a decision grade research report",
+    "map the evidence for this issue",
+    "give me a sourced validation memo"
+  ],
+  "inputs": "Research question and requester identity; optional organization, sector, geography, decision context, urgency, evidence standard and deliverable type.",
+  "outputs": "Decision brief/report/evidence map/dataset/validation memo with findings, uncertainties, recommendations, evidence count, confidence and underlying evidence records.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Research may be scoped without obligation. Paid work and consequential-domain deliverables require explicit confirmation and existing review gates.",
+  "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path for this capability.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "catalog_version": "2026-09-23.12",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/towi-evidence-research-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/towi-evidence-research-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/towi-evidence-research-machine-v1/index.html"
+  }
+}

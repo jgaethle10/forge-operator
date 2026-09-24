@@ -23,5 +23,6 @@
     "public plan pricing is not a binding quote unless confirmed by the current product flow",
     "private event, participant, revenue, settlement, and admin data are not public"
   ],
+  "commercial": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

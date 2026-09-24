@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "buildflow-entity-resolution-machine-v1",
+  "name": "BuildFlow Business Entity Resolution",
+  "problem": "A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.",
+  "intent_terms": [
+    "dedupe our vendor list safely",
+    "the same customer exists in multiple systems",
+    "match vendors without silently merging them",
+    "resolve duplicate suppliers across ERP exports",
+    "AI found uncertain business entity matches",
+    "reconcile customer or vendor identity conflicts"
+  ],
+  "inputs": "Authenticated source records and mapping candidates.",
+  "outputs": "MappingCandidate confidence, conflict flags, MappingDecision lineage and review work items.",
+  "commercial_state": "verification_required",
+  "machine_state": "human_auth_handoff",
+  "pricing": "No approved machine price/payment path was found. Do not auto-quote.",
+  "offers": [],
+  "human_ui_required": true,
+  "confirmation": "Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.",
+  "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+  "payment_authority": "No verified Evercraft Payments path.",
+  "invocation_status": "SOURCE-VERIFIED: discovery and authenticated Decision Desk adjudication are implemented and build-tested; external client canary remains pending. Canonical merge remains a separate gated action.",
+  "catalog_version": "2026-09-24.1",
+  "discovery_creates_payment_obligation": false,
+  "checkout_is_payment_proof": false,
+  "authoritative_payment_verification_required": true,
+  "private_topology_exposed": false,
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/buildflow-entity-resolution-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/buildflow-entity-resolution-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/buildflow-entity-resolution-machine-v1/index.html"
+  }
+}

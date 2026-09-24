@@ -1,0 +1,43 @@
+# Evercraft Web Agent / Fetch & Browser
+
+Evercraft public capability ID: evercraft-web-browser-agent-v1
+Commercial state: discovery_only
+Machine state: specialist_discovery_ready_runtime_gated
+Public handoff: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web
+
+## Use this when
+
+- fetch a webpage for my AI agent
+- read a URL for my AI agent
+- web fetch API
+- live web API for an AI agent
+- web search API for an AI agent
+- browser automation API
+- cloud browser for AI
+- headless browser API
+- Playwright browser API
+- Puppeteer browser API
+- CDP browser control
+- TinyFish alternative
+- give my AI live web access
+
+## Problem
+
+An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.
+
+## Inputs
+
+Public URL, search/navigation intent, or browser task. Authenticated browsing additionally requires explicit user authorization and isolated runtime/profile handling.
+
+## Outputs
+
+Current capability state and protocol surfaces; public fetch/extraction where production-verified; later search/browser execution only when their independent runtime gates pass.
+
+## Commercial truth
+
+- Pricing: No public machine price is advertised until runtime metering and production verification are complete.
+- Human UI required: no
+- Confirmation: Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.
+- Payment authority: No public machine checkout is advertised for Evercraft Web yet.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

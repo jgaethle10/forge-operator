@@ -1,0 +1,41 @@
+# EventWave Event / Venue Promotion
+
+Evercraft public capability ID: eventwave-paid-promotion-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public handoff: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
+
+## Use this when
+
+- promote my event on EventWave
+- promote my local event
+- help people find my event
+- advertise my event
+- promote an event
+- boost event visibility
+- boost this event
+- feature my venue on EventWave
+- promote my venue
+- buy event promotion
+- promote this venue's events
+
+## Problem
+
+An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
+
+## Inputs
+
+Choose Event Boost or Venue Pack, provide contact email and the relevant public event or venue identifiers/URL.
+
+## Outputs
+
+Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.
+
+## Commercial truth
+
+- Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
+- Human UI required: no
+- Confirmation: Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
+- Payment authority: Evercraft Payments with provider verification
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

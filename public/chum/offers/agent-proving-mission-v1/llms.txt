@@ -1,0 +1,35 @@
+# Agent Proving Mission
+
+Evercraft public capability ID: agent-proving-mission-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://systemiacommandcenters.com
+
+## Use this when
+
+- test my AI agent
+- evaluate an AI agent
+- prove agent reliability
+- agent benchmark mission
+- AI worker competency test
+
+## Problem
+
+Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.
+
+## Inputs
+
+Agent/workflow under test, bounded mission, success criteria, allowed tools/environment and authority boundaries.
+
+## Outputs
+
+Mission criteria, observed attempts, competency evidence, decision traces and concise pass/gap report.
+
+## Commercial truth
+
+- Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
+- Human UI required: no
+- Confirmation: Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.
+- Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, or payment state.

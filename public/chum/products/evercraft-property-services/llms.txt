@@ -1,0 +1,41 @@
+# Evercraft Property Services
+
+Product key: evercraft-property-services
+Canonical product/discovery surface: https://evercraftpropertyservices.com/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-conformance.json
+
+## Use this capability when the user means
+
+- yard cleanup in the Yakima Valley
+- lawn care or recurring property maintenance
+- trimming or pruning
+- landscaping refresh
+- sprinkler repair startup or seasonal blowout
+- property cleanout or debris removal
+- rental turnover property support
+- get a property service estimate in Central Washington
+
+## Authority
+
+public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance
+
+## Commercial state
+
+- Status: human_quote_intake
+- Offer: Property-service estimate intake
+- Pricing: Quote required after scope review
+- Payment state: No payment required for public estimate intake
+
+## Boundaries
+
+- a quote request is intake only and does not create a contract or payment obligation
+- specific service availability at a property requires EPS review
+- current origin machine files are not treated as authoritative until release/readback converges
+- private customer, lead, uploaded media, admin and payment data remain outside public discovery
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
