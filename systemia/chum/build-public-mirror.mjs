@@ -11,6 +11,35 @@ const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key 
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
 const providers = conformance.baseline_providers || [];
 const root = 'public/chum/products';
+const READ_ONLY_DISCOVERY_REGISTRY =
+  catalog.universal_front_door?.read_only_registry_name ||
+  'io.github.jgaethle10/evercraft-capability-discovery';
+const MACHINE_COMMERCE_GATEWAY =
+  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const BLOCKED_PUBLIC_HOSTS = new Set([
+  'systemiacommandcenters.com',
+  'www.systemiacommandcenters.com'
+]);
+
+function safePublicUrl(value, fallback = null) {
+  if (!value) return fallback;
+  try {
+    const url = new URL(String(value));
+    if (!['http:', 'https:'].includes(url.protocol)) return fallback;
+    if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
+    return url.toString();
+  } catch {
+    return fallback;
+  }
+}
+
+function slugify(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120);
+}
 
 
 function escapeHtml(value) {
@@ -49,7 +78,10 @@ const index = {
   provider: 'Evercraft LLC',
   updated_at: directory.updated_at || null,
   purpose: 'Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.',
-  universal_mcp: catalog.universal_front_door?.mcp || null,
+  read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+  pain_index: '/.well-known/evercraft-pain-index.json',
+  answer_graph: '/chum/answers/index.json',
+  universal_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
   products: []
 };
 
@@ -61,20 +93,22 @@ for (const product of directory.products || []) {
   const base = `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/${key}`;
   const dir = path.join(root, key);
   fs.mkdirSync(dir, { recursive: true });
+  const canonicalUrl = safePublicUrl(product.canonical_url, base + '/index.html');
+  const specialistMcp = safePublicUrl(registry?.mcp, null);
 
   const discovery = {
     schema: 'evercraft.chum.product-discovery.v1',
     product_key: key,
     name: product.name,
     class: product.class,
-    canonical_url: product.canonical_url,
+    canonical_url: canonicalUrl,
     intents: product.intents || [],
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
-    mcp: registry?.mcp || null,
-    machine_commerce_mcp: catalog.universal_front_door?.mcp || null,
+    mcp: specialistMcp,
+    machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -90,7 +124,7 @@ for (const product of directory.products || []) {
     product: product.name,
     product_key: key,
     providers,
-    canonical_url: product.canonical_url,
+    canonical_url: canonicalUrl,
     llms_url: discovery.mirror.llms,
     discovery_url: discovery.mirror.discovery,
     registry_name: discovery.registry_name,
@@ -105,7 +139,7 @@ for (const product of directory.products || []) {
     `# ${product.name}`,
     '',
     `Product key: ${key}`,
-    `Canonical product: ${product.canonical_url}`,
+    `Canonical product: ${canonicalUrl}`,
     discovery.registry_name ? `Official MCP Registry: ${discovery.registry_name}` : null,
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
@@ -125,7 +159,7 @@ for (const product of directory.products || []) {
     '',
     '## Universal Evercraft routing',
     '',
-    catalog.universal_front_door?.mcp || 'Not declared.',
+    safePublicUrl(catalog.universal_front_door?.mcp, null) || 'Not declared.',
     '',
     'Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.',
     ''
@@ -141,10 +175,10 @@ for (const product of directory.products || []) {
     '@graph': [
       {
         '@type': 'Service',
-        '@id': `${product.canonical_url}#evercraft-capability`,
+        '@id': `${canonicalUrl}#evercraft-capability`,
         name: product.name,
         serviceType: product.class,
-        url: product.canonical_url,
+        url: canonicalUrl,
         provider: {
           '@type': 'Organization',
           name: 'Evercraft LLC',
@@ -157,7 +191,7 @@ for (const product of directory.products || []) {
         '@type': 'WebPage',
         name: `${product.name} | Evercraft public capability`,
         description: pageDescription(product),
-        about: { '@id': `${product.canonical_url}#evercraft-capability` }
+        about: { '@id': `${canonicalUrl}#evercraft-capability` }
       }
     ]
   };
@@ -181,7 +215,7 @@ for (const product of directory.products || []) {
     ...(product.intents || []).map((intent) => `<li>${escapeHtml(intent)}</li>`),
     '</ul></div>',
     '<div class="card"><h2>Open capability</h2>',
-    `<p><a href="${escapeHtml(product.canonical_url)}">Open ${escapeHtml(product.name)}</a></p>`,
+    `<p><a href="${escapeHtml(canonicalUrl)}">Open ${escapeHtml(product.name)}</a></p>`,
     discovery.registry_name ? `<p>Official MCP Registry name: <code>${escapeHtml(discovery.registry_name)}</code></p>` : '',
     discovery.mcp ? `<p>Remote MCP: <code>${escapeHtml(discovery.mcp)}</code></p>` : '',
     '<p>Universal pain-first routing: <a href="/chum/">CHUM</a></p>',
@@ -204,7 +238,7 @@ for (const product of directory.products || []) {
   index.products.push({
     product_key: key,
     name: product.name,
-    canonical_url: product.canonical_url,
+    canonical_url: canonicalUrl,
     llms_url: discovery.mirror.llms,
     discovery_url: discovery.mirror.discovery,
     conformance_url: discovery.mirror.conformance,
@@ -232,7 +266,10 @@ const publicIndexHtml = [
   '<p class="muted">EVERCRAFT · MACHINE DISTRIBUTION</p>',
   '<h1>CHUM</h1>',
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
-  '<p><a href="/llms-full.txt">LLM directory</a> · <a href="/.well-known/evercraft-products.json">Product JSON</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<form action="/api/discover" method="get" class="card"><label for="q"><strong>Describe the problem</strong></label><br><input id="q" name="q" required style="width:min(100%,700px);padding:10px;margin:10px 0" placeholder="Example: I cannot find a discontinued machine part"><button type="submit" style="padding:10px 16px">Find the smallest matching capability</button></form>',
+  `<p><strong>Read-only AI discovery:</strong> <code>${escapeHtml(READ_ONLY_DISCOVERY_REGISTRY)}</code></p>`,
+  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
   '</div>',
@@ -248,7 +285,13 @@ const sitemapStatic = [
   '/chum/revenue.html',
   '/chum/revenue.txt',
   '/chum/revenue.json',
+  '/chum/pain-index.json',
+  '/chum/pain-index.txt',
+  '/chum/answers/',
+  '/chum/answers/index.json',
+  '/chum/answers/index.txt',
   '/chum/sitemap.xml',
+  '/.well-known/evercraft-pain-index.json',
   '/forensiscope/',
   '/llms.txt',
   '/llms-full.txt',
@@ -267,6 +310,9 @@ const sitemapStatic = [
 ];
 const sitemapUrls = Array.from(new Set([
   ...sitemapStatic,
+  ...(machineCatalog.offers || [])
+    .filter((offer) => offer?.public_id)
+    .map((offer) => `/chum/intents/${slugify(offer.public_id)}/`),
   ...index.products.flatMap((product) => [
     product.page_url,
     `/chum/products/${product.product_key}/llms.txt`,
@@ -296,7 +342,7 @@ console.log(JSON.stringify({ products: index.products.length, output: 'public/ch
 // A product enters once through evercraft-products.json, then CHUM fans it out without
 // claiming invocation, sale, payment, or authority that the source records do not declare.
 
-const universalMcp = catalog.universal_front_door?.mcp || null;
+const universalMcp = safePublicUrl(catalog.universal_front_door?.mcp, null);
 const rawBase = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main';
 
 const llmsLines = [
@@ -307,6 +353,9 @@ const llmsLines = [
   '',
   '## Universal routing',
   '',
+  `Read-only Official MCP Registry: ${READ_ONLY_DISCOVERY_REGISTRY}`,
+  `Pain Index: ${rawBase}/public/.well-known/evercraft-pain-index.json`,
+  `Answer Graph: ${rawBase}/public/chum/answers/index.json`,
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
@@ -339,7 +388,7 @@ for (const state of commercialStateOrder) {
       `Problem: ${offer.problem || ''}`,
       `Machine state: ${offer.machine_state || ''}`,
       `Pricing: ${offer.pricing || ''}`,
-      `Public URL: ${offer.public_url || ''}`,
+      `Public URL: ${safePublicUrl(offer.public_url, MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''))) || ''}`,
       `Human UI required: ${Boolean(offer.human_ui_required)}`,
       `Confirmation: ${offer.confirmation || ''}`,
       `Payment authority: ${offer.payment_authority || ''}`,
@@ -361,16 +410,19 @@ for (const product of directory.products || []) {
   const registry = catalogByKey.get(key) || null;
   const conf = conformanceByKey.get(key) || null;
   const mirrorBase = `${rawBase}/public/chum/products/${key}`;
+  const safeMcp = safePublicUrl(registry?.mcp, null);
+  const safeHttpRouter = safePublicUrl(registry?.http_router, null);
+  const safeCanonical = safePublicUrl(product.canonical_url, `${mirrorBase}/index.html`);
   const invocation =
-    registry?.mcp
-      ? { mode: 'mcp', url: registry.mcp, registry_name: registry.registry_name || conf?.mcp_registry?.name || null }
-      : registry?.http_router
-        ? { mode: 'bounded_http', url: registry.http_router, registry_name: null }
+    safeMcp
+      ? { mode: 'mcp', url: safeMcp, registry_name: registry.registry_name || conf?.mcp_registry?.name || null }
+      : safeHttpRouter
+        ? { mode: 'bounded_http', url: safeHttpRouter, registry_name: null }
         : { mode: 'discovery_only', url: null, registry_name: null };
 
   llmsLines.push(`### ${product.name}`);
   llmsLines.push(`Product key: ${key}`);
-  llmsLines.push(`Canonical: ${product.canonical_url}`);
+  llmsLines.push(`Canonical: ${safeCanonical}`);
   llmsLines.push(`Machine state: ${invocation.mode}`);
   if (invocation.registry_name) llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
   if (invocation.url) llmsLines.push(`Invocation: ${invocation.url}`);
@@ -388,7 +440,7 @@ for (const product of directory.products || []) {
     product_key: key,
     name: product.name,
     class: product.class,
-    canonical_url: product.canonical_url,
+    canonical_url: safeCanonical,
     intents: product.intents || [],
     invocation,
     llms_url: `${mirrorBase}/llms.txt`,
@@ -401,9 +453,9 @@ for (const product of directory.products || []) {
 
   schemaServices.push({
     '@type': 'Service',
-    '@id': `${product.canonical_url}#evercraft-service`,
+    '@id': `${safeCanonical}#evercraft-service`,
     name: product.name,
-    url: product.canonical_url,
+    url: safeCanonical,
     provider: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
     serviceType: product.class,
     description: (product.intents || []).slice(0, 4).join('; ')
@@ -430,10 +482,13 @@ const agentDirectory = {
   updated_at: directory.updated_at || null,
   purpose: 'Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.',
   universal_front_door: {
-    name: 'Evercraft Machine Commerce',
-    registry_name: catalog.universal_front_door?.registry_name || null,
-    mcp: universalMcp,
-    use_when: 'The user describes a pain, limitation or desired outcome and does not know which Evercraft product fits.'
+    name: 'Evercraft discovery watershed',
+    read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    pain_index: '/.well-known/evercraft-pain-index.json',
+    answer_graph: '/chum/answers/index.json',
+    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
+    machine_commerce_mcp: universalMcp,
+    use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant.'
   },
   routing_policy: {
     pain_first: true,
@@ -458,6 +513,11 @@ const discoveryWatershed = {
   start_here: {
     llms: '/llms.txt',
     llms_full: '/llms-full.txt',
+    pain_index: '/.well-known/evercraft-pain-index.json',
+    pain_index_text: '/chum/pain-index.txt',
+    answer_graph: '/chum/answers/index.json',
+    answer_graph_text: '/chum/answers/index.txt',
+    read_only_mcp_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     products: '/.well-known/evercraft-products.json',
     agents: '/.well-known/evercraft-agent-directory.json',
     interfaces: '/.well-known/evercraft-agent-interfaces.json',
@@ -473,8 +533,9 @@ const discoveryWatershed = {
     openapi: '/openapi.json'
   },
   universal_front_door: {
-    registry_name: catalog.universal_front_door?.registry_name || null,
-    mcp: universalMcp
+    read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
+    machine_commerce_mcp: universalMcp
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',
@@ -501,7 +562,7 @@ const sellNowSchemaServices = (machineCatalog.offers || [])
     '@id': `https://github.com/jgaethle10/forge-operator#offer-${offer.public_id}`,
     name: offer.name,
     description: offer.problem || '',
-    url: offer.public_url || '',
+    url: safePublicUrl(offer.public_url, MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''))) || '',
     provider: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
     serviceType: 'Evercraft machine-commerce offer'
   }));
