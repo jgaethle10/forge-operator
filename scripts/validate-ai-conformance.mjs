@@ -106,9 +106,6 @@ for (const manifestPath of findServerManifests('registry')) {
   if (!String(manifest.version || '').trim()) fail(`${manifestPath} is missing version`);
 }
 
-if (process.exitCode) throw new Error('AI conformance registry validation failed');
-
-console.log(`AI CONFORMANCE REGISTRY PASS: ${registry.products.length} products indexed and publicly routable`);
 
 
 // CHUM brand-blind intent doorway must remain complete and machine-readable.
@@ -126,3 +123,7 @@ else {
     }
   }
 }
+
+if (process.exitCode) throw new Error('AI conformance registry validation failed');
+
+console.log(`AI CONFORMANCE REGISTRY PASS: ${registry.products.length} products indexed and publicly routable`);
