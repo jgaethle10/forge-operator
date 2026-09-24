@@ -34,7 +34,23 @@ jobs:
             echo "::endgroup::"
           }
 
+          check_tool() {
+            NAME="$1"
+            URL="$2"
+            TOOL="$3"
+            echo "::group::$NAME tool contract"
+            BODY="$(curl -fsS --max-time 20 -X POST "$URL"               -H 'Content-Type: application/json'               -H 'Accept: application/json, text/event-stream'               --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}')"
+            printf '%s\n' "$BODY" | head -c 4000
+            echo
+            printf '%s' "$BODY" | grep -q "$TOOL" || {
+              echo "MCP tools/list did not expose $TOOL for $NAME" >&2
+              exit 1
+            }
+            echo "::endgroup::"
+          }
+
           check "Evercraft Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+          check_tool "Evercraft Rewards" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_rewards_partner_enrollment"
           check "AliEV" "https://aliev.base44.app/functions/alievMcp"
           check "Career Command" "https://evercraft-career-command.base44.app/functions/careerMcp"
           check "FindMyPart" "https://findmypart.base44.app/functions/findMyPartMcp"

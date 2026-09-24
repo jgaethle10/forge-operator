@@ -17,7 +17,8 @@
     {"registry_name":"io.github.jgaethle10/website-launch","mcp":"https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp","triggers":["build my business website","professional website","website launch"]},
     {"registry_name":"io.github.jgaethle10/faie","mcp":"https://faie.base44.app/functions/faieMcp","triggers":["agriculture evidence brief","water risk","land resilience","production risk"]},
     {"registry_name":"io.github.jgaethle10/eventwave","mcp":"https://event-wave.base44.app/functions/eventWaveMcp","triggers":["find events","promote my event","boost event visibility","venue promotion"]},
-    {"registry_name":"io.github.jgaethle10/forensiscope","mcp":"https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp","triggers":["video too large for AI","audio too long","media overflow","timestamped media analysis"]}
+    {"registry_name":"io.github.jgaethle10/forensiscope","mcp":"https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp","triggers":["video too large for AI","audio too long","media overflow","timestamped media analysis"]},
+    {"registry_name":"io.github.jgaethle10/evercraft-rewards","mcp":"https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp","triggers":["join a local rewards network","local business loyalty program","cross-business rewards","business partnership rewards","Yakima local business discovery"]}
   ],
   "payment_boundary": {
     "discovery_creates_obligation": false,

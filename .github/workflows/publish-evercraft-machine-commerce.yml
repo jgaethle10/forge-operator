@@ -3,6 +3,8 @@ name: Publish Evercraft MCP Registry
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - "registry/**/server.json"
 
