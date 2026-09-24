@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "forge-operator",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "provider_policy": {
+    "preferred": "evercraft-owned",
+    "fallback": "none"
+  },
+  "release": {
+    "repository": "jgaethle10/forge-operator",
+    "branch": "main",
+    "container_image": "ghcr.io/jgaethle10/forge-operator:latest",
+    "immutable_image_pattern": "ghcr.io/jgaethle10/forge-operator:<git-sha>"
+  },
+  "service": {
+    "port": 3000,
+    "health_path": "/api/health",
+    "capabilities_path": "/api/capabilities",
+    "commercial_path": "/api/commercial",
+    "public_discovery": [
+      "/llms.txt",
+      "/.well-known/evercraft-capabilities.json"
+    ]
+  },
+  "environment": {
+    "required": [
+      "GEMINI_API_KEY"
+    ],
+    "optional_human_gated": [
+      "FORGE_CHECKOUT_URL"
+    ]
+  },
+  "capacity": {
+    "mode": "dynamic-lease",
+    "node_class": "physical_linux",
+    "provider_key": "evercraft-owned"
+  },
+  "release_gates": [
+    "ci_pass",
+    "health_pass",
+    "capability_manifest_present",
+    "public_route_verified"
+  ],
+  "receipt_requirements": [
+    "release_sha",
+    "image_digest",
+    "node_lease_id",
+    "live_route",
+    "health_verification",
+    "deployed_at",
+    "rollback_target"
+  ]
+}
