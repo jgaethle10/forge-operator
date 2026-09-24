@@ -4,47 +4,30 @@
   "coordinator": {
     "name": "CHUM",
     "expansion": "Capability Handoff & Utility Mesh",
-    "purpose": "Public discovery watershed for AI assistants, agents, crawlers, search systems and developers."
+    "purpose": "Public problem-to-capability discovery and machine handoff."
   },
-  "state": "source_manifest",
-  "runtime_note": "When served by Forge/Yard, the same path is generated with absolute runtime URLs.",
-  "entrypoints": {
-    "human_ai_directory": "/ai",
-    "deterministic_problem_resolver": "/api/discover?q={natural_language_problem}",
+  "status": "source_projection_runtime_endpoint_returns_absolute_urls",
+  "discovery": {
+    "human_and_search_hub": "/ai",
     "llms": "/llms.txt",
     "portfolio": "/.well-known/evercraft-products.json",
     "capabilities": "/.well-known/evercraft-capabilities.json",
     "chum": "/.well-known/evercraft-chum.json",
-    "media_overflow": "/.well-known/evercraft-media-overflow.json",
-    "source_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
-    "source_portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
-    "source_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
-    "source_repository": "https://github.com/jgaethle10/forge-operator",
-    "live_machine_commerce_discover": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=discover",
-    "live_machine_commerce_docs": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-    "live_machine_commerce_openapi": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=openapi"
+    "resolver": {
+      "method": "GET",
+      "url": "/api/discover?q={natural_language_problem}",
+      "deterministic": true,
+      "model_call_required": false
+    },
+    "mcp_registry_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
+    "source_repository": "https://github.com/jgaethle10/forge-operator"
   },
-  "routing": {
-    "input": "natural-language problem or desired outcome",
-    "rule": "Route to the smallest relevant public Evercraft capability. Preserve authority, evidence, pricing, geographic, privacy and human-confirmation boundaries.",
-    "model_call_required": false,
-    "private_topology_exposed": false
+  "rules": {
+    "route_to_smallest_relevant_capability": true,
+    "public_discovery_creates_payment_obligation": false,
+    "private_topology_exposed": false,
+    "provider_recommendation_claim_requires_receipt": true,
+    "payment_state_requires_authoritative_verification": true
   },
-  "commerce": {
-    "discovery_creates_payment_obligation": false,
-    "human_confirmation_required_where_declared": true,
-    "checkout_is_payment_proof": false,
-    "provider_verification_required_for_paid_state": true
-  },
-  "provider_targets": [
-    "ChatGPT",
-    "Claude",
-    "Gemini",
-    "Copilot",
-    "Perplexity",
-    "Grok",
-    "generic search crawlers",
-    "generic MCP clients",
-    "generic HTTP agents"
-  ]
+  "note": "The runtime endpoint at this same path expands product details and absolute URLs from the canonical public registry."
 }
