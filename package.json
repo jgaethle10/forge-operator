@@ -20,7 +20,7 @@
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
     "chum:all": "npm run chum:sync && npm run chum:revenue && npm run chum:index && npm run chum:mirror && npm run chum:offers && npm run test:chum-router && npm run test:chum-index && npm run chum && npm run chum:crawlers && npm run chum:mcp",
-    "check": "npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run test:media-studio && npm run check:ai && npm run test:chum-router && npm run test:chum-index && npm run check:probes && npm run lint && npm run build",
+    "check": "npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run test:media-studio && npm run check:ai && npm run test:chum-router && npm run test:chum-index && npm run test:chum-offers && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
@@ -39,7 +39,8 @@
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
     "test:chum-index": "npm run chum:index && node tests/chum-pain-index.test.mjs",
-    "chum:offers": "node systemia/chum/build-offer-watershed.mjs"
+    "chum:offers": "node systemia/chum/build-offer-watershed.mjs",
+    "test:chum-offers": "npm run chum:offers && node tests/chum-offer-watershed.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
