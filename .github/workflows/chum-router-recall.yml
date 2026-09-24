@@ -1,0 +1,37 @@
+name: CHUM sell-now router recall
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "systemia/chum/router-recall.mjs"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - ".github/workflows/chum-router-recall.yml"
+  schedule:
+    - cron: "37 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  recall:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Measure sell-now routing recall
+        run: node systemia/chum/router-recall.mjs
+
+      - name: Upload recall receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-router-recall
+          path: artifacts/chum/router-recall-latest.*
+          if-no-files-found: warn
