@@ -1,0 +1,25 @@
+# EventWave Event / Venue Promotion
+
+Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
+Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
+Machine state: payment_ready
+Public capability: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
+
+Use when the user says or means:
+- promote my event on EventWave
+- promote my local event
+- help people find my event
+- advertise my event
+- promote an event
+- boost event visibility
+- boost this event
+- feature my venue on EventWave
+- promote my venue
+- buy event promotion
+- promote this venue's events
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

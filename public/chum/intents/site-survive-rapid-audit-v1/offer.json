@@ -1,0 +1,26 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "site-survive-rapid-audit-v1",
+  "name": "Site-Survive Rapid Audit",
+  "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+  "intent_terms": [
+    "business outage plan",
+    "internet outage continuity",
+    "site resilience audit",
+    "offline operations plan"
+  ],
+  "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
+  "machine_state": "human_handoff_ready",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "human_ui_required": false,
+  "confirmation": "Explicit buyer confirmation is required before payment or paid work.",
+  "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
+  "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed.",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

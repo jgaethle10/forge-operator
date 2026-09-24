@@ -59,7 +59,7 @@ Boundaries:
 
 ### Evercraft Contractor Cloud
 Product key: contractor-cloud
-Canonical: https://evercraft-contractor-cloud-314d2197.base44.app/
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json
@@ -70,11 +70,13 @@ Use when the user says or means:
 - roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software
 - contractor measurement tools
 Authority:
-public homeowner intake and contractor discovery with protected person-level data
+public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified
 Boundaries:
 - project submission is not a guaranteed match, fixed price, scheduled job, or contract
 - homeowner identity, private addresses, project photos, bids, and transaction records are not public
 - paid access requires independently verified subscription state
+- the previously advertised Contractor Cloud product hostname is not currently live-verified
+- do not imply a live transactional Contractor Cloud UI until a fresh external canary passes
 
 ### Evercraft Deck Capital Fit
 Product key: deck-capital-fit
@@ -267,7 +269,7 @@ Boundaries:
 
 ### Infinite Classroom
 Product key: infinite-classroom
-Canonical: https://infinite-classroom-fe2d1357.base44.app/
+Canonical: https://infiniteclassroom.base44.app/
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-conformance.json
@@ -312,7 +314,7 @@ Boundaries:
 
 ### SkyOps Parking
 Product key: skyops-parking
-Canonical: https://skyops-parking.base44.app/
+Canonical: https://skyopsparking.base44.app/
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-conformance.json

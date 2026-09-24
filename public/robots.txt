@@ -17,6 +17,9 @@ Allow: /.well-known/
 Allow: /api/health
 Allow: /api/capabilities
 Allow: /api/commercial
+Allow: /api/discover
+Allow: /api/revenue-watershed
+Allow: /chum/
 Disallow: /api/
 
 User-agent: *
@@ -26,4 +29,7 @@ Allow: /.well-known/
 Allow: /api/health
 Allow: /api/capabilities
 Allow: /api/commercial
+Allow: /api/discover
+Allow: /api/revenue-watershed
+Allow: /chum/
 Disallow: /api/

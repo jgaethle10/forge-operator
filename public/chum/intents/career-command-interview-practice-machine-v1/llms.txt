@@ -1,0 +1,21 @@
+# Career Command Interview Practice + Interview Sprint
+
+Problem: A candidate needs role-specific practice and candid evidence-based feedback before an interview.
+Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
+Machine state: payment_ready
+Public capability: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
+
+Use when the user says or means:
+- help me prepare for this interview
+- mock interview me for this job
+- practice interview questions
+- score my interview answer
+- I have an interview tomorrow
+- prepare me for a recruiter screen
+- behavioral interview practice
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

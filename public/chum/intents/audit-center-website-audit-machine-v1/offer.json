@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "audit-center-website-audit-machine-v1",
+  "name": "Systemia Website Audit",
+  "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+  "intent_terms": [
+    "why is my website not getting leads",
+    "audit my website",
+    "why is my contractor website not ranking",
+    "check my local SEO",
+    "why is my site slow on mobile",
+    "find conversion problems on my website",
+    "review my website SEO",
+    "tell me what is wrong with my business website",
+    "my website gets traffic but nobody contacts us",
+    "people visit my site but do not contact me",
+    "why is my website not converting",
+    "website traffic but no leads",
+    "visitors are not turning into leads"
+  ],
+  "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+  "machine_state": "payment_ready",
+  "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+  "human_ui_required": false,
+  "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.",
+  "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
+  "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

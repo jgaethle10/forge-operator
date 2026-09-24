@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "roasted-text-pressure-test-machine-v1",
+  "name": "ROASTED 99¢ Text Pressure Test",
+  "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+  "intent_terms": [
+    "roast this text",
+    "roast my bio",
+    "roast my resume",
+    "tear apart this pitch",
+    "be brutally honest about this copy",
+    "brutally critique this message",
+    "roast my linkedin headline",
+    "roast this post",
+    "pressure test this copy",
+    "pressure test my writing"
+  ],
+  "pricing": "$0.99 USD one-time per roast.",
+  "machine_state": "payment_ready",
+  "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "human_ui_required": false,
+  "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.",
+  "payment_authority": "ROASTED / Stripe, provider-verified",
+  "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

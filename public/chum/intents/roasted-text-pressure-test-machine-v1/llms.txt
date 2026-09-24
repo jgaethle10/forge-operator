@@ -1,0 +1,24 @@
+# ROASTED 99¢ Text Pressure Test
+
+Problem: Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
+Pricing: $0.99 USD one-time per roast.
+Machine state: payment_ready
+Public capability: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+
+Use when the user says or means:
+- roast this text
+- roast my bio
+- roast my resume
+- tear apart this pitch
+- be brutally honest about this copy
+- brutally critique this message
+- roast my linkedin headline
+- roast this post
+- pressure test this copy
+- pressure test my writing
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

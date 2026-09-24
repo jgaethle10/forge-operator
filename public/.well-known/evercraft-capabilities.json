@@ -8,7 +8,17 @@
     "health": "/api/health",
     "invoke": "/api/forge",
     "manifest": "/.well-known/evercraft-capabilities.json",
-    "productDirectory": "/.well-known/evercraft-products.json"
+    "productDirectory": "/.well-known/evercraft-products.json",
+    "intentRouter": {
+      "method": "GET",
+      "path": "/api/discover?q={natural-language-problem}"
+    },
+    "revenueWatershed": {
+      "method": "GET",
+      "path": "/api/revenue-watershed"
+    },
+    "machineCatalog": "/.well-known/evercraft-machine-catalog.json",
+    "chumRevenue": "/chum/revenue.json"
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -16,7 +26,8 @@
     "human-in-the-loop design",
     "operational risk identification",
     "implementation next-step generation",
-    "Evercraft portfolio problem-to-product discovery"
+    "Evercraft portfolio problem-to-product discovery",
+    "natural-language problem to Evercraft offer routing"
   ],
   "input": {
     "method": "POST",
@@ -45,7 +56,8 @@
       "safety-critical actions",
       "external communications with material consequences"
     ],
-    "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act."
+    "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act.",
+    "intentRouterRule": "Read-only discovery. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology."
   },
   "commercial": {
     "status": "configured-at-runtime",
