@@ -8,9 +8,17 @@ on:
       - "chum-probes/**"
       - "conformance/**"
       - "registry/**"
+      - "public/llms.txt"
+      - "public/llms-full.txt"
+      - "public/robots.txt"
+      - "public/sitemap.xml"
+      - "public/ai-discovery.json"
+      - "public/openapi.json"
+      - "public/chum/**"
       - "public/.well-known/**"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
+      - "scripts/validate-chum-watershed.mjs"
       - ".github/workflows/chum-watershed.yml"
   schedule:
     - cron: "17 */6 * * *"
@@ -34,6 +42,7 @@ jobs:
         run: |
           npm run check:ai
           npm run chum:validate
+          npm run chum:check
 
       - name: Probe static AI doorways
         id: static-doorways
