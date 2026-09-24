@@ -48,7 +48,8 @@
     "test:chum-revenue": "npm run chum:revenue && node tests/chum-revenue-watershed.test.mjs",
     "test:chum-capabilities": "npm run chum:capabilities && node tests/chum-capability-mirrors.test.mjs",
     "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
-    "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs"
+    "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs",
+    "chum:router-recall": "node systemia/chum/router-recall.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
