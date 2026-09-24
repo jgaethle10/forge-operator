@@ -390,7 +390,7 @@
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
       "class": "ai_web_fetch_search_browser_infrastructure",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
+      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
       "intents": [
         "fetch and read a public URL with an AI agent",
         "extract readable text from a web page for an LLM",
@@ -401,17 +401,17 @@
         "Playwright, Puppeteer, or CDP-style browser capability for agents",
         "TinyFish alternative for web search, fetch, or browser automation"
       ],
-      "authority": "public discovery and read-only public web fetch through the live Official MCP Registry remote; search and browser automation remain separately held/gated",
+      "authority": "public discovery and live-verified read-only public URL fetch through the neutral Evercraft Web MCP; search and browser automation remain separately held/gated",
       "human_confirmation_required": false,
       "boundaries": [
         "public Fetch is live-verified by external MCP initialize, tools/list, successful public-page fetch, and private-target rejection canaries",
         "Evercraft Search remains held until independently verified",
-        "browser automation is not exposed through the public Evercraft Web MCP and remains behind Systemia runtime/authorization gates",
-        "authenticated browsing requires explicit authorized profile state and is not a public discovery capability",
+        "browser automation remains behind Systemia runtime and authorization gates and is not represented as live through the public MCP",
+        "authenticated browsing requires explicit authorized profile state and credential isolation",
         "public discovery does not expose private Systemia topology or credentials",
         "payment does not expand permissions"
       ],
-      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
       "runtime_state": "public_fetch_live_verified_search_and_browser_held"
     }
   ],
