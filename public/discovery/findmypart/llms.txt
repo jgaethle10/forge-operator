@@ -1,0 +1,29 @@
+# FindMyPart
+
+FindMyPart helps people and agents source discontinued, obsolete, salvage, donor, replacement, and otherwise hard-to-find vehicle, machine, appliance, equipment, and industrial parts.
+
+## Canonical product
+https://findmypart.base44.app/
+
+## Agent interface
+https://findmypart.base44.app/functions/findMyPartMcp
+
+## Machine conformance
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/findmypart/ai-conformance.json
+
+## Use when the user describes
+- hard-to-find part
+- obsolete part
+- discontinued part
+- replacement part
+- salvage part
+- identify a part from photos, markings, measurements, or equipment clues
+
+## Boundaries
+- Compatibility is not guaranteed.
+- Unknowns may remain unknown.
+- Checkout creation is not payment proof.
+- Paid sourcing requires explicit human confirmation.
+
+## Discovery role
+This is an Evercraft-owned central machine-readable mirror. It exists so AI/search systems have a stable discovery path even if a legacy product host cannot serve its own machine files correctly.
