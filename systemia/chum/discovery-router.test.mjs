@@ -13,7 +13,9 @@ const cases = [
   ['escape vendor lock in migrate from no code app portability', 'foundry-app-escape-audit-v1'],
   ['internet outage continuity offline operations plan', 'site-survive-rapid-audit-v1'],
   ['promote my local event boost visibility', 'eventwave-paid-promotion-v1'],
-  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1']
+  ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1'],
+  ['I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots', 'forensiscope-evidence-review-v1'],
+  ['my chatbot says this long video is too large; transcribe it and find repeated footage', 'forensiscope-evidence-review-v1']
 ];
 
 let failed = 0;
