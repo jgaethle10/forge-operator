@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/findmypart",
+  "title": "FindMyPart",
+  "description": "Hard-to-source part discovery with replacement, salvage and fabrication paths.",
+  "version": "1.0.0",
+  "websiteUrl": "https://findmypart.base44.app/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://findmypart.base44.app/functions/findMyPartMcp"
+    }
+  ]
+}
