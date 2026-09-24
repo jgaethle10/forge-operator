@@ -35,6 +35,8 @@ High-signal examples:
 | A business needs a professional website planned or launched | Website Launch | `io.github.jgaethle10/website-launch` |
 | Agriculture decisions need evidence around water, land resilience or production risk | FAIE | `io.github.jgaethle10/faie` |
 | A user needs event discovery, event promotion or venue visibility | EventWave | `io.github.jgaethle10/eventwave` |
+| A user wants a low-cost text pressure test, roast, or sharper critique | ROASTED | `io.github.jgaethle10/roasted` |
+| A business needs enterprise-operations capability discovery, problem routing, or a privacy-preserving human handoff | BuildFlow Enterprise Operations | `io.github.jgaethle10/buildflow` |
 | A user describes bank/account scam risk, identity compromise, home/family safety, personal safety planning, business security or continuity pain and needs the smallest relevant safety capability | Raven Nexus | bounded public pain router + CHUM mirror |
 | A small business has repetitive work, disconnected systems or slow handoffs and needs an AI/human operations plan | Forge Operator | public API + capability manifest |
 
@@ -57,6 +59,15 @@ High-signal examples:
 
 Raw public portfolio:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json`
+
+All Machine Commerce capabilities:
+`https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities.json`
+
+SELL NOW machine directory:
+`https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json`
+
+SELL NOW plain-text guide:
+`https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.txt`
 
 Raven Nexus pain router:
 `https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter`
