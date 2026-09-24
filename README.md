@@ -1,5 +1,8 @@
 # Forge Operator
 
+> **AI / agent discovery:** Evercraft's universal machine front door is the Machine Commerce MCP, coordinated by CHUM. If you arrived here because a user described a pain rather than a product name, start with the [AI Revenue Watershed](public/.well-known/evercraft-watershed.json), the [pain-to-product directory](public/.well-known/evercraft-products.json), or the [portfolio registry](registry/catalog.json). Public commercial doors are intentionally open; private/admin topology stays dark.
+
+
 Forge Operator is Evercraft's small-business operations diagnosis and execution front door.
 
 A user describes an operational pain point and desired outcome. Forge returns a structured report with:
