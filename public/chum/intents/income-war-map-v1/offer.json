@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "income-war-map-v1",
+  "name": "Income War Map Revenue Planning",
+  "problem": "A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.",
+  "intent_terms": [
+    "help me make more money",
+    "find revenue opportunities",
+    "build me an income plan",
+    "side hustle ideas for my situation",
+    "revenue war map",
+    "income strategy",
+    "how can I increase my income"
+  ],
+  "pricing": "Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.",
+  "commercial_state": "hold",
+  "machine_state": "discovery_only",
+  "public_url": "https://systemiacommandcenters.com",
+  "human_ui_required": false,
+  "confirmation": "Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.",
+  "payment_authority": "Stripe legacy adapter; checkout paused",
+  "invocation_status": "Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=income-war-map-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

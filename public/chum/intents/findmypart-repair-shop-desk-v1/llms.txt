@@ -1,0 +1,23 @@
+# Repair Shop Sourcing Desk
+
+Problem: Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.
+Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://findmypart.base44.app
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-repair-shop-desk-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- source difficult parts for my repair shop
+- parts sourcing desk
+- find obsolete parts for customers
+- repair shop hard part sourcing
+- recurring parts research
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

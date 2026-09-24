@@ -1,0 +1,24 @@
+# Canonical Data Gap Audit
+
+Problem: A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.
+Pricing: No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.
+Commercial state: verification_required
+Machine state: discovery_only
+Public capability: https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=datafoundry-data-gap-audit-machine-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- audit this dataset for gaps
+- what data is missing for this decision
+- find provenance problems in this data
+- reconcile conflicting sources
+- where are our visibility gaps
+- design a plan to close these data gaps
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

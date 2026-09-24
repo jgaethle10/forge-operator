@@ -18,6 +18,7 @@
     "promote this venue's events"
   ],
   "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
+  "commercial_state": "sell_now",
   "machine_state": "payment_ready",
   "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
   "human_ui_required": false,

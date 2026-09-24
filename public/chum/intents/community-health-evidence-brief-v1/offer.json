@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "community-health-evidence-brief-v1",
+  "name": "Community Health Evidence Brief",
+  "problem": "Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.",
+  "intent_terms": [
+    "community health data",
+    "county health evidence brief",
+    "public health grant research",
+    "health indicators for a community",
+    "public health planning data"
+  ],
+  "pricing": "Current hypothesis $250-$2,500 per brief; not auto-quotable yet.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "public_url": "https://systemiacommandcenters.com",
+  "human_ui_required": false,
+  "confirmation": "Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; brief-specific source verification required before fulfillment.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=community-health-evidence-brief-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

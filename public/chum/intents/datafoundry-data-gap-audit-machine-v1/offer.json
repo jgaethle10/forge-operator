@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "datafoundry-data-gap-audit-machine-v1",
+  "name": "Canonical Data Gap Audit",
+  "problem": "A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.",
+  "intent_terms": [
+    "audit this dataset for gaps",
+    "what data is missing for this decision",
+    "find provenance problems in this data",
+    "reconcile conflicting sources",
+    "where are our visibility gaps",
+    "design a plan to close these data gaps"
+  ],
+  "pricing": "No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+  "human_ui_required": false,
+  "confirmation": "Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.",
+  "payment_authority": "No verified Evercraft Payments path for this specific audit.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=datafoundry-data-gap-audit-machine-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

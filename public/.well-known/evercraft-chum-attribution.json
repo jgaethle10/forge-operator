@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.attribution.v1",
+  "name": "CHUM AI-originated conversion attribution",
+  "purpose": "Issue privacy-minimized referral tokens for legitimate AI-originated handoffs and distinguish discovery, landing, checkout, verified payment, and fulfillment without treating checkout as revenue.",
+  "endpoints": {
+    "issue_referral": {
+      "method": "POST",
+      "path": "/api/chum/referral"
+    },
+    "public_event": {
+      "method": "POST",
+      "path": "/api/chum/attribution/event"
+    },
+    "contract": {
+      "method": "GET",
+      "path": "/api/chum/attribution"
+    }
+  },
+  "stages": {
+    "landing": "A signed CHUM referral reached the destination.",
+    "checkout_started": "A user entered an approved checkout path. This is not payment.",
+    "payment_verified": "Trusted server-side/payment-provider evidence verified a payment. Public callers cannot assert this stage.",
+    "fulfilled": "Trusted evidence records fulfillment after verified payment."
+  },
+  "privacy": {
+    "raw_user_intent_in_token": false,
+    "intent_hash": "sha256 normalized intent when supplied",
+    "private_topology_exposed": false
+  },
+  "revenue_rule": "Only payment_verified events with authoritative payment verification may count toward verified revenue.",
+  "human_gate": "Discovery and attribution create no payment obligation. Existing explicit human confirmation rules remain in force."
+}\n

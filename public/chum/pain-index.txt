@@ -1,0 +1,1190 @@
+# Evercraft CHUM Pain Index
+
+Start from the user's problem. Do not require an Evercraft product name.
+
+Entries: 60
+Product entries: 18
+Machine-offer entries: 42
+Sell-now machine offers: 11
+
+Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
+
+## Agent Proving Mission
+Capability ID: offer:agent-proving-mission-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
+Use when the user means:
+- test my AI agent
+- evaluate an AI agent
+- prove agent reliability
+- agent benchmark mission
+- AI worker competency test
+Problem: Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.
+Outputs: Mission criteria, observed attempts, competency evidence, decision traces and concise pass/gap report.
+Confirmation boundary: Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.
+Invocation status: Discoverable capability; paid execution verification pending.
+
+## AI Capability Installation Package
+Capability ID: offer:ai-capability-install-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.
+Use when the user means:
+- install an AI capability
+- add an agent tool to my system
+- deploy an AI workflow
+- version and verify an AI capability
+- add a safe AI tool
+Problem: Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.
+Outputs: Versioned capability artifacts, execution contract, install verification receipt, health check and rollback path.
+Confirmation boundary: Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.
+Invocation status: Discoverable capability; environment-specific deployment/payment verification required.
+
+## AliEV EV Site Opportunity Intelligence
+Capability ID: offer:aliev-site-opportunity-snapshot-v1
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
+Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
+Use when the user means:
+- is this site good for EV charging
+- EV charger site analysis
+- EV charging feasibility by address
+- what EV chargers are near this property
+- EV charger competition around this address
+- EV charging opportunity report
+- should I install EV chargers at this property
+- find EV charging opportunities in this market
+- commercial EV site report
+Problem: A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
+Outputs: Free source-backed address screen with nearby mapped charging context, evidence-state labels and source provenance; paid preliminary/full site reports; qualified opportunity packs; recurring territory opportunity intelligence.
+Confirmation boundary: Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.
+Invocation status: LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.
+
+## Systemia Website Audit
+Capability ID: offer:audit-center-website-audit-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
+Use when the user means:
+- why is my website not getting leads
+- audit my website
+- why is my contractor website not ranking
+- check my local SEO
+- why is my site slow on mobile
+- find conversion problems on my website
+- review my website SEO
+- tell me what is wrong with my business website
+- my website gets traffic but nobody contacts us
+- people visit my site but do not contact me
+- why is my website not converting
+- website traffic but no leads
+- visitors are not turning into leads
+Problem: A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.
+Outputs: Observed website findings, deterministic category scores and breakdowns, prioritized audit findings, deeper fix plan/report for paid tier, and remediation scope for Audit + Patch.
+Confirmation boundary: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.
+Invocation status: LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.
+
+## BuildFlow Governed Agent Action Layer
+Capability ID: offer:buildflow-bounded-agent-action-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Use when the user means:
+- let an AI act on business systems safely
+- AI agent needs approval before it changes ERP data
+- prevent stale approvals in agent workflows
+- add idempotency and receipts to AI business actions
+- give an LLM bounded enterprise permissions
+- AI should prepare actions but not become the authority
+Problem: An AI/agent needs to prepare or route enterprise actions while policy, tenant, version, approval, value and idempotency constraints remain authoritative outside the model.
+Outputs: Policy disposition, internal ApprovalRequest where allowed and ActionExecutionReceipt for bounded internal actions.
+Confirmation boundary: The model is never authority. Material actions require configured grants and human confirmation. External purchasing/payment/accounting writes are currently disabled.
+Invocation status: SOURCE-VERIFIED: public routing and authenticated policy-check/internal-approval primitives are implemented and build-tested; external client canary remains pending. No external business-action executor.
+
+## BuildFlow Enterprise Operations Router
+Capability ID: offer:buildflow-enterprise-ops-router-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Use when the user means:
+- our business operations are a mess
+- we need an ERP but cannot survive a huge implementation
+- help an AI understand how our company works
+- connect our business systems without replacing everything
+- turn spreadsheets and legacy systems into an operating layer
+- we need a safer way for AI agents to work with our business
+- modernize our operations without a big bang migration
+Problem: A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.
+Outputs: Ranked smallest-fit BuildFlow capability, safety boundary and human-authentication handoff guidance.
+Confirmation boundary: Public routing does not ingest private company records or execute business actions. Authenticated tenant context is required before customer data access.
+Invocation status: SOURCE-VERIFIED: BuildFlow public router and central MCP specialist routing are implemented and build-tested. External client canary remains pending; private data and consequential actions remain authenticated/human-gated.
+
+## BuildFlow Business Entity Resolution
+Capability ID: offer:buildflow-entity-resolution-machine-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Use when the user means:
+- dedupe our vendor list safely
+- the same customer exists in multiple systems
+- match vendors without silently merging them
+- resolve duplicate suppliers across ERP exports
+- AI found uncertain business entity matches
+- reconcile customer or vendor identity conflicts
+Problem: A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.
+Outputs: MappingCandidate confidence, conflict flags, MappingDecision lineage and review work items.
+Confirmation boundary: Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.
+Invocation status: SOURCE-VERIFIED: discovery and authenticated Decision Desk adjudication are implemented and build-tested; external client canary remains pending. Canonical merge remains a separate gated action.
+
+## Business Process Pattern Audit
+Capability ID: offer:buildflow-process-audit-machine-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Use when the user means:
+- map how our process actually works
+- find bottlenecks in this business workflow
+- analyze our purchase approval process
+- reconstruct our process from logs
+- where are exceptions slowing us down
+- audit our procure to pay workflow
+- compare the real workflow to company policy
+- process mining from operational history
+Problem: A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.
+Outputs: Candidate step sequence, sample size, median duration, exception rate, confidence, evidence refs and review state. No policy change or external action.
+Confirmation boundary: Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.
+Invocation status: SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.
+
+## BuildFlow Procure-to-Pay Shadow Audit
+Capability ID: offer:buildflow-procure-to-pay-shadow-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Use when the user means:
+- our invoices do not match receipts
+- audit purchase approvals without replacing accounting
+- reconstruct request to purchase order to invoice
+- find missing purchasing approvals
+- trace procure to pay exceptions
+- our vendor invoices and purchase orders keep disagreeing
+- analyze three way match problems
+Problem: A business needs to reconstruct purchasing flow, approval state, receipts and invoice references without turning a new product into the authoritative general ledger.
+Outputs: Process timeline, approval gaps, invoice/receipt exceptions, recommendations and reconciliation context.
+Confirmation boundary: Current BuildFlow mode is shadow-first. It does not post accounting entries, create external POs or initiate payment.
+Invocation status: SOURCE-VERIFIED: discovery, tenant-scoped P2P model and bounded internal approval-request flow are implemented and build-tested; external client canary remains pending. External writes disabled.
+
+## BuildFlow Shadow Migration Audit
+Capability ID: offer:buildflow-shadow-migration-machine-v1
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Use when the user means:
+- analyze this messy ERP export
+- migrate our spreadsheets without losing provenance
+- map CSV data before replacing our system
+- find conflicts in our business exports
+- reconcile records from multiple business systems
+- stage an ERP migration without overwriting anything
+Problem: A business needs to ingest and understand messy operational exports while preserving source lineage, surfacing conflicts and avoiding destructive migration assumptions.
+Outputs: ImportRun, SourceRecord, mapping preview, explicit ImportConflict records and review state.
+Confirmation boundary: Shadow import does not overwrite the source or silently create canonical truth. Private records require authenticated tenant access.
+Invocation status: SOURCE-VERIFIED: discovery/routing and authenticated shadow-import flow are implemented and build-tested; external client canary remains pending. External-system writes are disabled.
+
+## CallProof Complaint Evidence Packet
+Capability ID: offer:callproof-complaint-packet-machine-v1
+Commercial state: verify
+Machine state: human_auth_handoff
+Public URL: https://call-proof-vault.base44.app
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
+Use when the user means:
+- organize my robocall evidence
+- make an FCC complaint packet
+- organize unwanted call records
+- help me document spam calls
+- prepare my FTC call evidence
+- turn my call log into a complaint packet
+Problem: Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.
+Outputs: Downloadable factual incident packet. CallProof does not file the complaint or determine that a law was violated.
+Confirmation boundary: User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.
+Invocation status: discoverable_authenticated_checkout_required
+
+## Evercraft Capability Concierge
+Capability ID: offer:capability-concierge-v1
+Commercial state: discovery_only
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Quote required until machine-lane pricing is approved.
+Use when the user means:
+- help my business with AI
+- find software for this problem
+- automate this workflow
+- which Evercraft capability solves this
+Problem: A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.
+Outputs: The smallest evidence-backed Evercraft capability set that fits the requested outcome.
+Confirmation boundary: Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.
+Invocation status: Internal routing exists; public universal invocation is not yet advertised.
+
+## Career Command Interview Practice + Interview Sprint
+Capability ID: offer:career-command-interview-practice-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
+Use when the user means:
+- help me prepare for this interview
+- mock interview me for this job
+- practice interview questions
+- score my interview answer
+- I have an interview tomorrow
+- prepare me for a recruiter screen
+- behavioral interview practice
+Problem: A candidate needs role-specific practice and candid evidence-based feedback before an interview.
+Outputs: Role-specific practice question, answer verdict, what landed, weaknesses, evidence gaps, improved answer structure, pressure follow-up and re-drill instruction.
+Confirmation boundary: Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.
+Invocation status: LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.
+
+## Career Command Resume + Job Fit Audit
+Capability ID: offer:career-command-resume-job-fit-machine-v1
+Commercial state: verify
+Machine state: discovery_only
+Public URL: https://evercraft-career-command.base44.app
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Free core is available. No premium machine-lane price is approved yet.
+Use when the user means:
+- check my resume against this job
+- why am I not getting interviews
+- tailor my resume to this opening
+- is my resume ATS friendly
+- what am I missing for this job
+- resume job match
+- audit my resume
+Problem: A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.
+Outputs: Strongest proof anchors, job-fit evidence, generic or unsupported claims, missing evidence, highest-impact edits and a truthful rewritten summary.
+Confirmation boundary: No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.
+Invocation status: catalog_ready_runtime_adapter_pending
+
+## Community Health Evidence Brief
+Capability ID: offer:community-health-evidence-brief-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current hypothesis $250-$2,500 per brief; not auto-quotable yet.
+Use when the user means:
+- community health data
+- county health evidence brief
+- public health grant research
+- health indicators for a community
+- public health planning data
+Problem: Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.
+Outputs: Geography-specific public-health evidence brief with indicator provenance, gaps, comparisons and uncertainty.
+Confirmation boundary: Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.
+Invocation status: Discoverable capability; brief-specific source verification required before fulfillment.
+
+## Condition Desk for Weather-Sensitive Field Operations
+Capability ID: offer:condition-desk-field-ops-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
+Use when the user means:
+- can my crews work tomorrow
+- weather go no-go for field crews
+- jobsite weather risk
+- roofing weather decision
+- construction weather operations
+- air quality work decision
+Problem: Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.
+Outputs: Conditions and hazards evaluated against defined thresholds with source health and evidence snapshot.
+Confirmation boundary: Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.
+Invocation status: Discoverable capability; notification/commercial reliability verification pending.
+
+## Canonical Data Gap Audit
+Capability ID: offer:datafoundry-data-gap-audit-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.
+Use when the user means:
+- audit this dataset for gaps
+- what data is missing for this decision
+- find provenance problems in this data
+- reconcile conflicting sources
+- where are our visibility gaps
+- design a plan to close these data gaps
+Problem: A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.
+Outputs: Explicit gaps and types, severity, evidence/confidence, affected decisions, source conflicts, collection options/effort, governance constraints and next actions.
+Confirmation boundary: Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## Evercraft Deck Engine Founding Capital Fit Sprint
+Capability ID: offer:deck-capital-fit-sprint-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
+Use when the user means:
+- help me find funding for my business
+- which lenders or programs fit my business
+- build a lender ready deck
+- review my funding pitch
+- help me prepare for SBA financing
+- find capital options for this project
+- turn my business info into a funding deck
+- what am I missing before I seek funding
+Problem: A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.
+Outputs: Research summary, capital-readiness notes, 3-6 public-source provider/program candidates, requirements and evidence links, recommended audience and a 6-14 slide deck outline.
+Confirmation boundary: The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.
+Invocation status: LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.
+
+## Field-Service Estimate Engine
+Capability ID: offer:eps-estimate-engine-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.
+Use when the user means:
+- estimate this service job
+- build a contractor estimate from this scope
+- what should this job cost
+- turn these measurements into an estimate
+- give me a rough customer range
+- calculate margin and price for this job
+Problem: A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.
+Outputs: Estimated cost, sell price or range, confidence, assumptions, inclusions/exclusions and site-review state, with revision/proposal lineage available downstream.
+Confirmation boundary: Rough estimate generation does not authorize sending a proposal, accepting work or creating a customer obligation. Proposal/payment actions retain separate authority gates.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## EventWave Event / Venue Promotion
+Capability ID: offer:eventwave-paid-promotion-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
+Use when the user means:
+- promote my event on EventWave
+- promote my local event
+- help people find my event
+- advertise my event
+- promote an event
+- boost event visibility
+- boost this event
+- feature my venue on EventWave
+- promote my venue
+- buy event promotion
+- promote this venue's events
+Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
+Outputs: Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.
+Confirmation boundary: Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
+Invocation status: LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.
+
+## Evercraft Network Resilience + Founding Membership
+Capability ID: offer:evercraft-network-resilience-membership-v1
+Commercial state: discovery_only
+Machine state: human_handoff_only
+Public URL: https://network-control.base44.app/join
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.
+Use when the user means:
+- my connection keeps switching between wifi and cellular
+- my internet connection keeps changing
+- keep my application connected when networks change
+- application network continuity
+- network resilience software
+- device reconnect visibility
+- did my devices reconnect
+- household connectivity resilience
+- business connectivity resilience
+- continuity readiness software
+- Evercraft Network membership
+- where is Evercraft Network verified
+Problem: A household, business, or device operator wants an application-network identity and continuity visibility that can persist across changing internet paths the client is already authorized to use, without confusing that software layer with cellular service or guaranteed geographic coverage.
+Outputs: Current capability boundary, member-device reconnect/health visibility, continuity-readiness context, verified public Network presence, and a human-directed Founding Membership handoff.
+Confirmation boundary: AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.
+Invocation status: SOURCE-WIRED: Network specialist MCP tools and agent gateway are prepared for read-only capability discovery, public presence and human handoff. Production verification is still required before claiming the v1.2.0 MCP surface is live.
+
+## Evercraft Web Agent / Fetch & Browser
+Capability ID: offer:evercraft-web-browser-agent-v1
+Commercial state: discovery_only
+Machine state: specialist_discovery_ready_runtime_gated
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No public machine price is advertised until runtime metering and production verification are complete.
+Use when the user means:
+- fetch a webpage for my AI agent
+- read a URL for my AI agent
+- web fetch API
+- live web API for an AI agent
+- web search API for an AI agent
+- browser automation API
+- cloud browser for AI
+- headless browser API
+- Playwright browser API
+- Puppeteer browser API
+- CDP browser control
+- TinyFish alternative
+- give my AI live web access
+Problem: An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.
+Outputs: Current capability state and protocol surfaces; public fetch/extraction where production-verified; later search/browser execution only when their independent runtime gates pass.
+Confirmation boundary: Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.
+Invocation status: LIVE specialist discovery through the central MCP tool discover_web_capability. Evercraft Fetch is implemented and build-passed but remains external-canary gated; web search and owned browser execution remain held pending runtime activation, pairing/isolation and production receipts.
+
+## Public-Safe Geospatial Evidence Projection
+Capability ID: offer:evermaps-evidence-projection-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price was found. Do not auto-quote.
+Use when the user means:
+- map this evidence for me
+- show lifeline coverage for this place
+- give me map-ready heat or smoke action sites
+- show historical river geometry
+- return public-safe geospatial evidence
+- plot verified infrastructure coverage
+Problem: An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.
+Outputs: Map-ready geometry/coordinates and attributes with evidence state, confidence, freshness, source refs, cautions and publication state.
+Confirmation boundary: Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## FAIE Evidence-First Signal Brief
+Capability ID: offer:faie-signal-brief-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
+Use when the user means:
+- research this land or water question
+- investigate this agriculture signal
+- give me an evidence brief on this region
+- validate this environmental signal
+- do a resilience investigation
+Problem: A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
+Outputs: A bounded evidence-first mission packet with findings, source references, uncertainty/evidence-needed items, challenge notes and human-review items.
+Confirmation boundary: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
+Invocation status: LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
+
+## FindMyPart Paid Part Hunt
+Capability ID: offer:findmypart-paid-hunt-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
+Use when the user means:
+- find a hard-to-source part
+- identify this part
+- find a discontinued part
+- source an obsolete component
+- find a donor or salvage part
+Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
+Outputs: Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.
+Confirmation boundary: User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.
+Invocation status: LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.
+
+## Repair Shop Sourcing Desk
+Capability ID: offer:findmypart-repair-shop-desk-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://findmypart.base44.app
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
+Use when the user means:
+- source difficult parts for my repair shop
+- parts sourcing desk
+- find obsolete parts for customers
+- repair shop hard part sourcing
+- recurring parts research
+Problem: Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.
+Outputs: Recurring difficult-part sourcing with saved case memory, vendor/salvage research, compatibility evidence and resolved-case reuse.
+Confirmation boundary: Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.
+Invocation status: Discoverable capability; recurring entitlement/payment path still being verified.
+
+## ForensiScope Evidence Review
+Capability ID: offer:forensiscope-evidence-review-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.
+Use when the user means:
+- this video is too large for the AI
+- the chat will not take my video
+- video too big for AI
+- audio too large for AI
+- analyze a long video
+- review hours of footage
+- transcribe and analyze this video
+- make a timestamped timeline from this video
+- compare two recordings
+- review surveillance footage
+- review video evidence
+- analyze long-form evidence
+- evidence timeline review
+- media evidence integrity review
+Problem: An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.
+Outputs: Source-lineage-preserving evidence analysis with custody events, timestamped findings and integrity review.
+Confirmation boundary: Evidence authorization and payment confirmation are required. Secure machine intake remains disabled until current security tests pass.
+Invocation status: LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.
+
+## Evercraft Foundry App Escape Audit
+Capability ID: offer:foundry-app-escape-audit-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: $500 one-time.
+Use when the user means:
+- escape vendor lock-in
+- migrate from no-code
+- export an AI-built app
+- audit app portability
+Problem: A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.
+Outputs: Dependency map, route/schema inventory, security findings, provider-neutral architecture candidate, reconstruction manifest and migration/rollback plan.
+Confirmation boundary: Explicit buyer authorization for source access and payment is required.
+Invocation status: LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.
+
+## Freight Load Exception Intelligence
+Capability ID: offer:freight-load-exception-intelligence-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price or payment path was verified. Do not auto-quote.
+Use when the user means:
+- what is wrong with this load
+- audit this freight load for exceptions
+- check this carrier and load paperwork
+- find missing POD or rate mismatches
+- summarize freight risk on this shipment
+- what recoverable charges or detention issues exist
+Problem: A freight operator needs a compact operational picture of a load's exceptions, document gaps, carrier/compliance state and possible financial impact without manually reconciling several records.
+Outputs: Exception types/severity, estimated impact and recoverable amount when recorded, document/compliance state, risk flags, evidence refs, unknowns and review actions.
+Confirmation boundary: Analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment, invoice action or any other external/financial side effect.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## Country / Domain Intelligence Slice
+Capability ID: offer:globalstat-country-intelligence-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
+Use when the user means:
+- compare these countries on this metric
+- give me sourced country intelligence
+- which countries lead on this domain and why
+- show me the evidence behind this country score
+- reconcile conflicting country data
+- country benchmark with sources
+Problem: An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.
+Outputs: Sourced observations, evidence state/confidence, source URLs, reconciliation findings, methodology context, signals and limitations.
+Confirmation boundary: Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## Income War Map Revenue Planning
+Capability ID: offer:income-war-map-v1
+Commercial state: hold
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.
+Use when the user means:
+- help me make more money
+- find revenue opportunities
+- build me an income plan
+- side hustle ideas for my situation
+- revenue war map
+- income strategy
+- how can I increase my income
+Problem: A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.
+Outputs: Personalized planning opportunities, modeled revenue/startup/time/risk estimates, prioritized missions and progress tracking.
+Confirmation boundary: Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.
+Invocation status: Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.
+
+## Large Document Corpus Review Service
+Capability ID: offer:large-document-corpus-review-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.
+Use when the user means:
+- review thousands of documents
+- analyze a document dump
+- deduplicate a large document set
+- map a public records production
+- large legal document review
+Problem: Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.
+Outputs: Corpus ingestion, subdocument mapping, deduplication, evidence index and review packets with provenance.
+Confirmation boundary: Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.
+Invocation status: Discoverable capability; upload/payment disabled pending rights/security verification.
+
+## Book Export QA
+Capability ID: offer:littlered-kdp-export-qa-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved external machine price/payment path was found. Do not auto-quote.
+Use when the user means:
+- check if my book is ready for KDP
+- validate my cover dimensions
+- audit this paperback export
+- is my book file ready to publish
+- check page count and cover DPI
+Problem: An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.
+Outputs: Page-count validity, cover-geometry validity, effective DPI, check timestamp and notes.
+Confirmation boundary: QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## Raven Nexus Modular Safety & Stability
+Capability ID: offer:raven-nexus-pain-router-v1
+Commercial state: verification_required
+Machine state: invocation_ready
+Public URL: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Varies by matched modular capability. The live pain router is the authority for current availability, offer and checkout state; do not invent a price.
+Use when the user means:
+- protect my bank account from AI scams
+- AI scam draining my bank account
+- protect my family online
+- identity theft protection
+- account takeover protection
+- home safety monitoring
+- family check in safety
+- relationship safety planning
+- business account security
+- credit builder
+- home stability help
+- business continuity and safety
+- Raven Nexus
+- what Raven Nexus capability do I need
+Problem: A person or business has a specific home, family, financial, digital-security, personal-safety, property-stability, relationship, connectivity or business-safety pain and needs the smallest appropriate Raven Nexus capability rather than a forced full-suite purchase.
+Outputs: Pain-ranked Raven capabilities with availability, independent sellability, verified-offer state, direct-checkout presence, human-gate requirements, safety boundaries and optional expansion capabilities.
+Confirmation boundary: Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.
+Invocation status: LIVE: public Raven Nexus pain router accepts plain-language pain and returns the smallest appropriate modular capability with evidence-state and checkout boundaries.
+
+## RIVET EV Charging Site Underwriting Package
+Capability ID: offer:rivet-site-underwriting-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
+Use when the user means:
+- underwrite an EV charging site
+- EV charger investment report
+- charging site economics
+- evaluate this address for EV charging
+- EV charging diligence
+Problem: A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.
+Outputs: Address-specific siting and underwriting package with evidence-state labels, economics, competition, power/incentive context and next diligence.
+Confirmation boundary: Discovery may be automatic. Payment, engineering representations and commitments require explicit confirmation/approval.
+Invocation status: Discoverable capability; quote/payment verification required before sale.
+
+## ROASTED 99¢ Text Pressure Test
+Capability ID: offer:roasted-text-pressure-test-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: $0.99 USD one-time per roast.
+Use when the user means:
+- roast this text
+- roast my bio
+- roast my resume
+- tear apart this pitch
+- be brutally honest about this copy
+- brutally critique this message
+- roast my linkedin headline
+- roast this post
+- pressure test this copy
+- pressure test my writing
+Problem: Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
+Outputs: A roast, three practical fixes and a shareable result.
+Confirmation boundary: Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.
+Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.
+
+## Site-Survive Rapid Audit
+Capability ID: offer:site-survive-rapid-audit-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
+Use when the user means:
+- business outage plan
+- internet outage continuity
+- site resilience audit
+- offline operations plan
+Problem: A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.
+Outputs: One-site continuity map with the three largest failure points and a prioritized action plan.
+Confirmation boundary: Explicit buyer confirmation is required before payment or paid work.
+Invocation status: LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed.
+
+## Systemia Yard Bounded Runtime Extension
+Capability ID: offer:systemia-yard-runtime-extension-v1
+Commercial state: verification_required
+Machine state: invocation_ready
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
+Use when the user means:
+- keep this approved agent run going longer
+- buy more runtime for this Yard execution
+- extend this bounded build run
+- give this approved execution more time
+Problem: An already-approved active Yard execution needs more runtime without receiving broader authority.
+Outputs: Request-bound server quote, quote digest, payment requirement, bounded runtime entitlement, receipt and updated lease expiry.
+Confirmation boundary: Explicit purchase authorization is required. Purchased runtime changes time only and never widens execution scope, permissions, release authority or security access.
+Invocation status: Machine discovery/OpenAPI contract exists; settlement remains verification-gated.
+
+## Evidence-Backed Talent Profile
+Capability ID: offer:talent-evidence-profile-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved machine price/payment path was verified. Do not auto-quote.
+Use when the user means:
+- evaluate this candidate from the evidence
+- build a talent profile from this portfolio
+- what roles fit this person's demonstrated skills
+- find gaps in this candidate's proof
+- turn this athlete or creator evidence into an opportunity dossier
+- map this person's capabilities to opportunities
+Problem: A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.
+Outputs: Strengths, weaknesses, patterns, skills, development questions, evidence confidence, inference limits, opportunity bridge and missing proof.
+Confirmation boundary: No contact, representation, application or third-party sharing without explicit authority/consent. Analysis must not infer protected traits or use gated sensitive data for scoring.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## Evidence-Backed Talent Proof Portal
+Capability ID: offer:talent-proof-portal-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://systemiacommandcenters.com
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Current organization hypothesis $500-$3,000/month; not auto-quotable yet.
+Use when the user means:
+- help me hire based on skills
+- verify candidate ability
+- talent evidence portal
+- skills based hiring
+- prove candidate competency
+- find talent by demonstrated ability
+Problem: Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.
+Outputs: Evidence-backed profiles, competency proof, opportunity routing and outcomes tracking.
+Confirmation boundary: No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.
+Invocation status: Discoverable capability; privacy/onboarding acceptance work pending.
+
+## Evidence-Controlled Research Brief
+Capability ID: offer:towi-evidence-research-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.
+Use when the user means:
+- research this question with sources
+- build me an evidence brief
+- validate this claim independently
+- make me a decision grade research report
+- map the evidence for this issue
+- give me a sourced validation memo
+Problem: A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.
+Outputs: Decision brief/report/evidence map/dataset/validation memo with findings, uncertainties, recommendations, evidence count, confidence and underlying evidence records.
+Confirmation boundary: Research may be scoped without obligation. Paid work and consequential-domain deliverables require explicit confirmation and existing review gates.
+Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+
+## Evercraft Website Launch Service
+Capability ID: offer:website-launch-service-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
+Use when the user means:
+- build me a business website
+- launch a website for my company
+- replace my bad website
+- make me a professional business site
+- handle my website for me
+Problem: A business needs a professional website built or upgraded without operating a site-builder interface.
+Outputs: A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.
+Confirmation boundary: The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
+Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.
+
+## AliEV
+Capability ID: product:aliev
+Product key: aliev
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://aliev.base44.app/
+MCP: https://aliev.base44.app/functions/alievMcp
+Use when the user means:
+- would EV charging make sense at this property
+- what public EV charging is near this address
+- screen a property for EV infrastructure opportunity
+- compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence
+- EV charging site
+- charger opportunity
+- property EV fit
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Evercraft Career Command
+Capability ID: product:career-command
+Product key: career-command
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://evercraft-career-command.base44.app/
+MCP: https://evercraft-career-command.base44.app/functions/careerMcp
+Use when the user means:
+- practice for a job interview tomorrow
+- run a role-specific mock interview
+- prepare concise interview stories and answers
+- get structured interview practice before an upcoming interview
+- job interview practice
+- mock interview
+- interview tomorrow
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Evercraft Contractor Cloud
+Capability ID: product:contractor-cloud
+Product key: contractor-cloud
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+Use when the user means:
+- get contractor quotes for a home project
+- find contractors for a project
+- contractor opportunity network
+- roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software
+- contractor measurement tools
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Deck Capital Fit
+Capability ID: product:deck-capital-fit
+Product key: deck-capital-fit
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+MCP: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp
+Use when the user means:
+- figure out what capital or funding path fits my business
+- identify founder readiness gaps before raising money
+- research realistic capital options for my business
+- prepare a bounded capital-fit brief
+- capital fit
+- funding options
+- founder readiness
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## EventWave
+Capability ID: product:eventwave
+Product key: eventwave
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://event-wave.base44.app/
+MCP: https://event-wave.base44.app/functions/eventWaveMcp
+Use when the user means:
+- find local events
+- promote my local event
+- help people find my event
+- boost event visibility
+- promote a venue's events
+- find events
+- promote my event
+- venue promotion
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Evercraft Network
+Capability ID: product:evercraft-network
+Product key: evercraft-network
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://network-control.base44.app/
+Use when the user means:
+- application network that reconnects across changing authorized internet paths
+- network resilience software
+- member device reconnect visibility
+- continuity readiness tools
+- Evercraft Network membership
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Rewards
+Capability ID: product:evercraft-rewards
+Product key: evercraft-rewards
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Use when the user means:
+- join a local business rewards network
+- create cross-business loyalty rewards
+- make my local business more discoverable
+- join a community business partnership program
+- join a local rewards network
+- local business loyalty program
+- cross-business rewards
+- business partnership rewards
+- Yakima local business discovery
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Evercraft Web
+Capability ID: product:evercraft-web
+Product key: evercraft-web
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://systemiacommandcenters.com/evercraft-web
+MCP: https://systemiacommandcenters.com/api/functions/evercraftWebMcp
+Use when the user means:
+- fetch and read a public URL with an AI agent
+- extract readable text from a web page for an LLM
+- web search API for AI agents
+- browser automation API for an AI agent
+- cloud or headless browser for an AI workflow
+- web agent that can navigate websites
+- Playwright, Puppeteer, or CDP-style browser capability for agents
+- TinyFish alternative for web search, fetch, or browser automation
+- fetch URL for AI
+- read web page
+- web search API
+- browser automation API
+- cloud browser
+- headless browser
+- web agent
+- Playwright API
+- Puppeteer API
+- CDP browser
+- TinyFish alternative
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## EverNest
+Capability ID: product:evernest
+Product key: evernest
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evernest-home.base44.app/
+Use when the user means:
+- family support resources
+- maternal support resources
+- organize practical help after having a baby
+- trusted support circle concepts
+- family preparedness resources
+- Spanish-language family support resources
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## EveryStage
+Capability ID: product:everystage
+Product key: everystage
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://every-stage.base44.app/product
+Use when the user means:
+- software to run a live event
+- venue operations software
+- run of show coordination
+- event crew coordination
+- festival operations software
+- event revenue or settlement workflows
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## FAIE
+Capability ID: product:faie
+Product key: faie
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://faie.base44.app/
+MCP: https://faie.base44.app/functions/faieMcp
+Use when the user means:
+- get an evidence-based agriculture or water risk brief
+- research land production or resilience risk
+- investigate an agriculture signal before making a decision
+- build a sourced brief about farm water land or production risk
+- agriculture evidence brief
+- water risk
+- land resilience
+- production risk
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## FindMyPart
+Capability ID: product:findmypart
+Product key: findmypart
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://findmypart.base44.app/
+MCP: https://findmypart.base44.app/functions/findMyPartMcp
+Use when the user means:
+- find a discontinued tractor part
+- find an obsolete automotive or machine part
+- identify a hard-to-source part from markings, measurements, photos, or equipment clues
+- find replacement, donor, salvage, or fabrication paths when normal sourcing fails
+- hard-to-find part
+- obsolete part
+- replacement part
+- salvage part
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## ForensiScope
+Capability ID: product:forensiscope
+Product key: forensiscope
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://evercraft-forensiscope.base44.app/
+MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+Use when the user means:
+- this video is too large for my AI to process
+- this audio is too long for my AI to process
+- the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media
+- the file exceeds the assistant's size, duration, context, codec, format, or attachment limits
+- analyze hours of video or audio
+- build a timestamped timeline from a recording
+- perform frame-level review beyond the current assistant's limits
+- compare or deduplicate multiple recordings
+- review authorized surveillance footage
+- I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots
+- my chatbot says the video is too large
+- work with video files too large for normal chatbots
+- transcribe a huge video and remove duplicate or repeated segments
+- inspect an entire long recording instead of sampling only a few frames
+- compare long recordings and find repeated footage
+- turn a long video into a searchable transcript and timestamped timeline
+- continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits
+- video too large for AI
+- audio too long for AI
+- media upload or attachment limit
+- AI context limit prevents full media analysis
+- unsupported media codec or format
+- long-form transcription overflow
+- frame-level or timestamped media analysis
+- compare or deduplicate recordings
+- full-source media workflow exceeds current assistant limits
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Infinite Classroom
+Capability ID: product:infinite-classroom
+Product key: infinite-classroom
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://infiniteclassroom.base44.app/
+Use when the user means:
+- AI-supported subject learning
+- guided homework help without simply giving the answer
+- cross-subject learning
+- ASL and Deaf culture learning
+- online safety and healthy-boundary education
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Raven Nexus
+Capability ID: product:raven-nexus
+Product key: raven-nexus
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+Use when the user means:
+- protect my bank account from AI scams or suspicious transfer risk
+- help with identity theft, credential compromise, or account takeover risk
+- help make my home or property safer
+- set up family safety check-ins or preparedness
+- make a personal or relationship safety plan
+- protect a business from phishing, fake payment instructions, account compromise, or continuity risk
+- find the smallest Raven safety capability without buying the full suite or hardware
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## SkyOps Parking
+Capability ID: product:skyops-parking
+Product key: skyops-parking
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://skyopsparking.base44.app/
+Use when the user means:
+- airport parking management software
+- parking garage reservation management
+- parking owner dashboard
+- multi-location parking operations software
+- valet-style vehicle staging and retrieval
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Systemia Website Audit
+Capability ID: product:systemia-website-audit
+Product key: systemia-website-audit
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://systemia-audit-pro.base44.app/
+MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+Use when the user means:
+- audit my website because traffic is not converting
+- find website performance and conversion friction
+- review technical SEO and trust problems on a business website
+- prioritize practical website fixes
+- website audit
+- conversion problems
+- technical SEO audit
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Evercraft Website Launch
+Capability ID: product:website-launch
+Product key: website-launch
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://instant-website-builder-usa-6feac193.base44.app/
+MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
+Use when the user means:
+- build a professional website for my small business
+- replace an outdated business website
+- launch a business website quickly
+- get a human-finished website instead of doing it myself
+- build my business website
+- professional website
+- website launch
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+

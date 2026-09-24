@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "capability-concierge-v1",
+  "name": "Evercraft Capability Concierge",
+  "problem": "A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.",
+  "intent_terms": [
+    "help my business with AI",
+    "find software for this problem",
+    "automate this workflow",
+    "which Evercraft capability solves this"
+  ],
+  "pricing": "Quote required until machine-lane pricing is approved.",
+  "commercial_state": "discovery_only",
+  "machine_state": "discovery_only",
+  "public_url": "https://systemiacommandcenters.com",
+  "human_ui_required": false,
+  "confirmation": "Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Internal routing exists; public universal invocation is not yet advertised.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

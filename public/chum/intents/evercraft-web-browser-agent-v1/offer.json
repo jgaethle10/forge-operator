@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "evercraft-web-browser-agent-v1",
+  "name": "Evercraft Web Agent / Fetch & Browser",
+  "problem": "An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.",
+  "intent_terms": [
+    "fetch a webpage for my AI agent",
+    "read a URL for my AI agent",
+    "web fetch API",
+    "live web API for an AI agent",
+    "web search API for an AI agent",
+    "browser automation API",
+    "cloud browser for AI",
+    "headless browser API",
+    "Playwright browser API",
+    "Puppeteer browser API",
+    "CDP browser control",
+    "TinyFish alternative",
+    "give my AI live web access"
+  ],
+  "pricing": "No public machine price is advertised until runtime metering and production verification are complete.",
+  "commercial_state": "discovery_only",
+  "machine_state": "specialist_discovery_ready_runtime_gated",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+  "human_ui_required": false,
+  "confirmation": "Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.",
+  "payment_authority": "No public machine checkout is advertised for Evercraft Web yet.",
+  "invocation_status": "LIVE specialist discovery through the central MCP tool discover_web_capability. Evercraft Fetch is implemented and build-passed but remains external-canary gated; web search and owned browser execution remain held pending runtime activation, pairing/isolation and production receipts.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-web-browser-agent-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

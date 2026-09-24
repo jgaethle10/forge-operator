@@ -2,6 +2,7 @@
 
 Problem: A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
+Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
 Public capability: https://aliev.base44.app/functions/alievAgentGateway?view=docs
 Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1

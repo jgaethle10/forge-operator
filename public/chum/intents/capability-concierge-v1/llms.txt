@@ -1,0 +1,22 @@
+# Evercraft Capability Concierge
+
+Problem: A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.
+Pricing: Quote required until machine-lane pricing is approved.
+Commercial state: discovery_only
+Machine state: discovery_only
+Public capability: https://systemiacommandcenters.com
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- help my business with AI
+- find software for this problem
+- automate this workflow
+- which Evercraft capability solves this
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

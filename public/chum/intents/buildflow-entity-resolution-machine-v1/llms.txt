@@ -1,0 +1,24 @@
+# BuildFlow Business Entity Resolution
+
+Problem: A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.
+Pricing: No approved machine price/payment path was found. Do not auto-quote.
+Commercial state: verification_required
+Machine state: human_auth_handoff
+Public capability: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-entity-resolution-machine-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- dedupe our vendor list safely
+- the same customer exists in multiple systems
+- match vendors without silently merging them
+- resolve duplicate suppliers across ERP exports
+- AI found uncertain business entity matches
+- reconcile customer or vendor identity conflicts
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

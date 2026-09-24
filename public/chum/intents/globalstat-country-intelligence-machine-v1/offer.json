@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "globalstat-country-intelligence-machine-v1",
+  "name": "Country / Domain Intelligence Slice",
+  "problem": "An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.",
+  "intent_terms": [
+    "compare these countries on this metric",
+    "give me sourced country intelligence",
+    "which countries lead on this domain and why",
+    "show me the evidence behind this country score",
+    "reconcile conflicting country data",
+    "country benchmark with sources"
+  ],
+  "pricing": "Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+  "human_ui_required": false,
+  "confirmation": "Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.",
+  "payment_authority": "No verified Evercraft Payments path for this capability.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=globalstat-country-intelligence-machine-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

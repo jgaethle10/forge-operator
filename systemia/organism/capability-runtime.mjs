@@ -135,11 +135,16 @@ export async function executeGoalWorkWithAdapter({
     now,
   });
 
+  const output = outcome && Object.prototype.hasOwnProperty.call(outcome, 'output')
+    ? structuredClone(outcome.output)
+    : null;
+
   return {
     ok: result === 'complete' || result === 'skipped',
     executed: true,
     reason: result,
     state: next,
+    output,
     receipt: {
       schema: 'evercraft.capability-route-receipt.v1',
       work_key: work.work_key,
@@ -149,6 +154,7 @@ export async function executeGoalWorkWithAdapter({
       human_gate_required: adapter.human_gate_required,
       execution_receipt_ref: receiptRef,
       evidence_refs: evidenceRefs,
+      output,
       observed_at: now instanceof Date ? now.toISOString() : new Date(now).toISOString(),
     },
   };

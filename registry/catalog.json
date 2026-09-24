@@ -238,6 +238,29 @@
         "professional website",
         "website launch"
       ]
+    },
+    {
+      "product_key": "evercraft-web",
+      "name": "Evercraft Web",
+      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "triggers": [
+        "fetch URL for AI",
+        "read web page",
+        "web search API",
+        "browser automation API",
+        "cloud browser",
+        "headless browser",
+        "web agent",
+        "Playwright API",
+        "Puppeteer API",
+        "CDP browser",
+        "TinyFish alternative"
+      ],
+      "registry_publication_state": "published_receipt_backed",
+      "registry_receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
+      "runtime_state": "fetch_external_canary_pending_search_and_browser_held"
     }
   ],
   "payment_boundary": {
@@ -252,5 +275,11 @@
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
     "human_confirmation_required_for_irreversible_financial_or_authority_action": true
+  },
+  "pain_index": {
+    "schema": "evercraft.chum.pain-index.v1",
+    "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
+    "text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
+    "purpose": "Brand-blind routing from user pain to the smallest relevant public Evercraft capability while preserving commercial, invocation, payment and evidence state."
   }
 }

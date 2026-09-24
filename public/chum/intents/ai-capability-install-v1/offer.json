@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "ai-capability-install-v1",
+  "name": "AI Capability Installation Package",
+  "problem": "Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.",
+  "intent_terms": [
+    "install an AI capability",
+    "add an agent tool to my system",
+    "deploy an AI workflow",
+    "version and verify an AI capability",
+    "add a safe AI tool"
+  ],
+  "pricing": "Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "public_url": "https://systemiacommandcenters.com",
+  "human_ui_required": false,
+  "confirmation": "Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "Discoverable capability; environment-specific deployment/payment verification required.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ai-capability-install-v1",
+  "machine_offer_url": null,
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

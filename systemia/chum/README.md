@@ -17,11 +17,25 @@ CHUM intentionally separates:
 
 ## Portfolio rule
 
-CHUM inventories the **union** of the Evercraft conformance registry, public product directory and agent/MCP registry catalog. A product does not disappear from distribution because one list was not manually synchronized.
+CHUM inventories the **union** of the Evercraft conformance registry, public product directory, public machine-commerce catalog and agent/MCP registry catalog. A product or bounded offer does not disappear from distribution because one list was not manually synchronized.
+
+## Pain Index
+
+CHUM publishes a brand-blind watershed map at:
+
+- `public/.well-known/evercraft-pain-index.json`
+- `public/chum/pain-index.json`
+- `public/chum/pain-index.txt`
+
+The index starts from the user's problem rather than an Evercraft brand. Product intents and machine-commerce offer terms are merged into one routing surface while preserving actual `commercial_state`, `machine_state`, pricing, authentication, payment, evidence and human-confirmation boundaries.
+
+Sellable capabilities must have pain-language. Discovery-only and held capabilities remain discoverable but may not borrow a stronger capability's evidence state.
 
 ## Commands
 
 ```bash
+npm run chum:index
+npm run test:chum-index
 npm run chum
 npm run chum:offline
 npm run chum:mcp
@@ -41,3 +55,8 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+
+## Wide-open discovery rule
+
+A legitimate public Evercraft capability must never rely on brand recognition alone. CHUM keeps a pain-first machine index, crawler-readable text index, registry metadata and conformance receipts so an outside model can start from the user's problem and reach the smallest truthful capability surface. Sellable capabilities without pain-language fail the CHUM index test. Held or discovery-only capabilities remain visible but may not borrow stronger invocation, payment or provider-pickup evidence.

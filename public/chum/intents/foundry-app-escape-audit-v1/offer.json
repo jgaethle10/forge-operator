@@ -11,6 +11,7 @@
     "audit app portability"
   ],
   "pricing": "$500 one-time.",
+  "commercial_state": "sell_now",
   "machine_state": "human_handoff_ready",
   "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
   "human_ui_required": false,
