@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.cross-llm-conformance.v1",
+  "product": "ForensiScope",
+  "product_key": "forensiscope",
+  "provider": "Evercraft LLC",
+  "canonical_url": "https://evercraft-forensiscope.base44.app/",
+  "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "mirror_role": "central_machine_fallback",
+  "source_of_truth": "jgaethle10/forge-operator",
+  "intents": [
+    "video too large for AI",
+    "audio too long for AI",
+    "media upload limit",
+    "long-form transcription overflow",
+    "frame-level media analysis",
+    "compare or deduplicate recordings",
+    "full-source media workflow"
+  ],
+  "boundaries": [
+    "The user must submit media themselves and have the right or authority to do so.",
+    "Media is not transferred automatically.",
+    "The service does not determine guilt or intent.",
+    "External handoff requires human confirmation."
+  ],
+  "human_confirmation_required": true,
+  "payment_state_rule": "Checkout creation or a payment URL is not proof of payment.",
+  "provider_behavior_rule": "Public availability is not proof that any AI provider discovered, cited, recommended, or invoked this capability."
+}
