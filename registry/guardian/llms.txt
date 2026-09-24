@@ -1,0 +1,28 @@
+# Guardian
+
+Provider: Evercraft
+Product key: guardian
+Class: privacy_first_protection_navigation_and_prevention
+Canonical URL: https://guardian-pilot.base44.app/
+Authority: Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.
+Human confirmation required: no
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt
+
+## Natural-language intents
+- find verified help for housing shelter food benefits transportation childcare income or legal aid
+- find public safety or stability resources without creating an account
+- find Spanish-language or interpreter-supported help
+- find outside support when I do not want to route through my school workplace family or usual authority
+- find prevention and protective infrastructure resources
+- give my organization a privacy-minimized public doorway to verified help
+
+## Boundaries
+- not an emergency-response service
+- does not guarantee provider availability or service acceptance
+- does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability
+- GuardianLink school operations are a separate authorized deployment lane
+- private case data, precise locations, protected identities, and admin topology are not public
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
