@@ -29,6 +29,12 @@ https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8
 Machine-readable portfolio:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
 
+Full portfolio discovery:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt
+
+A2A Agent Card:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/agent-card.json
+
 Human-readable portfolio:
 https://github.com/jgaethle10/forge-operator/tree/main/registry
 
