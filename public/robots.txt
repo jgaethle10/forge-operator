@@ -1,6 +1,43 @@
+# Evercraft public discovery policy.
+# Public commercial surfaces are intentionally crawlable. Private/admin/action
+# surfaces remain out of crawl scope. robots.txt is not an authorization layer.
+
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: ClaudeBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: bingbot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /openapi.json
+Allow: /.well-known/
+Allow: /api/health
+Allow: /api/capabilities
+Allow: /api/discovery
+Allow: /api/commercial
+Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /systemia/
+
 User-agent: *
 Allow: /
 Allow: /llms.txt
-Allow: /.well-known/evercraft-capabilities.json
-Allow: /.well-known/evercraft-products.json
+Allow: /llms-full.txt
+Allow: /openapi.json
+Allow: /.well-known/
+Allow: /api/health
+Allow: /api/capabilities
+Allow: /api/discovery
+Allow: /api/commercial
 Disallow: /api/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /systemia/
