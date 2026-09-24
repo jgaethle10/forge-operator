@@ -1,0 +1,69 @@
+name: CHUM discovery heartbeat
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/chum/**"
+      - "registry/catalog.json"
+      - "conformance/products.json"
+      - "package.json"
+      - ".github/workflows/chum-heartbeat.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chum-discovery-heartbeat
+  cancel-in-progress: true
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Refresh public Evercraft machine catalog
+        run: npm run chum:sync
+
+      - name: Run CHUM public-surface and registry audit
+        run: npm run chum
+
+      - name: Upload CHUM receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-receipts-${{ github.run_id }}
+          path: artifacts/chum/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit changed public catalog snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add public/.well-known/evercraft-machine-catalog.json
+          if git diff --cached --quiet; then
+            echo "CHUM public catalog is already current."
+            exit 0
+          fi
+          git config user.name "Evercraft CHUM"
+          git config user.email "chum@users.noreply.github.com"
+          git commit -m "CHUM refresh public machine catalog"
+          git push origin HEAD:main
