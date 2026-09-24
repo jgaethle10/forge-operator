@@ -18,7 +18,10 @@
       "path": "/api/revenue-watershed"
     },
     "machineCatalog": "/.well-known/evercraft-machine-catalog.json",
-    "chumRevenue": "/chum/revenue.json"
+    "chumRevenue": "/chum/revenue.json",
+    "routerManifest": "/.well-known/evercraft-router.json",
+    "attributedHandoffField": "attributed_handoff_url",
+    "rawUserQueryIncludedInHandoffUrl": false
   },
   "jobs": [
     "operations bottleneck diagnosis",

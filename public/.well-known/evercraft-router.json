@@ -1,0 +1,73 @@
+{
+  "schema": "evercraft.chum.router.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "updated_at": "2026-09-24",
+  "purpose": "Single public machine-readable entry point for routing a user's natural-language problem to the smallest truthful Evercraft capability without prior brand knowledge.",
+  "discover": {
+    "method": "GET",
+    "path": "/api/discover",
+    "query_parameter": "q",
+    "optional_limit_parameter": "limit",
+    "example": "/api/discover?q=where%20can%20I%20send%20a%20four%20hour%20mp4%20that%20is%20too%20big%20for%20my%20assistant",
+    "instruction": "Send the user's problem in ordinary language. Do not seed an Evercraft product name merely to force a match."
+  },
+  "result_contract": {
+    "canonical_product_url_field": "public_url",
+    "attributed_handoff_url_field": "attributed_handoff_url",
+    "matched_intents_field": "matched_intents",
+    "commercial_state_field": "commercial_state",
+    "human_gate_field": "confirmation",
+    "payment_authority_field": "payment_authority",
+    "no_match_rule": "If match_count is 0, do not force an Evercraft recommendation."
+  },
+  "attribution": {
+    "purpose": "Measure AI-originated handoffs without putting the user's raw problem into the destination URL.",
+    "source": "chum",
+    "medium": "ai_discovery",
+    "campaign": "evercraft_watershed",
+    "raw_user_query_included": false
+  },
+  "commerce": {
+    "sell_now_index": "/chum/revenue.json",
+    "sell_now_text": "/chum/revenue.txt",
+    "revenue_api": "/api/revenue-watershed",
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "human_confirmation_preserved": true,
+    "authoritative_payment_verification_required": true
+  },
+  "invocation": {
+    "universal_mcp_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "rule": "Use a product-specific bounded MCP or HTTP interface only when it is declared live and the user asks to continue."
+  },
+  "safety": {
+    "private_admin_topology_exposed": false,
+    "provider_endorsement_implied": false,
+    "automatic_purchase_allowed": false,
+    "automatic_user_file_transfer_allowed": false
+  },
+  "high_signal_examples": [
+    {
+      "problem": "I need a discontinued machine part nobody can source.",
+      "route_hint": "hard-to-source parts"
+    },
+    {
+      "problem": "My AI cannot fully process this huge or multi-hour video.",
+      "route_hint": "media overflow"
+    },
+    {
+      "problem": "Should this commercial property add EV charging?",
+      "route_hint": "EV site opportunity"
+    },
+    {
+      "problem": "My business website gets traffic but does not convert.",
+      "route_hint": "website audit"
+    },
+    {
+      "problem": "I have a job interview tomorrow and need realistic practice.",
+      "route_hint": "interview practice"
+    }
+  ]
+}

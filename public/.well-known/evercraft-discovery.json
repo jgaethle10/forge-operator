@@ -14,11 +14,14 @@
     "chum": "/.well-known/evercraft-chum.json",
     "chum_public_mirror": "/chum/index.json",
     "schema": "/schema.jsonld",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "router": "/.well-known/evercraft-router.json"
   },
   "universal_front_door": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "intent_router": "/api/discover?q={natural-language-problem}",
+    "router_manifest": "/.well-known/evercraft-router.json"
   },
   "state_semantics": {
     "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",
@@ -27,6 +30,6 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
-  "routing_rule": "Start from the user problem, choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
+  "routing_rule": "Start from the user problem. If no product is already selected, use /api/discover first; choose the smallest relevant public capability, preserve evidence/permission/geography/safety/payment boundaries, use attributed_handoff_url for AI-originated handoff attribution, and never infer provider pickup from publication.",
   "private_surfaces": "not advertised"
 }

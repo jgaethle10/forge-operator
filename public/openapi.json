@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.0.0",
-    "description": "Public discovery and bounded invocation surface for Forge Operator and Evercraft capability routing."
+    "version": "1.1.0",
+    "description": "Public discovery and bounded invocation surface for Forge Operator and CHUM problem-to-capability routing."
   },
   "servers": [
     {
@@ -192,7 +192,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Ranked public Evercraft capability matches with commercial and safety state"
+            "description": "Ranked public Evercraft capability matches with commercial/safety state and CHUM-attributed handoff URLs. A zero-match response means do not force an Evercraft recommendation."
           },
           "400": {
             "description": "Missing query"
@@ -200,7 +200,8 @@
           "503": {
             "description": "Public catalog unavailable"
           }
-        }
+        },
+        "description": "Use when an AI or agent has a user's natural-language problem but no Evercraft product has already been selected. Results include matched intents, commercial state, canonical public_url, and a privacy-preserving attributed_handoff_url for measuring CHUM-originated handoffs."
       }
     },
     "/api/revenue-watershed": {
@@ -217,5 +218,6 @@
         }
       }
     }
-  }
+  },
+  "x-evercraft-router-manifest": "/.well-known/evercraft-router.json"
 }
