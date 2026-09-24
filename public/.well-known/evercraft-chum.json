@@ -34,7 +34,11 @@
     "discovery_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json",
     "agent_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-directory.json",
     "public_mirror": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json",
-    "structured_data": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/schema.jsonld"
+    "structured_data": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/schema.jsonld",
+    "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
+    "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
+    "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
+    "discovery_router": "/api/discover?q={natural-language-problem}"
   },
   "verified_crawler_controls": [
     {
