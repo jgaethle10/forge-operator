@@ -11,7 +11,7 @@ async function probe(url) {
       method: 'GET',
       redirect: 'follow',
       headers: {
-        'user-agent': 'Evercraft-AI-Doorway-Canary/1.1',
+        'user-agent': 'Evercraft-AI-Doorway-Canary/1.2',
         'accept': 'text/plain, application/json;q=0.9, */*;q=0.5'
       },
       signal: controller.signal
@@ -63,35 +63,76 @@ function validateSurface(product, kind, result) {
   return {valid:reasons.length===0,reasons};
 }
 
+async function checkSurface(product, kind, primaryUrl, fallbackUrl) {
+  const primaryResult = await probe(primaryUrl);
+  const primaryValidation = validateSurface(product, kind, primaryResult);
+
+  let fallback = null;
+  if (!primaryValidation.valid && fallbackUrl) {
+    const fallbackResult = await probe(fallbackUrl);
+    const fallbackValidation = validateSurface(product, kind, fallbackResult);
+    fallback = {
+      url: fallbackUrl,
+      ...fallbackResult,
+      valid: fallbackValidation.valid,
+      reasons: fallbackValidation.reasons
+    };
+  }
+
+  const rescued = !primaryValidation.valid && fallback?.valid === true;
+  const effectiveValid = primaryValidation.valid || rescued;
+  const effective = rescued ? fallback : {
+    url: primaryUrl,
+    ...primaryResult,
+    valid: primaryValidation.valid,
+    reasons: primaryValidation.reasons
+  };
+
+  return {
+    product: product.product_key,
+    kind,
+    url: primaryUrl,
+    fallback_url: fallbackUrl || null,
+    effective_url: effective.url,
+    source: rescued ? 'central_fallback' : 'primary',
+    valid: effectiveValid,
+    primary_valid: primaryValidation.valid,
+    primary: {
+      ok: primaryResult.ok,
+      status: primaryResult.status,
+      content_type: primaryResult.content_type || '',
+      bytes: primaryResult.bytes || 0,
+      reasons: primaryValidation.reasons,
+      sample: String(primaryResult.body || '').slice(0,120).replace(/\s+/g,' ')
+    },
+    fallback: fallback ? {
+      ok: fallback.ok,
+      status: fallback.status,
+      content_type: fallback.content_type || '',
+      bytes: fallback.bytes || 0,
+      valid: fallback.valid,
+      reasons: fallback.reasons,
+      sample: String(fallback.body || '').slice(0,120).replace(/\s+/g,' ')
+    } : null
+  };
+}
+
 let hardFailures = 0;
 const rows = [];
 
 for (const product of registry.products) {
   const checks = [
-    ['llms', product.llms_url],
-    ['conformance', product.conformance_url],
-    ['discovery', product.discovery_url]
+    ['llms', product.llms_url, product.central_llms_url],
+    ['conformance', product.conformance_url, product.central_conformance_url],
+    ['discovery', product.discovery_url, product.central_discovery_url]
   ].filter(([,url]) => Boolean(url));
 
-  for (const [kind,url] of checks) {
-    const result = await probe(url);
-    const validation = validateSurface(product,kind,result);
+  for (const [kind,url,fallbackUrl] of checks) {
+    const row = await checkSurface(product, kind, url, fallbackUrl);
     const hard = product.conformance_state === 'reference_implementation' && (kind === 'llms' || kind === 'conformance');
-    if (!validation.valid && hard) hardFailures += 1;
-
-    const row = {
-      product: product.product_key,
-      kind,
-      url,
-      expected: hard ? 'required_live_and_valid' : 'observe',
-      ok: result.ok,
-      valid: validation.valid,
-      status: result.status,
-      content_type: result.content_type || '',
-      bytes: result.bytes || 0,
-      reasons: validation.reasons,
-      sample: String(result.body || '').slice(0,120).replace(/\s+/g,' ')
-    };
+    row.expected = hard ? 'required_live_and_valid' : 'observe';
+    row.primary_repair_needed = !row.primary_valid;
+    if (!row.valid && hard) hardFailures += 1;
     rows.push(row);
     console.log(JSON.stringify(row));
   }
@@ -103,6 +144,8 @@ const summary = {
   checks: rows.length,
   hard_failures: hardFailures,
   invalid_surfaces: rows.filter(r=>!r.valid).length,
+  primary_surfaces_needing_repair: rows.filter(r=>r.primary_repair_needed).length,
+  rescued_by_central_fallback: rows.filter(r=>r.source === 'central_fallback' && r.valid).length,
   rows
 };
 
@@ -115,17 +158,29 @@ const lines = [
   `Checked: ${summary.checked_at}`,
   `Products: ${summary.products}`,
   `Endpoints: ${summary.checks}`,
-  `Invalid surfaces: ${summary.invalid_surfaces}`,
+  `Invalid effective surfaces: ${summary.invalid_surfaces}`,
+  `Primary surfaces needing repair: ${summary.primary_surfaces_needing_repair}`,
+  `Rescued by central fallback: ${summary.rescued_by_central_fallback}`,
   `Hard failures: ${summary.hard_failures}`,
   '',
-  '| Product | Surface | HTTP | Valid | Expectation | Reason |',
-  '|---|---|---:|---|---|---|',
-  ...rows.map(r => `| ${r.product} | ${r.kind} | ${r.status || 'ERR'} | ${r.valid ? 'yes' : 'no'} | ${r.expected} | ${r.reasons.join(', ') || 'ok'} |`)
+  '> A central fallback keeps discovery alive but does not erase the broken primary. Primary failures remain in the repair queue.',
+  '',
+  '| Product | Surface | Effective | Source | Primary | Expectation | Primary repair |',
+  '|---|---|---|---|---|---|---|',
+  ...rows.map(r => `| ${r.product} | ${r.kind} | ${r.valid ? 'valid' : 'FAIL'} | ${r.source} | ${r.primary.status || 'ERR'} | ${r.expected} | ${r.primary_repair_needed ? r.primary.reasons.join(', ') || 'yes' : 'no'} |`),
+  '',
+  '## Primary repair queue',
+  '',
+  ...(
+    rows.filter(r=>r.primary_repair_needed).length
+      ? rows.filter(r=>r.primary_repair_needed).map(r => `- ${r.product} / ${r.kind}: ${r.primary.reasons.join(', ') || 'invalid primary'}${r.source === 'central_fallback' ? ' (central fallback active)' : ''}`)
+      : ['- No primary doorway repairs needed.']
+  )
 ];
 fs.writeFileSync('artifacts/ai-doorway-canary.md', lines.join('\n')+'\n');
 
 if (hardFailures) {
-  throw new Error(`AI doorway canary found ${hardFailures} required live/valid endpoint failure(s)`);
+  throw new Error(`AI doorway canary found ${hardFailures} required effective doorway failure(s)`);
 }
 
 console.log('AI DOORWAY CANARY PASS');
