@@ -41,3 +41,12 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+
+## Crawler watershed
+
+CHUM keeps legitimate public capability doors bright and machine-readable while private surfaces stay dark.
+
+The public graph includes `robots.txt`, `llms.txt`, `llms-full.txt`, the `/.well-known/` discovery manifests, `openapi.json`, the Official MCP Registry, specialist MCPs, and the runtime `/api/discovery` summary. CHUM also runs brand-blind provider probes and records receipts instead of pretending crawl eligibility proves provider pickup.
+
+`npm run chum:policy` is the deterministic release gate for crawler policy. `npm run chum:crawlers` is the live portfolio crawler/reachability audit.
