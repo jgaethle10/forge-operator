@@ -106,6 +106,20 @@ for (const manifestPath of findServerManifests('registry')) {
   if (!String(manifest.version || '').trim()) fail(`${manifestPath} is missing version`);
 }
 
+
+const masterIntentIndex = readJson('public/chum/intents/index.json');
+if (masterIntentIndex.schema !== 'evercraft.chum.intent-index.v1') fail('unexpected CHUM master intent index schema');
+if (masterIntentIndex.routing?.live_router !== '/api/discover?q={natural-language-problem}') fail('master intent index missing canonical live router');
+if ((masterIntentIndex.products || []).length !== (publicDirectory.products || []).length) fail('master intent index product count drift');
+for (const product of masterIntentIndex.products || []) {
+  if (!product.product_key || !String(product.canonical_url || '').startsWith('https://')) {
+    fail(`master intent product identity invalid: ${product.product_key || 'unknown'}`);
+  }
+  if (!Array.isArray(product.intents) || product.intents.length === 0) {
+    fail(`master intent product has no buyer-language intents: ${product.product_key || 'unknown'}`);
+  }
+}
+
 if (process.exitCode) throw new Error('AI conformance registry validation failed');
 
 console.log(`AI CONFORMANCE REGISTRY PASS: ${registry.products.length} products indexed and publicly routable`);
