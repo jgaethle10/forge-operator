@@ -19,8 +19,8 @@
     "chum:validate": "node scripts/validate-chum-probes.mjs",
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
-    "chum:all": "npm run chum && npm run chum:crawlers && npm run chum:mcp",
-    "check": "npm run check:workflow-noise && npm run test:release-policy && npm run test:media-studio && npm run check:ai && npm run check:probes && npm run lint && npm run build",
+    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run chum:mirror && npm run test:chum-router && npm run chum && npm run chum:crawlers && npm run chum:mcp",
+    "check": "npm run check:workflow-noise && npm run test:release-policy && npm run test:media-studio && npm run check:ai && npm run test:chum-router && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
@@ -29,7 +29,9 @@
     "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
     "chum:mirror": "node systemia/chum/build-public-mirror.mjs",
     "chum:sync": "node systemia/chum/sync-public-discovery.mjs",
-    "check:workflow-noise": "node scripts/validate-workflow-noise.mjs"
+    "check:workflow-noise": "node scripts/validate-workflow-noise.mjs",
+    "chum:revenue": "node systemia/chum/build-revenue-watershed.mjs",
+    "test:chum-router": "node systemia/chum/discovery-router.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
