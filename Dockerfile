@@ -16,6 +16,7 @@ ENV PORT=3000
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/server.ts ./server.ts
+COPY --from=build /app/systemia/chum/discovery-router.mjs ./systemia/chum/discovery-router.mjs
 COPY --from=build /app/dist ./dist
 
 EXPOSE 3000
