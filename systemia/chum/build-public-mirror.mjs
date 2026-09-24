@@ -5,9 +5,11 @@ const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const directory = readJson('public/.well-known/evercraft-products.json');
 const conformance = readJson('conformance/products.json');
 const catalog = readJson('registry/catalog.json');
+const offerCatalog = readJson('public/.well-known/evercraft-offers.json');
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
+const offersByKey = new Map((offerCatalog.offers || []).map((p) => [p.product_key, p]));
 const providers = conformance.baseline_providers || [];
 const root = 'public/chum/products';
 
@@ -28,6 +30,7 @@ for (const product of directory.products || []) {
   if (!key) continue;
   const registry = catalogByKey.get(key) || null;
   const conf = conformanceByKey.get(key) || null;
+  const commercial = offersByKey.get(key) || null;
   const base = `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/${key}`;
   const dir = path.join(root, key);
   fs.mkdirSync(dir, { recursive: true });
@@ -45,6 +48,16 @@ for (const product of directory.products || []) {
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
     mcp: registry?.mcp || null,
     machine_commerce_mcp: catalog.universal_front_door?.mcp || null,
+    commercial: commercial ? {
+      public_id: commercial.public_id || null,
+      state: commercial.commercial_state || null,
+      machine_state: commercial.machine_state || null,
+      pricing: commercial.pricing || null,
+      offers: commercial.offers || [],
+      confirmation: commercial.confirmation || null,
+      public_url: commercial.public_url || product.canonical_url,
+      caution: commercial.caution || null
+    } : null,
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -83,6 +96,12 @@ for (const product of directory.products || []) {
     '',
     ...(product.intents || []).map((intent) => `- ${intent}`),
     '',
+    commercial ? '## Current commercial state' : null,
+    commercial ? '' : null,
+    commercial ? `State: ${commercial.machine_state || commercial.commercial_state}` : null,
+    commercial?.pricing ? `Pricing: ${commercial.pricing}` : null,
+    commercial?.confirmation ? `Confirmation: ${commercial.confirmation}` : null,
+    commercial ? '' : null,
     '## Authority',
     '',
     product.authority || 'Public discovery only.',
@@ -111,7 +130,9 @@ for (const product of directory.products || []) {
     discovery_url: discovery.mirror.discovery,
     conformance_url: discovery.mirror.conformance,
     registry_name: discovery.registry_name,
-    mcp: discovery.mcp
+    mcp: discovery.mcp,
+    commercial_state: commercial?.commercial_state || null,
+    machine_state: commercial?.machine_state || null
   });
 }
 
