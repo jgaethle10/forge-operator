@@ -4,6 +4,8 @@
   "updated_at": "2026-09-24",
   "registry_namespace": "io.github.jgaethle10",
   "universal_front_door": {
+    "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "read_only_purpose": "Read-only matching from user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported."
@@ -242,9 +244,9 @@
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
-      "canonical_url": "https://systemiacommandcenters.com/evercraft-web",
+      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
       "triggers": [
         "fetch URL for AI",
         "read web page",
@@ -260,7 +262,8 @@
       ],
       "registry_publication_state": "published_receipt_backed",
       "registry_receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
-      "runtime_state": "fetch_external_canary_pending_search_and_browser_held"
+      "runtime_state": "fetch_external_canary_pending_search_and_browser_held",
+      "route_note": "Neutral Evercraft AI Suite route. Do not route Evercraft Web through the SYSTEMIA Marketing Agency domain."
     }
   ],
   "payment_boundary": {
@@ -274,7 +277,9 @@
     "smallest_sufficient_capability": true,
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
-    "human_confirmation_required_for_irreversible_financial_or_authority_action": true
+    "human_confirmation_required_for_irreversible_financial_or_authority_action": true,
+    "brand_seed_required": false,
+    "read_only_discovery_before_commerce": true
   },
   "pain_index": {
     "schema": "evercraft.chum.pain-index.v1",
