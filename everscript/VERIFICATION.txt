@@ -1,0 +1,12 @@
+a018fadaef4a30275f032a284a1945f16f0f5cd56e41f0121a8b3296f0e73b13  everscript.mjs
+62c3dcf38c7f7c1aee92b7e6b9823c3b0ec68a23ae75820c83725aa61e8fb4a9  gateway.mjs
+9a0704ee16dcc579a230400bd8651f9c79ccee1b0b9d4a53c1c6237d0dfaf364  agent-bridge.mjs
+944779c073b48ac240ccfa43c086f8a67ed3437e61cf1ee08ef2b36dc4729fbf  test.mjs
+362bf93fc1af493bbca8edfb6040014e0796e1411ec8aca3aa5310c4db5d12dd  media-analysis.ever
+57d1966f956a672dd9bd549b88d71e66d7bc86ce9b62b66a08d77d04ad03bcb7  README.md
+7fe32238057bda5e2c6dca255f1bb5a4c57c6fac982db80070c58f52720d67ea  SECURITY.md
+925273c2e8f41ff1664771eace19e6c140fc4a61bd842273cecdca703c36fb9a  package.json
+
+Tests:
+- npm test: PASS
+- npm run check: PASS
