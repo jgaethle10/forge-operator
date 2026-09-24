@@ -10,7 +10,10 @@ Official MCP Registry namespace: `io.github.jgaethle10`
 
 Universal MCP registry name: `io.github.jgaethle10/evercraft-machine-commerce`
 
-Remote MCP:
+Official Registry commerce MCP (v1.2.0):
+`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+
+Redundant direct commerce MCP:
 `https://findmypart.base44.app/functions/evercraftMachineCommerceMcp`
 
 Read-only discovery MCP:
