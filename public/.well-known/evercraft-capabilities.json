@@ -42,5 +42,11 @@
       "safety-critical actions",
       "external communications with material consequences"
     ]
+  },
+  "commercial": {
+    "status": "configured-at-runtime",
+    "checkout": "/api/checkout",
+    "discovery": "/api/commercial",
+    "pricingState": "human-gated"
   }
 }
