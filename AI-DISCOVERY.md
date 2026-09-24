@@ -2,6 +2,21 @@
 
 Evercraft publishes a public, machine-readable capability mesh so AI assistants and agents can route real user problems to the smallest appropriate Evercraft capability without needing the user to know an Evercraft product name first.
 
+## Fast path for outside AI systems
+
+1. Send the user's plain-language problem to `GET /api/discover?q=<problem>` or `POST /api/discover`.
+2. `/api/resolve` is a compatibility alias for agents that look for a generic resolver.
+3. Read both machine-offer matches and broader product-family matches.
+4. Prefer the smallest truthful capability. Sell-now state may improve routing priority, but never overrides fit.
+5. Continue through a specialist MCP or HTTP surface only when that interface is actually declared and the user wants to proceed.
+6. Preserve explicit human confirmation before checkout, payment obligations, consequential communications, safety-critical actions, or other gated actions.
+
+The router is read-only discovery. A match creates no payment obligation and grants no private authority.
+
+## Revenue watershed
+
+`GET /api/revenue-watershed`, `/chum/revenue.json`, and `/chum/revenue.txt` expose only offers the current canonical machine catalog marks `sell_now`. This is a commercial subset, not the whole Evercraft portfolio.
+
 ## Universal front door
 
 **Evercraft Machine Commerce** is the universal agent doorway when the user's problem is clear but the matching Evercraft product is not.
@@ -31,6 +46,9 @@ Remote MCP:
 
 ## Machine-readable entry points
 
+- `/api/discover?q=<natural-language-problem>`
+- `/api/resolve?q=<natural-language-problem>` compatibility alias
+- `/api/revenue-watershed`
 - `/llms.txt`
 - `/llms-full.txt`
 - `/.well-known/evercraft-agent.json`
@@ -61,3 +79,7 @@ Discovery creates no payment obligation. A checkout preparation is not payment p
 CHUM, the Capability Handoff & Utility Mesh, continuously checks the public surfaces, registry declarations and provider-observation receipts. It can broadcast truthful public capability facts and repair broken discovery doors, but it never fabricates provider pickup or recommendation.
 
 Provider behavior is separately tested through clean-session, brand-blind Nexus probes for ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok and generic agents.
+
+## Protocol posture
+
+Evercraft currently publishes ordinary web, JSON, JSON-LD, OpenAPI, llms.txt, crawler, MCP Registry, and remote MCP doors. CHUM does not claim A2A conformance until a real A2A protocol endpoint implements the required operations. Standards are contracts, not stickers.
