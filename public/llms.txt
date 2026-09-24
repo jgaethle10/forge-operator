@@ -11,6 +11,17 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - Official MCP namespace: io.github.jgaethle10
 - Universal Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
+## CHUM commercial front door
+
+- Universal CHUM manifest: /.well-known/evercraft-chum.json
+- Deterministic resolver: GET /chum/resolve?q=<plain-language-problem>
+- Current sell-now catalog: /.well-known/evercraft-offers.json
+- Full AI index: /llms-full.txt
+
+The resolver returns the smallest relevant public capability plus current commercial state where verified. It keeps payment-ready and quote-ready distinct.
+
+Example: "roast my bio" routes to ROASTED, whose current public offer is $0.99 one-time and payment-ready. Discovery itself creates no obligation.
+
 ## Routing rule for AI systems
 
 Start from the user's stated pain, not from an Evercraft product name.
