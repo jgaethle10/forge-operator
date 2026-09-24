@@ -2,38 +2,42 @@
 
 **CHUM = Capability Handoff & Utility Mesh.**
 
-CHUM is Evercraft's machine-distribution coordinator. Its job is to make legitimate public capabilities easy for LLMs and agents to discover, understand, route to, invoke where authorized, and hand off into human-confirmed commerce.
+CHUM is the Evercraft/Systemia distribution control plane. It turns the portfolio into one discoverable watershed instead of a collection of isolated product islands.
 
-CHUM is not a claim that a model has seen or recommended a product. It separates four different states that are often blurred together:
+## Loop
 
-1. **Surface readiness**: public pages, llms.txt, structured manifests and contracts exist and can be validated.
-2. **Signaling**: provider-appropriate discovery mechanisms are available and kept fresh.
-3. **Provider pickup**: a named provider actually discovers or cites the capability. This requires a receipt-backed probe.
-4. **Conversion**: an AI-originated handoff reaches an approved commercial path and can be attributed without inventing payment state.
+`PRODUCT → SIGNAL → DISCOVERY → PROBE → REPAIR → INVOCATION → PAYMENT → LEARNING`
 
-## Run it
+CHUM intentionally separates:
+
+1. **Surface readiness**: pages, `llms.txt`, JSON contracts, MCP endpoints and public documentation are reachable.
+2. **Registry presence**: the capability is present in the Official MCP Registry and its remote MCP completes an external handshake.
+3. **Provider pickup**: a clean, brand-blind test on a named provider actually surfaces, cites or links the expected capability. This requires a receipt.
+4. **Conversion**: an AI-originated handoff reaches a verified commercial path while preserving explicit human confirmation before a payment obligation.
+
+## Portfolio rule
+
+CHUM inventories the **union** of the Evercraft conformance registry, public product directory and agent/MCP registry catalog. A product does not disappear from distribution because one list was not manually synchronized.
+
+## Commands
 
 ```bash
 npm run chum
 npm run chum:offline
+npm run chum:mcp
+npm run chum:validate
+npm run chum:providers
+npm run chum:announce
 ```
 
-Live mode probes declared public surfaces and writes:
+Provider probes use an authorized bridge when `CHUM_PROBE_BRIDGE_URL` and `CHUM_PROBE_BRIDGE_TOKEN` are available. The runner also accepts the existing `NEXUS_PROBE_BRIDGE_URL` and `NEXUS_PROBE_BRIDGE_TOKEN` names so CHUM can inherit the already-designed execution boundary.
 
-- `artifacts/chum/chum-latest.json`
-- `artifacts/chum/chum-latest.md`
+No bridge means **blocked**, not fabricated success.
 
-Offline mode builds the routing and signaling plan without network requests.
+## Failure doctrine
 
-## Current v0.1 lanes
+Static discovery failures create repair work but do not stop CHUM from checking the rest of the network. A declared live MCP failing an external initialize/tools-list canary is a hard failure. Provider pickup remains receipt-gated.
 
-- **Crawl lane**: canonical pages, `llms.txt`, structured discovery JSON, conformance and OpenAPI surfaces.
-- **Registry lane**: the existing Evercraft capability catalog and MCP registry.
-- **Probe lane**: intentionally receipt-gated. No provider behavior is claimed until a real authorized probe runs.
-- **Conversion lane**: AI-originated attribution with the existing human-confirmation boundary for checkout and payment obligations.
+## Operating doctrine
 
-## Next adapters
-
-CHUM is designed so provider adapters can be added without coupling the portfolio to one model vendor. Candidates include standards-based freshness notification where supported, MCP registry publication, provider-specific discovery surfaces, authorized model probes, referral attribution, and revenue receipts.
-
-The governing rule is simple: **broadcast facts, never fabricate pickup.**
+Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
