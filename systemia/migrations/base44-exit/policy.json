@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.systemia.base44-exit-policy.v1",
+  "status": "active",
+  "effective_date": "2026-09-24",
+  "destinations": {
+    "canonical_source": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "base44": "legacy_extraction_compatibility_only"
+  },
+  "invariants": {
+    "new_base44_apps": false,
+    "base44_as_new_runtime_target": false,
+    "secrets_in_public_github": false,
+    "private_core_source_in_public_repo": false,
+    "migration_expands_authority": false,
+    "payment_requires_explicit_confirmation": true,
+    "revenue_requires_provider_verified_payment": true
+  },
+  "cutover_required_evidence": [
+    "source_extracted",
+    "dependencies_enumerated",
+    "data_reconciled",
+    "auth_parity_verified",
+    "integration_parity_verified",
+    "tests_pass",
+    "immutable_release_ref",
+    "yard_deployment_receipt",
+    "health_pass",
+    "route_verification_pass",
+    "rollback_target_present",
+    "observation_window_pass"
+  ],
+  "priority": [
+    "systemia_core_and_kaidance_collider",
+    "shared_capability_registry_and_execution_receipts",
+    "machine_commerce_and_discovery_edges",
+    "shared_auth_data_and_integration_adapters",
+    "revenue_and_customer_workflows",
+    "public_product_surfaces",
+    "archives_and_low_traffic_legacy_apps"
+  ],
+  "retirement_rule": "Base44 may be retired per slice only after the named replacement is live, independently verified, reconciled and rollback-safe."
+}
