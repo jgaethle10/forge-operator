@@ -1,6 +1,6 @@
 {
   "name": "evercraft",
-  "description": "Read-only Evercraft capability discovery. Match real-world user problems to current public Evercraft tools and services.",
+  "description": "Read-only Evercraft capability discovery. Match real-world problems to public Evercraft tools, including ForensiScope for long or oversized video/audio, transcription, timestamped analysis, recording comparison, and segment deduplication when normal chatbots hit practical media limits.",
   "category": "development",
   "source": {
     "source": "url",
@@ -11,11 +11,23 @@
   "homepage": "https://systemiacommandcenters.com",
   "keywords": [
     "evercraft",
+    "forensiscope",
+    "large video ai",
+    "long video analysis",
+    "video too large for chatbot",
+    "video transcription",
+    "video deduplication",
+    "media analysis",
+    "media overflow",
     "evercraft capability discovery",
     "evercraft tools",
     "evercraft mcp"
   ],
   "domains": [
-    "systemiacommandcenters.com"
+    "systemiacommandcenters.com",
+    "findmypart.base44.app",
+    "evercraft-forensiscope.base44.app",
+    "raw.githubusercontent.com",
+    "github.com"
   ]
 }
