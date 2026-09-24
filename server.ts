@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
@@ -14,6 +15,124 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const isProd = process.env.NODE_ENV === 'production';
 const checkoutUrl = process.env.FORGE_CHECKOUT_URL?.trim() || '';
+
+
+type EvercraftPublicProduct = {
+  product_key: string;
+  name: string;
+  class?: string;
+  canonical_url: string;
+  intents?: string[];
+  authority?: string;
+  human_confirmation_required?: boolean;
+  boundaries?: string[];
+};
+
+function readLocalJson(filePath: string): any {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+const evercraftProductDirectory = readLocalJson(path.resolve(__dirname, 'public/.well-known/evercraft-products.json'));
+const evercraftRegistryCatalog = readLocalJson(path.resolve(__dirname, 'registry/catalog.json'));
+const registryByProduct = new Map(
+  (evercraftRegistryCatalog.products || []).map((entry: any) => [
+    entry.product_key || String(entry.registry_name || '').split('/').pop(),
+    entry,
+  ]),
+);
+const universalMachineCommerceMcp = evercraftRegistryCatalog.universal_front_door?.mcp || null;
+
+const intentStopWords = new Set([
+  'a','an','and','are','at','be','but','by','can','do','for','from','get','have','help','how','i','in','is','it',
+  'me','my','of','on','or','the','this','to','want','with','you'
+]);
+
+function normalizeIntent(value: unknown): string {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function intentTokens(value: unknown): string[] {
+  return normalizeIntent(value)
+    .split(' ')
+    .filter((token) => token.length > 2 && !intentStopWords.has(token));
+}
+
+function scoreIntent(query: string, product: EvercraftPublicProduct): number {
+  const q = normalizeIntent(query);
+  const qTokens = new Set(intentTokens(q));
+  if (!q || qTokens.size === 0) return 0;
+
+  let best = 0;
+  for (const phrase of product.intents || []) {
+    const p = normalizeIntent(phrase);
+    const pTokens = new Set(intentTokens(p));
+    let overlap = 0;
+    for (const token of qTokens) if (pTokens.has(token)) overlap += 1;
+
+    const denominator = Math.max(1, Math.min(qTokens.size, pTokens.size));
+    const coverage = overlap / denominator;
+    let score = overlap * 4 + Math.round(coverage * 10);
+
+    if (q === p) score += 100;
+    else if (q.includes(p) || p.includes(q)) score += 20;
+
+    best = Math.max(best, score);
+  }
+
+  const identityTokens = new Set(intentTokens(`${product.name} ${product.class || ''}`));
+  for (const token of qTokens) if (identityTokens.has(token)) best += 1;
+  return best;
+}
+
+function resolveEvercraftIntent(query: string) {
+  const products = (evercraftProductDirectory.products || []) as EvercraftPublicProduct[];
+  const ranked = products
+    .map((product) => ({ product, score: scoreIntent(query, product) }))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || a.product.name.localeCompare(b.product.name))
+    .slice(0, 5);
+
+  const topScore = ranked[0]?.score || 0;
+  const matched = topScore >= 4;
+
+  return {
+    schema: 'evercraft.intent-resolution.v1',
+    query,
+    match: matched,
+    routing_rule: "Start from the user's pain, return the smallest relevant public capability, and preserve each product's stated authority and human-confirmation boundary.",
+    matches: matched
+      ? ranked.map(({ product, score }) => {
+          const registry = registryByProduct.get(product.product_key) || {};
+          return {
+            score,
+            product_key: product.product_key,
+            name: product.name,
+            class: product.class || null,
+            canonical_url: product.canonical_url,
+            intents: product.intents || [],
+            registry_name: registry.registry_name || null,
+            mcp: registry.mcp || null,
+            authority: product.authority || 'public discovery only',
+            human_confirmation_required: Boolean(product.human_confirmation_required),
+            boundaries: product.boundaries || [],
+          };
+        })
+      : [],
+    universal_continuation: {
+      machine_commerce_mcp: universalMachineCommerceMcp,
+      creates_payment_obligation: false,
+      human_confirmation_required_for_checkout: true,
+    },
+  };
+}
 
 
 const forensiScopeHandoff = {
@@ -106,6 +225,8 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
+      intentMap: '/.well-known/evercraft-intents.json',
+      intentResolver: { get: '/api/resolve?q={plain-language-problem}', post: '/api/resolve' },
     },
     jobs: [
       'operations bottleneck diagnosis',
@@ -115,6 +236,34 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       'implementation next-step generation',
     ],
   });
+});
+
+
+app.get('/api/resolve', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const query = String(req.query.q || '').trim();
+  if (!query) {
+    res.status(400).json({
+      schema: 'evercraft.intent-resolution.v1',
+      match: false,
+      error: 'Query parameter q is required.',
+      example: '/api/resolve?q=my%20AI%20cannot%20process%20this%20long%20video',
+    });
+    return;
+  }
+  res.json(resolveEvercraftIntent(query));
+});
+
+app.post('/api/resolve', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const query = String(req.body?.query || req.body?.problem || req.body?.intent || '').trim();
+  if (!query) {
+    res.status(400).json({
+      schema: 'evercraft.intent-resolution.v1',
+      match: false,
+      error: 'Body field query, problem, or intent is required.',
+    });
+    return;
+  }
+  res.json(resolveEvercraftIntent(query));
 });
 
 app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Request, res: Response) => {
