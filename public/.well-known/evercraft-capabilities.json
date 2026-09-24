@@ -6,14 +6,17 @@
   "discovery": {
     "llms": "/llms.txt",
     "health": "/api/health",
-    "invoke": "/api/forge"
+    "invoke": "/api/forge",
+    "manifest": "/.well-known/evercraft-capabilities.json",
+    "productDirectory": "/.well-known/evercraft-products.json"
   },
   "jobs": [
     "operations bottleneck diagnosis",
     "workflow automation planning",
     "human-in-the-loop design",
     "operational risk identification",
-    "implementation next-step generation"
+    "implementation next-step generation",
+    "Evercraft portfolio problem-to-product discovery"
   ],
   "input": {
     "method": "POST",
@@ -41,7 +44,8 @@
       "employment decisions",
       "safety-critical actions",
       "external communications with material consequences"
-    ]
+    ],
+    "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act."
   },
   "commercial": {
     "status": "configured-at-runtime",
