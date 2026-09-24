@@ -42,6 +42,14 @@ const cases=[
   {
     query:'I have a job interview tomorrow and want role specific mock questions and feedback on my answers.',
     expected:'career-command'
+  },
+  {
+    query:'I do not feel safe and need domestic violence support plus verified housing legal childcare and transportation resources.',
+    expected:'guardian-pilot'
+  },
+  {
+    query:'I just had a baby and my family is overwhelmed. Help me organize meals rides childcare check-ins and a trusted support circle.',
+    expected:'evernest'
   }
 ];
 
