@@ -1,0 +1,25 @@
+# BuildFlow Enterprise Operations
+
+Provider: Evercraft
+Product key: buildflow
+Class: enterprise_operations_discovery_and_handoff
+Canonical URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+Authority: public discovery, intent routing and privacy-preserving human handoff only
+Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt
+Declared MCP: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
+
+## Natural-language intents
+- audit an enterprise operations process
+- route an enterprise operations problem
+- map business process patterns
+- prepare a privacy-safe operations handoff
+
+## Boundaries
+- do not send private customer records
+- external business writes are disabled
+- handoff does not execute business actions
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
