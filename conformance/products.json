@@ -103,6 +103,19 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "evercraft-containment",
+      "name": "Evercraft Containment",
+      "class": "agent_persistence_diagnostic",
+      "canonical_url": "https://evercraft.base44.app/containment",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
+      "doorway_state": "public_product_page_live_machine_surface_pending",
+      "conformance_state": "chum_discovery_mirror",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "bounded_membership_discovery",
