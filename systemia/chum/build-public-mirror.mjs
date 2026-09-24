@@ -516,12 +516,14 @@ for (const product of directory.products || []) {
   const safeMcp = safePublicUrl(registry?.mcp, null);
   const safeHttpRouter = safePublicUrl(registry?.http_router, null);
   const safeCanonical = safePublicUrl(product.canonical_url, `${mirrorBase}/index.html`);
+  const declaredRegistryName = registry?.registry_name || conf?.mcp_registry?.name || null;
+  const registryPublication = registryPublicationState(key, declaredRegistryName);
   const invocation =
     safeMcp
-      ? { mode: 'mcp', url: safeMcp, registry_name: registry.registry_name || conf?.mcp_registry?.name || null }
+      ? { mode: 'mcp', url: safeMcp, registry_name: registryPublication.registry_name, declared_registry_name: registryPublication.declared_registry_name, registry_publication_state: registryPublication.state }
       : safeHttpRouter
-        ? { mode: 'bounded_http', url: safeHttpRouter, registry_name: null }
-        : { mode: 'discovery_only', url: null, registry_name: null };
+        ? { mode: 'bounded_http', url: safeHttpRouter, registry_name: null, declared_registry_name: declaredRegistryName, registry_publication_state: registryPublication.state }
+        : { mode: 'discovery_only', url: null, registry_name: null, declared_registry_name: declaredRegistryName, registry_publication_state: registryPublication.state };
 
   llmsLines.push(`### ${product.name}`);
   llmsLines.push(`Product key: ${key}`);
@@ -529,6 +531,7 @@ for (const product of directory.products || []) {
   llmsLines.push(`Canonical: ${safeCanonical}`);
   llmsLines.push(`Machine state: ${invocation.mode}`);
   if (invocation.registry_name) llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
+  else if (invocation.declared_registry_name) llmsLines.push(`Declared registry namespace (publication not receipt-backed): ${invocation.declared_registry_name}`);
   if (invocation.url) llmsLines.push(`Invocation: ${invocation.url}`);
   llmsLines.push(`Discovery: ${mirrorBase}/ai-discovery.json`);
   llmsLines.push(`AI conformance: ${mirrorBase}/ai-conformance.json`);
@@ -599,10 +602,17 @@ const agentDirectory = {
     name: 'Evercraft discovery watershed',
     human_directory: '/ai',
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    read_only_mcp: READ_ONLY_DISCOVERY_MCP,
     pain_index: '/.well-known/evercraft-pain-index.json',
     answer_graph: '/chum/answers/index.json',
-    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
+    machine_commerce_registry_name: MACHINE_COMMERCE_REGISTRY,
     machine_commerce_mcp: universalMcp,
+    redundant_commerce_mcp: REDUNDANT_COMMERCE_MCP,
+    a2a_agent_card: A2A_AGENT_CARD,
+    a2a_endpoint: A2A_ENDPOINT,
+    openapi_safe: OPENAPI_SAFE,
+    openapi_full: OPENAPI_FULL,
+    grok_marketplace: GROK_MARKETPLACE,
     use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant.'
   },
   routing_policy: {
@@ -634,6 +644,7 @@ const discoveryWatershed = {
     answer_graph: '/chum/answers/index.json',
     answer_graph_text: '/chum/answers/index.txt',
     read_only_mcp_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    read_only_mcp: READ_ONLY_DISCOVERY_MCP,
     products: '/.well-known/evercraft-products.json',
     agents: '/.well-known/evercraft-agent-directory.json',
     interfaces: '/.well-known/evercraft-agent-interfaces.json',
@@ -650,8 +661,14 @@ const discoveryWatershed = {
   },
   universal_front_door: {
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
-    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
-    machine_commerce_mcp: universalMcp
+    machine_commerce_registry_name: MACHINE_COMMERCE_REGISTRY,
+    machine_commerce_mcp: universalMcp,
+    redundant_commerce_mcp: REDUNDANT_COMMERCE_MCP,
+    a2a_agent_card: A2A_AGENT_CARD,
+    a2a_endpoint: A2A_ENDPOINT,
+    openapi_safe: OPENAPI_SAFE,
+    openapi_full: OPENAPI_FULL,
+    grok_marketplace: GROK_MARKETPLACE
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',
