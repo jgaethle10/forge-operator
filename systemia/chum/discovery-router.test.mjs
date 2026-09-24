@@ -16,7 +16,9 @@ const cases = [
   ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1'],
   ['I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots', 'forensiscope-evidence-review-v1'],
   ['protect my family online identity theft home safety account takeover', 'raven-nexus-pain-router-v1'],
-  ['my chatbot says this long video is too large; transcribe it and find repeated footage', 'forensiscope-evidence-review-v1']
+  ['my chatbot says this long video is too large; transcribe it and find repeated footage', 'forensiscope-evidence-review-v1'],
+  ['we need an ERP but cannot survive a huge implementation and want to modernize without replacing everything', 'buildflow-enterprise-ops-router-v1'],
+  ['the same vendors exist in multiple systems and we need safe deduplication without silent merges', 'buildflow-entity-resolution-machine-v1']
 ];
 
 let failed = 0;
