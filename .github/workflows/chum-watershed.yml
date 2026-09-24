@@ -109,6 +109,12 @@ jobs:
         continue-on-error: true
         run: npm run chum:mcp
 
+      - name: Canary current sell-now offer doors
+        id: commerce
+        if: always()
+        continue-on-error: true
+        run: npm run chum:commerce-canary
+
       - name: Run authorized brand-blind provider probes
         id: providers
         if: always()
@@ -137,6 +143,7 @@ jobs:
             "static:${{ steps.static.outcome }}" \
             "crawlers:${{ steps.crawlers.outcome }}" \
             "mcp:${{ steps.mcp.outcome }}" \
+            "commerce:${{ steps.commerce.outcome }}" \
             "mesh:${{ steps.mesh.outcome }}"; do
             NAME="$(printf '%s' "$PAIR" | cut -d: -f1)"
             STATE="$(printf '%s' "$PAIR" | cut -d: -f2-)"
@@ -157,11 +164,12 @@ jobs:
             echo "Static doorway: ${{ steps.static.outcome }}"
             echo "Crawler reachability: ${{ steps.crawlers.outcome }}"
             echo "MCP / Registry: ${{ steps.mcp.outcome }}"
+            echo "Sell-now commerce doors: ${{ steps.commerce.outcome }}"
             echo "Provider probes: ${{ steps.providers.outcome }}"
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -185,7 +193,7 @@ jobs:
         run: |
           set -euo pipefail
           FAILED=0
-          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
+          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
             NAME="${PAIR%%:*}"
             STATE="${PAIR#*:}"
             echo "${NAME}: ${STATE}"
