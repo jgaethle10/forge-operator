@@ -1,0 +1,36 @@
+name: CHUM goal adapter proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/chum/goal-adapter.mjs"
+      - "systemia/chum/goal-adapter.proof.mjs"
+      - "systemia/chum/discovery-router.mjs"
+      - "systemia/organism/capability-runtime.mjs"
+      - ".github/workflows/chum-goal-adapter.yml"
+  push:
+    branches:
+      - main
+      - "systemia/**"
+    paths:
+      - "systemia/chum/goal-adapter.mjs"
+      - "systemia/chum/goal-adapter.proof.mjs"
+      - "systemia/chum/discovery-router.mjs"
+      - "systemia/organism/capability-runtime.mjs"
+      - ".github/workflows/chum-goal-adapter.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run CHUM goal adapter proof
+        run: node systemia/chum/goal-adapter.proof.mjs
