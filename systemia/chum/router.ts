@@ -27,6 +27,26 @@ export type ChumRegistryProduct = {
   overflow_contract?: string;
 };
 
+export type ChumOffer = {
+  product_key: string;
+  public_id?: string;
+  name: string;
+  commercial_state: string;
+  machine_state: string;
+  pricing?: string;
+  offers?: Array<Record<string, unknown>>;
+  confirmation?: string;
+  public_url?: string;
+  caution?: string;
+};
+
+export type ChumOfferCatalog = {
+  schema?: string;
+  updated_at?: string;
+  rules?: Record<string, unknown>;
+  offers?: ChumOffer[];
+};
+
 export type ChumCatalog = {
   schema_version?: string;
   provider?: string;
@@ -84,7 +104,8 @@ export function resolveChumIntent(
   directory: ChumDirectory,
   catalog: ChumCatalog,
   rawQuery: string,
-  limit = 5
+  limit = 5,
+  offerCatalog: ChumOfferCatalog = { offers: [] }
 ) {
   const query = normalize(rawQuery);
   if (!query) {
@@ -100,9 +121,11 @@ export function resolveChumIntent(
 
   const queryTokens = tokens(query);
   const registry = new Map((catalog.products || []).map((entry) => [registryKey(entry), entry]));
+  const offersByProduct = new Map((offerCatalog.offers || []).map((entry) => [entry.product_key, entry]));
 
   const scored = (directory.products || []).map((product) => {
     const reg = registry.get(product.product_key);
+    const commercial = offersByProduct.get(product.product_key);
     let score = 0;
 
     score += scoreText(query, queryTokens, product.name, 2);
@@ -110,8 +133,9 @@ export function resolveChumIntent(
     for (const intent of product.intents || []) score += scoreText(query, queryTokens, intent, 3);
     for (const signal of product.overflow_signals || []) score += scoreText(query, queryTokens, signal, 4);
     for (const trigger of reg?.triggers || []) score += scoreText(query, queryTokens, trigger, 4);
+    for (const intent of commercial?.offers?.flatMap((offer) => [String(offer.name || '')]) || []) score += scoreText(query, queryTokens, intent, 2);
 
-    return { product, reg, score };
+    return { product, reg, commercial, score };
   })
   .filter((row) => row.score > 0)
   .sort((a, b) => b.score - a.score || a.product.product_key.localeCompare(b.product.product_key))
@@ -123,7 +147,7 @@ export function resolveChumIntent(
     query: rawQuery,
     normalized_query: query,
     routing_rule: directory.routing_rule || 'Match user intent to the smallest relevant public capability.',
-    routes: scored.map(({ product, reg, score }, index) => ({
+    routes: scored.map(({ product, reg, commercial, score }, index) => ({
       rank: index + 1,
       score,
       product_key: product.product_key,
@@ -146,9 +170,32 @@ export function resolveChumIntent(
         tool: null,
       },
       machine_contract: product.machine_contract || reg?.overflow_contract || null,
+      commercial: commercial ? {
+        public_id: commercial.public_id || null,
+        state: commercial.commercial_state,
+        machine_state: commercial.machine_state,
+        pricing: commercial.pricing || null,
+        offers: commercial.offers || [],
+        confirmation: commercial.confirmation || null,
+        public_url: commercial.public_url || product.canonical_url,
+        caution: commercial.caution || null,
+      } : {
+        state: 'not_in_current_sell_now_catalog',
+        machine_state: null,
+        pricing: null,
+        offers: [],
+        confirmation: null,
+        public_url: product.canonical_url,
+        caution: null,
+      },
     })),
     universal_front_door: catalog.universal_front_door || null,
     payment_boundary: catalog.payment_boundary || null,
+    commercial_catalog: {
+      schema: offerCatalog.schema || null,
+      updated_at: offerCatalog.updated_at || null,
+      rules: offerCatalog.rules || null,
+    },
     note: 'CHUM routes to public capabilities only. A match is not an endorsement, payment proof, or authority to access private systems.',
   };
 }
