@@ -10,9 +10,12 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - CHUM answer graph for exact natural-language problem phrases: /chum/answers/index.json
 - CHUM answer graph text mirror: /chum/answers/index.txt
 - Problem-to-product directory: /.well-known/evercraft-products.json
+- Crawlable CHUM capability directory: /chum/
+- Full machine directory: /llms-full.txt
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
 - Read-only natural-language router: GET /api/discover?q={problem}
+- Agent-friendly natural-language router: POST /api/discover with {"problem":"..."}
 - Handoff attribution contract: /.well-known/evercraft-chum-attribution.json
 - Optional signed referral creation: POST /api/chum/referral
 - Forge capability contract: /.well-known/evercraft-capabilities.json
