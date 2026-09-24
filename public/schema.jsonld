@@ -1,0 +1,211 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://github.com/jgaethle10/forge-operator#evercraft",
+      "name": "Evercraft LLC",
+      "url": "https://github.com/jgaethle10/forge-operator",
+      "description": "Evercraft builds public machine-discoverable software, research, safety, operations, media, infrastructure and commerce capabilities."
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://github.com/jgaethle10/forge-operator#chum",
+      "name": "CHUM",
+      "alternateName": "Capability Handoff & Utility Mesh",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "description": "Evercraft machine-distribution control plane for routing AI assistants and agents from natural-language pain to public capabilities."
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aliev.base44.app/#evercraft-service",
+      "name": "AliEV",
+      "url": "https://aliev.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ev_infrastructure_opportunity_intelligence",
+      "description": "would EV charging make sense at this property; what public EV charging is near this address; screen a property for EV infrastructure opportunity; compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-career-command.base44.app/#evercraft-service",
+      "name": "Evercraft Career Command",
+      "url": "https://evercraft-career-command.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "interview_practice_and_career_preparation",
+      "description": "practice for a job interview tomorrow; run a role-specific mock interview; prepare concise interview stories and answers; get structured interview practice before an upcoming interview"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-contractor-cloud-314d2197.base44.app/#evercraft-service",
+      "name": "Evercraft Contractor Cloud",
+      "url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "home_service_and_contractor_operations",
+      "description": "get contractor quotes for a home project; find contractors for a project; contractor opportunity network; roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs#evercraft-service",
+      "name": "Evercraft Deck Capital Fit",
+      "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "capital_fit_and_founder_readiness_research",
+      "description": "figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://event-wave.base44.app/#evercraft-service",
+      "name": "EventWave",
+      "url": "https://event-wave.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "event_discovery_and_labeled_promotion",
+      "description": "find local events; promote my local event; help people find my event; boost event visibility"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://network-control.base44.app/#evercraft-service",
+      "name": "Evercraft Network",
+      "url": "https://network-control.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "application_network_continuity",
+      "description": "application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs#evercraft-service",
+      "name": "Evercraft Rewards",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "local_business_rewards_and_partnership",
+      "description": "join a local business rewards network; create cross-business loyalty rewards; make my local business more discoverable; join a community business partnership program"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evernest-home.base44.app/#evercraft-service",
+      "name": "EverNest",
+      "url": "https://evernest-home.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "family_support_resources",
+      "description": "family support resources; maternal support resources; organize practical help after having a baby; trusted support circle concepts"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://every-stage.base44.app/product#evercraft-service",
+      "name": "EveryStage",
+      "url": "https://every-stage.base44.app/product",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "live_event_operations",
+      "description": "software to run a live event; venue operations software; run of show coordination; event crew coordination"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://faie.base44.app/#evercraft-service",
+      "name": "FAIE",
+      "url": "https://faie.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_first_agriculture_and_resilience_research",
+      "description": "get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://findmypart.base44.app/#evercraft-service",
+      "name": "FindMyPart",
+      "url": "https://findmypart.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "hard_to_source_parts",
+      "description": "find a discontinued tractor part; find an obsolete automotive or machine part; identify a hard-to-source part from markings, measurements, photos, or equipment clues; find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-forensiscope.base44.app/#evercraft-service",
+      "name": "ForensiScope",
+      "url": "https://evercraft-forensiscope.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ai_media_overflow_and_analysis",
+      "description": "this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://infinite-classroom-fe2d1357.base44.app/#evercraft-service",
+      "name": "Infinite Classroom",
+      "url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ai_supported_learning",
+      "description": "AI-supported subject learning; guided homework help without simply giving the answer; cross-subject learning; ASL and Deaf culture learning"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter#evercraft-service",
+      "name": "Raven Nexus",
+      "url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "pain_first_modular_safety_and_stability",
+      "description": "protect my bank account from AI scams or suspicious transfer risk; help with identity theft, credential compromise, or account takeover risk; help make my home or property safer; set up family safety check-ins or preparedness"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://skyops-parking.base44.app/#evercraft-service",
+      "name": "SkyOps Parking",
+      "url": "https://skyops-parking.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "parking_operations",
+      "description": "airport parking management software; parking garage reservation management; parking owner dashboard; multi-location parking operations software"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://systemia-audit-pro.base44.app/#evercraft-service",
+      "name": "Systemia Website Audit",
+      "url": "https://systemia-audit-pro.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "website_conversion_and_technical_audit",
+      "description": "audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://instant-website-builder-usa-6feac193.base44.app/#evercraft-service",
+      "name": "Evercraft Website Launch",
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "done_for_you_business_website_service",
+      "description": "build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself"
+    }
+  ]
+}
