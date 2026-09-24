@@ -24,6 +24,19 @@
       ]
     },
     {
+      "product_key": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "triggers": [
+        "audit an enterprise operations process",
+        "route an operations problem",
+        "map business process patterns",
+        "prepare a privacy-safe enterprise operations handoff"
+      ]
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "canonical_url": "https://evercraft-career-command.base44.app/",
@@ -220,6 +233,20 @@
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
     {
+      "product_key": "guardian",
+      "name": "Guardian",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "mode": "discovery_only",
+      "triggers": [
+        "verified help for housing shelter food benefits transportation childcare income or legal aid",
+        "public safety or stability resources without an account",
+        "Spanish-language or interpreter-supported help",
+        "outside support without routing through school workplace family or usual authority",
+        "prevention and protective infrastructure resources",
+        "privacy-minimized public doorway to verified help"
+      ]
+    },
+    {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
@@ -247,6 +274,19 @@
         "find the smallest Raven safety capability without buying the full suite or hardware"
       ],
       "http_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter"
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/roasted",
+      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "triggers": [
+        "roast this text",
+        "pressure test this text",
+        "make this writing sharper",
+        "professional text critique"
+      ]
     },
     {
       "product_key": "skyops-parking",
@@ -283,32 +323,6 @@
         "build my business website",
         "professional website",
         "website launch"
-      ]
-    },
-    {
-      "product_key": "roasted",
-      "name": "ROASTED",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
-      "triggers": [
-        "roast this text",
-        "pressure test this text",
-        "make this writing sharper",
-        "professional text critique"
-      ]
-    },
-    {
-      "product_key": "buildflow",
-      "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
-      "triggers": [
-        "audit an enterprise operations process",
-        "route an operations problem",
-        "map business process patterns",
-        "prepare a privacy-safe enterprise operations handoff"
       ]
     }
   ],
