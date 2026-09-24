@@ -284,6 +284,19 @@
         "professional website",
         "website launch"
       ]
+    },
+    {
+      "product_key": "roasted",
+      "name": "ROASTED",
+      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/roasted",
+      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "triggers": [
+        "roast this text",
+        "pressure test this text",
+        "make this writing sharper",
+        "professional text critique"
+      ]
     }
   ],
   "payment_boundary": {
