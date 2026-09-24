@@ -2,17 +2,37 @@
   "schema": "evercraft.chum.v2",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "status": "portfolio_distribution_control_plane",
+  "status": "source_implemented_pending_runtime_verification",
   "provider": "Evercraft LLC",
-  "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": ["PRODUCT","SIGNAL","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","LEARNING"],
-  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
+  "purpose": "Operate Evercraft's public discovery watershed: pain-language discovery, crawlable capability pages, machine-readable routing, provider-neutral agent handoff, invocation readiness, pickup verification, and AI-originated conversion attribution.",
+  "loop": [
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
+    "LEARNING"
+  ],
+  "provider_targets": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
   "public_entrypoints": {
-    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
-    "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
-    "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
-    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "human_ai_directory": "/ai",
+    "deterministic_resolver": "/api/discover?q={natural_language_problem}",
+    "runtime_agent_manifest": "/.well-known/evercraft-agent-discovery.json",
+    "portfolio": "/.well-known/evercraft-products.json",
+    "capabilities": "/.well-known/evercraft-capabilities.json",
+    "llms": "/llms.txt",
+    "source_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
+    "source_repository": "https://github.com/jgaethle10/forge-operator"
   },
   "verified_crawler_controls": [
     {
@@ -43,5 +63,13 @@
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification"
-  ]
+  ],
+  "discovery_doctrine": {
+    "describe_problem_not_product": true,
+    "route_to_smallest_relevant_public_capability": true,
+    "no_hidden_machine_only_purchase_path": true,
+    "no_private_topology_exposure": true,
+    "no_provider_recommendation_claim_without_receipt": true,
+    "no_payment_obligation_from_discovery": true
+  }
 }
