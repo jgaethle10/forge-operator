@@ -6,7 +6,7 @@ const UNIVERSAL_MCP = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/6
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const offers = (catalog.offers || [])
-  .filter((offer) => offer.commercial_state === 'sell_now')
+  .filter((offer) => offer && offer.public_id && offer.name)
   .sort((a,b) => String(a.name || '').localeCompare(String(b.name || '')));
 
 const slugify = (value) => String(value || '')
@@ -19,13 +19,14 @@ const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (ch) => ({
   '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
 }[ch]));
 
-const publicOffers = offers.map((offer) => ({
+const toPublicOffer = (offer) => ({
   public_id: offer.public_id,
   name: offer.name,
   problem: offer.problem,
   intent_terms: offer.intent_terms || [],
   pricing: offer.pricing,
   offers: offer.offers || [],
+  commercial_state: offer.commercial_state,
   machine_state: offer.machine_state,
   public_url: offer.public_url,
   human_ui_required: Boolean(offer.human_ui_required),
@@ -34,9 +35,14 @@ const publicOffers = offers.map((offer) => ({
   invocation_status: offer.invocation_status,
   catalog_version: offer.catalog_version,
   machine_review_url: MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || '')),
-  machine_offer_url: MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || '')),
+  machine_offer_url: offer.commercial_state === 'sell_now'
+    ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || ''))
+    : null,
   universal_mcp: UNIVERSAL_MCP
-}));
+});
+
+const publicOffers = offers.filter((offer) => offer.commercial_state === 'sell_now').map(toPublicOffer);
+const discoveryOffers = offers.map(toPublicOffer);
 
 const output = {
   schema: 'evercraft.chum.revenue-watershed.v2',
@@ -57,7 +63,12 @@ const output = {
     private_topology_exposed: false
   },
   sell_now_count: publicOffers.length,
+  discovery_count: discoveryOffers.length,
   offers: publicOffers.map((offer) => ({
+    ...offer,
+    pain_page: `/chum/intents/${slugify(offer.public_id)}/`
+  })),
+  discovery_offers: discoveryOffers.map((offer) => ({
     ...offer,
     pain_page: `/chum/intents/${slugify(offer.public_id)}/`
   }))
@@ -78,11 +89,12 @@ const text = [
     `Public ID: ${offer.public_id}`,
     `Problem: ${offer.problem}`,
     `Pricing: ${offer.pricing}`,
+    `Commercial state: ${offer.commercial_state}`,
     `Machine state: ${offer.machine_state}`,
     `Public URL: ${offer.public_url}`,
     `Pain page: ${offer.pain_page}`,
     `Human review: ${offer.machine_review_url}`,
-    `Machine offer JSON: ${offer.machine_offer_url}`,
+    `Machine offer JSON: ${offer.machine_offer_url || 'Not exposed until commercial verification is complete'}`,
     `Universal MCP: ${offer.universal_mcp}`,
     'Intent examples:',
     ...(offer.intent_terms || []).map((term) => `- ${term}`),
@@ -139,7 +151,7 @@ fs.mkdirSync(intentsRoot, {recursive:true});
 
 const sitemapUrls = ['/chum/','/chum/revenue.html','/chum/revenue.txt','/chum/revenue.json'];
 
-for (const offer of output.offers) {
+for (const offer of output.discovery_offers) {
   const slug = slugify(offer.public_id);
   const dir = path.join(intentsRoot, slug);
   fs.mkdirSync(dir, {recursive:true});
@@ -155,6 +167,7 @@ for (const offer of output.offers) {
     problem:offer.problem,
     intent_terms:offer.intent_terms,
     pricing:offer.pricing,
+    commercial_state:offer.commercial_state,
     machine_state:offer.machine_state,
     public_url:offer.public_url,
     human_ui_required:offer.human_ui_required,
@@ -203,7 +216,13 @@ for (const offer of output.offers) {
     description:offer.problem,
     url:offer.public_url,
     provider:{'@type':'Organization',name:'Evercraft LLC'},
-    offers: offer.pricing ? {'@type':'Offer','description':offer.pricing} : undefined
+    offers: offer.commercial_state === 'sell_now' && offer.pricing
+      ? {'@type':'Offer','description':offer.pricing}
+      : undefined,
+    additionalProperty: [
+      {'@type':'PropertyValue','name':'commercial_state','value':offer.commercial_state},
+      {'@type':'PropertyValue','name':'machine_state','value':offer.machine_state}
+    ]
   };
 
   const page = [
@@ -219,8 +238,12 @@ for (const offer of output.offers) {
     '<h2>When this fits</h2><ul>',
     ...(offer.intent_terms || []).map((term) => `<li>${escapeHtml(term)}</li>`),
     '</ul>',
-    `<p><strong>Pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
+    `<p><strong>Published pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
+    `<p><strong>Commercial state:</strong> ${escapeHtml(offer.commercial_state)}</p>`,
     `<p><strong>Machine state:</strong> ${escapeHtml(offer.machine_state)}</p>`,
+    offer.commercial_state === 'sell_now'
+      ? '<p>This capability is currently marked sell-now in the canonical catalog. Human confirmation and authoritative payment verification still apply.</p>'
+      : '<p>This capability is publicly discoverable, but machine checkout is not exposed until its current commercial verification gate is satisfied.</p>',
     `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
     '<p>Discovery creates no payment obligation. Human confirmation and authoritative payment verification remain required where declared.</p>',
     '</main></body></html>'
@@ -239,7 +262,8 @@ fs.writeFileSync('public/chum/sitemap.xml', sitemap);
 
 console.log(JSON.stringify({
   sell_now_count: publicOffers.length,
-  pain_pages: publicOffers.length,
+  pain_pages: discoveryOffers.length,
+  sell_now_pain_pages: publicOffers.length,
   outputs:[
     'public/chum/revenue.json',
     'public/chum/revenue.txt',
