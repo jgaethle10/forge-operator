@@ -1,0 +1,36 @@
+name: Systemia organism proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/organism/**"
+      - ".github/workflows/systemia-organism-proof.yml"
+  push:
+    branches:
+      - main
+      - "systemia/**"
+    paths:
+      - "systemia/organism/**"
+      - ".github/workflows/systemia-organism-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: systemia-organism-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run deterministic organism proof
+        run: node systemia/organism/proof.mjs
