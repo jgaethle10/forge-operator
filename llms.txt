@@ -88,3 +88,15 @@ Direct specialist MCPs include AliEV, FindMyPart, Career Command, Systemia Websi
 Evercraft Rewards is a local-commerce capability exposed through Evercraft Machine Commerce. Use the `prepare_rewards_partner_enrollment` tool when a business wants discoverability, loyalty, cross-business rewards, or community partnership. It may prepare a reversible enrollment intent, but it does not activate a partner or create a payment obligation.
 
 Payment rule: discovery and matching create no payment obligation. Checkout preparation requires explicit human confirmation. Checkout creation is not proof of payment, revenue, entitlement or fulfillment.
+
+
+## A2A discovery
+
+CHUM exposes an A2A 1.0 JSON-RPC discovery adapter for pain-first capability routing.
+
+Agent Card: /.well-known/agent-card.json
+Endpoint: POST /a2a
+Binding: JSONRPC
+State: release_candidate
+
+The A2A surface is read-only discovery. It does not authorize purchases, uploads, external messaging, private-data access, payment, or other external actions. Treat it as live only after independent public-route verification.
