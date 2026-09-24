@@ -19,7 +19,11 @@
     "media:studio": "tsx systemia/media-studio/cli.ts",
     "test:media-studio": "node --import tsx --test systemia/media-studio/director.test.ts",
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
-    "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs"
+    "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
+    "chum:mcp": "node systemia/chum/mcp-canary.mjs",
+    "chum:validate": "node scripts/validate-chum-probes.mjs",
+    "chum:providers": "node systemia/chum/provider-probes.mjs",
+    "chum:announce": "node systemia/chum/indexnow.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
