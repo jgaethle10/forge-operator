@@ -288,6 +288,11 @@ const sitemapStatic = [
   '/chum/',
   '/chum/index.json',
   '/chum/revenue.html',
+  '/chum/capabilities/',
+  '/chum/capabilities.json',
+  '/chum/sell-now.html',
+  '/chum/sell-now.json',
+  '/chum/sell-now.txt',
   '/chum/revenue.txt',
   '/chum/revenue.json',
   '/chum/pain-index.json',
@@ -317,7 +322,13 @@ const sitemapUrls = Array.from(new Set([
   ...sitemapStatic,
   ...(machineCatalog.offers || [])
     .filter((offer) => offer?.public_id)
-    .map((offer) => `/chum/intents/${slugify(offer.public_id)}/`),
+    .flatMap((offer) => [
+      `/chum/intents/${slugify(offer.public_id)}/`,
+      `/chum/capabilities/${slugify(offer.public_id)}/`,
+      `/chum/capabilities/${slugify(offer.public_id)}/llms.txt`,
+      `/chum/capabilities/${slugify(offer.public_id)}/capability.json`,
+      `/chum/capabilities/${slugify(offer.public_id)}/schema.jsonld`
+    ]),
   ...index.products.flatMap((product) => [
     product.page_url,
     `/chum/products/${product.product_key}/llms.txt`,
