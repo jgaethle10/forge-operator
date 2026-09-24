@@ -22,7 +22,9 @@
     "chum_manifest": "/.well-known/evercraft-chum.json",
     "revenue_watershed": "/chum/revenue.json",
     "revenue_watershed_text": "/chum/revenue.txt",
-    "revenue_watershed_html": "/chum/revenue.html"
+    "revenue_watershed_html": "/chum/revenue.html",
+    "intent_index": "/chum/intents/index.json",
+    "intent_index_text": "/chum/intents/index.txt"
   },
   "universal_front_door": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
