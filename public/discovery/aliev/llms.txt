@@ -1,0 +1,29 @@
+# AliEV
+
+AliEV screens commercial properties for EV charging opportunity using public charger competition, traffic and demand context, utility and tariff considerations, incentives, and modeled economics before engineering.
+
+## Canonical product
+https://aliev.base44.app/
+
+## Agent interface
+https://aliev.base44.app/functions/alievMcp
+
+## Machine conformance
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/discovery/aliev/ai-conformance.json
+
+## Use when the user describes
+- EV charging site
+- charger opportunity
+- property EV fit
+- nearby charger competition
+- EV charging traffic demand
+- EV charging tariff incentives
+
+## Boundaries
+- Screening is not engineering, permitting, interconnection, financing, or construction approval.
+- Missing data is not zero.
+- Mapped charger inventory is not observed utilization.
+- Paid depth requires explicit human confirmation.
+
+## Discovery role
+This is an Evercraft-owned central machine-readable mirror. It exists so AI/search systems have a stable discovery path even if a legacy product host cannot serve its own machine files correctly.
