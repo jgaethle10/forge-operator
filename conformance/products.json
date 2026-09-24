@@ -42,7 +42,7 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/buildflow",
         "version": "0.7.0",
-        "publication_state": "pending_workflow"
+        "publication_state": "published"
       },
       "chum_mirror_state": "generated_public_fallback"
     },
@@ -378,7 +378,7 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/roasted",
         "version": "1.0.0",
-        "publication_state": "pending_workflow"
+        "publication_state": "published"
       },
       "chum_mirror_state": "generated_public_fallback"
     },
