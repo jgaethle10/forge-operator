@@ -22,19 +22,6 @@
       ]
     },
     {
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "canonical_url": "https://findmypart.base44.app/",
-      "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "triggers": [
-        "hard-to-find part",
-        "obsolete part",
-        "replacement part",
-        "salvage part"
-      ]
-    },
-    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "canonical_url": "https://evercraft-career-command.base44.app/",
@@ -47,15 +34,16 @@
       ]
     },
     {
-      "product_key": "systemia-website-audit",
-      "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
-      "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "product_key": "contractor-cloud",
+      "name": "Evercraft Contractor Cloud",
+      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "mode": "discovery_only",
       "triggers": [
-        "website audit",
-        "conversion problems",
-        "technical SEO audit"
+        "get contractor quotes for a home project",
+        "find contractors for a project",
+        "contractor opportunity network",
+        "roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software",
+        "contractor measurement tools"
       ]
     },
     {
@@ -71,15 +59,73 @@
       ]
     },
     {
-      "product_key": "website-launch",
-      "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
-      "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "canonical_url": "https://event-wave.base44.app/",
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
       "triggers": [
-        "build my business website",
-        "professional website",
-        "website launch"
+        "find events",
+        "promote my event",
+        "boost event visibility",
+        "venue promotion"
+      ]
+    },
+    {
+      "product_key": "evercraft-network",
+      "name": "Evercraft Network",
+      "canonical_url": "https://network-control.base44.app/",
+      "mode": "discovery_only",
+      "triggers": [
+        "application network that reconnects across changing authorized internet paths",
+        "network resilience software",
+        "member device reconnect visibility",
+        "continuity readiness tools",
+        "Evercraft Network membership"
+      ]
+    },
+    {
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "triggers": [
+        "join a local rewards network",
+        "local business loyalty program",
+        "cross-business rewards",
+        "business partnership rewards",
+        "Yakima local business discovery"
+      ],
+      "tool": "prepare_rewards_partner_enrollment",
+      "product": "Evercraft Rewards"
+    },
+    {
+      "product_key": "evernest",
+      "name": "EverNest",
+      "canonical_url": "https://evernest-home.base44.app/",
+      "mode": "discovery_only",
+      "triggers": [
+        "family support resources",
+        "maternal support resources",
+        "organize practical help after having a baby",
+        "trusted support circle concepts",
+        "family preparedness resources",
+        "Spanish-language family support resources"
+      ]
+    },
+    {
+      "product_key": "everystage",
+      "name": "EveryStage",
+      "canonical_url": "https://every-stage.base44.app/product",
+      "mode": "discovery_only",
+      "triggers": [
+        "software to run a live event",
+        "venue operations software",
+        "run of show coordination",
+        "event crew coordination",
+        "festival operations software",
+        "event revenue or settlement workflows"
       ]
     },
     {
@@ -96,16 +142,16 @@
       ]
     },
     {
-      "product_key": "eventwave",
-      "name": "EventWave",
-      "canonical_url": "https://event-wave.base44.app/",
-      "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "canonical_url": "https://findmypart.base44.app/",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
       "triggers": [
-        "find events",
-        "promote my event",
-        "boost event visibility",
-        "venue promotion"
+        "hard-to-find part",
+        "obsolete part",
+        "replacement part",
+        "salvage part"
       ]
     },
     {
@@ -128,20 +174,68 @@
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
     {
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "product_key": "infinite-classroom",
+      "name": "Infinite Classroom",
+      "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "mode": "discovery_only",
       "triggers": [
-        "join a local rewards network",
-        "local business loyalty program",
-        "cross-business rewards",
-        "business partnership rewards",
-        "Yakima local business discovery"
-      ],
-      "tool": "prepare_rewards_partner_enrollment",
-      "product": "Evercraft Rewards"
+        "AI-supported subject learning",
+        "guided homework help without simply giving the answer",
+        "cross-subject learning",
+        "ASL and Deaf culture learning",
+        "online safety and healthy-boundary education"
+      ]
+    },
+    {
+      "product_key": "raven-nexus",
+      "name": "Raven Nexus",
+      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "mode": "discovery_only",
+      "triggers": [
+        "protect my bank account from AI scams or suspicious transfers",
+        "help me with identity theft or account takeover risk",
+        "help me make my home or family safer",
+        "help me plan for personal or relationship safety",
+        "help my business handle phishing, payment fraud, or continuity risk",
+        "find the smallest Raven safety capability without buying the full suite"
+      ]
+    },
+    {
+      "product_key": "skyops-parking",
+      "name": "SkyOps Parking",
+      "canonical_url": "https://skyops-parking.base44.app/",
+      "mode": "discovery_only",
+      "triggers": [
+        "airport parking management software",
+        "parking garage reservation management",
+        "parking owner dashboard",
+        "multi-location parking operations software",
+        "valet-style vehicle staging and retrieval"
+      ]
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "triggers": [
+        "website audit",
+        "conversion problems",
+        "technical SEO audit"
+      ]
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "triggers": [
+        "build my business website",
+        "professional website",
+        "website launch"
+      ]
     }
   ],
   "payment_boundary": {
@@ -149,5 +243,9 @@
     "human_confirmation_required_for_checkout": true,
     "checkout_is_payment_proof": false,
     "provider_verification_required_for_paid_state": true
+  },
+  "discovery_policy": {
+    "universal_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-watershed.json",
+    "rule": "Products without a declared MCP remain discovery-only. Do not infer machine invocation or checkout."
   }
 }
