@@ -297,6 +297,19 @@
         "make this writing sharper",
         "professional text critique"
       ]
+    },
+    {
+      "product_key": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "triggers": [
+        "audit an enterprise operations process",
+        "route an operations problem",
+        "map business process patterns",
+        "prepare a privacy-safe enterprise operations handoff"
+      ]
     }
   ],
   "payment_boundary": {
