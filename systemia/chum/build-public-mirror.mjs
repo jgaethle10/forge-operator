@@ -211,7 +211,7 @@ for (const product of directory.products || []) {
     `Product key: ${key}`,
     Array.isArray(product.aliases) && product.aliases.length ? `Aliases: ${product.aliases.join(', ')}` : null,
     `Canonical product: ${canonicalUrl}`,
-    discovery.registry_name ? `Official MCP Registry: ${discovery.registry_name}` : null,
+    discovery.registry_name ? `Official MCP Registry: ${discovery.registry_name}` : (discovery.declared_registry_name ? `Declared registry namespace (publication not receipt-backed): ${discovery.declared_registry_name}` : null),
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
