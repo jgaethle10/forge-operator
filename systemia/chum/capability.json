@@ -3,7 +3,7 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "owner": "Systemia",
   "status": "live_in_forge_operator",
   "contract": {
@@ -15,7 +15,9 @@
       "Official MCP Registry",
       "public capability endpoints",
       "robots.txt policies",
-      "authorized provider-probe bridge receipts"
+      "authorized provider-probe bridge receipts",
+      "signed CHUM referral tokens",
+      "trusted payment verification receipts"
     ],
     "outputs": [
       "surface-readiness receipts",
@@ -24,7 +26,9 @@
       "repair queue",
       "provider signal plan",
       "receipt-backed provider pickup state",
-      "AI-originated conversion attribution inputs"
+      "privacy-minimized AI referral tokens",
+      "AI-originated landing and checkout-start receipts",
+      "authoritatively verified payment attribution receipts"
     ]
   },
   "permissions": {
@@ -33,14 +37,18 @@
     "authorized_provider_probe": true,
     "provider_side_effects": false,
     "payment_side_effects": false,
-    "private_topology_access": false
+    "private_topology_access": false,
+    "public_referral_issue": true,
+    "public_payment_claims": false,
+    "trusted_payment_receipt_ingest": true
   },
   "evidence_state": {
     "public_surface_probes": "receipt_backed",
     "crawler_reachability": "receipt_backed",
     "mcp_external_canary": "receipt_backed",
     "provider_pickup": "receipt_required",
-    "conversion_attribution": "receipt_required"
+    "conversion_attribution": "signed_referral_plus_receipt_backed",
+    "revenue_attribution": "authoritative_payment_verification_required"
   },
   "compatibility": {
     "provider_targets": [
@@ -66,7 +74,7 @@
   },
   "rollback": {
     "safe_disable": "disable the CHUM watershed workflow or run CHUM with --offline",
-    "data_mutation": "none; probes are read-only and write receipts/artifacts"
+    "data_mutation": "public referral/event APIs can be disabled by removing attribution secrets; payment actions are never performed by CHUM"
   },
   "intended_adoption": "Default distribution and discovery feedback layer for every legitimate public Evercraft capability."
 }
