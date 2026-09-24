@@ -63,7 +63,16 @@ jobs:
             echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
             exit 0
           fi
-          git add public/chum public/.well-known/evercraft-machine-catalog.json public/.well-known/evercraft-pain-index.json public/llms-full.txt llms-full.txt
+          git add \
+            public/chum \
+            public/.well-known/evercraft-machine-catalog.json \
+            public/.well-known/evercraft-pain-index.json \
+            public/.well-known/evercraft-agent-directory.json \
+            public/.well-known/evercraft-discovery.json \
+            public/ai-discovery.json \
+            public/llms-full.txt \
+            llms-full.txt \
+            public/schema.jsonld
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else

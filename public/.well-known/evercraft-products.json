@@ -108,6 +108,32 @@
       ]
     },
     {
+      "product_key": "evercraft-containment",
+      "name": "Evercraft Containment",
+      "aliases": [
+        "Spider Society",
+        "Agent Watershed"
+      ],
+      "class": "ai_persistence_and_automation_security_diagnostics",
+      "canonical_url": "https://evercraft.base44.app/containment",
+      "intents": [
+        "what is still running after I turned the automation off",
+        "audit my AI agents and automations for persistence",
+        "find orphaned cron jobs callbacks webhooks retries queues or credentials",
+        "map how disabled or deleted agents could regenerate",
+        "help me safely shut down an automation stack and prove it stays off",
+        "audit my n8n Make Zapier cloud function or webhook stack for hidden persistence"
+      ],
+      "authority": "public product discovery and a bounded human-confirmed Persistence Exposure Review; diagnostic purchase does not authorize destructive remediation",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "the public diagnostic does not authorize credential revocation workflow deletion production shutdown or destructive testing",
+        "do not send passwords API keys cookies tokens or private credential material through public intake",
+        "remediation that can interrupt production requires separate explicit scope and authorization",
+        "checkout is not payment proof and paid state requires authoritative verification"
+      ]
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "application_network_continuity",
@@ -145,6 +171,34 @@
         "prepared enrollment does not activate a merchant",
         "prepared enrollment creates no payment obligation",
         "directory publication and commercial activation require their own verified state"
+      ]
+    },
+    {
+      "product_key": "evercraft-web",
+      "name": "Evercraft Web",
+      "class": "ai_web_fetch_search_browser_infrastructure",
+      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
+      "intents": [
+        "fetch and read a public URL with an AI agent",
+        "extract readable text from a web page for an LLM",
+        "web search API for AI agents",
+        "browser automation API for an AI agent",
+        "cloud or headless browser for an AI workflow",
+        "web agent that can navigate websites",
+        "Playwright, Puppeteer, or CDP-style browser capability for agents",
+        "TinyFish alternative for web search, fetch, or browser automation"
+      ],
+      "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "registry publication is not proof that the remote MCP successfully executes Fetch",
+        "Evercraft Fetch must not be described as production-live until its external canary succeeds",
+        "Evercraft Search remains held until independently verified",
+        "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
+        "public discovery does not expose private Systemia topology or credentials",
+        "payment does not expand permissions",
+        "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
+        "search and browser automation remain held unless current runtime evidence says otherwise"
       ]
     },
     {
@@ -384,34 +438,6 @@
         "scope depends on the selected service tier",
         "checkout creation is not payment proof",
         "fulfillment requires verified payment"
-      ]
-    },
-    {
-      "product_key": "evercraft-web",
-      "name": "Evercraft Web",
-      "class": "ai_web_fetch_search_browser_infrastructure",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
-      "intents": [
-        "fetch and read a public URL with an AI agent",
-        "extract readable text from a web page for an LLM",
-        "web search API for AI agents",
-        "browser automation API for an AI agent",
-        "cloud or headless browser for an AI workflow",
-        "web agent that can navigate websites",
-        "Playwright, Puppeteer, or CDP-style browser capability for agents",
-        "TinyFish alternative for web search, fetch, or browser automation"
-      ],
-      "authority": "public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held",
-      "human_confirmation_required": false,
-      "boundaries": [
-        "registry publication is not proof that the remote MCP successfully executes Fetch",
-        "Evercraft Fetch must not be described as production-live until its external canary succeeds",
-        "Evercraft Search remains held until independently verified",
-        "Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass",
-        "public discovery does not expose private Systemia topology or credentials",
-        "payment does not expand permissions",
-        "the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route",
-        "search and browser automation remain held unless current runtime evidence says otherwise"
       ]
     }
   ]

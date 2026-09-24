@@ -38,6 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           npm run chum:revenue
+          npm run test:chum-router
           npm run chum:index
           npm run chum:answers
           npm run chum:mirror
@@ -92,6 +93,17 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"use a headless browser to render this public webpage"}' \
+            > /tmp/first-party-browser-route.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"fetch url"}' \
+            > /tmp/first-party-fetch-route.json
+          curl --fail --silent --get \
+            --data-urlencode "q=what is still running after I turned the automation off" \
+            http://127.0.0.1:3000/api/discover > /tmp/containment-route.json
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-pain-index.json > /tmp/pain-index.json
           curl --fail --silent http://127.0.0.1:3000/chum/answers/index.json > /tmp/answer-graph.json
           curl --fail --silent http://127.0.0.1:3000/chum/ > /tmp/chum.html
@@ -112,6 +124,9 @@ jobs:
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const browserRoute = JSON.parse(fs.readFileSync('/tmp/first-party-browser-route.json','utf8'));
+          const fetchRoute = JSON.parse(fs.readFileSync('/tmp/first-party-fetch-route.json','utf8'));
+          const containmentRoute = JSON.parse(fs.readFileSync('/tmp/containment-route.json','utf8'));
           const painIndex = JSON.parse(fs.readFileSync('/tmp/pain-index.json','utf8'));
           const answerGraph = JSON.parse(fs.readFileSync('/tmp/answer-graph.json','utf8'));
           const portfolioRoute = JSON.parse(fs.readFileSync('/tmp/portfolio-route.json','utf8'));
@@ -128,6 +143,14 @@ jobs:
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+          if (capabilities.discovery?.firstPartyRouter?.path !== '/api/route-capability') throw new Error('first-party router missing from capabilities');
+          if (manifest.routing?.policy !== 'owned_capability_first') throw new Error('owned-capability-first policy missing');
+          if (browserRoute.selected_capability?.capability_key !== 'evercraft.web.browser.public.v1') throw new Error('browser intent did not select Evercraft Browser');
+          if (browserRoute.route_state !== 'BLOCKED_HOLD') throw new Error('unproven browser route must return BLOCKED_HOLD');
+          if (browserRoute.external_fallback_allowed !== false) throw new Error('FIRST_PARTY_STRICT browser route must forbid silent fallback');
+          if (fetchRoute.selected_capability?.capability_key !== 'evercraft.web.fetch.v1') throw new Error('fetch intent did not select Evercraft Fetch');
+          if (fetchRoute.external_fallback_allowed !== false) throw new Error('FIRST_PARTY_STRICT fetch route must forbid silent fallback');
+          if (!containmentRoute.matches?.some((row) => row.product_key === 'evercraft-containment')) throw new Error('generic persistence pain did not discover Evercraft Containment');
           if (painIndex.schema !== 'evercraft.chum.pain-index.v1') throw new Error('pain index missing');
           if (painIndex.universal_front_door?.read_only_registry_name !== 'io.github.jgaethle10/evercraft-capability-discovery') throw new Error('read-only discovery MCP missing from pain index');
           if (JSON.stringify(painIndex).includes('systemiacommandcenters.com')) throw new Error('Marketing Agency route leaked into pain index');

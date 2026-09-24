@@ -5,7 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
-import { rankOffers } from './systemia/chum/discovery-router.mjs';
+import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-router.mjs';
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 
@@ -22,6 +22,71 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+
+const firstPartyRoutingPath = path.resolve(__dirname, 'registry', 'first-party-routing.json');
+const firstPartyRouting = JSON.parse(fs.readFileSync(firstPartyRoutingPath, 'utf8')) as {
+  schema_version: string;
+  provider: string;
+  policy: string;
+  strict_behavior: string;
+  capabilities: Array<{
+    capability_key: string;
+    name: string;
+    state: string;
+    first_party_strict: boolean;
+    invocation: string | null;
+    triggers: string[];
+  }>;
+};
+
+function normalizeOwnedIntent(value: unknown): string {
+  return String(value ?? '').trim().toLowerCase().slice(0, 5000);
+}
+
+function routeFirstPartyIntent(intentInput: unknown) {
+  const intent = normalizeOwnedIntent(intentInput);
+  const ranked = firstPartyRouting.capabilities
+    .map((capability) => {
+      let score = 0;
+      const matchedTriggers: string[] = [];
+      for (const trigger of capability.triggers || []) {
+        const normalized = normalizeOwnedIntent(trigger);
+        if (normalized && intent.includes(normalized)) {
+          score += 20 + Math.min(10, normalized.length / 4);
+          matchedTriggers.push(trigger);
+        }
+      }
+      return { capability, score, matchedTriggers };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.capability.capability_key.localeCompare(b.capability.capability_key));
+
+  if (!ranked.length) {
+    return {
+      matched: false,
+      route_state: 'NO_OWNED_MATCH',
+      external_fallback_allowed: null,
+      note: 'No Evercraft first-party routing rule matched this intent. This response does not authorize or recommend an external provider.',
+    };
+  }
+
+  const selected = ranked[0];
+  const ready = selected.capability.state === 'live' || selected.capability.state === 'ready';
+
+  return {
+    matched: true,
+    routing_policy: selected.capability.first_party_strict ? 'FIRST_PARTY_STRICT' : firstPartyRouting.policy,
+    route_state: ready ? 'READY' : 'BLOCKED_HOLD',
+    external_fallback_allowed: selected.capability.first_party_strict ? false : null,
+    selected_capability: selected.capability,
+    matched_trigger_terms: selected.matchedTriggers,
+    next_action: ready
+      ? 'Invoke the selected Evercraft-owned capability within its authority boundary.'
+      : selected.capability.first_party_strict
+        ? 'Repair or prove the Evercraft-owned capability. Do not silently substitute an external provider.'
+        : 'Preserve the capability evidence boundary before choosing another route.',
+  };
+}
 
 
 const forensiScopeHandoff = {
@@ -176,6 +241,14 @@ function loadPublicMachineCatalog(): any {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
+function loadPublicProductDirectory(): any {
+  const file = path.resolve(
+    __dirname,
+    isProd ? 'dist/.well-known/evercraft-products.json' : 'public/.well-known/evercraft-products.json'
+  );
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
 function loadPublicPainIndex(): any {
   const file = publicAssetPath('.well-known/evercraft-pain-index.json');
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -257,6 +330,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',
+      firstPartyRouter: { method: 'POST', path: '/api/route-capability' },
       agentManifest: '/.well-known/evercraft-agent.json',
       aiDirectory: '/ai',
       sitemap: '/sitemap.xml',
@@ -282,6 +356,23 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       'operational risk identification',
       'implementation next-step generation',
     ],
+  });
+});
+
+app.post('/api/route-capability', rateLimit(120, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const intent = req.body?.intent;
+  if (typeof intent !== 'string' || intent.trim().length < 3) {
+    res.status(400).json({ ok: false, error: 'A plain-language intent of at least 3 characters is required.' });
+    return;
+  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.json({
+    ok: true,
+    provider: 'Evercraft',
+    registry_schema: firstPartyRouting.schema_version,
+    default_policy: firstPartyRouting.policy,
+    strict_behavior: firstPartyRouting.strict_behavior,
+    ...routeFirstPartyIntent(intent),
   });
 });
 
@@ -351,8 +442,9 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
 
   try {
     const catalog = loadPublicMachineCatalog();
+    const directory = loadPublicProductDirectory();
     const painIndex = loadPublicPainIndex();
-    const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
+    const matches = rankDiscoveryCandidates(catalog, directory, q, { limit: requestedLimit, minimumScore: 8 });
     const capabilityMatches = rankPain(painIndex, q, requestedLimit)
       .filter(({ score }: any) => Number(score) >= 8)
       .map(({ entry, score }: any) => ({
@@ -378,7 +470,7 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
       }));
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json({
-      schema: 'evercraft.chum.intent-routing.v1',
+      schema: 'evercraft.chum.intent-routing.v2',
       ok: true,
       query: q,
       match_count: matches.length,
@@ -387,7 +479,10 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
       read_only_mcp_registry_name: 'io.github.jgaethle10/evercraft-capability-discovery',
       doctrine: {
         match_problem_first: true,
+        search_union_of_public_capabilities_and_sell_now_offers: true,
         discovery_creates_obligation: false,
+        discovery_only_is_not_callable: true,
+        callable_is_not_paid: true,
         human_confirmation_preserved: true,
         checkout_is_not_payment_proof: true,
       },
@@ -411,7 +506,7 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
   } catch (error: any) {
     res.status(503).json({
       ok: false,
-      error: 'Public machine catalog is unavailable.',
+      error: 'Public discovery watershed is unavailable.',
       detail: error?.message || String(error),
     });
   }

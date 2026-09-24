@@ -315,6 +315,47 @@
           }
         }
       }
+    },
+    "/api/route-capability": {
+      "post": {
+        "operationId": "routeFirstPartyCapability",
+        "summary": "Select an Evercraft-owned capability before external tooling",
+        "description": "Read-only provider selection. FIRST_PARTY_STRICT matches fail closed with BLOCKED_HOLD when the owned capability is not independently proven runnable.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "intent"
+                ],
+                "properties": {
+                  "intent": {
+                    "type": "string",
+                    "minLength": 3
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "First-party routing decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid intent"
+          }
+        }
+      }
     }
   },
   "x-evercraft-discovery": {
