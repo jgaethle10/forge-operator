@@ -41,3 +41,24 @@ Static discovery failures create repair work but do not stop CHUM from checking 
 ## Operating doctrine
 
 Broadcast facts. Keep legitimate public doors open. Measure whether models actually find them. Turn misses into repair work. Never manufacture provider pickup, payment state, or authority.
+
+## AI-originated conversion attribution
+
+CHUM issues signed, privacy-minimized referral tokens for known public Evercraft offers. Raw user intent is not embedded in the token. When intent is supplied, only a SHA-256 digest is carried.
+
+Public callers may record only `landing` and `checkout_started`. Neither state counts as revenue.
+
+`payment_verified` and `fulfilled` are trusted-backend states. Verified payment requires a payment authority, provider verification reference, amount and currency. Trusted ingestion is intentionally omitted from the public machine manifest.
+
+Runtime configuration:
+
+```
+CHUM_ATTRIBUTION_SECRET=<strong signing secret>
+CHUM_ATTRIBUTION_SINK_URL=<https receipt sink>
+CHUM_ATTRIBUTION_SINK_TOKEN=<optional sink bearer token>
+CHUM_ATTRIBUTION_INGEST_TOKEN=<trusted payment receipt ingest token>
+```
+
+Without a durable receipt sink, public events are explicitly reported as not persisted and trusted payment ingestion fails closed.
+
+Run `npm run test:chum-attribution` to verify the attribution boundary.
