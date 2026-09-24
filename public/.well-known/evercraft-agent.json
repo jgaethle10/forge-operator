@@ -14,7 +14,8 @@
     "ai_discovery": "/ai-discovery.json",
     "openapi": "/openapi.json",
     "chum": "/.well-known/evercraft-chum.json",
-    "chum_page": "/chum/"
+    "chum_page": "/chum/",
+    "agent_interfaces": "/.well-known/evercraft-agent-interfaces.json"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
