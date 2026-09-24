@@ -1,0 +1,19 @@
+{
+  "schema": "evercraft.registry-publication.receipt.v1",
+  "product_key": "forensiscope",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/forensiscope",
+  "version": "1.1.1",
+  "workflow_run_id": 36036466816,
+  "workflow_name": "Publish MCP Registry manifests",
+  "head_sha": "55b300dc1d5d32ca113ad063e91c9d68ff0e0f38",
+  "run_conclusion": "success",
+  "publish_job_conclusion": "success",
+  "publish_log_result": "Successfully published",
+  "published_at_utc": "2026-09-24T17:45:44Z",
+  "evidence_state": "receipt_backed",
+  "notes": [
+    "This proves publication to the Official MCP Registry.",
+    "It does not prove that a generic web search engine or any named AI provider has indexed, discovered, recommended, invoked, or converted the product."
+  ]
+}
