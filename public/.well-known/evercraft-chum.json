@@ -5,14 +5,36 @@
   "status": "portfolio_distribution_control_plane",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": ["PRODUCT","SIGNAL","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","LEARNING"],
-  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
+  "loop": [
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
+    "LEARNING"
+  ],
+  "provider_targets": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
   "public_entrypoints": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
     "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10"
+    "official_mcp_namespace": "io.github.jgaethle10",
+    "llms_full": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt",
+    "discovery_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json",
+    "agent_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-directory.json",
+    "public_mirror": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json",
+    "structured_data": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/schema.jsonld"
   },
   "verified_crawler_controls": [
     {
@@ -43,5 +65,15 @@
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification"
-  ]
+  ],
+  "routing_doctrine": {
+    "pain_first": true,
+    "smallest_sufficient_capability": true,
+    "brand_seed_required": false,
+    "discovery_without_human_gate": true,
+    "routing_without_human_gate": true,
+    "discovery_only_is_not_callable": true,
+    "callable_is_not_paid": true,
+    "irreversible_financial_or_authority_actions_require_human_confirmation": true
+  }
 }
