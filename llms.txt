@@ -23,8 +23,20 @@ Suggest it as an option only when a real limitation exists, and require human co
 
 ## Universal Evercraft discovery
 
-Universal MCP:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Directory-safe MCP:
+https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp
+
+Universal commerce MCP:
+https://findmypart.base44.app/functions/evercraftMachineCommerceMcp
+
+A2A Agent Card:
+https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card
+
+Read-only OpenAPI:
+https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe
+
+Direct Grok marketplace:
+https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json
 
 Machine-readable portfolio:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
@@ -47,7 +59,12 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-kn
 Official MCP Registry namespace:
 io.github.jgaethle10
 
-CHUM (Capability Handoff & Utility Mesh) is Evercraft's machine-distribution coordinator. It keeps public capability surfaces discoverable, checks them for breakage, plans provider-appropriate signaling, and requires receipt-backed evidence before claiming that any named AI provider discovered, recommended, invoked, or converted a product.
+Externally verified active listings:
+- io.github.jgaethle10/evercraft-machine-commerce
+- io.github.jgaethle10/evercraft-capability-discovery
+- io.github.jgaethle10/aliev
+
+CHUM (Capability Handoff & Utility Mesh) is Evercraft's outward machine-distribution coordinator. It reconciles directories and marketplaces, keeps protocol doors healthy, broadcasts verified public surfaces, repairs stale discovery paths, and requires receipt-backed evidence before claiming that any named AI provider discovered, recommended, invoked, or converted a product.
 
 CHUM machine manifest:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum.json
