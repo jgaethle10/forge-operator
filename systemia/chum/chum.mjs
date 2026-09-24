@@ -9,6 +9,10 @@ const timeoutMs = 12000;
 const conformance = readJson('conformance/products.json');
 const directory = readJson('public/.well-known/evercraft-products.json');
 const catalog = readJson('registry/catalog.json');
+const machineCatalogPath = 'public/.well-known/evercraft-machine-catalog.json';
+const machineCatalog = fs.existsSync(machineCatalogPath)
+  ? readJson(machineCatalogPath)
+  : { schema: 'evercraft.machine-catalog.snapshot.v1', offers: [] };
 
 const readJsonDir = (dir) => {
   if (!fs.existsSync(dir)) return [];
@@ -249,6 +253,28 @@ const checked = allChecks.filter((x) => x.checked);
 const valid = checked.filter((x) => x.valid === true);
 const invalid = checked.filter((x) => x.valid === false);
 
+const machineOffers = Array.isArray(machineCatalog.offers) ? machineCatalog.offers : [];
+const machineCatalogAudit = machineOffers.map((offer) => {
+  const issues = [];
+  if (!Array.isArray(offer.intent_terms) || offer.intent_terms.length < 3) issues.push('thin_intent_coverage');
+  if (!String(offer.public_url || '').trim()) issues.push('missing_public_url');
+  if (!String(offer.problem || '').trim()) issues.push('missing_problem_statement');
+  if (!String(offer.inputs || '').trim()) issues.push('missing_inputs');
+  if (!String(offer.outputs || '').trim()) issues.push('missing_outputs');
+  if (offer.commercial_state === 'sell_now' && !String(offer.pricing || '').trim()) issues.push('sell_now_missing_pricing');
+  return {
+    public_id: offer.public_id,
+    name: offer.name,
+    commercial_state: offer.commercial_state,
+    machine_state: offer.machine_state,
+    intent_count: Array.isArray(offer.intent_terms) ? offer.intent_terms.length : 0,
+    public_url: offer.public_url || null,
+    issues,
+    discovery_score: Math.max(0, 100 - issues.length * 20)
+  };
+});
+const machineCatalogRepair = machineCatalogAudit.filter((x) => x.issues.length);
+
 const receipt = {
   schema: 'evercraft.chum.receipt.v2',
   name: 'CHUM',
@@ -267,9 +293,18 @@ const receipt = {
     declared_surfaces: allChecks.length,
     checked_surfaces: checked.length,
     valid_surfaces: valid.length,
-    invalid_surfaces: invalid.length
+    invalid_surfaces: invalid.length,
+    machine_catalog_offers: machineOffers.length,
+    machine_catalog_sell_now: machineOffers.filter((x) => x.commercial_state === 'sell_now').length,
+    machine_catalog_offers_needing_repair: machineCatalogRepair.length
   },
   provider_targets: providerTargets,
+  machine_catalog: {
+    source: machineCatalog.source_url || null,
+    snapshot_schema: machineCatalog.schema || null,
+    offer_count: machineOffers.length,
+    offers: machineCatalogAudit
+  },
   products
 };
 
@@ -286,6 +321,9 @@ const md = [
   `Checked surfaces: ${receipt.summary.checked_surfaces}`,
   `Valid surfaces: ${receipt.summary.valid_surfaces}`,
   `Invalid surfaces: ${receipt.summary.invalid_surfaces}`,
+  `Machine catalog offers: ${receipt.summary.machine_catalog_offers}`,
+  `Sell-now machine offers: ${receipt.summary.machine_catalog_sell_now}`,
+  `Machine offers needing discovery repair: ${receipt.summary.machine_catalog_offers_needing_repair}`,
   '',
   '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
@@ -296,7 +334,13 @@ const md = [
     return `| ${p.name} | ${p.readiness.surface_readiness_percent}% | ${g.canonical_surface ? 'yes' : 'no'} | ${g.llms_surface ? 'yes' : 'no'} | ${g.machine_contract ? 'yes' : 'no'} | ${g.agent_invocation_declared ? 'yes' : 'no'} | ${p.distribution_state.official_registry} | ${p.distribution_state.public_web_discovery} | ${p.distribution_state.provider_observations} |`;
   }),
   '',
-  '## Repair queue',
+  '## Machine catalog repair queue',
+  '',
+  ...(machineCatalogRepair.length
+    ? machineCatalogRepair.map((x) => `- ${x.public_id}: ${x.issues.join(', ')}`)
+    : ['- All synced public machine offers meet the CHUM discovery baseline.']),
+  '',
+  '## Surface repair queue',
   '',
   ...(invalid.length
     ? invalid.map((x) => `- ${x.product_key} / ${x.kind}: ${x.reason || x.status}`)
