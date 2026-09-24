@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evercraft.local/schemas/offline-node.v1.json",
+  "title": "Evercraft Offline Node v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "node_id",
+    "roles",
+    "transports",
+    "capabilities",
+    "continuity"
+  ],
+  "properties": {
+    "schema": {
+      "const": "evercraft.offline-node.v1"
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "seed",
+          "nexus",
+          "guardian",
+          "hearth",
+          "team",
+          "gateway"
+        ]
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "transports": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "compute": {
+          "type": "boolean"
+        },
+        "agent_runtime": {
+          "type": "boolean"
+        },
+        "local_inference": {
+          "type": "boolean"
+        },
+        "model_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "continuity": {
+      "type": "object",
+      "required": [
+        "offline_capable",
+        "checkpoint",
+        "store_forward"
+      ],
+      "properties": {
+        "offline_capable": {
+          "type": "boolean"
+        },
+        "checkpoint": {
+          "type": "boolean"
+        },
+        "store_forward": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "trust": {
+      "type": "object",
+      "properties": {
+        "identity_fingerprint": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "endpoint": {
+      "type": "string"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true
+}
