@@ -31,6 +31,9 @@ jobs:
       - name: Install
         run: npm install --no-audit --no-fund
 
+      - name: Regenerate CHUM public mirrors
+        run: npm run chum:mirror
+
       - name: Typecheck and build
         run: npm run check
 
@@ -67,18 +70,36 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
+          curl --fail --silent --get --data-urlencode "q=this video is too large for my AI to fully process" http://127.0.0.1:3000/api/resolve > /tmp/resolve.json
+          curl --fail --silent http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
+          curl --fail --silent http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
+          curl --fail --silent http://127.0.0.1:3000/chum/products/forensiscope/ > /tmp/forensiscope.html
 
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const resolver = JSON.parse(fs.readFileSync('/tmp/resolve.json','utf8'));
+          const robots = fs.readFileSync('/tmp/robots.txt','utf8');
+          const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
+          const forensiscope = fs.readFileSync('/tmp/forensiscope.html','utf8');
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
+          if (capabilities.discovery?.resolver?.post !== '/api/resolve') throw new Error('CHUM resolver missing from capabilities');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+          if (resolver.success !== true) throw new Error('CHUM resolver did not succeed');
+          if (resolver.candidates?.[0]?.product_key !== 'forensiscope') throw new Error('brand-blind media overflow did not route to ForensiScope');
+          if (resolver.payment_obligation_created !== false) throw new Error('discovery must not create a payment obligation');
+          for (const token of ['OAI-SearchBot','ChatGPT-User','Claude-SearchBot','PerplexityBot']) {
+            if (!robots.includes(token)) throw new Error(`crawler policy missing ${token}`);
+          }
+          if (!robots.includes('Allow: /api/resolve')) throw new Error('robots policy does not expose CHUM resolver');
+          if (!sitemap.includes('http://127.0.0.1:3000/chum/products/forensiscope/')) throw new Error('absolute CHUM product URL missing from sitemap');
+          if (!forensiscope.includes('ForensiScope')) throw new Error('crawlable ForensiScope mirror missing');
           NODE
 
       - name: Show container logs on failure
