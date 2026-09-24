@@ -45,7 +45,9 @@
       "discovery_url": "https://evercraft-forensiscope.base44.app/forensiscope-capabilities.json",
       "doorway_state": "source_build_green",
       "conformance_state": "reference_implementation",
-      "provider_behavior_state": "not_run"
+      "provider_behavior_state": "not_run",
+      "overflow_contract_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json",
+      "overflow_resolver_state": "source_build_green"
     },
     {
       "product_key": "skyops-parking",
