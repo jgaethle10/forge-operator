@@ -4,6 +4,8 @@
   <url><loc>/chum/</loc></url>
   <url><loc>/chum/index.json</loc></url>
   <url><loc>/forensiscope/</loc></url>
+  <url><loc>/forensiscope/llms.txt</loc></url>
+  <url><loc>/forensiscope/discovery.json</loc></url>
   <url><loc>/llms.txt</loc></url>
   <url><loc>/llms-full.txt</loc></url>
   <url><loc>/ai-discovery.json</loc></url>
