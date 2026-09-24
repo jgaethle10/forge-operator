@@ -1,64 +1,46 @@
 {
-  "schema": "evercraft.chum.v2",
+  "schema": "evercraft.chum.v3",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "status": "portfolio_distribution_control_plane",
+  "status": "active_distribution_probe_repair_mesh",
   "provider": "Evercraft LLC",
   "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
-  "loop": [
-    "PRODUCT",
-    "SIGNAL",
-    "DISCOVERY",
-    "PROBE",
-    "REPAIR",
-    "INVOCATION",
-    "PAYMENT",
-    "LEARNING"
-  ],
-  "provider_targets": [
-    "chatgpt",
-    "claude",
-    "gemini",
-    "copilot",
-    "perplexity",
-    "grok",
-    "generic_agent"
-  ],
+  "loop": ["PRODUCT","SIGNAL","DIRECTORY","DISCOVERY","PROBE","REPAIR","INVOCATION","PAYMENT","ATTRIBUTION","LEARNING"],
+  "orchestration": {
+    "canonical_brain": "Systemia",
+    "distribution_operator": "https://findmypart.base44.app/functions/evercraftDistributionOperator",
+    "execution_model": "API/connector first, authorized browser second, human only for non-delegable identity/MFA/CAPTCHA/legal gates"
+  },
+  "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"],
   "public_entrypoints": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
-    "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
-    "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
-    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "official_mcp_namespace": "io.github.jgaethle10",
     "llms_full": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt",
-    "discovery_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-discovery.json",
-    "agent_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-agent-directory.json",
-    "public_mirror": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json",
-    "structured_data": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/schema.jsonld",
-    "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
-    "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
-    "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "live_catalog": "https://systemiacommandcenters.com/api/functions/machineCommerceCatalog",
+    "portfolio_snapshot": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
+    "product_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
+    "directory_safe_mcp": "https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp",
+    "machine_commerce_mcp": "https://findmypart.base44.app/functions/evercraftMachineCommerceMcp",
+    "a2a_agent_card": "https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card",
+    "openapi_safe": "https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe",
+    "openapi_full": "https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi",
+    "grok_marketplace": "https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json",
+    "official_mcp_namespace": "io.github.jgaethle10"
   },
-  "verified_crawler_controls": [
-    {
-      "provider": "OpenAI",
-      "token": "OAI-SearchBot",
-      "purpose": "ChatGPT Search discovery",
-      "evidence": "https://developers.openai.com/api/docs/bots"
-    },
-    {
-      "provider": "Google",
-      "token": "Google-Extended",
-      "purpose": "Gemini training and Google Search grounding control; separate from ordinary Google Search inclusion",
-      "evidence": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
-    }
-  ],
+  "verified_distribution": {
+    "official_mcp_registry": [
+      "io.github.jgaethle10/evercraft-machine-commerce",
+      "io.github.jgaethle10/evercraft-capability-discovery",
+      "io.github.jgaethle10/aliev"
+    ],
+    "grok_direct_marketplace": "https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json",
+    "indexnow_edge_host": "findmypart.base44.app"
+  },
   "measurement": {
     "surface_readiness": "public endpoint and contract checks",
-    "registry_presence": "Official MCP Registry plus external MCP handshake canaries",
+    "distribution_state": "receipt-backed registry, marketplace and protocol checks",
+    "index_announcement": "receipt-backed IndexNow submission",
     "provider_pickup": "receipt-backed brand-blind provider probes through authorized interfaces",
-    "conversion": "AI-originated attribution only after human-confirmed commercial flow"
+    "conversion": "AI-originated attribution only after human-confirmed commercial flow and verified payment"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
@@ -69,15 +51,5 @@
     "checkout preparation requires explicit human confirmation",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification"
-  ],
-  "routing_doctrine": {
-    "pain_first": true,
-    "smallest_sufficient_capability": true,
-    "brand_seed_required": false,
-    "discovery_without_human_gate": true,
-    "routing_without_human_gate": true,
-    "discovery_only_is_not_callable": true,
-    "callable_is_not_paid": true,
-    "irreversible_financial_or_authority_actions_require_human_confirmation": true
-  }
+  ]
 }
