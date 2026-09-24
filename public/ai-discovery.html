@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft AI Discovery | CHUM</title>
+<meta name="description" content="Public machine discovery for Evercraft capabilities, current sell-now offers, MCP endpoints and deterministic plain-language routing.">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+<link rel="alternate" type="text/plain" href="/llms-full.txt" title="llms-full.txt">
+<link rel="service-desc" type="application/json" href="/openapi.json">
+<script type="application/ld+json" src="/schema.jsonld"></script>
+</head>
+<body>
+<main>
+<h1>Evercraft AI Discovery</h1>
+<p>CHUM routes plain-language problems to the smallest relevant public Evercraft capability.</p>
+<h2>Machine entry points</h2>
+<ul>
+<li><a href="/.well-known/evercraft-chum.json">CHUM manifest</a></li>
+<li><a href="/.well-known/evercraft-products.json">Product directory</a></li>
+<li><a href="/.well-known/evercraft-offers.json">Current public sell-now offers</a></li>
+<li><a href="/.well-known/evercraft-capabilities.json">Forge capability manifest</a></li>
+<li><a href="/llms.txt">llms.txt</a></li>
+<li><a href="/llms-full.txt">llms-full.txt</a></li>
+<li><a href="/openapi.json">OpenAPI</a></li>
+<li><a href="/schema.jsonld">JSON-LD</a></li>
+<li><a href="/chum/health">CHUM health</a></li>
+</ul>
+<h2>Resolve a problem</h2>
+<p><code>GET /chum/resolve?q=&lt;plain-language-problem&gt;</code></p>
+<p>Examples: “roast my bio”, “find a discontinued tractor part”, “would EV charging make sense here”, “audit my website”.</p>
+<h2>Commercial boundary</h2>
+<p>Discovery is public. Payment requires explicit human confirmation. Checkout is not proof of payment. Paid fulfillment requires provider verification.</p>
+<h2>Privacy boundary</h2>
+<p>Private/admin topology, credentials, private user data and non-public operational state are intentionally not exposed.</p>
+</main>
+</body>
+</html>
