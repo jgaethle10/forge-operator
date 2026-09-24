@@ -38,7 +38,9 @@
     "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
     "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "discovery_router": "/api/discover?q={natural-language-problem}",
+    "intent_map": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-intents.json",
+    "intent_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/intents.txt"
   },
   "verified_crawler_controls": [
     {
@@ -52,6 +54,18 @@
       "token": "Google-Extended",
       "purpose": "Gemini training and Google Search grounding control; separate from ordinary Google Search inclusion",
       "evidence": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
+    },
+    {
+      "provider": "Anthropic",
+      "token": "Claude-SearchBot / Claude-User / ClaudeBot",
+      "purpose": "Claude search, user-directed retrieval and model crawl controls",
+      "evidence": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "provider": "Perplexity",
+      "token": "PerplexityBot",
+      "purpose": "Perplexity web search discovery",
+      "evidence": "https://www.perplexity.ai/hub/blog/architecting-and-evaluating-an-ai-first-search-api"
     }
   ],
   "measurement": {
