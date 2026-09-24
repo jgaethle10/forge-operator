@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.cross-llm-agent.v1",
+  "name": "Evercraft Machine Commerce",
+  "provider": "Evercraft LLC",
+  "status": "public",
+  "description": "Universal machine-facing front door for matching natural-language needs to the smallest appropriate Evercraft capability.",
+  "discovery": {
+    "portfolio": "/.well-known/evercraft-products.json",
+    "capabilities": "/.well-known/evercraft-capabilities.json",
+    "chum": "/.well-known/evercraft-chum.json",
+    "llms": "/llms.txt",
+    "llms_full": "/llms-full.txt",
+    "openapi": "/openapi.json"
+  },
+  "invocation": {
+    "protocol": "MCP",
+    "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "registry_namespace": "io.github.jgaethle10",
+    "lifecycle": [
+      "discover",
+      "match",
+      "inspect",
+      "prepare",
+      "status",
+      "cancel"
+    ]
+  },
+  "commerce": {
+    "human_confirmation_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  },
+  "evidence": {
+    "provider_pickup_claim_requires_receipt": true,
+    "product_live_claim_requires_public_state": true
+  }
+}
