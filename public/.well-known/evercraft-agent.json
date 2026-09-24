@@ -14,10 +14,15 @@
     "discovery_watershed": "/.well-known/evercraft-discovery.json",
     "agent_directory": "/.well-known/evercraft-agent-directory.json",
     "chum_public_mirror": "/chum/index.json",
-    "structured_data": "/schema.jsonld"
+    "structured_data": "/schema.jsonld",
+    "intent_page": "/discover/",
+    "intent_directory": "/.well-known/evercraft-intents.json",
+    "intent_api": "/api/intents",
+    "live_problem_router": "/api/discover?q={natural-language-problem}",
+    "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Use the public intent directory or read-only capability-discovery MCP to understand the vocabulary, then match to the smallest relevant public capability. Use Machine Commerce only when commercial state or a human-confirmed paid continuation is actually needed. Preserve stated limits and uncertainty.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true,
