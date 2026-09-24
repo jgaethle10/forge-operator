@@ -4,6 +4,8 @@
   "updated_at": "2026-09-24",
   "registry_namespace": "io.github.jgaethle10",
   "universal_front_door": {
+    "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "read_only_purpose": "Read-only matching from natural-language user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported."
@@ -251,6 +253,8 @@
     "smallest_sufficient_capability": true,
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
-    "human_confirmation_required_for_irreversible_financial_or_authority_action": true
+    "human_confirmation_required_for_irreversible_financial_or_authority_action": true,
+    "brand_seed_required": false,
+    "read_only_discovery_before_commerce": true
   }
 }
