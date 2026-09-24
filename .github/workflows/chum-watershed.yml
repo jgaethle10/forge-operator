@@ -62,6 +62,7 @@ jobs:
 
       - name: Announce updated central discovery surfaces
         if: github.event_name != 'schedule'
+        continue-on-error: true
         run: npm run chum:announce
 
       - name: Write watershed summary
