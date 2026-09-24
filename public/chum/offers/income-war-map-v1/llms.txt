@@ -1,0 +1,37 @@
+# Income War Map Revenue Planning
+
+Evercraft public capability ID: income-war-map-v1
+Commercial state: hold
+Machine state: discovery_only
+Public handoff: https://systemiacommandcenters.com
+
+## Use this capability when the user means
+
+- help me make more money
+- find revenue opportunities
+- build me an income plan
+- side hustle ideas for my situation
+- revenue war map
+- income strategy
+- how can I increase my income
+
+## Problem
+
+A person needs a structured revenue plan based on their real constraints rather than generic opportunity lists.
+
+## Inputs
+
+User-provided income, expenses, debt, skills, available time, risk tolerance, work context, location and revenue target.
+
+## Outputs
+
+Personalized planning opportunities, modeled revenue/startup/time/risk estimates, prioritized missions and progress tracking.
+
+## Commercial truth
+
+- Pricing: Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.
+- Human UI required: no
+- Confirmation: Planning estimates are not guarantees or individualized investment, tax, legal or credit advice. No checkout should be initiated while billing is paused.
+- Payment authority: Stripe legacy adapter; checkout paused
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

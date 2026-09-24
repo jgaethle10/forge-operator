@@ -1,0 +1,34 @@
+# Evercraft Foundry App Escape Audit
+
+Evercraft public capability ID: foundry-app-escape-audit-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public handoff: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
+
+## Use this capability when the user means
+
+- escape vendor lock-in
+- migrate from no-code
+- export an AI-built app
+- audit app portability
+
+## Problem
+
+A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.
+
+## Inputs
+
+Authorized read-only project access or exported source/schema information.
+
+## Outputs
+
+Dependency map, route/schema inventory, security findings, provider-neutral architecture candidate, reconstruction manifest and migration/rollback plan.
+
+## Commercial truth
+
+- Pricing: $500 one-time.
+- Human UI required: no
+- Confirmation: Explicit buyer authorization for source access and payment is required.
+- Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

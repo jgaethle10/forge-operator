@@ -1,0 +1,37 @@
+# Career Command Interview Practice + Interview Sprint
+
+Evercraft public capability ID: career-command-interview-practice-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public handoff: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
+
+## Use this capability when the user means
+
+- help me prepare for this interview
+- mock interview me for this job
+- practice interview questions
+- score my interview answer
+- I have an interview tomorrow
+- prepare me for a recruiter screen
+- behavioral interview practice
+
+## Problem
+
+A candidate needs role-specific practice and candid evidence-based feedback before an interview.
+
+## Inputs
+
+Target job description and candidate background. Optional company context and prior practice. Answer evaluation requires the candidate's practice answer.
+
+## Outputs
+
+Role-specific practice question, answer verdict, what landed, weaknesses, evidence gaps, improved answer structure, pressure follow-up and re-drill instruction.
+
+## Commercial truth
+
+- Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
+- Human UI required: no
+- Confirmation: Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.
+- Payment authority: Evercraft Payments with provider verification
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

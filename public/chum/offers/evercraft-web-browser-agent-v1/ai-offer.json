@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "evercraft-web-browser-agent-v1",
+  "name": "Evercraft Web Agent / Fetch & Browser",
+  "problem": "An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.",
+  "intent_terms": [
+    "fetch a webpage for my AI agent",
+    "read a URL for my AI agent",
+    "web fetch API",
+    "live web API for an AI agent",
+    "web search API for an AI agent",
+    "browser automation API",
+    "cloud browser for AI",
+    "headless browser API",
+    "Playwright browser API",
+    "Puppeteer browser API",
+    "CDP browser control",
+    "TinyFish alternative",
+    "give my AI live web access"
+  ],
+  "inputs": "Public URL, search/navigation intent, or browser task. Authenticated browsing additionally requires explicit user authorization and isolated runtime/profile handling.",
+  "outputs": "Current capability state and protocol surfaces; public fetch/extraction where production-verified; later search/browser execution only when their independent runtime gates pass.",
+  "commercial_state": "discovery_only",
+  "machine_state": "specialist_discovery_ready_runtime_gated",
+  "pricing": "No public machine price is advertised until runtime metering and production verification are complete.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+  "payment_authority": "No public machine checkout is advertised for Evercraft Web yet.",
+  "invocation_status": "LIVE specialist discovery through the central MCP tool discover_web_capability. Evercraft Fetch is implemented and build-passed but remains external-canary gated; web search and owned browser execution remain held pending runtime activation, pairing/isolation and production receipts.",
+  "catalog_version": "2026-09-24.3",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/evercraft-web-browser-agent-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/evercraft-web-browser-agent-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/evercraft-web-browser-agent-v1/index.html"
+  }
+}

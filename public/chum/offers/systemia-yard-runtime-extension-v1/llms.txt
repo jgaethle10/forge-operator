@@ -1,0 +1,34 @@
+# Systemia Yard Bounded Runtime Extension
+
+Evercraft public capability ID: systemia-yard-runtime-extension-v1
+Commercial state: verification_required
+Machine state: invocation_ready
+Public handoff: not currently declared
+
+## Use this capability when the user means
+
+- keep this approved agent run going longer
+- buy more runtime for this Yard execution
+- extend this bounded build run
+- give this approved execution more time
+
+## Problem
+
+An already-approved active Yard execution needs more runtime without receiving broader authority.
+
+## Inputs
+
+Authenticated owner, eligible active execution request key, requested additional seconds and optional spend cap.
+
+## Outputs
+
+Request-bound server quote, quote digest, payment requirement, bounded runtime entitlement, receipt and updated lease expiry.
+
+## Commercial truth
+
+- Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
+- Human UI required: no
+- Confirmation: Explicit purchase authorization is required. Purchased runtime changes time only and never widens execution scope, permissions, release authority or security access.
+- Payment authority: Runtime broker supports machine settlement, but live verifier configuration and a paid canary still require independent verification.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

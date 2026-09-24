@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "career-command-interview-practice-machine-v1",
+  "name": "Career Command Interview Practice + Interview Sprint",
+  "problem": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
+  "intent_terms": [
+    "help me prepare for this interview",
+    "mock interview me for this job",
+    "practice interview questions",
+    "score my interview answer",
+    "I have an interview tomorrow",
+    "prepare me for a recruiter screen",
+    "behavioral interview practice"
+  ],
+  "inputs": "Target job description and candidate background. Optional company context and prior practice. Answer evaluation requires the candidate's practice answer.",
+  "outputs": "Role-specific practice question, answer verdict, what landed, weaknesses, evidence gaps, improved answer structure, pressure follow-up and re-drill instruction.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+  "offers": [
+    {
+      "name": "Basic Interview Practice",
+      "price": "$0",
+      "billing": "free_core"
+    },
+    {
+      "name": "Evercraft Interview Sprint",
+      "price": "$19",
+      "billing": "one_time",
+      "access": "7 days",
+      "premium_action_limit": 25
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.",
+  "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+  "payment_authority": "Evercraft Payments with provider verification",
+  "invocation_status": "LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.",
+  "catalog_version": "2026-09-23.17",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/career-command-interview-practice-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/career-command-interview-practice-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/career-command-interview-practice-machine-v1/index.html"
+  }
+}

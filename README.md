@@ -1,6 +1,6 @@
 # Forge Operator
 
-> **AI and agent discovery:** Evercraft exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
+> **AI and agent discovery:** Evercraft exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [AI capability catalog](AI-CAPABILITY-CATALOG.md), the [all-offer machine index](public/chum/offers/index.json), the [static intent map](public/chum/intents.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
 
 
 Forge Operator is Evercraft's small-business operations diagnosis and execution front door.
@@ -26,6 +26,8 @@ Forge intentionally publishes a public machine-readable discovery layer:
 - `/api/health`
 
 Private/admin topology is not advertised through these surfaces.
+
+CHUM deliberately publishes redundant doors for the same truthful public capability: product manifests, offer-level JSON, plain-text LLM guides, crawlable HTML, structured data, an online read-only router, and a static natural-language intent map. Those surfaces improve discoverability without granting execution or payment authority.
 
 ### ForensiScope media overflow
 

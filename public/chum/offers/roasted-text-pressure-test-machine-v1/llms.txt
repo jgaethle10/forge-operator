@@ -1,0 +1,40 @@
+# ROASTED 99¢ Text Pressure Test
+
+Evercraft public capability ID: roasted-text-pressure-test-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public handoff: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+
+## Use this capability when the user means
+
+- roast this text
+- roast my bio
+- roast my resume
+- tear apart this pitch
+- be brutally honest about this copy
+- brutally critique this message
+- roast my linkedin headline
+- roast this post
+- pressure test this copy
+- pressure test my writing
+
+## Problem
+
+Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
+
+## Inputs
+
+Text to critique and optional roast style.
+
+## Outputs
+
+A roast, three practical fixes and a shareable result.
+
+## Commercial truth
+
+- Pricing: $0.99 USD one-time per roast.
+- Human UI required: no
+- Confirmation: Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.
+- Payment authority: ROASTED / Stripe, provider-verified
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

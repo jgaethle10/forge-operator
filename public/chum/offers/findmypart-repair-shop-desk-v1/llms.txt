@@ -1,0 +1,35 @@
+# Repair Shop Sourcing Desk
+
+Evercraft public capability ID: findmypart-repair-shop-desk-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://findmypart.base44.app
+
+## Use this capability when the user means
+
+- source difficult parts for my repair shop
+- parts sourcing desk
+- find obsolete parts for customers
+- repair shop hard part sourcing
+- recurring parts research
+
+## Problem
+
+Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.
+
+## Inputs
+
+Shop identity, part requests, asset/equipment context and preferred service level.
+
+## Outputs
+
+Recurring difficult-part sourcing with saved case memory, vendor/salvage research, compatibility evidence and resolved-case reuse.
+
+## Commercial truth
+
+- Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
+- Human UI required: no
+- Confirmation: Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.
+- Payment authority: Evercraft Payments
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

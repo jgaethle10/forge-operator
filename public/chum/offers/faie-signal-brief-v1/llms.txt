@@ -1,0 +1,35 @@
+# FAIE Evidence-First Signal Brief
+
+Evercraft public capability ID: faie-signal-brief-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public handoff: https://faie.base44.app/functions/faieAgentGateway?view=docs
+
+## Use this capability when the user means
+
+- research this land or water question
+- investigate this agriculture signal
+- give me an evidence brief on this region
+- validate this environmental signal
+- do a resilience investigation
+
+## Problem
+
+A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
+
+## Inputs
+
+Defined question, buyer email and selected fixed offer. Geography, organization and use case are optional scope context.
+
+## Outputs
+
+A bounded evidence-first mission packet with findings, source references, uncertainty/evidence-needed items, challenge notes and human-review items.
+
+## Commercial truth
+
+- Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
+- Human UI required: no
+- Confirmation: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
+- Payment authority: FAIE / Stripe, provider-verified
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

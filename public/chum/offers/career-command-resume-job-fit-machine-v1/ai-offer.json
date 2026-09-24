@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "career-command-resume-job-fit-machine-v1",
+  "name": "Career Command Resume + Job Fit Audit",
+  "problem": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
+  "intent_terms": [
+    "check my resume against this job",
+    "why am I not getting interviews",
+    "tailor my resume to this opening",
+    "is my resume ATS friendly",
+    "what am I missing for this job",
+    "resume job match",
+    "audit my resume"
+  ],
+  "inputs": "Candidate-supplied resume or background plus the target job description. Optional skills, achievements and company context.",
+  "outputs": "Strongest proof anchors, job-fit evidence, generic or unsupported claims, missing evidence, highest-impact edits and a truthful rewritten summary.",
+  "commercial_state": "verify",
+  "machine_state": "discovery_only",
+  "pricing": "Free core is available. No premium machine-lane price is approved yet.",
+  "offers": [
+    {
+      "name": "Resume + Job Fit Audit",
+      "state": "free_core",
+      "price": "$0 core"
+    }
+  ],
+  "human_ui_required": false,
+  "confirmation": "No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.",
+  "public_url": "https://evercraft-career-command.base44.app",
+  "payment_authority": "Evercraft Payments",
+  "invocation_status": "catalog_ready_runtime_adapter_pending",
+  "catalog_version": "2026-09-23.1",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/career-command-resume-job-fit-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/career-command-resume-job-fit-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/career-command-resume-job-fit-machine-v1/index.html"
+  }
+}

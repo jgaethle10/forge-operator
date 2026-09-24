@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.offer-discovery.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "public_id": "littlered-kdp-export-qa-machine-v1",
+  "name": "Book Export QA",
+  "problem": "An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.",
+  "intent_terms": [
+    "check if my book is ready for KDP",
+    "validate my cover dimensions",
+    "audit this paperback export",
+    "is my book file ready to publish",
+    "check page count and cover DPI"
+  ],
+  "inputs": "Book/project identifier, interior page count and trim size; optional paper type and cover dimensions/DPI.",
+  "outputs": "Page-count validity, cover-geometry validity, effective DPI, check timestamp and notes.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "No approved external machine price/payment path was found. Do not auto-quote.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.",
+  "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+  "payment_authority": "No verified Evercraft Payments path.",
+  "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+  "catalog_version": "2026-09-23.12",
+  "safety": {
+    "discovery_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true,
+    "private_topology_exposed": false
+  },
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/littlered-kdp-export-qa-machine-v1/llms.txt",
+    "offer": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/littlered-kdp-export-qa-machine-v1/ai-offer.json",
+    "human": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/littlered-kdp-export-qa-machine-v1/index.html"
+  }
+}

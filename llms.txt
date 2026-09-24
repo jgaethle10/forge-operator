@@ -38,6 +38,15 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-kn
 CHUM public mirror:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json
 
+All-offer capability index:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.json
+
+Static natural-language intent map:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents.json
+
+Human-readable AI capability catalog:
+https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md
+
 Human-readable portfolio:
 https://github.com/jgaethle10/forge-operator/tree/main/registry
 

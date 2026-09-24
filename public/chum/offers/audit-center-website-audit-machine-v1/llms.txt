@@ -1,0 +1,43 @@
+# Systemia Website Audit
+
+Evercraft public capability ID: audit-center-website-audit-machine-v1
+Commercial state: sell_now
+Machine state: payment_ready
+Public handoff: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+
+## Use this capability when the user means
+
+- why is my website not getting leads
+- audit my website
+- why is my contractor website not ranking
+- check my local SEO
+- why is my site slow on mobile
+- find conversion problems on my website
+- review my website SEO
+- tell me what is wrong with my business website
+- my website gets traffic but nobody contacts us
+- people visit my site but do not contact me
+- why is my website not converting
+- website traffic but no leads
+- visitors are not turning into leads
+
+## Problem
+
+A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.
+
+## Inputs
+
+Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.
+
+## Outputs
+
+Observed website findings, deterministic category scores and breakdowns, prioritized audit findings, deeper fix plan/report for paid tier, and remediation scope for Audit + Patch.
+
+## Commercial truth
+
+- Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
+- Human UI required: no
+- Confirmation: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.
+- Payment authority: Systemia Audit Center / Stripe, provider-verified
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.

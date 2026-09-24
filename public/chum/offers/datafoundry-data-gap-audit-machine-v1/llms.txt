@@ -1,0 +1,36 @@
+# Canonical Data Gap Audit
+
+Evercraft public capability ID: datafoundry-data-gap-audit-machine-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public handoff: https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs
+
+## Use this capability when the user means
+
+- audit this dataset for gaps
+- what data is missing for this decision
+- find provenance problems in this data
+- reconcile conflicting sources
+- where are our visibility gaps
+- design a plan to close these data gaps
+
+## Problem
+
+A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.
+
+## Inputs
+
+Authorized dataset/domain plus decision question; optional geography, population scope, metric/subject and source refs.
+
+## Outputs
+
+Explicit gaps and types, severity, evidence/confidence, affected decisions, source conflicts, collection options/effort, governance constraints and next actions.
+
+## Commercial truth
+
+- Pricing: No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.
+- Human UI required: no
+- Confirmation: Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.
+- Payment authority: No verified Evercraft Payments path for this specific audit.
+
+Discovery does not create a payment obligation. Do not invent availability, pricing, authority, endorsement, invocation readiness, or payment state.
