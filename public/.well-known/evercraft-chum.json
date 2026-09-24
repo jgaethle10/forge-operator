@@ -39,7 +39,10 @@
     "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
     "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "discovery_router": "/api/discover?q={natural-language-problem}",
+    "all_offer_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.json",
+    "static_intent_map": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents.json",
+    "human_capability_catalog": "https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md"
   },
   "freshness_broadcast": {
     "mechanism": "IndexNow",
@@ -87,6 +90,8 @@
     "routing_without_human_gate": true,
     "discovery_only_is_not_callable": true,
     "callable_is_not_paid": true,
-    "irreversible_financial_or_authority_actions_require_human_confirmation": true
+    "irreversible_financial_or_authority_actions_require_human_confirmation": true,
+    "static_intent_map_available": true,
+    "all_public_offer_states_visible": true
   }
 }
