@@ -47,7 +47,16 @@
       "conformance_state": "reference_implementation",
       "provider_behavior_state": "not_run",
       "overflow_contract_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json",
-      "overflow_resolver_state": "source_build_green"
+      "overflow_resolver_state": "source_build_green",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/forensiscope",
+        "version": "1.1.1",
+        "publication_state": "published_receipt_backed",
+        "receipt": "conformance/registry-publications/2026-09-24-forensiscope.json",
+        "published_at_utc": "2026-09-24T17:45:44Z"
+      },
+      "public_web_discovery_state": "not_yet_observed",
+      "provider_observation_state": "negative_observations_recorded"
     },
     {
       "product_key": "skyops-parking",
@@ -120,6 +129,9 @@
     "source_build_green": "Machine-facing files exist in source and the product build passed. This is not live deployment proof.",
     "reference_implementation": "Product has a cross-LLM conformance contract and deterministic local release checks.",
     "not_yet_propagated": "Product has a machine doorway but has not yet received the full cross-LLM conformance contract.",
-    "provider_behavior_state_not_run": "No claim is made that any named AI provider has discovered, recommended, invoked, or converted the product."
+    "provider_behavior_state_not_run": "No claim is made that any named AI provider has discovered, recommended, invoked, or converted the product.",
+    "published_receipt_backed": "A release receipt confirms successful publication to the declared external registry. This does not prove search indexing or model recommendation.",
+    "not_yet_observed": "No receipt yet shows that generic public web discovery returns the product for the target pain query.",
+    "negative_observations_recorded": "At least one user-observed provider test failed to surface the product for the target intent; see provider observation receipts."
   }
 }
