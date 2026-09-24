@@ -35,7 +35,8 @@
     "chum:llms": "node systemia/chum/build-llms-full.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime"
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime",
+    "chum:offers": "node systemia/chum/build-offer-watershed.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
