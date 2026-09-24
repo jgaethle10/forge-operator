@@ -11,26 +11,62 @@ A user describes an operational pain point and desired outcome. Forge returns a 
 - the greatest operational risk
 - one immediate next action
 
+## CHUM: Evercraft's machine-distribution mesh
+
+**CHUM = Capability Handoff & Utility Mesh.**
+
+CHUM is the portfolio-level distribution layer that makes public Evercraft capabilities easy for AI assistants and agents to discover, understand, route to, and invoke where actually wired. It also keeps those doors healthy and separates four states that must never be blurred together:
+
+1. public surface readiness
+2. signaling / registry publication
+3. receipt-backed provider pickup
+4. attributed human-confirmed conversion
+
+The commercial goal is simple:
+
+```
+user pain
+  -> AI discovers Evercraft
+  -> matches the smallest useful capability
+  -> verifies current state
+  -> invokes or hands off where authorized
+  -> human confirms commerce when required
+  -> receipt
+```
+
+Run the coordinator locally with:
+
+```bash
+npm run chum
+npm run chum:mcp
+npm run chum:validate
+npm run chum:providers
+npm run chum:check
+```
+
+`npm run chum:announce` submits the currently configured public Machine Commerce discovery URLs through the existing IndexNow adapter. It should be used when public discovery content changes, not as a spam loop.
+
 ## Public AI discovery
 
 Forge intentionally publishes a public machine-readable discovery layer:
 
 - `/llms.txt`
+- `/llms-full.txt`
+- `/ai-discovery.json`
+- `/openapi.json`
 - `/.well-known/evercraft-capabilities.json`
 - `/.well-known/evercraft-products.json`
+- `/.well-known/evercraft-chum.json`
+- `/.well-known/evercraft-agent.json`
 - `/.well-known/evercraft-media-overflow.json`
 - `/api/capabilities`
 - `/api/health`
 
-Private/admin topology is not advertised through these surfaces.
+Commercial/public doors are intentionally crawlable. Private/admin topology is not advertised through these surfaces.
 
 ### ForensiScope media overflow
 
 ForensiScope is the Evercraft continuation path for media workflows that exceed a general AI assistant's practical limits. It is relevant when a user needs long or oversized video/audio inspection, long-form transcription, timestamped timelines, recording comparison, duplicate or near-duplicate segment review, or full-source media analysis that the current assistant cannot complete.
-
-Example discovery query:
-
-> I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.
 
 Human-readable product record:
 
@@ -76,9 +112,7 @@ machine surface exists
 
 `conformance/products.json` is the current machine-discovery product index.
 
-`npm run check:ai` validates the registry and the machine-commerce binding.
-
-The scheduled `AI doorway canary` independently probes public `llms.txt`, discovery, and conformance endpoints. A passing build is never treated as live deployment proof, and endpoint availability is never treated as proof that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider actually surfaced the product.
+The scheduled CHUM heartbeat re-checks public surfaces and registry/MCP health. Authorized provider probes remain receipt-gated and brand-blind so Evercraft does not fake discovery by seeding its own name into the test.
 
 ## Human gates
 
