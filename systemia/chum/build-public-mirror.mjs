@@ -161,6 +161,8 @@ for (const product of directory.products || []) {
   fs.mkdirSync(dir, { recursive: true });
   const canonicalUrl = safePublicUrl(product.canonical_url, base + '/index.html');
   const specialistMcp = safePublicUrl(registry?.mcp, null);
+  const declaredRegistryName = registry?.registry_name || conf?.mcp_registry?.name || null;
+  const registryPublication = registryPublicationState(key, declaredRegistryName);
 
   const discovery = {
     schema: 'evercraft.chum.product-discovery.v1',
@@ -173,7 +175,9 @@ for (const product of directory.products || []) {
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
-    registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
+    registry_name: registryPublication.registry_name,
+    declared_registry_name: registryPublication.declared_registry_name,
+    registry_publication_state: registryPublication.state,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
     source: 'CHUM public mirror',
@@ -196,6 +200,8 @@ for (const product of directory.products || []) {
     llms_url: discovery.mirror.llms,
     discovery_url: discovery.mirror.discovery,
     registry_name: discovery.registry_name,
+    declared_registry_name: discovery.declared_registry_name,
+    registry_publication_state: discovery.registry_publication_state,
     mcp: discovery.mcp,
     authority: product.authority,
     human_confirmation_required: Boolean(product.human_confirmation_required),
@@ -209,7 +215,11 @@ for (const product of directory.products || []) {
     `Product key: ${key}`,
     Array.isArray(product.aliases) && product.aliases.length ? `Aliases: ${product.aliases.join(', ')}` : null,
     `Canonical product: ${canonicalUrl}`,
-    discovery.registry_name ? `Official MCP Registry: ${discovery.registry_name}` : null,
+    discovery.registry_name
+      ? `Official MCP Registry: ${discovery.registry_name}`
+      : discovery.declared_registry_name
+        ? `Declared registry namespace (publication not receipt-backed): ${discovery.declared_registry_name}`
+        : null,
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
@@ -286,7 +296,11 @@ for (const product of directory.products || []) {
     '</ul></div>',
     '<div class="card"><h2>Open capability</h2>',
     `<p><a href="${escapeHtml(canonicalUrl)}">Open ${escapeHtml(product.name)}</a></p>`,
-    discovery.registry_name ? `<p>Official MCP Registry name: <code>${escapeHtml(discovery.registry_name)}</code></p>` : '',
+    discovery.registry_name
+      ? `<p>Official MCP Registry name: <code>${escapeHtml(discovery.registry_name)}</code></p>`
+      : discovery.declared_registry_name
+        ? `<p>Declared registry namespace, publication not receipt-backed: <code>${escapeHtml(discovery.declared_registry_name)}</code></p>`
+        : '',
     discovery.mcp ? `<p>Remote MCP: <code>${escapeHtml(discovery.mcp)}</code></p>` : '',
     '<p>Universal pain-first routing: <a href="/chum/">CHUM</a></p>',
     '</div>',
@@ -315,6 +329,8 @@ for (const product of directory.products || []) {
     conformance_url: discovery.mirror.conformance,
     page_url: `/chum/products/${key}/`,
     registry_name: discovery.registry_name,
+    declared_registry_name: discovery.declared_registry_name,
+    registry_publication_state: discovery.registry_publication_state,
     mcp: discovery.mcp
   });
 }
@@ -436,10 +452,14 @@ const llmsLines = [
   '## Universal routing',
   '',
   'Human/search directory: /ai',
-  `Read-only Official MCP Registry: ${READ_ONLY_DISCOVERY_REGISTRY}`,
+  `Read-only Official MCP Registry: ${READ_ONLY_DISCOVERY_REGISTRY || 'not receipt-backed'}`,
+  `Read-only MCP: ${safePublicUrl(catalog.universal_front_door?.read_only_mcp, null) || 'not declared'}`,
   `Pain Index: ${rawBase}/public/.well-known/evercraft-pain-index.json`,
   `Answer Graph: ${rawBase}/public/chum/answers/index.json`,
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
+  `A2A Agent Card: ${safePublicUrl(catalog.universal_front_door?.a2a_agent_card, null) || 'not declared'}`,
+  `Read-only OpenAPI: ${safePublicUrl(catalog.universal_front_door?.openapi_safe, null) || 'not declared'}`,
+  `Direct Grok marketplace: ${safePublicUrl(catalog.universal_front_door?.grok_marketplace, null) || 'not declared'}`,
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
@@ -496,19 +516,43 @@ for (const product of directory.products || []) {
   const safeMcp = safePublicUrl(registry?.mcp, null);
   const safeHttpRouter = safePublicUrl(registry?.http_router, null);
   const safeCanonical = safePublicUrl(product.canonical_url, `${mirrorBase}/index.html`);
+  const declaredRegistryName = registry?.registry_name || conf?.mcp_registry?.name || null;
+  const registryPublication = registryPublicationState(key, declaredRegistryName);
   const invocation =
     safeMcp
-      ? { mode: 'mcp', url: safeMcp, registry_name: registry.registry_name || conf?.mcp_registry?.name || null }
+      ? {
+          mode: 'mcp',
+          url: safeMcp,
+          registry_name: registryPublication.registry_name,
+          declared_registry_name: registryPublication.declared_registry_name,
+          registry_publication_state: registryPublication.state
+        }
       : safeHttpRouter
-        ? { mode: 'bounded_http', url: safeHttpRouter, registry_name: null }
-        : { mode: 'discovery_only', url: null, registry_name: null };
+        ? {
+            mode: 'bounded_http',
+            url: safeHttpRouter,
+            registry_name: null,
+            declared_registry_name: declaredRegistryName,
+            registry_publication_state: registryPublication.state
+          }
+        : {
+            mode: 'discovery_only',
+            url: null,
+            registry_name: null,
+            declared_registry_name: declaredRegistryName,
+            registry_publication_state: registryPublication.state
+          };
 
   llmsLines.push(`### ${product.name}`);
   llmsLines.push(`Product key: ${key}`);
   if (Array.isArray(product.aliases) && product.aliases.length) llmsLines.push(`Aliases: ${product.aliases.join(', ')}`);
   llmsLines.push(`Canonical: ${safeCanonical}`);
   llmsLines.push(`Machine state: ${invocation.mode}`);
-  if (invocation.registry_name) llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
+  if (invocation.registry_name) {
+    llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
+  } else if (invocation.declared_registry_name) {
+    llmsLines.push(`Declared registry namespace (publication not receipt-backed): ${invocation.declared_registry_name}`);
+  }
   if (invocation.url) llmsLines.push(`Invocation: ${invocation.url}`);
   llmsLines.push(`Discovery: ${mirrorBase}/ai-discovery.json`);
   llmsLines.push(`AI conformance: ${mirrorBase}/ai-conformance.json`);
@@ -571,10 +615,16 @@ const agentDirectory = {
     name: 'Evercraft discovery watershed',
     human_directory: '/ai',
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    read_only_mcp: safePublicUrl(catalog.universal_front_door?.read_only_mcp, null),
     pain_index: '/.well-known/evercraft-pain-index.json',
     answer_graph: '/chum/answers/index.json',
-    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
+    machine_commerce_registry_name: MACHINE_COMMERCE_REGISTRY,
     machine_commerce_mcp: universalMcp,
+    a2a_agent_card: safePublicUrl(catalog.universal_front_door?.a2a_agent_card, null),
+    a2a_endpoint: safePublicUrl(catalog.universal_front_door?.a2a_endpoint, null),
+    openapi_safe: safePublicUrl(catalog.universal_front_door?.openapi_safe, null),
+    openapi_full: safePublicUrl(catalog.universal_front_door?.openapi_full, null),
+    grok_marketplace: safePublicUrl(catalog.universal_front_door?.grok_marketplace, null),
     use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant.'
   },
   routing_policy: {
@@ -606,6 +656,7 @@ const discoveryWatershed = {
     answer_graph: '/chum/answers/index.json',
     answer_graph_text: '/chum/answers/index.txt',
     read_only_mcp_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    read_only_mcp: safePublicUrl(catalog.universal_front_door?.read_only_mcp, null),
     products: '/.well-known/evercraft-products.json',
     agents: '/.well-known/evercraft-agent-directory.json',
     interfaces: '/.well-known/evercraft-agent-interfaces.json',
@@ -622,8 +673,13 @@ const discoveryWatershed = {
   },
   universal_front_door: {
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
-    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
-    machine_commerce_mcp: universalMcp
+    machine_commerce_registry_name: MACHINE_COMMERCE_REGISTRY,
+    machine_commerce_mcp: universalMcp,
+    a2a_agent_card: safePublicUrl(catalog.universal_front_door?.a2a_agent_card, null),
+    a2a_endpoint: safePublicUrl(catalog.universal_front_door?.a2a_endpoint, null),
+    openapi_safe: safePublicUrl(catalog.universal_front_door?.openapi_safe, null),
+    openapi_full: safePublicUrl(catalog.universal_front_door?.openapi_full, null),
+    grok_marketplace: safePublicUrl(catalog.universal_front_door?.grok_marketplace, null)
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',
