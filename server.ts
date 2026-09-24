@@ -1,10 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
-import fs from 'node:fs';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import { rankOffers } from './systemia/chum/discovery-router.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 
 dotenv.config();
@@ -20,53 +21,6 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
-
-type ChumMachineOffer = {
-  public_id?: string;
-  product_key?: string;
-  name?: string;
-  public_url?: string;
-  human_ui_required?: boolean;
-  confirmation?: string;
-  payment_authority?: string;
-};
-
-function findChumOffer(publicId: string): ChumMachineOffer | null {
-  try {
-    const catalogPath = path.join(__dirname, 'public', '.well-known', 'evercraft-machine-catalog.json');
-    const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
-    return (Array.isArray(catalog.offers) ? catalog.offers : [])
-      .find((offer: ChumMachineOffer) => offer.public_id === publicId) || null;
-  } catch {
-    return null;
-  }
-}
-
-async function persistChumAttributionEvent(event: unknown) {
-  if (!chumAttributionSinkUrl) {
-    return { persisted: false, state: 'sink_not_configured' };
-  }
-
-  const target = new URL(chumAttributionSinkUrl);
-  if (target.protocol !== 'https:') {
-    throw new Error('CHUM attribution sink must use HTTPS.');
-  }
-
-  const response = await fetch(target, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      ...(chumAttributionSinkToken ? { authorization: `Bearer ${chumAttributionSinkToken}` } : {}),
-    },
-    body: JSON.stringify(event),
-  });
-
-  if (!response.ok) {
-    throw new Error(`CHUM attribution sink returned HTTP ${response.status}`);
-  }
-
-  return { persisted: true, state: 'receipt_forwarded' };
-}
 
 
 const forensiScopeHandoff = {
@@ -133,6 +87,66 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+function loadPublicMachineCatalog(): any {
+  const file = path.resolve(
+    __dirname,
+    isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json'
+  );
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function publicOfferProjection(offer: any) {
+  return {
+    public_id: offer.public_id,
+    name: offer.name,
+    problem: offer.problem,
+    intent_terms: Array.isArray(offer.intent_terms) ? offer.intent_terms : [],
+    commercial_state: offer.commercial_state,
+    machine_state: offer.machine_state,
+    pricing: offer.pricing,
+    offers: Array.isArray(offer.offers) ? offer.offers : [],
+    human_ui_required: Boolean(offer.human_ui_required),
+    confirmation: offer.confirmation,
+    public_url: offer.public_url,
+    payment_authority: offer.payment_authority,
+    invocation_status: offer.invocation_status,
+    catalog_version: offer.catalog_version,
+  };
+}
+
+function findChumOffer(publicId: string): any | null {
+  const catalog = loadPublicMachineCatalog();
+  return (Array.isArray(catalog?.offers) ? catalog.offers : [])
+    .find((offer: any) => offer.public_id === publicId) || null;
+}
+
+async function persistChumAttributionEvent(event: unknown) {
+  if (!chumAttributionSinkUrl) {
+    return { persisted: false, state: 'sink_not_configured' };
+  }
+
+  const target = new URL(chumAttributionSinkUrl);
+  if (target.protocol !== 'https:') {
+    throw new Error('CHUM attribution sink must use HTTPS.');
+  }
+
+  const response = await fetch(target, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      ...(chumAttributionSinkToken ? { authorization: `Bearer ${chumAttributionSinkToken}` } : {}),
+    },
+    body: JSON.stringify(event),
+  });
+
+  if (!response.ok) {
+    throw new Error(`CHUM attribution sink returned HTTP ${response.status}`);
+  }
+
+  return { persisted: true, state: 'receipt_forwarded' };
+}
+
+
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     ok: true,
@@ -159,7 +173,13 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
+      intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
+      revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
+      machineCatalog: '/.well-known/evercraft-machine-catalog.json',
+      chumRevenueJson: '/chum/revenue.json',
+      chumRevenueText: '/chum/revenue.txt',
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
+      chumReferral: { method: 'POST', path: '/api/chum/referral' },
     },
     jobs: [
       'operations bottleneck diagnosis',
@@ -221,7 +241,90 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
   });
 });
 
+
+app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const q = String(req.query.q || '').trim();
+  const requestedLimit = Number(req.query.limit || 5);
+
+  if (!q) {
+    res.status(400).json({
+      ok: false,
+      error: 'Query parameter q is required.',
+      example: '/api/discover?q=I%20need%20a%20discontinued%20tractor%20part',
+    });
+    return;
+  }
+
+  try {
+    const catalog = loadPublicMachineCatalog();
+    const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.json({
+      schema: 'evercraft.chum.intent-routing.v1',
+      ok: true,
+      query: q,
+      match_count: matches.length,
+      doctrine: {
+        match_problem_first: true,
+        discovery_creates_obligation: false,
+        human_confirmation_preserved: true,
+        checkout_is_not_payment_proof: true,
+      },
+      matches,
+      attribution: {
+        manifest: '/.well-known/evercraft-chum-attribution.json',
+        referral_endpoint: '/api/chum/referral',
+        note: 'A referral token measures an optional handoff. It creates no payment obligation and cannot prove payment.',
+      },
+      fallback: matches.length
+        ? null
+        : {
+            message: 'No strong Evercraft match was found. Do not force a product recommendation.',
+            directory: '/.well-known/evercraft-products.json',
+            catalog: '/.well-known/evercraft-machine-catalog.json',
+          },
+    });
+  } catch (error: any) {
+    res.status(503).json({
+      ok: false,
+      error: 'Public machine catalog is unavailable.',
+      detail: error?.message || String(error),
+    });
+  }
+});
+
+app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request, res: Response) => {
+  try {
+    const catalog = loadPublicMachineCatalog();
+    const offers = (Array.isArray(catalog?.offers) ? catalog.offers : [])
+      .filter((offer: any) => offer.commercial_state === 'sell_now')
+      .map(publicOfferProjection)
+      .sort((a: any, b: any) => String(a.name || '').localeCompare(String(b.name || '')));
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.json({
+      schema: 'evercraft.chum.revenue-watershed.v1',
+      ok: true,
+      sell_now_count: offers.length,
+      doctrine: {
+        fit_before_sale: true,
+        discovery_creates_obligation: false,
+        human_confirmation_preserved: true,
+        authoritative_payment_verification_required: true,
+      },
+      offers,
+    });
+  } catch (error: any) {
+    res.status(503).json({
+      ok: false,
+      error: 'Revenue watershed is unavailable.',
+      detail: error?.message || String(error),
+    });
+  }
+});
+
 app.get('/api/chum/attribution', (_req: Request, res: Response) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.json({
     schema: 'evercraft.chum.attribution.v1',
     configured: Boolean(chumAttributionSecret),
@@ -248,14 +351,14 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
   const provider = String(req.body?.provider || 'unknown').trim().toLowerCase().slice(0, 64);
   const surface = String(req.body?.surface || 'assistant_handoff').trim().toLowerCase().slice(0, 64);
   const intent = String(req.body?.intent || '').slice(0, 2000);
-  const offer = findChumOffer(publicId);
-
-  if (!offer?.public_id || !offer.public_url) {
-    res.status(404).json({ success: false, error: 'Unknown public Evercraft offer.' });
-    return;
-  }
 
   try {
+    const offer = findChumOffer(publicId);
+    if (!offer?.public_id || !offer.public_url) {
+      res.status(404).json({ success: false, error: 'Unknown public Evercraft offer.' });
+      return;
+    }
+
     const issued = issueReferralToken({
       productKey: offer.product_key || offer.public_id,
       publicId: offer.public_id,
