@@ -19,7 +19,6 @@ const TOKEN_EQUIVALENCE_GROUPS = [
   ['funding','capital','financing','loan','loans','lender','lenders','investor','investors'],
   ['outage','offline','downtime','disruption','connectivity'],
   ['audit','review','assessment','analysis'],
-  ['business','company','companies'],
 ];
 
 const TOKEN_EQUIVALENTS = new Map();
@@ -113,20 +112,19 @@ export function scoreOffer(offer, query) {
     if (coverage >= 0.8 && matched.length >= 2) intentScore += 10;
 
     if (intentScore > 0) {
-      score += intentScore;
       matchedIntents.push({ intent: rawIntent, score: intentScore });
     }
   }
+
+  const strongestIntents = matchedIntents.sort((a,b) => b.score - a.score).slice(0,3);
+  score += strongestIntents.reduce((sum, item) => sum + item.score, 0);
 
   if (score > 0 && offer.commercial_state === 'sell_now') score += 3;
   if (score > 0 && /payment_ready|human_handoff_ready/.test(String(offer.machine_state || ''))) score += 1;
 
   return {
     score,
-    matched_intents: matchedIntents
-      .sort((a,b) => b.score - a.score)
-      .slice(0,3)
-      .map((item) => item.intent)
+    matched_intents: strongestIntents.map((item) => item.intent)
   };
 }
 
