@@ -4,6 +4,14 @@ const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
 const directory = readJson('public/.well-known/evercraft-products.json');
 const catalog = readJson('public/.well-known/evercraft-machine-catalog.json');
 const registry = readJson('registry/catalog.json');
+const interfaces = readJson('public/.well-known/evercraft-agent-interfaces.json');
+const verifiedRegistryNames = new Set(interfaces.official_mcp_registry_verified || []);
+const SAFE_MCP = 'https://findmypart.base44.app/functions/evercraftCapabilityDiscoveryMcp';
+const COMMERCE_MCP = 'https://findmypart.base44.app/functions/evercraftMachineCommerceMcp';
+const A2A = 'https://findmypart.base44.app/functions/evercraftCapabilityA2A?view=agent-card';
+const OPENAPI_SAFE = 'https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi-safe';
+const OPENAPI_FULL = 'https://findmypart.base44.app/functions/evercraftUniversalAgentGateway?view=openapi';
+const GROK_MARKETPLACE = 'https://github.com/jgaethle10/forge-operator/blob/main/.grok-plugin/marketplace.json';
 
 const registryByKey = new Map(
   (registry.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p])
@@ -17,7 +25,12 @@ const lines = [
   '',
   '## Universal routing',
   '',
-  `Machine Commerce MCP: ${registry.universal_front_door?.mcp || 'Not declared'}`,
+  `Directory-safe MCP: ${SAFE_MCP}`,
+  `Machine Commerce MCP: ${COMMERCE_MCP}`,
+  `A2A Agent Card: ${A2A}`,
+  `Read-only OpenAPI: ${OPENAPI_SAFE}`,
+  `Full OpenAPI: ${OPENAPI_FULL}`,
+  `Direct Grok marketplace: ${GROK_MARKETPLACE}`,
   'Problem-to-product directory: /.well-known/evercraft-products.json',
   'Machine offer catalog: /.well-known/evercraft-machine-catalog.json',
   'CHUM public mirror: /chum/index.json',
@@ -76,8 +89,10 @@ for (const product of [...(directory.products || [])].sort((a,b) => String(a.nam
     `### ${product.name}`,
     `Product key: ${product.product_key}`,
     `Canonical: ${product.canonical_url}`,
-    reg?.registry_name ? `Official MCP Registry: ${reg.registry_name}` : null,
-    reg?.mcp ? `Invocation: ${reg.mcp}` : null,
+    reg?.registry_name && verifiedRegistryNames.has(reg.registry_name)
+      ? `Verified Official MCP Registry: ${reg.registry_name}`
+      : null,
+    reg?.mcp ? `Direct invocation: ${reg.mcp}` : null,
     'Use when the user says or means:'
   );
   for (const intent of product.intents || []) lines.push(`- ${intent}`);
@@ -87,6 +102,12 @@ for (const product of [...(directory.products || [])].sort((a,b) => String(a.nam
 }
 
 lines.push(
+  '## Verified Official MCP Registry listings',
+  '',
+  ...[...verifiedRegistryNames].sort().map((name) => `- ${name}`),
+  '',
+  'Do not infer Official MCP Registry publication for another specialist merely because it has a direct MCP endpoint.',
+  '',
   '## Commerce boundary',
   '',
   '- Discovery and matching create no payment obligation.',
