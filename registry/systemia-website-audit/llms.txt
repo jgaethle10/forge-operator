@@ -1,0 +1,25 @@
+# Systemia Website Audit
+
+Provider: Evercraft
+Product key: systemia-website-audit
+Class: website_conversion_and_technical_audit
+Canonical URL: https://systemia-audit-pro.base44.app/
+Authority: public audit offer discovery and human-confirmed paid checkout
+Human confirmation required: yes
+Runtime llms.txt: https://systemia-audit-pro.base44.app/llms.txt
+Declared MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+
+## Natural-language intents
+- audit my website because traffic is not converting
+- find website performance and conversion friction
+- review technical SEO and trust problems on a business website
+- prioritize practical website fixes
+
+## Boundaries
+- audit findings do not guarantee revenue or rankings
+- checkout creation is not payment proof
+- paid state requires provider verification
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
