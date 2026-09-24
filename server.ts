@@ -127,13 +127,30 @@ function requestOrigin(req: Request): string {
   }
 }
 
+function publicPainSlug(value: unknown): string {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120);
+}
+
 app.get('/sitemap.xml', (req: Request, res: Response) => {
   const origin = requestOrigin(req);
   if (!origin) {
     res.status(503).type('text/plain').send('Public origin unavailable.');
     return;
   }
-  const urls = discoverySitemapPaths
+
+  let paths = discoverySitemapPaths;
+  try {
+    const painPaths = (loadPublicMachineCatalog()?.offers || [])
+      .filter((offer: any) => offer?.commercial_state === 'sell_now' && String(offer?.public_id || '').trim())
+      .map((offer: any) => `/chum/intents/${publicPainSlug(offer.public_id)}/`);
+    paths = Array.from(new Set([...discoverySitemapPaths, ...painPaths]));
+  } catch {}
+
+  const urls = paths
     .map((pathname) => `  <url><loc>${origin}${pathname}</loc></url>`)
     .join('\n');
   res.type('application/xml').send(
