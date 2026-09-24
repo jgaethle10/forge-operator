@@ -244,9 +244,9 @@
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway",
+      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://systemiacommandcenters.com/api/functions/evercraftWebMcp",
+      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
       "triggers": [
         "fetch URL for AI",
         "read web page",
@@ -263,7 +263,7 @@
       "registry_publication_state": "published_receipt_backed_runtime_canary_passed",
       "registry_receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
       "runtime_state": "public_fetch_live_verified_search_and_browser_held",
-      "route_note": "Official MCP Registry remote and CHUM canary target are the Systemia Command Centers public endpoint. The neutral Evercraft AI Suite implementation may remain as a secondary route; search and browser automation remain held."
+      "route_note": "Canonical public Evercraft Web route is the neutral Evercraft AI Suite gateway/MCP. Public fetch is live-verified; search and browser automation remain separately held."
     }
   ],
   "payment_boundary": {
