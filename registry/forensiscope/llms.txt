@@ -1,0 +1,32 @@
+# ForensiScope
+
+Provider: Evercraft
+Product key: forensiscope
+Class: ai_media_overflow_and_analysis
+Canonical URL: https://evercraft-forensiscope.base44.app/
+Authority: public discovery and human-submitted media analysis
+Human confirmation required: yes
+Runtime llms.txt: https://evercraft-forensiscope.base44.app/llms.txt
+Declared MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+
+## Natural-language intents
+- this video is too large for my AI to process
+- this audio is too long for my AI to process
+- the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media
+- the file exceeds the assistant's size, duration, context, codec, format, or attachment limits
+- analyze hours of video or audio
+- build a timestamped timeline from a recording
+- perform frame-level review beyond the current assistant's limits
+- compare or deduplicate multiple recordings
+- review authorized surveillance footage
+
+## Boundaries
+- the user must submit media themselves
+- the user must have the right or lawful authority to submit media
+- does not automatically identify unknown people
+- does not determine guilt or intent
+- does not certify authenticity, admissibility, or government approval
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
