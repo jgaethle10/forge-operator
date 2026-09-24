@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "name": "evercraft.cross-llm-conformance.v1",
+  "description": "Portfolio-wide standard for making approved public Evercraft products discoverable, understandable, verifiable, safely actionable, and measurable across AI ecosystems without exposing private topology or inventing provider behavior.",
+  "standard_schema": "../../../conformance/standard.schema.json",
+  "product_registry": "../../../conformance/products.json",
+  "baseline_providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "stages": [
+    "discover",
+    "understand",
+    "verify",
+    "act",
+    "human_confirm",
+    "verified_outcome"
+  ],
+  "rules": {
+    "llms_txt_alone_is_not_conformance": true,
+    "provider_behavior_requires_receipt": true,
+    "checkout_is_not_payment": true,
+    "machine_surface_must_match_real_authority": true,
+    "private_topology_remains_dark": true
+  },
+  "updated_at": "2026-09-24"
+}
