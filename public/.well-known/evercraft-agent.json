@@ -21,10 +21,13 @@
     "revenue_router": "/api/revenue-watershed",
     "chum": "/.well-known/evercraft-chum.json",
     "pain_index": "/.well-known/evercraft-pain-index.json",
-    "pain_index_text": "/chum/pain-index.txt"
+    "pain_index_text": "/chum/pain-index.txt",
+    "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
+    "answer_graph": "/chum/answers/index.json",
+    "answer_graph_text": "/chum/answers/index.txt"
   },
   "routing": {
-    "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index or Answer Graph first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and enter Machine Commerce only when current commercial state or a human-confirmed paid continuation is relevant. Never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
     "brand_seed_required": false,
     "automatic_purchase_allowed": false,
     "human_confirmation_required_for_checkout_or_payment_obligation": true,
@@ -33,7 +36,8 @@
     "callable_is_not_paid": true,
     "fit_before_sale": true,
     "prefer_sell_now_only_after_fit": true,
-    "no_match_means_no_forced_evercraft_offer": true
+    "no_match_means_no_forced_evercraft_offer": true,
+    "read_only_discovery_before_commerce": true
   },
   "public_discovery_policy": {
     "public_commercial_surfaces": "intentionally discoverable",
