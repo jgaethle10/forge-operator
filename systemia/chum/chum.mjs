@@ -9,6 +9,8 @@ const timeoutMs = 12000;
 const conformance = readJson('conformance/products.json');
 const directory = readJson('public/.well-known/evercraft-products.json');
 const catalog = readJson('registry/catalog.json');
+const agentDirectory = readJson('public/.well-known/evercraft-agent-directory.json');
+const discoveryWatershed = readJson('public/.well-known/evercraft-discovery.json');
 
 const readJsonDir = (dir) => {
   if (!fs.existsSync(dir)) return [];
@@ -48,6 +50,8 @@ for (const receipt of providerObservationReceipts) {
   list.push(receipt);
   providerObservationsByKey.set(key, list);
 }
+
+const agentByKey = new Map((agentDirectory.specialists || []).map((p) => [p.product_key, p]));
 
 const providerTargets = (conformance.baseline_providers || []).map((provider) => ({
   provider,
@@ -150,7 +154,7 @@ async function inspectProduct(product) {
     class: product.class,
     canonical_url: product.canonical_url,
     intents: publicEntry?.intents || [],
-    mcp: catalogEntry?.mcp || null,
+    mcp: catalogEntry?.mcp || agentByKey.get(product.product_key)?.mcp || null,
     checks,
     readiness: readiness({ product, publicEntry, catalogEntry, checks }),
     distribution_state: {
@@ -173,9 +177,9 @@ async function inspectProduct(product) {
       },
       {
         lane: 'agent_registry',
-        state: catalogEntry?.mcp ? 'declared' : 'not_declared',
-        action: catalogEntry?.mcp
-          ? 'Maintain the specialist MCP entry and route compatible natural-language intent to it.'
+        state: (catalogEntry?.mcp || agentByKey.get(product.product_key)?.mcp) ? 'declared' : 'not_declared',
+        action: (catalogEntry?.mcp || agentByKey.get(product.product_key)?.mcp)
+          ? 'Maintain the specialist MCP entry, Official MCP Registry manifest, and route compatible natural-language intent to it.'
           : 'Evaluate whether this capability should expose a bounded MCP or HTTP invocation surface.'
       },
       {
@@ -227,6 +231,13 @@ const receipt = {
     invalid_surfaces: invalid.length
   },
   provider_targets: providerTargets,
+  watershed: {
+    schema: discoveryWatershed.schema,
+    public_machine_surfaces: Object.values(discoveryWatershed.machine_readable || {}),
+    official_registry_namespace: discoveryWatershed.registry?.namespace || null,
+    universal_mcp: discoveryWatershed.registry?.universal_mcp || null,
+    public_agent_count: (agentDirectory.specialists || []).length
+  },
   products
 };
 
