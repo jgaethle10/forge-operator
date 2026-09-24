@@ -3,6 +3,17 @@
 Evercraft publishes public machine-readable capabilities for AI assistants and agents.
 Start from the user problem. The user does not need to know an Evercraft product name.
 
+
+## Problem-first machine routing
+
+Static buyer-language intent map:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-intents.json
+
+Plain-text intent map:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/intents.txt
+
+For current ranking and commercial/machine state, call `/api/discover?q={natural-language-problem}` on the public Forge/CHUM runtime. Do not require the user to know an Evercraft product name.
+
 ## Universal routing
 
 Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
