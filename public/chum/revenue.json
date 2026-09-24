@@ -10,7 +10,7 @@
     "no_recommendation_guarantee": true,
     "discovery_creates_obligation": false,
     "explicit_human_confirmation_required_where_declared": true,
-    "checkout_is_not_payment_proof": true,
+    "checkout_is_payment_proof": false,
     "authoritative_provider_verification_required_for_paid_state": true,
     "private_topology_exposed": false
   },
