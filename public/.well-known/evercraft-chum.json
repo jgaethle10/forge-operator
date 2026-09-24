@@ -28,5 +28,18 @@
   "public_entrypoints": {
     "portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt"
+  },
+  "entrypoints": {
+    "offers": "/.well-known/evercraft-offers.json"
+  },
+  "commercial_catalog": {
+    "state": "public",
+    "path": "/.well-known/evercraft-offers.json",
+    "semantics": "Only current public/share-safe SELL_NOW projections are published. payment_ready and quote_ready remain distinct."
+  },
+  "crawler_policy": {
+    "public_machine_surfaces": [
+      "/.well-known/evercraft-offers.json"
+    ]
   }
 }
