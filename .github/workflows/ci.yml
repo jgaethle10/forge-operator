@@ -90,6 +90,9 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/forensiscope/llms.txt > /tmp/forensiscope-llms.txt
           curl --fail --silent http://127.0.0.1:3000/forensiscope/discovery.json > /tmp/forensiscope-discovery.json
           curl --fail --silent http://127.0.0.1:3000/chum/intents/forensiscope-evidence-review-v1/offer.json > /tmp/forensiscope-offer.json
+          curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-failure-routes.json > /tmp/failure-routes.json
+          curl --fail --silent http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
+          curl --fail --silent http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
           curl --fail --silent --get \
             --data-urlencode "q=I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots" \
             http://127.0.0.1:3000/api/discover > /tmp/forensiscope-route.json
@@ -102,6 +105,9 @@ jobs:
           const forensiscopeDiscovery = JSON.parse(fs.readFileSync('/tmp/forensiscope-discovery.json','utf8'));
           const forensiscopeOffer = JSON.parse(fs.readFileSync('/tmp/forensiscope-offer.json','utf8'));
           const forensiscopeRoute = JSON.parse(fs.readFileSync('/tmp/forensiscope-route.json','utf8'));
+          const failureRoutes = JSON.parse(fs.readFileSync('/tmp/failure-routes.json','utf8'));
+          const robots = fs.readFileSync('/tmp/robots.txt','utf8');
+          const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
           const forensiscopeLlms = fs.readFileSync('/tmp/forensiscope-llms.txt','utf8');
 
           if (health.ok !== true) throw new Error('health.ok must be true');
@@ -116,6 +122,24 @@ jobs:
           }
           if (forensiscopeOffer.commercial_state !== 'sell_now' && forensiscopeOffer.machine_offer_url !== null) {
             throw new Error('Verification-gated ForensiScope exposed checkout');
+          }
+          if (!failureRoutes.routes?.some((r) => r.failure_code === 'ai_media_overflow' && r.target_public_id === 'forensiscope-evidence-review-v1')) {
+            throw new Error('ForensiScope failure-state exit missing');
+          }
+          if (!failureRoutes.routes?.some((r) => r.failure_code === 'runtime_too_short' && r.target_public_id === 'systemia-yard-runtime-extension-v1')) {
+            throw new Error('Systemia Yard runtime exit missing');
+          }
+          if (!failureRoutes.routes?.some((r) => r.failure_code === 'web_or_browser_capability_missing' && r.target_public_id === 'evercraft-web-browser-agent-v1')) {
+            throw new Error('Evercraft Web exit missing');
+          }
+          if (!robots.includes('OAI-SearchBot') || !robots.includes('Claude-SearchBot') || !robots.includes('PerplexityBot')) {
+            throw new Error('AI crawler policy missing');
+          }
+          if (!robots.includes('Sitemap: http://127.0.0.1:3000/sitemap.xml')) {
+            throw new Error('absolute sitemap declaration missing');
+          }
+          if (!sitemap.includes('<loc>http://127.0.0.1:3000/chum/intents/forensiscope-evidence-review-v1/</loc>')) {
+            throw new Error('absolute CHUM intent URL missing from sitemap');
           }
           NODE
 
