@@ -39,7 +39,11 @@
     "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
     "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "discovery_router": "/api/discover?q={natural-language-problem}",
+    "offer_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/offers/index.json",
+    "offer_directory": "https://github.com/jgaethle10/forge-operator/blob/main/public/chum/offers/index.html",
+    "intent_router": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents.json",
+    "capability_catalog": "https://github.com/jgaethle10/forge-operator/blob/main/AI-CAPABILITY-CATALOG.md"
   },
   "freshness_broadcast": {
     "mechanism": "IndexNow",
@@ -60,6 +64,12 @@
       "token": "Google-Extended",
       "purpose": "Gemini training and Google Search grounding control; separate from ordinary Google Search inclusion",
       "evidence": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
+    },
+    {
+      "provider": "OpenAI",
+      "token": "ChatGPT-User",
+      "purpose": "User-triggered ChatGPT retrieval on public Evercraft surfaces; this is separate from automatic Search crawling and is not treated as provider pickup.",
+      "evidence": "https://developers.openai.com/api/docs/bots"
     }
   ],
   "measurement": {
