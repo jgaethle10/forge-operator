@@ -5,7 +5,7 @@
   "expansion": "Capability Handoff & Utility Mesh",
   "version": "0.2.0",
   "owner": "Systemia",
-  "status": "live_in_forge_operator",
+  "status": "source_implemented_pending_runtime_verification",
   "contract": {
     "inputs": [
       "conformance/products.json",
@@ -13,7 +13,9 @@
       "registry/catalog.json",
       "Official MCP Registry",
       "public capability endpoints",
-      "authorized provider-probe bridge receipts"
+      "authorized provider-probe bridge receipts",
+      "natural-language pain query",
+      "public crawler request"
     ],
     "outputs": [
       "surface-readiness receipts",
@@ -21,7 +23,10 @@
       "repair queue",
       "provider signal plan",
       "receipt-backed provider pickup state",
-      "AI-originated conversion attribution inputs"
+      "AI-originated conversion attribution inputs",
+      "deterministic problem-to-capability resolution",
+      "crawlable AI capability directory",
+      "absolute runtime sitemap"
     ]
   },
   "permissions": {
@@ -36,10 +41,19 @@
     "public_surface_probes": "receipt_backed",
     "mcp_external_canary": "receipt_backed",
     "provider_pickup": "receipt_required",
-    "conversion_attribution": "receipt_required"
+    "conversion_attribution": "receipt_required",
+    "public_watershed": "source_implemented_pending_runtime_verification"
   },
   "compatibility": {
-    "provider_targets": ["chatgpt","claude","gemini","copilot","perplexity","grok","generic_agent"]
+    "provider_targets": [
+      "chatgpt",
+      "claude",
+      "gemini",
+      "copilot",
+      "perplexity",
+      "grok",
+      "generic_agent"
+    ]
   },
   "rollback": {
     "safe_disable": "disable the CHUM watershed workflow or run CHUM with --offline",
