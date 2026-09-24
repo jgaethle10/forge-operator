@@ -39,7 +39,9 @@
     "revenue_watershed": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.json",
     "revenue_watershed_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/revenue.txt",
     "machine_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
-    "discovery_router": "/api/discover?q={natural-language-problem}"
+    "discovery_router": "/api/discover?q={natural-language-problem}",
+    "intent_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents/index.json",
+    "intent_index_text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/intents/index.txt"
   },
   "freshness_broadcast": {
     "mechanism": "IndexNow",
