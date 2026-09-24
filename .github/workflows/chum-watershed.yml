@@ -50,6 +50,7 @@ jobs:
           npm run chum:index
           npm run chum:answers
           npm run chum:mirror
+          npm run chum:failures
 
       - name: Publish changed CHUM mirrors
         if: github.ref == 'refs/heads/main'
@@ -63,7 +64,7 @@ jobs:
             echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
             exit 0
           fi
-          git add public/chum public/.well-known/evercraft-machine-catalog.json public/.well-known/evercraft-pain-index.json public/llms-full.txt llms-full.txt
+          git add public/chum public/.well-known/evercraft-machine-catalog.json public/.well-known/evercraft-pain-index.json public/.well-known/evercraft-failure-routes.json public/llms-full.txt llms-full.txt
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else
@@ -78,6 +79,7 @@ jobs:
           npm run chum:validate
           npm run test:chum-index
           npm run test:chum-answers
+          npm run test:chum-failures
 
       - name: Probe static AI doorways
         id: static

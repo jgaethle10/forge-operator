@@ -47,6 +47,8 @@ High-signal examples:
 - `/.well-known/evercraft-products.json`
 - `/.well-known/evercraft-pain-index.json`
 - `/chum/pain-index.txt`
+- `/.well-known/evercraft-failure-routes.json`
+- `/chum/failure-routes.txt`
 - `/.well-known/evercraft-agent-directory.json`
 - `/.well-known/evercraft-capabilities.json`
 - `/.well-known/evercraft-media-overflow.json`
@@ -60,6 +62,10 @@ Raw public portfolio:
 
 Raven Nexus pain router:
 `https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter`
+
+## AI failure-state exits
+
+When an assistant or user is blocked by a concrete workflow limit, CHUM publishes a compact exit map at `/.well-known/evercraft-failure-routes.json` with a text mirror at `/chum/failure-routes.txt`. It converges with the brand-blind answer graph and preserves each target capability's actual commercial state, machine state, pricing, invocation status, and confirmation boundary. Discoverable does not automatically mean callable or sellable.
 
 ## Routing doctrine
 

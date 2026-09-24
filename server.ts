@@ -253,6 +253,8 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
+      failureRoutes: '/.well-known/evercraft-failure-routes.json',
+      failureRoutesText: '/chum/failure-routes.txt',
       chumRevenueJson: '/chum/revenue.json',
       chumRevenueText: '/chum/revenue.txt',
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',

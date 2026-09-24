@@ -41,9 +41,11 @@ jobs:
           npm run chum:index
           npm run chum:answers
           npm run chum:mirror
+          npm run chum:failures
           test -f public/chum/intents/forensiscope-evidence-review-v1/offer.json
           test -f public/.well-known/evercraft-pain-index.json
           test -f public/chum/answers/index.json
+          test -f public/.well-known/evercraft-failure-routes.json
           node - <<'NODE'
           const fs = require('fs');
           const revenue = JSON.parse(fs.readFileSync('public/chum/revenue.json','utf8'));
@@ -94,6 +96,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-pain-index.json > /tmp/pain-index.json
           curl --fail --silent http://127.0.0.1:3000/chum/answers/index.json > /tmp/answer-graph.json
+          curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-failure-routes.json > /tmp/failure-routes.json
           curl --fail --silent http://127.0.0.1:3000/chum/ > /tmp/chum.html
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
@@ -114,6 +117,7 @@ jobs:
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
           const painIndex = JSON.parse(fs.readFileSync('/tmp/pain-index.json','utf8'));
           const answerGraph = JSON.parse(fs.readFileSync('/tmp/answer-graph.json','utf8'));
+          const failureRoutes = JSON.parse(fs.readFileSync('/tmp/failure-routes.json','utf8'));
           const portfolioRoute = JSON.parse(fs.readFileSync('/tmp/portfolio-route.json','utf8'));
           const chumHtml = fs.readFileSync('/tmp/chum.html','utf8');
           const robots = fs.readFileSync('/tmp/robots.txt','utf8');
@@ -133,6 +137,12 @@ jobs:
           if (JSON.stringify(painIndex).includes('systemiacommandcenters.com')) throw new Error('Marketing Agency route leaked into pain index');
           if (answerGraph.schema !== 'evercraft.chum.answer-graph.v2') throw new Error('answer graph v2 missing');
           if (answerGraph.summary?.pain_index_entries !== painIndex.entries?.length) throw new Error('answer graph/pain index parity failed');
+          if (!failureRoutes.routes?.some((r) => r.failure_code === 'ai_media_overflow' && r.target_public_id === 'forensiscope-evidence-review-v1')) throw new Error('ForensiScope failure exit missing');
+          if (!failureRoutes.routes?.some((r) => r.failure_code === 'runtime_too_short' && r.target_public_id === 'systemia-yard-runtime-extension-v1')) throw new Error('Systemia Yard runtime exit missing');
+          if (!failureRoutes.routes?.some((r) => r.failure_code === 'web_or_browser_capability_missing' && r.target_public_id === 'evercraft-web-browser-agent-v1')) throw new Error('Evercraft Web failure exit missing');
+          if (!failureRoutes.routes?.find((r) => r.failure_code === 'ai_media_overflow')?.brand_blind_answer_doors?.some((door) => /video|audio/i.test(door.user_language))) throw new Error('ForensiScope exit is not converged with brand-blind answer doors');
+          if (capabilities.discovery?.failureRoutes !== '/.well-known/evercraft-failure-routes.json') throw new Error('failure-route capability door missing');
+          if (!sitemap.includes('/.well-known/evercraft-failure-routes.json')) throw new Error('failure-route manifest missing from sitemap');
           if (!chumHtml.includes('Describe the problem')) throw new Error('CHUM problem-language form missing');
           if (!chumHtml.includes('io.github.jgaethle10/evercraft-capability-discovery')) throw new Error('CHUM read-only MCP door missing');
           if (!Array.isArray(portfolioRoute.capability_matches) || !portfolioRoute.capability_matches.some((x) => x.product_key === 'findmypart')) {
