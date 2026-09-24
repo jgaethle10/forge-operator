@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.agent-discovery.v2",
+  "provider": "Evercraft LLC",
+  "coordinator": {
+    "name": "CHUM",
+    "expansion": "Capability Handoff & Utility Mesh",
+    "purpose": "Public discovery watershed for AI assistants, agents, crawlers, search systems and developers."
+  },
+  "state": "source_manifest",
+  "runtime_note": "When served by Forge/Yard, the same path is generated with absolute runtime URLs.",
+  "entrypoints": {
+    "human_ai_directory": "/ai",
+    "deterministic_problem_resolver": "/api/discover?q={natural_language_problem}",
+    "llms": "/llms.txt",
+    "portfolio": "/.well-known/evercraft-products.json",
+    "capabilities": "/.well-known/evercraft-capabilities.json",
+    "chum": "/.well-known/evercraft-chum.json",
+    "media_overflow": "/.well-known/evercraft-media-overflow.json",
+    "source_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
+    "source_portfolio": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json",
+    "source_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms.txt",
+    "source_repository": "https://github.com/jgaethle10/forge-operator"
+  },
+  "routing": {
+    "input": "natural-language problem or desired outcome",
+    "rule": "Route to the smallest relevant public Evercraft capability. Preserve authority, evidence, pricing, geographic, privacy and human-confirmation boundaries.",
+    "model_call_required": false,
+    "private_topology_exposed": false
+  },
+  "commerce": {
+    "discovery_creates_payment_obligation": false,
+    "human_confirmation_required_where_declared": true,
+    "checkout_is_payment_proof": false,
+    "provider_verification_required_for_paid_state": true
+  },
+  "provider_targets": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "Copilot",
+    "Perplexity",
+    "Grok",
+    "generic search crawlers",
+    "generic MCP clients",
+    "generic HTTP agents"
+  ]
+}
