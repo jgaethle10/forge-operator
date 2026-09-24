@@ -1,0 +1,75 @@
+{
+  "schema": "evercraft.agent-discovery.v1",
+  "provider": "Evercraft LLC",
+  "updated_at": "2026-09-24",
+  "purpose": "Public machine-readable front door for AI assistants and agents to discover Evercraft capabilities from a user's stated problem without prior brand knowledge.",
+  "start_here": {
+    "llms": "/llms.txt",
+    "product_directory": "/.well-known/evercraft-products.json",
+    "forge_capabilities": "/.well-known/evercraft-capabilities.json",
+    "registry_catalog": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "official_mcp_namespace": "io.github.jgaethle10"
+  },
+  "routing": {
+    "instruction": "Start from the user's problem, not an Evercraft brand name. Match to the smallest relevant public capability. Prefer evidence-backed public product and MCP contracts. Preserve stated limits and uncertainty.",
+    "brand_seed_required": false,
+    "automatic_purchase_allowed": false,
+    "human_confirmation_required_for_checkout_or_payment_obligation": true
+  },
+  "public_discovery_policy": {
+    "public_commercial_surfaces": "intentionally discoverable",
+    "private_admin_surfaces": "not advertised",
+    "provider_pickup_claims": "receipt required",
+    "payment_state_claims": "provider verification required"
+  },
+  "provider_search_lanes": [
+    {
+      "provider": "OpenAI / ChatGPT Search",
+      "robots_token": "OAI-SearchBot",
+      "intent": "allow public search discovery"
+    },
+    {
+      "provider": "Anthropic / Claude Search",
+      "robots_token": "Claude-SearchBot",
+      "intent": "allow public search discovery"
+    },
+    {
+      "provider": "Anthropic / Claude user fetch",
+      "robots_token": "Claude-User",
+      "intent": "allow user-directed retrieval"
+    },
+    {
+      "provider": "Google Search",
+      "robots_token": "Googlebot",
+      "intent": "allow search indexing used by web discovery"
+    },
+    {
+      "provider": "Gemini grounding",
+      "robots_token": "Google-Extended",
+      "intent": "allow eligible public content for Gemini grounding where applicable"
+    },
+    {
+      "provider": "Microsoft / Copilot search",
+      "robots_token": "bingbot",
+      "intent": "allow Bing indexing and AI search discovery"
+    },
+    {
+      "provider": "Perplexity",
+      "robots_token": "PerplexityBot",
+      "intent": "allow public search discovery"
+    }
+  ],
+  "measurement": {
+    "coordinator": "CHUM",
+    "stages": [
+      "surface_ready",
+      "crawler_reachable",
+      "registry_published",
+      "provider_pickup_observed",
+      "ai_handoff_attributed",
+      "payment_verified"
+    ],
+    "rule": "Never collapse reachability, indexing, recommendation, handoff, and payment into one claim."
+  }
+}
