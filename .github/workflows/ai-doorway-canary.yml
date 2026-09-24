@@ -9,8 +9,11 @@ on:
       - "conformance/**"
       - "registry/**"
       - "public/.well-known/**"
+      - "public/robots.txt"
+      - "public/llms.txt"
       - "systemia/chum/**"
       - "scripts/check-ai-doorways.mjs"
+      - "package.json"
       - ".github/workflows/ai-doorway-canary.yml"
   schedule:
     - cron: "17 */6 * * *"
@@ -43,6 +46,17 @@ jobs:
       - name: Run CHUM signal mesh
         run: node systemia/chum/chum.mjs
 
+      - name: Audit crawler and AI-search reachability
+        run: node systemia/chum/crawler-audit.mjs
+
+      - name: Probe MCP and Official Registry
+        run: node systemia/chum/mcp-canary.mjs
+
+      - name: Announce changed public discovery surfaces
+        if: github.event_name != 'schedule'
+        continue-on-error: true
+        run: node systemia/chum/indexnow.mjs
+
       - name: Upload AI distribution receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -51,4 +65,6 @@ jobs:
           path: |
             artifacts/ai-doorway-canary.*
             artifacts/chum/chum-latest.*
+            artifacts/chum/crawler-audit-latest.*
+            artifacts/chum/mcp-canary-latest.*
           if-no-files-found: warn
