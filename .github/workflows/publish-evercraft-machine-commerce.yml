@@ -5,7 +5,6 @@ on:
   push:
     paths:
       - "registry/evercraft-machine-commerce/server.json"
-      - ".github/workflows/publish-evercraft-machine-commerce.yml"
 
 permissions:
   contents: read
@@ -29,4 +28,17 @@ jobs:
         run: ./mcp-publisher login github-oidc
 
       - name: Publish Evercraft Machine Commerce
-        run: ./mcp-publisher publish registry/evercraft-machine-commerce/server.json
+        shell: bash
+        run: |
+          set +e
+          OUTPUT="$(./mcp-publisher publish registry/evercraft-machine-commerce/server.json 2>&1)"
+          CODE=$?
+          printf '%s\n' "$OUTPUT"
+          if [ "$CODE" -eq 0 ]; then
+            exit 0
+          fi
+          if printf '%s' "$OUTPUT" | grep -qi "cannot publish duplicate version"; then
+            echo "Registry already contains this version; treating publish as idempotent success."
+            exit 0
+          fi
+          exit "$CODE"
