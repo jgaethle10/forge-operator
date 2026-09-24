@@ -186,7 +186,8 @@ jobs:
             throw new Error('Verification-gated ForensiScope exposed checkout');
           }
           if (capabilities.discovery?.a2a?.path !== '/a2a') throw new Error('A2A discovery route missing from capabilities');
-          if (a2aCard.protocolVersion !== '1.0') throw new Error('A2A Agent Card must advertise protocol 1.0');
+          if (a2aCard.protocolVersion !== undefined) throw new Error('A2A v1 Agent Card must not use the removed top-level protocolVersion field');
+          if (a2aCard.supportedInterfaces?.[0]?.protocolVersion !== '1.0') throw new Error('A2A supported interface must advertise protocol 1.0');
           if (a2aCard.supportedInterfaces?.[0]?.url !== 'https://discovery.example.test/a2a') throw new Error('A2A Agent Card public interface URL is wrong');
           if (!a2aCard.skills?.some((skill) => skill.id === 'discover_evercraft_capability')) throw new Error('A2A discovery skill missing');
           if (a2aRoute.jsonrpc !== '2.0' || a2aRoute.id !== 'smoke-a2a') throw new Error('A2A JSON-RPC envelope invalid');
