@@ -1,0 +1,48 @@
+{
+  "schema": "evercraft.chum.discovery.v1",
+  "name": "CHUM",
+  "expansion": "Capability Handoff & Utility Mesh",
+  "provider": "Evercraft",
+  "updated_at": "2026-09-24",
+  "purpose": "Public machine front door for matching natural-language needs to the smallest appropriate Evercraft capability.",
+  "discovery": {
+    "llms": "/llms.txt",
+    "product_directory": "/.well-known/evercraft-products.json",
+    "forge_capability_manifest": "/.well-known/evercraft-capabilities.json",
+    "media_overflow_contract": "/.well-known/evercraft-media-overflow.json",
+    "runtime": "/api/chum",
+    "resolver": "/api/chum/discover",
+    "resolver_method": "GET",
+    "resolver_query_parameter": "q",
+    "optional_provider_parameter": "provider"
+  },
+  "crawler_policy": {
+    "intended_search_and_retrieval_agents": [
+      "OAI-SearchBot",
+      "ChatGPT-User",
+      "Claude-SearchBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Googlebot",
+      "Bingbot"
+    ],
+    "public_discovery_open": true,
+    "private_and_expensive_routes_excluded_from_crawl": true
+  },
+  "commerce_boundary": {
+    "discovery_creates_payment_obligation": false,
+    "human_confirmation_required_when_product_declares_it": true,
+    "checkout_creation_is_not_payment_proof": true
+  },
+  "attribution": {
+    "resolver_emits_attributed_handoff_url": true,
+    "medium": "ai_handoff",
+    "campaign": "evercraft_chum"
+  },
+  "truth_rules": [
+    "Only advertise public capabilities represented in the canonical product directory.",
+    "Do not infer private or unreleased capabilities.",
+    "Do not claim an AI provider discovered, recommended, invoked, or converted a product without receipt-backed evidence.",
+    "Do not force-route a user when no relevant capability matches."
+  ]
+}
