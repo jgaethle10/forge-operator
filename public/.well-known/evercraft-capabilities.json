@@ -8,7 +8,11 @@
     "health": "/api/health",
     "invoke": "/api/forge",
     "manifest": "/.well-known/evercraft-capabilities.json",
-    "productDirectory": "/.well-known/evercraft-products.json"
+    "productDirectory": "/.well-known/evercraft-products.json",
+    "watershed": "/.well-known/evercraft-discovery.json",
+    "resolver": "/api/resolve",
+    "chum": "/.well-known/evercraft-chum.json",
+    "publicMirror": "/chum/index.json"
   },
   "jobs": [
     "operations bottleneck diagnosis",
@@ -16,7 +20,8 @@
     "human-in-the-loop design",
     "operational risk identification",
     "implementation next-step generation",
-    "Evercraft portfolio problem-to-product discovery"
+    "Evercraft portfolio problem-to-product discovery",
+    "natural-language pain-to-capability routing"
   ],
   "input": {
     "method": "POST",
