@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "standard": "evercraft.cross-llm-conformance.v1",
+  "updated_at": "2026-09-24",
+  "baseline_providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "products": [
+    {
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "class": "agent_commerce",
+      "canonical_url": "https://findmypart.base44.app/",
+      "llms_url": "https://findmypart.base44.app/llms.txt",
+      "conformance_url": "https://findmypart.base44.app/ai-conformance.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "reference_implementation",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "aliev",
+      "name": "AliEV",
+      "class": "evidence_aware_agent_commerce",
+      "canonical_url": "https://aliev.base44.app/",
+      "llms_url": "https://aliev.base44.app/llms.txt",
+      "conformance_url": "https://aliev.base44.app/ai-conformance.json",
+      "openapi_url": "https://aliev.base44.app/openapi.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "reference_implementation",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "forensiscope",
+      "name": "ForensiScope",
+      "class": "human_handoff_media_overflow",
+      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "llms_url": "https://evercraft-forensiscope.base44.app/llms.txt",
+      "conformance_url": "https://evercraft-forensiscope.base44.app/ai-conformance.json",
+      "discovery_url": "https://evercraft-forensiscope.base44.app/forensiscope-capabilities.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "reference_implementation",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "skyops-parking",
+      "name": "SkyOps Parking",
+      "class": "discovery_human_handoff",
+      "canonical_url": "https://skyops-parking.base44.app/",
+      "llms_url": "https://skyops-parking.base44.app/llms.txt",
+      "discovery_url": "https://skyops-parking.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "everystage",
+      "name": "EveryStage",
+      "class": "discovery_human_handoff",
+      "canonical_url": "https://every-stage.base44.app/product",
+      "llms_url": "https://every-stage.base44.app/llms.txt",
+      "discovery_url": "https://every-stage.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "contractor-cloud",
+      "name": "Evercraft Contractor Cloud",
+      "class": "two_sided_marketplace_human_handoff",
+      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "llms_url": "https://evercraft-contractor-cloud-314d2197.base44.app/llms.txt",
+      "discovery_url": "https://evercraft-contractor-cloud-314d2197.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "infinite-classroom",
+      "name": "Infinite Classroom",
+      "class": "public_learning_discovery",
+      "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "llms_url": "https://infinite-classroom-fe2d1357.base44.app/llms.txt",
+      "discovery_url": "https://infinite-classroom-fe2d1357.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "evernest",
+      "name": "EverNest",
+      "class": "public_resource_discovery_only",
+      "canonical_url": "https://evernest-home.base44.app/",
+      "llms_url": "https://evernest-home.base44.app/llms.txt",
+      "discovery_url": "https://evernest-home.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    },
+    {
+      "product_key": "evercraft-network",
+      "name": "Evercraft Network",
+      "class": "bounded_membership_discovery",
+      "canonical_url": "https://network-control.base44.app/",
+      "llms_url": "https://network-control.base44.app/llms.txt",
+      "discovery_url": "https://network-control.base44.app/ai-discovery.json",
+      "doorway_state": "source_build_green",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run"
+    }
+  ],
+  "state_semantics": {
+    "source_build_green": "Machine-facing files exist in source and the product build passed. This is not live deployment proof.",
+    "reference_implementation": "Product has a cross-LLM conformance contract and deterministic local release checks.",
+    "not_yet_propagated": "Product has a machine doorway but has not yet received the full cross-LLM conformance contract.",
+    "provider_behavior_state_not_run": "No claim is made that any named AI provider has discovered, recommended, invoked, or converted the product."
+  }
+}
