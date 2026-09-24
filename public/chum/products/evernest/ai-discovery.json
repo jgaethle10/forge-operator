@@ -5,18 +5,21 @@
   "class": "family_support_resources",
   "canonical_url": "https://evernest-home.base44.app/",
   "intents": [
-    "family support resources",
-    "maternal support resources",
-    "organize practical help after having a baby",
-    "trusted support circle concepts",
+    "I just had a baby and need help organizing practical support",
+    "my family is overwhelmed and I need help coordinating people around us",
+    "help me set up a trusted support circle for my family",
+    "new parent or postpartum practical support resources",
+    "help organize meals, rides, childcare, check-ins, or family tasks",
     "family preparedness resources",
-    "Spanish-language family support resources"
+    "Spanish-language family support resources",
+    "I need family help without putting private details out in public"
   ],
-  "authority": "public resource discovery only",
+  "authority": "public family-support resource discovery and user-controlled support-circle planning",
   "human_confirmation_required": false,
   "boundaries": [
     "does not diagnose, score urgency, or determine whether abuse or danger occurred",
-    "not an emergency-response service",
+    "not an emergency-response service and does not replace medical, mental-health, legal, or emergency care",
+    "AI assistants and agents must not invite people, publish family details, share child information, or create support tasks without explicit user action",
     "private family, child, Care Circle, task, note, upload, location, and account data are not public"
   ],
   "registry_name": null,
