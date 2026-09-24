@@ -7,6 +7,26 @@ fs.rmSync(root,{recursive:true,force:true});
 fs.mkdirSync(root,{recursive:true});
 
 const universalMcp='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const BLOCKED_PUBLIC_HOSTS=new Set(['systemiacommandcenters.com','www.systemiacommandcenters.com']);
+
+function escapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,(ch)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function safePublicUrl(value,fallback){
+  if(!value) return fallback;
+  try{
+    const url=new URL(String(value));
+    if(!['http:','https:'].includes(url.protocol)) return fallback;
+    if(BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
+    return url.toString();
+  }catch{return fallback;}
+}
+function descriptionFor(offer){
+  const problem=String(offer.problem||'').trim();
+  if(problem) return problem;
+  const intents=Array.isArray(offer.intent_terms)?offer.intent_terms.filter(Boolean).slice(0,3):[];
+  return intents.length ? offer.name+' helps when: '+intents.join('; ')+'.' : offer.name+' is a public Evercraft capability.';
+}
 const items=[];
 
 for(const offer of catalog.offers||[]){
@@ -15,6 +35,11 @@ for(const offer of catalog.offers||[]){
   const dir=path.join(root,id);
   fs.mkdirSync(dir,{recursive:true});
   const base='https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+id;
+  const pageUrl='/chum/capabilities/'+id+'/';
+  const canonicalUrl=safePublicUrl(
+    offer.public_url,
+    'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+id+'/index.html'
+  );
   const record={
     schema:'evercraft.chum.capability-discovery.v1',
     provider:'Evercraft LLC',
@@ -30,13 +55,15 @@ for(const offer of catalog.offers||[]){
     offers:offer.offers||[],
     human_ui_required:Boolean(offer.human_ui_required),
     confirmation:offer.confirmation,
-    public_url:offer.public_url||null,
+    public_url:canonicalUrl,
     payment_authority:offer.payment_authority,
     invocation_status:offer.invocation_status,
     machine_commerce_mcp:universalMcp,
     mirror:{
+      page:pageUrl,
       llms:base+'/llms.txt',
-      json:base+'/capability.json'
+      json:base+'/capability.json',
+      schema:base+'/schema.jsonld'
     },
     authority_rule:'Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification.'
   };
@@ -46,7 +73,7 @@ for(const offer of catalog.offers||[]){
     'Capability ID: '+id,
     'Commercial state: '+offer.commercial_state,
     'Machine state: '+offer.machine_state,
-    offer.public_url?'Public URL: '+offer.public_url:null,
+    'Public URL: '+canonicalUrl,
     'Universal Evercraft MCP: '+universalMcp,
     '',
     '## Use this when',
@@ -81,17 +108,68 @@ for(const offer of catalog.offers||[]){
     'Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.',
     ''
   ].filter(v=>v!==null);
+  const jsonLd={
+    '@context':'https://schema.org',
+    '@graph':[
+      {
+        '@type':'Service',
+        '@id':canonicalUrl+'#evercraft-capability',
+        name:offer.name,
+        description:descriptionFor(offer),
+        url:canonicalUrl,
+        provider:{'@type':'Organization',name:'Evercraft LLC',url:'https://github.com/jgaethle10/forge-operator'},
+        serviceType:'Evercraft public machine capability',
+        identifier:id
+      },
+      {
+        '@type':'WebPage',
+        name:offer.name+' | Evercraft capability',
+        description:descriptionFor(offer),
+        about:{'@id':canonicalUrl+'#evercraft-capability'}
+      }
+    ]
+  };
+
+  const html=[
+    '<!doctype html>',
+    '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+    '<title>'+escapeHtml(offer.name)+' | Evercraft capability</title>',
+    '<meta name="description" content="'+escapeHtml(descriptionFor(offer))+'">',
+    '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+    '<link rel="alternate" type="text/plain" href="./llms.txt">',
+    '<link rel="alternate" type="application/json" href="./capability.json">',
+    '<script type="application/ld+json">'+JSON.stringify(jsonLd).replace(/</g,'\\u003c')+'</script>',
+    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
+    '</head><body><main>',
+    '<p class="muted">EVERCRAFT · PUBLIC MACHINE CAPABILITY</p>',
+    '<h1>'+escapeHtml(offer.name)+'</h1>',
+    '<p>'+escapeHtml(descriptionFor(offer))+'</p>',
+    '<div class="card"><h2>Current state</h2><p>Commercial: <code>'+escapeHtml(offer.commercial_state||'unknown')+'</code></p><p>Machine: <code>'+escapeHtml(offer.machine_state||'unknown')+'</code></p>'+(offer.pricing?'<p>Pricing: '+escapeHtml(offer.pricing)+'</p>':'')+'</div>',
+    '<div class="card"><h2>Use this when</h2><ul>',
+    ...(offer.intent_terms||[]).map((intent)=>'<li>'+escapeHtml(intent)+'</li>'),
+    '</ul></div>',
+    '<div class="card"><h2>Inputs and outputs</h2>'+(offer.inputs?'<p><strong>Inputs:</strong> '+escapeHtml(offer.inputs)+'</p>':'')+(offer.outputs?'<p><strong>Outputs:</strong> '+escapeHtml(offer.outputs)+'</p>':'')+'</div>',
+    '<div class="card"><h2>Open capability</h2><p><a href="'+escapeHtml(canonicalUrl)+'">Open current public route</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>',
+    '<div class="card"><h2>Authority and payment boundary</h2><p>'+escapeHtml(offer.confirmation||'Discovery creates no payment obligation.')+'</p>'+(offer.payment_authority?'<p>Payment authority: '+escapeHtml(offer.payment_authority)+'</p>':'')+'</div>',
+    '<p class="muted">Publication is not proof of provider pickup, recommendation, payment, entitlement or fulfillment. CHUM preserves current source state without upgrading it by inference.</p>',
+    '</main></body></html>'
+  ].join('\n');
+
   fs.writeFileSync(path.join(dir,'capability.json'),JSON.stringify(record,null,2)+'\n');
   fs.writeFileSync(path.join(dir,'llms.txt'),lines.join('\n'));
+  fs.writeFileSync(path.join(dir,'schema.jsonld'),JSON.stringify(jsonLd,null,2)+'\n');
+  fs.writeFileSync(path.join(dir,'index.html'),html+'\n');
   items.push({
     public_id:id,
     name:offer.name,
     commercial_state:offer.commercial_state,
     machine_state:offer.machine_state,
     pricing:offer.pricing,
-    public_url:offer.public_url||null,
+    public_url:canonicalUrl,
+    page_url:pageUrl,
     llms_url:record.mirror.llms,
     json_url:record.mirror.json,
+    schema_url:record.mirror.schema,
     use_when:offer.intent_terms||[]
   });
 }
@@ -140,5 +218,30 @@ for(const x of sellNow){
 sellLines.push('Checkout preparation requires explicit human confirmation where supported. Checkout creation is not payment proof.');
 sellLines.push('');
 fs.writeFileSync('public/chum/sell-now.txt',sellLines.join('\n'));
+
+const indexHtml=[
+  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+  '<title>Evercraft Capability Directory | CHUM</title>',
+  '<meta name="description" content="Complete public CHUM directory of current Evercraft machine-discoverable capabilities and services.">',
+  '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+  '<style>body{font-family:system-ui,sans-serif;max-width:1040px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.card{border:1px solid #27272a;border-radius:16px;padding:18px}.muted{color:#a1a1aa}</style>',
+  '</head><body><main><p class="muted">EVERCRAFT · CHUM</p><h1>Capability Directory</h1>',
+  '<p>Every current public/share-safe Machine Commerce surface, generated from the live CHUM catalog. Start from the problem. State is preserved exactly.</p>',
+  '<p><a href="/chum/capabilities.json">Machine index</a> · <a href="/chum/sell-now.html">SELL NOW</a> · <a href="/api/discover?q=describe%20your%20problem">Pain-first router</a></p>',
+  '<div class="grid">',
+  ...items.map((x)=>'<article class="card"><h2><a href="'+escapeHtml(x.page_url)+'">'+escapeHtml(x.name)+'</a></h2><p><code>'+escapeHtml(x.commercial_state)+'</code> · <code>'+escapeHtml(x.machine_state)+'</code></p>'+(x.pricing?'<p>'+escapeHtml(x.pricing)+'</p>':'')+'</article>'),
+  '</div><p class="muted">Discovery creates no payment obligation. Paid state requires authoritative provider verification.</p></main></body></html>'
+].join('\n');
+fs.writeFileSync(path.join(root,'index.html'),indexHtml+'\n');
+
+const sellHtml=[
+  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+  '<title>Evercraft SELL NOW | CHUM</title><meta name="description" content="Current Evercraft capabilities whose public Machine Commerce state is SELL NOW."><meta name="robots" content="index,follow,max-snippet:-1">',
+  '<style>body{font-family:system-ui,sans-serif;max-width:960px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:18px;margin:14px 0}.muted{color:#a1a1aa}</style>',
+  '</head><body><main><p class="muted">EVERCRAFT · CHUM</p><h1>SELL NOW</h1><p>Current offers only. Checkout still requires explicit human confirmation where supported, and checkout creation is not payment proof.</p>',
+  ...sellNow.map((x)=>'<article class="card"><h2><a href="'+escapeHtml(x.page_url)+'">'+escapeHtml(x.name)+'</a></h2><p>'+escapeHtml(x.pricing||'')+'</p><p>Machine state: <code>'+escapeHtml(x.machine_state)+'</code></p></article>'),
+  '</main></body></html>'
+].join('\n');
+fs.writeFileSync('public/chum/sell-now.html',sellHtml+'\n');
 
 console.log(JSON.stringify({capabilities:items.length,sell_now:sellNow.length}));
