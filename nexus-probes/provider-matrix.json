@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.nexus.provider-matrix.v1",
+  "updated_at": "2026-09-24",
+  "execution_owner": "Nexus",
+  "orchestration_owner": "Systemia",
+  "providers": [
+    {
+      "provider": "chatgpt",
+      "surface": "consumer_chat",
+      "execution": "authorized_nexus_session",
+      "behavioral_probe_state": "not_run"
+    },
+    {
+      "provider": "claude",
+      "surface": "consumer_chat",
+      "execution": "authorized_nexus_session",
+      "behavioral_probe_state": "not_run"
+    },
+    {
+      "provider": "gemini",
+      "surface": "consumer_chat",
+      "execution": "authorized_nexus_session",
+      "behavioral_probe_state": "not_run"
+    },
+    {
+      "provider": "copilot",
+      "surface": "consumer_chat",
+      "execution": "authorized_nexus_session",
+      "behavioral_probe_state": "not_run"
+    },
+    {
+      "provider": "perplexity",
+      "surface": "consumer_chat",
+      "execution": "authorized_nexus_session",
+      "behavioral_probe_state": "not_run"
+    },
+    {
+      "provider": "grok",
+      "surface": "consumer_chat",
+      "execution": "authorized_nexus_session",
+      "behavioral_probe_state": "not_run"
+    },
+    {
+      "provider": "generic_agent",
+      "surface": "machine_client",
+      "execution": "nexus_http_client",
+      "behavioral_probe_state": "not_run"
+    }
+  ],
+  "rules": {
+    "clean_session_required": true,
+    "brand_seed_forbidden": true,
+    "prior_context_forbidden": true,
+    "screenshots_when_available": true,
+    "citations_and_urls_capture": true,
+    "provider_behavior_requires_receipt": true,
+    "api_behavior_is_not_consumer_ui_behavior": true,
+    "no_credential_exfiltration": true,
+    "no_captcha_bypass": true,
+    "no_payment_or_external_message_actions": true
+  }
+}
