@@ -28,10 +28,34 @@ const readJsonDir = (dir) => {
 const registryPublicationReceipts = readJsonDir('conformance/registry-publications');
 const providerObservationReceipts = readJsonDir('conformance/provider-observations');
 
+const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
 const publicByKey = new Map((directory.products || []).map((p) => [p.product_key, p]));
 const catalogByKey = new Map(
   (catalog.products || []).map((p) => [String(p.registry_name || '').split('/').pop(), p])
 );
+const allProductKeys = [...new Set([
+  ...conformanceByKey.keys(),
+  ...publicByKey.keys(),
+  ...catalogByKey.keys()
+])].filter(Boolean).sort();
+
+function productUnionRecord(productKey) {
+  const conform = conformanceByKey.get(productKey) || {};
+  const publicEntry = publicByKey.get(productKey) || {};
+  const catalogEntry = catalogByKey.get(productKey) || {};
+  return {
+    product_key: productKey,
+    name: conform.name || publicEntry.name || catalogEntry.product || catalogEntry.name || productKey,
+    class: conform.class || publicEntry.class || 'agent_registry_capability',
+    canonical_url: conform.canonical_url || publicEntry.canonical_url || null,
+    llms_url: conform.llms_url || null,
+    conformance_url: conform.conformance_url || null,
+    discovery_url: conform.discovery_url || publicEntry.discovery_url || null,
+    openapi_url: conform.openapi_url || null,
+    provider_behavior_state: conform.provider_behavior_state || 'not_run',
+    public_web_discovery_state: conform.public_web_discovery_state || 'not_measured'
+  };
+}
 const registryReceiptsByKey = new Map();
 for (const receipt of registryPublicationReceipts) {
   const key = receipt.product_key;
@@ -67,7 +91,7 @@ async function probe(url, kind) {
       method: 'GET',
       redirect: 'follow',
       headers: {
-        'user-agent': 'Evercraft-CHUM/0.1 (+public-discovery-canary)',
+        'user-agent': 'Evercraft-CHUM/0.2 (+public-discovery-canary)',
         accept: 'text/plain, application/json;q=0.9, text/html;q=0.7, */*;q=0.3'
       },
       signal: controller.signal
@@ -193,8 +217,8 @@ async function inspectProduct(product) {
 }
 
 const products = [];
-for (const product of conformance.products || []) {
-  products.push(await inspectProduct(product));
+for (const productKey of allProductKeys) {
+  products.push(await inspectProduct(productUnionRecord(productKey)));
 }
 
 const allChecks = products.flatMap((p) =>
@@ -207,7 +231,7 @@ const valid = checked.filter((x) => x.valid === true);
 const invalid = checked.filter((x) => x.valid === false);
 
 const receipt = {
-  schema: 'evercraft.chum.receipt.v1',
+  schema: 'evercraft.chum.receipt.v2',
   name: 'CHUM',
   expansion: 'Capability Handoff & Utility Mesh',
   generated_at: new Date().toISOString(),
