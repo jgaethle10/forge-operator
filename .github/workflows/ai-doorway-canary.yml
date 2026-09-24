@@ -9,6 +9,7 @@ on:
       - "conformance/**"
       - "registry/**"
       - "public/.well-known/**"
+      - "public/discovery/**"
       - "public/robots.txt"
       - "public/llms.txt"
       - "systemia/chum/**"
@@ -41,19 +42,30 @@ jobs:
         run: node scripts/validate-ai-conformance.mjs
 
       - name: Probe public AI doorways
+        id: static
+        continue-on-error: true
         run: node scripts/check-ai-doorways.mjs
 
       - name: Run CHUM signal mesh
+        id: mesh
+        if: always()
+        continue-on-error: true
         run: node systemia/chum/chum.mjs
 
       - name: Audit crawler and AI-search reachability
+        id: crawlers
+        if: always()
+        continue-on-error: true
         run: node systemia/chum/crawler-audit.mjs
 
       - name: Probe MCP and Official Registry
+        id: mcp
+        if: always()
+        continue-on-error: true
         run: node systemia/chum/mcp-canary.mjs
 
       - name: Announce changed public discovery surfaces
-        if: github.event_name != 'schedule'
+        if: ${{ github.event_name != 'schedule' && steps.static.outcome == 'success' && steps.mesh.outcome == 'success' && steps.crawlers.outcome == 'success' && steps.mcp.outcome == 'success' }}
         continue-on-error: true
         run: node systemia/chum/indexnow.mjs
 
@@ -68,3 +80,20 @@ jobs:
             artifacts/chum/crawler-audit-latest.*
             artifacts/chum/mcp-canary-latest.*
           if-no-files-found: warn
+
+      - name: Enforce doorway health
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          FAILED=0
+          for PAIR in             "static:${{ steps.static.outcome }}"             "mesh:${{ steps.mesh.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"; do
+            NAME="${PAIR%%:*}"
+            STATE="${PAIR#*:}"
+            echo "${NAME}: ${STATE}"
+            if [ "${STATE}" != "success" ]; then FAILED=1; fi
+          done
+          if [ "${FAILED}" -ne 0 ]; then
+            echo "One or more AI doorway lanes failed. Full receipts were still collected."
+            exit 1
+          fi
