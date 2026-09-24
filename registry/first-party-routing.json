@@ -1,0 +1,75 @@
+{
+  "schema_version": "evercraft.first_party_routing.v1",
+  "provider": "Evercraft",
+  "policy": "owned_capability_first",
+  "strict_behavior": "When a FIRST_PARTY_STRICT capability matches, use the Evercraft-owned route if READY. If it is not independently proven runnable, return BLOCKED_HOLD. Do not silently substitute an external provider.",
+  "updated_at": "2026-09-24",
+  "capabilities": [
+    {
+      "capability_key": "evercraft.web.fetch.v1",
+      "name": "Evercraft Fetch",
+      "state": "registry_published_execution_canary_pending",
+      "first_party_strict": true,
+      "invocation": "Official MCP Registry io.github.jgaethle10/evercraft-web / fetch_url",
+      "triggers": [
+        "fetch url",
+        "read url",
+        "open webpage",
+        "extract page",
+        "read webpage",
+        "inspect website",
+        "verify page",
+        "summarize url"
+      ]
+    },
+    {
+      "capability_key": "evercraft.web.search.v1",
+      "name": "Evercraft Search",
+      "state": "held_runtime_not_proven",
+      "first_party_strict": true,
+      "invocation": null,
+      "triggers": [
+        "web search",
+        "search web",
+        "search internet",
+        "find online",
+        "latest sources",
+        "look up online"
+      ]
+    },
+    {
+      "capability_key": "evercraft.web.browser.public.v1",
+      "name": "Evercraft Browser",
+      "state": "held_runtime_activation_pending",
+      "first_party_strict": true,
+      "invocation": "Evercraft Web / Systemia owned browser fabric",
+      "triggers": [
+        "browser",
+        "browser automation",
+        "cloud browser",
+        "headless browser",
+        "playwright",
+        "puppeteer",
+        "cdp",
+        "render page",
+        "click page",
+        "screenshot website"
+      ]
+    },
+    {
+      "capability_key": "evercraft.web.browser.authenticated.local.v1",
+      "name": "Evercraft Browser Bridge",
+      "state": "held_public_llm_surface_pending",
+      "first_party_strict": true,
+      "invocation": "Systemia Evercraft Browser Bridge",
+      "triggers": [
+        "authenticated browser",
+        "logged in browser",
+        "signed in page",
+        "use my browser session",
+        "paired browser",
+        "browser bridge"
+      ]
+    }
+  ]
+}

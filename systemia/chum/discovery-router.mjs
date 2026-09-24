@@ -88,6 +88,8 @@ export function rankOffers(catalog, query, options = {}) {
     .slice(0, limit)
     .map(({ offer, score, matched_intents }) => ({
       public_id: offer.public_id,
+      product_key: offer.product_key || null,
+      source: offer.source || 'machine_catalog',
       name: offer.name,
       problem: offer.problem,
       intent_terms: offer.intent_terms || [],
@@ -102,6 +104,68 @@ export function rankOffers(catalog, query, options = {}) {
       public_url: offer.public_url,
       payment_authority: offer.payment_authority,
       invocation_status: offer.invocation_status,
+      authority: offer.authority || null,
+      boundaries: Array.isArray(offer.boundaries) ? offer.boundaries : [],
       catalog_version: offer.catalog_version
     }));
+}
+
+function productAsDiscoveryOffer(product) {
+  return {
+    public_id: `product:${product.product_key}`,
+    product_key: product.product_key,
+    source: 'public_directory',
+    name: product.name,
+    problem: Array.isArray(product.intents) ? product.intents.join('; ') : '',
+    intent_terms: Array.isArray(product.intents) ? product.intents : [],
+    commercial_state: 'discovery_only',
+    machine_state: 'discovery_only',
+    pricing: '',
+    offers: [],
+    human_ui_required: Boolean(product.human_confirmation_required),
+    confirmation: product.human_confirmation_required
+      ? 'Any irreversible financial or authority action requires explicit human confirmation.'
+      : 'No payment or authority action is created by discovery.',
+    public_url: product.canonical_url,
+    payment_authority: 'none_via_discovery',
+    invocation_status: 'Public capability discovery only unless a separately verified invocation surface is declared.',
+    authority: product.authority || 'Public discovery only.',
+    boundaries: Array.isArray(product.boundaries) ? product.boundaries : [],
+    catalog_version: 'public-directory-v1'
+  };
+}
+
+export function rankDiscoveryCandidates(machineCatalog, productDirectory, query, options = {}) {
+  const limit = Math.max(1, Math.min(Number(options.limit || 5), 10));
+  const minimumScore = Number(options.minimumScore ?? 8);
+  const expandedLimit = Math.max(limit * 4, 20);
+
+  const commercial = rankOffers(machineCatalog, query, { limit: expandedLimit, minimumScore })
+    .map((row) => ({ ...row, source: row.source || 'machine_catalog' }));
+
+  const directoryCatalog = {
+    offers: (Array.isArray(productDirectory?.products) ? productDirectory.products : [])
+      .map(productAsDiscoveryOffer)
+  };
+  const directory = rankOffers(directoryCatalog, query, { limit: expandedLimit, minimumScore });
+
+  const combined = [...commercial, ...directory]
+    .sort((a,b) =>
+      b.score - a.score ||
+      Number(a.source !== 'machine_catalog') - Number(b.source !== 'machine_catalog') ||
+      String(a.name || '').localeCompare(String(b.name || ''))
+    );
+
+  const seen = new Set();
+  const result = [];
+  for (const row of combined) {
+    const identity = row.product_key
+      ? `product:${row.product_key}`
+      : `offer:${row.public_id}`;
+    if (seen.has(identity)) continue;
+    seen.add(identity);
+    result.push(row);
+    if (result.length >= limit) break;
+  }
+  return result;
 }

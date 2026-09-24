@@ -170,6 +170,22 @@
       "expected_fit": true
     },
     {
+      "case_id": "containment-persistence-001",
+      "product_key": "evercraft-containment",
+      "expected_product": "Evercraft Containment",
+      "expected_aliases": [
+        "Evercraft Containment",
+        "Spider Society",
+        "Agent Watershed"
+      ],
+      "expected_hosts": [
+        "evercraft.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I turned off several AI agents and automations, but I am worried cron jobs, queues, retries, webhooks, service accounts, or deployment hooks could still run or recreate them later. I need a bounded diagnostic that maps what can still execute and gives me a safe kill-path and respawn test. What service should I use?",
+      "expected_fit": true
+    },
+    {
       "case_id": "control-negative-001",
       "product_key": null,
       "expected_product": null,
