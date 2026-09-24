@@ -67,6 +67,11 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/health | tee /tmp/health.json
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
+          curl --fail --silent http://127.0.0.1:3000/llms-full.txt > /tmp/llms-full.txt
+          curl --fail --silent http://127.0.0.1:3000/openapi.json > /tmp/openapi.json
+          curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-chum.json > /tmp/chum.json
+          curl --fail --silent http://127.0.0.1:3000/api/discovery > /tmp/discovery.json
+          curl --fail --silent http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
 
           node - <<'NODE'
@@ -74,12 +79,20 @@ jobs:
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          const openapi = JSON.parse(fs.readFileSync('/tmp/openapi.json','utf8'));
+          const chum = JSON.parse(fs.readFileSync('/tmp/chum.json','utf8'));
+          const discovery = JSON.parse(fs.readFileSync('/tmp/discovery.json','utf8'));
+          const robots = fs.readFileSync('/tmp/robots.txt','utf8');
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
+          if (openapi.openapi !== '3.1.0') throw new Error('OpenAPI contract missing');
+          if (chum.schema !== 'evercraft.chum.v3') throw new Error('CHUM manifest missing');
+          if (discovery.schema !== 'evercraft.discovery.v1') throw new Error('runtime discovery missing');
+          if (!robots.includes('OAI-SearchBot') || !robots.includes('Claude-SearchBot') || !robots.includes('PerplexityBot')) throw new Error('AI crawler doors missing');
           NODE
 
       - name: Show container logs on failure
