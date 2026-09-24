@@ -206,6 +206,28 @@
       },
       "serviceType": "done_for_you_business_website_service",
       "description": "build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens#evercraft-service",
+      "name": "DayTrade Lens",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "paper_trading_risk_discipline_and_journaling",
+      "description": "practice day trading without risking real money; paper trade before using real capital; build better trading risk discipline; journal and review trades"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraftpropertyservices.com/#evercraft-service",
+      "name": "Evercraft Property Services",
+      "url": "https://evercraftpropertyservices.com/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "local_property_services_and_estimate_intake",
+      "description": "yard cleanup in the Yakima Valley; lawn care or recurring property maintenance; sprinkler services; property-service estimate intake"
     }
   ]
 }
