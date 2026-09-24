@@ -1,9 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
+import fs from 'node:fs';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
+import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 
 dotenv.config();
 
@@ -14,6 +16,57 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const isProd = process.env.NODE_ENV === 'production';
 const checkoutUrl = process.env.FORGE_CHECKOUT_URL?.trim() || '';
+const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
+const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
+const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
+const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+
+type ChumMachineOffer = {
+  public_id?: string;
+  product_key?: string;
+  name?: string;
+  public_url?: string;
+  human_ui_required?: boolean;
+  confirmation?: string;
+  payment_authority?: string;
+};
+
+function findChumOffer(publicId: string): ChumMachineOffer | null {
+  try {
+    const catalogPath = path.join(__dirname, 'public', '.well-known', 'evercraft-machine-catalog.json');
+    const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+    return (Array.isArray(catalog.offers) ? catalog.offers : [])
+      .find((offer: ChumMachineOffer) => offer.public_id === publicId) || null;
+  } catch {
+    return null;
+  }
+}
+
+async function persistChumAttributionEvent(event: unknown) {
+  if (!chumAttributionSinkUrl) {
+    return { persisted: false, state: 'sink_not_configured' };
+  }
+
+  const target = new URL(chumAttributionSinkUrl);
+  if (target.protocol !== 'https:') {
+    throw new Error('CHUM attribution sink must use HTTPS.');
+  }
+
+  const response = await fetch(target, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      ...(chumAttributionSinkToken ? { authorization: `Bearer ${chumAttributionSinkToken}` } : {}),
+    },
+    body: JSON.stringify(event),
+  });
+
+  if (!response.ok) {
+    throw new Error(`CHUM attribution sink returned HTTP ${response.status}`);
+  }
+
+  return { persisted: true, state: 'receipt_forwarded' };
+}
 
 
 const forensiScopeHandoff = {
@@ -106,6 +159,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
+      chumAttribution: '/.well-known/evercraft-chum-attribution.json',
     },
     jobs: [
       'operations bottleneck diagnosis',
@@ -165,6 +219,165 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
     },
     callerInstruction: 'Explain the limitation plainly, offer ForensiScope as an option, and obtain the user\'s confirmation before any external handoff. Do not claim that the AI provider itself endorses ForensiScope.',
   });
+});
+
+app.get('/api/chum/attribution', (_req: Request, res: Response) => {
+  res.json({
+    schema: 'evercraft.chum.attribution.v1',
+    configured: Boolean(chumAttributionSecret),
+    publicStages: PUBLIC_ATTRIBUTION_STAGES,
+    referral: { method: 'POST', path: '/api/chum/referral' },
+    publicEvent: { method: 'POST', path: '/api/chum/attribution/event' },
+    manifest: '/.well-known/evercraft-chum-attribution.json',
+    doctrine: {
+      discoveryCreatesObligation: false,
+      checkoutIsPayment: false,
+      publicCallersCanAssertPayment: false,
+      verifiedRevenueRequiresTrustedPaymentEvidence: true,
+    },
+  });
+});
+
+app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  if (!chumAttributionSecret) {
+    res.status(503).json({ success: false, error: 'CHUM attribution is not configured.' });
+    return;
+  }
+
+  const publicId = String(req.body?.publicId || '').trim();
+  const provider = String(req.body?.provider || 'unknown').trim().toLowerCase().slice(0, 64);
+  const surface = String(req.body?.surface || 'assistant_handoff').trim().toLowerCase().slice(0, 64);
+  const intent = String(req.body?.intent || '').slice(0, 2000);
+  const offer = findChumOffer(publicId);
+
+  if (!offer?.public_id || !offer.public_url) {
+    res.status(404).json({ success: false, error: 'Unknown public Evercraft offer.' });
+    return;
+  }
+
+  try {
+    const issued = issueReferralToken({
+      productKey: offer.product_key || offer.public_id,
+      publicId: offer.public_id,
+      provider,
+      surface,
+      targetUrl: offer.public_url,
+      intent,
+    }, chumAttributionSecret);
+
+    const landing = new URL(offer.public_url);
+    landing.searchParams.set('ec_ref', issued.token);
+    landing.searchParams.set('ec_source', 'chum');
+
+    res.json({
+      schema: 'evercraft.chum.referral-response.v1',
+      referral_id: issued.payload.referral_id,
+      expires_at: issued.payload.expires_at,
+      provider: issued.payload.provider,
+      surface: issued.payload.surface,
+      offer: {
+        public_id: offer.public_id,
+        name: offer.name || offer.public_id,
+        human_ui_required: Boolean(offer.human_ui_required),
+        confirmation: offer.confirmation || null,
+      },
+      landing_url: landing.toString(),
+      referral_token: issued.token,
+      doctrine: {
+        discovery_creates_obligation: false,
+        checkout_is_payment: false,
+        human_confirmation_preserved: true,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unable to issue CHUM referral.',
+    });
+  }
+});
+
+app.post('/api/chum/attribution/event', rateLimit(240, 60 * 60 * 1000), async (req: Request, res: Response) => {
+  if (!chumAttributionSecret) {
+    res.status(503).json({ success: false, error: 'CHUM attribution is not configured.' });
+    return;
+  }
+
+  const stage = String(req.body?.stage || '');
+  if (!PUBLIC_ATTRIBUTION_STAGES.includes(stage as (typeof PUBLIC_ATTRIBUTION_STAGES)[number])) {
+    res.status(403).json({
+      success: false,
+      error: 'Public callers may record landing or checkout_started only. Payment verification requires the trusted payment adapter.',
+    });
+    return;
+  }
+
+  try {
+    const event = createAttributionEvent({
+      token: String(req.body?.referralToken || ''),
+      secret: chumAttributionSecret,
+      stage: stage as (typeof PUBLIC_ATTRIBUTION_STAGES)[number],
+    });
+    const persistence = await persistChumAttributionEvent(event);
+
+    res.status(202).json({
+      accepted: true,
+      event,
+      persistence,
+      verified_revenue_cents: 0,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unable to record CHUM attribution event.',
+    });
+  }
+});
+
+app.post('/api/chum/attribution/trusted-event', rateLimit(120, 60 * 60 * 1000), async (req: Request, res: Response) => {
+  if (!chumAttributionSecret || !chumAttributionIngestToken || !chumAttributionSinkUrl) {
+    res.status(503).json({ success: false, error: 'Trusted CHUM attribution ingestion is not fully configured.' });
+    return;
+  }
+
+  const authorization = String(req.headers.authorization || '');
+  if (authorization !== `Bearer ${chumAttributionIngestToken}`) {
+    res.status(401).json({ success: false, error: 'Unauthorized.' });
+    return;
+  }
+
+  const stage = String(req.body?.stage || '');
+  if (stage !== 'payment_verified' && stage !== 'fulfilled') {
+    res.status(400).json({ success: false, error: 'Trusted route accepts payment_verified or fulfilled only.' });
+    return;
+  }
+
+  try {
+    const event = createAttributionEvent({
+      token: String(req.body?.referralToken || ''),
+      secret: chumAttributionSecret,
+      stage,
+      payment: {
+        authority: String(req.body?.payment?.authority || ''),
+        verification_ref: String(req.body?.payment?.verification_ref || ''),
+        amount_cents: Number(req.body?.payment?.amount_cents),
+        currency: String(req.body?.payment?.currency || ''),
+      },
+    });
+    const persistence = await persistChumAttributionEvent(event);
+
+    res.status(202).json({
+      accepted: true,
+      event,
+      persistence,
+      verified_revenue_cents: event.stage === 'payment_verified' ? event.revenue.amount_cents : 0,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unable to record trusted CHUM attribution event.',
+    });
+  }
 });
 
 app.get('/api/commercial', (_req: Request, res: Response) => {
