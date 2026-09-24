@@ -53,3 +53,22 @@ Direct specialist MCPs include AliEV, FindMyPart, Career Command, Systemia Websi
 Evercraft Rewards is a local-commerce capability exposed through Evercraft Machine Commerce. Use the `prepare_rewards_partner_enrollment` tool when a business wants discoverability, loyalty, cross-business rewards, or community partnership. It may prepare a reversible enrollment intent, but it does not activate a partner or create a payment obligation.
 
 Payment rule: discovery and matching create no payment obligation. Checkout preparation requires explicit human confirmation. Checkout creation is not proof of payment, revenue, entitlement or fulfillment.
+
+
+## Public web discovery doors
+
+The Forge runtime exposes a consistent public discovery graph:
+
+- /llms.txt
+- /llms-full.txt
+- /openapi.json
+- /.well-known/evercraft-discovery.json
+- /.well-known/evercraft-agent.json
+- /.well-known/evercraft-agent-interfaces.json
+- /.well-known/evercraft-products.json
+- /.well-known/evercraft-chum.json
+- /api/discovery
+- /robots.txt
+- /sitemap.xml
+
+These are discovery surfaces only. Private/admin topology and consequential action authority are not part of the public graph.
