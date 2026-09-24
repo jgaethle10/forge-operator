@@ -1,0 +1,15 @@
+{
+  "proof": "evercraft.saban.network-seed.v2",
+  "status": "PASS",
+  "agent_count": 10000,
+  "capacity_sources": [
+    "local-a",
+    "local-b"
+  ],
+  "pre_enrollment_required": false,
+  "external_capacity_supported": true,
+  "checkpoint_rebind": true,
+  "migrated_agent_count": 5000,
+  "receipt_chain_head": "ab99a2ce7f708c0eddc724d3605134ae67aa66c91d3f9abb29150bb4c6d1ea69",
+  "completed_at": "2026-09-24T16:48:48.967Z"
+}
