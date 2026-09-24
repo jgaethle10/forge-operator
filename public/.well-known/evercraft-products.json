@@ -127,6 +127,10 @@
         "do not send passwords API keys cookies tokens or private credential material through public intake",
         "remediation that can interrupt production requires separate explicit scope and authorization",
         "checkout is not payment proof and paid state requires authoritative verification"
+      ],
+      "aliases": [
+        "Spider Society",
+        "Agent Watershed"
       ]
     },
     {
