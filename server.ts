@@ -88,6 +88,55 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb' }));
 
+const CENTRAL_MACHINE_COMMERCE_MCP =
+  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+
+const CHUM_DISCOVERY_LINKS = [
+  '</llms.txt>; rel="describedby"; type="text/plain"',
+  '</llms-full.txt>; rel="describedby"; type="text/plain"',
+  '</.well-known/evercraft-pain-index.json>; rel="service-desc"; type="application/json"',
+  '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
+  '</openapi.json>; rel="service-desc"; type="application/json"',
+  `<${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"`,
+];
+
+function isChumDiscoverySurface(pathname: string): boolean {
+  return pathname === '/' ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/llms.txt' ||
+    pathname === '/llms-full.txt' ||
+    pathname === '/openapi.json' ||
+    pathname.startsWith('/.well-known/') ||
+    pathname.startsWith('/chum/') ||
+    pathname === '/api/capabilities' ||
+    pathname === '/api/discover' ||
+    pathname === '/api/revenue-watershed';
+}
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (!isChumDiscoverySurface(req.path)) {
+    next();
+    return;
+  }
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    for (const link of CHUM_DISCOVERY_LINKS) res.append('Link', link);
+    res.setHeader('X-Robots-Tag', 'index, follow');
+  }
+
+  next();
+});
+
 function requestOrigin(req: Request): string {
   const configured = String(process.env.PUBLIC_BASE_URL || '').trim();
   if (configured) {
@@ -250,7 +299,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       painIndexText: '/chum/pain-index.txt',
       answerGraph: '/chum/answers/index.json',
       readOnlyMcpRegistryName: 'io.github.jgaethle10/evercraft-capability-discovery',
-      intentRouter: { method: 'GET', path: '/api/discover?q={natural-language-problem}' },
+      intentRouter: { methods: ['GET', 'POST'], get: '/api/discover?q={natural-language-problem}', post: '/api/discover' },
       revenueWatershed: { method: 'GET', path: '/api/revenue-watershed' },
       machineCatalog: '/.well-known/evercraft-machine-catalog.json',
       chumRevenueJson: '/chum/revenue.json',
@@ -319,15 +368,26 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
 });
 
 
-app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
-  const q = String(req.query.q || '').trim();
-  const requestedLimit = Number(req.query.limit || 5);
+function handleChumDiscovery(req: Request, res: Response) {
+  const body = req.method === 'POST' && req.body && typeof req.body === 'object' ? req.body : {};
+  const query = String(
+    req.method === 'POST'
+      ? (body.problem || body.intent || body.q || '')
+      : (req.query.q || '')
+  ).trim().slice(0, 4000);
+  const rawLimit = Number(req.method === 'POST' ? (body.limit || 5) : (req.query.limit || 5));
+  const requestedLimit = Math.min(10, Math.max(1, Number.isFinite(rawLimit) ? Math.floor(rawLimit) : 5));
 
-  if (!q) {
+  res.setHeader('Cache-Control', 'no-store');
+
+  if (!query) {
     res.status(400).json({
       ok: false,
-      error: 'Query parameter q is required.',
-      example: '/api/discover?q=I%20need%20a%20discontinued%20tractor%20part',
+      error: req.method === 'POST' ? 'problem or intent is required.' : 'Query parameter q is required.',
+      example: req.method === 'POST'
+        ? { problem: 'I need a discontinued machine part' }
+        : '/api/discover?q=I%20need%20a%20discontinued%20machine%20part',
+      privacy: 'Send only the non-sensitive problem description needed for routing. Do not include credentials, secrets, regulated data, or private customer records.',
     });
     return;
   }
@@ -335,8 +395,8 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
   try {
     const catalog = loadPublicMachineCatalog();
     const painIndex = loadPublicPainIndex();
-    const matches = rankOffers(catalog, q, { limit: requestedLimit, minimumScore: 8 });
-    const capabilityMatches = rankPain(painIndex, q, requestedLimit)
+    const matches = rankOffers(catalog, query, { limit: requestedLimit, minimumScore: 8 });
+    const capabilityMatches = rankPain(painIndex, query, requestedLimit)
       .filter(({ score }: any) => Number(score) >= 8)
       .map(({ entry, score }: any) => ({
         capability_id: entry.capability_id,
@@ -359,20 +419,30 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
         confirmation: entry.confirmation || null,
         invocation_status: entry.invocation_status || null
       }));
-    res.setHeader('Access-Control-Allow-Origin', '*');
+
     res.json({
-      schema: 'evercraft.chum.intent-routing.v1',
+      schema: 'evercraft.chum.intent-routing.v2',
       ok: true,
-      query: q,
+      query,
       match_count: matches.length,
       capability_match_count: capabilityMatches.length,
       pain_index: '/.well-known/evercraft-pain-index.json',
       read_only_mcp_registry_name: 'io.github.jgaethle10/evercraft-capability-discovery',
+      machine_handoff: {
+        llms: '/llms.txt',
+        answer_graph: '/chum/answers/index.json',
+        pain_index: '/.well-known/evercraft-pain-index.json',
+        directory: '/.well-known/evercraft-products.json',
+        catalog: '/.well-known/evercraft-machine-catalog.json',
+        universal_mcp: CENTRAL_MACHINE_COMMERCE_MCP,
+      },
       doctrine: {
         match_problem_first: true,
+        smallest_sufficient_capability: true,
         discovery_creates_obligation: false,
         human_confirmation_preserved: true,
         checkout_is_not_payment_proof: true,
+        provider_pickup_not_inferred: true,
       },
       matches,
       capability_matches: capabilityMatches,
@@ -390,15 +460,19 @@ app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Res
             directory: '/.well-known/evercraft-products.json',
             catalog: '/.well-known/evercraft-machine-catalog.json',
           },
+      privacy: 'Public routing accepts a non-sensitive problem description only. Private/admin/customer data stays behind product-specific authentication.',
     });
   } catch (error: any) {
     res.status(503).json({
       ok: false,
-      error: 'Public machine catalog is unavailable.',
+      error: 'Public discovery catalog is unavailable.',
       detail: error?.message || String(error),
     });
   }
-});
+}
+
+app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), handleChumDiscovery);
+app.post('/api/discover', rateLimit(120, 60 * 60 * 1000), handleChumDiscovery);
 
 app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request, res: Response) => {
   try {
