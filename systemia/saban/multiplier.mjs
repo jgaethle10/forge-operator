@@ -48,7 +48,7 @@ function arrayAtPath(value, field) {
 export function loadMultiplicationRegistry(registryPath = DEFAULT_REGISTRY) {
   const registry = readJson(registryPath);
   if (!registry || !Array.isArray(registry.software)) {
-    throw new Error(\`Invalid Saban multiplication registry: \${registryPath}\`);
+    throw new Error(`Invalid Saban multiplication registry: ${registryPath}`);
   }
   return registry;
 }
@@ -61,7 +61,7 @@ export function resolveMultiplicationContract(software, registry = loadMultiplic
   });
   if (!found) {
     throw new Error(
-      \`Software "\${software}" is not registered for Saban multiplication. \` +
+      `Software "${software}" is not registered for Saban multiplication. ` +
       'Register a bounded multiplication contract before execution; arbitrary side-effect duplication is intentionally blocked.'
     );
   }
@@ -89,7 +89,7 @@ export function loadWorkItems(contract, rootDir = process.cwd(), extraItems = []
         raw?.product_key ??
         raw?.public_id ??
         raw?.name ??
-        \`\${source.kind || 'item'}-\${index}\`;
+        `${source.kind || 'item'}-${index}`;
       items.push({
         kind: source.kind || 'item',
         key: String(key),
@@ -114,10 +114,54 @@ export function loadWorkItems(contract, rootDir = process.cwd(), extraItems = []
 
   const deduped = new Map();
   for (const item of items) {
-    const fingerprint = \`\${item.kind}:\${item.key}\`;
+    const fingerprint = `${item.kind}:${item.key}`;
     if (!deduped.has(fingerprint)) deduped.set(fingerprint, item);
   }
   return [...deduped.values()];
+}
+
+export function expandPartitionedWorkItems(contract, workItems) {
+  const partitioner = contract.partitioner;
+  if (!partitioner || partitioner.type !== 'media_time_windows') return workItems;
+
+  const windowSeconds = clampInteger(partitioner.window_seconds, 1, 86400, 300);
+  const overlapSeconds = clampInteger(partitioner.overlap_seconds, 0, windowSeconds - 1, 5);
+  const stepSeconds = Math.max(1, windowSeconds - overlapSeconds);
+  const expanded = [];
+
+  for (const item of workItems) {
+    if (item.kind !== 'media_job') {
+      expanded.push(item);
+      continue;
+    }
+    const duration = Number(item.raw?.duration_seconds);
+    if (!Number.isFinite(duration) || duration <= 0) {
+      expanded.push(item);
+      continue;
+    }
+    let shard = 0;
+    for (let start = 0; start < duration; start += stepSeconds) {
+      const end = Math.min(duration, start + windowSeconds);
+      expanded.push({
+        kind: 'media_shard',
+        key: `${item.key}:t${Math.floor(start)}-${Math.floor(end)}`,
+        source_file: item.source_file,
+        raw: {
+          parent_key: item.key,
+          media_ref: item.raw?.media_ref || null,
+          start_seconds: start,
+          end_seconds: end,
+          duration_seconds: end - start,
+          requested_outputs: item.raw?.requested_outputs || [],
+          provenance: item.raw?.provenance || null,
+          shard_index: shard
+        }
+      });
+      shard += 1;
+      if (end >= duration) break;
+    }
+  }
+  return expanded;
 }
 
 export function assignmentForIndex(plan, workItems, index) {
@@ -125,7 +169,7 @@ export function assignmentForIndex(plan, workItems, index) {
   const roles = plan.roles.length ? plan.roles : ['worker'];
   const role = roles[index % roles.length];
   const workIndex = workItems.length
-    ? hashInt(\`\${plan.software_id}:\${logicalNumber}\`) % workItems.length
+    ? hashInt(`${plan.software_id}:${logicalNumber}`) % workItems.length
     : -1;
   const item = workIndex >= 0 ? workItems[workIndex] : {
     kind: 'portfolio',
@@ -135,7 +179,7 @@ export function assignmentForIndex(plan, workItems, index) {
   };
 
   return {
-    agent_id: \`\${plan.software_id}-\${String(logicalNumber).padStart(5, '0')}\`,
+    agent_id: `${plan.software_id}-${String(logicalNumber).padStart(5, '0')}`,
     logical_index: index,
     physical_worker: (index % plan.physical_workers) + 1,
     role,
@@ -197,7 +241,6 @@ export function buildMultiplicationPlan({
       work: assignment.work
     });
   }
-
   return plan;
 }
 
@@ -252,13 +295,13 @@ export async function executeMultiplicationPlan({
   reconcile = false
 }) {
   if (!contract.adapter) {
-    throw new Error(\`No execution adapter declared for \${contract.software_id}\`);
+    throw new Error(`No execution adapter declared for ${contract.software_id}`);
   }
 
   const adapterPath = path.resolve(rootDir, contract.adapter);
   const adapter = await import(pathToFileURL(adapterPath).href);
   if (typeof adapter.runAssignment !== 'function') {
-    throw new Error(\`Adapter \${contract.adapter} must export runAssignment()\`);
+    throw new Error(`Adapter ${contract.adapter} must export runAssignment()`);
   }
 
   const assignments = Array.from(
@@ -267,12 +310,7 @@ export async function executeMultiplicationPlan({
   );
 
   const results = await runBounded(assignments, plan.physical_workers, (assignment) =>
-    adapter.runAssignment({
-      assignment,
-      plan,
-      contract,
-      rootDir
-    })
+    adapter.runAssignment({ assignment, plan, contract, rootDir })
   );
 
   let reconciliation = null;
@@ -282,14 +320,9 @@ export async function executeMultiplicationPlan({
     }
     const exportName = contract.reconciler?.adapter_export || 'reconcile';
     if (typeof adapter[exportName] !== 'function') {
-      throw new Error(\`Adapter \${contract.adapter} does not export \${exportName}()\`);
+      throw new Error(`Adapter ${contract.adapter} does not export ${exportName}()`);
     }
-    reconciliation = await adapter[exportName]({
-      plan,
-      contract,
-      rootDir,
-      results
-    });
+    reconciliation = await adapter[exportName]({ plan, contract, rootDir, results });
   }
 
   return {
@@ -308,15 +341,15 @@ export async function executeMultiplicationPlan({
 export function loadPrivateInventory(inventoryPath) {
   if (!inventoryPath) return [];
   const payload = readJson(inventoryPath, null);
-  if (!payload) throw new Error(\`Could not read inventory: \${inventoryPath}\`);
-  const rows = Array.isArray(payload) ? payload : payload.apps || payload.products || payload.items || [];
+  if (!payload) throw new Error(`Could not read inventory: ${inventoryPath}`);
+  const rows = Array.isArray(payload) ? payload : payload.apps || payload.products || payload.items || payload.jobs || [];
   return rows
     .filter(Boolean)
     .map((row, index) => ({
-      kind: 'external_inventory',
-      key: String(row.product_key || row.public_id || row.name || row.id || \`inventory-\${index}\`),
+      kind: row.kind || 'external_inventory',
+      key: String(row.key || row.product_key || row.public_id || row.name || row.id || `inventory-${index}`),
       source_file: inventoryPath,
-      raw: row
+      raw: row.raw || row
     }));
 }
 
@@ -332,7 +365,10 @@ async function main() {
   const registry = loadMultiplicationRegistry(registryPath);
   const contract = resolveMultiplicationContract(software, registry);
   const extraItems = loadPrivateInventory(inventoryPath);
-  const workItems = loadWorkItems(contract, rootDir, extraItems);
+  const workItems = expandPartitionedWorkItems(
+    contract,
+    loadWorkItems(contract, rootDir, extraItems)
+  );
   const plan = buildMultiplicationPlan({
     contract,
     logicalAgents: argValue(argv, '--agents', contract.default_logical_agents),
@@ -349,13 +385,13 @@ async function main() {
 
   if (execute) {
     receipt = {
-      ...await executeMultiplicationPlan({
+      ...(await executeMultiplicationPlan({
         contract,
         plan,
         workItems,
         rootDir,
         reconcile
-      }),
+      })),
       mode: reconcile ? 'execute_and_reconcile' : 'execute',
       plan
     };
@@ -363,7 +399,7 @@ async function main() {
 
   const outDir = path.resolve(rootDir, 'artifacts/saban-multiplier');
   fs.mkdirSync(outDir, { recursive: true });
-  const outFile = path.join(outDir, \`\${contract.software_id}-latest.json\`);
+  const outFile = path.join(outDir, `${contract.software_id}-latest.json`);
   fs.writeFileSync(outFile, JSON.stringify(receipt, null, 2) + '\n');
 
   console.log(JSON.stringify({
