@@ -1,0 +1,26 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "remote-device-admission-watch",
+  "mission_key": "remote-device-admission",
+  "runtime": "systemia-organism+collider",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/remote-device-admission-watch-runner.mjs",
+  "proof": "systemia/organism/remote-device-admission-watch.proof.mjs",
+  "authority": {
+    "read_private_yard_pending_device_inbox": "autonomous",
+    "publish_pending_count_to_kaidance": "autonomous",
+    "authorize_remote_device": false,
+    "revoke_remote_device": false,
+    "mutate_device_trust": false,
+    "publish_device_fingerprint": false,
+    "publish_node_id": false
+  },
+  "collider": {
+    "heartbeat_seconds": 300,
+    "mission_snapshot_schema": "evercraft.kaidance.mission-snapshot.v1",
+    "pending_identity_semantics": "hold_for_explicit_approval",
+    "automatic_authorization": false
+  }
+}
