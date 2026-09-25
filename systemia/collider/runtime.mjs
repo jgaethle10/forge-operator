@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import {
   admitColliderCycle,
   completeColliderCycle,
@@ -10,6 +10,23 @@ import {
   cycleDue,
   kaidanceHealth,
 } from './kernel.mjs';
+
+function stateHash(state) {
+  return createHash('sha256').update(JSON.stringify(state)).digest('hex');
+}
+
+export function validateKaidanceCheckpoint(checkpoint) {
+  if (!checkpoint || checkpoint.schema !== 'evercraft.kaidance.checkpoint.v1') {
+    throw new Error('kaidance_checkpoint_invalid');
+  }
+  if (!checkpoint.state || checkpoint.state.schema !== 'evercraft.kaidance.state.v1') {
+    throw new Error('kaidance_checkpoint_state_invalid');
+  }
+  if (stateHash(checkpoint.state) !== String(checkpoint.state_hash || '')) {
+    throw new Error('kaidance_checkpoint_hash_mismatch');
+  }
+  return checkpoint;
+}
 
 function atomicJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o750 });
@@ -64,6 +81,7 @@ export class KaidanceRuntime {
     graceSeconds = 90,
     deploymentReceipt = '',
     snapshotPath,
+    initialCheckpoint = null,
     clock = () => new Date(),
   } = {}) {
     if (!root) throw new Error('root is required');
@@ -72,7 +90,11 @@ export class KaidanceRuntime {
     this.receiptFile = path.join(this.root, 'receipts.jsonl');
     this.snapshotPath = path.resolve(snapshotPath || path.join(this.root, 'mission-snapshot.json'));
     this.clock = clock;
-    this.deploymentReceipt = String(deploymentReceipt || '');
+    this.deploymentReceipt = String(
+      deploymentReceipt ||
+      initialCheckpoint?.state?.last_deployment_receipt ||
+      ''
+    );
     this.timer = null;
     this.running = false;
     this.inFlight = false;
@@ -86,6 +108,13 @@ export class KaidanceRuntime {
       if (this.state.schema !== 'evercraft.kaidance.state.v1') {
         throw new Error('persisted_kaidance_state_invalid');
       }
+    } else if (initialCheckpoint) {
+      const checkpoint = validateKaidanceCheckpoint(initialCheckpoint);
+      this.state = {
+        ...checkpoint.state,
+        updated_at: this.clock().toISOString(),
+      };
+      atomicJson(this.stateFile, this.state);
     } else {
       this.state = createKaidanceState({
         colliderKey,
@@ -95,6 +124,18 @@ export class KaidanceRuntime {
       });
       atomicJson(this.stateFile, this.state);
     }
+  }
+
+  checkpoint(now = this.clock()) {
+    if (this.inFlight) throw new Error('checkpoint_blocked_cycle_in_flight');
+    const body = {
+      schema: 'evercraft.kaidance.checkpoint.v1',
+      collider_key: this.state.collider_key,
+      captured_at: now.toISOString(),
+      state: JSON.parse(JSON.stringify(this.state)),
+      state_hash: stateHash(this.state),
+    };
+    return body;
   }
 
   setDeploymentReceipt(receiptRef) {
