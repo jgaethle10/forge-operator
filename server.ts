@@ -24,7 +24,7 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
-const chumCrawlObservatoryStatePath = process.env.CHUM_CRAWL_OBSERVATORY_STATE_PATH?.trim() || '';
+const chumCrawlObservatoryStatePath = process.env.CHUM_CRAWL_OBSERVATORY_STATE_PATH?.trim() || path.resolve(process.env.EVERCRAFT_STATE_DIR?.trim() || '/tmp/evercraft', 'chum-crawl-observatory.json');
 const chumCrawlObservatoryToken = process.env.CHUM_CRAWL_OBSERVATORY_TOKEN?.trim() || '';
 const machineCommerceGatewayUrl =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
