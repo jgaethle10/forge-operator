@@ -71,5 +71,10 @@
     "rss": "/forensiscope/editorial/feed.xml",
     "social_pack": "/forensiscope/editorial/social-pack.json"
   },
+  "knowledge_surfaces": {
+    "hub": "/forensiscope/mesh/",
+    "index": "/forensiscope/mesh/index.json",
+    "llms": "/forensiscope/mesh/llms.txt"
+  },
   "provider_behavior_state": "not_inferred_from_publication"
 }

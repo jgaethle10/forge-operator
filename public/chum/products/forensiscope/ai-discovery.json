@@ -86,6 +86,11 @@
     "rss": "/forensiscope/editorial/feed.xml",
     "social_pack": "/forensiscope/editorial/social-pack.json"
   },
+  "knowledge_surfaces": {
+    "hub": "/forensiscope/mesh/",
+    "index": "/forensiscope/mesh/index.json",
+    "llms": "/forensiscope/mesh/llms.txt"
+  },
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",
