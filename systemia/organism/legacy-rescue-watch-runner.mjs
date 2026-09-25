@@ -9,6 +9,7 @@ import {
   normalizeLegacyRescueSignal,
   shouldSurfaceLegacyRescueChange,
 } from './legacy-rescue-watch.mjs';
+import { admitLegacyRescueStrike } from './legacy-rescue-strike-admission.mjs';
 
 function clean(value) {
   return String(value ?? '').trim();
@@ -60,6 +61,20 @@ export function evaluateLegacyRescueCycle({
     observedAt,
   });
 
+  const strikeAdmission = admitted[0]
+    ? admitLegacyRescueStrike({
+        signal: admitted[0],
+        cycleKey: key,
+        now: observedAt,
+      })
+    : {
+        schema: 'evercraft.legacy-rescue.strike-admission.v1',
+        admitted: false,
+        reason: 'no_material_candidate',
+        cycle_key: key,
+        observed_at: observedAt.toISOString(),
+      };
+
   return {
     schema: 'evercraft.legacy-rescue-watch.cycle.v1',
     workflow_key: LEGACY_RESCUE_WATCH.workflow_key,
@@ -73,6 +88,7 @@ export function evaluateLegacyRescueCycle({
     held,
     unchanged: normalized.filter((row) => !row.material_change),
     mission_snapshot: missionSnapshot,
+    strike_admission: strikeAdmission,
     doctrine: {
       material_change_only: true,
       no_touch_shadow_builds_may_advance: true,
@@ -138,6 +154,7 @@ async function main() {
     cycle_key: report.cycle_key,
     candidates: report.admitted,
   });
+  atomicJson(path.join(outDir, 'strike-admission.json'), report.strike_admission);
 
   console.log(JSON.stringify({
     ok: true,
@@ -146,6 +163,8 @@ async function main() {
     top_candidate: report.top_candidate
       ? { title: report.top_candidate.title, score: report.top_candidate.score }
       : null,
+    strike_admitted: Boolean(report.strike_admission?.admitted),
+    strike_goal_key: report.strike_admission?.goal_state?.goal_key || null,
     mission_snapshot: path.join(outDir, 'mission-snapshot.json'),
   }));
 }
