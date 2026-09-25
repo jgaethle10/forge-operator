@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/field-certify.mjs'
+      - 'systemia/compute/field-offline-check.mjs'
       - 'systemia/compute/install-node-seed.sh'
       - 'systemia/compute/FIELD_KIT.md'
       - '.github/workflows/node001-field-kit.yml'
@@ -14,6 +15,7 @@ on:
     paths:
       - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/field-certify.mjs'
+      - 'systemia/compute/field-offline-check.mjs'
       - 'systemia/compute/install-node-seed.sh'
       - 'systemia/compute/FIELD_KIT.md'
       - '.github/workflows/node001-field-kit.yml'
@@ -31,6 +33,7 @@ jobs:
         run: |
           node --check systemia/compute/field-preflight.mjs
           node --check systemia/compute/field-certify.mjs
+          node --check systemia/compute/field-offline-check.mjs
           bash -n systemia/compute/install-node-seed.sh
       - name: Confirm CI cannot pass physical preflight
         run: |
@@ -43,7 +46,7 @@ jobs:
       - name: Build portable field kit artifact
         run: |
           mkdir -p dist/evercraft-node001-field-kit/systemia/compute
-          cp systemia/compute/{node-seed.mjs,runtime-node.mjs,capacity-beacon.mjs,device-identity.mjs,field-preflight.mjs,field-certify.mjs,install-node-seed.sh,FIELD_KIT.md,FIELD_ATTESTATION.md} dist/evercraft-node001-field-kit/systemia/compute/
+          cp systemia/compute/{node-seed.mjs,runtime-node.mjs,capacity-beacon.mjs,device-identity.mjs,field-preflight.mjs,field-certify.mjs,field-offline-check.mjs,install-node-seed.sh,FIELD_KIT.md,FIELD_ATTESTATION.md} dist/evercraft-node001-field-kit/systemia/compute/
           mkdir -p dist/evercraft-node001-field-kit/systemia/{collider,core/bootstrap}
           cp systemia/collider/{kernel.mjs,runtime.mjs} dist/evercraft-node001-field-kit/systemia/collider/
           cp systemia/core/bootstrap/private-origin.mjs dist/evercraft-node001-field-kit/systemia/core/bootstrap/
