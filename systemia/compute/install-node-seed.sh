@@ -135,4 +135,4 @@ systemctl is-active --quiet evercraft-nodeseed.service
 
 echo "Evercraft NodeSeed installed and active."
 echo "Device identity and allocator secret remain on this machine."
-echo "Reboot once, then run field-certify.mjs to prove reboot persistence."
+echo "Reboot once, capture field-offline-check.mjs while isolated, then run field-certify.mjs."
