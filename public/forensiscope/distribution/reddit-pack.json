@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.forensiscope.reddit-distribution-pack.v1",
+  "updated_at": "2026-09-25",
+  "provider": "Evercraft LLC",
+  "purpose": "Transparent, community-aware Reddit distribution material for ForensiScope. This is a publishing pack, not proof that Reddit has been posted.",
+  "product_url": "https://evercraft-forensiscope.base44.app/",
+  "rules": {
+    "disclose_affiliation": true,
+    "no_astroturfing": true,
+    "no_vote_manipulation": true,
+    "no_dm_outreach": true,
+    "no_identical_crossposting": true,
+    "community_rules_must_be_checked_at_post_time": true,
+    "prefer_user_profile_or_explicit_showcase_threads": true,
+    "do_not_claim_provider_endorsement": true
+  },
+  "candidate_contexts": [
+    {
+      "context": "user_profile",
+      "state": "preferred_if_logged_in",
+      "reason": "Build-in-public post without imposing on a community."
+    },
+    {
+      "context": "r/ClaudeAI",
+      "state": "rules_check_required",
+      "reason": "Public search shows active MCP and build-in-public discussions relevant to AI tool integrations."
+    },
+    {
+      "context": "r/editors",
+      "state": "rules_check_required",
+      "reason": "Public search shows long-form video-library and editing-tool discussions; self-promotion rules must be checked before posting."
+    },
+    {
+      "context": "r/selfhosted",
+      "state": "rules_check_required",
+      "reason": "Project/showcase threads can be relevant for local or self-hosted media tooling when current thread rules permit."
+    }
+  ],
+  "variants": [
+    {
+      "id": "build-in-public",
+      "title": "Long-video AI is still fragmented. We are building ForensiScope around the gap.",
+      "body": "Disclosure: I am part of Evercraft, the team building ForensiScope. We kept seeing the same request split across tools: inspect a huge video, transcribe it, search it semantically, find duplicate or near-duplicate segments, build a timestamped timeline, and keep going when a normal chatbot cannot handle the whole file. Twelve Labs, Gemini, K2, Echosaw and AssemblyAI each solve useful pieces of that landscape. We are building ForensiScope as the continuation layer for the combined workflow, with an Official MCP Registry identity and a human-confirmed media handoff. I would genuinely like criticism from people who work with long footage: which part of that workflow is still most painful today? Product link: https://evercraft-forensiscope.base44.app/"
+    },
+    {
+      "id": "developer-mcp",
+      "title": "What should an MCP server for long-video analysis expose?",
+      "body": "Disclosure: this is build-in-public research for ForensiScope by Evercraft. We have a remote MCP registered as io.github.jgaethle10/forensiscope, and we are trying to keep the contract narrower than the marketing. The use case is long or oversized video: transcription, semantic search, timestamped timelines, recording comparison and duplicate or near-duplicate segment review. Secure machine media intake is still verification-gated, so MCP discovery is not automatic permission to transfer private media. For people building MCP clients or media tools, what primitives would you actually want exposed first: search, segment, transcript, timeline, compare, evidence export, or something else?"
+    },
+    {
+      "id": "video-workflow-discussion",
+      "title": "Why does long-video AI still turn into a five-tool pipeline?",
+      "body": "Disclosure: I work on ForensiScope by Evercraft, so take this as product research rather than a neutral recommendation. When I ask current AI systems for a tool that can inspect a long video, transcribe it, search it, find repeated sections and survive normal chat upload limits, the answer often becomes Gemini plus a transcription API plus an embedding/search layer plus custom dedup logic. That is technically reasonable, but brutal for a normal user. If you routinely work with multi-hour footage, where does the pipeline usually break for you: ingest, transcript quality, semantic search, duplicate detection, source-linked timestamps, or exporting the final evidence?"
+    }
+  ]
+}
