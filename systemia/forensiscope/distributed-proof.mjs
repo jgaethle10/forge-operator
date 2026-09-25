@@ -411,13 +411,25 @@ assert.ok(persistedEvidenceQuery.match_count > 0);
 assert.equal(persistedEvidenceQuery.hits[0].source_sha256, sourceHashAfter);
 
 const gatewayTools = listForensiScopeGatewayTools();
-assert.equal(gatewayTools.length, 4);
+assert.equal(gatewayTools.length, 5);
+const singleEvidenceGatewayTools = gatewayTools.filter(
+  (tool) => tool.name !== 'forensiscope_compare_evidence'
+);
+assert.equal(singleEvidenceGatewayTools.length, 4);
 assert.ok(
-  gatewayTools.every((tool) =>
+  singleEvidenceGatewayTools.every((tool) =>
     tool.inputSchema.required.includes('evidence_ref') &&
     tool.inputSchema.required.includes('access_token')
   )
 );
+const compareGatewayTool = gatewayTools.find(
+  (tool) => tool.name === 'forensiscope_compare_evidence'
+);
+assert.ok(compareGatewayTool);
+assert.ok(compareGatewayTool.inputSchema.required.includes('evidence_ref_a'));
+assert.ok(compareGatewayTool.inputSchema.required.includes('access_token_a'));
+assert.ok(compareGatewayTool.inputSchema.required.includes('evidence_ref_b'));
+assert.ok(compareGatewayTool.inputSchema.required.includes('access_token_b'));
 
 const gatewayQuery = invokeForensiScopeGatewayTool({
   name: 'forensiscope_query_evidence',
@@ -505,10 +517,10 @@ const modernToolList = handleForensiScopeMcpRequest({
   }
 }, { rootDir });
 assert.equal(modernToolList.result.resultType, 'complete');
-assert.equal(modernToolList.result.tools.length, 4);
+assert.equal(modernToolList.result.tools.length, 5);
 assert.ok(
-  modernToolList.result.tools.every((tool) =>
-    tool.inputSchema.required.includes('evidence_ref')
+  modernToolList.result.tools.some(
+    (tool) => tool.name === 'forensiscope_compare_evidence'
   )
 );
 
@@ -767,6 +779,38 @@ assert.equal(crossRecording.identical_source_hash, false);
 assert.ok(crossRecording.match_count > 0);
 assert.ok(crossRecording.decoded_visual_matches > 0);
 
+const comparisonAccessA = issueEvidenceAccessToken({
+  evidenceRef: pipelineReceipt.result.evidence_ref,
+  scopes: ['compare'],
+  ttlSeconds: 3600,
+  subject: 'forensiscope-compare-proof-a'
+});
+const comparisonAccessB = issueEvidenceAccessToken({
+  evidenceRef: comparisonPipelineReceipt.result.evidence_ref,
+  scopes: ['compare'],
+  ttlSeconds: 3600,
+  subject: 'forensiscope-compare-proof-b'
+});
+const gatewayComparison = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_compare_evidence',
+  args: {
+    evidence_ref_a: pipelineReceipt.result.evidence_ref,
+    access_token_a: comparisonAccessA.access_token,
+    evidence_ref_b: comparisonPipelineReceipt.result.evidence_ref,
+    access_token_b: comparisonAccessB.access_token,
+    max_matches: 100
+  },
+  rootDir
+});
+assert.equal(
+  gatewayComparison.schema,
+  'evercraft.forensiscope.gateway-comparison-result.v1'
+);
+assert.equal(gatewayComparison.access.length, 2);
+assert.ok(gatewayComparison.access.every((entry) => entry.verified === true));
+assert.ok(gatewayComparison.result.match_count > 0);
+assert.ok(gatewayComparison.result.decoded_visual_matches > 0);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -832,6 +876,9 @@ const proof = {
   comparison_evidence_ref: comparisonPipelineReceipt.result.evidence_ref,
   cross_recording_matches: crossRecording.match_count,
   cross_recording_decoded_visual_matches: crossRecording.decoded_visual_matches,
+  gateway_cross_recording_matches: gatewayComparison.result.match_count,
+  gateway_cross_recording_decoded_visual_matches:
+    gatewayComparison.result.decoded_visual_matches,
   public_machine_intake_enabled: false
 };
 
