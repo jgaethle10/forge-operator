@@ -64,12 +64,13 @@
     "test:saban-revenue": "node tests/saban-revenue-swarm.test.mjs",
     "test:openai-plugin-submission": "node scripts/validate-openai-plugin-submission.mjs",
     "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs",
-    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan",
+    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan && npm run proof:legacy-rescue-link-discovery",
     "test:chum-surfaces": "npm run chum:mirror && node systemia/chum/discovery-surfaces.test.mjs",
     "test:ibmi-rescue-discovery": "node tests/ibmi-rescue-discovery.test.mjs",
     "run:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch-runner.mjs",
     "scan:legacy-rescue-watch": "node systemia/organism/legacy-rescue-public-scan.mjs",
-    "proof:legacy-rescue-public-scan": "node systemia/organism/legacy-rescue-public-scan.proof.mjs"
+    "proof:legacy-rescue-public-scan": "node systemia/organism/legacy-rescue-public-scan.proof.mjs",
+    "proof:legacy-rescue-link-discovery": "node systemia/organism/legacy-rescue-link-discovery.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
