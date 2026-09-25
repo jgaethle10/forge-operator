@@ -21,6 +21,26 @@ function safePublicUrl(value,fallback){
     return url.toString();
   }catch{return fallback;}
 }
+function humanStartUrl(offer){
+  if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return null;
+  return '/api/chum/go/'+encodeURIComponent(String(offer.public_id))+'?surface=chum_capability_page';
+}
+function priceUsd(tier){
+  const numeric=Number(tier?.price_usd);
+  if(Number.isFinite(numeric)&&numeric>=0) return numeric;
+  const raw=String(tier?.price||'').trim();
+  const match=raw.match(/^\$([0-9][0-9,]*(?:\.[0-9]+)?)/);
+  if(!match) return null;
+  const parsed=Number(match[1].replace(/,/g,''));
+  return Number.isFinite(parsed)?parsed:null;
+}
+function entryPaidOffer(offer){
+  const paid=(Array.isArray(offer?.offers)?offer.offers:[])
+    .map(tier=>({tier,usd:priceUsd(tier)}))
+    .filter(row=>Number.isFinite(row.usd)&&row.usd>0)
+    .sort((a,b)=>a.usd-b.usd);
+  return paid.length?{...paid[0].tier,price_usd_normalized:paid[0].usd}:null;
+}
 function descriptionFor(offer){
   const problem=String(offer.problem||'').trim();
   if(problem) return problem;
@@ -59,6 +79,8 @@ for(const offer of catalog.offers||[]){
     payment_authority:offer.payment_authority,
     invocation_status:offer.invocation_status,
     machine_commerce_mcp:universalMcp,
+    start_url:humanStartUrl(offer),
+    entry_paid_offer:entryPaidOffer(offer),
     mirror:{
       page:pageUrl,
       llms:base+'/llms.txt',
@@ -75,6 +97,7 @@ for(const offer of catalog.offers||[]){
     'Machine state: '+offer.machine_state,
     'Public URL: '+canonicalUrl,
     'Universal Evercraft MCP: '+universalMcp,
+    'Start here: '+(humanStartUrl(offer)||'Not a current sell-now route'),
     '',
     '## Use this when',
     '',
@@ -149,7 +172,10 @@ for(const offer of catalog.offers||[]){
     ...(offer.intent_terms||[]).map((intent)=>'<li>'+escapeHtml(intent)+'</li>'),
     '</ul></div>',
     '<div class="card"><h2>Inputs and outputs</h2>'+(offer.inputs?'<p><strong>Inputs:</strong> '+escapeHtml(offer.inputs)+'</p>':'')+(offer.outputs?'<p><strong>Outputs:</strong> '+escapeHtml(offer.outputs)+'</p>':'')+'</div>',
-    '<div class="card"><h2>Open capability</h2><p><a href="'+escapeHtml(canonicalUrl)+'">Open current public route</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>',
+    '<div class="card"><h2>Open capability</h2>'+
+      (humanStartUrl(offer)?'<p><a href="'+escapeHtml(humanStartUrl(offer))+'"><strong>Start here</strong></a></p>':'')+
+      (entryPaidOffer(offer)?'<p><strong>Easiest paid entry:</strong> '+escapeHtml(entryPaidOffer(offer).name||'Paid option')+' · &#36;'+escapeHtml(entryPaidOffer(offer).price_usd_normalized)+'</p>':'')+
+      '<p><a href="'+escapeHtml(canonicalUrl)+'">Capability details</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>',
     '<div class="card"><h2>Authority and payment boundary</h2><p>'+escapeHtml(offer.confirmation||'Discovery creates no payment obligation.')+'</p>'+(offer.payment_authority?'<p>Payment authority: '+escapeHtml(offer.payment_authority)+'</p>':'')+'</div>',
     '<p class="muted">Publication is not proof of provider pickup, recommendation, payment, entitlement or fulfillment. CHUM preserves current source state without upgrading it by inference.</p>',
     '</main></body></html>'
@@ -170,6 +196,8 @@ for(const offer of catalog.offers||[]){
     llms_url:record.mirror.llms,
     json_url:record.mirror.json,
     schema_url:record.mirror.schema,
+    start_url:record.start_url,
+    entry_paid_offer:record.entry_paid_offer,
     use_when:offer.intent_terms||[]
   });
 }
@@ -209,6 +237,7 @@ for(const x of sellNow){
   sellLines.push('Capability ID: '+x.public_id);
   sellLines.push('Price: '+(x.pricing||''));
   if(x.public_url) sellLines.push('Public URL: '+x.public_url);
+  if(x.start_url) sellLines.push('Start here: '+x.start_url);
   sellLines.push('Machine state: '+x.machine_state);
   sellLines.push('Use this when:');
   for(const t of x.use_when) sellLines.push('- '+t);
@@ -239,7 +268,7 @@ const sellHtml=[
   '<title>Evercraft SELL NOW | CHUM</title><meta name="description" content="Current Evercraft capabilities whose public Machine Commerce state is SELL NOW."><meta name="robots" content="index,follow,max-snippet:-1">',
   '<style>body{font-family:system-ui,sans-serif;max-width:960px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:18px;margin:14px 0}.muted{color:#a1a1aa}</style>',
   '</head><body><main><p class="muted">EVERCRAFT · CHUM</p><h1>SELL NOW</h1><p>Current offers only. Checkout still requires explicit human confirmation where supported, and checkout creation is not payment proof.</p>',
-  ...sellNow.map((x)=>'<article class="card"><h2><a href="'+escapeHtml(x.page_url)+'">'+escapeHtml(x.name)+'</a></h2><p>'+escapeHtml(x.pricing||'')+'</p><p>Machine state: <code>'+escapeHtml(x.machine_state)+'</code></p></article>'),
+  ...sellNow.map((x)=>'<article class="card"><h2><a href="'+escapeHtml(x.page_url)+'">'+escapeHtml(x.name)+'</a></h2><p>'+escapeHtml(x.pricing||'')+'</p>'+(x.entry_paid_offer?'<p><strong>Easiest paid entry:</strong> '+escapeHtml(x.entry_paid_offer.name||'Paid option')+' · &#36;'+escapeHtml(x.entry_paid_offer.price_usd_normalized)+'</p>':'')+'<p>Machine state: <code>'+escapeHtml(x.machine_state)+'</code></p>'+(x.start_url?'<p><a href="'+escapeHtml(x.start_url)+'"><strong>Start here</strong></a></p>':'')+'</article>'),
   '</main></body></html>'
 ].join('\n');
 fs.writeFileSync('public/chum/sell-now.html',sellHtml+'\n');
