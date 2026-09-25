@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 93
-Product entries: 50
+Entries: 94
+Product entries: 51
 Machine-offer entries: 43
 Sell-now machine offers: 12
 
@@ -1566,6 +1566,38 @@ Use when the user means:
 - ASL and Deaf culture learning
 - online safety and healthy-boundary education
 Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Legacy Rescue Lab
+Capability ID: product:legacy-rescue-lab
+Product key: legacy-rescue-lab
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+Use when the user means:
+- my checkout is broken and customers cannot buy
+- our developer disappeared and nobody knows how this codebase works
+- our website or app is old but rebuilding from scratch is too risky
+- customers cannot submit our lead form
+- our website is painfully slow on mobile
+- we inherited a messy codebase and are afraid to touch it
+- an AI agency built our app and now it is unreliable or undocumented
+- our SaaS works but barely and we need to stabilize it
+- we need to migrate off an old platform without losing business behavior
+- repair an existing system instead of replacing it
+- find publicly observable conversion leaks before we pay for a rebuild
+- broken checkout or purchase flow
+- broken lead form
+- abandoned codebase
+- developer disappeared
+- legacy website or app modernization
+- failed AI-built application
+- slow mobile website
+- fragile SaaS stabilization
+- legacy platform migration
+- repair instead of rebuild
+- public conversion leak diagnosis
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Little Red Studio Book Export QA
