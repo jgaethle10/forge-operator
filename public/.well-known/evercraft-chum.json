@@ -55,7 +55,11 @@
     "sell_now_directory_page": "/chum/sell-now.html",
     "live_intent_hunter": "/api/chum/hunt",
     "human_conversion": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}",
-    "tracked_human_conversion": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}"
+    "tracked_human_conversion": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}",
+    "crawlable_html_directory": "/chum/",
+    "product_page_pattern": "/chum/products/{product_key}/",
+    "discovery_post": "/api/discover",
+    "discovery_get": "/api/discover?q={natural-language-problem}"
   },
   "verified_crawler_controls": [
     {
@@ -115,7 +119,10 @@
     "same_turn_hunt": true,
     "private_thread_surveillance": false,
     "sell_now_gets_human_start_corridor": true,
-    "no_outbound_spam": true
+    "no_outbound_spam": true,
+    "html_and_machine_surfaces_interlinked": true,
+    "public_problem_routing_accepts_brand_blind_intent": true,
+    "public_discovery_accepts_private_customer_records": false
   },
   "public_surfaces": {
     "first_party_router": "/api/route-capability"
