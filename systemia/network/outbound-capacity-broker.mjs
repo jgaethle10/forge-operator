@@ -111,6 +111,7 @@ export async function startOutboundCapacityBroker({
 
   const challenges = new Map();
   const nodes = new Map();
+  let shuttingDown = false;
   const instanceId = `remote_broker_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
   let endpoint = '';
@@ -261,7 +262,19 @@ export async function startOutboundCapacityBroker({
       const url = new URL(req.url || '/', 'http://broker.invalid');
 
       if (req.method === 'GET' && url.pathname === '/v1/remote/health') {
+        if (shuttingDown) {
+          return send(res, 503, {
+            ...health(),
+            ok: false,
+            state: 'shutting_down',
+          });
+        }
         return send(res, 200, health());
+      }
+
+      if (shuttingDown) {
+        res.setHeader('connection', 'close');
+        return send(res, 503, { error: 'remote_broker_shutting_down' });
       }
 
       if (req.method === 'POST' && url.pathname === '/v1/remote/challenge') {
@@ -562,19 +575,36 @@ export async function startOutboundCapacityBroker({
       };
     },
     close: async () => {
+      if (shuttingDown) return;
+      shuttingDown = true;
+      challenges.clear();
+
       for (const node of nodes.values()) {
+        node.session_expires_at = 0;
         for (const pending of node.pending.values()) {
           clearTimeout(pending.timer);
           pending.reject(new Error('remote_broker_shutdown'));
         }
+        node.pending.clear();
+        node.queue.length = 0;
         for (const waiter of node.waiters) {
           clearTimeout(waiter.timer);
           waiter.resolve(null);
         }
+        node.waiters.length = 0;
       }
-      await new Promise((resolve, reject) =>
-        server.close((error) => error ? reject(error) : resolve())
-      );
+
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          try { server.closeAllConnections?.(); } catch {}
+        }, 250);
+        server.close((error) => {
+          clearTimeout(timeout);
+          if (error) reject(error);
+          else resolve();
+        });
+        try { server.closeIdleConnections?.(); } catch {}
+      });
     },
   };
 }
