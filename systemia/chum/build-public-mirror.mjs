@@ -123,6 +123,7 @@ for (const product of directory.products || []) {
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
     commercial: product.commercial || null,
+    machine_commerce_handoff: product.commercial?.machine_commerce_handoff || null,
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
@@ -159,7 +160,11 @@ for (const product of directory.products || []) {
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
     distribution_surfaces: product.distribution_surfaces || null,
-    provider_behavior_state: 'not_inferred_from_publication'
+    provider_behavior_state: 'not_inferred_from_publication',
+    machine_commerce_handoff_state: conf?.machine_commerce_handoff_state || null,
+    machine_commerce_public_id: conf?.machine_commerce_public_id || product.commercial?.machine_commerce_handoff?.public_id || null,
+    machine_commerce_tool: conf?.machine_commerce_tool || product.commercial?.machine_commerce_handoff?.tool || null,
+    live_canary_evidence: conf?.live_canary_evidence || null
   };
 
   const llms = [
@@ -199,7 +204,7 @@ for (const product of directory.products || []) {
           )
         : []),
       ...(product.commercial.pricing ? [`- Pricing: ${product.commercial.pricing}`] : []),
-      ...(String(product.commercial.status || '').includes('canary_pending') ? ['- Checkout route remains canary-pending.'] : []),
+      ...(String(product.commercial.status || '').includes('canary_pending') ? ['- Checkout route remains canary-pending.', '- Product-specific public checkout route is not represented as live until its independent canary passes.'] : []),
       ...(product.commercial.payment_state ? [`- Payment state: ${product.commercial.payment_state}`] : [])
     ] : []),
     '',

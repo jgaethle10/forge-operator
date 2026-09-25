@@ -1,0 +1,25 @@
+{
+  "schema": "evercraft.customer-gauntlet.policy.v1",
+  "control_plane": "Systemia",
+  "multiplication": "Saban",
+  "customer_execution": "Raven Nexus Lennox nodes",
+  "discovery_source": "CHUM",
+  "runtime": "Yard / Evercraft Compute",
+  "rules": {
+    "third_party_test_engines_allowed": false,
+    "legacy_public_hosts_may_be_test_targets": true,
+    "live_payment_by_default": false,
+    "sandbox_payment_required_for_automated_purchase": true,
+    "never_infer_payment_from_checkout": true,
+    "never_infer_fulfillment_from_payment": true,
+    "independent_sessions_required": true,
+    "quarantine_on_p0": true,
+    "quarantine_on_repeated_p1": true,
+    "visual_receipt_required_when_browser_lane_available": true
+  },
+  "severity": {
+    "P0": ["wrong_price","dead_checkout","payment_verified_but_no_entitlement","entitlement_but_no_delivery","duplicate_charge","cross_customer_data_leak","customer_cannot_access_purchase"],
+    "P1": ["broken_cta","mobile_blocker","login_loop","checkout_cancel_loop","wrong_offer","missing_receipt","severe_brand_mismatch"],
+    "P2": ["weak_copy","metadata_problem","minor_visual_defect","slow_nonblocking_step"]
+  }
+}

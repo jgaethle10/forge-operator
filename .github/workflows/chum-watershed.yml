@@ -151,6 +151,15 @@ jobs:
         continue-on-error: true
         run: npm run chum:commerce-canary
 
+      - name: Run independent customer gauntlet
+        id: gauntlet
+        env:
+          RAVEN_NEXUS_CUSTOMER_BRIDGE_URL: ${{ secrets.RAVEN_NEXUS_CUSTOMER_BRIDGE_URL }}
+          RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN: ${{ secrets.RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN }}
+          CUSTOMER_GAUNTLET_REQUIRE_NEXUS: "false"
+          CUSTOMER_GAUNTLET_SANDBOX_PURCHASE: "false"
+        run: npm run customer:gauntlet
+
       - name: Form Saban revenue lanes
         id: revenue
         if: always()
@@ -199,6 +208,7 @@ jobs:
             "crawlers:${{ steps.crawlers.outcome }}" \
             "mcp:${{ steps.mcp.outcome }}" \
             "commerce:${{ steps.commerce.outcome }}" \
+            "gauntlet:${{ steps.gauntlet.outcome }}" \
             "mesh:${{ steps.mesh.outcome }}"; do
             NAME="$(printf '%s' "$PAIR" | cut -d: -f1)"
             STATE="$(printf '%s' "$PAIR" | cut -d: -f2-)"
@@ -220,6 +230,7 @@ jobs:
             echo "Crawler reachability: ${{ steps.crawlers.outcome }}"
             echo "MCP / Registry: ${{ steps.mcp.outcome }}"
             echo "Sell-now commerce doors: ${{ steps.commerce.outcome }}"
+            echo "Independent customer gauntlet: ${{ steps.gauntlet.outcome }}"
             echo "Saban revenue formation: ${{ steps.revenue.outcome }}"
             echo "LLM ecosystem hunter: ${{ steps.hunter.outcome }}"
             echo "ARD registry strike: ${{ steps.ard.outcome }}"
@@ -227,7 +238,7 @@ jobs:
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/customer-gauntlet/latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -243,6 +254,7 @@ jobs:
           path: |
             artifacts/chum/**
             artifacts/saban-revenue/**
+            artifacts/customer-gauntlet/**
             artifacts/ai-doorway-canary.*
           if-no-files-found: warn
 
@@ -252,7 +264,7 @@ jobs:
         run: |
           set -euo pipefail
           FAILED=0
-          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
+          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "gauntlet:${{ steps.gauntlet.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
             NAME="${PAIR%%:*}"
             STATE="${PAIR#*:}"
             echo "${NAME}: ${STATE}"
