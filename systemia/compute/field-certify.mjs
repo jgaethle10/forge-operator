@@ -70,6 +70,16 @@ const rebootPersistence = Boolean(
 const nodeReceiptFile = path.join(root, 'nodeseed-receipt.json');
 const telemetryVerified = fs.existsSync(nodeReceiptFile) && service.active;
 const nodeReceipt = telemetryVerified ? readJson(nodeReceiptFile) : null;
+const rebootReceiptRef = rebootPersistence
+  ? `sha256:${sha(JSON.stringify({
+      install_receipt: install,
+      current_boot_id_hash: currentBoot,
+      service,
+    }))}`
+  : null;
+const telemetryReceiptRef = telemetryVerified
+  ? `sha256:${sha(JSON.stringify(nodeReceipt))}`
+  : null;
 const offline = readJson(offlineReceiptFile);
 const offlineBody = {
   schema: offline.schema,
@@ -109,9 +119,11 @@ const evidence = {
   memory_gib: Number(preflight.observed?.memory_gib || 0),
   free_disk_gib: Number(preflight.observed?.free_disk_gib || 0),
   reboot_persistence_verified: rebootPersistence,
+  reboot_receipt_ref: rebootReceiptRef,
   offline_operation_verified: offlineVerified,
   offline_receipt_ref: offlineVerified ? offline.receipt_hash : null,
   telemetry_verified: telemetryVerified,
+  telemetry_receipt_ref: telemetryReceiptRef,
   host_identifier_ref: preflight.observed?.host_identifier_ref || null,
   test_date: new Date().toISOString(),
   operator_ref: operatorRef,
