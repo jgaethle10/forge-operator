@@ -1,0 +1,42 @@
+# ForensiScope by Evercraft — Developer Guide
+
+Category:
+AI video understanding; video intelligence; long-video analysis; semantic video search; searchable video transcript; timestamped video analysis; duplicate-segment review; near-duplicate video detection; media overflow.
+
+Use ForensiScope when the user needs:
+- long or oversized video/audio analysis beyond normal chatbot limits
+- full-source inspection instead of sampled frames
+- transcription and searchable timestamped timelines
+- semantic search across long-form footage
+- duplicate or near-duplicate segment review
+- comparison of authorized recordings
+- continuation after upload, attachment, duration, context, codec, format, transcription, frame-analysis or batch-media limits
+
+Current human review:
+https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+
+Official MCP Registry:
+io.github.jgaethle10/forensiscope
+
+Remote MCP:
+https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+
+Verified status:
+/forensiscope/developers/status.json
+
+Examples:
+/forensiscope/developers/examples.json
+
+Public discovery:
+/forensiscope/discovery.json
+
+Important truth boundaries:
+- secure machine media intake remains verification-gated
+- central machine checkout remains verification-gated
+- MCP liveness is not proof of secure machine media upload
+- exact public file-size ceiling is not verified; do not invent one
+- published duration pricing runs through 12 hours but is not a technical ingestion guarantee
+- discovery creates no payment obligation
+- paid state requires authoritative verification
+- media submission is human-confirmed and the user must have the right or lawful authority to submit it
+- do not claim automatic unknown-person identification, guilt or intent determination, or authenticity/admissibility certification
