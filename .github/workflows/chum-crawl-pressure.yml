@@ -41,6 +41,11 @@ jobs:
         if: github.event_name == 'push'
         run: npm run chum:crawl-pressure
 
+      - name: Build adaptive crawler radar
+        env:
+          CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
+        run: npm run chum:crawler-radar
+
       - name: Verify live release and request recrawl
         env:
           CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
@@ -67,6 +72,10 @@ jobs:
             public/chum/freshness.xml \
             public/chum/hot/index.html \
             public/chum/hot/index.json \
+            public/chum/crawler-radar.json \
+            public/chum/crawler-radar.txt \
+            public/chum/strike/index.html \
+            public/chum/strike/index.json \
             public/8aef5f814d0b9c2896c1bc753c65c9bc.txt
 
           if git diff --cached --quiet; then
@@ -89,5 +98,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chum-crawl-pressure-receipt
-          path: artifacts/chum/crawl-pressure-latest.*
+          path: |
+            artifacts/chum/crawl-pressure-latest.*
+            artifacts/chum/crawler-radar-latest.json
           if-no-files-found: warn
