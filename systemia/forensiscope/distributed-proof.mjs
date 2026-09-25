@@ -19,6 +19,7 @@ import { persistEvidenceGraph, loadEvidenceGraph, verifyEvidenceRef } from './ev
 import { listForensiScopeGatewayTools, invokeForensiScopeGatewayTool } from './agent-gateway.mjs';
 import { handleForensiScopeMcpRequest } from './mcp-protocol.mjs';
 import { issueEvidenceAccessToken } from './evidence-access.mjs';
+import { handleForensiScopeMcpHttp } from './mcp-http.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -571,6 +572,94 @@ assert.equal(
   null
 );
 
+const modernHttpBody = {
+  jsonrpc: '2.0',
+  id: 7,
+  method: 'tools/call',
+  params: {
+    name: 'forensiscope_query_evidence',
+    arguments: {
+      evidence_ref: storedEvidence.evidence_ref,
+      access_token: evidenceAccess.access_token,
+      query: 'boundary-3',
+      top_k: 2,
+      context_radius_seconds: 3
+    },
+    _meta: modernMeta
+  }
+};
+
+const modernHttp = handleForensiScopeMcpHttp({
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    'mcp-protocol-version': '2026-07-28',
+    'mcp-method': 'tools/call',
+    'mcp-name': 'forensiscope_query_evidence',
+    'mcp-param-evidence-access': evidenceAccess.access_token
+  },
+  body: modernHttpBody,
+  rootDir
+});
+assert.equal(modernHttp.status, 200);
+assert.equal(modernHttp.body.result.isError, false);
+assert.ok(modernHttp.body.result.structuredContent.result.match_count > 0);
+
+const modernHttpBadTokenHeader = handleForensiScopeMcpHttp({
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    'mcp-protocol-version': '2026-07-28',
+    'mcp-method': 'tools/call',
+    'mcp-name': 'forensiscope_query_evidence',
+    'mcp-param-evidence-access': queryOnlyAccess.access_token
+  },
+  body: modernHttpBody,
+  rootDir
+});
+assert.equal(modernHttpBadTokenHeader.status, 400);
+assert.equal(modernHttpBadTokenHeader.body.error.code, -32020);
+
+const modernHttpBadMethodHeader = handleForensiScopeMcpHttp({
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    'mcp-protocol-version': '2026-07-28',
+    'mcp-method': 'tools/list',
+    'mcp-name': 'forensiscope_query_evidence',
+    'mcp-param-evidence-access': evidenceAccess.access_token
+  },
+  body: modernHttpBody,
+  rootDir
+});
+assert.equal(modernHttpBadMethodHeader.status, 400);
+assert.equal(modernHttpBadMethodHeader.body.error.code, -32020);
+
+const legacyHttp = handleForensiScopeMcpHttp({
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json'
+  },
+  body: {
+    jsonrpc: '2.0',
+    id: 8,
+    method: 'tools/call',
+    params: {
+      name: 'forensiscope_query_evidence',
+      arguments: {
+        evidence_ref: storedEvidence.evidence_ref,
+        access_token: evidenceAccess.access_token,
+        query: 'boundary-3',
+        top_k: 2,
+        context_radius_seconds: 3
+      }
+    }
+  },
+  rootDir
+});
+assert.equal(legacyHttp.status, 200);
+assert.equal(legacyHttp.body.result.isError, false);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -624,6 +713,10 @@ const proof = {
   mcp_tool_count: modernToolList.result.tools.length,
   mcp_modern_query_matches: modernToolCall.result.structuredContent.result.match_count,
   mcp_legacy_context_atoms: legacyToolCall.result.structuredContent.result.atoms.length,
+  mcp_http_modern_status: modernHttp.status,
+  mcp_http_header_mismatch_status: modernHttpBadTokenHeader.status,
+  mcp_http_header_mismatch_code: modernHttpBadTokenHeader.body.error.code,
+  mcp_http_legacy_status: legacyHttp.status,
   public_machine_intake_enabled: false
 };
 
