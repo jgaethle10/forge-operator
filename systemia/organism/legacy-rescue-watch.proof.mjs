@@ -113,3 +113,19 @@ assert.equal(cycle.counts.held, 0);
 assert.equal(cycle.top_candidate.title, 'IBM i 7.4 lifecycle');
 assert.equal(cycle.mission_snapshot.schema, 'evercraft.kaidance.mission-snapshot.v1');
 assert.equal(cycle.doctrine.named_outreach_requires_human_gate, true);
+
+assert.equal(cycle.strike_admission.admitted, true);
+assert.equal(cycle.strike_admission.disposition, 'strike_candidate');
+assert(cycle.strike_admission.goal_state.next_work_keys.includes('ground-public-evidence'));
+assert.equal(
+  cycle.strike_admission.goal_state.tasks.find((task) => task.work_key === 'founder-review-outreach').human_gate_unresolved,
+  true,
+);
+
+const quietCycle = evaluateLegacyRescueCycle({
+  cycleKey: '2026-09-24T21:45:00.000Z',
+  now: new Date('2026-09-24T21:45:00.000Z'),
+  signals: [],
+});
+assert.equal(quietCycle.strike_admission.admitted, false);
+assert.equal(quietCycle.strike_admission.reason, 'no_material_candidate');
