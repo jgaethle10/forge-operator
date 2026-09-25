@@ -83,6 +83,41 @@ process.env.FORENSISCOPE_TRANSCRIBE_ARGS_JSON = JSON.stringify([
   '{timeline_offset}'
 ]);
 
+const mockSemanticPath = path.join(proofDir, 'mock-semantic-engine.mjs');
+fs.writeFileSync(
+  mockSemanticPath,
+  [
+    "let raw = '';",
+    "process.stdin.setEncoding('utf8');",
+    "process.stdin.on('data', (chunk) => { raw += chunk; });",
+    "process.stdin.on('end', () => {",
+    "  const payload = JSON.parse(raw || '{}');",
+    "  const numbers = new Map([['zero',0],['three',3],['six',6],['nine',9],['twelve',12]]);",
+    "  const vectorize = (value) => {",
+    "    const text = String(value || '').toLowerCase();",
+    "    const v = [0,0,0,0,0,0,0,0.1];",
+    "    if (text.includes('boundary') || text.includes('edge')) v[0] = 1;",
+    "    const digit = text.match(/(?:^|[^0-9])(0|3|6|9|12)(?:[^0-9]|$)/)?.[1];",
+    "    let number = digit === undefined ? null : Number(digit);",
+    "    if (number === null) for (const [word, n] of numbers) if (text.includes(word)) { number = n; break; }",
+    "    const slot = new Map([[0,1],[3,2],[6,3],[9,4],[12,5]]).get(number);",
+    "    if (slot !== undefined) v[slot] = 1;",
+    "    let sum = 0; for (const ch of text) sum += ch.charCodeAt(0);",
+    "    v[6] = ((sum % 17) + 1) / 17;",
+    "    return v;",
+    "  };",
+    "  console.log(JSON.stringify({ vectors: (payload.texts || []).map(vectorize) }));",
+    "});"
+  ].join(newline) + newline
+);
+process.env.FORENSISCOPE_SEMANTIC_ENABLED = 'true';
+process.env.FORENSISCOPE_SEMANTIC_ENGINE_ID = 'forensiscope-ci-semantic';
+process.env.FORENSISCOPE_SEMANTIC_EXECUTABLE = process.execPath;
+process.env.FORENSISCOPE_SEMANTIC_ARGS_JSON = JSON.stringify([
+  mockSemanticPath
+]);
+process.env.FORENSISCOPE_SEMANTIC_BATCH_SIZE = '64';
+
 const sourcePath = path.join(sourceDir, 'synthetic-repeat.mkv');
 run('ffmpeg', [
   '-v', 'error',
@@ -296,6 +331,25 @@ assert.equal(evidenceQuery.hits[0].source_sha256, sourceHashAfter);
 assert.ok(evidenceQuery.hits[0].evidence_id);
 assert.equal(evidenceQuery.answer_policy.evidence_retrieval_only, true);
 assert.equal(evidenceQuery.answer_policy.unsupported_answer_generation, false);
+assert.equal(evidenceQuery.search_mode, 'hybrid_semantic');
+assert.equal(evidenceQuery.semantic.state, 'ready');
+assert.equal(evidenceQuery.semantic.engine_id, 'forensiscope-ci-semantic');
+
+const semanticOnlyQuery = queryEvidenceGraph(
+  receipt.reconciliation.evidence_graph,
+  {
+    query: 'edge three',
+    topK: 3,
+    contextRadiusSeconds: 3
+  }
+);
+assert.equal(semanticOnlyQuery.search_mode, 'hybrid_semantic');
+assert.ok(semanticOnlyQuery.match_count > 0);
+assert.ok(semanticOnlyQuery.hits[0].text.includes('boundary-3'));
+assert.equal(semanticOnlyQuery.hits[0].score_components.lexical_overlap, 0);
+assert.ok(
+  semanticOnlyQuery.hits[0].score_components.semantic_similarity > 0.9
+);
 
 const agentTools = listForensiScopeAgentTools();
 assert.deepEqual(
@@ -899,6 +953,10 @@ const proof = {
   llm_evidence_atoms: receipt.reconciliation.evidence_graph.llm_projection.transcript_atoms.length,
   evidence_query_matches: evidenceQuery.match_count,
   evidence_query_top_id: evidenceQuery.hits[0].evidence_id,
+  evidence_query_search_mode: evidenceQuery.search_mode,
+  semantic_engine_id: evidenceQuery.semantic.engine_id,
+  semantic_only_query_matches: semanticOnlyQuery.match_count,
+  semantic_only_query_top_id: semanticOnlyQuery.hits[0].evidence_id,
   agent_tool_count: agentTools.length,
   agent_query_matches: agentEvidenceQuery.match_count,
   agent_timeline_nodes: agentTimeline.count,
