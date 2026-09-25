@@ -39,6 +39,8 @@ jobs:
       base: ${{ steps.gate.outputs.base }}
       release_allowed: ${{ steps.gate.outputs.release_allowed }}
       risk_class: ${{ steps.gate.outputs.risk_class }}
+      approval_mode: ${{ steps.gate.outputs.approval_mode }}
+      approval_ref: ${{ steps.gate.outputs.approval_ref }}
     steps:
       - name: Resolve revision
         id: revision
@@ -73,19 +75,41 @@ jobs:
           RISK="$(node -p "require('./release-classification.json').riskClass")"
           AUTO="$(node -p "require('./release-classification.json').autoReleaseAllowed")"
           ALLOWED="false"
+          APPROVAL_MODE="none"
+          APPROVAL_REF=""
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            [ "${{ inputs.approval }}" = "RELEASE" ] && [ -n "${{ inputs.approval_ref }}" ] && ALLOWED="true"
+            if [ "${{ inputs.approval }}" = "RELEASE" ] && [ -n "${{ inputs.approval_ref }}" ]; then
+              ALLOWED="true"
+              APPROVAL_MODE="human_dispatch"
+              APPROVAL_REF="${{ inputs.approval_ref }}"
+            fi
           elif [ "$RISK" = "routine_public" ] && [ "$AUTO" = "true" ]; then
             ALLOWED="true"
+            APPROVAL_MODE="auto_policy"
+            APPROVAL_REF="routine_public"
+          else
+            mapfile -t MANIFESTS < <(git diff --name-only "$BASE" "$SHA" -- 'mcp-registry/*.json')
+            if [ "${#MANIFESTS[@]}" -eq 1 ]; then
+              MANIFEST="${MANIFESTS[0]}"
+              if node systemia/release/scoped-approval.mjs --base "$BASE" --head "$SHA" --manifest "$MANIFEST" > scoped-approval.json; then
+                ALLOWED="true"
+                APPROVAL_MODE="scoped_operator_receipt"
+                APPROVAL_REF="$(node -p "require('./scoped-approval.json').approval_ref")"
+              fi
+            fi
           fi
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
           echo "base=$BASE" >> "$GITHUB_OUTPUT"
           echo "release_allowed=$ALLOWED" >> "$GITHUB_OUTPUT"
           echo "risk_class=$RISK" >> "$GITHUB_OUTPUT"
+          echo "approval_mode=$APPROVAL_MODE" >> "$GITHUB_OUTPUT"
+          echo "approval_ref=$APPROVAL_REF" >> "$GITHUB_OUTPUT"
           {
             echo "## Systemia ReleaseAuthorization"
-            echo "- Revision: \`$SHA\`"
+            echo "- Revision: `$SHA`"
             echo "- Risk class: **$RISK**"
+            echo "- Approval mode: **$APPROVAL_MODE**"
+            echo "- Approval ref: `${APPROVAL_REF:-none}`"
             echo "- Release allowed: **$ALLOWED**"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -183,6 +207,8 @@ jobs:
             echo "- Revision: \`${{ needs.authorize.outputs.sha }}\`"
             echo "- Risk class: **${{ needs.authorize.outputs.risk_class }}**"
             echo "- Target: Official MCP Registry"
+            echo "- Approval mode: **${{ needs.authorize.outputs.approval_mode }}**"
+            echo "- Approval ref: `${{ needs.authorize.outputs.approval_ref }}`"
             echo "- credential_material_stored: false"
           } >> "$GITHUB_STEP_SUMMARY"
 
