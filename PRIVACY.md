@@ -34,9 +34,9 @@ Evercraft may retain limited operational, security, reliability, abuse-preventio
 
 Provider identity supplied by a caller is treated as caller-asserted unless separately supported by an authorized provider receipt.
 
-## Sharing and sale
+## Sharing and external processing
 
-Evercraft does not sell conversation content or personal data to advertisers.
+The Machine Commerce capability contract does not include an advertising-data-sale workflow. This document does not make claims about unrelated Evercraft products or practices outside this capability.
 
 Data may be processed by infrastructure or payment providers when necessary to deliver the requested service, subject to the relevant provider terms and the specific capability contract.
 
