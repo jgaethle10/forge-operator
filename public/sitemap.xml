@@ -16,6 +16,8 @@
   <url><loc>/chum/answers/</loc></url>
   <url><loc>/chum/answers/index.json</loc></url>
   <url><loc>/chum/answers/index.txt</loc></url>
+  <url><loc>/chum/answers/observed/</loc></url>
+  <url><loc>/chum/answers/observed/index.json</loc></url>
   <url><loc>/chum/sitemap.xml</loc></url>
   <url><loc>/.well-known/evercraft-pain-index.json</loc></url>
   <url><loc>/forensiscope/</loc></url>
@@ -448,4 +450,7 @@
   <url><loc>/chum/products/website-launch/llms.txt</loc></url>
   <url><loc>/chum/products/website-launch/ai-discovery.json</loc></url>
   <url><loc>/chum/products/website-launch/ai-conformance.json</loc></url>
+  <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/</loc></url>
+  <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json</loc></url>
+  <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/llms.txt</loc></url>
 </urlset>

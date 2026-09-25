@@ -9,6 +9,7 @@ Human/search directory: /ai
 Read-only Official MCP Registry: io.github.jgaethle10/evercraft-capability-discovery
 Pain Index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
 Answer Graph: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json
+Observed discovery repairs: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/observed/index.json
 Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Product directory: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
 CHUM public mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json

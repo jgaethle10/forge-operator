@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.chum.observed-miss-index.v1",
+  "provider": "Evercraft LLC",
+  "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed provider misses.",
+  "page_count": 1,
+  "rules": {
+    "user_observed_receipts_only": true,
+    "dedupe_same_prompt_across_providers": true,
+    "no_provider_endorsement_claim": true,
+    "no_product_ranking_claim": true,
+    "discovery_creates_payment_obligation": false,
+    "provider_pickup_requires_new_receipt": true
+  },
+  "pages": [
+    {
+      "product_key": "forensiscope",
+      "user_question": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+      "observed_providers": [
+        "chatgpt",
+        "claude",
+        "gemini",
+        "grok"
+      ],
+      "relative_html": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/",
+      "relative_json": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
+      "relative_llms": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/llms.txt"
+    }
+  ]
+}
