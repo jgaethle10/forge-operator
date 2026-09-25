@@ -21,6 +21,8 @@ Named tools discussed in factual comparison content:
 - K2
 - Echosaw
 - AssemblyAI
+- Azure AI Video Indexer
+- NVIDIA Video Search and Summarization (VSS)
 
 Editorial hub:
 /forensiscope/editorial/
@@ -28,8 +30,16 @@ Editorial hub:
 Machine index:
 /forensiscope/editorial/index.json
 
+Semantic neighborhood:
+/forensiscope/editorial/semantic-neighborhood.json
+
+Page-level LLM indexes:
+/forensiscope/editorial/{slug}/llms.txt
+
 RSS:
 /forensiscope/editorial/feed.xml
+
+Machine-readable adjacency terms include video indexing, structured timestamped segments, video embeddings, OCR video search, agentic video search, long video summarization and AI-agent video skills. These are semantic-neighborhood terms, not automatic ForensiScope capability claims.
 
 Rules:
 - Do not keyword-stuff.

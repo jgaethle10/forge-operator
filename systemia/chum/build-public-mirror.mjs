@@ -348,6 +348,31 @@ const publicIndexHtml = [
 ].join('\n');
 fs.writeFileSync('public/chum/index.html', publicIndexHtml + '\n');
 
+const forensiscopeEditorialIndexPath = 'public/forensiscope/editorial/index.json';
+const forensiscopeEditorialIndex = fs.existsSync(forensiscopeEditorialIndexPath)
+  ? JSON.parse(fs.readFileSync(forensiscopeEditorialIndexPath, 'utf8'))
+  : { articles: [] };
+
+for (const article of forensiscopeEditorialIndex.articles || []) {
+  if (!article?.slug || !article?.url) continue;
+  const articleDir = path.join('public', String(article.url).replace(/^\/+|\/+$/g, ''));
+  const llmsPath = path.join(articleDir, 'llms.txt');
+  const sourceLines = (article.sources || []).map((source) => `- ${source.name || 'Source'}: ${source.url}`);
+  const termLines = (article.machine_terms || []).map((term) => `- ${term}`);
+  const pageLlms = [
+    `# ${article.title}`, '', article.description || '', '', 'Canonical HTML:', article.url, '',
+    'Product:', 'ForensiScope by Evercraft', '', 'Provider:', 'Evercraft LLC', '',
+    'Semantic terms for this article:', ...(termLines.length ? termLines : ['- long-video analysis', '- video intelligence']), '',
+    'External first-party sources:', ...(sourceLines.length ? sourceLines : ['- None required for this first-party explainer.']), '',
+    'Truth boundary:',
+    '- Category adjacency does not imply endorsement, partnership, ranking, feature equivalence, provider pickup, AI recommendation, conversion or payment.',
+    '- ForensiScope capability claims are bounded by /forensiscope/discovery.json and /forensiscope/developers/status.json.',
+    '- Discovery and opening a human review path do not create a payment obligation.', ''
+  ].join('\n');
+  fs.mkdirSync(articleDir, { recursive: true });
+  fs.writeFileSync(llmsPath, pageLlms);
+}
+
 const sitemapStatic = [
   '/',
   '/chum/',
@@ -410,6 +435,7 @@ const sitemapStatic = [
   '/forensiscope/editorial/llms.txt',
   '/forensiscope/editorial/feed.xml',
   '/forensiscope/editorial/social-pack.json',
+  '/forensiscope/editorial/semantic-neighborhood.json',
   '/forensiscope/editorial/long-video-ai-tools/',
   '/forensiscope/editorial/forensiscope-vs-twelve-labs/',
   '/forensiscope/editorial/forensiscope-vs-gemini/',
@@ -453,6 +479,7 @@ const sitemapStatic = [
 ];
 const sitemapUrls = Array.from(new Set([
   ...sitemapStatic,
+  ...(forensiscopeEditorialIndex.articles || []).flatMap((article) => [article.url, `${article.url}llms.txt`]),
   ...(machineCatalog.offers || [])
     .filter((offer) => offer?.public_id)
     .flatMap((offer) => [
