@@ -85,6 +85,8 @@ export async function startOutboundCapacityBroker({
   port = 0,
   stateDir,
   authorizedDevices = {},
+  pairingEnabled = false,
+  pairingPermitTtlMs = 10 * 60_000,
   challengeTtlMs = 60_000,
   sessionTtlMs = 30 * 60_000,
   commandTimeoutMs = 15_000,
@@ -93,12 +95,14 @@ export async function startOutboundCapacityBroker({
 } = {}) {
   if (!stateDir) throw new Error('stateDir is required');
   const authorized = normalizeAuthorizedDevices(authorizedDevices);
-  if (authorized.size === 0) {
-    throw new Error('at least one authorized device fingerprint is required');
+  if (authorized.size === 0 && pairingEnabled !== true) {
+    throw new Error('at least one authorized device fingerprint is required unless pairing is enabled');
   }
 
   const root = path.resolve(stateDir);
   const grantsFile = path.join(root, 'control-grants.json');
+  const pairedDevicesFile = path.join(root, 'paired-devices.json');
+  const pairingPermitsFile = path.join(root, 'pairing-permits.json');
   fs.mkdirSync(root, { recursive: true, mode: 0o700 });
 
   const persisted = fs.existsSync(grantsFile)
@@ -107,6 +111,47 @@ export async function startOutboundCapacityBroker({
 
   if (persisted.schema !== 'evercraft.remote-capacity.control-grants.v1') {
     throw new Error('remote_control_grants_invalid');
+  }
+
+  const pairedDevices = fs.existsSync(pairedDevicesFile)
+    ? JSON.parse(fs.readFileSync(pairedDevicesFile, 'utf8'))
+    : { schema: 'evercraft.remote-capacity.paired-devices.v1', devices: {} };
+  const pairingPermits = fs.existsSync(pairingPermitsFile)
+    ? JSON.parse(fs.readFileSync(pairingPermitsFile, 'utf8'))
+    : { schema: 'evercraft.remote-capacity.pairing-permits.v1', permits: {} };
+
+  if (pairedDevices.schema !== 'evercraft.remote-capacity.paired-devices.v1') {
+    throw new Error('remote_paired_devices_invalid');
+  }
+  if (pairingPermits.schema !== 'evercraft.remote-capacity.pairing-permits.v1') {
+    throw new Error('remote_pairing_permits_invalid');
+  }
+
+  for (const device of Object.values(pairedDevices.devices || {})) {
+    const fingerprint = String(device?.device_fingerprint || '');
+    const nodeId = String(device?.node_id || '');
+    if (/^sha256:[a-f0-9]{64}$/i.test(fingerprint) && /^[a-zA-Z0-9._-]{1,128}$/.test(nodeId)) {
+      authorized.set(fingerprint, nodeId);
+    }
+  }
+
+  function persistPairedDevices() {
+    atomicJson(pairedDevicesFile, pairedDevices);
+  }
+
+  function persistPairingPermits() {
+    atomicJson(pairingPermitsFile, pairingPermits);
+  }
+
+  function prunePairingPermits(now = Date.now()) {
+    let changed = false;
+    for (const [permitId, permit] of Object.entries(pairingPermits.permits || {})) {
+      if (Number(permit?.expires_at_ms || 0) <= now || permit?.used === true) {
+        delete pairingPermits.permits[permitId];
+        changed = true;
+      }
+    }
+    if (changed) persistPairingPermits();
   }
 
   const challenges = new Map();
@@ -127,8 +172,59 @@ export async function startOutboundCapacityBroker({
       deployment_receipt_ref: deploymentReceiptRef || null,
       registered_nodes: nodes.size,
       authorized_devices: authorized.size,
+      pairing_enabled: pairingEnabled === true,
+      pending_pairing_permits: Object.keys(pairingPermits.permits || {}).length,
       secure_envelope_schema: 'evercraft.secure-envelope.v1',
       recovered_command_policy: 'no_automatic_side_effect_replay',
+    };
+  }
+
+  function issuePairingPermit({
+    nodeId,
+    authorizationRef,
+    expectedFingerprint = '',
+    ttlMs = pairingPermitTtlMs,
+  } = {}) {
+    if (pairingEnabled !== true) throw new Error('remote_pairing_disabled');
+    const id = safeNodeId(nodeId);
+    const authRef = String(authorizationRef || '').trim();
+    if (!authRef) throw new Error('pairing_authorization_ref_required');
+
+    const fingerprint = String(expectedFingerprint || '').trim();
+    if (fingerprint && !/^sha256:[a-f0-9]{64}$/i.test(fingerprint)) {
+      throw new Error('pairing_expected_fingerprint_invalid');
+    }
+
+    prunePairingPermits();
+    const boundedTtl = Math.max(
+      60_000,
+      Math.min(15 * 60_000, Number(ttlMs || pairingPermitTtlMs))
+    );
+    const permitId = `pair_${randomBytes(10).toString('hex')}`;
+    const token = randomBytes(32).toString('hex');
+    const createdAt = Date.now();
+    pairingPermits.permits[permitId] = {
+      permit_id: permitId,
+      token_hash: sha(token),
+      node_id: id,
+      expected_fingerprint: fingerprint || null,
+      authorization_ref_hash: `sha256:${sha(authRef)}`,
+      created_at: new Date(createdAt).toISOString(),
+      expires_at: new Date(createdAt + boundedTtl).toISOString(),
+      expires_at_ms: createdAt + boundedTtl,
+      used: false,
+    };
+    persistPairingPermits();
+
+    return {
+      schema: 'evercraft.remote-capacity.pairing-permit.v1',
+      permit_id: permitId,
+      permit_token: token,
+      node_id: id,
+      expected_fingerprint: fingerprint || null,
+      expires_at: new Date(createdAt + boundedTtl).toISOString(),
+      single_use: true,
+      authorization_ref_recorded: true,
     };
   }
 
