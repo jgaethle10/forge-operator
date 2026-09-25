@@ -1,0 +1,31 @@
+name: Outbound-only Evercraft capacity transport
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/network/outbound-capacity.proof.mjs'
+      - 'systemia/network/OUTBOUND_CAPACITY.md'
+      - '.github/workflows/outbound-capacity-transport.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/network/outbound-capacity.proof.mjs'
+      - 'systemia/network/OUTBOUND_CAPACITY.md'
+      - '.github/workflows/outbound-capacity-transport.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove outbound-only NodeSeed transport through Yard
+        run: node systemia/network/outbound-capacity.proof.mjs
