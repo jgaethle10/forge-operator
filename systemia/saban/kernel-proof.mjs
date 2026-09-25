@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  assignmentForIndex,
   buildMultiplicationPlan,
   expandPartitionedWorkItems,
   loadMultiplicationRegistry,
@@ -36,6 +37,13 @@ assert.equal(plan.sample_assignments.length, 24);
 assert.equal(plan.assignment_strategy, 'role_item_cartesian');
 assert.equal(plan.sample_assignments[0].role, chum.roles[0]);
 assert.equal(plan.sample_assignments[0].work.key, syntheticItems[0].key);
+
+const idempotentA = assignmentForIndex(plan, syntheticItems, 0);
+const idempotentB = assignmentForIndex(plan, syntheticItems, 0);
+const idempotentDifferent = assignmentForIndex(plan, syntheticItems, 1);
+assert.ok(idempotentA.idempotency_key);
+assert.equal(idempotentA.idempotency_key, idempotentB.idempotency_key);
+assert.notEqual(idempotentA.idempotency_key, idempotentDifferent.idempotency_key);
 
 const smallAssignments = Array.from({ length: 64 }, (_, index) => ({
   agent_id: `proof-agent-${index + 1}`,
@@ -83,6 +91,8 @@ const receipt = await runScheduler({
 assert.equal(receipt.summary.total, 64);
 assert.equal(receipt.summary.counts.completed, 64);
 assert.ok(receipt.summary.retried > 0);
+assert.equal(receipt.summary.timing.measured_jobs, 64);
+assert.ok(receipt.summary.timing.total_duration_ms >= 0);
 
 const statePath = 'artifacts/saban-multiplier/kernel-proof-resume-state.json';
 saveWorkState(statePath, state);
@@ -180,6 +190,7 @@ const registeredWorkerReceipt = await runRegisteredAssignment({
   software: 'chum',
   assignment: {
     agent_id: 'registered-worker-proof',
+    idempotency_key: idempotentA.idempotency_key,
     role: 'surface_auditor',
     work: {
       kind: 'product',
@@ -199,6 +210,7 @@ const registeredWorkerReceipt = await runRegisteredAssignment({
   }
 });
 assert.equal(registeredWorkerReceipt.software_id, 'chum');
+assert.equal(registeredWorkerReceipt.idempotency_key, idempotentA.idempotency_key);
 assert.equal(registeredWorkerReceipt.result.status, 'finding');
 
 console.log(JSON.stringify({
@@ -213,5 +225,7 @@ console.log(JSON.stringify({
   governed_spawn_children: spawnLedger.children.length,
   governed_spawn_logical_agents: spawnLedger.total_logical_agents,
   registered_worker: registeredWorkerReceipt.software_id,
+  stable_idempotency: true,
+  measured_jobs: receipt.summary.timing.measured_jobs,
   status: 'pass'
 }));
