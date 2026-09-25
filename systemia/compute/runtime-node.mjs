@@ -78,6 +78,7 @@ export async function startEvercraftComputeNode({
   const supported = new Set([
     'systemia.private-core-origin.v1',
     'systemia.kaidance-collider.v1',
+    'saban.logical-agent',
   ]);
 
   async function stopService(serviceId, reason = 'operator_requested') {
@@ -197,11 +198,31 @@ export async function startEvercraftComputeNode({
         if (lease.expires_at < Date.now()) {
           return send(res, 410, { error: 'expired_lease' });
         }
-        if (body.workload_class !== lease.workload_class || !supported.has(body.workload_class)) {
+        const workloadClass = String(body.workload_class || lease.workload_class || '');
+        if (workloadClass !== lease.workload_class || !supported.has(workloadClass)) {
           return send(res, 422, { error: 'workload_not_admitted' });
         }
 
-        if (body.workload_class === 'systemia.private-core-origin.v1') {
+        if (workloadClass === 'saban.logical-agent') {
+          const checkpoint = {
+            step: Number(body.checkpoint?.step || 0) + 1,
+            state: body.checkpoint?.state ?? body.payload ?? null,
+            last_node: nodeId,
+          };
+          const receipt = chain.issue('workload.executed', {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            agent_id: String(body.agent_id || ''),
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            checkpoint,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.private-core-origin.v1') {
           const target = path.resolve(String(body.input?.target_path || ''));
           if (!target || !isWithin(allowedRoot, target)) {
             return send(res, 403, { error: 'target_outside_admitted_root' });
@@ -224,7 +245,7 @@ export async function startEvercraftComputeNode({
           });
         }
 
-        if (body.workload_class === 'systemia.kaidance-collider.v1') {
+        if (workloadClass === 'systemia.kaidance-collider.v1') {
           const stateRoot = path.resolve(String(body.input?.state_root || ''));
           const snapshotPath = path.resolve(String(
             body.input?.snapshot_path || path.join(stateRoot, 'mission-snapshot.json')
