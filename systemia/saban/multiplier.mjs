@@ -402,7 +402,7 @@ async function main() {
   const execute = hasFlag(argv, '--execute');
   const reconcile = hasFlag(argv, '--reconcile');
   const resume = hasFlag(argv, '--resume');
-  const auto = hasFlag(argv, '--auto');
+  const auto = hasFlag(argv, '--auto') || (!hasFlag(argv, '--fixed') && !argv.includes('--agents'));
   const rootDir = process.cwd();
 
   const registry = loadMultiplicationRegistry(registryPath);
