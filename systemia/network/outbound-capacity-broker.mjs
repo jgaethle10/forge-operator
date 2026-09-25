@@ -169,6 +169,29 @@ export async function startOutboundCapacityBroker({
     }
   }
 
+  function virtualizeNodeResponse(nodeId, route, result) {
+    if (!result || typeof result !== 'object') return result;
+    if (route !== '/v1/jobs' || !result.body || typeof result.body !== 'object') {
+      return result;
+    }
+
+    const body = structuredClone(result.body);
+    if (body.result && typeof body.result === 'object') {
+      for (const key of ['health_path', 'mission_ingress_path']) {
+        const value = String(body.result[key] || '');
+        if (value.startsWith('/v1/')) {
+          body.result[key] =
+            `/nodes/${encodeURIComponent(nodeId)}${value}`;
+        }
+      }
+    }
+
+    return {
+      ...result,
+      body,
+    };
+  }
+
   function queueCommand(node, {
     method,
     route,
@@ -395,7 +418,8 @@ export async function startOutboundCapacityBroker({
             error: error instanceof Error ? error.message : String(error),
           });
         }
-        return send(res, result.status, result.body);
+        const virtualized = virtualizeNodeResponse(node.node_id, route, result);
+        return send(res, virtualized.status, virtualized.body);
       }
 
       return send(res, 404, { error: 'not_found' });
