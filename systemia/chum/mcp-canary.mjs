@@ -31,6 +31,33 @@ async function postMcp(url, payload) {
   }
 }
 
+function extractToolNames(text) {
+  const names = new Set();
+  const scan = (value, depth = 0) => {
+    if (depth > 10 || value == null) return;
+    if (Array.isArray(value)) {
+      for (const item of value) scan(item, depth + 1);
+      return;
+    }
+    if (typeof value !== 'object') return;
+    if (Array.isArray(value.tools)) {
+      for (const tool of value.tools) {
+        if (tool && typeof tool.name === 'string' && tool.name.trim()) names.add(tool.name.trim());
+      }
+    }
+    for (const child of Object.values(value)) scan(child, depth + 1);
+  };
+
+  const candidates = [String(text || '')];
+  for (const line of String(text || '').split(/\r?\n/)) {
+    if (line.startsWith('data:')) candidates.push(line.slice(5).trim());
+  }
+  for (const candidate of candidates) {
+    try { scan(JSON.parse(candidate)); } catch {}
+  }
+  return [...names].sort();
+}
+
 async function registryState(name) {
   if (!name) return { checked: false, present: null, reason: 'registry_name_missing' };
   try {
@@ -66,11 +93,20 @@ async function inspectTarget(t) {
     });
     const initValid = init.ok && /serverInfo/.test(init.text);
     const tools = initValid ? await postMcp(t.mcp, { jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} }) : { ok: false, status: 0, text: '' };
-    const toolsValid = tools.ok && /\"tools\"/.test(tools.text);
+    const toolNames = extractToolNames(tools.text);
+    const toolsValid = tools.ok && /\"tools\"/.test(tools.text) && toolNames.length > 0;
+    const commerceSignals = toolNames.filter((name) => /checkout|payment|offer|commerce|purchase|route|match/i.test(name));
     return {
       ...t,
       initialize: { ok: init.ok, status: init.status, valid: initValid },
-      tools_list: { ok: tools.ok, status: tools.status, valid: toolsValid },
+      tools_list: {
+        ok: tools.ok,
+        status: tools.status,
+        valid: toolsValid,
+        count: toolNames.length,
+        names: toolNames,
+        commerce_signals: commerceSignals
+      },
       registry: await registryState(t.registry_name)
     };
   } catch (error) {
@@ -90,6 +126,8 @@ for (let i = 0; i < targets.length; i += CONCURRENCY) {
 }
 
 const failed = rows.filter((r) => !r.initialize.valid || !r.tools_list.valid);
+const machineCommerce = rows.find((r) => r.name === 'Evercraft Machine Commerce') || null;
+const machineCommerceHasCommerceTool = Boolean(machineCommerce?.tools_list?.commerce_signals?.length);
 const registryMissing = rows.filter((r) =>
   r.registry.checked &&
   r.registry.ok &&
@@ -101,6 +139,9 @@ const receipt = {
   targets: rows.length,
   failed_mcp: failed.length,
   registry_missing: registryMissing.length,
+  machine_commerce_checkout_capability_visible: machineCommerceHasCommerceTool,
+  machine_commerce_tool_names: machineCommerce?.tools_list?.names || [],
+  machine_commerce_commerce_signals: machineCommerce?.tools_list?.commerce_signals || [],
   rows
 };
 
@@ -113,12 +154,15 @@ fs.writeFileSync('artifacts/chum/mcp-canary-latest.md', [
   `MCP targets: ${receipt.targets}`,
   `Failed MCP targets: ${receipt.failed_mcp}`,
   `Registry entries missing on successful registry reads: ${receipt.registry_missing}`,
+  `Machine Commerce checkout/offer capability visible: ${receipt.machine_commerce_checkout_capability_visible ? 'yes' : 'NO'}`,
+  `Machine Commerce tools: ${(receipt.machine_commerce_tool_names || []).join(', ') || 'none'}`,
   '',
   '| Capability | MCP initialize | tools/list | Registry |',
   '|---|---|---|---|',
   ...rows.map((r) => `| ${r.name} | ${r.initialize.valid ? 'pass' : 'FAIL'} | ${r.tools_list.valid ? 'pass' : 'FAIL'} | ${r.registry.present === true && r.registry.active === true && r.registry.latest === true ? `active/latest ${r.registry.version || ''}`.trim() : r.registry.present === false ? 'MISSING' : r.registry.active === false ? 'INACTIVE' : r.registry.latest === false ? 'NOT_LATEST' : 'unknown'} |`)
 ].join('\n') + '\n');
 
-console.log(JSON.stringify({ targets: receipt.targets, failed_mcp: receipt.failed_mcp, registry_missing: receipt.registry_missing }));
+console.log(JSON.stringify({ targets: receipt.targets, failed_mcp: receipt.failed_mcp, registry_missing: receipt.registry_missing, machine_commerce_checkout_capability_visible: receipt.machine_commerce_checkout_capability_visible, machine_commerce_commerce_signals: receipt.machine_commerce_commerce_signals }));
 if (failed.length) throw new Error(`CHUM MCP canary found ${failed.length} live MCP failure(s)`);
 if (registryMissing.length) throw new Error(`CHUM Registry canary found ${registryMissing.length} published entry mismatch(es)`);
+if (!machineCommerceHasCommerceTool) throw new Error('Evercraft Machine Commerce MCP is live but exposes no checkout/offer/commerce-capable tool name');
