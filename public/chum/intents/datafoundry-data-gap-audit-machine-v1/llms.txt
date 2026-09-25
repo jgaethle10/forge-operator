@@ -5,7 +5,8 @@ Pricing: No approved fixed machine price/payment path verified. Raven data-produ
 Commercial state: verification_required
 Machine state: discovery_only
 Public capability: https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs
-Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=datafoundry-data-gap-audit-machine-v1
+Start here: Not exposed until commercial verification is complete
+Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=datafoundry-data-gap-audit-machine-v1
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 

@@ -5,7 +5,8 @@ Pricing: Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes,
 Commercial state: verification_required
 Machine state: discovery_only
 Public capability: https://evercraft-forensiscope.base44.app/video-too-large-for-ai
-Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1
+Start here: Not exposed until commercial verification is complete
+Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
