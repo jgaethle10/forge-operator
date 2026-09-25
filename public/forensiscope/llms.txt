@@ -69,3 +69,15 @@ Machine examples:
 
 Developer LLM guide:
 /forensiscope/developers/llms.txt
+
+
+Editorial hub:
+/forensiscope/editorial/
+
+Editorial JSON:
+/forensiscope/editorial/index.json
+
+Editorial RSS:
+/forensiscope/editorial/feed.xml
+
+The editorial surface uses common category and competitor/tool language in factual, source-linked explanations. It is not a provider endorsement or ranking.

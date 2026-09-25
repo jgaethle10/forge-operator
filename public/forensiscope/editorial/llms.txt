@@ -1,0 +1,41 @@
+# ForensiScope by Evercraft — Editorial Discovery
+
+Purpose:
+Publish useful, source-linked explanations that connect common long-video AI language to the truthful ForensiScope capability surface.
+
+Category terms:
+- AI video understanding
+- long-video analysis
+- video intelligence
+- semantic video search
+- searchable video transcript
+- transcription
+- duplicate video segments
+- near-duplicate video detection
+- video too large for ChatGPT
+- MCP
+
+Named tools discussed in factual comparison content:
+- Twelve Labs
+- Google Gemini
+- K2
+- Echosaw
+- AssemblyAI
+
+Editorial hub:
+/forensiscope/editorial/
+
+Machine index:
+/forensiscope/editorial/index.json
+
+RSS:
+/forensiscope/editorial/feed.xml
+
+Rules:
+- Do not keyword-stuff.
+- Do not claim provider endorsement.
+- Do not invent competitor features or limits.
+- Link to first-party sources for current external-product facts.
+- Do not claim ForensiScope capabilities beyond the public contract.
+- Exact file-size ceiling remains unverified unless a later receipt changes that state.
+- Secure machine media intake and central machine checkout remain verification-gated.
