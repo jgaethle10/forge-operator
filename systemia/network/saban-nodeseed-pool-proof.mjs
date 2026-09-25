@@ -31,6 +31,7 @@ const seedB = await startNodeSeed({
 
 const assignments = Array.from({ length: 24 }, (_, index) => ({
   agent_id: `pool-proof-${String(index + 1).padStart(3, '0')}`,
+  idempotency_key: `proof-idempotency-${String(index + 1).padStart(3, '0')}`,
   role: 'surface_auditor',
   work: {
     kind: 'product',
@@ -89,10 +90,27 @@ try {
       (event) => event.type === 'assignment.failover.completed'
     )
   );
+  const completedResults = receipt.results
+    .filter((result) => result?.status === 'completed');
   assert.ok(
-    receipt.results
-      .filter((result) => result?.status === 'completed')
-      .every((result) => result.result?.schema === 'evercraft.saban.registered-worker-receipt.v1')
+    completedResults.every(
+      (result) => result.result?.schema === 'evercraft.saban.registered-worker-receipt.v1'
+    )
+  );
+  assert.ok(
+    completedResults.every(
+      (result) =>
+        result.result?.idempotency_key === result.assignment?.idempotency_key &&
+        result.checkpoint?.state?.idempotency_key === result.assignment?.idempotency_key
+    )
+  );
+  assert.ok(
+    completedResults
+      .filter((result) => result.failover)
+      .every(
+        (result) =>
+          result.result?.idempotency_key === result.assignment?.idempotency_key
+      )
   );
 
   console.log(JSON.stringify({
@@ -102,6 +120,7 @@ try {
     completed: receipt.completed_assignments,
     failed: receipt.failed_assignments,
     failovers: receipt.failover_assignments,
+    idempotency_preserved: true,
     killed_node: 'saban-pool-node-a',
     surviving_node: 'saban-pool-node-b'
   }));
