@@ -1,0 +1,95 @@
+{
+  "schema": "evercraft.machine-commerce.distribution.v1",
+  "generated_at": "2026-09-25T18:33:30Z",
+  "public_id": "evercraft-machine-commerce",
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "live_runtime": {
+    "version": "1.2.1",
+    "transport": "streamable-http",
+    "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "health": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp?action=health",
+    "state": "live_verified"
+  },
+  "destinations": [
+    {
+      "destination": "Official MCP Registry",
+      "state": "verified_live",
+      "version": "1.2.1",
+      "is_latest": true,
+      "observed_at": "2026-09-25T18:32:42Z",
+      "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce"
+    },
+    {
+      "destination": "Glama",
+      "state": "verified_live",
+      "observed_at": "2026-09-25",
+      "evidence_url": "https://glama.ai/mcp/connectors?query=namespace%3Aio.github.jgaethle10",
+      "note": "Machine Commerce independently indexed with 21 tools at last observed crawl. Version propagation may lag the Official Registry."
+    },
+    {
+      "destination": "MCP.Directory",
+      "state": "submitted_pending_review",
+      "submitted_at": "2026-09-25T18:32:01Z",
+      "submission_endpoint": "https://mcp.directory/api/submit-server",
+      "submission_receipt": "HTTP 200: Server submitted for review!",
+      "note": "Do not treat submission as listing or pickup until independently observed."
+    },
+    {
+      "destination": "PulseMCP",
+      "state": "upstream_auto_ingestion_expected_not_yet_verified",
+      "note": "PulseMCP documents ingestion from the Official MCP Registry. Verify actual Evercraft listing before claiming pickup."
+    },
+    {
+      "destination": "mcp.so",
+      "state": "submission_blocked_by_connector_permission",
+      "note": "Published submission path uses a GitHub issue. Connected GitHub integration returned 403 for third-party issue creation. This is not a directory rejection."
+    },
+    {
+      "destination": "MCPFind",
+      "state": "not_submitted_package_requirement",
+      "note": "Public form requires a package artifact (npm, PyPI, or Docker). Machine Commerce is remote Streamable HTTP; do not fabricate a package."
+    },
+    {
+      "destination": "Smithery",
+      "state": "not_submitted_auth_required",
+      "note": "CLI/dashboard publication requires Smithery authorization. No listing claim."
+    },
+    {
+      "destination": "ChatGPT plugin directory",
+      "state": "not_evidenced_as_submitted",
+      "note": "No exact Evercraft listing, approval email, or repository submission artifact observed."
+    }
+  ],
+  "instrumentation": {
+    "mcp_discovery_event_entity": "MachineCommerceDiscoveryEvent",
+    "records_initialize_tools_list_tools_call": true,
+    "source_families": [
+      "glama",
+      "mcp-registry",
+      "mcpserver-lol",
+      "smithery",
+      "mcp-so",
+      "mcp-directory",
+      "pulsemcp",
+      "lobehub",
+      "mcphub",
+      "mcpfind",
+      "openai-mcp",
+      "claude-mcp",
+      "perplexity-mcp",
+      "gemini-mcp",
+      "cursor-mcp",
+      "windsurf-mcp",
+      "cline-mcp",
+      "codex-mcp",
+      "vscode-mcp"
+    ],
+    "revenue_boundary": "Discovery and tool invocation are not checkout, payment, revenue, recommendation, or provider endorsement proof."
+  },
+  "next_milestones": [
+    "first_non_synthetic_external_tools_call",
+    "first_attributed_human_buyer_handoff",
+    "first_attributed_checkout_created",
+    "first_provider_verified_payment"
+  ]
+}
