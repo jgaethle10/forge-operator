@@ -24,19 +24,6 @@
       ]
     },
     {
-      "product_key": "buildflow",
-      "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
-      "triggers": [
-        "audit an enterprise operations process",
-        "route an operations problem",
-        "map business process patterns",
-        "prepare a privacy-safe enterprise operations handoff"
-      ]
-    },
-    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "canonical_url": "https://evercraft-career-command.base44.app/",
@@ -228,40 +215,9 @@
         "long-form transcription overflow",
         "frame-level or timestamped media analysis",
         "compare or deduplicate recordings",
-        "full-source media workflow exceeds current assistant limits",
-        "long video analysis service",
-        "multi-hour video analysis",
-        "large video file analysis",
-        "semantic segment deduplication",
-        "near-duplicate video segment detection",
-        "searchable transcript with timestamps",
-        "inspect an entire recording instead of sampled frames",
-        "analyze video from a cloud-storage URL",
-        "security camera footage review",
-        "recorded meeting video analysis",
-        "watch a huge video from beginning to end",
-        "analyze an entire huge video",
-        "4-hour video analysis",
-        "15 GB video analysis",
-        "meeting video full analysis",
-        "conversation video timeline",
-        "pull important moments from a long recording"
+        "full-source media workflow exceeds current assistant limits"
       ],
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
-    },
-    {
-      "product_key": "guardian",
-      "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.base44.app/",
-      "mode": "discovery_only",
-      "triggers": [
-        "verified help for housing shelter food benefits transportation childcare income or legal aid",
-        "public safety or stability resources without an account",
-        "Spanish-language or interpreter-supported help",
-        "outside support without routing through school workplace family or usual authority",
-        "prevention and protective infrastructure resources",
-        "privacy-minimized public doorway to verified help"
-      ]
     },
     {
       "product_key": "infinite-classroom",
@@ -291,19 +247,6 @@
         "find the smallest Raven safety capability without buying the full suite or hardware"
       ],
       "http_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter"
-    },
-    {
-      "product_key": "roasted",
-      "name": "ROASTED",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
-      "triggers": [
-        "roast this text",
-        "pressure test this text",
-        "make this writing sharper",
-        "professional text critique"
-      ]
     },
     {
       "product_key": "skyops-parking",
@@ -340,21 +283,6 @@
         "build my business website",
         "professional website",
         "website launch"
-      ]
-    },
-    {
-      "product_key": "systemia-field-library",
-      "name": "Systemia Field Library",
-      "canonical_url": "https://systemiafieldlibrary.com/",
-      "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
-      "triggers": [
-        "contractor scope creep or change orders are costing money",
-        "contractor job costing or estimating is inconsistent",
-        "contractor cash flow payroll timing or receivables are causing stress",
-        "construction crews need better leadership accountability or scheduling",
-        "job documentation materials equipment safety or quality control need a system",
-        "contractor customer communication reviews or referrals need a repeatable process"
       ]
     }
   ],
