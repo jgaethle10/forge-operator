@@ -68,6 +68,13 @@
         "automatic_checkout": false,
         "payment_obligation": false,
         "private_topology_publication": false
+      },
+      "max_attempts_per_job": 4,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 64,
+        "max_work_items": 250000,
+        "max_attempts_per_job": 4
       }
     },
     {
@@ -111,6 +118,13 @@
         "external_network": false,
         "unsolicited_human_outreach": false,
         "automatic_checkout": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 128,
+        "max_work_items": 50000,
+        "max_attempts_per_job": 3
       }
     }
   ]
