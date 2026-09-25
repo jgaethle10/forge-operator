@@ -25,6 +25,7 @@ The offers are active in Evercraft Payments. The product-specific public checkou
 
 - Canonical public discovery record: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 - GitHub LLM mirror: ./llms.txt
+- Machine Commerce human handoff: live-verified via `ibmi-rescue-v1`
 - Intended product route: https://findmypart.base44.app/ibmi-rescue
 
 ## Authority
@@ -37,6 +38,7 @@ Production access, production upgrade, cutover, credential use, or irreversible 
 
 ## Boundaries
 
+- Machine Commerce can surface the two bounded offers and a human review page without creating checkout or payment
 - support transition does not mean an IBM i system automatically stops working
 - direct-upgrade eligibility must be verified from the exact release, hardware, PTF, application, database, driver, integration, and vendor state
 - checkout creation is not payment proof
