@@ -196,8 +196,21 @@ export function assignmentForIndex(plan, workItems, index) {
     raw: null
   };
 
+  const agentId = `${plan.software_id}-${String(logicalNumber).padStart(5, '0')}`;
+  const idempotencyKey = 'sha256:' + crypto
+    .createHash('sha256')
+    .update([
+      plan.software_id,
+      agentId,
+      role,
+      item.kind,
+      item.key
+    ].join(':'))
+    .digest('hex');
+
   return {
-    agent_id: `${plan.software_id}-${String(logicalNumber).padStart(5, '0')}`,
+    agent_id: agentId,
+    idempotency_key: idempotencyKey,
     logical_index: index,
     pass,
     physical_worker: (index % plan.physical_workers) + 1,
