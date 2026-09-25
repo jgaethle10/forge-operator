@@ -1,0 +1,55 @@
+name: Node 001 field kit
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/field-preflight.mjs'
+      - 'systemia/compute/field-certify.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/FIELD_KIT.md'
+      - '.github/workflows/node001-field-kit.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/compute/field-preflight.mjs'
+      - 'systemia/compute/field-certify.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/FIELD_KIT.md'
+      - '.github/workflows/node001-field-kit.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check field tooling
+        run: |
+          node --check systemia/compute/field-preflight.mjs
+          node --check systemia/compute/field-certify.mjs
+          bash -n systemia/compute/install-node-seed.sh
+      - name: Confirm CI cannot pass physical preflight
+        run: |
+          set +e
+          node systemia/compute/field-preflight.mjs --root /tmp/evercraft-field-proof > /tmp/preflight.json
+          code=$?
+          set -e
+          node -e "const r=require('/tmp/preflight.json'); if (r.schema !== 'evercraft.node001.preflight.v1') process.exit(1); if (r.observed.virtualization_state === 'virtual_detected' && r.passed) process.exit(2);"
+          echo "preflight_exit_code=$code"
+      - name: Build portable field kit artifact
+        run: |
+          mkdir -p dist/evercraft-node001-field-kit/systemia/compute
+          cp systemia/compute/{node-seed.mjs,runtime-node.mjs,capacity-beacon.mjs,device-identity.mjs,field-preflight.mjs,field-certify.mjs,install-node-seed.sh,FIELD_KIT.md,FIELD_ATTESTATION.md} dist/evercraft-node001-field-kit/systemia/compute/
+          mkdir -p dist/evercraft-node001-field-kit/systemia/{collider,core/bootstrap}
+          cp systemia/collider/{kernel.mjs,runtime.mjs} dist/evercraft-node001-field-kit/systemia/collider/
+          cp systemia/core/bootstrap/private-origin.mjs dist/evercraft-node001-field-kit/systemia/core/bootstrap/
+          tar -C dist -czf dist/evercraft-node001-field-kit.tgz evercraft-node001-field-kit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-node001-field-kit
+          path: dist/evercraft-node001-field-kit.tgz
+          if-no-files-found: error
