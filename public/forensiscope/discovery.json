@@ -93,6 +93,10 @@
     "integrations": "/forensiscope/developers/integrations.html",
     "status": "/forensiscope/developers/status.json",
     "examples": "/forensiscope/developers/examples.json",
-    "llms": "/forensiscope/developers/llms.txt"
+    "llms": "/forensiscope/developers/llms.txt",
+    "playground": "/forensiscope/developers/playground.html",
+    "clients": "/forensiscope/developers/clients/",
+    "vscode": "/forensiscope/developers/clients/vscode.html",
+    "claude_api": "/forensiscope/developers/clients/claude-api.html"
   }
 }
