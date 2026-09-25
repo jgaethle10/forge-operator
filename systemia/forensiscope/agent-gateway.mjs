@@ -87,6 +87,7 @@ export function invokeForensiScopeGatewayTool({
     access_token: {
       type: 'string',
       minLength: 64,
+      'x-mcp-header': 'Evidence-Access',
       description: 'Scoped, expiring ForensiScope evidence-access capability for this evidence_ref.'
     },
     ...(schema.properties || {})
