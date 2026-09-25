@@ -854,6 +854,104 @@ export class YardOperator {
     return publicRoute;
   }
 
+  async #remoteDeviceAuthorization(deploymentId, {
+    action,
+    deviceFingerprint,
+    nodeId,
+    approvalRef,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const normalizedAction = String(action || '');
+    if (!['authorize', 'revoke'].includes(normalizedAction)) {
+      throw new Error('remote device authorization action is invalid');
+    }
+    const fingerprint = String(deviceFingerprint || '').trim().toLowerCase();
+    if (!/^sha256:[a-f0-9]{64}$/.test(fingerprint)) {
+      throw new Error('remote device fingerprint is invalid');
+    }
+    const id = String(nodeId || '').trim();
+    if (!/^[a-zA-Z0-9._-]{1,128}$/.test(id)) {
+      throw new Error('remote node id is invalid');
+    }
+    const approval = String(approvalRef || '').trim();
+    if (!approval || approval.length > 512) {
+      throw new Error('explicit approval reference is required');
+    }
+
+    const managed = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-device-${normalizedAction}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          device_fingerprint: fingerprint,
+          node_id: id,
+          approval_ref: approval,
+        }),
+      }
+    );
+
+    const body = {
+      schema: 'evercraft.yard.remote-device-authorization.v1',
+      broker_deployment_id: deploymentId,
+      action: normalizedAction,
+      device_fingerprint: fingerprint,
+      node_id: id,
+      approval_ref: approval,
+      broker_decision_receipt_hash: managed.decision_receipt_hash || null,
+      compute_management_receipt_hash: managed.receipt?.receipt_hash || null,
+      live_session_disconnected: managed.live_session_disconnected ?? null,
+      decided_at: new Date().toISOString(),
+    };
+    const decision = {
+      ...body,
+      receipt_hash: sha(body),
+    };
+
+    record.remote_device_authorizations = {
+      ...(record.remote_device_authorizations || {}),
+      [fingerprint]: decision,
+    };
+    record.updated_at = decision.decided_at;
+    this.#persist(record);
+    return decision;
+  }
+
+  async authorizeRemoteDevice(deploymentId, {
+    deviceFingerprint,
+    nodeId,
+    approvalRef,
+  } = {}) {
+    return this.#remoteDeviceAuthorization(deploymentId, {
+      action: 'authorize',
+      deviceFingerprint,
+      nodeId,
+      approvalRef,
+    });
+  }
+
+  async revokeRemoteDevice(deploymentId, {
+    deviceFingerprint,
+    nodeId,
+    approvalRef,
+  } = {}) {
+    return this.#remoteDeviceAuthorization(deploymentId, {
+      action: 'revoke',
+      deviceFingerprint,
+      nodeId,
+      approvalRef,
+    });
+  }
+
   async remoteCapacityGrant(deploymentId, nodeId, {
     allowLoopbackProof = false,
   } = {}) {
