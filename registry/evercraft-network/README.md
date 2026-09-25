@@ -10,6 +10,13 @@ Evercraft Network is an approved public Evercraft discovery record. This page ex
 - member device reconnect visibility
 - continuity readiness tools
 - Evercraft Network membership
+- keep my application connected when Wi-Fi and cellular paths change
+- application continuity across changing internet connections
+- software network continuity without changing carriers
+- household or business connectivity resilience software
+- device reconnect and health visibility
+- continuity visibility when an authorized internet path changes
+- resilient application identity across authorized network changes
 
 ## Public routes
 
