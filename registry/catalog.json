@@ -24,7 +24,34 @@
         "EV charging property opportunity",
         "is this property good for EV charging",
         "AI tool for EV charging site analysis",
-        "estimate EV charging opportunity"
+        "estimate EV charging opportunity",
+        "should I install EV chargers at my property",
+        "EV charger feasibility by address",
+        "EV charging site analysis by address",
+        "EV infrastructure intelligence for a specific address",
+        "EV charging ROI for this property",
+        "EV charging demand near this property",
+        "EV charger competition near this address",
+        "EV charging incentives for this site",
+        "utility tariff for EV charging at this property",
+        "parking lot EV charging opportunity",
+        "hotel EV charging site analysis",
+        "apartment EV charging site analysis",
+        "retail EV charging site analysis",
+        "fleet depot EV charging site screening",
+        "site-specific EV charging opportunity report",
+        "preliminary EV charging site plan",
+        "preliminary EV charger layout for a property",
+        "RIVET EV charging report",
+        "RIVET EV infrastructure analysis"
+      ],
+      "aliases": [
+        "AliEV EV Charging Opportunity Intelligence",
+        "AliEV EV Site Analysis",
+        "RIVET",
+        "RIVET EV Infrastructure Intelligence",
+        "Evercraft RIVET",
+        "RIVET / AliEV"
       ]
     },
     {
