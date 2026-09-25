@@ -1,3 +1,5 @@
+import { querySemanticIndex } from './semantic-index.mjs';
+
 const STOP_WORDS = new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
   'of','on','or','that','the','this','to','was','what','when','where','which',
@@ -48,7 +50,11 @@ function neighboringTranscriptNodes(graph, node, radiusSeconds) {
   const center = evidenceTimestamp(node);
   if (center === null) return [];
   return (graph.nodes || [])
-    .filter((candidate) => candidate.kind === 'transcript_segment' && candidate.id !== node.id)
+    .filter(
+      (candidate) =>
+        candidate.kind === 'transcript_segment' &&
+        candidate.id !== node.id
+    )
     .filter((candidate) => {
       const t = evidenceTimestamp(candidate);
       return t !== null && Math.abs(t - center) <= radiusSeconds;
@@ -59,21 +65,22 @@ function neighboringTranscriptNodes(graph, node, radiusSeconds) {
 function relatedVisualEvidence(graph, node, radiusSeconds) {
   const center = evidenceTimestamp(node);
   if (center === null) return [];
+
   const ids = new Set(
     (graph.nodes || [])
-      .filter((candidate) =>
-        ['keyframe', 'scene_boundary', 'visual_moment'].includes(candidate.kind) &&
-        finite(candidate.timestamp_seconds) !== null &&
-        Math.abs(candidate.timestamp_seconds - center) <= radiusSeconds
+      .filter(
+        (candidate) =>
+          ['keyframe', 'scene_boundary', 'visual_moment'].includes(candidate.kind) &&
+          finite(candidate.timestamp_seconds) !== null &&
+          Math.abs(candidate.timestamp_seconds - center) <= radiusSeconds
       )
       .map((candidate) => candidate.id)
   );
   if (!ids.size) return [];
 
-  const relatedEdges = (graph.edges || []).filter((edge) =>
-    ids.has(edge.from) || ids.has(edge.to)
+  return (graph.edges || []).filter(
+    (edge) => ids.has(edge.from) || ids.has(edge.to)
   );
-  return relatedEdges;
 }
 
 export function queryEvidenceGraph(graph, {
@@ -83,43 +90,71 @@ export function queryEvidenceGraph(graph, {
   minimumScore = 0.01
 } = {}) {
   if (!graph || graph.schema !== 'evercraft.forensiscope.evidence-graph.v1') {
-    throw new Error('ForensiScope evidence query requires evercraft.forensiscope.evidence-graph.v1.');
+    throw new Error(
+      'ForensiScope evidence query requires evercraft.forensiscope.evidence-graph.v1.'
+    );
   }
 
-  const queryTokens = tokenize(query);
-  if (!queryTokens.length) throw new Error('ForensiScope evidence query requires a meaningful query.');
+  const queryText = String(query || '').trim();
+  if (!queryText) {
+    throw new Error('ForensiScope evidence query requires a meaningful query.');
+  }
 
-  const scored = (graph.nodes || [])
-    .filter((node) => node.kind === 'transcript_segment')
+  const queryTokens = tokenize(queryText);
+  const transcriptNodes = (graph.nodes || [])
+    .filter((node) => node.kind === 'transcript_segment');
+
+  const semantic = querySemanticIndex(graph, queryText, {
+    limit: Math.max(1, transcriptNodes.length)
+  });
+  const semanticReady = semantic.state === 'ready';
+  const semanticScores = new Map(
+    semanticReady
+      ? semantic.hits.map((hit) => [hit.evidence_id, hit.similarity])
+      : []
+  );
+
+  const scored = transcriptNodes
     .map((node) => {
       const tokens = tokenize(node.text);
       const lexical = overlapScore(queryTokens, tokens);
-      const phrase = phraseBonus(query, node.text);
+      const phrase = phraseBonus(queryText, node.text);
+      const semanticSimilarity = semanticReady
+        ? finite(semanticScores.get(node.id)) ?? 0
+        : null;
+      const semanticContribution =
+        semanticSimilarity === null
+          ? 0
+          : Math.max(0, semanticSimilarity) * 4;
       const confidence = finite(node.confidence);
-      const confidenceFactor = confidence === null ? 1 : 0.75 + 0.25 * confidence;
-      const score = (lexical * 4 + phrase) * confidenceFactor;
-      return { node, score, lexical, phrase };
+      const confidenceFactor =
+        confidence === null ? 1 : 0.75 + 0.25 * confidence;
+      const score =
+        (lexical * 4 + phrase + semanticContribution) *
+        confidenceFactor;
+
+      return {
+        node,
+        score,
+        lexical,
+        phrase,
+        semanticSimilarity
+      };
     })
     .filter((entry) => entry.score >= minimumScore)
-    .sort((a, b) =>
-      b.score - a.score ||
-      evidenceTimestamp(a.node) - evidenceTimestamp(b.node) ||
-      String(a.node.id).localeCompare(String(b.node.id))
+    .sort(
+      (a, b) =>
+        b.score - a.score ||
+        evidenceTimestamp(a.node) - evidenceTimestamp(b.node) ||
+        String(a.node.id).localeCompare(String(b.node.id))
     )
     .slice(0, Math.max(1, Math.min(50, Number(topK) || 5)));
 
   const nodes = nodeById(graph);
   const hits = scored.map((entry) => {
-    const neighbors = neighboringTranscriptNodes(
-      graph,
-      entry.node,
-      Math.max(0, Number(contextRadiusSeconds) || 0)
-    );
-    const relatedEdges = relatedVisualEvidence(
-      graph,
-      entry.node,
-      Math.max(0, Number(contextRadiusSeconds) || 0)
-    );
+    const radius = Math.max(0, Number(contextRadiusSeconds) || 0);
+    const neighbors = neighboringTranscriptNodes(graph, entry.node, radius);
+    const relatedEdges = relatedVisualEvidence(graph, entry.node, radius);
 
     return {
       evidence_id: entry.node.id,
@@ -133,7 +168,11 @@ export function queryEvidenceGraph(graph, {
       score: Number(entry.score.toFixed(6)),
       score_components: {
         lexical_overlap: Number(entry.lexical.toFixed(6)),
-        phrase_bonus: entry.phrase
+        phrase_bonus: entry.phrase,
+        semantic_similarity:
+          entry.semanticSimilarity === null
+            ? null
+            : Number(entry.semanticSimilarity.toFixed(8))
       },
       transcript_context: neighbors.map((node) => ({
         evidence_id: node.id,
@@ -147,8 +186,12 @@ export function queryEvidenceGraph(graph, {
         to: edge.to,
         hamming_distance: finite(edge.hamming_distance),
         color_distance: finite(edge.color_distance),
-        from_timestamp_seconds: finite(nodes.get(edge.from)?.timestamp_seconds),
-        to_timestamp_seconds: finite(nodes.get(edge.to)?.timestamp_seconds)
+        from_timestamp_seconds: finite(
+          nodes.get(edge.from)?.timestamp_seconds
+        ),
+        to_timestamp_seconds: finite(
+          nodes.get(edge.to)?.timestamp_seconds
+        )
       }))
     };
   });
@@ -156,7 +199,15 @@ export function queryEvidenceGraph(graph, {
   return {
     schema: 'evercraft.forensiscope.evidence-query-result.v1',
     source_sha256: graph.source_sha256,
-    query: String(query),
+    query: queryText,
+    search_mode: semanticReady ? 'hybrid_semantic' : 'lexical_fallback',
+    semantic: {
+      state: semantic.state,
+      engine_id:
+        semantic.engine_id ||
+        graph.semantic_index?.engine_id ||
+        null
+    },
     match_count: hits.length,
     hits,
     answer_policy: {
