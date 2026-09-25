@@ -1,0 +1,29 @@
+name: KAIDANCE continuity supervisor
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/yard/continuity-supervisor.mjs'
+      - 'systemia/yard/continuity-supervisor-proof.mjs'
+      - 'systemia/collider/CONTINUITY_SUPERVISOR.md'
+      - '.github/workflows/kaidance-continuity-supervisor.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/yard/continuity-supervisor.mjs'
+      - 'systemia/yard/continuity-supervisor-proof.mjs'
+      - 'systemia/collider/CONTINUITY_SUPERVISOR.md'
+      - '.github/workflows/kaidance-continuity-supervisor.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove automatic KAIDANCE continuity supervision
+        run: node systemia/yard/continuity-supervisor-proof.mjs
