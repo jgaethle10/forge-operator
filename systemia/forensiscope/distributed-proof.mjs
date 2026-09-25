@@ -206,6 +206,26 @@ assert.deepEqual(
 );
 assert.equal(receipt.reconciliation.transcription.segment_count, 5);
 assert.ok(receipt.reconciliation.transcription.text.includes('boundary-3'));
+assert.equal(
+  receipt.reconciliation.evidence_graph.schema,
+  'evercraft.forensiscope.evidence-graph.v1'
+);
+assert.equal(
+  receipt.reconciliation.evidence_graph.source_sha256,
+  sourceHashAfter
+);
+assert.equal(
+  receipt.reconciliation.evidence_graph.indexes.transcript_node_ids.length,
+  receipt.reconciliation.transcription.segment_count
+);
+assert.ok(
+  receipt.reconciliation.evidence_graph.llm_projection.relationship_counts.near_duplicate_of > 0
+);
+assert.ok(
+  receipt.reconciliation.evidence_graph.nodes
+    .filter((node) => node.kind === 'transcript_segment')
+    .every((node) => node.engine_id === 'forensiscope-ci-contract')
+);
 
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
@@ -228,6 +248,9 @@ const proof = {
   transcription_state: receipt.reconciliation.transcription.state,
   transcription_engine_ids: receipt.reconciliation.transcription.engine_ids,
   transcript_segments: receipt.reconciliation.transcription.segment_count,
+  evidence_graph_nodes: receipt.reconciliation.evidence_graph.node_count,
+  evidence_graph_edges: receipt.reconciliation.evidence_graph.edge_count,
+  llm_evidence_atoms: receipt.reconciliation.evidence_graph.llm_projection.transcript_atoms.length,
   public_machine_intake_enabled: false
 };
 
