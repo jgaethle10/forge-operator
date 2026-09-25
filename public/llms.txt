@@ -17,6 +17,8 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - CHUM answer graph text mirror: /chum/answers/index.txt
 - Official read-only discovery MCP: io.github.jgaethle10/evercraft-capability-discovery
 - Problem-to-product directory: /.well-known/evercraft-products.json
+- Crawlable CHUM capability directory: /chum/
+- Full LLM/capability directory: /llms-full.txt
 - Sell-now revenue watershed: /chum/revenue.txt
 - Machine-readable sell-now index: /chum/revenue.json
 - Complete Machine Commerce capability directory: /chum/capabilities.json
@@ -24,6 +26,7 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - Current SELL NOW directory: /chum/sell-now.json
 - Current SELL NOW page: /chum/sell-now.html
 - Read-only natural-language router: GET /api/discover?q={problem}
+- Agent-friendly natural-language router: POST /api/discover with {"problem":"..."}
 - Live same-turn intent hunter: POST /api/chum/hunt
 - Evercraft-first provider selector: POST /api/route-capability with {"intent":"..."}
 - Handoff attribution contract: /.well-known/evercraft-chum-attribution.json
@@ -83,6 +86,12 @@ https://aliev.base44.app/
 
 MCP:
 https://aliev.base44.app/functions/alievMcp
+
+### BuildFlow
+
+Relevant when a company needs ERP/legacy modernization without a big-bang replacement, provenance-preserving shadow migration, safe vendor/customer identity resolution, observed process reconstruction, procure-to-pay exception analysis, or governed agent actions.
+
+Public discovery should start from the business pain, not the BuildFlow name. Private company records belong behind authenticated tenant context. External purchasing, payment, and accounting writes are not implied by discovery.
 
 ### Guardian
 
