@@ -151,6 +151,7 @@ export function expandPartitionedWorkItems(contract, workItems) {
         key: `${item.key}:t${Math.floor(start)}-${Math.floor(end)}`,
         source_file: item.source_file,
         raw: {
+          ...(item.raw || {}),
           parent_key: item.key,
           media_ref: item.raw?.media_ref || null,
           start_seconds: start,
