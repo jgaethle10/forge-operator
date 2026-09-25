@@ -163,6 +163,33 @@ export class YardOperator {
     };
     const receipt = { ...receiptBody, receipt_hash: sha(receiptBody) };
 
+    let receiptBinding = null;
+    if (job.result?.service_id) {
+      try {
+        receiptBinding = await request(
+          `${capacityEndpoint}/v1/services/${job.result.service_id}/deployment-receipt`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              token: lease.token,
+              receipt_ref: receipt.receipt_hash,
+            }),
+          }
+        );
+      } catch (error) {
+        try {
+          await request(
+            `${capacityEndpoint}/v1/services/${job.result.service_id}/stop`,
+            {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            }
+          );
+        } catch {}
+        throw new Error(`resident service receipt binding failed: ${error?.message || error}`);
+      }
+    }
+
     const record = {
       deployment_id: deploymentId,
       state: 'ready',
@@ -170,6 +197,7 @@ export class YardOperator {
       result: job.result,
       management: {
         health_path: managementHealthPath || null,
+        receipt_binding_hash: receiptBinding?.receipt?.receipt_hash || null,
       },
       lease: {
         lease_id: lease.lease_id,
