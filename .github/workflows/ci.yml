@@ -92,6 +92,11 @@ jobs:
 
           curl --fail --silent http://127.0.0.1:3000/api/health | tee /tmp/health.json
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
+          curl --fail --silent http://127.0.0.1:3000/fallen > /tmp/fallen.html
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/fallen/family/episode \
+            -H 'Content-Type: application/json' \
+            --data '{"seriesTitle":"Smoke Family","episodeTitle":"Episode One","premise":"The family builds a blanket fort and the dog steals the pillows.","style":"Warm 2D storybook cartoon","characters":[{"id":"parent","name":"Parent","role":"Parent","description":"Warm and funny"},{"id":"kid","name":"Kid","role":"Kid","description":"Curious and energetic"}]}' \
+            > /tmp/fallen-episode.json
           curl --fail --silent -X POST http://127.0.0.1:3000/api/chum/hunt \
             -H 'Content-Type: application/json' \
             --data '{"intent":"My AI cannot analyze this three hour video and I need the whole recording reviewed","provider":"smoke-llm","surface":"ci"}' \
@@ -136,6 +141,8 @@ jobs:
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
+          const fallenHtml = fs.readFileSync('/tmp/fallen.html','utf8');
+          const fallenEpisode = JSON.parse(fs.readFileSync('/tmp/fallen-episode.json','utf8'));
           const liveHunt = JSON.parse(fs.readFileSync('/tmp/live-hunt-route.json','utf8'));
           const alievLiveHunt = JSON.parse(fs.readFileSync('/tmp/aliev-live-hunt.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
@@ -158,6 +165,11 @@ jobs:
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
+          if (!fallenHtml.includes('<div id="root"></div>')) throw new Error('Fallen SPA route did not return the production app shell');
+          if (fallenEpisode.success !== true) throw new Error('Fallen family episode smoke failed');
+          if (fallenEpisode.data?.story?.scenes?.length !== 6) throw new Error('Fallen family episode must contain six scenes');
+          if (fallenEpisode.data?.seriesPlan?.schema !== 'evercraft.fallen.series-plan.v1') throw new Error('Fallen series plan contract missing');
+          if (fallenEpisode.data?.seriesPlan?.continuity?.status !== 'pass') throw new Error('Fallen family episode continuity did not pass');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (capabilities.discovery?.liveIntentHunter?.path !== '/api/chum/hunt') throw new Error('live-intent hunter missing from capabilities');
           if (liveHunt.ok !== true || liveHunt.schema !== 'evercraft.chum.live-intent-hunt.v1') throw new Error('live-intent hunter response contract failed');

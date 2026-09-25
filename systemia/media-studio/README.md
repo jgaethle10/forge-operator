@@ -28,6 +28,10 @@ The durable product boundary lives above any single foundation model. Fallen own
 - Provider-neutral production work graph for generated shots and voice-locked dialogue.
 - Verified creative-department router that refuses declared-but-unverified providers.
 - Capability routing for reference identity, voice locks, timing, rights and provenance requirements.
+- Production admission gate for artifact digests, continuity digests, commercial rights, provenance, timing and locked voices.
+- Verified identity-evidence threshold gate before generated visuals can enter an episode.
+- Episode-level production reconciliation that fails closed if any artifact is rejected.
+- Saban production inventory export plus a bounded eight-role Fallen production contract.
 - Deterministic tests for the core director and Series Mode continuity gate.
 
 ## Commands
@@ -37,6 +41,8 @@ npm run media:studio -- plan systemia/media-studio/example.project.json ./tmp/pl
 npm run media:studio -- render ./tmp/plan.json ./tmp/output.mp4
 npm run media:studio -- build systemia/media-studio/example.project.json ./tmp/output.mp4 ./tmp/plan.json
 npm run media:studio -- series <episode.project.json> <series-bible.json> <series-plan.json>
+npm run media:studio -- inventory <series-plan.json> <saban-inventory.json>
+npm run proof:saban-fallen
 npm run test:media-studio
 ```
 
@@ -77,7 +83,8 @@ This is the foundation for recurring cartoons, serialized films, recurring comme
 5. **Reconcile**: compare generated assets against identity, canon, provenance and quality requirements before accepting them.
 6. **Edit**: preserve scene-level regeneration and non-destructive versions instead of flattening the project too early.
 7. **Render**: assemble deterministic platform-ready outputs with audio mixing, captions and delivery variants.
-8. **Distribute**: package approved outputs for Evercraft Clip and other authorized publishing lanes.
+8. **Scale**: export bounded production needs to Saban, where independent guards verify continuity, identity requirements, voice, rights, provenance and timing before reconciliation.
+9. **Distribute**: package only admitted outputs for Evercraft Clip and other authorized publishing lanes.
 
 ## Next engineering slices
 
@@ -89,7 +96,8 @@ This is the foundation for recurring cartoons, serialized films, recurring comme
 - Automated lip-sync and dialogue timing adapters.
 - Multi-track editor UI and single-shot regeneration.
 - Continuity QA that compares generated frames against the series bible before accepting them.
-- Saban fanout for shot generation and variant exploration with deterministic reconciliation.
+- Provider execution adapters behind the now-registered Saban production contract.
+- Saban fanout for shot generation and variant exploration with deterministic post-generation reconciliation.
 - ForensiScope ingest for long source footage and reusable scene retrieval.
 - Kaidance scoring/music handoff and Evercraft Clip delivery.
 - Metered API/MCP access, workspaces and reusable brand/series kits.
@@ -100,4 +108,4 @@ Unknown rights produce a warning. Restricted assets fail closed. Synthetic shots
 
 ## Release state
 
-The current code is a source-stage engine with executable planning/rendering slices and deterministic continuity tests. It must not be advertised as a publicly live end-to-end creative platform until deployment, provider execution and real media canaries are independently verified.
+The current code is a source-stage engine with executable planning/rendering slices, deterministic continuity tests, production-admission tests, and a bounded Saban production proof. It must not be advertised as a publicly live end-to-end creative platform until deployment, provider execution and real media canaries are independently verified.
