@@ -6,6 +6,8 @@ INSTALL_ROOT="${EVERCRAFT_USER_INSTALL_ROOT:-$HOME/.local/share/evercraft/forge-
 STATE_ROOT="${EVERCRAFT_LOCAL_ORGANISM_ROOT:-$HOME/.local/state/evercraft/organism}"
 UNIT_DIR="$HOME/.config/systemd/user"
 UNIT_FILE="$UNIT_DIR/evercraft-local-organism.service"
+ENV_DIR="$HOME/.config/evercraft"
+ENV_FILE="$ENV_DIR/local-organism.env"
 NODE_BIN="$(command -v node || true)"
 
 if [[ -z "${NODE_BIN}" ]]; then
@@ -24,8 +26,18 @@ if ! command -v systemctl >/dev/null 2>&1; then
   exit 3
 fi
 
-mkdir -p "${INSTALL_ROOT}" "${STATE_ROOT}" "${UNIT_DIR}"
-chmod 0700 "${STATE_ROOT}"
+mkdir -p "${INSTALL_ROOT}" "${STATE_ROOT}" "${UNIT_DIR}" "${ENV_DIR}"
+chmod 0700 "${STATE_ROOT}" "${ENV_DIR}"
+
+if [[ ! -f "${ENV_FILE}" ]]; then
+  : > "${ENV_FILE}"
+  chmod 0600 "${ENV_FILE}"
+fi
+
+if [[ -n "${EVERCRAFT_REMOTE_BROKER_URL:-}" ]]; then
+  printf 'EVERCRAFT_REMOTE_BROKER_URL=%s\n' "${EVERCRAFT_REMOTE_BROKER_URL}" > "${ENV_FILE}"
+  chmod 0600 "${ENV_FILE}"
+fi
 
 rm -rf "${INSTALL_ROOT:?}/"*
 cp -a "${SOURCE_ROOT}/." "${INSTALL_ROOT}/"
@@ -38,6 +50,7 @@ After=default.target
 [Service]
 Type=simple
 WorkingDirectory=${INSTALL_ROOT}
+EnvironmentFile=-${ENV_FILE}
 ExecStart=${NODE_BIN} ${INSTALL_ROOT}/systemia/compute/local-organism.mjs --root ${STATE_ROOT}
 Restart=always
 RestartSec=5
@@ -60,5 +73,10 @@ fi
 echo "Evercraft local organism installed and active."
 echo "Runtime: NodeSeed -> Evercraft Compute -> Yard -> KAIDANCE -> Systemia Core"
 echo "Network: loopback-only; no public ingress created."
+if [[ -s "${ENV_FILE}" ]]; then
+  echo "Remote admission: configured through private user environment."
+else
+  echo "Remote admission: not configured; enrollment request will still be generated."
+fi
 echo "State: ${STATE_ROOT}"
 echo "This user-mode Chromebook/Crostini runtime is authorized compute, not Node 001 physical field certification."
