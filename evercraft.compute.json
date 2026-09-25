@@ -23,7 +23,11 @@
     "public_discovery": [
       "/llms.txt",
       "/.well-known/evercraft-capabilities.json",
-      "/api/chum/attribution"
+      "/api/chum/attribution",
+      "/chum/freshness.xml",
+      "/chum/freshness.json",
+      "/chum/crawl-state.json",
+      "/sitemap.xml"
     ]
   },
   "environment": {

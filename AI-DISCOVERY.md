@@ -61,6 +61,15 @@ High-signal examples:
 - `/openapi.json`
 - `/schema.jsonld`
 - `/chum/index.json`
+- `/chum/freshness.xml` - Atom freshness feed generated from content hashes
+- `/chum/freshness.json` - machine-readable freshness state
+- `/chum/crawl-state.json` - durable per-URL content hash and last-change ledger
+
+## Crawl pressure
+
+CHUM's Crawl Pressure Engine tracks public discovery pages by content hash, preserves honest `lastmod` values, emits Atom/JSON freshness feeds, and can request IndexNow recrawls after a live-release byte check confirms the deployed page matches the current release. It runs every 15 minutes plus immediately on relevant main-branch changes.
+
+The engine deliberately distinguishes **requesting a recrawl** from **proving a crawl**. Search engines and AI providers retain control over whether and when they fetch, index, rank, cite, recommend, or convert a public page. The engine never fabricates those downstream states.
 
 Raw public portfolio:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json`

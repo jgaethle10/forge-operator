@@ -1,9 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/aliev",
-  "title": "AliEV",
-  "description": "EV property opportunity screening with evidence-aware human-confirmed depth.",
-  "version": "1.0.2",
+  "title": "AliEV EV Charging Site Opportunity",
+  "description": "AI property screening for whether a site is a good fit for EV charging and what the opportunity may be, with evidence-aware charger competition, traffic and demand context, utility and tariff context, incentives, and modeled economics.",
+  "version": "1.0.3",
   "websiteUrl": "https://aliev.base44.app/",
   "remotes": [
     {

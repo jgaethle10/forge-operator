@@ -1,0 +1,92 @@
+name: CHUM crawl pressure
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "public/**"
+      - "registry/**"
+      - "conformance/**"
+      - "systemia/chum/**"
+      - "package.json"
+      - ".github/workflows/chum-crawl-pressure.yml"
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chum-crawl-pressure-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  pressure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build content-hash freshness state
+        if: github.event_name == 'push'
+        run: npm run chum:crawl-pressure
+
+      - name: Verify live release and request recrawl
+        if: github.event_name != 'push'
+        env:
+          CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
+          CHUM_CRAWL_MAX_URLS: "1000"
+        run: npm run chum:crawl-pressure:broadcast
+
+      - name: Persist crawl-pressure state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Evercraft CHUM Crawl Pressure"
+          git config user.email "chum-crawl-pressure@users.noreply.github.com"
+          git fetch origin main --quiet
+
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "A newer main commit exists. Leaving this run's receipt as evidence; a newer run will rebuild state."
+            exit 0
+          fi
+
+          git add \
+            public/sitemap.xml \
+            public/chum/crawl-state.json \
+            public/chum/freshness.json \
+            public/chum/freshness.xml \
+            public/8aef5f814d0b9c2896c1bc753c65c9bc.txt
+
+          if git diff --cached --quiet; then
+            echo "Crawl-pressure state is current."
+          else
+            git commit -m "CHUM refresh crawl pressure signals [skip ci]"
+            git push origin HEAD:main
+          fi
+
+      - name: Publish crawl-pressure summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f artifacts/chum/crawl-pressure-latest.md ]; then
+            cat artifacts/chum/crawl-pressure-latest.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload crawl-pressure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-crawl-pressure-receipt
+          path: artifacts/chum/crawl-pressure-latest.*
+          if-no-files-found: warn
