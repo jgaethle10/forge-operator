@@ -1,0 +1,18 @@
+# Systemia Core resident supervisor
+
+The Core resident supervisor is the lifecycle boundary for Systemia workflows that must keep moving without chat orchestration.
+
+It supports two service modes:
+
+- `cycle`: run a bounded workflow once per declared cadence and never overlap the previous cycle.
+- `resident`: keep a long-lived process alive, restart it with bounded exponential backoff, and stop restarting when its hourly restart budget is exhausted.
+
+The initial supervised organism is:
+
+- Legacy Rescue opportunity watch, every 300 seconds.
+- Node 001 / Megatron field-certification tracker, every 300 seconds.
+- KAIDANCE mission publisher, resident, publishing changed mission snapshots on its own 300-second cadence.
+
+Private runtime bindings do not live in the public config. The mission publisher receives its Yard state directory and KAIDANCE deployment ID from environment bindings at runtime.
+
+Every start, completion, exit, hold, restart and supervisor lifecycle event produces a hashed receipt. Child stdout/stderr are not persisted; only their hashes and exit codes enter the supervisor ledger.
