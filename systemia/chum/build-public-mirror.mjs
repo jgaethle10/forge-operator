@@ -6,6 +6,8 @@ const directory = readJson('public/.well-known/evercraft-products.json');
 const conformance = readJson('conformance/products.json');
 const catalog = readJson('registry/catalog.json');
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json');
+let observedMissIndex = { pages: [] };
+try { observedMissIndex = readJson('public/chum/answers/observed/index.json'); } catch {}
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
@@ -81,6 +83,7 @@ const index = {
   read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
   pain_index: '/.well-known/evercraft-pain-index.json',
   answer_graph: '/chum/answers/index.json',
+  observed_miss_answers: '/chum/answers/observed/index.json',
   universal_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
   products: []
 };
@@ -299,7 +302,7 @@ const publicIndexHtml = [
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
   '<form action="/api/discover" method="get" class="card"><label for="q"><strong>Describe the problem</strong></label><br><input id="q" name="q" required style="width:min(100%,700px);padding:10px;margin:10px 0" placeholder="Example: I cannot find a discontinued machine part"><button type="submit" style="padding:10px 16px">Find the smallest matching capability</button></form>',
   `<p><strong>Read-only AI discovery:</strong> <code>${escapeHtml(READ_ONLY_DISCOVERY_REGISTRY)}</code></p>`,
-  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
   '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
@@ -326,6 +329,8 @@ const sitemapStatic = [
   '/chum/answers/',
   '/chum/answers/index.json',
   '/chum/answers/index.txt',
+  '/chum/answers/observed/',
+  '/chum/answers/observed/index.json',
   '/chum/sitemap.xml',
   '/.well-known/evercraft-pain-index.json',
   '/forensiscope/',
@@ -360,6 +365,11 @@ const sitemapUrls = Array.from(new Set([
     `/chum/products/${product.product_key}/llms.txt`,
     `/chum/products/${product.product_key}/ai-discovery.json`,
     `/chum/products/${product.product_key}/ai-conformance.json`
+  ]),
+  ...(observedMissIndex.pages || []).flatMap((page) => [
+    page.relative_html,
+    page.relative_json,
+    page.relative_llms
   ])
 ]));
 const sitemap = [
@@ -376,7 +386,12 @@ for (const product of index.products) {
   if (!fs.existsSync(pagePath)) throw new Error(`CHUM public page missing: ${pagePath}`);
   if (!sitemap.includes(product.page_url)) throw new Error(`CHUM sitemap missing: ${product.page_url}`);
 }
-console.log(JSON.stringify({ products: index.products.length, output: 'public/chum' }));
+for (const page of observedMissIndex.pages || []) {
+  const pagePath = path.join('public', page.relative_html, 'index.html');
+  if (!fs.existsSync(pagePath)) throw new Error(`Observed discovery repair page missing: ${pagePath}`);
+  if (!sitemap.includes(page.relative_html)) throw new Error(`CHUM sitemap missing observed repair: ${page.relative_html}`);
+}
+console.log(JSON.stringify({ products: index.products.length, observed_miss_pages: (observedMissIndex.pages || []).length, output: 'public/chum' }));
 
 
 // CHUM_WATERSHED_COMPILER_V2
@@ -399,6 +414,7 @@ const llmsLines = [
   `Read-only Official MCP Registry: ${READ_ONLY_DISCOVERY_REGISTRY}`,
   `Pain Index: ${rawBase}/public/.well-known/evercraft-pain-index.json`,
   `Answer Graph: ${rawBase}/public/chum/answers/index.json`,
+  `Observed discovery repairs: ${rawBase}/public/chum/answers/observed/index.json`,
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
@@ -573,6 +589,7 @@ const discoveryWatershed = {
     pain_index_text: '/chum/pain-index.txt',
     answer_graph: '/chum/answers/index.json',
     answer_graph_text: '/chum/answers/index.txt',
+    observed_miss_answers: '/chum/answers/observed/index.json',
     read_only_mcp_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     products: '/.well-known/evercraft-products.json',
     agents: '/.well-known/evercraft-agent-directory.json',
