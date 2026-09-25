@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-25T05:45:00.000Z",
+  "answer_id": "intent:862f0289be",
+  "user_language": "I need an AI tool to figure out whether a property is good for EV charging and estimate the opportunity",
+  "normalized": "i need an ai tool to figure out whether a property is good for ev charging and estimate the opportunity",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:aliev",
+      "kind": "product",
+      "product_key": "aliev",
+      "public_id": null,
+      "name": "AliEV",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "public_url": "https://aliev.base44.app/",
+      "pain_page": "/chum/products/aliev/",
+      "registry_name": "io.github.jgaethle10/aliev",
+      "direct_mcp": "https://aliev.base44.app/functions/alievMcp",
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "authority": "public screening plus bounded machine invocation and human-confirmed paid depth",
+      "boundaries": [
+        "missing is not zero",
+        "mapped charger inventory is not utilization",
+        "program presence is not incentive eligibility",
+        "screening is not engineering, permitting, interconnection, financing, or construction approval",
+        "payment requires authoritative verification"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

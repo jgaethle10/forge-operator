@@ -12,7 +12,10 @@
     {
       "product_key": "aliev",
       "name": "AliEV",
-      "aliases": [],
+      "aliases": [
+        "AliEV EV Charging Opportunity Intelligence",
+        "AliEV EV Site Analysis"
+      ],
       "canonical_url": "https://aliev.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",

@@ -26,14 +26,22 @@
     {
       "product_key": "aliev",
       "name": "AliEV",
-      "aliases": [],
+      "aliases": [
+        "AliEV EV Charging Opportunity Intelligence",
+        "AliEV EV Site Analysis"
+      ],
       "class": "ev_infrastructure_opportunity_intelligence",
       "canonical_url": "https://aliev.base44.app/",
       "intents": [
         "would EV charging make sense at this property",
         "what public EV charging is near this address",
         "screen a property for EV infrastructure opportunity",
-        "compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence"
+        "compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence",
+        "I need an AI tool to figure out whether a property is good for EV charging and estimate the opportunity",
+        "AI tool to evaluate a property for EV charging and estimate the opportunity",
+        "EV charging property opportunity assessment",
+        "is this property good for EV charging",
+        "estimate the EV charging opportunity for this property"
       ],
       "invocation": {
         "mode": "mcp",

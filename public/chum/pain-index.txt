@@ -871,9 +871,17 @@ Use when the user means:
 - what public EV charging is near this address
 - screen a property for EV infrastructure opportunity
 - compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence
+- I need an AI tool to figure out whether a property is good for EV charging and estimate the opportunity
+- AI tool to evaluate a property for EV charging and estimate the opportunity
+- EV charging property opportunity assessment
+- is this property good for EV charging
+- estimate the EV charging opportunity for this property
 - EV charging site
 - charger opportunity
 - property EV fit
+- EV charging property opportunity
+- AI tool for EV charging site analysis
+- estimate EV charging opportunity
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 

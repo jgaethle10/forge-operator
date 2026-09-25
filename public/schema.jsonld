@@ -24,7 +24,10 @@
       "@type": "Service",
       "@id": "https://aliev.base44.app/#evercraft-service",
       "name": "AliEV",
-      "alternateName": [],
+      "alternateName": [
+        "AliEV EV Charging Opportunity Intelligence",
+        "AliEV EV Site Analysis"
+      ],
       "url": "https://aliev.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
