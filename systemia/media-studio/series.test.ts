@@ -93,6 +93,15 @@ test('series compiler locks character, voice, canon and synthetic generation pro
   assert.equal(plan.dialogue[0]?.voiceProfileId, 'voice-ember-v1');
   assert.equal(plan.continuity.status, 'pass');
   assert.equal(plan.canonReceipt.length, 64);
+  assert.ok(plan.productionNeeds.some((need) => need.kind === 'video'));
+  assert.ok(
+    plan.productionNeeds.some(
+      (need) =>
+        need.kind === 'speech' &&
+        need.voiceProfileId === 'voice-ember-v1' &&
+        need.requires.includes('voice_profile'),
+    ),
+  );
   assert.ok(
     plan.filmPlan.generationRequests.every((request) =>
       request.prompt.includes('FALLEN CONTINUITY CONTRACT'),
