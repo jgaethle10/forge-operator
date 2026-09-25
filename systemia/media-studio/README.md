@@ -1,53 +1,100 @@
-# Evercraft Media Studio v0
+# Fallen
 
-Evercraft Media Studio is the first executable slice of an Evercraft-owned media creation engine.
+Fallen is Evercraft's owned media creation engine for turning photos, video, audio and plain-language direction into editable media projects, commercials, shorts, films and episodic series.
 
-Input: photos + videos + a plain-language prompt + optional brand, CTA, style, audience and rights metadata.
+The durable product boundary lives above any single foundation model. Fallen owns the project graph, story direction, asset identity, continuity, canon, edit decisions, provenance, render graph, receipts and future provider routing. Image, video, speech, music and SFX models are replaceable production departments.
 
-Output: structured story plan -> normalized shot clips -> assembled MP4.
+## What works now
 
-The durable product boundary sits above any single foundation model. Evercraft owns the project schema, story compiler, asset graph, continuity rules, edit decisions, provenance, renderer, cost routing and future provider-selection layer. Image, video, voice and music models remain replaceable camera departments.
-
-## What works in v0
-
-- Commercial, social-short and short-film story structures.
+- Commercial, social-short, short-film and episodic story structures.
 - Prompt-aware shot allocation.
-- Image and video inputs.
+- Image and video source inputs.
 - FFprobe metadata inspection.
 - FFmpeg normalization and MP4 assembly.
 - 9:16, 16:9 and 1:1 output.
 - Basic push-in movement for stills.
 - Rights and provenance tracking.
-- Hard rejection of assets explicitly marked restricted.
+- Hard rejection of explicitly restricted assets.
 - Explicit generation requests for missing or optional synthetic coverage.
-- Deterministic tests for the story compiler.
-
-## Requirements
-
-- Node.js
-- repository dependencies installed
-- ffmpeg and ffprobe available on PATH
+- Fallen Series Bible with stable characters, locations, props, brands and style entities.
+- Immutable character trait locks.
+- Locked canon facts with fail-closed contradiction detection.
+- Per-character voice profile locks.
+- Asset-to-character identity binding.
+- Dialogue plans that cannot silently substitute an unlocked voice.
+- Continuity contracts automatically injected into synthetic coverage requests.
+- Bible digests and episode canon receipts for reproducible continuity auditing.
+- Proposed-canon output for human review rather than silently rewriting the show's history.
+- Deterministic tests for the core director and Series Mode continuity gate.
 
 ## Commands
 
+```bash
 npm run media:studio -- plan systemia/media-studio/example.project.json ./tmp/plan.json
 npm run media:studio -- render ./tmp/plan.json ./tmp/output.mp4
 npm run media:studio -- build systemia/media-studio/example.project.json ./tmp/output.mp4 ./tmp/plan.json
+npm run media:studio -- series <episode.project.json> <series-bible.json> <series-plan.json>
 npm run test:media-studio
+```
 
-## Next build slices
+## Series Mode
 
-1. Visual understanding: sample frames from video, build contact sheets, identify exact moments and scene semantics.
-2. Generative coverage: provider adapters for image-to-video, text-to-video and image generation that resolve generation requests without binding the project format to one vendor.
-3. Audio: script and voiceover planning, TTS adapters, licensed music, ducking, captions and loudness normalization.
-4. Continuity: people, product and location identity, object continuity, color matching, camera direction and synthetic-shot consistency.
-5. Editor UI: upload, prompt, storyboard, editable timeline, single-shot regeneration, provenance and per-shot cost.
-6. Commercialization: metered usage, reusable brand kits, agency workspaces, API/MCP access and multi-platform exports.
+A series bible uses the schema `evercraft.fallen.series-bible.v1`.
+
+It can lock:
+
+- character identity and immutable physical traits;
+- character voice profile IDs;
+- locations and landmark traits;
+- props and recurring objects;
+- brand identity;
+- visual/style rules;
+- canon facts established by earlier episodes.
+
+An episode may submit continuity claims and dialogue. Fallen checks those requests against the bible before compiling the film plan. Locked contradictions fail closed. New canon is emitted as proposed canon for review instead of being silently committed.
+
+The resulting `evercraft.fallen.series-plan.v1` contains:
+
+- the normal editable film plan;
+- the complete continuity report;
+- voice-locked dialogue cues;
+- proposed canon;
+- a SHA-256 digest of the source bible;
+- a SHA-256 canon receipt for the episode;
+- continuity instructions attached to every requested generated shot.
+
+This is the foundation for recurring cartoons, serialized films, recurring commercial characters and brand campaigns where identity must survive across many generations and editing sessions.
+
+## Architecture direction
+
+1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
+2. **Remember**: maintain persistent series/brand bibles, identity fingerprints, canon and approved evolution.
+3. **Direct**: turn intent into a storyboard, camera language, dialogue, performance direction and coverage plan.
+4. **Generate**: route image, image-to-video, video, speech, music and SFX work through replaceable provider adapters.
+5. **Reconcile**: compare generated assets against identity, canon, provenance and quality requirements before accepting them.
+6. **Edit**: preserve scene-level regeneration and non-destructive versions instead of flattening the project too early.
+7. **Render**: assemble deterministic platform-ready outputs with audio mixing, captions and delivery variants.
+8. **Distribute**: package approved outputs for Evercraft Clip and other authorized publishing lanes.
+
+## Next engineering slices
+
+- Visual identity fingerprints from approved reference assets.
+- Scene-level visual understanding and exact-moment selection.
+- Provider-neutral image/video generation adapters.
+- Voice generation, performance direction and voice-consistency verification.
+- Music and SFX planning, ducking, stems and loudness normalization.
+- Automated lip-sync and dialogue timing adapters.
+- Multi-track editor UI and single-shot regeneration.
+- Continuity QA that compares generated frames against the series bible before accepting them.
+- Saban fanout for shot generation and variant exploration with deterministic reconciliation.
+- ForensiScope ingest for long source footage and reusable scene retrieval.
+- Kaidance scoring/music handoff and Evercraft Clip delivery.
+- Metered API/MCP access, workspaces and reusable brand/series kits.
 
 ## Safety and provenance
 
-Unknown rights produce a warning. Restricted assets fail closed. Synthetic shots remain marked synthetic in project provenance. The engine must not invent factual product claims merely because a prompt asks for a dramatic commercial.
+Unknown rights produce a warning. Restricted assets fail closed. Synthetic shots remain synthetic in provenance. Fallen must not invent factual product claims simply because a commercial prompt asks for them. Series canon changes should remain explicit and reviewable.
 
 ## Release state
 
-This branch is a source prototype. It must not be advertised as a live public Evercraft capability until deployment and live verification are complete.
+The current code is a source-stage engine with executable planning/rendering slices and deterministic continuity tests. It must not be advertised as a publicly live end-to-end creative platform until deployment, provider execution and real media canaries are independently verified.
