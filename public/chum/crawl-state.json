@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T20:12:21.326Z",
+  "updated_at": "2026-09-25T20:15:45.994Z",
   "url_count": 1798,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -122,8 +122,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "b661fd28ba73c7e32f7746f672f47b1b1664b8e1bd0f8ded35265fd3c7c9166e",
-      "last_changed": "2026-09-25T20:12:21.326Z",
+      "content_sha256": "68e26ccfbf47a59ca93bacc75b6c124247f2404579c3d4eaddee3c3008756f3f",
+      "last_changed": "2026-09-25T20:15:45.994Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
@@ -488,8 +488,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "0e5bb927751c7ffdf3a0623858eb4a6340d64da0a5f71f59772ddf55b16e2f67",
-      "last_changed": "2026-09-25T20:03:42.500Z",
+      "content_sha256": "680340bdaabf63dfa39f48d0bc4fe6b00ada3957580ac854661642306f9588a8",
+      "last_changed": "2026-09-25T20:15:45.697Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -2636,14 +2636,14 @@
     },
     "/chum/products/ibmi-rescue/ai-discovery.json": {
       "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "content_sha256": "a080525fd4eedab5edbef9bc2ddf17f58c9a08303cbf647529f60e60b3d2cca6",
-      "last_changed": "2026-09-25T20:03:52.612Z",
+      "content_sha256": "afdb1ccdb8df39d2622768f0e5317933051e2c93b2ca08c2f1a1dc8507b40923",
+      "last_changed": "2026-09-25T20:15:45.697Z",
       "priority": 94
     },
     "/chum/products/ibmi-rescue/ai-conformance.json": {
       "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "content_sha256": "4e713972181f7f5b4528d605d64d300c3c08372345d4d34607a5cf20781891b2",
-      "last_changed": "2026-09-25T20:03:52.612Z",
+      "content_sha256": "5ff43477e723158cc9c5cbe8ddcd77d8e97163ab418cfb256207658c52eb2262",
+      "last_changed": "2026-09-25T20:15:45.697Z",
       "priority": 94
     },
     "/chum/products/infinite-classroom/": {

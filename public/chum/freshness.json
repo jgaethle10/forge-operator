@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T20:12:21.326Z",
+  "updated_at": "2026-09-25T20:15:45.994Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,7 +12,7 @@
   "latest_change_batch": [
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T20:12:21.326Z",
+      "last_changed": "2026-09-25T20:15:45.994Z",
       "priority": 80
     }
   ],
@@ -20,8 +20,26 @@
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T20:12:21.326Z",
+      "last_changed": "2026-09-25T20:15:45.994Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
+      "url": "/chum/products/ibmi-rescue/ai-conformance.json",
+      "last_changed": "2026-09-25T20:15:45.697Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "last_changed": "2026-09-25T20:15:45.697Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-25T20:15:45.697Z",
+      "priority": 88
     },
     {
       "path": "/chum/products/aliev/ai-conformance.json",
@@ -438,18 +456,6 @@
       "priority": 94
     },
     {
-      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "url": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "last_changed": "2026-09-25T20:03:52.612Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-25T20:03:52.612Z",
-      "priority": 94
-    },
-    {
       "path": "/chum/products/infinite-classroom/ai-conformance.json",
       "url": "/chum/products/infinite-classroom/ai-conformance.json",
       "last_changed": "2026-09-25T20:03:52.612Z",
@@ -652,12 +658,6 @@
       "url": "/forensiscope/distribution/reddit-pack.json",
       "last_changed": "2026-09-25T20:03:52.612Z",
       "priority": 60
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-25T20:03:42.500Z",
-      "priority": 88
     },
     {
       "path": "/forensiscope/mesh/llms.txt",
