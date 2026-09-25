@@ -1,0 +1,31 @@
+name: KAIDANCE safe pulse
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/collider/kernel.mjs'
+      - 'systemia/collider/pulse.mjs'
+      - 'systemia/collider/pulse-proof.mjs'
+      - 'systemia/collider/PULSE.md'
+      - '.github/workflows/kaidance-pulse.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/collider/kernel.mjs'
+      - 'systemia/collider/pulse.mjs'
+      - 'systemia/collider/pulse-proof.mjs'
+      - 'systemia/collider/PULSE.md'
+      - '.github/workflows/kaidance-pulse.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove safe KAIDANCE pulse
+        run: node systemia/collider/pulse-proof.mjs
