@@ -172,7 +172,8 @@ export async function runNodeSeedAssignmentPool({
   maxConcurrencyPerNode = 2,
   timeoutMs = 3000,
   assignmentTimeoutMs = 120000,
-  requestedTtlMs = 300000
+  requestedTtlMs = 300000,
+  onEvent = null
 }) {
   if (!software) throw new Error('software is required');
   if (!Array.isArray(assignments) || assignments.length === 0) {
@@ -226,6 +227,10 @@ export async function runNodeSeedAssignmentPool({
   const results = new Array(assignments.length);
   const failures = [];
   const events = [];
+  const emit = async (event) => {
+    events.push(event);
+    if (typeof onEvent === 'function') await onEvent(event);
+  };
   let cursor = 0;
 
   async function worker(workerIndex) {
@@ -264,7 +269,7 @@ export async function runNodeSeedAssignmentPool({
           compute_receipt: response.receipt || null
         };
 
-        events.push({
+        await emit({
           type: failover ? 'assignment.failover.completed' : 'assignment.completed',
           agent_id: job.assignment.agent_id,
           node_id: response.node_id,
@@ -275,7 +280,7 @@ export async function runNodeSeedAssignmentPool({
         job.last_node_id = node.node_id;
         node.healthy = false;
 
-        events.push({
+        await emit({
           type: 'node.assignment.failed',
           agent_id: job.assignment.agent_id,
           node_id: node.node_id,
