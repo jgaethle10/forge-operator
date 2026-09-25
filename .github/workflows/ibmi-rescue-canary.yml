@@ -1,0 +1,31 @@
+name: IBM i Rescue Machine Commerce canary
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/chum/ibmi-rescue-canary.mjs"
+      - "registry/ibmi-rescue/**"
+      - "public/chum/products/ibmi-rescue/**"
+      - "public/.well-known/evercraft-products.json"
+      - "conformance/products.json"
+      - ".github/workflows/ibmi-rescue-canary.yml"
+  schedule:
+    - cron: "23 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify IBM i Rescue live Machine Commerce handoff
+        run: node systemia/chum/ibmi-rescue-canary.mjs
