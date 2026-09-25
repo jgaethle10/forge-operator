@@ -1,0 +1,18 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-25T08:05:00-07:00",
+  "provider": "google",
+  "provider_surface": "Google AI response as reported by user; exact Google product surface not independently verified",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Google Gemini Pro / Google AI Studio",
+    "AssemblyAI",
+    "AHK Hero / FFmpeg"
+  ],
+  "notable_gap": "The Google response understood the combined long-video, transcription, deduplication and oversized-file need, but still did not surface ForensiScope by Evercraft.",
+  "interpretation": "Fresh negative pickup receipt after the latest discovery repairs. This is evidence of a current distribution miss, not a product-quality judgment or endorsement of alternatives.",
+  "evidence": "User-provided copied Google response in this conversation."
+}
