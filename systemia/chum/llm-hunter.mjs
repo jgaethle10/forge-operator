@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { buildRevenueFormation } from '../saban/revenue-swarm.mjs';
+import { classifyEcosystemCandidate } from './ecosystem-classifier.mjs';
 
 const offline = process.argv.includes('--offline');
 const strict = process.argv.includes('--strict');
@@ -112,6 +113,7 @@ if (!offline) {
       const readme = readmeResult.ok ? decodeReadme(readmeResult.body) : '';
       const signals = submissionSignals(`${repo.description || ''}\n${readme.slice(0, 20000)}`);
       const score = scoreCandidate({ repo, readme });
+      const classification = classifyEcosystemCandidate({ repo, signals, score });
       discovered.push({
         ecosystem_id: `github:${repo.full_name}`,
         source: 'github_public_recon',
@@ -121,9 +123,12 @@ if (!offline) {
         homepage: repo.homepage || null,
         stars: Number(repo.stargazers_count || 0),
         updated_at: repo.updated_at || null,
+        archived: Boolean(repo.archived),
         submission_signals: signals,
         attack_score: score,
-        state: score >= 70 ? 'engage_now' : score >= 50 ? 'recon_next' : 'watch',
+        state: classification.state,
+        classification_reason: classification.reason,
+        machine_entrance_candidate: classification.machine_entrance_candidate,
         next_actions: [
           'Inspect the public contribution/submission path and terms.',
           'Map which machine-readable surfaces the ecosystem consumes.',
@@ -177,7 +182,9 @@ const receipt = {
     no_fake_provider_pickup: true,
     no_silent_payment: true,
     explicit_human_confirmation_for_payment: true,
-    internal_revenue_priorities_not_published_as_external_recommendation_bias: true
+    internal_revenue_priorities_not_published_as_external_recommendation_bias: true,
+    engage_now_requires_machine_entrance_evidence: true,
+    archived_repositories_never_engage_now: true
   },
   attack_loop: [
     'DISCOVER_ECOSYSTEM',
@@ -212,6 +219,9 @@ const receipt = {
     discovered_ecosystems: discovered.length,
     engage_now: discovered.filter((x) => x.state === 'engage_now').length,
     recon_next: discovered.filter((x) => x.state === 'recon_next').length,
+    watch: discovered.filter((x) => x.state === 'watch').length,
+    downranked_noise: discovered.filter((x) => x.classification_reason === 'mcp_project_not_verified_distribution_entrance').length,
+    archived_filtered: discovered.filter((x) => x.classification_reason === 'archived_repository').length,
     errors: errors.length
   },
   errors
@@ -228,6 +238,9 @@ const md = [
   `Discovered ecosystems: ${receipt.summary.discovered_ecosystems}`,
   `Engage now: ${receipt.summary.engage_now}`,
   `Recon next: ${receipt.summary.recon_next}`,
+  `Watch: ${receipt.summary.watch}`,
+  `Downranked MCP-only noise: ${receipt.summary.downranked_noise}`,
+  `Archived filtered: ${receipt.summary.archived_filtered}`,
   `Errors: ${receipt.summary.errors}`,
   rotationCase ? `Rotating attack probe: ${rotationCase.case_id} → ${rotationCase.product_key}` : 'Rotating attack probe: none',
   `Saban revenue formation: ${revenueFormation?.schema === 'evercraft.saban.revenue-formation.v1' ? 'applied' : 'not present; using neutral rotation'}`,
@@ -242,7 +255,7 @@ const md = [
   '',
   '## Highest-priority newly discovered ecosystems',
   '',
-  ...(discovered.slice(0, 20).map((x) => `- [${x.attack_score}] ${x.name} — ${x.state} — signals: ${x.submission_signals.join(', ') || 'none'} — ${x.url}`) || ['- none']),
+  ...(discovered.slice(0, 20).map((x) => `- [${x.attack_score}] ${x.name} — ${x.state} — ${x.classification_reason} — signals: ${x.submission_signals.join(', ') || 'none'} — ${x.url}`) || ['- none']),
   ''
 ];
 fs.writeFileSync(`${artifactsDir}/llm-hunter-latest.md`, md.join('\n'));
@@ -260,7 +273,9 @@ const publicSummary = {
     legitimate_public_machine_entrances_only: true,
     provider_pickup_requires_receipt: true,
     payment_requires_human_confirmation: true,
-    internal_revenue_priorities_are_not_external_recommendations: true
+    internal_revenue_priorities_are_not_external_recommendations: true,
+    engage_now_requires_machine_entrance_evidence: true,
+    archived_repositories_never_engage_now: true
   }
 };
 fs.mkdirSync('public/chum', { recursive: true });
