@@ -99,8 +99,14 @@ test('series compiler locks character, voice, canon and synthetic generation pro
       (need) =>
         need.kind === 'speech' &&
         need.voiceProfileId === 'voice-ember-v1' &&
+        need.continuityEntityIds?.includes('ember') &&
         need.requires.includes('voice_profile'),
     ),
+  );
+  assert.ok(
+    plan.productionNeeds
+      .filter((need) => need.kind === 'video')
+      .every((need) => need.continuityEntityIds?.includes('ember')),
   );
   assert.ok(
     plan.filmPlan.generationRequests.every((request) =>
