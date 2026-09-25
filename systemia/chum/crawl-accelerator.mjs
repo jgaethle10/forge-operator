@@ -339,7 +339,7 @@ async function broadcastIndexNow({ origin, state, publicRoot, maxUrls = 1000, of
 
   const pending = Object.values(state.entries)
     .filter((entry) => entry.content_sha256 !== entry.last_indexnow_sha256)
-    .sort((a, b) => Number(offensePriorityByPath[b.path] ?? b.priority || 0) - Number(offensePriorityByPath[a.path] ?? a.priority || 0) || String(a.path).localeCompare(String(b.path)))
+    .sort((a, b) => Number((offensePriorityByPath[b.path] ?? b.priority) || 0) - Number((offensePriorityByPath[a.path] ?? a.priority) || 0) || String(a.path).localeCompare(String(b.path)))
     .slice(0, Math.max(1, Math.min(10000, Number(maxUrls) || 1000)));
 
   const verified = [];
