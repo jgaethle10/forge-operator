@@ -198,11 +198,12 @@ export async function startEvercraftComputeNode({
         if (lease.expires_at < Date.now()) {
           return send(res, 410, { error: 'expired_lease' });
         }
-        if (body.workload_class !== lease.workload_class || !supported.has(body.workload_class)) {
+        const workloadClass = String(body.workload_class || lease.workload_class || '');
+        if (workloadClass !== lease.workload_class || !supported.has(workloadClass)) {
           return send(res, 422, { error: 'workload_not_admitted' });
         }
 
-        if (body.workload_class === 'saban.logical-agent') {
+        if (workloadClass === 'saban.logical-agent') {
           const checkpoint = {
             step: Number(body.checkpoint?.step || 0) + 1,
             state: body.checkpoint?.state ?? body.payload ?? null,
@@ -221,7 +222,7 @@ export async function startEvercraftComputeNode({
           });
         }
 
-        if (body.workload_class === 'systemia.private-core-origin.v1') {
+        if (workloadClass === 'systemia.private-core-origin.v1') {
           const target = path.resolve(String(body.input?.target_path || ''));
           if (!target || !isWithin(allowedRoot, target)) {
             return send(res, 403, { error: 'target_outside_admitted_root' });
@@ -244,7 +245,7 @@ export async function startEvercraftComputeNode({
           });
         }
 
-        if (body.workload_class === 'systemia.kaidance-collider.v1') {
+        if (workloadClass === 'systemia.kaidance-collider.v1') {
           const stateRoot = path.resolve(String(body.input?.state_root || ''));
           const snapshotPath = path.resolve(String(
             body.input?.snapshot_path || path.join(stateRoot, 'mission-snapshot.json')
