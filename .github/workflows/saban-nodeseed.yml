@@ -1,0 +1,27 @@
+name: Saban NodeSeed discovery
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/**'
+      - 'systemia/compute/**'
+      - '.github/workflows/saban-nodeseed.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/network/**'
+      - 'systemia/compute/**'
+      - '.github/workflows/saban-nodeseed.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Discover two NodeSeeds and rebind Saban work
+        run: node systemia/network/saban-nodeseed-proof.mjs
