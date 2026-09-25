@@ -1,4 +1,5 @@
 import { handleForensiScopeMcpRequest } from './mcp-protocol.mjs';
+import { listForensiScopeGatewayTools } from './agent-gateway.mjs';
 
 const MODERN_VERSION = '2026-07-28';
 const VERSION_META_KEY = 'io.modelcontextprotocol/protocolVersion';
@@ -81,18 +82,29 @@ function validateModernHeaders(body, headers) {
       );
     }
 
-    const accessToken = body?.params?.arguments?.access_token;
-    const mirroredAccess = headers['mcp-param-evidence-access'];
-    if (
-      (accessToken !== undefined || mirroredAccess !== undefined) &&
-      String(accessToken || '') !== String(mirroredAccess || '')
-    ) {
-      return headerMismatch(
-        id,
-        'Mcp-Param-Evidence-Access',
-        accessToken ? '[matching access token]' : '[absent]',
-        mirroredAccess ? '[present but mismatched]' : '[absent]'
-      );
+    const tool = listForensiScopeGatewayTools()
+      .find((entry) => entry.name === name);
+    const properties = tool?.inputSchema?.properties || {};
+    const args = body?.params?.arguments || {};
+
+    for (const [propertyName, definition] of Object.entries(properties)) {
+      const mirrorName = definition?.['x-mcp-header'];
+      if (!mirrorName) continue;
+
+      const headerName = 'mcp-param-' + String(mirrorName).toLowerCase();
+      const argumentValue = args[propertyName];
+      const headerValue = headers[headerName];
+      if (
+        (argumentValue !== undefined || headerValue !== undefined) &&
+        String(argumentValue ?? '') !== String(headerValue ?? '')
+      ) {
+        return headerMismatch(
+          id,
+          'Mcp-Param-' + mirrorName,
+          argumentValue !== undefined ? '[matching parameter]' : '[absent]',
+          headerValue !== undefined ? '[present but mismatched]' : '[absent]'
+        );
+      }
     }
   }
 
