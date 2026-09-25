@@ -51,7 +51,7 @@ async function pullAliEV(req:Request,address:string,paidPurchase:any=null,intern
   const response=await fetch(ALIEV_LOOKUP_URL,{
     method:'POST',
     headers,
-    body:JSON.stringify({address})
+    body:JSON.stringify({address,mode:'rivet_report_snapshot'})
   });
   const data=await response.json().catch(()=>null);
   if(!response.ok){ console.error('RIVET upstream report lookup failed',response.status,data); throw new Error('RIVET could not retrieve the report data for this site.'); }
