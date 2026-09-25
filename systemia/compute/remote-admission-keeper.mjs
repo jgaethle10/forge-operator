@@ -1,5 +1,8 @@
 import { setTimeout as sleep } from 'node:timers/promises';
-import { startOutboundNodeAgent } from '../network/outbound-node-agent.mjs';
+import {
+  startOutboundNodeAgent,
+  submitOutboundEnrollmentRequest,
+} from '../network/outbound-node-agent.mjs';
 
 export class RemoteAdmissionKeeper {
   constructor({
@@ -8,6 +11,7 @@ export class RemoteAdmissionKeeper {
     localAllocatorToken,
     retryBaseMs = 5_000,
     retryMaxMs = 60_000,
+    enrollmentRequestCooldownMs = 5 * 60_000,
     clock = () => new Date(),
   } = {}) {
     if (!brokerUrl) throw new Error('brokerUrl is required');
@@ -19,6 +23,10 @@ export class RemoteAdmissionKeeper {
     this.localAllocatorToken = String(localAllocatorToken);
     this.retryBaseMs = Math.max(250, Number(retryBaseMs || 5_000));
     this.retryMaxMs = Math.max(this.retryBaseMs, Number(retryMaxMs || 60_000));
+    this.enrollmentRequestCooldownMs = Math.max(
+      30_000,
+      Number(enrollmentRequestCooldownMs || 5 * 60_000)
+    );
     this.clock = clock;
 
     this.running = false;
@@ -28,6 +36,9 @@ export class RemoteAdmissionKeeper {
     this.connectedAt = null;
     this.lastAttemptAt = null;
     this.lastError = null;
+    this.lastEnrollmentRequestAt = null;
+    this.lastEnrollmentRequestReceipt = null;
+    this.enrollmentState = 'not_requested';
   }
 
   #schedule(delayMs) {
@@ -59,6 +70,39 @@ export class RemoteAdmissionKeeper {
       this.lastError = null;
     } catch (error) {
       this.lastError = String(error?.message || error);
+
+      const unauthorized =
+        this.lastError.includes('remote_challenge_failed:403');
+      const lastRequestMs = this.lastEnrollmentRequestAt
+        ? Date.parse(this.lastEnrollmentRequestAt)
+        : 0;
+      const requestDue =
+        unauthorized &&
+        (!Number.isFinite(lastRequestMs) ||
+          Date.now() - lastRequestMs >= this.enrollmentRequestCooldownMs);
+
+      if (requestDue) {
+        try {
+          const requested = await submitOutboundEnrollmentRequest({
+            brokerUrl: this.brokerUrl,
+            localCapacityEndpoint: this.localCapacityEndpoint,
+            localAllocatorToken: this.localAllocatorToken,
+          });
+          this.lastEnrollmentRequestAt = this.clock().toISOString();
+          this.lastEnrollmentRequestReceipt =
+            requested.request_receipt_hash || null;
+          this.enrollmentState =
+            requested.state || 'pending_explicit_authorization';
+        } catch (requestError) {
+          this.lastEnrollmentRequestAt = this.clock().toISOString();
+          this.enrollmentState = 'request_failed';
+          const requestMessage = String(
+            requestError?.message || requestError
+          );
+          this.lastError = `${this.lastError}; ${requestMessage}`;
+        }
+      }
+
       const exponent = Math.min(6, Math.max(0, this.attempts - 1));
       const delay = Math.min(this.retryMaxMs, this.retryBaseMs * (2 ** exponent));
       this.#schedule(delay);
@@ -92,6 +136,9 @@ export class RemoteAdmissionKeeper {
       attempts: this.attempts,
       connected_at: this.connectedAt,
       last_attempt_at: this.lastAttemptAt,
+      enrollment_state: this.enrollmentState,
+      enrollment_request_receipt: this.lastEnrollmentRequestReceipt,
+      last_enrollment_request_at: this.lastEnrollmentRequestAt,
       last_error: agentStatus?.last_error || this.lastError,
     };
   }

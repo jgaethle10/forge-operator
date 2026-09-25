@@ -76,6 +76,77 @@ function routeAllowed(method, route) {
   return false;
 }
 
+export async function submitOutboundEnrollmentRequest({
+  brokerUrl,
+  localCapacityEndpoint,
+  localAllocatorToken,
+} = {}) {
+  const broker = assertBrokerUrl(brokerUrl);
+  const localEndpoint = String(localCapacityEndpoint || '').replace(/\/$/, '');
+  if (!localEndpoint) throw new Error('localCapacityEndpoint is required');
+  if (!/^http:\/\/(127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/i.test(localEndpoint)) {
+    throw new Error('outbound enrollment requires a loopback local Compute endpoint');
+  }
+  if (!String(localAllocatorToken || '')) {
+    throw new Error('localAllocatorToken is required');
+  }
+
+  const capacity = await jsonRequest(`${localEndpoint}/v1/capacity`);
+  if (!capacity.ok) {
+    throw new Error(`local_capacity_failed:${capacity.status}`);
+  }
+  const nodeId = String(capacity.body?.node_id || '');
+  const deviceFingerprint = String(capacity.body?.device_fingerprint || '');
+  if (!nodeId || !deviceFingerprint) {
+    throw new Error('local Compute capacity is missing device identity');
+  }
+
+  const challenge = await jsonRequest(
+    `${broker}/v1/remote/enrollment/challenge`,
+    {
+      method: 'POST',
+      body: {
+        node_id: nodeId,
+        device_fingerprint: deviceFingerprint,
+      },
+    }
+  );
+  if (!challenge.ok) {
+    const error = new Error(`remote_enrollment_challenge_failed:${challenge.status}`);
+    error.status = challenge.status;
+    error.body = challenge.body;
+    throw error;
+  }
+
+  const attested = await jsonRequest(`${localEndpoint}/v1/attest`, {
+    method: 'POST',
+    bearerToken: localAllocatorToken,
+    body: { nonce: challenge.body.nonce },
+  });
+  if (!attested.ok) {
+    throw new Error(`local_attestation_failed:${attested.status}`);
+  }
+
+  const requested = await jsonRequest(
+    `${broker}/v1/remote/enrollment/request`,
+    {
+      method: 'POST',
+      body: {
+        challenge_id: challenge.body.challenge_id,
+        attestation: attested.body.attestation,
+      },
+    }
+  );
+  if (!requested.ok) {
+    const error = new Error(`remote_enrollment_request_failed:${requested.status}`);
+    error.status = requested.status;
+    error.body = requested.body;
+    throw error;
+  }
+
+  return requested.body;
+}
+
 export async function startOutboundNodeAgent({
   brokerUrl,
   localCapacityEndpoint,

@@ -947,6 +947,35 @@ export class YardOperator {
     return decision;
   }
 
+  async listPendingRemoteDevices(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const pending = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-pending-enrollments`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ token: secret.token }),
+      }
+    );
+
+    return {
+      schema: 'evercraft.yard.pending-remote-devices.v1',
+      broker_deployment_id: deploymentId,
+      count: Number(pending.count || 0),
+      pending: Array.isArray(pending.pending) ? pending.pending : [],
+      compute_management_receipt_hash: pending.receipt?.receipt_hash || null,
+      observed_at: new Date().toISOString(),
+    };
+  }
+
   async authorizeRemoteDevice(deploymentId, {
     deviceFingerprint,
     nodeId,

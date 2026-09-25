@@ -938,6 +938,34 @@ export async function startEvercraftComputeNode({
         });
       }
 
+      const remotePendingEnrollment = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-pending-enrollments$/
+      );
+      if (req.method === 'POST' && remotePendingEnrollment) {
+        const entry = services.get(remotePendingEnrollment[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_pending_enrollments_not_supported' });
+        }
+        const pending = entry.runtime.pendingEnrollmentRequests();
+        return send(res, 200, {
+          ok: true,
+          pending,
+          count: pending.length,
+          receipt: chain.issue('remote-capacity.pending-enrollments.read', {
+            service_id: remotePendingEnrollment[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            pending_count: pending.length,
+          }),
+        });
+      }
+
       const remoteDeviceAuthorization = req.url?.match(
         /^\/v1\/services\/([^/]+)\/remote-device-(authorize|revoke)$/
       );
