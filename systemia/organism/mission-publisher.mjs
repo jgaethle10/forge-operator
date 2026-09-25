@@ -42,6 +42,23 @@ function validateSnapshot(snapshot) {
   };
 }
 
+function syntheticHoldSnapshot(sourceKey, reason, now) {
+  return {
+    schema: 'evercraft.kaidance.mission-snapshot.v1',
+    snapshot_ref: `publisher-hold:${sourceKey}:${reason}`,
+    observed_at: now.toISOString(),
+    counts: {
+      scanned: 1,
+      changed: 1,
+      admitted: 0,
+      held: 1,
+    },
+    evidence_refs: [
+      `mission-publisher:${sourceKey}:${reason}`,
+    ],
+  };
+}
+
 export class SystemiaMissionPublisher {
   constructor({
     yard,
@@ -140,9 +157,30 @@ export class SystemiaMissionPublisher {
         }
 
         if (!fs.existsSync(sourcePath)) {
-          report.status = 'missing';
           report.reason = 'source_missing';
           missing += 1;
+          if (report.required) {
+            const hold = syntheticHoldSnapshot(sourceKey, report.reason, now);
+            const accepted = await this.yard.pushMissionSnapshot(this.deploymentId, {
+              sourceKey,
+              snapshot: hold,
+            });
+            const holdHash = `sha256:${sha(JSON.stringify(hold))}`;
+            report.status = 'hold_pushed';
+            report.snapshot_ref = hold.snapshot_ref;
+            report.snapshot_hash = holdHash;
+            report.ingress_receipt_hash = accepted.receipt_hash || null;
+            pushed += 1;
+            this.ledger.published[sourceKey] = {
+              snapshot_hash: holdHash,
+              snapshot_ref: hold.snapshot_ref,
+              ingress_receipt_hash: accepted.receipt_hash || null,
+              pushed_at: now.toISOString(),
+              synthetic_hold_reason: report.reason,
+            };
+          } else {
+            report.status = 'missing';
+          }
           sources.push(report);
           continue;
         }
@@ -151,9 +189,30 @@ export class SystemiaMissionPublisher {
         try {
           snapshot = validateSnapshot(JSON.parse(fs.readFileSync(sourcePath, 'utf8')));
         } catch (error) {
-          report.status = 'invalid';
           report.reason = String(error?.message || error);
           invalid += 1;
+          if (report.required) {
+            const hold = syntheticHoldSnapshot(sourceKey, 'source_invalid', now);
+            const accepted = await this.yard.pushMissionSnapshot(this.deploymentId, {
+              sourceKey,
+              snapshot: hold,
+            });
+            const holdHash = `sha256:${sha(JSON.stringify(hold))}`;
+            report.status = 'hold_pushed';
+            report.snapshot_ref = hold.snapshot_ref;
+            report.snapshot_hash = holdHash;
+            report.ingress_receipt_hash = accepted.receipt_hash || null;
+            pushed += 1;
+            this.ledger.published[sourceKey] = {
+              snapshot_hash: holdHash,
+              snapshot_ref: hold.snapshot_ref,
+              ingress_receipt_hash: accepted.receipt_hash || null,
+              pushed_at: now.toISOString(),
+              synthetic_hold_reason: 'source_invalid',
+            };
+          } else {
+            report.status = 'invalid';
+          }
           sources.push(report);
           continue;
         }
@@ -191,22 +250,27 @@ export class SystemiaMissionPublisher {
       this.ledger.updated_at = now.toISOString();
       atomicJson(this.ledgerPath, this.ledger);
 
+      const requiredMissing = sources
+        .filter((x) => x.required && x.reason === 'source_missing')
+        .map((x) => x.source_key);
+      const requiredInvalid = sources
+        .filter((x) => x.required && x.reason && x.reason !== 'source_missing')
+        .map((x) => x.source_key);
+
       const body = {
         schema: 'evercraft.systemia.mission-publisher-report.v1',
         deployment_id: this.deploymentId,
-        status: invalid > 0 ? 'degraded' : 'ok',
+        status: requiredMissing.length > 0 || requiredInvalid.length > 0 || invalid > 0
+          ? 'degraded'
+          : 'ok',
         observed_at: now.toISOString(),
         source_count: sources.length,
         pushed,
         unchanged,
         missing,
         invalid,
-        required_missing: sources
-          .filter((x) => x.required && x.status === 'missing')
-          .map((x) => x.source_key),
-        required_invalid: sources
-          .filter((x) => x.required && x.status === 'invalid')
-          .map((x) => x.source_key),
+        required_missing: requiredMissing,
+        required_invalid: requiredInvalid,
         sources,
       };
 
