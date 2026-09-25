@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import { buildRevenueFormation } from '../saban/revenue-swarm.mjs';
 
 const offline = process.argv.includes('--offline');
 const strict = process.argv.includes('--strict');
@@ -14,7 +15,11 @@ const readJson = (path, fallback = {}) => {
 const providerMatrix = readJson('chum-probes/provider-matrix.json', { providers: [] });
 const probeSuite = readJson('chum-probes/probe-suite.json', { cases: [] });
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json', { offers: [] });
-const revenueFormation = readJson('artifacts/saban-revenue/latest.json', null);
+const painIndex = readJson('public/.well-known/evercraft-pain-index.json', { entries: [] });
+const storedRevenueFormation = readJson('artifacts/saban-revenue/latest.json', null);
+const revenueFormation = storedRevenueFormation?.schema === 'evercraft.saban.revenue-formation.v1'
+  ? storedRevenueFormation
+  : buildRevenueFormation({ catalog: machineCatalog, painIndex, probeSuite, commerceCanary: null, generatedAt: now.toISOString() });
 
 const positiveCases = (probeSuite.cases || []).filter((x) => x.enabled && x.expected_fit);
 const sellNowOffers = (machineCatalog.offers || []).filter((x) => x.commercial_state === 'sell_now');
@@ -189,6 +194,7 @@ const receipt = {
     sell_now_ids: sellNowOffers.map((x) => x.public_id),
     positive_probe_cases: positiveCases.length,
     saban_revenue_formation_applied: Boolean(revenueFormation?.schema === 'evercraft.saban.revenue-formation.v1'),
+    saban_revenue_formation_source: storedRevenueFormation?.schema === 'evercraft.saban.revenue-formation.v1' ? 'receipt_artifact' : 'in_process_fallback',
     first_dollar_focus: (revenueFormation?.lanes?.first_dollar_velocity || []).slice(0, 5).map((x) => x.public_id),
     high_value_focus: (revenueFormation?.lanes?.high_value_cash || []).slice(0, 5).map((x) => x.public_id),
     repair_before_distribution: (revenueFormation?.lanes?.repair_before_distribution || []).map((x) => x.public_id),
