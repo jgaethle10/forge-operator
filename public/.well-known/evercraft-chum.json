@@ -54,7 +54,8 @@
     "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
     "sell_now_directory_page": "/chum/sell-now.html",
     "live_intent_hunter": "/api/chum/hunt",
-    "human_conversion": "/api/chum/go/{publicId}"
+    "human_conversion": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}&ec_source=chum&ec_surface=chum_public",
+    "forge_attribution_corridor": "/api/chum/go/{publicId}"
   },
   "verified_crawler_controls": [
     {
@@ -123,13 +124,17 @@
     "first_party_strict_fails_closed": true
   },
   "conversion_corridor": {
-    "start_pattern": "/api/chum/go/{publicId}",
+    "start_pattern": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}&ec_source=chum&ec_surface=chum_public",
     "eligibility": "sell_now offers only",
     "behavior": "HTTP 303 to the human review and checkout-preparation flow",
     "attribution": "signed privacy-minimized referral when configured; attribution is not required for the human to continue",
     "discovery_creates_payment_obligation": false,
     "start_creates_payment_obligation": false,
     "checkout_is_payment_proof": false,
-    "verified_revenue_requires_authoritative_payment_evidence": true
+    "verified_revenue_requires_authoritative_payment_evidence": true,
+    "primary_public_authority": "Evercraft Machine Commerce gateway",
+    "forge_attribution_corridor": "/api/chum/go/{publicId}",
+    "forge_runtime_state": "source_available; no public Forge runtime deployment is declared by this repository",
+    "public_start_rule": "Public machine-readable Start URLs must resolve to the live Machine Commerce gateway until a public Forge runtime is independently declared and verified."
   }
 }
