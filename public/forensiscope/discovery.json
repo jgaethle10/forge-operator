@@ -44,5 +44,45 @@
   "aliases": [
     "ForensiScope",
     "Evercraft ForensiScope"
-  ]
+  ],
+  "category_terms": [
+    "AI video understanding",
+    "video intelligence",
+    "long-video analysis",
+    "semantic video search",
+    "searchable video transcript",
+    "timestamped video analysis",
+    "duplicate-segment review",
+    "near-duplicate video detection",
+    "oversized-media analysis"
+  ],
+  "start_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+  "commercial": {
+    "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
+    "pricing": [
+      {
+        "max_duration": "5 minutes",
+        "price_usd": 15
+      },
+      {
+        "max_duration": "30 minutes",
+        "price_usd": 35
+      },
+      {
+        "max_duration": "2 hours",
+        "price_usd": 75
+      },
+      {
+        "max_duration": "6 hours",
+        "price_usd": 149
+      },
+      {
+        "max_duration": "12 hours",
+        "price_usd": 249
+      }
+    ],
+    "payment_authority": "Evercraft Payments",
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_verification": true
+  }
 }
