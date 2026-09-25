@@ -14,7 +14,10 @@
       "software_id": "chum",
       "name": "CHUM",
       "expansion": "Capability Handoff & Utility Mesh",
-      "aliases": ["capability-handoff-utility-mesh", "capability handoff utility mesh"],
+      "aliases": [
+        "capability-handoff-utility-mesh",
+        "capability handoff utility mesh"
+      ],
       "adapter": "systemia/chum/saban-adapter.mjs",
       "default_logical_agents": 10000,
       "max_logical_agents": 10000,
@@ -65,6 +68,49 @@
         "automatic_checkout": false,
         "payment_obligation": false,
         "private_topology_publication": false
+      }
+    },
+    {
+      "software_id": "media-pipeline",
+      "name": "Evercraft Media Pipeline",
+      "aliases": [
+        "media",
+        "long-media",
+        "video-pipeline"
+      ],
+      "adapter": "systemia/media/saban-adapter.mjs",
+      "default_logical_agents": 256,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 16,
+      "max_physical_workers": 128,
+      "lease_seconds": 900,
+      "roles": [
+        "media_shard_worker",
+        "transcription_worker",
+        "timeline_worker",
+        "duplicate_segment_worker",
+        "frame_review_worker",
+        "provenance_guard",
+        "cross_shard_reconciler"
+      ],
+      "work_sources": [],
+      "partitioner": {
+        "type": "media_time_windows",
+        "window_seconds": 300,
+        "overlap_seconds": 5
+      },
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "source_media_write": false,
+        "external_network": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false
       }
     }
   ]
