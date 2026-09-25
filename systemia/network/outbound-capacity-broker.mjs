@@ -111,7 +111,25 @@ export async function startOutboundCapacityBroker({
 
   const challenges = new Map();
   const nodes = new Map();
+  const instanceId = `remote_broker_${randomBytes(12).toString('hex')}`;
+  let deploymentReceiptRef = '';
   let endpoint = '';
+
+  function health() {
+    return {
+      ok: true,
+      schema: 'evercraft.remote-capacity.broker-health.v1',
+      service: 'remote-capacity-broker',
+      runtime: 'Evercraft Compute',
+      instance_id: instanceId,
+      deployment_receipt_bound: Boolean(deploymentReceiptRef),
+      deployment_receipt_ref: deploymentReceiptRef || null,
+      registered_nodes: nodes.size,
+      authorized_devices: authorized.size,
+      secure_envelope_schema: 'evercraft.secure-envelope.v1',
+      recovered_command_policy: 'no_automatic_side_effect_replay',
+    };
+  }
 
   function authorizedPair(fingerprint, nodeId) {
     const expected = authorized.get(String(fingerprint || ''));
@@ -243,14 +261,7 @@ export async function startOutboundCapacityBroker({
       const url = new URL(req.url || '/', 'http://broker.invalid');
 
       if (req.method === 'GET' && url.pathname === '/v1/remote/health') {
-        return send(res, 200, {
-          ok: true,
-          schema: 'evercraft.remote-capacity.broker-health.v1',
-          registered_nodes: nodes.size,
-          authorized_devices: authorized.size,
-          secure_envelope_schema: 'evercraft.secure-envelope.v1',
-          recovered_command_policy: 'no_automatic_side_effect_replay',
-        });
+        return send(res, 200, health());
       }
 
       if (req.method === 'POST' && url.pathname === '/v1/remote/challenge') {
@@ -517,6 +528,14 @@ export async function startOutboundCapacityBroker({
   return {
     schema: 'evercraft.remote-capacity.broker.v1',
     endpoint,
+    instance_id: instanceId,
+    health,
+    setDeploymentReceipt(receiptRef) {
+      const value = String(receiptRef || '').trim();
+      if (!value) throw new Error('deployment receipt is required');
+      deploymentReceiptRef = value;
+      return health();
+    },
     controlGrant(nodeId) {
       const id = safeNodeId(nodeId);
       const node = nodes.get(id);
