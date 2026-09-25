@@ -6,6 +6,7 @@ on:
       - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/field-certify.mjs'
       - 'systemia/compute/field-offline-check.mjs'
+      - 'systemia/compute/field-release.mjs'
       - 'systemia/compute/install-node-seed.sh'
       - 'systemia/compute/FIELD_KIT.md'
       - '.github/workflows/node001-field-kit.yml'
@@ -16,6 +17,7 @@ on:
       - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/field-certify.mjs'
       - 'systemia/compute/field-offline-check.mjs'
+      - 'systemia/compute/field-release.mjs'
       - 'systemia/compute/install-node-seed.sh'
       - 'systemia/compute/FIELD_KIT.md'
       - '.github/workflows/node001-field-kit.yml'
@@ -34,6 +36,7 @@ jobs:
           node --check systemia/compute/field-preflight.mjs
           node --check systemia/compute/field-certify.mjs
           node --check systemia/compute/field-offline-check.mjs
+          node --check systemia/compute/field-release.mjs
           bash -n systemia/compute/install-node-seed.sh
       - name: Confirm CI cannot pass physical preflight
         run: |
@@ -46,10 +49,12 @@ jobs:
       - name: Build portable field kit artifact
         run: |
           mkdir -p dist/evercraft-node001-field-kit/systemia/compute
-          cp systemia/compute/{node-seed.mjs,runtime-node.mjs,capacity-beacon.mjs,device-identity.mjs,field-preflight.mjs,field-certify.mjs,field-offline-check.mjs,install-node-seed.sh,FIELD_KIT.md,FIELD_ATTESTATION.md} dist/evercraft-node001-field-kit/systemia/compute/
+          cp systemia/compute/{node-seed.mjs,runtime-node.mjs,capacity-beacon.mjs,device-identity.mjs,field-preflight.mjs,field-certify.mjs,field-offline-check.mjs,field-release.mjs,install-node-seed.sh,FIELD_KIT.md,FIELD_ATTESTATION.md} dist/evercraft-node001-field-kit/systemia/compute/
           mkdir -p dist/evercraft-node001-field-kit/systemia/{collider,core/bootstrap}
           cp systemia/collider/{kernel.mjs,runtime.mjs} dist/evercraft-node001-field-kit/systemia/collider/
           cp systemia/core/bootstrap/private-origin.mjs dist/evercraft-node001-field-kit/systemia/core/bootstrap/
+          node systemia/compute/field-release.mjs build             --root .             --source-commit "$GITHUB_SHA"             --out dist/evercraft-node001-field-kit/FIELD_RELEASE.json
+          node dist/evercraft-node001-field-kit/systemia/compute/field-release.mjs verify             --root dist/evercraft-node001-field-kit             --manifest dist/evercraft-node001-field-kit/FIELD_RELEASE.json
           tar -C dist -czf dist/evercraft-node001-field-kit.tgz evercraft-node001-field-kit
       - uses: actions/upload-artifact@v4
         with:
