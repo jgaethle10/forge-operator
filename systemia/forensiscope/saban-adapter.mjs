@@ -708,6 +708,7 @@ export async function reconcile({ results, contract }) {
         transcript: transcription,
         timeline: reconciledTimeline,
         sceneBoundaries: reconciledSceneBoundaries,
+        perceptualSignatures,
         exactDuplicateGroups: repeatedContent,
         nearDuplicatePairs: nearRepeatedPairs
       })
