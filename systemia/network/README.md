@@ -56,3 +56,16 @@ npm run proof:partition-reconciliation
 ```
 
 The same proof also exercises authenticated AES-256-GCM delayed-delivery envelopes, destination binding, tamper rejection, expiry, and stable-message replay protection.
+
+
+## Durable continuity state
+
+Replay protection and checkpoint lineage survive ordinary process restart through hash-linked append-only journals. The durable replay ledger fails closed on committed corruption and tolerates only an incomplete final tail as an interrupted uncommitted write. The checkpoint journal reconstructs standard reconciliation history after restart.
+
+Run the proof:
+
+```bash
+npm run proof:durable-continuity
+```
+
+This is a filesystem/process-restart proof, not yet a sudden-power-loss field certification.
