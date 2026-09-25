@@ -728,6 +728,37 @@ export async function startEvercraftComputeNode({
         return send(res, 200, entry.runtime.health());
       }
 
+      const remoteControlGrant = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-control-grant$/
+      );
+      if (req.method === 'POST' && remoteControlGrant) {
+        const entry = services.get(remoteControlGrant[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_control_grant_not_supported' });
+        }
+        const grant = entry.runtime.controlGrant(String(body.node_id || ''));
+        if (!grant) return send(res, 404, { error: 'remote_node_control_grant_unavailable' });
+        return send(res, 200, {
+          ok: true,
+          node_id: grant.node_id,
+          device_fingerprint: grant.device_fingerprint,
+          control_token: grant.allocator_token,
+          receipt: chain.issue('remote-capacity.control-grant.read', {
+            service_id: remoteControlGrant[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            remote_node_id: grant.node_id,
+            device_fingerprint: grant.device_fingerprint,
+          }),
+        });
+      }
+
       const missionIngress = req.url?.match(/^\/v1\/services\/([^/]+)\/missions\/([^/]+)$/);
       if (req.method === 'POST' && missionIngress) {
         const entry = services.get(missionIngress[1]);
