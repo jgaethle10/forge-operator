@@ -7,6 +7,7 @@ fs.rmSync(root,{recursive:true,force:true});
 fs.mkdirSync(root,{recursive:true});
 
 const universalMcp='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const machineCommerceGateway='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const BLOCKED_PUBLIC_HOSTS=new Set(['systemiacommandcenters.com','www.systemiacommandcenters.com']);
 
 function escapeHtml(value){
@@ -23,7 +24,12 @@ function safePublicUrl(value,fallback){
 }
 function humanStartUrl(offer){
   if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return null;
-  return '/api/chum/go/'+encodeURIComponent(String(offer.public_id))+'?surface=chum_capability_page';
+  const target=new URL(machineCommerceGateway);
+  target.searchParams.set('view','service');
+  target.searchParams.set('public_id',String(offer.public_id));
+  target.searchParams.set('ec_source','chum');
+  target.searchParams.set('ec_surface','chum_capability_page');
+  return target.toString();
 }
 function priceUsd(tier){
   const numeric=Number(tier?.price_usd);
