@@ -22,7 +22,7 @@ public discovery and human-confirmed paid evidence engagement; production access
 
 ## Commercial state
 
-- Status: sell_now_offers_active_checkout_route_canary_pending
+- Status: sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending
 - Offer: IBM i 7.4 Deadline X-Ray · $250 one-time · offer_key: ibmi_74_deadline_xray_250
 - Offer: IBM i Upgrade Proof Sprint · $1,500 one-time · offer_key: ibmi_upgrade_proof_sprint_1500
 - Checkout route remains canary-pending.
@@ -36,6 +36,7 @@ public discovery and human-confirmed paid evidence engagement; production access
 - checkout creation is not payment proof
 - paid state requires authoritative provider verification
 - no production change or cutover is included in the public X-Ray or Proof Sprint
+- Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending
 
 ## Universal Evercraft routing
 

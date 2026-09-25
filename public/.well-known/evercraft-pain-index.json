@@ -5,7 +5,7 @@
     "product_directory_schema": "evercraft.product-directory.v1",
     "product_directory_updated_at": "2026-09-25",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
-    "machine_catalog_source_generated_at": "2026-09-25T05:45:00.000Z",
+    "machine_catalog_source_generated_at": "2026-09-25T20:12:17.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
     "registry_updated_at": "2026-09-24"
   },
@@ -1462,7 +1462,7 @@
       "human_confirmation_required": true,
       "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.",
-      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $250 X-Ray and $1,500 Proof Sprint are active Evercraft Payment offers. Public machine discovery and human-confirmed handoff are allowed. Product-specific direct checkout remains canary-pending; checkout creation is not payment proof, paid state requires provider verification, and production change remains outside this capability.",
+      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, and zero checkout/payment creation. Product-specific direct checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -3782,14 +3782,15 @@
         "the public product-specific checkout route remains unverified until an external canary passes",
         "checkout creation is not payment proof",
         "paid state requires authoritative provider verification",
-        "no production change or cutover is included in the public X-Ray or Proof Sprint"
+        "no production change or cutover is included in the public X-Ray or Proof Sprint",
+        "Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": {
-        "status": "sell_now_offers_active_checkout_route_canary_pending",
+        "status": "sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending",
         "offers": [
           {
             "name": "IBM i 7.4 Deadline X-Ray",
@@ -3802,7 +3803,16 @@
             "offer_key": "ibmi_upgrade_proof_sprint_1500"
           }
         ],
-        "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live"
+        "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live",
+        "machine_commerce_handoff": {
+          "state": "live_verified",
+          "public_id": "ibmi-rescue-v1",
+          "mode": "fixed_price_human_handoff",
+          "tool": "prepare_quote_ready_service_handoff",
+          "checkout_created": false,
+          "payment_created": false,
+          "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
+        }
       },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",

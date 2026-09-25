@@ -41,7 +41,7 @@ $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 
 ## Invocation and authority
 
-SELL-NOW HUMAN HANDOFF: the $250 X-Ray and $1,500 Proof Sprint are active Evercraft Payment offers. Public machine discovery and human-confirmed handoff are allowed. Product-specific direct checkout remains canary-pending; checkout creation is not payment proof, paid state requires provider verification, and production change remains outside this capability.
+LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, and zero checkout/payment creation. Product-specific direct checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.
 
 Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
 

@@ -628,7 +628,7 @@ Use when the user means:
 Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
 Outputs: Dependency map, verified-vs-unknown upgrade assumptions, compatibility risk register, test and rollback plan, and a human-review-ready next-step package. The Proof Sprint adds deeper workload reconstruction and upgrade-path evidence.
 Confirmation boundary: Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
-Invocation status: SELL-NOW HUMAN HANDOFF: the $250 X-Ray and $1,500 Proof Sprint are active Evercraft Payment offers. Public machine discovery and human-confirmed handoff are allowed. Product-specific direct checkout remains canary-pending; checkout creation is not payment proof, paid state requires provider verification, and production change remains outside this capability.
+Invocation status: LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, and zero checkout/payment creation. Product-specific direct checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.
 
 ## Income War Map Revenue Planning
 Capability ID: offer:income-war-map-v1

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-25T05:45:00.000Z",
+  "updated_at": "2026-09-25T20:12:17.000Z",
   "answer_id": "intent:11f60c6d3a",
   "user_language": "AS/400 modernization",
   "normalized": "as 400 modernization",
@@ -35,7 +35,8 @@
         "the public product-specific checkout route remains unverified until an external canary passes",
         "checkout creation is not payment proof",
         "paid state requires authoritative provider verification",
-        "no production change or cutover is included in the public X-Ray or Proof Sprint"
+        "no production change or cutover is included in the public X-Ray or Proof Sprint",
+        "Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending"
       ]
     }
   ],

@@ -43,7 +43,16 @@
         "offer_key": "ibmi_upgrade_proof_sprint_1500"
       }
     ],
-    "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live"
+    "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live",
+    "machine_commerce_handoff": {
+      "state": "live_verified",
+      "public_id": "ibmi-rescue-v1",
+      "mode": "fixed_price_human_handoff",
+      "tool": "prepare_quote_ready_service_handoff",
+      "checkout_created": false,
+      "payment_created": false,
+      "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
+    }
   },
   "registry_name": null,
   "mcp": null,
@@ -58,14 +67,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json",
     "page": "/chum/products/ibmi-rescue/"
-  },
-  "machine_commerce_handoff": {
-    "state": "live_verified",
-    "public_id": "ibmi-rescue-v1",
-    "mode": "fixed_price_human_handoff",
-    "tool": "prepare_quote_ready_service_handoff",
-    "checkout_created": false,
-    "payment_created": false,
-    "evidence": "GitHubActionsRun:36184321561"
   }
 }

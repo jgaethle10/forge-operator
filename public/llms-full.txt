@@ -20,7 +20,7 @@ Human confirmation remains required at irreversible financial or authority bound
 
 ## Current machine-commerce offer graph
 
-Catalog version: 2026-09-24.6
+Catalog version: 2026-09-25.1
 Gateway version: evercraft-machine-commerce-gateway-v0.7.0
 Current public offers: 43
 Current sell-now offers: 12
@@ -1597,7 +1597,7 @@ Use when the user says or means:
 Authority:
 public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization
 Commercial state:
-- Status: sell_now_offers_active_checkout_route_canary_pending
+- Status: sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending
 - Payment state: Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live
 Boundaries:
 - support transition does not mean a system automatically stops working
@@ -1606,6 +1606,7 @@ Boundaries:
 - checkout creation is not payment proof
 - paid state requires authoritative provider verification
 - no production change or cutover is included in the public X-Ray or Proof Sprint
+- Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending
 
 ### Infinite Classroom
 Product key: infinite-classroom

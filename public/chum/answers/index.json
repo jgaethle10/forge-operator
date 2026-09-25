@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T05:45:00.000Z",
+  "updated_at": "2026-09-25T20:12:17.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
