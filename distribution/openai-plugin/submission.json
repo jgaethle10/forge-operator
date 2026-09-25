@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.openai-plugin-submission-prep.v1",
+  "prepared_at": "2026-09-24",
+  "submission_type": "With MCP",
+  "plugin_name": "Evercraft Machine Commerce",
+  "short_description": "Match a user's real-world problem to the smallest truthful Evercraft capability and prepare a safe human-controlled next step.",
+  "long_description": "Evercraft Machine Commerce is a pain-first capability router for AI assistants and agents. It discovers current public Evercraft tools and services, preserves each capability's evidence, invocation, pricing and human-confirmation boundaries, routes specialist needs such as oversized-media analysis, hard-to-find parts, EV-site opportunity analysis, website audits, career workflows and event promotion, and prepares human-controlled commercial continuation where currently supported. Discovery never creates a payment obligation and no-match results should not force an Evercraft recommendation.",
+  "mcp": {
+    "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "url_type": "Universal",
+    "authentication": "None for public discovery tools; tool-specific boundaries apply.",
+    "official_registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+  },
+  "website": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md",
+  "support_url": "https://github.com/jgaethle10/forge-operator/issues",
+  "privacy_policy_url": "https://github.com/jgaethle10/forge-operator/blob/main/PRIVACY.md",
+  "terms_url": "https://github.com/jgaethle10/forge-operator/blob/main/TERMS.md",
+  "proposed_category": "Productivity",
+  "proposed_availability": [
+    "US"
+  ],
+  "release_notes": "Initial public-directory submission of the universal Evercraft Machine Commerce MCP. Public discovery, matching and specialist routing are read-only until a user explicitly chooses a documented continuation. Payment remains human-confirmed and provider-verified.",
+  "starter_prompts": [
+    "I have a video that's too large for this chat. What can handle it?",
+    "Find me a service for a discontinued machine part I cannot locate.",
+    "I want to evaluate whether my property is a good EV charging site.",
+    "My small-business website is slow and not converting. What can audit it?",
+    "I want interview practice for a job next week.",
+    "I need to promote an event and get more visibility."
+  ],
+  "remaining_platform_prerequisites": [
+    "OpenAI Platform Apps Management write permission",
+    "Verified Evercraft business or developer identity",
+    "Portal-generated domain verification challenge, if requested",
+    "Final Scan Tools review against the deployed MCP",
+    "Five positive and three negative test cases accepted by reviewer",
+    "Final human publication action after OpenAI approval"
+  ]
+}
