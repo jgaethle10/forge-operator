@@ -1186,6 +1186,13 @@ Use when the user means:
 - analyze video from a cloud-storage URL
 - security camera footage review
 - recorded meeting video analysis
+- watch a huge video from beginning to end
+- analyze an entire huge video
+- 4-hour video analysis
+- 15 GB video analysis
+- meeting video full analysis
+- conversation video timeline
+- pull important moments from a long recording
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 

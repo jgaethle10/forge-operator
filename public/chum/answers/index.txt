@@ -7,9 +7,21 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 67
-Unique user phrases: 515
-Candidate edges: 523
+Unique user phrases: 522
+Candidate edges: 530
 Ambiguous phrases: 8
+
+## 15 GB video analysis
+Answer ID: intent:0f57ef2f90
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## 4-hour video analysis
+Answer ID: intent:b25c640591
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/4-hour-video-analysis-b25c640591.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## account takeover protection
 Answer ID: intent:6a5072fc31
@@ -130,6 +142,12 @@ Answer ID: intent:2badf65989
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/analyze-a-long-video-2badf65989.json
 Candidates:
 - ForensiScope Evidence Review | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+
+## analyze an entire huge video
+Answer ID: intent:f49eeef64e
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## analyze hours of video or audio
 Answer ID: intent:092575817d
@@ -654,6 +672,12 @@ Answer ID: intent:9c1b5a9c0a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json
 Candidates:
 - Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## conversation video timeline
+Answer ID: intent:14d07826b9
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/conversation-video-timeline-14d07826b9.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## conversion problems
 Answer ID: intent:272215f37a
@@ -1737,6 +1761,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## meeting video full analysis
+Answer ID: intent:11db9ab092
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/meeting-video-full-analysis-11db9ab092.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
 ## member device reconnect visibility
 Answer ID: intent:b1e695417e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/member-device-reconnect-visibility-b1e695417e.json
@@ -2206,6 +2236,12 @@ Answer ID: intent:420a4b4609
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/public-safety-or-stability-resources-without-an-account-420a4b4609.json
 Candidates:
 - Guardian | kind=product | commercial=product_contract | machine=discovery_only | public=https://guardian-pilot.base44.app/
+
+## pull important moments from a long recording
+Answer ID: intent:b45a1bcb87
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/pull-important-moments-from-a-long-recording-b45a1bcb87.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## Puppeteer API
 Answer ID: intent:1be21557a2
@@ -2862,6 +2898,12 @@ Answer ID: intent:ae35f23b1a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json
 Candidates:
 - Systemia Website Audit | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+
+## watch a huge video from beginning to end
+Answer ID: intent:7617197161
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/watch-a-huge-video-from-beginning-to-end-7617197161.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## water risk
 Answer ID: intent:88c4b4b3ef

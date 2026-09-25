@@ -21,13 +21,57 @@
   },
   "summary": {
     "pain_index_entries": 67,
-    "unique_user_phrases": 515,
-    "mapped_candidate_edges": 523,
+    "unique_user_phrases": 522,
+    "mapped_candidate_edges": 530,
     "ambiguous_phrases": 8,
     "product_candidates": 25,
     "machine_offer_candidates": 42
   },
   "doors": [
+    {
+      "answer_id": "intent:0f57ef2f90",
+      "user_language": "15 GB video analysis",
+      "normalized": "15 gb video analysis",
+      "relative_json": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensiscope",
+          "kind": "product",
+          "product_key": "forensiscope",
+          "public_id": null,
+          "name": "ForensiScope",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/forensiscope/",
+          "public_url": "https://evercraft-forensiscope.base44.app/",
+          "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b25c640591",
+      "user_language": "4-hour video analysis",
+      "normalized": "4 hour video analysis",
+      "relative_json": "/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensiscope",
+          "kind": "product",
+          "product_key": "forensiscope",
+          "public_id": null,
+          "name": "ForensiScope",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/forensiscope/",
+          "public_url": "https://evercraft-forensiscope.base44.app/",
+          "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
     {
       "answer_id": "intent:6a5072fc31",
       "user_language": "account takeover protection",
@@ -465,6 +509,28 @@
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
           "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f49eeef64e",
+      "user_language": "analyze an entire huge video",
+      "normalized": "analyze an entire huge video",
+      "relative_json": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensiscope",
+          "kind": "product",
+          "product_key": "forensiscope",
+          "public_id": null,
+          "name": "ForensiScope",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/forensiscope/",
+          "public_url": "https://evercraft-forensiscope.base44.app/",
+          "registry_name": "io.github.jgaethle10/forensiscope"
         }
       ]
     },
@@ -2403,6 +2469,28 @@
           "pain_page": "/chum/products/systemia-field-library/",
           "public_url": "https://systemiafieldlibrary.com/",
           "registry_name": "io.github.jgaethle10/systemia-field-library"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:14d07826b9",
+      "user_language": "conversation video timeline",
+      "normalized": "conversation video timeline",
+      "relative_json": "/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensiscope",
+          "kind": "product",
+          "product_key": "forensiscope",
+          "public_id": null,
+          "name": "ForensiScope",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/forensiscope/",
+          "public_url": "https://evercraft-forensiscope.base44.app/",
+          "registry_name": "io.github.jgaethle10/forensiscope"
         }
       ]
     },
@@ -6391,6 +6479,28 @@
       ]
     },
     {
+      "answer_id": "intent:11db9ab092",
+      "user_language": "meeting video full analysis",
+      "normalized": "meeting video full analysis",
+      "relative_json": "/chum/answers/doors/meeting-video-full-analysis-11db9ab092.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/meeting-video-full-analysis-11db9ab092.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensiscope",
+          "kind": "product",
+          "product_key": "forensiscope",
+          "public_id": null,
+          "name": "ForensiScope",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/forensiscope/",
+          "public_url": "https://evercraft-forensiscope.base44.app/",
+          "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:b1e695417e",
       "user_language": "member device reconnect visibility",
       "normalized": "member device reconnect visibility",
@@ -8127,6 +8237,28 @@
           "pain_page": "/chum/products/guardian/",
           "public_url": "https://guardian-pilot.base44.app/",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b45a1bcb87",
+      "user_language": "pull important moments from a long recording",
+      "normalized": "pull important moments from a long recording",
+      "relative_json": "/chum/answers/doors/pull-important-moments-from-a-long-recording-b45a1bcb87.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/pull-important-moments-from-a-long-recording-b45a1bcb87.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensiscope",
+          "kind": "product",
+          "product_key": "forensiscope",
+          "public_id": null,
+          "name": "ForensiScope",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/forensiscope/",
+          "public_url": "https://evercraft-forensiscope.base44.app/",
+          "registry_name": "io.github.jgaethle10/forensiscope"
         }
       ]
     },
@@ -10549,6 +10681,28 @@
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
           "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7617197161",
+      "user_language": "watch a huge video from beginning to end",
+      "normalized": "watch a huge video from beginning to end",
+      "relative_json": "/chum/answers/doors/watch-a-huge-video-from-beginning-to-end-7617197161.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/watch-a-huge-video-from-beginning-to-end-7617197161.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensiscope",
+          "kind": "product",
+          "product_key": "forensiscope",
+          "public_id": null,
+          "name": "ForensiScope",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/forensiscope/",
+          "public_url": "https://evercraft-forensiscope.base44.app/",
+          "registry_name": "io.github.jgaethle10/forensiscope"
         }
       ]
     },
