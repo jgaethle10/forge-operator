@@ -189,7 +189,10 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/openapi.json' ||
     pathname.startsWith('/.well-known/') ||
     pathname.startsWith('/chum/') ||
+    pathname.startsWith('/forensiscope/') ||
     pathname.startsWith('/rivet/') ||
+    pathname === '/ai' ||
+    pathname.startsWith('/ai/') ||
     pathname === '/api/capabilities' ||
     pathname === '/api/discover' ||
     pathname === '/api/revenue-watershed' ||
