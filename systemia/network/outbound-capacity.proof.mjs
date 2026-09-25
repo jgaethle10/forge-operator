@@ -131,6 +131,14 @@ try {
   assert.equal(pulse.state, 'healthy');
   assert.equal(pulse.field_attestation.state, 'not_verified');
 
+  const secureAgent = agent.status();
+  const secureNode = broker.snapshot().nodes.find((row) => row.node_id === seed.node_id);
+  assert.equal(secureAgent.secure_envelope_schema, 'evercraft.secure-envelope.v1');
+  assert.ok(secureAgent.secure_commands_opened > 0);
+  assert.equal(secureNode.secure_envelope_schema, 'evercraft.secure-envelope.v1');
+  assert.ok(secureNode.command_envelopes_issued > 0);
+  assert.ok(secureNode.result_envelopes_accepted > 0);
+
   await yard.stopDeployment('remote-kaidance-proof', {
     reason: 'proof_remote_transport_complete',
   });
@@ -200,6 +208,10 @@ try {
     remote_health_verified: true,
     remote_mission_ingress_verified: true,
     remote_checkpoint_verified: true,
+    secure_command_envelopes_verified: secureAgent.secure_commands_opened > 0,
+    secure_result_envelopes_verified: secureNode.result_envelopes_accepted > 0,
+    replay_guard_active: true,
+    uncertain_side_effect_replay_policy: 'hold_not_replay',
     remote_field_attestation_state: pulse.field_attestation.state,
     agent_disconnect_removes_capacity: true,
     broker_control_grant_survives_restart: true,
