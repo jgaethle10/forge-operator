@@ -1,0 +1,19 @@
+{
+  "schema": "evercraft.customer-gauntlet.personas.v1",
+  "family": "Lennox",
+  "purpose": "Independent Raven Nexus customer nodes that attack Evercraft buying journeys without brand privilege or shared session state.",
+  "personas": [
+    {"id":"lennox-mobile-impatient","viewport":"mobile","traits":["impatient","first_visit"],"tests":["landing_clarity","cta_visibility","mobile_layout","time_to_offer","back_forward"]},
+    {"id":"lennox-skeptic","viewport":"desktop","traits":["skeptical","proof_seeking"],"tests":["claims","evidence","pricing_clarity","trust","refund_or_support_visibility"]},
+    {"id":"lennox-typo","viewport":"mobile","traits":["typo_heavy","low_patience"],"tests":["validation","error_copy","recovery","address_input","email_input"]},
+    {"id":"lennox-returning","viewport":"desktop","traits":["returning_buyer"],"tests":["session_restore","saved_work","reopen_purchase","receipt_recovery"]},
+    {"id":"lennox-high-value","viewport":"desktop","traits":["enterprise_buyer","comparison_shopper"],"tests":["offer_depth","pricing_consistency","sales_handoff","invoice_or_contact_path"]},
+    {"id":"lennox-bad-network","viewport":"mobile","traits":["slow_network","intermittent"],"tests":["loading_states","retry_idempotency","duplicate_order_protection","resume"]},
+    {"id":"lennox-accessibility","viewport":"desktop","traits":["keyboard_only","screen_reader"],"tests":["tab_order","labels","focus","semantic_ctas","error_announcements"]},
+    {"id":"lennox-checkout-retry","viewport":"mobile","traits":["checkout_retry"],"tests":["cancel_resume","double_click","refresh_checkout","duplicate_charge_guard"]},
+    {"id":"lennox-fulfilled","viewport":"desktop","traits":["post_payment"],"tests":["provider_verification","entitlement","job_queue","delivery","receipt","reopen_delivery"]},
+    {"id":"lennox-brand-blind","viewport":"desktop","traits":["llm_referred","brand_blind"],"tests":["promise_match","handoff_context","offer_match","no_bait_switch"]},
+    {"id":"lennox-hostile-input","viewport":"mobile","traits":["edge_case_inputs"],"tests":["unicode","long_input","empty_input","malformed_address","safe_errors"]},
+    {"id":"lennox-concurrent","viewport":"desktop","traits":["multi_tab","concurrent"],"tests":["two_tabs","same_offer","race_conditions","entitlement_consistency"]}
+  ]
+}
