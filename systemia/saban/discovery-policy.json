@@ -24,6 +24,8 @@
     "never_invent_mcp_or_runtime_endpoints": true,
     "provider_behavior_requires_receipt": true,
     "checkout_is_not_payment": true,
-    "private_admin_topology_remains_dark": true
+    "private_admin_topology_remains_dark": true,
+    "discovery_only_may_precede_central_conformance_registration": true,
+    "callable_surface_requires_central_conformance": true
   }
 }

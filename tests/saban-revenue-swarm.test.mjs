@@ -21,11 +21,12 @@ const result = buildRevenueFormation({
 });
 
 const fail=(message)=>{throw new Error('SABAN_REVENUE_FAIL: '+message);};
+const expectedSellNow=(catalog.offers||[]).filter((o)=>o.commercial_state==='sell_now').length;
 
 if(result.schema!=='evercraft.saban.revenue-formation.v1') fail('unexpected schema');
-if(result.summary.sell_now_offers!==11) fail('expected 11 current sell-now offers');
+if(result.summary.sell_now_offers!==expectedSellNow) fail(`expected ${expectedSellNow} current sell-now offers`);
 if(result.summary.canary_broken!==0) fail('healthy fixture should have no broken doors');
-if(result.summary.canary_healthy!==11) fail('healthy fixture should mark all sell-now doors healthy');
+if(result.summary.canary_healthy!==expectedSellNow) fail('healthy fixture should mark all sell-now doors healthy');
 if(result.doctrine.no_unsolicited_human_outreach!==true) fail('no-spam doctrine missing');
 if(result.doctrine.no_automatic_checkout!==true) fail('automatic checkout must remain false');
 if(result.doctrine.public_priority_bias_for_external_llms!==false) fail('internal priority must not leak as external recommendation bias');
@@ -33,7 +34,7 @@ if(result.doctrine.scores_are_internal_operating_heuristics_not_conversion_predi
 
 const all = result.lanes.first_dollar_velocity;
 const ids = new Set(all.map((x)=>x.public_id));
-if(ids.size!==11) fail('first-dollar lane should contain all healthy sell-now offers exactly once');
+if(ids.size!==expectedSellNow) fail('first-dollar lane should contain all healthy sell-now offers exactly once');
 if(!ids.has('roasted-text-pressure-test-machine-v1')) fail('ROASTED missing');
 if(!ids.has('website-launch-service-v1')) fail('Website Launch missing');
 if(!ids.has('audit-center-website-audit-machine-v1')) fail('Website Audit missing');

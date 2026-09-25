@@ -163,7 +163,13 @@ for (const product of directory.products || []) {
       '',
       `- Status: ${product.commercial.status || 'unspecified'}`,
       ...(product.commercial.offer ? [`- Offer: ${product.commercial.offer}`] : []),
+      ...(Array.isArray(product.commercial.offers)
+        ? product.commercial.offers.map((offer) =>
+            `- Offer: ${offer.name || 'Unnamed offer'} · ${offer.price || 'price not published'}${offer.offer_key ? ` · offer_key: ${offer.offer_key}` : ''}`
+          )
+        : []),
       ...(product.commercial.pricing ? [`- Pricing: ${product.commercial.pricing}`] : []),
+      ...(String(product.commercial.status || '').includes('canary_pending') ? ['- Checkout route remains canary-pending.'] : []),
       ...(product.commercial.payment_state ? [`- Payment state: ${product.commercial.payment_state}`] : [])
     ] : []),
     '',
