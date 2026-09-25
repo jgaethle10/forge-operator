@@ -165,6 +165,12 @@ let currentIndex = null;
 try { currentIndex = readJson('registry/public-products.json'); } catch {}
 const indexCurrent = JSON.stringify(stable(currentIndex)) === JSON.stringify(stable(expectedIndex));
 const missingConformance = products.filter(p => !p.conformance);
+const requiredConformanceMissing = missingConformance.filter(
+  p => p.invocation?.mode !== 'discovery_only'
+);
+const pendingDiscoveryConformance = missingConformance.filter(
+  p => p.invocation?.mode === 'discovery_only'
+);
 const missingMirrors = products.filter(p => !p.readme_exists || !p.llms_exists);
 
 let inventory = {supplied:false,total:0,approved_name_matches:0,unknown_or_unapproved:0};
@@ -186,6 +192,8 @@ const summary = {
   approved_public_products: products.length,
   invalid_public_contracts: invalidContracts.length,
   conformance_missing: missingConformance.length,
+  required_conformance_missing: requiredConformanceMissing.length,
+  discovery_only_conformance_pending: pendingDiscoveryConformance.length,
   github_mirrors_missing: missingMirrors.length,
   mcp_declared: products.filter(p => p.mcp_declared).length,
   public_index_current: indexCurrent,
@@ -202,6 +210,13 @@ if (emit) {
   }, null, 2) + '\n');
 }
 
-if (strict && (invalidContracts.length || missingConformance.length || missingMirrors.length || !indexCurrent)) {
-  throw new Error(`Saban discovery check failed: invalid_contracts=${invalidContracts.length}, missing_conformance=${missingConformance.length}, missing_mirrors=${missingMirrors.length}, index_current=${indexCurrent}`);
+if (strict && (
+  invalidContracts.length ||
+  requiredConformanceMissing.length ||
+  missingMirrors.length ||
+  !indexCurrent
+)) {
+  throw new Error(
+    `Saban discovery check failed: invalid_contracts=${invalidContracts.length}, required_conformance_missing=${requiredConformanceMissing.length}, discovery_only_conformance_pending=${pendingDiscoveryConformance.length}, missing_mirrors=${missingMirrors.length}, index_current=${indexCurrent}`
+  );
 }
