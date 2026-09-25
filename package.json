@@ -79,7 +79,9 @@
     "proof:saban-kernel": "node systemia/saban/kernel-proof.mjs",
     "proof:saban-chum": "node systemia/saban/multiplier.mjs --software chum --agents 512 --workers 16 --execute",
     "proof:saban-media": "node systemia/saban/multiplier.mjs --software media-pipeline --inventory systemia/saban/fixtures/media-job.json --agents 32 --workers 4 --execute --reconcile",
-    "check:saban-contracts": "node systemia/saban/contract-doctor.mjs"
+    "check:saban-contracts": "node systemia/saban/contract-doctor.mjs",
+    "saban:formation": "node systemia/saban/formation.mjs",
+    "proof:saban-formation": "node systemia/saban/formation.mjs --request systemia/saban/fixtures/formation-proof.json --execute"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
