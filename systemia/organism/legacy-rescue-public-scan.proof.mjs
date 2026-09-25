@@ -59,3 +59,37 @@ const notDue = await scanLegacyRescuePublicSources({
 assert.equal(notDue.receipts[0].state,'skipped_not_due');
 
 console.log(JSON.stringify({ok:true, seeded:first.receipts[0].state, changed:changed.signals.length, not_due:notDue.receipts[0].state}));
+
+const linkSource = {
+  ...source,
+  key:'listing-source',
+  url:'https://example.com/listing',
+  discover_links:true,
+  allowed_link_hosts:['example.com'],
+  link_match_terms:['rfp'],
+  emit_links_on_first_seen:false,
+  emit_body_change_signal:false,
+};
+const listingFetch = async () => ({
+  ok:true,
+  status:200,
+  text:async () => '<a href="/rfp/legacy-one">Legacy RFP One</a>',
+});
+const linkBaseline = await scanLegacyRescuePublicSources({
+  sources:[linkSource],
+  previousState:{
+    sources:{
+      'listing-source':{
+        url:'https://example.com/listing',
+        fingerprint:'old-fingerprint-without-link-baseline',
+        last_checked_at:'2026-09-25T05:00:00Z',
+      },
+    },
+  },
+  fetchImpl:listingFetch,
+  now:new Date('2026-09-25T05:31:00Z'),
+});
+assert.equal(linkBaseline.signals.length,0);
+assert.equal(linkBaseline.receipts[0].link_baseline_missing,true);
+assert.equal(linkBaseline.receipts[0].emitted_link_signals,0);
+assert.equal(linkBaseline.state.sources['listing-source'].known_links.length,1);
