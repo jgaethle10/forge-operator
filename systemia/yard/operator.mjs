@@ -854,6 +854,55 @@ export class YardOperator {
     return publicRoute;
   }
 
+  async remoteCapacityGrant(deploymentId, nodeId, {
+    allowLoopbackProof = false,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) throw new Error('remote capacity broker service is unavailable');
+
+    const route = record.public_route;
+    const routeAllowed =
+      route?.verified === true &&
+      route?.scope === 'public_https';
+    const loopbackAllowed =
+      allowLoopbackProof === true &&
+      route?.scope === 'loopback_proof';
+
+    if (!routeAllowed && !loopbackAllowed) {
+      throw new Error('verified public HTTPS broker route is required');
+    }
+
+    const grant = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-control-grant`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          node_id: String(nodeId || ''),
+        }),
+      }
+    );
+
+    return {
+      schema: 'evercraft.yard.remote-capacity-grant.v1',
+      broker_deployment_id: deploymentId,
+      broker_origin: route.origin,
+      node_id: grant.node_id,
+      device_fingerprint: grant.device_fingerprint,
+      capacity_endpoint:
+        `${route.origin}/nodes/${encodeURIComponent(grant.node_id)}`,
+      allocator_token: grant.control_token,
+      control_grant_receipt_hash: grant.receipt?.receipt_hash || null,
+      public_route_receipt_hash: route.receipt_hash,
+      route_scope: route.scope,
+    };
+  }
+
   remoteCapacityBrokerReceipt(deploymentId) {
     const record = this.deploymentStatus(deploymentId);
     if (!record) throw new Error('deployment not found');
