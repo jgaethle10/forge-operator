@@ -45,6 +45,9 @@ jobs:
       - name: Execute mixed software formation
         run: npm run proof:saban-formation
 
+      - name: Execute registered Saban assignment on NodeSeed
+        run: npm run proof:saban-nodeseed-multiplier
+
       - name: Plan full CHUM formation
         run: npm run saban:chum:10000
 
