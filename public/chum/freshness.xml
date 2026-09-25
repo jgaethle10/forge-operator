@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T21:21:08.209Z</updated>
+<updated>2026-09-25T21:35:07.951Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T21:21:08.209Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T21:35:07.951Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:85e83ca31d75d4764884dac0</id><title>/rivet/brand.json</title><updated>2026-09-25T21:21:08.209Z</updated><link href="/rivet/brand.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:fb6f83ffc3317a9996b347e0</id><title>/chum/intents/rivet-site-underwriting-v1/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/chum/intents/rivet-site-underwriting-v1/"/><category term="priority-98"/></entry>
 <entry><id>urn:evercraft:chum:eb83745119ec6477154d52eb</id><title>/chum/capabilities/rivet-site-underwriting-v1/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/chum/capabilities/rivet-site-underwriting-v1/"/><category term="priority-96"/></entry>
