@@ -207,12 +207,10 @@ function nearDuplicatePairs(signatures, {
   const seen = new Set();
 
   for (const signature of signatures) {
-    const bands = [
-      signature.dhash64.slice(0, 4),
-      signature.dhash64.slice(4, 8),
-      signature.dhash64.slice(8, 12),
-      signature.dhash64.slice(12, 16)
-    ];
+    const bands = Array.from(
+      { length: 8 },
+      (_, index) => signature.dhash64.slice(index * 2, index * 2 + 2)
+    );
 
     const candidates = new Set();
     for (const band of bands) {
@@ -220,10 +218,17 @@ function nearDuplicatePairs(signatures, {
     }
 
     for (const prior of candidates) {
-      const pairKey = [
-        Math.min(prior.sample_index, signature.sample_index),
-        Math.max(prior.sample_index, signature.sample_index)
+      const priorKey = [
+        prior.shard_index ?? 'x',
+        prior.sample_index,
+        prior.timestamp_seconds
       ].join(':');
+      const signatureKey = [
+        signature.shard_index ?? 'x',
+        signature.sample_index,
+        signature.timestamp_seconds
+      ].join(':');
+      const pairKey = [priorKey, signatureKey].sort().join('|');
       if (seen.has(pairKey)) continue;
       seen.add(pairKey);
 
