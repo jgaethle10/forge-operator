@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { startEvercraftComputeNode } from './runtime-node.mjs';
 import { startCapacityBeacon } from './capacity-beacon.mjs';
+import { ensureNodeIdentity, publicIdentityProjection } from './node-identity.mjs';
 
 function arg(name, fallback = null) {
   const i = process.argv.indexOf(name);
@@ -36,6 +37,8 @@ export async function startNodeSeed({
   if (!root) throw new Error('root is required');
   const resolvedRoot = path.resolve(root);
   fs.mkdirSync(resolvedRoot, { recursive: true, mode: 0o750 });
+  const identity = ensureNodeIdentity({ root: resolvedRoot, nodeId });
+  const publicIdentity = publicIdentityProjection(identity);
 
   const compute = await startEvercraftComputeNode({
     nodeId,
@@ -43,6 +46,7 @@ export async function startNodeSeed({
     host,
     port,
     allocatorToken,
+    nodeIdentity: publicIdentity,
   });
 
   const actualPort = Number(new URL(compute.endpoint).port);
@@ -59,6 +63,7 @@ export async function startNodeSeed({
     beacon = await startCapacityBeacon({
       nodeId,
       endpoint,
+      identity,
       address: announceAddress,
       port: announcePort,
       intervalMs: announceIntervalMs,
@@ -70,10 +75,11 @@ export async function startNodeSeed({
     node_id: nodeId,
     runtime: 'Evercraft Compute',
     endpoint,
+    node_identity: publicIdentity,
     root: resolvedRoot,
     allocation_auth: allocatorToken ? 'bearer' : 'loopback_only',
     beacon: announce ? {
-      schema: 'evercraft.capacity.beacon.v1',
+      schema: 'evercraft.capacity.beacon.v2',
       address: announceAddress,
       port: announcePort,
     } : null,
@@ -90,6 +96,7 @@ export async function startNodeSeed({
     ...receipt,
     compute,
     beacon,
+    node_identity: publicIdentity,
     close: async () => {
       if (beacon) await beacon.close();
       await compute.close();
@@ -129,6 +136,7 @@ if (isCli) {
     node_id: seed.node_id,
     endpoint: seed.endpoint,
     allocation_auth: seed.allocation_auth,
+    node_identity_fingerprint_sha256: seed.node_identity.public_key_fingerprint_sha256,
     beacon: seed.beacon ? { address: seed.beacon.address, port: seed.beacon.port } : null,
     named_cloud_required: false,
   }, null, 2));
