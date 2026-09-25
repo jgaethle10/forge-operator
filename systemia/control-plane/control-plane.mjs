@@ -9,6 +9,7 @@ import { admitGoalPlan, createGoalState, goalSnapshot } from '../organism/goal-r
 const here = path.dirname(new URL(import.meta.url).pathname);
 const contract = JSON.parse(fs.readFileSync(path.join(here, 'machine-contract.json'), 'utf8'));
 const sabanRegistry = JSON.parse(fs.readFileSync(path.join(here, '..', 'saban', 'multiplication-registry.json'), 'utf8'));
+const publicProductIndex = JSON.parse(fs.readFileSync(path.join(here, '..', '..', 'registry', 'public-products.json'), 'utf8'));
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -40,6 +41,12 @@ function at(now) {
 
 function sabanSoftwareIds() {
   return new Set((sabanRegistry.software || []).map((row) => clean(row.software_id)));
+}
+
+function productByKey(productKey) {
+  const key = clean(productKey);
+  if (!key) return null;
+  return (publicProductIndex.products || []).find((row) => clean(row.product_key) === key) || null;
 }
 
 function normalizeTask(raw, index) {
@@ -89,10 +96,16 @@ export function machineInventory(rootDir = process.cwd()) {
     observed_at: new Date().toISOString(),
     evidence_semantics: 'Source presence only. This is not a claim of live deployment, healthy runtime, revenue, payment, or customer readiness.',
     components,
+    product_graph: {
+      schema: publicProductIndex.schema,
+      source: 'registry/public-products.json',
+      admitted_products: (publicProductIndex.products || []).length,
+    },
     summary: {
       total: components.length,
       source_present: components.filter((row) => row.state === 'source_present').length,
       source_missing: components.filter((row) => row.state === 'source_missing').length,
+      admitted_public_products: (publicProductIndex.products || []).length,
     },
   };
 }
@@ -100,6 +113,8 @@ export function machineInventory(rootDir = process.cwd()) {
 export function routeTask(task) {
   const specialist = contract.routing[task.work_type] || 'systemia-organism';
   const softwareId = clean(task.software_id);
+  const productKey = clean(task.product_key);
+  const product = productByKey(productKey);
   const parallelRequested = task.parallel === true || Number(task.logical_agents || 0) > 1 || Boolean(softwareId);
   const allowed = sabanSoftwareIds();
   const sabanRequested = parallelRequested && softwareId && allowed.has(softwareId);
@@ -113,13 +128,18 @@ export function routeTask(task) {
     specialist_component: specialist,
     execution_component: sabanRequested ? 'saban' : specialist,
     software_id: softwareId || null,
+    target_product_key: productKey || null,
+    target_product_name: product ? clean(product.name) : null,
+    target_product_admitted: productKey ? Boolean(product) : null,
     scale_requested: parallelRequested,
     scale_admitted: sabanRequested,
     hold: unsupportedSaban
       ? 'saban_contract_missing'
-      : consequence.required && !consequence.authorized
-        ? 'human_gate_unresolved'
-        : null,
+      : productKey && !product
+        ? 'unknown_product'
+        : consequence.required && !consequence.authorized
+          ? 'human_gate_unresolved'
+          : null,
     human_gate_required: consequence.required,
     authorization_refs: unique(task.authorization_refs || []),
     authority_boundary: 'Saban and specialists execute bounded work. Systemia retains mission authority.',
@@ -186,7 +206,7 @@ export function admitMission({ request, rootDir = process.cwd(), now = new Date(
     }
   }
 
-  const hardHolds = dispatch.filter((row) => row.hold === 'saban_contract_missing');
+  const hardHolds = dispatch.filter((row) => row.hold && row.hold !== 'human_gate_unresolved');
   const humanHolds = dispatch.filter((row) => row.hold === 'human_gate_unresolved');
   const emergency = request.emergency_direct_dispatch === true;
 
