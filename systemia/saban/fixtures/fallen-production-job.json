@@ -1,0 +1,44 @@
+{
+  "jobs": [
+    {
+      "kind": "fallen_production_need",
+      "key": "need-proof-video-001",
+      "need": {
+        "id": "need-proof-video-001",
+        "kind": "video",
+        "prompt": "Synthetic proof shot for Fallen fanout.",
+        "durationSec": 6,
+        "aspectRatio": "16:9",
+        "continuityEntityIds": ["proof-character"],
+        "continuityDigest": "proof-continuity-digest",
+        "requires": [
+          "reference_identity",
+          "commercial_rights",
+          "provenance_receipt",
+          "timing_control"
+        ],
+        "status": "planned"
+      }
+    },
+    {
+      "kind": "fallen_production_need",
+      "key": "need-proof-speech-001",
+      "need": {
+        "id": "need-proof-speech-001",
+        "kind": "speech",
+        "prompt": "Synthetic proof dialogue.",
+        "speakerId": "proof-character",
+        "voiceProfileId": "proof-voice-v1",
+        "continuityEntityIds": ["proof-character"],
+        "continuityDigest": "proof-continuity-digest",
+        "requires": [
+          "voice_profile",
+          "commercial_rights",
+          "provenance_receipt",
+          "timing_control"
+        ],
+        "status": "planned"
+      }
+    }
+  ]
+}
