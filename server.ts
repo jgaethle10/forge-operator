@@ -9,6 +9,7 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { createCrawlObservatory } from './systemia/chum/crawl-observatory.mjs';
 
 dotenv.config();
 
@@ -23,6 +24,8 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+const chumCrawlObservatoryStatePath = process.env.CHUM_CRAWL_OBSERVATORY_STATE_PATH?.trim() || path.resolve(process.env.EVERCRAFT_STATE_DIR?.trim() || '/tmp/evercraft', 'chum-crawl-observatory.json');
+const chumCrawlObservatoryToken = process.env.CHUM_CRAWL_OBSERVATORY_TOKEN?.trim() || '';
 const machineCommerceGatewayUrl =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
@@ -160,6 +163,8 @@ app.use(express.json({ limit: '10mb' }));
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
 
+const crawlObservatory = createCrawlObservatory({ statePath: chumCrawlObservatoryStatePath });
+
 const CHUM_DISCOVERY_LINKS = [
   '</llms.txt>; rel="describedby"; type="text/plain"',
   '</llms-full.txt>; rel="describedby"; type="text/plain"',
@@ -207,7 +212,18 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('X-Robots-Tag', 'index, follow');
     res.setHeader('Cache-Control', 'public, max-age=60, must-revalidate');
     res.setHeader('X-CHUM-Crawl-Pressure', 'v1');
+    res.setHeader('X-CHUM-Sonar', 'v1');
   }
+
+  res.once('finish', () => {
+    crawlObservatory.observe({
+      pathname: req.path,
+      userAgent: req.get('user-agent') || '',
+      method: req.method,
+      status: res.statusCode,
+      at: new Date(),
+    });
+  });
 
   next();
 });
@@ -290,6 +306,28 @@ app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
     return;
   }
   next();
+});
+
+app.get('/api/chum/crawl-observatory', rateLimit(30, 60_000), (req: Request, res: Response) => {
+  if (!chumCrawlObservatoryToken) {
+    res.status(503).json({
+      ok: false,
+      state: 'observatory_read_token_not_configured',
+    });
+    return;
+  }
+
+  const expected = `Bearer ${chumCrawlObservatoryToken}`;
+  if (req.get('authorization') !== expected) {
+    res.status(401).json({ ok: false, error: 'unauthorized' });
+    return;
+  }
+
+  res.json({
+    ok: true,
+    ...crawlObservatory.publicSummary(),
+    state: crawlObservatory.snapshot(),
+  });
 });
 
 function loadPublicMachineCatalog(): any {
