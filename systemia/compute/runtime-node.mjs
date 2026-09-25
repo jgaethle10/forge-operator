@@ -78,6 +78,7 @@ export async function startEvercraftComputeNode({
   const supported = new Set([
     'systemia.private-core-origin.v1',
     'systemia.kaidance-collider.v1',
+    'saban.logical-agent',
   ]);
 
   async function stopService(serviceId, reason = 'operator_requested') {
@@ -199,6 +200,25 @@ export async function startEvercraftComputeNode({
         }
         if (body.workload_class !== lease.workload_class || !supported.has(body.workload_class)) {
           return send(res, 422, { error: 'workload_not_admitted' });
+        }
+
+        if (body.workload_class === 'saban.logical-agent') {
+          const checkpoint = {
+            step: Number(body.checkpoint?.step || 0) + 1,
+            state: body.checkpoint?.state ?? body.payload ?? null,
+            last_node: nodeId,
+          };
+          const receipt = chain.issue('workload.executed', {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            agent_id: String(body.agent_id || ''),
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            checkpoint,
+            receipt,
+          });
         }
 
         if (body.workload_class === 'systemia.private-core-origin.v1') {
