@@ -13,6 +13,7 @@ import {
 } from './multiplier.mjs';
 import { recommendFormation } from './autoscaler.mjs';
 import { admitMultiplicationRequest } from './admission.mjs';
+import { executeDistributedMultiplicationPlan } from './distributed-executor.mjs';
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -97,7 +98,8 @@ export function planFormation({ request, rootDir = process.cwd() }) {
       loadWorkItems(contract, rootDir, extra)
     );
 
-    const recommendation = node.auto === true
+    const shouldAuto = node.auto === true || (node.auto !== false && node.logical_agents == null);
+    const recommendation = shouldAuto
       ? recommendFormation({
           contract,
           workItemCount: workItems.length,
@@ -134,6 +136,7 @@ export function planFormation({ request, rootDir = process.cwd() }) {
       software: node.software,
       depends_on: node.depends_on || [],
       reconcile: node.reconcile === true,
+      execution: node.execution || { mode: 'local' },
       work_items: workItems,
       contract,
       plan
@@ -176,19 +179,47 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
     );
 
     try {
-      const receipt = await executeMultiplicationPlan({
-        contract: node.contract,
-        plan: node.plan,
-        workItems: node.work_items,
-        rootDir,
-        reconcile: node.reconcile,
-        statePath,
-        resume: false
-      });
+      const distributed = node.execution?.mode === 'nodeseed_pool';
+      const receipt = distributed
+        ? await executeDistributedMultiplicationPlan({
+            contract: node.contract,
+            plan: node.plan,
+            workItems: node.work_items,
+            rootDir,
+            reconcile: node.reconcile,
+            nodePool: {
+              endpoints: node.execution?.endpoints || [],
+              discover: node.execution?.discover === true,
+              discoveryOptions: node.execution?.discovery_options || {},
+              allocatorToken: process.env.EVERCRAFT_ALLOCATOR_TOKEN || '',
+              maxAttempts: node.execution?.max_attempts,
+              maxConcurrencyPerNode: node.execution?.max_concurrency_per_node,
+              timeoutMs: node.execution?.timeout_ms,
+              assignmentTimeoutMs: node.execution?.assignment_timeout_ms,
+              requestedTtlMs: node.execution?.requested_ttl_ms
+            }
+          })
+        : await executeMultiplicationPlan({
+            contract: node.contract,
+            plan: node.plan,
+            workItems: node.work_items,
+            rootDir,
+            reconcile: node.reconcile,
+            statePath,
+            resume: false
+          });
+
+      const status = receipt.quality?.status === 'fail'
+        ? 'failed_quality'
+        : receipt.scheduler_summary?.counts?.dead_letter
+          ? 'completed_with_dead_letter'
+          : 'completed';
+
       receipts.push({
         node_id: nodeId,
         software_id: node.plan.software_id,
-        status: receipt.scheduler_summary?.counts?.dead_letter ? 'completed_with_dead_letter' : 'completed',
+        execution_mode: distributed ? 'nodeseed_pool' : 'local',
+        status,
         receipt
       });
     } catch (error) {
@@ -212,6 +243,7 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
       completed: receipts.filter((row) => row.status === 'completed').length,
       completed_with_dead_letter: receipts.filter((row) => row.status === 'completed_with_dead_letter').length,
       blocked: receipts.filter((row) => row.status === 'blocked_by_dependency').length,
+      failed_quality: receipts.filter((row) => row.status === 'failed_quality').length,
       failed: receipts.filter((row) => row.status === 'failed').length
     }
   };
@@ -241,7 +273,8 @@ async function main() {
           logical_agents: node.plan.logical_agents,
           physical_workers: node.plan.physical_workers,
           work_item_count: node.plan.work_item_count,
-          depends_on: node.depends_on
+          depends_on: node.depends_on,
+          execution_mode: node.execution?.mode || 'local'
         }))
       };
 
