@@ -8,6 +8,7 @@ import { createWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
 import { recommendFormation } from './autoscaler.mjs';
 import { evaluateSwarmQuality } from './quality-gate.mjs';
+import { sanitizePrivateInventoryRows } from './private-inventory.mjs';
 
 const DEFAULT_REGISTRY = 'systemia/saban/multiplication-registry.json';
 
@@ -394,11 +395,19 @@ export async function executeMultiplicationPlan({
   };
 }
 
-export function loadPrivateInventory(inventoryPath) {
+export function loadPrivateInventory(inventoryPath, { privacy = null } = {}) {
   if (!inventoryPath) return [];
   const payload = readJson(inventoryPath, null);
   if (!payload) throw new Error(`Could not read inventory: ${inventoryPath}`);
   const rows = Array.isArray(payload) ? payload : payload.apps || payload.products || payload.items || payload.jobs || [];
+
+  if (privacy?.redact_identifiers === true) {
+    return sanitizePrivateInventoryRows(rows, {
+      ...privacy,
+      source_file: inventoryPath
+    });
+  }
+
   return rows
     .filter(Boolean)
     .map((row, index) => ({
@@ -422,7 +431,7 @@ async function main() {
 
   const registry = loadMultiplicationRegistry(registryPath);
   const contract = resolveMultiplicationContract(software, registry);
-  const extraItems = loadPrivateInventory(inventoryPath);
+  const extraItems = loadPrivateInventory(inventoryPath, { privacy: contract.inventory_privacy || null });
   const workItems = expandPartitionedWorkItems(
     contract,
     loadWorkItems(contract, rootDir, extraItems)
