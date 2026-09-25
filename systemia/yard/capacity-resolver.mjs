@@ -22,10 +22,12 @@ export async function discoverEligibleCapacity({
   workloadClass,
   discovery = {},
   endpointTimeoutMs = 750,
+  excludeNodeIds = [],
 } = {}) {
   if (!workloadClass) throw new Error('workloadClass is required');
 
   const beacons = await discoverCapacityBeacons(discovery);
+  const excluded = new Set((excludeNodeIds || []).map(String));
   const observedAt = new Date().toISOString();
   const candidates = [];
 
@@ -41,6 +43,11 @@ export async function discoverEligibleCapacity({
     };
 
     try {
+      if (excluded.has(String(beacon.node_id || ''))) {
+        candidate.reason = 'node_excluded';
+        candidates.push(candidate);
+        continue;
+      }
       if (Date.parse(beacon.expires_at) < Date.now()) {
         candidate.reason = 'beacon_expired';
         candidates.push(candidate);
@@ -91,6 +98,7 @@ export async function discoverEligibleCapacity({
     observed_at: observedAt,
     discovered_count: beacons.length,
     eligible_count: eligible.length,
+    excluded_node_ids: [...excluded],
     selected: eligible[0] || null,
     candidates,
   };
