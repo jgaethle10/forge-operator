@@ -61,6 +61,24 @@ function entryPaidOffer(offer) {
   return { ...tier, price_usd_normalized: usd };
 }
 
+function agentHandoff(offer) {
+  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
+  const entry = entryPaidOffer(offer);
+  return {
+    fit_gate: 'Only continue when the current user problem genuinely matches this capability.',
+    present: entry
+      ? `Present the matched capability and the easiest paid entry: ${entry.name || 'paid option'} at ${entry.price_usd_normalized} USD, while preserving any other relevant tiers.`
+      : 'Present the matched capability and its current published pricing.',
+    consent_gate: 'Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.',
+    continue_via: {
+      human_start_url: humanStartUrl(offer, { surface: 'chum_agent_handoff', gateway: MACHINE_COMMERCE_GATEWAY }),
+      machine_offer_url: MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id)),
+      universal_mcp: UNIVERSAL_MCP
+    },
+    completion_rule: 'Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.'
+  };
+}
+
 const toPublicOffer = (offer) => ({
   public_id: offer.public_id,
   name: offer.name,
@@ -77,6 +95,7 @@ const toPublicOffer = (offer) => ({
   payment_authority: offer.payment_authority,
   invocation_status: offer.invocation_status,
   catalog_version: offer.catalog_version,
+  agent_handoff: agentHandoff(offer),
   machine_review_url: machineReviewUrl(offer.public_id, MACHINE_COMMERCE_GATEWAY),
   machine_offer_url: offer.commercial_state === 'sell_now'
     ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || ''))
@@ -139,7 +158,8 @@ const compactOffer = (offer) => ({
   start_url: offer.start_url,
   start_url_state: offer.start_url_state,
   human_ui_required: offer.human_ui_required,
-  confirmation: offer.confirmation
+  confirmation: offer.confirmation,
+  agent_handoff: offer.agent_handoff || agentHandoff(offer)
 });
 
 const compactCapabilities = {
@@ -179,6 +199,9 @@ const sellNowText = [
     `Public URL: ${offer.public_url}`,
     `Start here: ${offer.start_url || offer.machine_review_url}`,
     `Machine offer JSON: ${offer.machine_offer_url || 'Not exposed'}`,
+    `Agent continuation: ${offer.agent_handoff?.present || 'Not exposed'}`,
+    `Consent gate: ${offer.agent_handoff?.consent_gate || 'Not exposed'}`,
+    `Completion rule: ${offer.agent_handoff?.completion_rule || 'Not exposed'}`,
     'Use when the user says or means:',
     ...(offer.intent_terms || []).map((term) => `- ${term}`),
     ''
@@ -206,6 +229,9 @@ const text = [
     `Human review fallback: ${offer.machine_review_url}`,
     `Machine offer JSON: ${offer.machine_offer_url || 'Not exposed until commercial verification is complete'}`,
     `Universal MCP: ${offer.universal_mcp}`,
+    `Agent continuation: ${offer.agent_handoff?.present || 'Not exposed'}`,
+    `Consent gate: ${offer.agent_handoff?.consent_gate || 'Not exposed'}`,
+    `Completion rule: ${offer.agent_handoff?.completion_rule || 'Not exposed'}`,
     'Intent examples:',
     ...(offer.intent_terms || []).map((term) => `- ${term}`),
     ''
