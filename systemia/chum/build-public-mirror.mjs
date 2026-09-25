@@ -179,6 +179,9 @@ for (const product of directory.products || []) {
         ? product.commercial.offers.map((offer) =>
             `- Offer: ${offer.name || 'Unnamed offer'}${offer.price ? ` — ${offer.price}` : ''}`)
         : []),
+      ...(String(product.commercial.status || '').includes('canary_pending')
+        ? ['- Checkout route remains canary-pending until independent live verification passes.']
+        : []),
       ...(product.commercial.pricing ? [`- Pricing: ${product.commercial.pricing}`] : []),
       ...(product.commercial.payment_state ? [`- Payment state: ${product.commercial.payment_state}`] : [])
     ] : []),
@@ -266,6 +269,9 @@ for (const product of directory.products || []) {
           `<li><strong>${escapeHtml(offer.name || 'Unnamed offer')}:</strong> ${escapeHtml(offer.price || 'Price not published')}</li>`),
         '</ul>'
       ] : []),
+      ...(String(product.commercial.status || '').includes('canary_pending')
+        ? ['<p><strong>Checkout state:</strong> Checkout route remains canary-pending until independent live verification passes.</p>']
+        : []),
       ...(product.commercial.pricing ? [`<p><strong>Pricing:</strong> ${escapeHtml(product.commercial.pricing)}</p>`] : []),
       ...(product.commercial.payment_state ? [`<p><strong>Payment state:</strong> ${escapeHtml(product.commercial.payment_state)}</p>`] : []),
       '</div>'
