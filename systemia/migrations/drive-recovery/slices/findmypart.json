@@ -1,0 +1,94 @@
+{
+  "schema": "evercraft.systemia.drive-recovery-slice.v1",
+  "product": "FindMyPart",
+  "source_class": "legacy_operational_tracker",
+  "recovery_state": "workflow_contract_recovered_pending_source_and_runtime_parity",
+  "workflow": [
+    "request_intake",
+    "item_and_part_identification",
+    "keyword_and_alternate_name_expansion",
+    "cross_compatibility_research",
+    "oem_diagram_check",
+    "marketplace_search",
+    "specialty_supplier_search",
+    "local_source_search",
+    "compatibility_verification",
+    "ranked_option_packaging",
+    "customer_choice",
+    "purchase_or_handoff",
+    "outcome_and_effort_recording"
+  ],
+  "request_fields": [
+    "request_id",
+    "date_received",
+    "status",
+    "preferred_contact_method",
+    "category",
+    "item_type",
+    "brand_or_manufacturer",
+    "model",
+    "year",
+    "serial_vin_or_model_code",
+    "part_name",
+    "part_description",
+    "customer_part_number_if_provided",
+    "photo_reference",
+    "complexity",
+    "urgency",
+    "budget_range"
+  ],
+  "research_receipts": [
+    "keywords_expanded",
+    "alternate_names_identified",
+    "cross_compatible_models_identified",
+    "oem_diagram_checked",
+    "marketplaces_searched",
+    "specialty_sites_searched",
+    "local_sources_checked",
+    "compatibility_verified"
+  ],
+  "result_contract": {
+    "ranked_options": 3,
+    "per_option_fields": ["title", "source_link", "price", "condition", "notes"],
+    "outcome_fields": [
+      "customer_chosen_option",
+      "result_sent_date",
+      "customer_purchased",
+      "purchase_handled_for_customer",
+      "outcome_notes",
+      "verified_alternate_part_numbers",
+      "verified_cross_compatible_models",
+      "suppliers_with_part",
+      "search_difficulty_notes",
+      "time_spent_minutes"
+    ]
+  },
+  "privacy_boundary": {
+    "never_commit": [
+      "customer_name",
+      "contact_email",
+      "contact_phone",
+      "serial_or_vin_values",
+      "photo_links",
+      "individual_request_rows"
+    ],
+    "rule": "Recover schema and workflow only. Operational rows remain in an authorized data store outside public source control."
+  },
+  "acceptance": [
+    "a request can progress from intake through verified ranked options",
+    "compatibility claims carry an explicit verification state",
+    "source searches record which source classes were checked",
+    "alternate part numbers and cross-compatible models remain evidence-linked",
+    "customer contact data is segregated from public capability metadata",
+    "outcomes and search effort can be measured without exposing customer identity",
+    "tests and live runtime parity are required before retiring the legacy workflow"
+  ],
+  "not_recovered_yet": [
+    "exact application source",
+    "live supplier adapters",
+    "marketplace credentials",
+    "production intake data",
+    "payment or purchase authority",
+    "runtime deployment configuration"
+  ]
+}
