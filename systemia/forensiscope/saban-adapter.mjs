@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { validateAuthorizedMediaSource, hashFile } from './authorized-source.mjs';
 import { transcribePreparedAudio } from './transcription-engine.mjs';
 import { buildEvidenceGraph } from './evidence-graph.mjs';
+import { attachSemanticIndex } from './semantic-index.mjs';
 
 function safeId(value) {
   return String(value || 'item')
@@ -702,7 +703,7 @@ export async function reconcile({ results, contract }) {
     text: transcriptSegments.map((entry) => entry.text).join(' ')
   };
   const originalSourceSha256 = originalHashes.size === 1 ? [...originalHashes][0] : null;
-  const evidenceGraph = originalSourceSha256
+  const baseEvidenceGraph = originalSourceSha256
     ? buildEvidenceGraph({
         sourceSha256: originalSourceSha256,
         transcript: transcription,
@@ -712,6 +713,9 @@ export async function reconcile({ results, contract }) {
         exactDuplicateGroups: repeatedContent,
         nearDuplicatePairs: nearRepeatedPairs
       })
+    : null;
+  const evidenceGraph = baseEvidenceGraph
+    ? attachSemanticIndex(baseEvidenceGraph)
     : null;
 
   return {
