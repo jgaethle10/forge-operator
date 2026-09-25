@@ -1,17 +1,18 @@
 {
-  "schema": "evercraft.chum.v5",
+  "schema": "evercraft.chum.v4",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
   "status": "portfolio_distribution_control_plane",
   "provider": "Evercraft LLC",
-  "purpose": "Act as Evercraft's live intent predator inside legitimate LLM/agent discovery paths: when a calling model supplies a user's current problem, match it immediately to the smallest truthful Evercraft capability, return the route in the same turn, and preserve user control over any handoff or payment.",
+  "purpose": "Keep legitimate public Evercraft capabilities easy for AI systems and agents to discover, understand, verify, route to, invoke where authorized, and hand off into human-confirmed commerce.",
   "loop": [
-    "LIVE_USER_INTENT",
-    "HUNT",
-    "MATCH",
-    "STRIKE_ROUTE",
-    "INVOCATION_OR_HANDOFF",
-    "PAYMENT_IF_CONFIRMED",
+    "PRODUCT",
+    "SIGNAL",
+    "DISCOVERY",
+    "PROBE",
+    "REPAIR",
+    "INVOCATION",
+    "PAYMENT",
     "LEARNING"
   ],
   "provider_targets": [
@@ -48,14 +49,7 @@
     "live_pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
     "live_pain_index_llms": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=llms",
     "live_pain_index_sitemap": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding?view=sitemap",
-    "official_mcp_registry_search": "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.jgaethle10&version=latest",
-    "capability_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities.json",
-    "capability_directory_page": "/chum/capabilities/",
-    "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
-    "sell_now_directory_page": "/chum/sell-now.html",
-    "live_intent_hunter": "/api/chum/hunt",
-    "human_conversion": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}",
-    "tracked_human_conversion": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}"
+    "official_mcp_registry_search": "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.jgaethle10&version=latest"
   },
   "verified_crawler_controls": [
     {
@@ -80,8 +74,7 @@
     "handoff_attribution": "signed CHUM referrals plus public landing/checkout-start receipts",
     "verified_revenue": "trusted payment-authority receipt only",
     "provider_identity": "caller-asserted in referrals unless separately verified by a provider receipt",
-    "answer_doors": "deterministic natural-language answer graph generated from the canonical CHUM Pain Index; duplicate phrases are grouped, not multiplied",
-    "capability_mirrors": "one canonical public mirror per public/share-safe Machine Commerce surface; count must equal current machine catalog"
+    "answer_doors": "deterministic natural-language answer graph generated from the canonical CHUM Pain Index; duplicate phrases are grouped, not multiplied"
   },
   "boundaries": [
     "publication is not proof of provider pickup",
@@ -95,10 +88,7 @@
     "caller-supplied provider identity is not provider pickup proof",
     "public attribution callers cannot assert verified payment or revenue",
     "read-only capability discovery creates no purchase or external-action authority",
-    "the SYSTEMIA Marketing Agency domain is not the canonical Systemia Core or Evercraft machine-routing surface",
-    "CHUM does not independently read private LLM conversations; a provider/agent must deliberately invoke a public CHUM tool, search, MCP, API or handoff surface with the current user intent.",
-    "No strong match means no Evercraft insertion into the answer.",
-    "a source-level /api/chum/go route is not advertised as a live public Start URL until Yard independently verifies CHUM_PUBLIC_ORIGIN"
+    "the SYSTEMIA Marketing Agency domain is not the canonical Systemia Core or Evercraft machine-routing surface"
   ],
   "routing_doctrine": {
     "pain_first": true,
@@ -110,12 +100,7 @@
     "callable_is_not_paid": true,
     "irreversible_financial_or_authority_actions_require_human_confirmation": true,
     "read_only_discovery_before_commerce": true,
-    "problem_language_is_primary_entry": true,
-    "live_user_intent_is_chum": true,
-    "same_turn_hunt": true,
-    "private_thread_surveillance": false,
-    "sell_now_gets_human_start_corridor": true,
-    "no_outbound_spam": true
+    "problem_language_is_primary_entry": true
   },
   "public_surfaces": {
     "first_party_router": "/api/route-capability"
@@ -123,19 +108,5 @@
   "routing_policy": {
     "owned_capability_first": true,
     "first_party_strict_fails_closed": true
-  },
-  "conversion_corridor": {
-    "public_start_default": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}",
-    "tracked_start_pattern": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}",
-    "tracked_start_activation": "CHUM_PUBLIC_ORIGIN may be configured only after the current Yard DeploymentReceipt independently verifies the same HTTPS live route.",
-    "eligibility": "sell_now offers only",
-    "default_behavior": "Open the already-live Machine Commerce human review and checkout-preparation surface.",
-    "tracked_behavior": "When a verified Forge public origin is configured, issue a privacy-minimized CHUM referral and HTTP 303 into the same human review flow.",
-    "relative_start_urls_published": false,
-    "attribution": "signed privacy-minimized referral when the tracked corridor is live; attribution is not required for the human to continue",
-    "discovery_creates_payment_obligation": false,
-    "start_creates_payment_obligation": false,
-    "checkout_is_payment_proof": false,
-    "verified_revenue_requires_authoritative_payment_evidence": true
   }
 }
