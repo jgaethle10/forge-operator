@@ -236,7 +236,11 @@
         "minimum_node_memory_mb": 512,
         "cpu_units_per_worker": 1,
         "memory_mb_per_worker": 512,
-        "require_capacity_hint": true
+        "require_capacity_hint": true,
+        "required_executables": [
+          "ffmpeg",
+          "ffprobe"
+        ]
       }
     }
   ]
