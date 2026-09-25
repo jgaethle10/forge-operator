@@ -190,6 +190,18 @@ export class YardOperator {
       identityVerification.ok = false;
       identityVerification.reason = 'deployment_device_fingerprint_mismatch';
     }
+    if (identityVerification.ok &&
+        record.receipt?.capacity_runtime_release_ref &&
+        record.receipt.capacity_runtime_release_ref !== identityVerification.runtime_release_ref) {
+      identityVerification.ok = false;
+      identityVerification.reason = 'deployment_runtime_release_mismatch';
+    }
+    if (identityVerification.ok &&
+        record.receipt?.capacity_runtime_payload_digest &&
+        record.receipt.capacity_runtime_payload_digest !== identityVerification.runtime_payload_digest) {
+      identityVerification.ok = false;
+      identityVerification.reason = 'deployment_runtime_payload_mismatch';
+    }
 
     const enrollment = identityVerification.ok
       ? this.#loadFieldEnrollment(identityVerification.device_fingerprint)
@@ -204,6 +216,8 @@ export class YardOperator {
       deployment_id: deploymentId,
       node_id: identityVerification.node_id || record.receipt?.capacity_node_id || null,
       device_fingerprint: identityVerification.device_fingerprint || null,
+      runtime_release_ref: identityVerification.runtime_release_ref || null,
+      runtime_payload_digest: identityVerification.runtime_payload_digest || null,
       identity_verified: Boolean(identityVerification.ok),
       field_verified: Boolean(field.verified),
       verified: Boolean(field.verified),
@@ -334,6 +348,8 @@ export class YardOperator {
       capacity_node_id: capacity.node_id,
       capacity_device_fingerprint: capacity.device_fingerprint || null,
       attestation_supported: Boolean(capacity.attestation_supported),
+      capacity_runtime_release_ref: capacity.runtime_release_ref || null,
+      capacity_runtime_payload_digest: capacity.runtime_payload_digest || null,
       lease_receipt_hash: lease.receipt?.receipt_hash || null,
       workload_receipt_hash: job.receipt?.receipt_hash || null,
       result_schema: job.result?.schema || null,
