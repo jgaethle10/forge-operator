@@ -107,6 +107,37 @@ const ciEvidence = evaluateNode001FieldEvidence({
 assert.equal(ciEvidence.ok, false);
 assert.equal(ciEvidence.reason, 'field_environment_not_observed');
 
+const syntheticFieldEvidence = {
+  schema: 'evercraft.node001.field-evidence.v1',
+  environment: 'field',
+  host_type: 'physical',
+  os_family: 'linux',
+  distribution_id: 'debian',
+  distribution_version: '12',
+  systemd_verified: true,
+  memory_gib: 8,
+  free_disk_gib: 32,
+  reboot_persistence_verified: true,
+  reboot_receipt_ref: 'sha256:synthetic-reboot',
+  offline_operation_verified: true,
+  offline_receipt_ref: 'sha256:synthetic-offline',
+  telemetry_verified: true,
+  telemetry_receipt_ref: 'sha256:synthetic-telemetry',
+  host_identifier_ref: 'machine:sha256:synthetic',
+  test_date: new Date().toISOString(),
+  operator_ref: 'synthetic-contract-fixture',
+  receipt_ref: 'synthetic-field-receipt',
+};
+const syntheticEvaluation = evaluateNode001FieldEvidence(syntheticFieldEvidence);
+assert.equal(syntheticEvaluation.ok, true);
+
+const missingOfflineReceipt = evaluateNode001FieldEvidence({
+  ...syntheticFieldEvidence,
+  offline_receipt_ref: null,
+});
+assert.equal(missingOfflineReceipt.ok, false);
+assert.equal(missingOfflineReceipt.reason, 'offline_receipt_missing');
+
 const seed = await startNodeSeed({
   root: computeRoot,
   nodeId: 'field-proof-node',
@@ -167,6 +198,8 @@ try {
     tamper_rejected: true,
     stale_attestation_rejected: true,
     ci_field_evidence_rejected: true,
+    synthetic_field_contract_fixture_passed: syntheticEvaluation.ok,
+    missing_offline_receipt_rejected: true,
     yard_identity_verified: attestation.identity_verified,
     field_verified_without_physical_evidence: attestation.field_verified,
     pulse_field_state: pulse.field_attestation.state,
