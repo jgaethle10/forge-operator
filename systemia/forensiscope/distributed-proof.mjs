@@ -35,6 +35,7 @@ run('ffmpeg', ['-version']);
 run('ffprobe', ['-version']);
 
 const mockTranscriberPath = path.join(proofDir, 'mock-transcriber.mjs');
+const newline = String.fromCharCode(10);
 fs.writeFileSync(
   mockTranscriberPath,
   [
@@ -44,7 +45,7 @@ fs.writeFileSync(
     "const tailStart = Math.max(0.2, duration - 0.8);",
     "const second = { start_seconds: tailStart, end_seconds: Math.min(duration, tailStart + 0.5), text: 'boundary-' + Math.round(offset + tailStart), confidence: 0.98 };",
     "console.log(JSON.stringify({segments:[first, second]}));"
-  ].join('\\n') + '\\n'
+  ].join(newline) + newline
 );
 process.env.FORENSISCOPE_TRANSCRIBE_ENABLED = 'true';
 process.env.FORENSISCOPE_TRANSCRIBE_ENGINE_ID = 'forensiscope-ci-contract';
@@ -169,6 +170,15 @@ try {
   await Promise.allSettled([seedA.close(), seedB.close()]);
 }
 const sourceHashAfter = hashFile(sourcePath);
+
+if (receipt.quality?.status !== 'pass') {
+  console.error(JSON.stringify({
+    forensiscope_quality: receipt.quality,
+    reconciliation_status: receipt.reconciliation?.status || null,
+    transcription: receipt.reconciliation?.transcription || null,
+    worker_statuses: receipt.reconciliation?.worker_statuses || null
+  }));
+}
 
 assert.equal(sourceHashBefore, sourceHashAfter);
 assert.equal(receipt.scheduler_summary.counts.completed, 24);
