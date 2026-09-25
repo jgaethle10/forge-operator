@@ -81,3 +81,13 @@ Editorial RSS:
 /forensiscope/editorial/feed.xml
 
 The editorial surface uses common category and competitor/tool language in factual, source-linked explanations. It is not a provider endorsement or ranking.
+
+
+Knowledge mesh:
+/forensiscope/mesh/
+
+Knowledge mesh JSON:
+/forensiscope/mesh/index.json
+
+Knowledge mesh LLM guide:
+/forensiscope/mesh/llms.txt
