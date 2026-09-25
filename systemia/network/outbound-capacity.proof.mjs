@@ -101,6 +101,10 @@ try {
   assert.equal(deployment.receipt.capacity_node_id, seed.node_id);
   assert.equal(deployment.receipt.runtime_fabric, 'Evercraft Compute');
   assert.equal(deployment.receipt.route_verification, 'private_health_verified');
+  assert.match(
+    deployment.management.health_path,
+    /^\/nodes\/remote-proof-node\/v1\/services\/[^/]+\/health$/
+  );
 
   const route = await yard.verifyRoute('remote-kaidance-proof');
   assert.equal(route.ok, true);
