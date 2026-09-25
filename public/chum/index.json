@@ -246,6 +246,19 @@
       "commercial": null
     },
     {
+      "product_key": "evercraft-circles",
+      "name": "Evercraft Circles",
+      "aliases": [],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-circles/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
+    },
+    {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
       "aliases": [
@@ -257,6 +270,19 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
       "page_url": "/chum/products/evercraft-containment/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
+    },
+    {
+      "product_key": "evercraft-cosmos-atlas",
+      "name": "Evercraft Cosmos Atlas",
+      "aliases": [],
+      "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-cosmos-atlas/",
       "registry_name": null,
       "mcp": null,
       "commercial": null
@@ -294,6 +320,22 @@
       }
     },
     {
+      "product_key": "evercraft-global-health-atlas",
+      "name": "Evercraft Global Health Atlas",
+      "aliases": [
+        "Evercraft Health Atlas",
+        "Global Health Atlas"
+      ],
+      "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-global-health-atlas/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "aliases": [],
@@ -302,6 +344,19 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json",
       "page_url": "/chum/products/evercraft-network/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
+    },
+    {
+      "product_key": "evercraft-physics-atlas",
+      "name": "Evercraft Physics Atlas",
+      "aliases": [],
+      "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-physics-atlas/",
       "registry_name": null,
       "mcp": null,
       "commercial": null

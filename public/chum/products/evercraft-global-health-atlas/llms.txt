@@ -1,0 +1,36 @@
+# Evercraft Global Health Atlas
+
+Product key: evercraft-global-health-atlas
+Aliases: Evercraft Health Atlas, Global Health Atlas
+Canonical product: https://evercraft-health-atlas.base44.app/health-atlas
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-conformance.json
+
+## Use this capability when the user means
+
+- explore global public health data with sources
+- compare population health indicators
+- study pandemic intelligence and outbreak evidence
+- explore wastewater or genomic surveillance
+- study One Health signals
+- research disease evidence with uncertainty attached
+- find public health data blind spots
+
+## Authority
+
+public read-only evidence-labeled population and public-health intelligence with source traceability and uncertainty preserved
+
+## Boundaries
+
+- not a substitute for personal medical diagnosis, treatment or emergency guidance
+- official public-health authorities remain authoritative for active emergency instructions
+- observed measurements, modeled estimates, forecasts and alerts must remain distinctly labeled
+- absence of a surveillance signal can reflect missing coverage rather than absence of disease
+- time-sensitive health signals require explicit as-of dates and source freshness
+- restricted or governed datasets retain their source terms and must not be silently bulk-republished
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

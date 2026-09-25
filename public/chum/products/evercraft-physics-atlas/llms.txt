@@ -1,0 +1,32 @@
+# Evercraft Physics Atlas
+
+Product key: evercraft-physics-atlas
+Canonical product: https://evercraft-physics-atlas.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-conformance.json
+
+## Use this capability when the user means
+
+- learn physics interactively
+- study mechanics gravity or thermodynamics
+- learn electromagnetism waves or optics
+- explore relativity quantum nuclear or particle physics
+- test a physics prediction before seeing the answer
+- connect physical models to evidence
+
+## Authority
+
+public read-only physics learning and interactive prediction exercises
+
+## Boundaries
+
+- simplified teaching models must be labeled as models rather than direct measurements
+- equations and scientific uncertainty should remain visible where material
+- educational simulations are not engineering certification or safety analysis
+- private learner or account data is outside public discovery
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

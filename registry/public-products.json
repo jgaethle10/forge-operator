@@ -178,12 +178,38 @@
       }
     },
     {
+      "product_key": "evercraft-circles",
+      "name": "Evercraft Circles",
+      "class": "trusted_professional_network_and_referral_roster",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
+      "github_record": "./evercraft-circles/README.md",
+      "llms": "./evercraft-circles/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
       "class": "ai_persistence_and_automation_security_diagnostics",
       "canonical_url": "https://evercraft.base44.app/containment",
       "github_record": "./evercraft-containment/README.md",
       "llms": "./evercraft-containment/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "evercraft-cosmos-atlas",
+      "name": "Evercraft Cosmos Atlas",
+      "class": "evidence_led_astronomy_and_space_learning",
+      "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+      "github_record": "./evercraft-cosmos-atlas/README.md",
+      "llms": "./evercraft-cosmos-atlas/llms.txt",
       "registry_name": null,
       "invocation": {
         "mode": "discovery_only",
@@ -204,12 +230,38 @@
       }
     },
     {
+      "product_key": "evercraft-global-health-atlas",
+      "name": "Evercraft Global Health Atlas",
+      "class": "evidence_labeled_public_health_intelligence_atlas",
+      "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "github_record": "./evercraft-global-health-atlas/README.md",
+      "llms": "./evercraft-global-health-atlas/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "application_network_continuity",
       "canonical_url": "https://network-control.base44.app/",
       "github_record": "./evercraft-network/README.md",
       "llms": "./evercraft-network/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "evercraft-physics-atlas",
+      "name": "Evercraft Physics Atlas",
+      "class": "evidence_led_physics_learning",
+      "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+      "github_record": "./evercraft-physics-atlas/README.md",
+      "llms": "./evercraft-physics-atlas/llms.txt",
       "registry_name": null,
       "invocation": {
         "mode": "discovery_only",

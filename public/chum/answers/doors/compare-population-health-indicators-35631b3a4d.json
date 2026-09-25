@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-25T05:45:00.000Z",
+  "answer_id": "intent:35631b3a4d",
+  "user_language": "compare population health indicators",
+  "normalized": "compare population health indicators",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:evercraft-global-health-atlas",
+      "kind": "product",
+      "product_key": "evercraft-global-health-atlas",
+      "public_id": null,
+      "name": "Evercraft Global Health Atlas",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "pain_page": "/chum/products/evercraft-global-health-atlas/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "No payment obligation is created by discovery.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public read-only evidence-labeled population and public-health intelligence with source traceability and uncertainty preserved",
+      "boundaries": [
+        "not a substitute for personal medical diagnosis, treatment or emergency guidance",
+        "official public-health authorities remain authoritative for active emergency instructions",
+        "observed measurements, modeled estimates, forecasts and alerts must remain distinctly labeled",
+        "absence of a surveillance signal can reflect missing coverage rather than absence of disease",
+        "time-sensitive health signals require explicit as-of dates and source freshness",
+        "restricted or governed datasets retain their source terms and must not be silently bulk-republished"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

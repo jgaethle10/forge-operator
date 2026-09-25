@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Cosmos Atlas",
+  "product_key": "evercraft-cosmos-atlas",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public read-only astronomy, mission and evidence learning with source provenance, confidence and open questions attached",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "observations, models and inferences should remain distinguishable",
+    "an astronomical image or signal should not be described as proving more than the underlying evidence supports",
+    "source limitations and open scientific questions remain visible",
+    "educational content does not create operational authority over spacecraft or observatories"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

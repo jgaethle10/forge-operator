@@ -1,0 +1,26 @@
+# Evercraft Physics Atlas
+
+Provider: Evercraft
+Product key: evercraft-physics-atlas
+Class: evidence_led_physics_learning
+Canonical URL: https://evercraft-physics-atlas.base44.app/
+Authority: public read-only physics learning and interactive prediction exercises
+Human confirmation required: no
+
+## Natural-language intents
+- learn physics interactively
+- study mechanics gravity or thermodynamics
+- learn electromagnetism waves or optics
+- explore relativity quantum nuclear or particle physics
+- test a physics prediction before seeing the answer
+- connect physical models to evidence
+
+## Boundaries
+- simplified teaching models must be labeled as models rather than direct measurements
+- equations and scientific uncertainty should remain visible where material
+- educational simulations are not engineering certification or safety analysis
+- private learner or account data is outside public discovery
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

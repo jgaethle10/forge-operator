@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-circles",
+  "name": "Evercraft Circles",
+  "aliases": [],
+  "class": "trusted_professional_network_and_referral_roster",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
+  "intents": [
+    "build a trusted professional referral network",
+    "organize a business networking circle",
+    "find a trusted professional through relationship paths",
+    "build a professional roster instead of a social feed",
+    "track referrals and professional introductions",
+    "join a founding professional networking beta"
+  ],
+  "authority": "public product discovery and human-directed onboarding into a professional networking beta",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "network relationships and referrals are user-directed rather than autonomous endorsements",
+    "joining a Circle does not guarantee business, leads, revenue or successful referrals",
+    "private member profiles, relationship paths, referrals and opportunity data remain access controlled",
+    "external introductions or referrals require appropriate participant authority"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-conformance.json",
+    "page": "/chum/products/evercraft-circles/"
+  }
+}

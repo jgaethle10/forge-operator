@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Physics Atlas",
+  "product_key": "evercraft-physics-atlas",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public read-only physics learning and interactive prediction exercises",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "simplified teaching models must be labeled as models rather than direct measurements",
+    "equations and scientific uncertainty should remain visible where material",
+    "educational simulations are not engineering certification or safety analysis",
+    "private learner or account data is outside public discovery"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

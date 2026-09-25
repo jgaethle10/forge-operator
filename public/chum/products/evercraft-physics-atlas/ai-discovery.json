@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-physics-atlas",
+  "name": "Evercraft Physics Atlas",
+  "aliases": [],
+  "class": "evidence_led_physics_learning",
+  "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+  "intents": [
+    "learn physics interactively",
+    "study mechanics gravity or thermodynamics",
+    "learn electromagnetism waves or optics",
+    "explore relativity quantum nuclear or particle physics",
+    "test a physics prediction before seeing the answer",
+    "connect physical models to evidence"
+  ],
+  "authority": "public read-only physics learning and interactive prediction exercises",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "simplified teaching models must be labeled as models rather than direct measurements",
+    "equations and scientific uncertainty should remain visible where material",
+    "educational simulations are not engineering certification or safety analysis",
+    "private learner or account data is outside public discovery"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-conformance.json",
+    "page": "/chum/products/evercraft-physics-atlas/"
+  }
+}

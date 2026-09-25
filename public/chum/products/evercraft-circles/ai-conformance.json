@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Circles",
+  "product_key": "evercraft-circles",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public product discovery and human-directed onboarding into a professional networking beta",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "network relationships and referrals are user-directed rather than autonomous endorsements",
+    "joining a Circle does not guarantee business, leads, revenue or successful referrals",
+    "private member profiles, relationship paths, referrals and opportunity data remain access controlled",
+    "external introductions or referrals require appropriate participant authority"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

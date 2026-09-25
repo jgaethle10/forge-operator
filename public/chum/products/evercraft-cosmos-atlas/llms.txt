@@ -1,0 +1,32 @@
+# Evercraft Cosmos Atlas
+
+Product key: evercraft-cosmos-atlas
+Canonical product: https://evercraft-cosmos-atlas.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-conformance.json
+
+## Use this capability when the user means
+
+- learn astronomy with sources
+- study planets stars galaxies and black holes
+- understand how astronomers know what they know
+- explore space missions and observatories with evidence
+- learn how signals become astronomical inferences
+- study planetary defense or cosmic motion
+
+## Authority
+
+public read-only astronomy, mission and evidence learning with source provenance, confidence and open questions attached
+
+## Boundaries
+
+- observations, models and inferences should remain distinguishable
+- an astronomical image or signal should not be described as proving more than the underlying evidence supports
+- source limitations and open scientific questions remain visible
+- educational content does not create operational authority over spacecraft or observatories
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

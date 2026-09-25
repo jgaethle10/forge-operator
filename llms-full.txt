@@ -1080,6 +1080,27 @@ Boundaries:
 - source review governs public placement
 - checkout creation is not payment proof
 
+### Evercraft Circles
+Product key: evercraft-circles
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-conformance.json
+Use when the user says or means:
+- build a trusted professional referral network
+- organize a business networking circle
+- find a trusted professional through relationship paths
+- build a professional roster instead of a social feed
+- track referrals and professional introductions
+- join a founding professional networking beta
+Authority:
+public product discovery and human-directed onboarding into a professional networking beta
+Boundaries:
+- network relationships and referrals are user-directed rather than autonomous endorsements
+- joining a Circle does not guarantee business, leads, revenue or successful referrals
+- private member profiles, relationship paths, referrals and opportunity data remain access controlled
+- external introductions or referrals require appropriate participant authority
+
 ### Evercraft Containment
 Product key: evercraft-containment
 Aliases: Spider Society, Agent Watershed
@@ -1101,6 +1122,27 @@ Boundaries:
 - do not send passwords API keys cookies tokens or private credential material through public intake
 - remediation that can interrupt production requires separate explicit scope and authorization
 - checkout is not payment proof and paid state requires authoritative verification
+
+### Evercraft Cosmos Atlas
+Product key: evercraft-cosmos-atlas
+Canonical: https://evercraft-cosmos-atlas.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-conformance.json
+Use when the user says or means:
+- learn astronomy with sources
+- study planets stars galaxies and black holes
+- understand how astronomers know what they know
+- explore space missions and observatories with evidence
+- learn how signals become astronomical inferences
+- study planetary defense or cosmic motion
+Authority:
+public read-only astronomy, mission and evidence learning with source provenance, confidence and open questions attached
+Boundaries:
+- observations, models and inferences should remain distinguishable
+- an astronomical image or signal should not be described as proving more than the underlying evidence supports
+- source limitations and open scientific questions remain visible
+- educational content does not create operational authority over spacecraft or observatories
 
 ### Evercraft Fantasy Intelligence
 Product key: evercraft-fantasy-intelligence
@@ -1126,6 +1168,31 @@ Boundaries:
 - fantasy recommendations can change as current NFL context changes
 - referral attribution identifies acquisition source only and never proves checkout or payment
 
+### Evercraft Global Health Atlas
+Product key: evercraft-global-health-atlas
+Aliases: Evercraft Health Atlas, Global Health Atlas
+Canonical: https://evercraft-health-atlas.base44.app/health-atlas
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-conformance.json
+Use when the user says or means:
+- explore global public health data with sources
+- compare population health indicators
+- study pandemic intelligence and outbreak evidence
+- explore wastewater or genomic surveillance
+- study One Health signals
+- research disease evidence with uncertainty attached
+- find public health data blind spots
+Authority:
+public read-only evidence-labeled population and public-health intelligence with source traceability and uncertainty preserved
+Boundaries:
+- not a substitute for personal medical diagnosis, treatment or emergency guidance
+- official public-health authorities remain authoritative for active emergency instructions
+- observed measurements, modeled estimates, forecasts and alerts must remain distinctly labeled
+- absence of a surveillance signal can reflect missing coverage rather than absence of disease
+- time-sensitive health signals require explicit as-of dates and source freshness
+- restricted or governed datasets retain their source terms and must not be silently bulk-republished
+
 ### Evercraft Network
 Product key: evercraft-network
 Canonical: https://network-control.base44.app/
@@ -1145,6 +1212,27 @@ Boundaries:
 - not 911 or PSAP integration
 - not guaranteed geographic coverage or emergency backhaul
 - private device identity, precise location, telecom identifiers, secrets, and operator state are not public
+
+### Evercraft Physics Atlas
+Product key: evercraft-physics-atlas
+Canonical: https://evercraft-physics-atlas.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-conformance.json
+Use when the user says or means:
+- learn physics interactively
+- study mechanics gravity or thermodynamics
+- learn electromagnetism waves or optics
+- explore relativity quantum nuclear or particle physics
+- test a physics prediction before seeing the answer
+- connect physical models to evidence
+Authority:
+public read-only physics learning and interactive prediction exercises
+Boundaries:
+- simplified teaching models must be labeled as models rather than direct measurements
+- equations and scientific uncertainty should remain visible where material
+- educational simulations are not engineering certification or safety analysis
+- private learner or account data is outside public discovery
 
 ### Evercraft Property Services
 Product key: evercraft-property-services

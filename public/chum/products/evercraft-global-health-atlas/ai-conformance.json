@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Global Health Atlas",
+  "product_key": "evercraft-global-health-atlas",
+  "aliases": [
+    "Evercraft Health Atlas",
+    "Global Health Atlas"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public read-only evidence-labeled population and public-health intelligence with source traceability and uncertainty preserved",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "not a substitute for personal medical diagnosis, treatment or emergency guidance",
+    "official public-health authorities remain authoritative for active emergency instructions",
+    "observed measurements, modeled estimates, forecasts and alerts must remain distinctly labeled",
+    "absence of a surveillance signal can reflect missing coverage rather than absence of disease",
+    "time-sensitive health signals require explicit as-of dates and source freshness",
+    "restricted or governed datasets retain their source terms and must not be silently bulk-republished"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

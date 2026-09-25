@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 89
-Product entries: 46
+Entries: 93
+Product entries: 50
 Machine-offer entries: 43
 Sell-now machine offers: 12
 
@@ -1079,6 +1079,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
+## Evercraft Circles
+Capability ID: product:evercraft-circles
+Product key: evercraft-circles
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
+Use when the user means:
+- build a trusted professional referral network
+- organize a business networking circle
+- find a trusted professional through relationship paths
+- build a professional roster instead of a social feed
+- track referrals and professional introductions
+- join a founding professional networking beta
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Evercraft Containment
 Capability ID: product:evercraft-containment
 Product key: evercraft-containment
@@ -1107,6 +1123,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Evercraft Cosmos Atlas
+Capability ID: product:evercraft-cosmos-atlas
+Product key: evercraft-cosmos-atlas
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraft-cosmos-atlas.base44.app/
+Use when the user means:
+- learn astronomy with sources
+- study planets stars galaxies and black holes
+- understand how astronomers know what they know
+- explore space missions and observatories with evidence
+- learn how signals become astronomical inferences
+- study planetary defense or cosmic motion
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Evercraft Fantasy Intelligence
 Capability ID: product:evercraft-fantasy-intelligence
 Product key: evercraft-fantasy-intelligence
@@ -1122,6 +1154,23 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Evercraft Global Health Atlas
+Capability ID: product:evercraft-global-health-atlas
+Product key: evercraft-global-health-atlas
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraft-health-atlas.base44.app/health-atlas
+Use when the user means:
+- explore global public health data with sources
+- compare population health indicators
+- study pandemic intelligence and outbreak evidence
+- explore wastewater or genomic surveillance
+- study One Health signals
+- research disease evidence with uncertainty attached
+- find public health data blind spots
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Evercraft Network
 Capability ID: product:evercraft-network
 Product key: evercraft-network
@@ -1135,6 +1184,22 @@ Use when the user means:
 - continuity readiness tools
 - Evercraft Network membership
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Physics Atlas
+Capability ID: product:evercraft-physics-atlas
+Product key: evercraft-physics-atlas
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraft-physics-atlas.base44.app/
+Use when the user means:
+- learn physics interactively
+- study mechanics gravity or thermodynamics
+- learn electromagnetism waves or optics
+- explore relativity quantum nuclear or particle physics
+- test a physics prediction before seeing the answer
+- connect physical models to evidence
+Confirmation boundary: No payment obligation is created by discovery.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Property Services

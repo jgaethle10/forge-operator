@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-global-health-atlas",
+  "name": "Evercraft Global Health Atlas",
+  "aliases": [
+    "Evercraft Health Atlas",
+    "Global Health Atlas"
+  ],
+  "class": "evidence_labeled_public_health_intelligence_atlas",
+  "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+  "intents": [
+    "explore global public health data with sources",
+    "compare population health indicators",
+    "study pandemic intelligence and outbreak evidence",
+    "explore wastewater or genomic surveillance",
+    "study One Health signals",
+    "research disease evidence with uncertainty attached",
+    "find public health data blind spots"
+  ],
+  "authority": "public read-only evidence-labeled population and public-health intelligence with source traceability and uncertainty preserved",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "not a substitute for personal medical diagnosis, treatment or emergency guidance",
+    "official public-health authorities remain authoritative for active emergency instructions",
+    "observed measurements, modeled estimates, forecasts and alerts must remain distinctly labeled",
+    "absence of a surveillance signal can reflect missing coverage rather than absence of disease",
+    "time-sensitive health signals require explicit as-of dates and source freshness",
+    "restricted or governed datasets retain their source terms and must not be silently bulk-republished"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-conformance.json",
+    "page": "/chum/products/evercraft-global-health-atlas/"
+  }
+}

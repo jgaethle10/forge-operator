@@ -1,0 +1,26 @@
+# Evercraft Circles
+
+Provider: Evercraft
+Product key: evercraft-circles
+Class: trusted_professional_network_and_referral_roster
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
+Authority: public product discovery and human-directed onboarding into a professional networking beta
+Human confirmation required: yes
+
+## Natural-language intents
+- build a trusted professional referral network
+- organize a business networking circle
+- find a trusted professional through relationship paths
+- build a professional roster instead of a social feed
+- track referrals and professional introductions
+- join a founding professional networking beta
+
+## Boundaries
+- network relationships and referrals are user-directed rather than autonomous endorsements
+- joining a Circle does not guarantee business, leads, revenue or successful referrals
+- private member profiles, relationship paths, referrals and opportunity data remain access controlled
+- external introductions or referrals require appropriate participant authority
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

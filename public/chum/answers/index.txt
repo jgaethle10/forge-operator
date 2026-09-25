@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 89
-Unique user phrases: 610
-Candidate edges: 669
+Pain-index entries: 93
+Unique user phrases: 635
+Candidate edges: 694
 Ambiguous phrases: 59
 
 ## 15 GB video analysis
@@ -401,6 +401,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Deck Engine Founding Capital Fit Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
 
+## build a professional roster instead of a social feed
+Answer ID: intent:03d0d56ace
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace.json
+Candidates:
+- Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
+
 ## build a professional website for my small business
 Answer ID: intent:476ef02530
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json
@@ -432,6 +438,12 @@ Answer ID: intent:7e665162c9
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-timestamped-timeline-from-a-recording-7e665162c9.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## build a trusted professional referral network
+Answer ID: intent:10f9c4df44
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-trusted-professional-referral-network-10f9c4df44.json
+Candidates:
+- Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
 
 ## build an evidence record for habitat restoration work
 Answer ID: intent:9bec3aebda
@@ -690,6 +702,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## compare population health indicators
+Answer ID: intent:35631b3a4d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-population-health-indicators-35631b3a4d.json
+Candidates:
+- Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
+
 ## compare the real cost of hiring before adding payroll
 Answer ID: intent:15edc18e4b
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-the-real-cost-of-hiring-before-adding-payroll-15edc18e4b.json
@@ -720,6 +738,12 @@ Answer ID: intent:4e80c745da
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json
 Candidates:
 - BuildFlow Enterprise Operations Router | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+
+## connect physical models to evidence
+Answer ID: intent:640629f226
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/connect-physical-models-to-evidence-640629f226.json
+Candidates:
+- Evercraft Physics Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-physics-atlas.base44.app/
 
 ## construction crews need better leadership accountability or scheduling
 Answer ID: intent:2a9440a399
@@ -1013,6 +1037,30 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
 
+## explore global public health data with sources
+Answer ID: intent:9a4c719029
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-global-public-health-data-with-sources-9a4c719029.json
+Candidates:
+- Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
+
+## explore relativity quantum nuclear or particle physics
+Answer ID: intent:6e591ede46
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46.json
+Candidates:
+- Evercraft Physics Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-physics-atlas.base44.app/
+
+## explore space missions and observatories with evidence
+Answer ID: intent:838794817f
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-space-missions-and-observatories-with-evidence-838794817f.json
+Candidates:
+- Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-cosmos-atlas.base44.app/
+
+## explore wastewater or genomic surveillance
+Answer ID: intent:f9c0c21366
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-wastewater-or-genomic-surveillance-f9c0c21366.json
+Candidates:
+- Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
+
 ## explore wildlife conservation with uncertainty attached
 Answer ID: intent:f3fd2a685d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-wildlife-conservation-with-uncertainty-attached-f3fd2a685d.json
@@ -1151,6 +1199,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - DayTrade Lens | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
 
+## find a trusted professional through relationship paths
+Answer ID: intent:bf30793b00
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json
+Candidates:
+- Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
+
 ## find an obsolete automotive or machine part
 Answer ID: intent:c7133fab20
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json
@@ -1278,6 +1332,12 @@ Answer ID: intent:57e559302d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json
 Candidates:
 - Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+
+## find public health data blind spots
+Answer ID: intent:dcf7a415bd
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-public-health-data-blind-spots-dcf7a415bd.json
+Candidates:
+- Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
 
 ## find public safety or stability resources without creating an account
 Answer ID: intent:fe963fb462
@@ -1841,6 +1901,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
 
+## join a founding professional networking beta
+Answer ID: intent:d27794cd5a
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-founding-professional-networking-beta-d27794cd5a.json
+Candidates:
+- Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
+
 ## join a holiday lighting installer marketplace
 Answer ID: intent:caff03634f
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json
@@ -1931,11 +1997,35 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Wildlife Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://wildlife-atlas.base44.app/
 
+## learn astronomy with sources
+Answer ID: intent:0edc00f99e
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-astronomy-with-sources-0edc00f99e.json
+Candidates:
+- Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-cosmos-atlas.base44.app/
+
+## learn electromagnetism waves or optics
+Answer ID: intent:790bb7ec4e
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-electromagnetism-waves-or-optics-790bb7ec4e.json
+Candidates:
+- Evercraft Physics Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-physics-atlas.base44.app/
+
 ## learn how an energy system works
 Answer ID: intent:7ca5eb54c6
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-how-an-energy-system-works-7ca5eb54c6.json
 Candidates:
 - Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
+
+## learn how signals become astronomical inferences
+Answer ID: intent:21baa73a95
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-how-signals-become-astronomical-inferences-21baa73a95.json
+Candidates:
+- Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-cosmos-atlas.base44.app/
+
+## learn physics interactively
+Answer ID: intent:e71c8a1db5
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-physics-interactively-e71c8a1db5.json
+Candidates:
+- Evercraft Physics Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-physics-atlas.base44.app/
 
 ## let an AI act on business systems safely
 Answer ID: intent:75cb05b2ed
@@ -2249,6 +2339,12 @@ Answer ID: intent:855b17abb9
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/online-safety-and-healthy-boundary-education-855b17abb9.json
 Candidates:
 - Infinite Classroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://infiniteclassroom.base44.app/
+
+## organize a business networking circle
+Answer ID: intent:1486d2ce74
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-a-business-networking-circle-1486d2ce74.json
+Candidates:
+- Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
 
 ## organize an ecological restoration project
 Answer ID: intent:7e020c92a1
@@ -2735,6 +2831,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
+## research disease evidence with uncertainty attached
+Answer ID: intent:0e1637b1f6
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-disease-evidence-with-uncertainty-attached-0e1637b1f6.json
+Candidates:
+- Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
+
 ## research land production or resilience risk
 Answer ID: intent:64672abc7c
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-land-production-or-resilience-risk-64672abc7c.json
@@ -3143,6 +3245,36 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
 
+## study mechanics gravity or thermodynamics
+Answer ID: intent:1d0d56b46c
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-mechanics-gravity-or-thermodynamics-1d0d56b46c.json
+Candidates:
+- Evercraft Physics Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-physics-atlas.base44.app/
+
+## study One Health signals
+Answer ID: intent:a8b79c6570
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-one-health-signals-a8b79c6570.json
+Candidates:
+- Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
+
+## study pandemic intelligence and outbreak evidence
+Answer ID: intent:319dbfcc0d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-pandemic-intelligence-and-outbreak-evidence-319dbfcc0d.json
+Candidates:
+- Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
+
+## study planetary defense or cosmic motion
+Answer ID: intent:0eabf4a875
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-planetary-defense-or-cosmic-motion-0eabf4a875.json
+Candidates:
+- Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-cosmos-atlas.base44.app/
+
+## study planets stars galaxies and black holes
+Answer ID: intent:90dbd5bbb7
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-planets-stars-galaxies-and-black-holes-90dbd5bbb7.json
+Candidates:
+- Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-cosmos-atlas.base44.app/
+
 ## study the legal process in Epstein-related public records
 Answer ID: intent:3e297b0611
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-the-legal-process-in-epstein-related-public-records-3e297b0611.json
@@ -3197,6 +3329,12 @@ Answer ID: intent:de24de764f
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json
 Candidates:
 - Systemia Website Audit | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+
+## test a physics prediction before seeing the answer
+Answer ID: intent:bc616bd04d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/test-a-physics-prediction-before-seeing-the-answer-bc616bd04d.json
+Candidates:
+- Evercraft Physics Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-physics-atlas.base44.app/
 
 ## test my AI agent
 Answer ID: intent:b9494d0b8b
@@ -3277,6 +3415,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
 
+## track referrals and professional introductions
+Answer ID: intent:531cd56642
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-referrals-and-professional-introductions-531cd56642.json
+Candidates:
+- Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
+
 ## track repeated unwanted calls or texts
 Answer ID: intent:1625a03283
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-repeated-unwanted-calls-or-texts-1625a03283.json
@@ -3356,6 +3500,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
 - Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+
+## understand how astronomers know what they know
+Answer ID: intent:cccac24d96
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/understand-how-astronomers-know-what-they-know-cccac24d96.json
+Candidates:
+- Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-cosmos-atlas.base44.app/
 
 ## underwrite an EV charging site
 Answer ID: intent:c05a16b3c1

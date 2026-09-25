@@ -182,6 +182,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles#evercraft-service",
+      "name": "Evercraft Circles",
+      "alternateName": [],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "trusted_professional_network_and_referral_roster",
+      "description": "build a trusted professional referral network; organize a business networking circle; find a trusted professional through relationship paths; build a professional roster instead of a social feed"
+    },
+    {
+      "@type": "Service",
       "@id": "https://evercraft.base44.app/containment#evercraft-service",
       "name": "Evercraft Containment",
       "alternateName": [
@@ -194,6 +206,18 @@
       },
       "serviceType": "ai_persistence_and_automation_security_diagnostics",
       "description": "what is still running after I turned the automation off; audit my AI agents and automations for persistence; find orphaned cron jobs callbacks webhooks retries queues or credentials; map how disabled or deleted agents could regenerate"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-cosmos-atlas.base44.app/#evercraft-service",
+      "name": "Evercraft Cosmos Atlas",
+      "alternateName": [],
+      "url": "https://evercraft-cosmos-atlas.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_led_astronomy_and_space_learning",
+      "description": "learn astronomy with sources; study planets stars galaxies and black holes; understand how astronomers know what they know; explore space missions and observatories with evidence"
     },
     {
       "@type": "Service",
@@ -211,6 +235,21 @@
     },
     {
       "@type": "Service",
+      "@id": "https://evercraft-health-atlas.base44.app/health-atlas#evercraft-service",
+      "name": "Evercraft Global Health Atlas",
+      "alternateName": [
+        "Evercraft Health Atlas",
+        "Global Health Atlas"
+      ],
+      "url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_labeled_public_health_intelligence_atlas",
+      "description": "explore global public health data with sources; compare population health indicators; study pandemic intelligence and outbreak evidence; explore wastewater or genomic surveillance"
+    },
+    {
+      "@type": "Service",
       "@id": "https://network-control.base44.app/#evercraft-service",
       "name": "Evercraft Network",
       "alternateName": [],
@@ -220,6 +259,18 @@
       },
       "serviceType": "application_network_continuity",
       "description": "application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraft-physics-atlas.base44.app/#evercraft-service",
+      "name": "Evercraft Physics Atlas",
+      "alternateName": [],
+      "url": "https://evercraft-physics-atlas.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_led_physics_learning",
+      "description": "learn physics interactively; study mechanics gravity or thermodynamics; learn electromagnetism waves or optics; explore relativity quantum nuclear or particle physics"
     },
     {
       "@type": "Service",
