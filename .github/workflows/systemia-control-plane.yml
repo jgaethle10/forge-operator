@@ -1,0 +1,51 @@
+name: Systemia Unified Control Plane
+
+on:
+  pull_request:
+    paths:
+      - "systemia/control-plane/**"
+      - "systemia/organism/**"
+      - "systemia/saban/**"
+      - "systemia/signal-fabric/**"
+      - "systemia/yard/**"
+      - "systemia/compute/**"
+      - "systemia/network/**"
+      - "systemia/chum/**"
+      - "systemia/collider/**"
+      - "systemia/beast-mode/**"
+      - "systemia/media-studio/**"
+      - "package.json"
+      - ".github/workflows/systemia-control-plane.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/control-plane/**"
+      - "systemia/organism/**"
+      - "systemia/saban/**"
+      - "systemia/signal-fabric/**"
+      - "systemia/yard/**"
+      - "systemia/compute/**"
+      - "systemia/network/**"
+      - "systemia/chum/**"
+      - "systemia/collider/**"
+      - "systemia/beast-mode/**"
+      - "systemia/media-studio/**"
+      - "package.json"
+
+permissions:
+  contents: read
+
+jobs:
+  prove-control-plane:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run machine:status
+      - run: npm run proof:control-plane
