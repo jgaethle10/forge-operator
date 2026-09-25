@@ -49,6 +49,11 @@ assert.equal(result.doctrine.same_turn_response, true);
 assert.equal(result.doctrine.no_private_thread_surveillance, true);
 assert.equal(result.doctrine.no_unsolicited_human_outreach, true);
 assert.equal(result.intent_retention, 'not_persisted_by_router');
+assert.equal(result.continuation.mode, 'human_confirmed_commercial_handoff');
+assert.ok(result.continuation.review_url.includes('public_id=forensiscope-overflow'));
+assert.equal(result.continuation.checkout_creation_requires_explicit_human_confirmation, true);
+assert.equal(result.continuation.checkout_is_payment_proof, false);
+assert.equal(result.continuation.paid_state_requires_authoritative_provider_verification, true);
 
 const miss = huntLiveIntent({
   catalog,
@@ -58,5 +63,6 @@ const miss = huntLiveIntent({
 });
 assert.equal(miss.matched, false);
 assert.equal(miss.state, 'no_match');
+assert.equal(miss.continuation, null);
 
 console.log('CHUM live-intent hunter proof passed.');
