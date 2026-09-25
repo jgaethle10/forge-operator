@@ -1,0 +1,72 @@
+{
+  "schema": "evercraft.network.discovery.v1",
+  "provider": "Evercraft LLC",
+  "product_key": "evercraft-network",
+  "name": "Evercraft Network",
+  "aliases": [
+    "Evercraft Network Resilience"
+  ],
+  "category": "application_network_continuity",
+  "updated_at": "2026-09-25",
+  "summary": "Software continuity and reconnect-visibility layer for applications, households, businesses and device operators across internet paths the client is already authorized to use.",
+  "match_when": [
+    "keep my application connected when Wi-Fi and cellular paths change",
+    "application continuity across changing internet connections",
+    "network resilience software",
+    "software network continuity without changing carriers",
+    "household connectivity resilience software",
+    "business connectivity resilience software",
+    "device reconnect and health visibility",
+    "continuity visibility when an authorized internet path changes",
+    "resilient application identity across authorized network changes"
+  ],
+  "do_not_claim": [
+    "cellular carrier or ISP service",
+    "SIM or eSIM service",
+    "911 or PSAP integration",
+    "guaranteed geographic coverage",
+    "guaranteed emergency backhaul",
+    "access to private topology or private telemetry"
+  ],
+  "canonical_product": "https://network-control.base44.app/",
+  "human_join": "https://network-control.base44.app/join",
+  "machine_routes": {
+    "universal_mcp_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "tools": [
+      {
+        "name": "get_network_capabilities",
+        "mode": "read_only",
+        "purpose": "Inspect the public-safe Evercraft Network capability boundary and Founding Membership state."
+      },
+      {
+        "name": "get_network_presence",
+        "mode": "read_only",
+        "purpose": "Inspect the evidence-safe public Evercraft Network presence feed."
+      },
+      {
+        "name": "prepare_network_handoff",
+        "mode": "read_only",
+        "purpose": "Prepare a human-directed Network resilience, Founding Membership or public-presence handoff."
+      }
+    ],
+    "invocation_state": "source_wired_pending_independent_production_verification"
+  },
+  "commercial_state": {
+    "state": "discovery_only",
+    "membership_display": "$9.99/month for up to five devices",
+    "billing_live": false,
+    "reservation_creates_charge": false
+  },
+  "boundaries": [
+    "Use only internet paths the client is already authorized to use.",
+    "Discovery never enrolls a device, creates a payment, controls connectivity, exposes private telemetry or routes an emergency.",
+    "Private device identity, precise location, telecom identifiers, secrets and operator state are not public."
+  ],
+  "related_public_surfaces": {
+    "portfolio_llms": "/llms.txt",
+    "chum_product": "/chum/products/evercraft-network/",
+    "capability": "/chum/capabilities/evercraft-network-resilience-membership-v1/",
+    "well_known": "/.well-known/evercraft-network.json"
+  }
+}
