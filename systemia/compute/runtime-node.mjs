@@ -261,6 +261,7 @@ export async function startEvercraftComputeNode({
             graceSeconds: Number(body.input?.grace_seconds || 90),
             deploymentReceipt: String(body.input?.deployment_receipt || ''),
             snapshotPath,
+            initialCheckpoint: body.input?.initial_checkpoint || null,
           });
           const service = await startKaidanceHealthService({
             runtime,
@@ -303,6 +304,32 @@ export async function startEvercraftComputeNode({
         const entry = services.get(serviceHealth[1]);
         if (!entry) return send(res, 404, { error: 'service_not_found' });
         return send(res, 200, entry.runtime.health());
+      }
+
+      const serviceCheckpoint = req.url?.match(/^\/v1\/services\/([^/]+)\/checkpoint$/);
+      if (req.method === 'POST' && serviceCheckpoint) {
+        const entry = services.get(serviceCheckpoint[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.kaidance-collider.v1') {
+          return send(res, 422, { error: 'checkpoint_not_supported' });
+        }
+        const checkpoint = entry.runtime.checkpoint();
+        return send(res, 200, {
+          ok: true,
+          service_id: serviceCheckpoint[1],
+          checkpoint,
+          receipt: chain.issue('service.checkpoint.captured', {
+            service_id: serviceCheckpoint[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            state_hash: checkpoint.state_hash,
+          }),
+        });
       }
 
       const serviceDeploymentReceipt = req.url?.match(/^\/v1\/services\/([^/]+)\/deployment-receipt$/);
