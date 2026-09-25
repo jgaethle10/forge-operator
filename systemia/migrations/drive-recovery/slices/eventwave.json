@@ -1,0 +1,120 @@
+{
+  "schema": "evercraft.systemia.drive-recovery-slice.v1",
+  "product": "EventWave AI",
+  "source_class": "institutional_platform_record",
+  "recovery_state": "architecture_and_evidence_contract_recovered_pending_source_and_runtime_parity",
+  "architecture": {
+    "eventwave": "event_discovery_public_source_data_provenance_location_and_market_intelligence",
+    "journal_bridge": "reader_facing_local_context_and_around_you_discovery",
+    "everystage": "event_operator_planning_staffing_execution_measurement_and_settlement",
+    "separation_rule": "public_interest_discovery_must_not_be_reduced_to_only_monetizable_inventory"
+  },
+  "source_doctrine": {
+    "foundation": "public_and_primary_sources",
+    "paid_feeds": "optional_accelerants_not_foundation",
+    "preferred_families": [
+      "government_event_apis",
+      "municipal_public_calendars",
+      "rss_atom",
+      "ics_icalendar",
+      "schema_org_event_jsonld",
+      "tourism_destination_calendars",
+      "university_college_calendars",
+      "venue_cultural_institution_calendars",
+      "sports_schedules",
+      "festival_calendars",
+      "direct_organizer_venue_partner_feeds"
+    ],
+    "generic_html_rule": "source_specific_or_manual_until_a_reliable_registered_adapter_exists"
+  },
+  "event_evidence_model": {
+    "core_fields": [
+      "title",
+      "description",
+      "start",
+      "end",
+      "time_precision",
+      "venue",
+      "city",
+      "region",
+      "country",
+      "country_code",
+      "coordinates",
+      "timezone",
+      "source_name",
+      "source_url",
+      "source_event_id",
+      "source_type",
+      "evidence_state",
+      "language",
+      "currency",
+      "price",
+      "category",
+      "ticket_link",
+      "operator_platform_linkage"
+    ],
+    "time_precision": ["exact", "date_only", "approximate"],
+    "rules": [
+      "never_fabricate_midnight_for_date_only_events",
+      "ongoing_multi_day_events_use_overlap_logic",
+      "unknown_scores_remain_unknown",
+      "render_event_local_timezone_and_currency",
+      "capability_proof_is_not_live_coverage_proof"
+    ]
+  },
+  "parser_lanes": [
+    "rss_atom",
+    "ics_icalendar",
+    "schema_org_jsonld",
+    "json_api"
+  ],
+  "ingestion_contract": [
+    "resolve_registered_target",
+    "check_access_state",
+    "fetch_source",
+    "hash_source_response",
+    "parse_registered_strategy",
+    "normalize_time_location_category_and_source",
+    "filter_active_and_future_records",
+    "sort_nearest_first_before_caps",
+    "check_exact_source_ids",
+    "apply_fingerprint_deduplication",
+    "create_or_update_event",
+    "preserve_source_lineage",
+    "finalize_ingestion_evidence",
+    "update_source_health_only_on_actual_success"
+  ],
+  "seo_mesh": {
+    "rule": "indexation_follows_real_inventory_and_source_diversity",
+    "city_pages": "require_meaningful_current_inventory_and_multiple_source_lanes",
+    "category_pages": "require_enough_real_category_inventory_to_stand_alone",
+    "thin_pages": "noindex_follow",
+    "retrieval_order": "resolve_market_before_event_retrieval"
+  },
+  "proximity_contract": {
+    "preferred": "venue_or_event_coordinates",
+    "fallback": "city_level_matching",
+    "enrichment": "progressive_without_blocking_useful_discovery"
+  },
+  "source_of_truth_lesson": "checked_in_entity_and_schema_definitions_must_match_runtime_fields_or_rebuilds_can_strip_runtime_only_changes",
+  "acceptance": [
+    "every_public_event_retains_source_lineage",
+    "date_only_and_approximate_events_render_without_fake_precision",
+    "failed_parse_or_fetch_attempts_leave_evidence",
+    "market_pages_are_not_indexed_ahead_of_qualified_inventory",
+    "current_and_ongoing_events_are_distinguished_from_raw_legacy_rows",
+    "source_health_changes_only_after_real_success",
+    "location_first_queries_do_not_depend_on_a_capped_global_event_scan",
+    "operator_publication_intent_is_not_claimed_as_success_without_end_to_end_receipts",
+    "tests_and_live_runtime_parity are required before legacy retirement"
+  ],
+  "known_recovery_gaps": [
+    "exact_legacy_source_files",
+    "complete_venue_coordinates",
+    "source_specific_html_adapters",
+    "generated_sitemap_from_qualified_market_state",
+    "multi_source_observation_lineage_depth",
+    "secure_operator_to_eventwave_publication_sync",
+    "live_production_ingestion_receipts_for_every_registered_target"
+  ]
+}
