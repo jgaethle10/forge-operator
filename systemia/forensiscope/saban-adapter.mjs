@@ -3,6 +3,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { validateAuthorizedMediaSource, hashFile } from './authorized-source.mjs';
 import { transcribePreparedAudio } from './transcription-engine.mjs';
+import { buildEvidenceGraph } from './evidence-graph.mjs';
 
 function safeId(value) {
   return String(value || 'item')
@@ -600,7 +601,8 @@ export async function reconcile({ results, contract }) {
     transcriptionShards.flatMap((entry) =>
       (entry.segments || []).map((segment) => ({
         ...segment,
-        shard_index: entry.shard_index
+        shard_index: entry.shard_index,
+        engine_id: entry.engine_id || segment.engine_id || null
       }))
     ),
     overlap
@@ -618,15 +620,36 @@ export async function reconcile({ results, contract }) {
   const transcriptionState = transcriptSegments.length
     ? (transcriptErrors ? 'partial' : 'transcribed')
     : (engineUnavailable ? 'engine_not_configured' : 'not_available');
+  const reconciledTimeline = dedupeTimeline(timeline);
+  const transcription = {
+    state: transcriptionState,
+    engine_ids: engineIds,
+    shard_count: transcriptionShards.length,
+    transcribed_shards: transcribedShards,
+    error_shards: transcriptErrors,
+    segment_count: transcriptSegments.length,
+    segments: transcriptSegments,
+    text: transcriptSegments.map((entry) => entry.text).join(' ')
+  };
+  const originalSourceSha256 = originalHashes.size === 1 ? [...originalHashes][0] : null;
+  const evidenceGraph = originalSourceSha256
+    ? buildEvidenceGraph({
+        sourceSha256: originalSourceSha256,
+        transcript: transcription,
+        timeline: reconciledTimeline,
+        exactDuplicateGroups: repeatedContent,
+        nearDuplicatePairs: nearRepeatedPairs
+      })
+    : null;
 
   return {
     schema: 'evercraft.forensiscope.reconciliation.v1',
     status: provenanceOk ? 'reconciled' : 'reconciliation_failed',
     source_integrity_preserved: provenanceOk,
-    original_source_sha256: originalHashes.size === 1 ? [...originalHashes][0] : null,
+    original_source_sha256: originalSourceSha256,
     derivative_integrity_checks: provenance.length,
     worker_statuses: workerStatuses,
-    timeline: dedupeTimeline(timeline),
+    timeline: reconciledTimeline,
     duplicate_review: {
       duplicate_hash_groups: duplicates.length,
       repeated_content_groups: repeatedContent.length,
@@ -637,15 +660,7 @@ export async function reconcile({ results, contract }) {
       perceptual_pairs: nearRepeatedPairs.slice(0, 200)
     },
     audio_assets: audio,
-    transcription: {
-      state: transcriptionState,
-      engine_ids: engineIds,
-      shard_count: transcriptionShards.length,
-      transcribed_shards: transcribedShards,
-      error_shards: transcriptErrors,
-      segment_count: transcriptSegments.length,
-      segments: transcriptSegments,
-      text: transcriptSegments.map((entry) => entry.text).join(' ')
-    }
+    transcription,
+    evidence_graph: evidenceGraph
   };
 }
