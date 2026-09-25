@@ -108,6 +108,7 @@ export class SystemiaCoreResidentSupervisor {
     this.services = new Map();
     this.timers = new Map();
     this.children = new Map();
+    this.cycleChildren = new Map();
     this.restartHistory = new Map();
     this.receiptFile = path.join(this.stateDir, 'receipts.jsonl');
     this.healthFile = path.join(this.stateDir, 'health.json');
@@ -235,6 +236,7 @@ export class SystemiaCoreResidentSupervisor {
         env: this.env,
         stdio: ['ignore', 'pipe', 'pipe'],
       });
+      this.cycleChildren.set(config.service_key, child);
       let stdout = '';
       let stderr = '';
       child.stdout?.on('data', (chunk) => { stdout = limitText(stdout + chunk); });
@@ -243,6 +245,7 @@ export class SystemiaCoreResidentSupervisor {
         stderr = limitText(`${stderr}\n${error.message}`);
       });
       child.once('close', (code) => {
+        this.cycleChildren.delete(config.service_key);
         state.last_completed_at = this.clock().toISOString();
         state.last_exit_code = Number(code ?? -1);
         state.status = code === 0 ? 'idle' : 'failed';
@@ -407,21 +410,36 @@ export class SystemiaCoreResidentSupervisor {
     this.timers.clear();
 
     const waits = [];
-    for (const [serviceKey, child] of this.children.entries()) {
+    const terminate = (serviceKey, child) => {
       waits.push(new Promise((resolve) => {
-        const done = () => resolve();
-        child.once('close', done);
-        try { child.kill('SIGTERM'); } catch { resolve(); }
-        setTimeout(() => {
-          try { child.kill('SIGKILL'); } catch {}
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
           resolve();
+        };
+        child.once('close', done);
+        try { child.kill('SIGTERM'); } catch { done(); }
+        setTimeout(() => {
+          if (settled) return;
+          try { child.kill('SIGKILL'); } catch {}
+          done();
         }, 3000).unref?.();
       }));
       const entry = this.services.get(serviceKey);
       if (entry) entry.state.status = 'stopping';
+    };
+
+    for (const [serviceKey, child] of this.children.entries()) {
+      terminate(serviceKey, child);
     }
+    for (const [serviceKey, child] of this.cycleChildren.entries()) {
+      terminate(serviceKey, child);
+    }
+
     await Promise.all(waits);
     this.children.clear();
+    this.cycleChildren.clear();
 
     for (const entry of this.services.values()) {
       if (entry.state.status !== 'held') entry.state.status = 'stopped';
