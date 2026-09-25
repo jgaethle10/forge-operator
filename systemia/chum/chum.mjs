@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { buildRevenueFormation } from '../saban/revenue-swarm.mjs';
 
 const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
 const hasFlag = (flag) => process.argv.includes(flag);
@@ -275,6 +276,29 @@ const machineCatalogAudit = machineOffers.map((offer) => {
 });
 const machineCatalogRepair = machineCatalogAudit.filter((x) => x.issues.length);
 
+const painIndex = fs.existsSync('public/.well-known/evercraft-pain-index.json')
+  ? readJson('public/.well-known/evercraft-pain-index.json')
+  : { entries: [] };
+const probeSuite = fs.existsSync('chum-probes/probe-suite.json')
+  ? readJson('chum-probes/probe-suite.json')
+  : { cases: [] };
+const commerceCanary = fs.existsSync('artifacts/chum/commerce-canary-latest.json')
+  ? readJson('artifacts/chum/commerce-canary-latest.json')
+  : null;
+
+const sabanRevenueFormation = buildRevenueFormation({
+  catalog: machineCatalog,
+  painIndex,
+  probeSuite,
+  commerceCanary,
+});
+
+fs.mkdirSync('artifacts/saban-revenue', { recursive: true });
+fs.writeFileSync(
+  'artifacts/saban-revenue/latest.json',
+  JSON.stringify(sabanRevenueFormation, null, 2) + '\n'
+);
+
 const receipt = {
   schema: 'evercraft.chum.receipt.v2',
   name: 'CHUM',
@@ -296,7 +320,10 @@ const receipt = {
     invalid_surfaces: invalid.length,
     machine_catalog_offers: machineOffers.length,
     machine_catalog_sell_now: machineOffers.filter((x) => x.commercial_state === 'sell_now').length,
-    machine_catalog_offers_needing_repair: machineCatalogRepair.length
+    machine_catalog_offers_needing_repair: machineCatalogRepair.length,
+    saban_revenue_sell_now: sabanRevenueFormation.summary.sell_now_offers,
+    saban_revenue_payment_ready: sabanRevenueFormation.summary.payment_ready,
+    saban_revenue_canary_broken: sabanRevenueFormation.summary.canary_broken
   },
   provider_targets: providerTargets,
   machine_catalog: {
@@ -304,6 +331,13 @@ const receipt = {
     snapshot_schema: machineCatalog.schema || null,
     offer_count: machineOffers.length,
     offers: machineCatalogAudit
+  },
+  saban_revenue: {
+    schema: sabanRevenueFormation.schema,
+    summary: sabanRevenueFormation.summary,
+    first_dollar_velocity: sabanRevenueFormation.lanes.first_dollar_velocity.slice(0, 6),
+    high_value_cash: sabanRevenueFormation.lanes.high_value_cash.slice(0, 6),
+    repair_before_distribution: sabanRevenueFormation.lanes.repair_before_distribution
   },
   products
 };
@@ -324,6 +358,9 @@ const md = [
   `Machine catalog offers: ${receipt.summary.machine_catalog_offers}`,
   `Sell-now machine offers: ${receipt.summary.machine_catalog_sell_now}`,
   `Machine offers needing discovery repair: ${receipt.summary.machine_catalog_offers_needing_repair}`,
+  `Saban sell-now offers: ${receipt.summary.saban_revenue_sell_now}`,
+  `Saban payment-ready offers: ${receipt.summary.saban_revenue_payment_ready}`,
+  `Saban broken commerce doors: ${receipt.summary.saban_revenue_canary_broken}`,
   '',
   '> Readiness below measures Evercraft-owned public surfaces. It is not evidence that any named AI provider discovered, recommended, invoked, or converted a product.',
   '',
