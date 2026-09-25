@@ -75,6 +75,17 @@ export function evaluateSwarmQuality({
     });
   }
 
+  if (
+    quality.require_transcription === true &&
+    reconciliation?.transcription?.state !== 'transcribed'
+  ) {
+    failures.push({
+      code: 'transcription_required',
+      observed: reconciliation?.transcription?.state || null,
+      segment_count: Number(reconciliation?.transcription?.segment_count || 0)
+    });
+  }
+
   return {
     schema: 'evercraft.saban.quality-receipt.v1',
     status: failures.length ? 'fail' : 'pass',
