@@ -42,11 +42,20 @@ export function evaluateNode001FieldEvidence(evidence = {}) {
   if (evidence.reboot_persistence_verified !== true) {
     return { ok: false, reason: 'reboot_persistence_not_verified' };
   }
+  if (!String(evidence.reboot_receipt_ref || '').startsWith('sha256:')) {
+    return { ok: false, reason: 'reboot_receipt_missing' };
+  }
   if (evidence.offline_operation_verified !== true) {
     return { ok: false, reason: 'offline_operation_not_verified' };
   }
+  if (!String(evidence.offline_receipt_ref || '').startsWith('sha256:')) {
+    return { ok: false, reason: 'offline_receipt_missing' };
+  }
   if (evidence.telemetry_verified !== true) {
     return { ok: false, reason: 'telemetry_not_verified' };
+  }
+  if (!String(evidence.telemetry_receipt_ref || '').startsWith('sha256:')) {
+    return { ok: false, reason: 'telemetry_receipt_missing' };
   }
 
   for (const key of ['host_identifier_ref', 'test_date', 'operator_ref', 'receipt_ref']) {
