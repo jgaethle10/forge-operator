@@ -88,6 +88,13 @@
         "require_all_roles": true,
         "require_reconciliation": false,
         "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
       }
     },
     {
@@ -152,6 +159,13 @@
         "require_all_roles": true,
         "require_reconciliation": false,
         "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 256,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 256,
+        "require_capacity_hint": false
       }
     },
     {
@@ -216,6 +230,13 @@
         "require_reconciliation": true,
         "require_source_integrity": true,
         "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 512,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 512,
+        "require_capacity_hint": true
       }
     }
   ]
