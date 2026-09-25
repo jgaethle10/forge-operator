@@ -40,3 +40,13 @@ Important truth boundaries:
 - paid state requires authoritative verification
 - media submission is human-confirmed and the user must have the right or lawful authority to submit it
 - do not claim automatic unknown-person identification, guilt or intent determination, or authenticity/admissibility certification
+
+Discovery playground:
+/forensiscope/developers/playground.html
+
+Verified client setup:
+/forensiscope/developers/clients/
+- VS Code: /forensiscope/developers/clients/vscode.html
+- Claude API MCP connector: /forensiscope/developers/clients/claude-api.html
+
+Client setup does not imply provider endorsement or provider-side indexing.
