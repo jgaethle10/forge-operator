@@ -51,6 +51,7 @@ jobs:
           npm run chum:answers
           npm run chum:capabilities
           npm run chum:mirror
+          npm run chum:crawl-pressure
           npm run saban:discovery
 
       - name: Publish changed CHUM mirrors
@@ -193,7 +194,7 @@ jobs:
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
