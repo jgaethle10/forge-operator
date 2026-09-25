@@ -179,8 +179,18 @@ export async function runAssignment({ assignment, rootDir }) {
 
 export async function reconcile({ results }) {
   const rows = (results || []).filter(Boolean);
-  const byName = new Map();
+  const byFingerprint = new Map();
+
   for (const row of rows) {
+    const fingerprint =
+      row.candidate?.source_record_fingerprint ||
+      `name:${normalize(row.candidate?.name)}`;
+    if (!byFingerprint.has(fingerprint)) byFingerprint.set(fingerprint, row);
+  }
+
+  const uniqueSourceRecords = [...byFingerprint.values()];
+  const byName = new Map();
+  for (const row of uniqueSourceRecords) {
     const key = normalize(row.candidate?.name);
     if (!key) continue;
     if (!byName.has(key)) byName.set(key, []);
@@ -192,7 +202,9 @@ export async function reconcile({ results }) {
     .map(([name, entries]) => ({
       normalized_name: name,
       count: entries.length,
-      fingerprints: [...new Set(entries.map((entry) => entry.candidate?.source_record_fingerprint).filter(Boolean))]
+      fingerprints: entries
+        .map((entry) => entry.candidate?.source_record_fingerprint)
+        .filter(Boolean)
     }));
 
   const representative = [...byName.values()].map((entries) => entries[0]);
