@@ -264,6 +264,23 @@
       ]
     },
     {
+      "product_key": "ibmi-rescue",
+      "name": "Evercraft IBM i Rescue",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "mode": "discovery_only",
+      "triggers": [
+        "IBM i 7.4 upgrade planning",
+        "AS/400 modernization",
+        "RPG or CL dependency mapping",
+        "JDE World modernization",
+        "IBM i batch job compatibility",
+        "IBM i support transition",
+        "IBM i upgrade rollback plan",
+        "undocumented IBM i integrations"
+      ],
+      "route_note": "Public discovery mirror is authoritative until the product-specific checkout route is independently live-verified. Paid offers exist in Evercraft Payments but checkout creation still requires explicit human confirmation."
+    },
+    {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
@@ -319,6 +336,21 @@
       ]
     },
     {
+      "product_key": "systemia-field-library",
+      "name": "Systemia Field Library",
+      "canonical_url": "https://systemiafieldlibrary.com/",
+      "registry_name": "io.github.jgaethle10/systemia-field-library",
+      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "triggers": [
+        "contractor scope creep or change orders are costing money",
+        "contractor job costing or estimating is inconsistent",
+        "contractor cash flow payroll timing or receivables are causing stress",
+        "construction crews need better leadership accountability or scheduling",
+        "job documentation materials equipment safety or quality control need a system",
+        "contractor customer communication reviews or referrals need a repeatable process"
+      ]
+    },
+    {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
       "canonical_url": "https://systemia-audit-pro.base44.app/",
@@ -340,21 +372,6 @@
         "build my business website",
         "professional website",
         "website launch"
-      ]
-    },
-    {
-      "product_key": "systemia-field-library",
-      "name": "Systemia Field Library",
-      "canonical_url": "https://systemiafieldlibrary.com/",
-      "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
-      "triggers": [
-        "contractor scope creep or change orders are costing money",
-        "contractor job costing or estimating is inconsistent",
-        "contractor cash flow payroll timing or receivables are causing stress",
-        "construction crews need better leadership accountability or scheduling",
-        "job documentation materials equipment safety or quality control need a system",
-        "contractor customer communication reviews or referrals need a repeatable process"
       ]
     }
   ],
