@@ -22,7 +22,8 @@
     "commercial_path": "/api/commercial",
     "public_discovery": [
       "/llms.txt",
-      "/.well-known/evercraft-capabilities.json"
+      "/.well-known/evercraft-capabilities.json",
+      "/api/chum/attribution"
     ]
   },
   "environment": {
@@ -31,7 +32,18 @@
     ],
     "optional_human_gated": [
       "FORGE_CHECKOUT_URL"
-    ]
+    ],
+    "optional_runtime": [
+      "CHUM_PUBLIC_ORIGIN",
+      "CHUM_ATTRIBUTION_SECRET",
+      "CHUM_ATTRIBUTION_SINK_URL",
+      "CHUM_ATTRIBUTION_SINK_TOKEN",
+      "CHUM_ATTRIBUTION_INGEST_TOKEN"
+    ],
+    "rules": {
+      "CHUM_PUBLIC_ORIGIN": "May be set only to a public route independently verified in the current Yard DeploymentReceipt.",
+      "attribution": "Missing attribution configuration must degrade to untracked public discovery, never fabricated referral or revenue receipts."
+    }
   },
   "capacity": {
     "mode": "dynamic-lease",
