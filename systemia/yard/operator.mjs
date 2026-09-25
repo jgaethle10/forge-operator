@@ -906,15 +906,24 @@ export class YardOperator {
     const record = this.deploymentStatus(deploymentId);
     if (!record) return { ok: false, state: 'missing' };
 
-    if (record.receipt?.workload_class === 'systemia.chum-public-origin.v1') {
+    if (
+      record.receipt?.workload_class === 'systemia.chum-public-origin.v1' ||
+      record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1'
+    ) {
+      const broker =
+        record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1';
+      const service = broker ? 'remote-capacity-broker' : 'chum-public-origin';
+      const healthPath = broker ? '/v1/remote/health' : '/api/health';
+
       if (record.public_route?.verified === true) {
         try {
-          const health = await request(`${record.public_route.origin}/api/health`);
+          const health = await request(`${record.public_route.origin}${healthPath}`);
           const ok =
             health.ok === true &&
-            health.service === 'chum-public-origin' &&
+            health.service === service &&
             health.instance_id === record.result?.instance_id &&
-            health.deployment_receipt_ref === record.receipt?.receipt_hash;
+            health.deployment_receipt_ref === record.receipt?.receipt_hash &&
+            (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1');
           return {
             ok,
             state: ok ? 'public_route_verified' : 'public_route_mismatch',
@@ -943,12 +952,17 @@ export class YardOperator {
             state: 'public_route_unbound',
             local_health_ok:
               health.ok === true &&
-              health.service === 'chum-public-origin' &&
-              health.instance_id === record.result?.instance_id,
+              health.service === service &&
+              health.instance_id === record.result?.instance_id &&
+              (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1'),
             health,
           };
         } catch (error) {
-          return { ok: false, state: 'local_origin_unreachable', error: String(error?.message || error) };
+          return {
+            ok: false,
+            state: broker ? 'local_broker_unreachable' : 'local_origin_unreachable',
+            error: String(error?.message || error),
+          };
         }
       }
     }
