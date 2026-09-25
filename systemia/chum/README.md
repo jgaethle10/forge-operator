@@ -85,3 +85,32 @@ A provider name supplied by a public caller is labeled caller-asserted. It is no
 Public callers may record only `landing` and `checkout_started`. Neither counts as revenue. `payment_verified` and `fulfilled` are trusted-backend states and require complete authoritative payment evidence.
 
 Without a durable receipt sink, public events are explicitly reported as not persisted and trusted payment ingestion fails closed. CHUM never performs a payment itself.
+
+## LLM Hunter
+
+CHUM is not only a passive discovery surface. The LLM Hunter actively searches public AI/agent ecosystems for legitimate machine-discovery entrances, maps submission and registry paths, pushes current Evercraft discovery surfaces outward through supported channels, probes providers from clean brand-blind sessions, records pickup receipts, and turns misses into repair work.
+
+The attack loop is:
+
+`DISCOVER_ECOSYSTEM → MAP_MACHINE_ENTRANCES → PUBLISH_OR_SUBMIT → BROADCAST → PROBE_BRAND_BLIND → MEASURE_PICKUP → REPAIR_MISS → REPEAT`
+
+The hunter targets LLMs, agents, registries, marketplaces, directories, search/crawler systems and machine tool ecosystems. It does **not** send unsolicited email or direct messages to end users. Publication must use legitimate public developer, registry, crawler, search, MCP, plugin or tool-discovery paths. Provider pickup and revenue remain receipt-gated.
+
+Commands:
+
+```bash
+npm run chum:hunt
+npm run chum:hunt:offline
+npm run test:chum-hunter
+```
+
+The scheduled hunter rotates one positive buyer-pain probe across authorized provider interfaces each hour rather than blasting the entire probe suite every run.
+
+### Federated ARD strike lane
+
+CHUM also goes directly to agent-discovery infrastructure. It enumerates the live remote MCP endpoints in `mcp-registry/*.json`, submits them to a federated Agentic Resource Discovery registry that verifies MCP endpoints by handshake, and runs a rotating brand-blind ARD search to measure whether Evercraft comes back for real pain language.
+
+`npm run chum:ard-strike` performs the live submission/search pass. `npm run chum:ard-strike:offline` and `npm run test:chum-ard-strike` prove the bounded behavior without network effects.
+
+Scheduled behavior is deliberately aggressive but not abusive: provider/search discovery runs hourly; ARD endpoint submission runs on relevant pushes and every six hours, while the registry's own retry schedule handles pending verification between strikes. No end-user email, DM, payment, or other human-targeted action is part of this lane.
+
