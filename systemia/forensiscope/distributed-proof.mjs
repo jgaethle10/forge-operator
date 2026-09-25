@@ -59,9 +59,9 @@ process.env.FORENSISCOPE_TRANSCRIBE_ARGS_JSON = JSON.stringify([
 const sourcePath = path.join(sourceDir, 'synthetic-repeat.mkv');
 run('ffmpeg', [
   '-v', 'error',
-  '-f', 'lavfi', '-i', 'color=c=red:s=160x120:r=2:d=4',
-  '-f', 'lavfi', '-i', 'color=c=blue:s=160x120:r=2:d=4',
-  '-f', 'lavfi', '-i', 'color=c=red:s=160x120:r=2:d=4',
+  '-f', 'lavfi', '-i', 'testsrc2=size=160x120:rate=2:duration=4',
+  '-f', 'lavfi', '-i', 'smptebars=size=160x120:rate=2:duration=4',
+  '-f', 'lavfi', '-i', 'testsrc2=size=160x120:rate=2:duration=4,eq=brightness=0.02',
   '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=16000:duration=12',
   '-filter_complex', '[0:v][1:v][2:v]concat=n=3:v=1:a=0[v]',
   '-map', '[v]',
@@ -182,7 +182,8 @@ assert.equal(receipt.reconciliation.worker_statuses.frame_hash_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.audio_extract_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.transcription_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.provenance_guard, 4);
-assert.ok(receipt.reconciliation.duplicate_review.repeated_content_groups > 0);
+assert.ok(receipt.reconciliation.duplicate_review.perceptual_signature_count > 0);
+assert.ok(receipt.reconciliation.duplicate_review.near_repeated_pairs > 0);
 assert.ok(
   receipt.reconciliation.audio_assets.some(
     (entry) => entry.state === 'prepared_for_transcription'
@@ -208,6 +209,8 @@ const proof = {
   execution_fabric: receipt.execution_fabric,
   completed_assignments: receipt.scheduler_summary.counts.completed,
   repeated_content_groups: receipt.reconciliation.duplicate_review.repeated_content_groups,
+  near_repeated_pairs: receipt.reconciliation.duplicate_review.near_repeated_pairs,
+  perceptual_signature_count: receipt.reconciliation.duplicate_review.perceptual_signature_count,
   timeline_entries: receipt.reconciliation.timeline.length,
   audio_shards_prepared: receipt.reconciliation.audio_assets.filter(
     (entry) => entry.state === 'prepared_for_transcription'
