@@ -177,6 +177,16 @@ function meetsResourceProfile(node, profile = null) {
   if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
     return { eligible: false, reason: 'insufficient_memory_capacity' };
   }
+
+  for (const executable of profile.required_executables || []) {
+    if (hint.executables?.[executable] !== true) {
+      return {
+        eligible: false,
+        reason: `missing_required_executable:${executable}`
+      };
+    }
+  }
+
   return { eligible: true, reason: null };
 }
 
