@@ -235,18 +235,26 @@ export async function startEvercraftComputeNode({
   const readSabanIdempotency = (cacheKey) => {
     const file = sabanIdempotencyPath(cacheKey);
     if (!fs.existsSync(file)) return null;
-    try {
-      const record = JSON.parse(fs.readFileSync(file, 'utf8'));
-      return record?.schema === 'evercraft.saban.idempotency-record.v1'
-        ? record
-        : null;
-    } catch {
-      return null;
+
+    const record = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (record?.schema !== 'evercraft.saban.idempotency-record.v1') {
+      throw new Error('saban_idempotency_record_schema_invalid');
     }
+
+    const { record_hash: recordHash, ...body } = record;
+    const expectedHash = 'sha256:' + sha(body);
+    if (!recordHash || recordHash !== expectedHash) {
+      throw new Error('saban_idempotency_record_integrity_failed');
+    }
+    return record;
   };
 
   const writeSabanIdempotency = (cacheKey, record) => {
-    atomicJson(sabanIdempotencyPath(cacheKey), record);
+    const sealed = {
+      ...record,
+      record_hash: 'sha256:' + sha(record)
+    };
+    atomicJson(sabanIdempotencyPath(cacheKey), sealed);
   };
 
   const stagedLeaseDir = (leaseId) =>
