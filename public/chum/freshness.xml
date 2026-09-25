@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T18:31:00.416Z</updated>
+<updated>2026-09-25T18:31:05.179Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T18:31:00.416Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T18:31:05.179Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:9897894058be7f4d3e2fbce7</id><title>/chum/</title><updated>2026-09-25T18:15:59.053Z</updated><link href="/chum/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-25T18:15:59.053Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:e04c93daeaa9ac64f77ad032</id><title>/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json"/><category term="priority-100"/></entry>
