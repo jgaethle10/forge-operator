@@ -127,7 +127,8 @@
         "product_spec"
       ],
       "recovery_priority": "wave_3",
-      "state": "source_reconciliation_required"
+      "state": "workflow_contract_recovered_pending_source_and_runtime_parity",
+      "recovered_contract": "slices/findmypart.json"
     },
     {
       "product": "SkyOps Parking",
