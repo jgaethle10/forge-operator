@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:09:32.472Z",
-  "url_count": 1839,
+  "updated_at": "2026-09-25T21:09:39.241Z",
+  "url_count": 1848,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -122,8 +122,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "084bf1d84c46fd493b90c1511b3f1bd51dfaf6a5fa7520314107eda326635602",
-      "last_changed": "2026-09-25T21:09:32.472Z",
+      "content_sha256": "8bba2d859f2e05e8ebaad38119896d5933aac438bae65cdfb7faa7f349f6e1ec",
+      "last_changed": "2026-09-25T21:09:39.241Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
@@ -154,6 +154,60 @@
       "path": "/rivet/",
       "content_sha256": "7bf18022439770efa9cb3dc0b55bad9c7384902d2c333c6848dad5da1e44829b",
       "last_changed": "2026-09-25T21:09:32.168Z",
+      "priority": 60
+    },
+    "/rivet/ev-charging-utility-incentive-screening/": {
+      "path": "/rivet/ev-charging-utility-incentive-screening/",
+      "content_sha256": "364e22a64b582b186fe52e11aab6fb952a3fbc29832ad8d61f1041b4be507a36",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    "/rivet/multifamily-ev-charging-site-analysis/": {
+      "path": "/rivet/multifamily-ev-charging-site-analysis/",
+      "content_sha256": "51d6d803f9954a548d56218381c2737d434438e9412161a5e2e8f7dc35f3da21",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    "/rivet/hotel-ev-charging-site-analysis/": {
+      "path": "/rivet/hotel-ev-charging-site-analysis/",
+      "content_sha256": "47cba8b3a1ffae06ea077fac1e249086816e8eea83e58112cc41f3f7b3f915a8",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    "/rivet/ev-charging-roi-by-property/": {
+      "path": "/rivet/ev-charging-roi-by-property/",
+      "content_sha256": "b65e5b57c9549de5021bf7fc9283e359d94ab01339d00ed1f7892c7e9135730f",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    "/rivet/ev-charging-property-feasibility/": {
+      "path": "/rivet/ev-charging-property-feasibility/",
+      "content_sha256": "10fcc9d3893ed5c55d50b532c6479b58ceb5a730f9823aebf96dbe588e6b0c7b",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    "/rivet/ev-charging-site-analysis-by-address/": {
+      "path": "/rivet/ev-charging-site-analysis-by-address/",
+      "content_sha256": "db05e38f3772d5e1602f1465b083ee5affa907819b7d9632ea155a74b34b6c2a",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    "/rivet/mesh/llms.txt": {
+      "path": "/rivet/mesh/llms.txt",
+      "content_sha256": "63d50aa8a18271f27fcbc427833b9f74ee3afceb4915c3f0a910f6576569a15d",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 86
+    },
+    "/rivet/mesh/index.json": {
+      "path": "/rivet/mesh/index.json",
+      "content_sha256": "39ad7c85eb6b0249209884accd7b13529e99322fe3cbed56a5a9917ff208d3b4",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    "/rivet/mesh/": {
+      "path": "/rivet/mesh/",
+      "content_sha256": "5fb48b43a8ff257b28adcbfffaa5a576298cdb40b3206a17adb4a01352b36236",
+      "last_changed": "2026-09-25T21:09:39.241Z",
       "priority": 60
     },
     "/forensiscope/": {

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:09:32.472Z",
+  "updated_at": "2026-09-25T21:09:39.241Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,116 @@
   },
   "latest_change_batch": [
     {
+      "path": "/rivet/mesh/llms.txt",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 86
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:09:32.472Z",
+      "last_changed": "2026-09-25T21:09:39.241Z",
       "priority": 80
+    },
+    {
+      "path": "/rivet/ev-charging-property-feasibility/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/ev-charging-roi-by-property/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/ev-charging-site-analysis-by-address/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/ev-charging-utility-incentive-screening/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/hotel-ev-charging-site-analysis/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/mesh/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/mesh/index.json",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/multifamily-ev-charging-site-analysis/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/rivet/mesh/llms.txt",
+      "url": "/rivet/mesh/llms.txt",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 86
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:09:32.472Z",
+      "last_changed": "2026-09-25T21:09:39.241Z",
       "priority": 80
+    },
+    {
+      "path": "/rivet/ev-charging-property-feasibility/",
+      "url": "/rivet/ev-charging-property-feasibility/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/ev-charging-roi-by-property/",
+      "url": "/rivet/ev-charging-roi-by-property/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/ev-charging-site-analysis-by-address/",
+      "url": "/rivet/ev-charging-site-analysis-by-address/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/ev-charging-utility-incentive-screening/",
+      "url": "/rivet/ev-charging-utility-incentive-screening/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/hotel-ev-charging-site-analysis/",
+      "url": "/rivet/hotel-ev-charging-site-analysis/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/mesh/",
+      "url": "/rivet/mesh/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/mesh/index.json",
+      "url": "/rivet/mesh/index.json",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/multifamily-ev-charging-site-analysis/",
+      "url": "/rivet/multifamily-ev-charging-site-analysis/",
+      "last_changed": "2026-09-25T21:09:39.241Z",
+      "priority": 60
     },
     {
       "path": "/rivet/llms.txt",
@@ -1460,60 +1559,6 @@
     {
       "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
       "url": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-timestamped-timeline-from-a-recording-7e665162c9.json",
-      "url": "/chum/answers/doors/build-a-timestamped-timeline-from-a-recording-7e665162c9.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-trusted-professional-referral-network-10f9c4df44.json",
-      "url": "/chum/answers/doors/build-a-trusted-professional-referral-network-10f9c4df44.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-an-evidence-record-for-habitat-restoration-work-9bec3aebda.json",
-      "url": "/chum/answers/doors/build-an-evidence-record-for-habitat-restoration-work-9bec3aebda.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-better-trading-risk-discipline-723c5d160e.json",
-      "url": "/chum/answers/doors/build-better-trading-risk-discipline-723c5d160e.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "url": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "url": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-an-income-plan-99c95ec4f1.json",
-      "url": "/chum/answers/doors/build-me-an-income-plan-99c95ec4f1.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-my-business-website-df44dc8ddb.json",
-      "url": "/chum/answers/doors/build-my-business-website-df44dc8ddb.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/business-account-security-d61002122d.json",
-      "url": "/chum/answers/doors/business-account-security-d61002122d.json",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 100
     }

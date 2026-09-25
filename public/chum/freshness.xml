@@ -2,10 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T21:09:32.472Z</updated>
+<updated>2026-09-25T21:09:39.241Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T21:09:32.472Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:83390e6fbb6ba43609b73040</id><title>/rivet/mesh/llms.txt</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/mesh/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:fb97ae67ef2278610b32df02</id><title>/rivet/ev-charging-property-feasibility/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-property-feasibility/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:0fe56e3ec6e8752d9556574d</id><title>/rivet/ev-charging-roi-by-property/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-roi-by-property/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:471e0e555ffd56ac7a7b2ce4</id><title>/rivet/ev-charging-site-analysis-by-address/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-site-analysis-by-address/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:4541193ea0b3d44e0c04a5ff</id><title>/rivet/ev-charging-utility-incentive-screening/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-utility-incentive-screening/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:9fe2048a2214ac796d709a4c</id><title>/rivet/hotel-ev-charging-site-analysis/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/hotel-ev-charging-site-analysis/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:744b7f7739c080ff3f310ebd</id><title>/rivet/mesh/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/mesh/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:c54dc2086fa4b9d200ee2008</id><title>/rivet/mesh/index.json</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/mesh/index.json"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:9ea5fac9de035a703d73fd26</id><title>/rivet/multifamily-ev-charging-site-analysis/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/multifamily-ev-charging-site-analysis/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:a3e8c77f221fee705d18c291</id><title>/rivet/llms.txt</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/rivet/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:c5fe63433c60ffd9fb3bb01b</id><title>/rivet/</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/rivet/"/><category term="priority-60"/></entry>
@@ -96,13 +105,4 @@
 <entry><id>urn:evercraft:chum:f37feedbe339cba1b98573ca</id><title>/chum/products/ecoledger/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/ecoledger/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:8d9f99e41e628206a58da3cd</id><title>/chum/products/eps-estimate-engine/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/eps-estimate-engine/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:fa8083c0055e733b55269072</id><title>/chum/products/eps-estimate-engine/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/eps-estimate-engine/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:48aa2adb636d6c47cfe999a2</id><title>/chum/products/eventwave/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/eventwave/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:ad56065e72e69675b54b93a1</id><title>/chum/products/eventwave/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/eventwave/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:99a5caad31f5d4adb2538513</id><title>/chum/products/evercraft-circles/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/evercraft-circles/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:29d8e4b253131132a262bb2f</id><title>/chum/products/evercraft-circles/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/evercraft-circles/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:27a9196c1f010060327ea898</id><title>/chum/products/evercraft-containment/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/evercraft-containment/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:8868e6e3e5863cdbab384e20</id><title>/chum/products/evercraft-containment/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/evercraft-containment/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:b9ae88277841c961618588a6</id><title>/chum/products/evercraft-cosmos-atlas/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/evercraft-cosmos-atlas/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:e32db6bad9d80d74e8d34755</id><title>/chum/products/evercraft-cosmos-atlas/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/evercraft-cosmos-atlas/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:282755bcb9eed52749a137f4</id><title>/chum/products/evercraft-fantasy-intelligence/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/evercraft-fantasy-intelligence/ai-conformance.json"/><category term="priority-94"/></entry>
 </feed>
