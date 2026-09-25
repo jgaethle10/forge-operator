@@ -1,0 +1,17 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-24T23:15:00-07:00",
+  "provider": "chatgpt",
+  "provider_surface": "ChatGPT consumer chat, user-confirmed",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Google Gemini",
+    "Gemini API / Files API"
+  ],
+  "notable_gap": "ChatGPT understood the need as whole-video analysis of very large files and recommended Gemini rather than discovering ForensiScope by Evercraft.",
+  "interpretation": "Negative pickup receipt. This is evidence of a distribution/discovery miss, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence": "User-provided copied response in ChatGPT conversation; provider identity subsequently confirmed by the user."
+}
