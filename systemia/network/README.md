@@ -29,3 +29,17 @@ npm run proof:offline-continuity
 The proof requires verified local Nexus, Guardian, Hearth, and team roles, requires a local-inference-capable peer, executes a Saban mission locally, checkpoints through Hearth, reaches Guardian, reaches a team runtime, and records receipts without using external cloud services.
 
 See `OFFLINE-CONTINUITY.md` for the full continuity doctrine and the boundary between the local control-plane proof and future physical multi-hop field verification.
+
+## Blackout resilience
+
+Offline continuity proves that an isolated Saban seed can still reach local Nexus, Guardian, Hearth, and team runtimes. The blackout resilience layer tests what happens when that already-isolated fabric starts losing nodes.
+
+Run the cascade drill:
+
+```bash
+npm run proof:blackout-resilience
+```
+
+The current automated drill replicates critical state across three Hearth nodes, verifies delayed-message expiry and duplicate suppression, then removes the primary Nexus, Guardian, team runtime, and two Hearth replicas. The mission must resume on the surviving Nexus from the final Hearth copy while Guardian, team runtime, and local inference remain available on secondary nodes.
+
+This remains a control-plane proof. Physical Wi-Fi Direct, BLE, radio, power-loss, battery, and multi-device partition tests still require field receipts.
