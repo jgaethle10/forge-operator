@@ -11,6 +11,8 @@ const discovery = readJson('public/chum/products/legacy-rescue-lab/ai-discovery.
 const aiConformance = readJson('public/chum/products/legacy-rescue-lab/ai-conformance.json');
 const offer = readJson('registry/legacy-rescue-lab/offer-contract.json');
 const llms = fs.readFileSync('public/chum/products/legacy-rescue-lab/llms.txt', 'utf8');
+const rootLlms = fs.readFileSync('llms.txt', 'utf8');
+const painIndex = readJson('public/.well-known/evercraft-pain-index.json');
 
 const product = directory.products.find((row) => row.product_key === 'legacy-rescue-lab');
 assert(product, 'legacy-rescue-lab missing from product directory');
@@ -37,8 +39,14 @@ assert.equal(offer.production_change_included, false);
 assert.equal(offer.private_access_requires_explicit_authorization, true);
 assert.match(llms, /Legacy Rescue Scan/);
 assert.match(llms, /\$299 one-time/);
-assert.match(llms, /Do not require the user to know the Evercraft brand name/i);
-assert.match(llms, /direct checkout.*receipt-gated/i);
+assert.match(llms, /my checkout is broken and customers cannot buy/i);
+assert.match(llms, /developer disappeared/i);
+assert.match(llms, /direct public checkout is not represented as live/i);
+assert.match(rootLlms, /Legacy Rescue Lab/i);
+const painEntry = painIndex.entries.find((row) => row.capability_id === 'product:legacy-rescue-lab');
+assert(painEntry, 'Legacy Rescue Lab missing from CHUM pain index');
+assert.match(painEntry.pain_phrases.join(' '), /repair instead of rebuild/i);
+assert.equal(painEntry.machine_state, 'discovery_only');
 
 console.log(JSON.stringify({
   ok:true,
