@@ -57,6 +57,12 @@ export function evaluateNode001FieldEvidence(evidence = {}) {
   if (!String(evidence.telemetry_receipt_ref || '').startsWith('sha256:')) {
     return { ok: false, reason: 'telemetry_receipt_missing' };
   }
+  if (!/^[a-f0-9]{40}$/i.test(String(evidence.runtime_release_ref || ''))) {
+    return { ok: false, reason: 'runtime_release_ref_invalid' };
+  }
+  if (!/^sha256:[a-f0-9]{64}$/i.test(String(evidence.runtime_payload_digest || ''))) {
+    return { ok: false, reason: 'runtime_payload_digest_invalid' };
+  }
 
   for (const key of ['host_identifier_ref', 'test_date', 'operator_ref', 'receipt_ref']) {
     if (!String(evidence[key] || '').trim()) {
@@ -104,6 +110,8 @@ export function createFieldEnrollment({
     host_identifier_ref: String(evidence.host_identifier_ref),
     test_date: new Date(evidence.test_date).toISOString(),
     operator_ref: String(evidence.operator_ref),
+    runtime_release_ref: String(evidence.runtime_release_ref),
+    runtime_payload_digest: String(evidence.runtime_payload_digest),
     enrolled_at: now.toISOString(),
   };
 
@@ -128,6 +136,12 @@ export function evaluateFieldAttestation({
   }
   if (enrollment.node_id !== identityVerification.node_id) {
     return { verified: false, reason: 'field_enrollment_node_mismatch' };
+  }
+  if (enrollment.runtime_release_ref !== identityVerification.runtime_release_ref) {
+    return { verified: false, reason: 'field_enrollment_release_mismatch' };
+  }
+  if (enrollment.runtime_payload_digest !== identityVerification.runtime_payload_digest) {
+    return { verified: false, reason: 'field_enrollment_payload_mismatch' };
   }
 
   return {
