@@ -82,7 +82,9 @@
     "check:saban-contracts": "node systemia/saban/contract-doctor.mjs",
     "saban:formation": "node systemia/saban/formation.mjs",
     "proof:saban-formation": "node systemia/saban/formation.mjs --request systemia/saban/fixtures/formation-proof.json --execute",
-    "proof:saban-nodeseed-multiplier": "node systemia/network/saban-multiplier-nodeseed-proof.mjs"
+    "proof:saban-nodeseed-multiplier": "node systemia/network/saban-multiplier-nodeseed-proof.mjs",
+    "proof:saban-nodeseed-pool": "node systemia/network/saban-nodeseed-pool-proof.mjs",
+    "proof:forensiscope-distributed": "node systemia/forensiscope/distributed-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
