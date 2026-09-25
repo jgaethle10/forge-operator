@@ -47,6 +47,21 @@ fs.writeFileSync(
     "console.log(JSON.stringify({segments:[first, second]}));"
   ].join(newline) + newline
 );
+const allocatorToken = 'forensiscope-distributed-proof-token';
+const previousTranscribeEnabled = process.env.FORENSISCOPE_TRANSCRIBE_ENABLED;
+delete process.env.FORENSISCOPE_TRANSCRIBE_ENABLED;
+const seedIneligible = await startNodeSeed({
+  root: path.join(proofDir, 'node-no-transcription'),
+  nodeId: 'forensiscope-proof-node-no-transcription',
+  host: '127.0.0.1',
+  port: 0,
+  advertiseHost: '127.0.0.1',
+  allocatorToken,
+  announce: false
+});
+if (previousTranscribeEnabled !== undefined) {
+  process.env.FORENSISCOPE_TRANSCRIBE_ENABLED = previousTranscribeEnabled;
+}
 process.env.FORENSISCOPE_TRANSCRIBE_ENABLED = 'true';
 process.env.FORENSISCOPE_TRANSCRIBE_ENGINE_ID = 'forensiscope-ci-contract';
 process.env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE = process.execPath;
@@ -129,7 +144,6 @@ const plan = buildMultiplicationPlan({
 });
 plan.formation_recommendation = formation;
 
-const allocatorToken = 'forensiscope-distributed-proof-token';
 const seedA = await startNodeSeed({
   root: path.join(proofDir, 'node-a'),
   nodeId: 'forensiscope-proof-node-a',
@@ -159,7 +173,7 @@ try {
     rootDir,
     reconcile: true,
     nodePool: {
-      endpoints: [seedA.endpoint, seedB.endpoint],
+      endpoints: [seedIneligible.endpoint, seedA.endpoint, seedB.endpoint],
       allocatorToken,
       maxAttempts: 3,
       maxConcurrencyPerNode: 2,
@@ -167,7 +181,7 @@ try {
     }
   });
 } finally {
-  await Promise.allSettled([seedA.close(), seedB.close()]);
+  await Promise.allSettled([seedIneligible.close(), seedA.close(), seedB.close()]);
 }
 const sourceHashAfter = hashFile(sourcePath);
 
@@ -183,6 +197,13 @@ if (receipt.quality?.status !== 'pass') {
 assert.equal(sourceHashBefore, sourceHashAfter);
 assert.equal(receipt.scheduler_summary.counts.completed, 24);
 assert.equal(receipt.pool_summary.nodes.length, 2);
+assert.ok(
+  receipt.pool_summary.rejected_nodes.some(
+    (entry) =>
+      entry.node_id === 'forensiscope-proof-node-no-transcription' &&
+      entry.reason === 'missing_required_service:forensiscope_transcription'
+  )
+);
 assert.equal(receipt.quality.status, 'pass');
 assert.equal(receipt.reconciliation.status, 'reconciled');
 assert.equal(receipt.reconciliation.source_integrity_preserved, true);
@@ -236,6 +257,9 @@ const proof = {
   logical_agents: plan.logical_agents,
   physical_workers: plan.physical_workers,
   nodeseed_count: receipt.pool_summary.nodes.length,
+  rejected_ineligible_transcription_nodes: receipt.pool_summary.rejected_nodes.filter(
+    (entry) => entry.reason === 'missing_required_service:forensiscope_transcription'
+  ).length,
   execution_fabric: receipt.execution_fabric,
   completed_assignments: receipt.scheduler_summary.counts.completed,
   repeated_content_groups: receipt.reconciliation.duplicate_review.repeated_content_groups,
