@@ -42,6 +42,15 @@ for (const offer of canonicalSellNow) {
   if (canonicalPaidTiers.length && !compact.entry_paid_offer) {
     fail(`sell-now offer missing entry_paid_offer: ${offer.public_id}`);
   }
+
+  const slug = String(offer.public_id || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 120);
+  const painPagePath = `public/chum/intents/${slug}/index.html`;
+  if (!fs.existsSync(painPagePath)) fail(`sell-now pain page missing: ${offer.public_id}`);
+  const painPage = fs.readFileSync(painPagePath, 'utf8');
+  if (!painPage.includes('Review purchase options')) fail(`sell-now pain page missing purchase review CTA: ${offer.public_id}`);
+  if (canonicalPaidTiers.length && !painPage.includes('Easiest paid entry:')) {
+    fail(`sell-now pain page missing entry offer: ${offer.public_id}`);
+  }
 }
 for (const offer of sellNow.offers || []) {
   if (offer.commercial_state !== 'sell_now') fail(`non-sell-now offer leaked into sell-now directory: ${offer.public_id}`);
