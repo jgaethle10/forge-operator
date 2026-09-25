@@ -14,8 +14,8 @@ const CRAWLERS = [
   ['google-ai', /\bGoogle-Extended\b|\bGoogle-CloudVertexBot\b|\bGoogle-Agent\b|\bGoogle-GeminiNotebook\b/i],
   ['microsoft-search', /\bbingbot\b/i],
   ['perplexity', /\bPerplexityBot\b/i],
-  ['apple-search', /\bApplebot\b/i],
   ['apple-ai', /\bApplebot-Extended\b/i],
+  ['apple-search', /\bApplebot\b/i],
 ];
 
 const DISCOVERY_PREFIXES = [
