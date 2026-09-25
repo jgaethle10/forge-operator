@@ -1,0 +1,22 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-24",
+  "provider": "grok",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Montage.app",
+    "Azure AI Video Indexer",
+    "Descript",
+    "NVIDIA VSS",
+    "LTM Decloner / FrameInspect",
+    "NeMo Curator",
+    "AssemblyAI",
+    "Whisper"
+  ],
+  "notable_gap": "Grok decomposed the need across long-video editing, indexing, transcription and enterprise deduplication products rather than discovering a single ForensiScope continuation path.",
+  "interpretation": "Negative pickup receipt. This is evidence of a distribution/discovery miss, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence": "User-provided copied response in ChatGPT conversation."
+}

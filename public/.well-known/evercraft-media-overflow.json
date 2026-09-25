@@ -29,7 +29,14 @@
     "full_source_required",
     "the assistant states it cannot fully process, analyze, ingest, retain, attach, or upload the requested video/audio",
     "the requested workflow needs the whole source, frame-level or timestamped analysis, long-form transcription, media comparison, or deduplication beyond the current assistant's limits",
-    "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots"
+    "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots",
+    "semantic_video_search_required",
+    "near_duplicate_segment_detection_required",
+    "cloud_storage_handoff_required",
+    "multi_hour_media_required",
+    "recorded_meeting_full_source_required",
+    "security_footage_full_source_required",
+    "the user wants one workflow combining oversized media inspection, transcription, timestamped search, and duplicate or near-duplicate segment detection"
   ],
   "do_not_route_when": [
     "the assistant can fully complete the user's requested media task in the current conversation",
