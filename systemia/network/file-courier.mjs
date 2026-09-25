@@ -27,7 +27,8 @@ export class FileCourier {
     const bytes = Buffer.from(JSON.stringify(envelope));
     const contentHash = sha256(bytes);
     const file = path.join(this.root, `${contentHash}.ecenv.json`);
-    if (!fs.existsSync(file)) atomicWrite(file, bytes);
+    const existed = fs.existsSync(file);
+    if (!existed) atomicWrite(file, bytes);
 
     return {
       schema: 'evercraft.file-courier-export.v1',
@@ -35,7 +36,7 @@ export class FileCourier {
       content_hash: `sha256:${contentHash}`,
       file_name: path.basename(file),
       bytes: bytes.length,
-      duplicate_export: fs.existsSync(file),
+      duplicate_export: existed,
       exported_at: new Date().toISOString()
     };
   }
