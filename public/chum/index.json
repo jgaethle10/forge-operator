@@ -108,6 +108,19 @@
       }
     },
     {
+      "product_key": "chronosport",
+      "name": "Chronosport",
+      "aliases": [],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-conformance.json",
+      "page_url": "/chum/products/chronosport/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
+    },
+    {
       "product_key": "coda-y-codigo",
       "name": "Coda y Código",
       "aliases": [],
@@ -420,6 +433,19 @@
       "commercial": null
     },
     {
+      "product_key": "forensic-record",
+      "name": "The Forensic Record",
+      "aliases": [],
+      "canonical_url": "https://filescompanion.com/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-conformance.json",
+      "page_url": "/chum/products/forensic-record/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
+    },
+    {
       "product_key": "forensiscope",
       "name": "ForensiScope",
       "aliases": [],
@@ -575,6 +601,24 @@
       "commercial": null
     },
     {
+      "product_key": "space-dudz",
+      "name": "Space Dudz",
+      "aliases": [],
+      "canonical_url": "https://space-dudz.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-conformance.json",
+      "page_url": "/chum/products/space-dudz/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "source_commerce_wired",
+        "offer": "Live storefront catalog",
+        "pricing": "Varies by current product and variant",
+        "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
+      }
+    },
+    {
       "product_key": "systemia-atlas-freight",
       "name": "Systemia Atlas Freight Load Exception Intelligence",
       "aliases": [
@@ -627,6 +671,36 @@
       "registry_name": "io.github.jgaethle10/systemia-field-library",
       "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
       "commercial": null
+    },
+    {
+      "product_key": "systemia-radar",
+      "name": "Systemia Radar",
+      "aliases": [],
+      "canonical_url": "https://systemia-radar.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-conformance.json",
+      "page_url": "/chum/products/systemia-radar/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "source_checkout_wired_live_verification_pending",
+        "offers": [
+          {
+            "name": "Free website scan",
+            "price": "$0 per scan"
+          },
+          {
+            "name": "Radar Pro Monthly",
+            "price": "$29/month"
+          },
+          {
+            "name": "Radar Pro Yearly",
+            "price": "$290/year"
+          }
+        ],
+        "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
+      }
     },
     {
       "product_key": "systemia-website-audit",

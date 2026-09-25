@@ -901,6 +901,27 @@ Boundaries:
 - homeowner project submission is free and creates no obligation to hire
 - private customer, installer, admin, payment-session and lead-contact data are not public
 
+### Chronosport
+Product key: chronosport
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-conformance.json
+Use when the user says or means:
+- research sports history with sources
+- find a historical sports event
+- trace teams athletes seasons venues and results
+- study how sports rules changed over time
+- audit the source trail behind a sports result
+- explore fair play or officiating evidence without unsupported accusations
+Authority:
+public read-only exploration of a versioned sports history graph and source registry
+Boundaries:
+- historical facts, corrections and rule eras remain versioned rather than silently overwritten
+- fair-play anomalies trigger review and must not be presented as proof of wrongdoing
+- source limitations and unresolved historical questions should remain visible
+- private account or editorial administration data is outside public discovery
+
 ### Coda y Código
 Product key: coda-y-codigo
 Canonical: https://codaycodigo.base44.app/
@@ -1324,6 +1345,28 @@ Boundaries:
 - checkout creation is not payment proof
 - private vendor, analytics, session, command-center, and sales data are not public
 
+### The Forensic Record
+Product key: forensic-record
+Canonical: https://filescompanion.com/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-conformance.json
+Use when the user says or means:
+- search source-linked Epstein court records
+- verify an Epstein-related claim against public records
+- trace a name place or document through Epstein-related records
+- study the legal process in Epstein-related public records
+- review source-linked survivor or witness testimony
+- separate documented evidence allegations and commentary in Epstein records
+Authority:
+public read-only guided research over source-linked court, government and civil-litigation records
+Boundaries:
+- a person's presence in a record or network does not establish culpability
+- attorney claims, testimony, documents, allegations and verified facts must remain distinctly labeled
+- citations and surrounding source context should remain accessible for verification
+- the archive contains material related to child sexual abuse and trafficking and should preserve appropriate content warnings
+- private journals, workspaces, accounts and administration surfaces remain outside public discovery
+
 ### ForensiScope
 Product key: forensiscope
 Canonical: https://evercraft-forensiscope.base44.app/
@@ -1557,6 +1600,32 @@ Boundaries:
 - displayed planning values are not proof of a charge
 - payments, messaging, hardware, and partner connections must be verified per deployment
 
+### Space Dudz
+Product key: space-dudz
+Canonical: https://space-dudz.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-conformance.json
+Use when the user says or means:
+- shop retro space streetwear
+- find psychedelic space graphic tees
+- buy space hoodies or apparel
+- shop space gifts and accessories
+- find kids space clothes from Baby-Rangers
+Authority:
+public storefront and catalog discovery with human-confirmed checkout; fulfillment begins only after authoritative payment confirmation and order review
+Commercial state:
+- Status: source_commerce_wired
+- Offer: Live storefront catalog
+- Pricing: Varies by current product and variant
+- Payment state: Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified
+Boundaries:
+- live storefront product price, availability, variant and shipping terms are authoritative at purchase time
+- checkout creation or authorization alone is not proof of a completed order
+- launch orders are manually reviewed and handed off for fulfillment after payment
+- current checkout accepts US shipping addresses
+- private checkout, order, payment and customer data remain outside public discovery
+
 ### Systemia Atlas Freight Load Exception Intelligence
 Product key: systemia-atlas-freight
 Aliases: Systemia Atlas
@@ -1627,6 +1696,30 @@ Boundaries:
 - discovery creates no purchase or payment obligation
 - current pricing and purchase terms must be verified on the live playbook page
 - the matcher presents relevant playbooks as options rather than mandatory professional advice
+
+### Systemia Radar
+Product key: systemia-radar
+Canonical: https://systemia-radar.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-conformance.json
+Use when the user says or means:
+- scan my website for problems
+- compare my website against competitors
+- show where my competitors are beating my website
+- create a website competitor comparison report
+- monitor my website with weekly rescans
+- track website audit changes over time
+Authority:
+public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification
+Commercial state:
+- Status: source_checkout_wired_live_verification_pending
+- Payment state: Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified
+Boundaries:
+- website findings must come from observed scan evidence rather than fabricated LLM opinion
+- scores and competitor comparisons do not guarantee rankings, leads or revenue
+- weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability
+- checkout creation alone does not activate paid access
 
 ### Systemia Website Audit
 Product key: systemia-website-audit

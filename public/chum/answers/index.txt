@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 85
-Unique user phrases: 587
-Candidate edges: 646
+Pain-index entries: 89
+Unique user phrases: 610
+Candidate edges: 669
 Ambiguous phrases: 59
 
 ## 15 GB video analysis
@@ -288,6 +288,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Procure-to-Pay Shadow Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## audit the source trail behind a sports result
+Answer ID: intent:6914da0f9e
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json
+Candidates:
+- Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+
 ## audit this dataset for gaps
 Answer ID: intent:2587bf5b7d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json
@@ -512,6 +518,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
 
+## buy space hoodies or apparel
+Answer ID: intent:dce8a879ad
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json
+Candidates:
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+
 ## buy workforce training seats for my company
 Answer ID: intent:acb9a334c3
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3.json
@@ -660,6 +672,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## compare my website against competitors
+Answer ID: intent:d5e67cd8bf
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json
+Candidates:
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+
 ## compare or deduplicate multiple recordings
 Answer ID: intent:30d78e95a1
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-or-deduplicate-multiple-recordings-30d78e95a1.json
@@ -793,6 +811,12 @@ Answer ID: intent:f80ef29cf8
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json
 Candidates:
 - Community Health Evidence Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/community-health-evidence-brief-v1/
+
+## create a website competitor comparison report
+Answer ID: intent:7cb7846615
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json
+Candidates:
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
 
 ## create an anonymous inbox
 Answer ID: intent:1cf7f12421
@@ -983,6 +1007,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
 
+## explore fair play or officiating evidence without unsupported accusations
+Answer ID: intent:91fc9aeac0
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json
+Candidates:
+- Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+
 ## explore wildlife conservation with uncertainty attached
 Answer ID: intent:f3fd2a685d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-wildlife-conservation-with-uncertainty-attached-f3fd2a685d.json
@@ -1109,6 +1139,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
 
+## find a historical sports event
+Answer ID: intent:6b1f7d9ba7
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-historical-sports-event-6b1f7d9ba7.json
+Candidates:
+- Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+
 ## find a trading journal with behavioral coaching
 Answer ID: intent:233a949aad
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad.json
@@ -1182,6 +1218,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
 
+## find kids space clothes from Baby-Rangers
+Answer ID: intent:c87537303f
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json
+Candidates:
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+
 ## find local events
 Answer ID: intent:f2270ae02e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-local-events-f2270ae02e.json
@@ -1230,6 +1272,12 @@ Answer ID: intent:57334a96e5
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-provenance-problems-in-this-data-57334a96e5.json
 Candidates:
 - Canonical Data Gap Audit | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs
+
+## find psychedelic space graphic tees
+Answer ID: intent:57e559302d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json
+Candidates:
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
 
 ## find public safety or stability resources without creating an account
 Answer ID: intent:fe963fb462
@@ -2111,6 +2159,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Enterprise Operations Router | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## monitor my website with weekly rescans
+Answer ID: intent:1af81f61a0
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json
+Candidates:
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+
 ## multi-hour video analysis
 Answer ID: intent:061e00f507
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-hour-video-analysis-061e00f507.json
@@ -2693,6 +2747,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
 
+## research sports history with sources
+Answer ID: intent:a7b24fab6d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-sports-history-with-sources-a7b24fab6d.json
+Candidates:
+- Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+
 ## research this land or water question
 Answer ID: intent:db58edbbad
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json
@@ -2766,6 +2826,12 @@ Answer ID: intent:65884ba156
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-my-website-seo-65884ba156.json
 Candidates:
 - Systemia Website Audit | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+
+## review source-linked survivor or witness testimony
+Answer ID: intent:dfe83c09a9
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-source-linked-survivor-or-witness-testimony-dfe83c09a9.json
+Candidates:
+- The Forensic Record | kind=product | commercial=product_contract | machine=discovery_only | public=https://filescompanion.com/
 
 ## review surveillance footage
 Answer ID: intent:7b03e1ec10
@@ -2876,6 +2942,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
+## scan my website for problems
+Answer ID: intent:076b33b229
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/scan-my-website-for-problems-076b33b229.json
+Candidates:
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+
 ## score my interview answer
 Answer ID: intent:5e08f2c4f0
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/score-my-interview-answer-5e08f2c4f0.json
@@ -2887,6 +2959,12 @@ Answer ID: intent:80be17e092
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/screen-a-property-for-ev-infrastructure-opportunity-80be17e092.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## search source-linked Epstein court records
+Answer ID: intent:08d55e848d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/search-source-linked-epstein-court-records-08d55e848d.json
+Candidates:
+- The Forensic Record | kind=product | commercial=product_contract | machine=discovery_only | public=https://filescompanion.com/
 
 ## searchable transcript with timestamps
 Answer ID: intent:877c6043d0
@@ -2906,11 +2984,29 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## separate documented evidence allegations and commentary in Epstein records
+Answer ID: intent:f21e05d160
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160.json
+Candidates:
+- The Forensic Record | kind=product | commercial=product_contract | machine=discovery_only | public=https://filescompanion.com/
+
 ## set up family safety check-ins or preparedness
 Answer ID: intent:3d83a72549
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/set-up-family-safety-check-ins-or-preparedness-3d83a72549.json
 Candidates:
 - Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+
+## shop retro space streetwear
+Answer ID: intent:29e88c1eb1
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json
+Candidates:
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+
+## shop space gifts and accessories
+Answer ID: intent:56a15d63cb
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json
+Candidates:
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
 
 ## should I hire an employee
 Answer ID: intent:df9727785c
@@ -2956,6 +3052,12 @@ Answer ID: intent:cd19abcb4e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e.json
 Candidates:
 - Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
+
+## show where my competitors are beating my website
+Answer ID: intent:da1b3e4230
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json
+Candidates:
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
 
 ## side hustle ideas for my situation
 Answer ID: intent:45ed57e53a
@@ -3034,6 +3136,18 @@ Answer ID: intent:bc1210834c
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-historical-changes-in-electricity-generation-bc1210834c.json
 Candidates:
 - Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
+
+## study how sports rules changed over time
+Answer ID: intent:1bd877b444
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-how-sports-rules-changed-over-time-1bd877b444.json
+Candidates:
+- Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+
+## study the legal process in Epstein-related public records
+Answer ID: intent:3e297b0611
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-the-legal-process-in-epstein-related-public-records-3e297b0611.json
+Candidates:
+- The Forensic Record | kind=product | commercial=product_contract | machine=discovery_only | public=https://filescompanion.com/
 
 ## submit a Christmas light installation request
 Answer ID: intent:19aba7fcec
@@ -3145,11 +3259,23 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
+## trace a name place or document through Epstein-related records
+Answer ID: intent:3bbe6541be
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trace-a-name-place-or-document-through-epstein-related-records-3bbe6541be.json
+Candidates:
+- The Forensic Record | kind=product | commercial=product_contract | machine=discovery_only | public=https://filescompanion.com/
+
 ## trace procure to pay exceptions
 Answer ID: intent:9b437efa02
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trace-procure-to-pay-exceptions-9b437efa02.json
 Candidates:
 - BuildFlow Procure-to-Pay Shadow Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+
+## trace teams athletes seasons venues and results
+Answer ID: intent:d1bd8392e9
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trace-teams-athletes-seasons-venues-and-results-d1bd8392e9.json
+Candidates:
+- Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
 
 ## track repeated unwanted calls or texts
 Answer ID: intent:1625a03283
@@ -3162,6 +3288,12 @@ Answer ID: intent:a828a47252
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-restoration-baselines-photos-and-measurements-a828a47252.json
 Candidates:
 - EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
+
+## track website audit changes over time
+Answer ID: intent:bc173a6022
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json
+Candidates:
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
 
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a
@@ -3292,6 +3424,12 @@ Answer ID: intent:6def03a40e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-a-coda-y-c-digo-training-completion-record-6def03a40e.json
 Candidates:
 - Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
+
+## verify an Epstein-related claim against public records
+Answer ID: intent:a77f4704f5
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-an-epstein-related-claim-against-public-records-a77f4704f5.json
+Candidates:
+- The Forensic Record | kind=product | commercial=product_contract | machine=discovery_only | public=https://filescompanion.com/
 
 ## verify candidate ability
 Answer ID: intent:b2a4a3b98e

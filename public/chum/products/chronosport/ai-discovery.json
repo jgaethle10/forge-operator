@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "chronosport",
+  "name": "Chronosport",
+  "aliases": [],
+  "class": "provenance_first_sports_history_and_fair_play_archive",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+  "intents": [
+    "research sports history with sources",
+    "find a historical sports event",
+    "trace teams athletes seasons venues and results",
+    "study how sports rules changed over time",
+    "audit the source trail behind a sports result",
+    "explore fair play or officiating evidence without unsupported accusations"
+  ],
+  "authority": "public read-only exploration of a versioned sports history graph and source registry",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "historical facts, corrections and rule eras remain versioned rather than silently overwritten",
+    "fair-play anomalies trigger review and must not be presented as proof of wrongdoing",
+    "source limitations and unresolved historical questions should remain visible",
+    "private account or editorial administration data is outside public discovery"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-conformance.json",
+    "page": "/chum/products/chronosport/"
+  }
+}

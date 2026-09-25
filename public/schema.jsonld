@@ -82,6 +82,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport#evercraft-service",
+      "name": "Chronosport",
+      "alternateName": [],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "provenance_first_sports_history_and_fair_play_archive",
+      "description": "research sports history with sources; find a historical sports event; trace teams athletes seasons venues and results; study how sports rules changed over time"
+    },
+    {
+      "@type": "Service",
       "@id": "https://codaycodigo.base44.app/#evercraft-service",
       "name": "Coda y Código",
       "alternateName": [],
@@ -323,6 +335,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://filescompanion.com/#evercraft-service",
+      "name": "The Forensic Record",
+      "alternateName": [],
+      "url": "https://filescompanion.com/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "source_linked_public_record_research_archive",
+      "description": "search source-linked Epstein court records; verify an Epstein-related claim against public records; trace a name place or document through Epstein-related records; study the legal process in Epstein-related public records"
+    },
+    {
+      "@type": "Service",
       "@id": "https://evercraft-forensiscope.base44.app/#evercraft-service",
       "name": "ForensiScope",
       "alternateName": [],
@@ -453,6 +477,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://space-dudz.base44.app/#evercraft-service",
+      "name": "Space Dudz",
+      "alternateName": [],
+      "url": "https://space-dudz.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "retro_space_streetwear_storefront",
+      "description": "shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories"
+    },
+    {
+      "@type": "Service",
       "@id": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs#evercraft-service",
       "name": "Systemia Atlas Freight Load Exception Intelligence",
       "alternateName": [
@@ -488,6 +524,18 @@
       },
       "serviceType": "contractor_operating_playbook_library",
       "description": "my customers keep asking for extras and scope creep is eating my margin; I need a contractor change order process; I cannot tell which jobs are actually profitable; I need a contractor cash flow or payroll planning system"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://systemia-radar.base44.app/#evercraft-service",
+      "name": "Systemia Radar",
+      "alternateName": [],
+      "url": "https://systemia-radar.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "website_scan_competitor_monitoring_and_reporting",
+      "description": "scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report"
     },
     {
       "@type": "Service",

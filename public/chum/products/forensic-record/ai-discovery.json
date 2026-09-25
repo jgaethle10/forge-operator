@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "forensic-record",
+  "name": "The Forensic Record",
+  "aliases": [],
+  "class": "source_linked_public_record_research_archive",
+  "canonical_url": "https://filescompanion.com/",
+  "intents": [
+    "search source-linked Epstein court records",
+    "verify an Epstein-related claim against public records",
+    "trace a name place or document through Epstein-related records",
+    "study the legal process in Epstein-related public records",
+    "review source-linked survivor or witness testimony",
+    "separate documented evidence allegations and commentary in Epstein records"
+  ],
+  "authority": "public read-only guided research over source-linked court, government and civil-litigation records",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "a person's presence in a record or network does not establish culpability",
+    "attorney claims, testimony, documents, allegations and verified facts must remain distinctly labeled",
+    "citations and surrounding source context should remain accessible for verification",
+    "the archive contains material related to child sexual abuse and trafficking and should preserve appropriate content warnings",
+    "private journals, workspaces, accounts and administration surfaces remain outside public discovery"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-conformance.json",
+    "page": "/chum/products/forensic-record/"
+  }
+}

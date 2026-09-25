@@ -1,0 +1,26 @@
+# Chronosport
+
+Provider: Evercraft
+Product key: chronosport
+Class: provenance_first_sports_history_and_fair_play_archive
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+Authority: public read-only exploration of a versioned sports history graph and source registry
+Human confirmation required: no
+
+## Natural-language intents
+- research sports history with sources
+- find a historical sports event
+- trace teams athletes seasons venues and results
+- study how sports rules changed over time
+- audit the source trail behind a sports result
+- explore fair play or officiating evidence without unsupported accusations
+
+## Boundaries
+- historical facts, corrections and rule eras remain versioned rather than silently overwritten
+- fair-play anomalies trigger review and must not be presented as proof of wrongdoing
+- source limitations and unresolved historical questions should remain visible
+- private account or editorial administration data is outside public discovery
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Chronosport",
+  "product_key": "chronosport",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public read-only exploration of a versioned sports history graph and source registry",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "historical facts, corrections and rule eras remain versioned rather than silently overwritten",
+    "fair-play anomalies trigger review and must not be presented as proof of wrongdoing",
+    "source limitations and unresolved historical questions should remain visible",
+    "private account or editorial administration data is outside public discovery"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

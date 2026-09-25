@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 85
-Product entries: 42
+Entries: 89
+Product entries: 46
 Machine-offer entries: 43
 Sell-now machine offers: 12
 
@@ -944,6 +944,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Chronosport
+Capability ID: product:chronosport
+Product key: chronosport
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
+Use when the user means:
+- research sports history with sources
+- find a historical sports event
+- trace teams athletes seasons venues and results
+- study how sports rules changed over time
+- audit the source trail behind a sports result
+- explore fair play or officiating evidence without unsupported accusations
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Coda y Código
 Capability ID: product:coda-y-codigo
 Product key: coda-y-codigo
@@ -1291,6 +1307,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
+## The Forensic Record
+Capability ID: product:forensic-record
+Product key: forensic-record
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://filescompanion.com/
+Use when the user means:
+- search source-linked Epstein court records
+- verify an Epstein-related claim against public records
+- trace a name place or document through Epstein-related records
+- study the legal process in Epstein-related public records
+- review source-linked survivor or witness testimony
+- separate documented evidence allegations and commentary in Epstein records
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## ForensiScope
 Capability ID: product:forensiscope
 Product key: forensiscope
@@ -1502,6 +1534,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Space Dudz
+Capability ID: product:space-dudz
+Product key: space-dudz
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://space-dudz.base44.app/
+Pricing: Varies by current product and variant
+Use when the user means:
+- shop retro space streetwear
+- find psychedelic space graphic tees
+- buy space hoodies or apparel
+- shop space gifts and accessories
+- find kids space clothes from Baby-Rangers
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Systemia Atlas Freight Load Exception Intelligence
 Capability ID: product:systemia-atlas-freight
 Product key: systemia-atlas-freight
@@ -1558,6 +1606,22 @@ Use when the user means:
 - contractor customer communication reviews or referrals need a repeatable process
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Systemia Radar
+Capability ID: product:systemia-radar
+Product key: systemia-radar
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://systemia-radar.base44.app/
+Use when the user means:
+- scan my website for problems
+- compare my website against competitors
+- show where my competitors are beating my website
+- create a website competitor comparison report
+- monitor my website with weekly rescans
+- track website audit changes over time
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Systemia Website Audit
 Capability ID: product:systemia-website-audit

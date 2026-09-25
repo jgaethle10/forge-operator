@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "systemia-radar",
+  "name": "Systemia Radar",
+  "aliases": [],
+  "class": "website_scan_competitor_monitoring_and_reporting",
+  "canonical_url": "https://systemia-radar.base44.app/",
+  "intents": [
+    "scan my website for problems",
+    "compare my website against competitors",
+    "show where my competitors are beating my website",
+    "create a website competitor comparison report",
+    "monitor my website with weekly rescans",
+    "track website audit changes over time"
+  ],
+  "authority": "public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "website findings must come from observed scan evidence rather than fabricated LLM opinion",
+    "scores and competitor comparisons do not guarantee rankings, leads or revenue",
+    "weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability",
+    "checkout creation alone does not activate paid access"
+  ],
+  "commercial": {
+    "status": "source_checkout_wired_live_verification_pending",
+    "offers": [
+      {
+        "name": "Free website scan",
+        "price": "$0 per scan"
+      },
+      {
+        "name": "Radar Pro Monthly",
+        "price": "$29/month"
+      },
+      {
+        "name": "Radar Pro Yearly",
+        "price": "$290/year"
+      }
+    ],
+    "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
+  },
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-conformance.json",
+    "page": "/chum/products/systemia-radar/"
+  }
+}

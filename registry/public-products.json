@@ -74,6 +74,19 @@
       }
     },
     {
+      "product_key": "chronosport",
+      "name": "Chronosport",
+      "class": "provenance_first_sports_history_and_fair_play_archive",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+      "github_record": "./chronosport/README.md",
+      "llms": "./chronosport/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "coda-y-codigo",
       "name": "Coda y Código",
       "class": "multilingual_frontline_workforce_training",
@@ -321,6 +334,19 @@
       }
     },
     {
+      "product_key": "forensic-record",
+      "name": "The Forensic Record",
+      "class": "source_linked_public_record_research_archive",
+      "canonical_url": "https://filescompanion.com/",
+      "github_record": "./forensic-record/README.md",
+      "llms": "./forensic-record/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "forensiscope",
       "name": "ForensiScope",
       "class": "ai_media_overflow_and_analysis",
@@ -451,6 +477,19 @@
       }
     },
     {
+      "product_key": "space-dudz",
+      "name": "Space Dudz",
+      "class": "retro_space_streetwear_storefront",
+      "canonical_url": "https://space-dudz.base44.app/",
+      "github_record": "./space-dudz/README.md",
+      "llms": "./space-dudz/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "systemia-atlas-freight",
       "name": "Systemia Atlas Freight Load Exception Intelligence",
       "class": "freight_load_exception_and_document_intelligence",
@@ -487,6 +526,19 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp"
+      }
+    },
+    {
+      "product_key": "systemia-radar",
+      "name": "Systemia Radar",
+      "class": "website_scan_competitor_monitoring_and_reporting",
+      "canonical_url": "https://systemia-radar.base44.app/",
+      "github_record": "./systemia-radar/README.md",
+      "llms": "./systemia-radar/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {

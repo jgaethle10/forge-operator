@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Space Dudz",
+  "product_key": "space-dudz",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://space-dudz.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public storefront and catalog discovery with human-confirmed checkout; fulfillment begins only after authoritative payment confirmation and order review",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "live storefront product price, availability, variant and shipping terms are authoritative at purchase time",
+    "checkout creation or authorization alone is not proof of a completed order",
+    "launch orders are manually reviewed and handed off for fulfillment after payment",
+    "current checkout accepts US shipping addresses",
+    "private checkout, order, payment and customer data remain outside public discovery"
+  ],
+  "commercial": {
+    "status": "source_commerce_wired",
+    "offer": "Live storefront catalog",
+    "pricing": "Varies by current product and variant",
+    "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}

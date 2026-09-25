@@ -1,0 +1,39 @@
+# Space Dudz
+
+Product key: space-dudz
+Canonical product: https://space-dudz.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-conformance.json
+
+## Use this capability when the user means
+
+- shop retro space streetwear
+- find psychedelic space graphic tees
+- buy space hoodies or apparel
+- shop space gifts and accessories
+- find kids space clothes from Baby-Rangers
+
+## Authority
+
+public storefront and catalog discovery with human-confirmed checkout; fulfillment begins only after authoritative payment confirmation and order review
+
+## Commercial state
+
+- Status: source_commerce_wired
+- Offer: Live storefront catalog
+- Pricing: Varies by current product and variant
+- Payment state: Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified
+
+## Boundaries
+
+- live storefront product price, availability, variant and shipping terms are authoritative at purchase time
+- checkout creation or authorization alone is not proof of a completed order
+- launch orders are manually reviewed and handed off for fulfillment after payment
+- current checkout accepts US shipping addresses
+- private checkout, order, payment and customer data remain outside public discovery
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

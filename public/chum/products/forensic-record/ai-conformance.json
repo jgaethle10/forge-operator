@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "The Forensic Record",
+  "product_key": "forensic-record",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://filescompanion.com/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public read-only guided research over source-linked court, government and civil-litigation records",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "a person's presence in a record or network does not establish culpability",
+    "attorney claims, testimony, documents, allegations and verified facts must remain distinctly labeled",
+    "citations and surrounding source context should remain accessible for verification",
+    "the archive contains material related to child sexual abuse and trafficking and should preserve appropriate content warnings",
+    "private journals, workspaces, accounts and administration surfaces remain outside public discovery"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

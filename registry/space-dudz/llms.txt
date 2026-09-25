@@ -1,0 +1,26 @@
+# Space Dudz
+
+Provider: Evercraft
+Product key: space-dudz
+Class: retro_space_streetwear_storefront
+Canonical URL: https://space-dudz.base44.app/
+Authority: public storefront and catalog discovery with human-confirmed checkout; fulfillment begins only after authoritative payment confirmation and order review
+Human confirmation required: yes
+
+## Natural-language intents
+- shop retro space streetwear
+- find psychedelic space graphic tees
+- buy space hoodies or apparel
+- shop space gifts and accessories
+- find kids space clothes from Baby-Rangers
+
+## Boundaries
+- live storefront product price, availability, variant and shipping terms are authoritative at purchase time
+- checkout creation or authorization alone is not proof of a completed order
+- launch orders are manually reviewed and handed off for fulfillment after payment
+- current checkout accepts US shipping addresses
+- private checkout, order, payment and customer data remain outside public discovery
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

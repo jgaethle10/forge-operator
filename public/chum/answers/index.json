@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 85,
-    "unique_user_phrases": 587,
-    "mapped_candidate_edges": 646,
+    "pain_index_entries": 89,
+    "unique_user_phrases": 610,
+    "mapped_candidate_edges": 669,
     "ambiguous_phrases": 59,
-    "product_candidates": 42,
+    "product_candidates": 46,
     "machine_offer_candidates": 43
   },
   "doors": [
@@ -1053,6 +1053,28 @@
       ]
     },
     {
+      "answer_id": "intent:6914da0f9e",
+      "user_language": "audit the source trail behind a sports result",
+      "normalized": "audit the source trail behind a sports result",
+      "relative_json": "/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:chronosport",
+          "kind": "product",
+          "product_key": "chronosport",
+          "public_id": null,
+          "name": "Chronosport",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/chronosport/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:2587bf5b7d",
       "user_language": "audit this dataset for gaps",
       "normalized": "audit this dataset for gaps",
@@ -1941,6 +1963,28 @@
       ]
     },
     {
+      "answer_id": "intent:dce8a879ad",
+      "user_language": "buy space hoodies or apparel",
+      "normalized": "buy space hoodies or apparel",
+      "relative_json": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:space-dudz",
+          "kind": "product",
+          "product_key": "space-dudz",
+          "public_id": null,
+          "name": "Space Dudz",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/space-dudz/",
+          "public_url": "https://space-dudz.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:acb9a334c3",
       "user_language": "buy workforce training seats for my company",
       "normalized": "buy workforce training seats for my company",
@@ -2517,6 +2561,28 @@
       ]
     },
     {
+      "answer_id": "intent:d5e67cd8bf",
+      "user_language": "compare my website against competitors",
+      "normalized": "compare my website against competitors",
+      "relative_json": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-radar",
+          "kind": "product",
+          "product_key": "systemia-radar",
+          "public_id": null,
+          "name": "Systemia Radar",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-radar/",
+          "public_url": "https://systemia-radar.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:30d78e95a1",
       "user_language": "compare or deduplicate multiple recordings",
       "normalized": "compare or deduplicate multiple recordings",
@@ -3020,6 +3086,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/community-health-evidence-brief-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7cb7846615",
+      "user_language": "create a website competitor comparison report",
+      "normalized": "create a website competitor comparison report",
+      "relative_json": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-radar",
+          "kind": "product",
+          "product_key": "systemia-radar",
+          "public_id": null,
+          "name": "Systemia Radar",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-radar/",
+          "public_url": "https://systemia-radar.base44.app/",
           "registry_name": null
         }
       ]
@@ -3743,6 +3831,28 @@
       ]
     },
     {
+      "answer_id": "intent:91fc9aeac0",
+      "user_language": "explore fair play or officiating evidence without unsupported accusations",
+      "normalized": "explore fair play or officiating evidence without unsupported accusations",
+      "relative_json": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:chronosport",
+          "kind": "product",
+          "product_key": "chronosport",
+          "public_id": null,
+          "name": "Chronosport",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/chronosport/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:f3fd2a685d",
       "user_language": "explore wildlife conservation with uncertainty attached",
       "normalized": "explore wildlife conservation with uncertainty attached",
@@ -4205,6 +4315,28 @@
       ]
     },
     {
+      "answer_id": "intent:6b1f7d9ba7",
+      "user_language": "find a historical sports event",
+      "normalized": "find a historical sports event",
+      "relative_json": "/chum/answers/doors/find-a-historical-sports-event-6b1f7d9ba7.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-historical-sports-event-6b1f7d9ba7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:chronosport",
+          "kind": "product",
+          "product_key": "chronosport",
+          "public_id": null,
+          "name": "Chronosport",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/chronosport/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:233a949aad",
       "user_language": "find a trading journal with behavioral coaching",
       "normalized": "find a trading journal with behavioral coaching",
@@ -4481,6 +4613,28 @@
       ]
     },
     {
+      "answer_id": "intent:c87537303f",
+      "user_language": "find kids space clothes from Baby-Rangers",
+      "normalized": "find kids space clothes from baby rangers",
+      "relative_json": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:space-dudz",
+          "kind": "product",
+          "product_key": "space-dudz",
+          "public_id": null,
+          "name": "Space Dudz",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/space-dudz/",
+          "public_url": "https://space-dudz.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:f2270ae02e",
       "user_language": "find local events",
       "normalized": "find local events",
@@ -4664,6 +4818,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:57e559302d",
+      "user_language": "find psychedelic space graphic tees",
+      "normalized": "find psychedelic space graphic tees",
+      "relative_json": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:space-dudz",
+          "kind": "product",
+          "product_key": "space-dudz",
+          "public_id": null,
+          "name": "Space Dudz",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/space-dudz/",
+          "public_url": "https://space-dudz.base44.app/",
           "registry_name": null
         }
       ]
@@ -8029,6 +8205,28 @@
       ]
     },
     {
+      "answer_id": "intent:1af81f61a0",
+      "user_language": "monitor my website with weekly rescans",
+      "normalized": "monitor my website with weekly rescans",
+      "relative_json": "/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-radar",
+          "kind": "product",
+          "product_key": "systemia-radar",
+          "public_id": null,
+          "name": "Systemia Radar",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-radar/",
+          "public_url": "https://systemia-radar.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:061e00f507",
       "user_language": "multi-hour video analysis",
       "normalized": "multi hour video analysis",
@@ -10213,6 +10411,28 @@
       ]
     },
     {
+      "answer_id": "intent:a7b24fab6d",
+      "user_language": "research sports history with sources",
+      "normalized": "research sports history with sources",
+      "relative_json": "/chum/answers/doors/research-sports-history-with-sources-a7b24fab6d.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-sports-history-with-sources-a7b24fab6d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:chronosport",
+          "kind": "product",
+          "product_key": "chronosport",
+          "public_id": null,
+          "name": "Chronosport",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/chronosport/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:db58edbbad",
       "user_language": "research this land or water question",
       "normalized": "research this land or water question",
@@ -10496,6 +10716,28 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
           "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dfe83c09a9",
+      "user_language": "review source-linked survivor or witness testimony",
+      "normalized": "review source linked survivor or witness testimony",
+      "relative_json": "/chum/answers/doors/review-source-linked-survivor-or-witness-testimony-dfe83c09a9.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-source-linked-survivor-or-witness-testimony-dfe83c09a9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensic-record",
+          "kind": "product",
+          "product_key": "forensic-record",
+          "public_id": null,
+          "name": "The Forensic Record",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/forensic-record/",
+          "public_url": "https://filescompanion.com/",
           "registry_name": null
         }
       ]
@@ -10909,6 +11151,28 @@
       ]
     },
     {
+      "answer_id": "intent:076b33b229",
+      "user_language": "scan my website for problems",
+      "normalized": "scan my website for problems",
+      "relative_json": "/chum/answers/doors/scan-my-website-for-problems-076b33b229.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/scan-my-website-for-problems-076b33b229.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-radar",
+          "kind": "product",
+          "product_key": "systemia-radar",
+          "public_id": null,
+          "name": "Systemia Radar",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-radar/",
+          "public_url": "https://systemia-radar.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5e08f2c4f0",
       "user_language": "score my interview answer",
       "normalized": "score my interview answer",
@@ -10949,6 +11213,28 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:08d55e848d",
+      "user_language": "search source-linked Epstein court records",
+      "normalized": "search source linked epstein court records",
+      "relative_json": "/chum/answers/doors/search-source-linked-epstein-court-records-08d55e848d.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/search-source-linked-epstein-court-records-08d55e848d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensic-record",
+          "kind": "product",
+          "product_key": "forensic-record",
+          "public_id": null,
+          "name": "The Forensic Record",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/forensic-record/",
+          "public_url": "https://filescompanion.com/",
+          "registry_name": null
         }
       ]
     },
@@ -11019,6 +11305,28 @@
       ]
     },
     {
+      "answer_id": "intent:f21e05d160",
+      "user_language": "separate documented evidence allegations and commentary in Epstein records",
+      "normalized": "separate documented evidence allegations and commentary in epstein records",
+      "relative_json": "/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensic-record",
+          "kind": "product",
+          "product_key": "forensic-record",
+          "public_id": null,
+          "name": "The Forensic Record",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/forensic-record/",
+          "public_url": "https://filescompanion.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:3d83a72549",
       "user_language": "set up family safety check-ins or preparedness",
       "normalized": "set up family safety check ins or preparedness",
@@ -11036,6 +11344,50 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/raven-nexus/",
           "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:29e88c1eb1",
+      "user_language": "shop retro space streetwear",
+      "normalized": "shop retro space streetwear",
+      "relative_json": "/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:space-dudz",
+          "kind": "product",
+          "product_key": "space-dudz",
+          "public_id": null,
+          "name": "Space Dudz",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/space-dudz/",
+          "public_url": "https://space-dudz.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:56a15d63cb",
+      "user_language": "shop space gifts and accessories",
+      "normalized": "shop space gifts and accessories",
+      "relative_json": "/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:space-dudz",
+          "kind": "product",
+          "product_key": "space-dudz",
+          "public_id": null,
+          "name": "Space Dudz",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/space-dudz/",
+          "public_url": "https://space-dudz.base44.app/",
           "registry_name": null
         }
       ]
@@ -11226,6 +11578,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/global-energy-atlas/",
           "public_url": "https://energy-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:da1b3e4230",
+      "user_language": "show where my competitors are beating my website",
+      "normalized": "show where my competitors are beating my website",
+      "relative_json": "/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-radar",
+          "kind": "product",
+          "product_key": "systemia-radar",
+          "public_id": null,
+          "name": "Systemia Radar",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-radar/",
+          "public_url": "https://systemia-radar.base44.app/",
           "registry_name": null
         }
       ]
@@ -11512,6 +11886,50 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/global-energy-atlas/",
           "public_url": "https://energy-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1bd877b444",
+      "user_language": "study how sports rules changed over time",
+      "normalized": "study how sports rules changed over time",
+      "relative_json": "/chum/answers/doors/study-how-sports-rules-changed-over-time-1bd877b444.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-how-sports-rules-changed-over-time-1bd877b444.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:chronosport",
+          "kind": "product",
+          "product_key": "chronosport",
+          "public_id": null,
+          "name": "Chronosport",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/chronosport/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3e297b0611",
+      "user_language": "study the legal process in Epstein-related public records",
+      "normalized": "study the legal process in epstein related public records",
+      "relative_json": "/chum/answers/doors/study-the-legal-process-in-epstein-related-public-records-3e297b0611.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-the-legal-process-in-epstein-related-public-records-3e297b0611.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensic-record",
+          "kind": "product",
+          "product_key": "forensic-record",
+          "public_id": null,
+          "name": "The Forensic Record",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/forensic-record/",
+          "public_url": "https://filescompanion.com/",
           "registry_name": null
         }
       ]
@@ -11937,6 +12355,28 @@
       ]
     },
     {
+      "answer_id": "intent:3bbe6541be",
+      "user_language": "trace a name place or document through Epstein-related records",
+      "normalized": "trace a name place or document through epstein related records",
+      "relative_json": "/chum/answers/doors/trace-a-name-place-or-document-through-epstein-related-records-3bbe6541be.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trace-a-name-place-or-document-through-epstein-related-records-3bbe6541be.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensic-record",
+          "kind": "product",
+          "product_key": "forensic-record",
+          "public_id": null,
+          "name": "The Forensic Record",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/forensic-record/",
+          "public_url": "https://filescompanion.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9b437efa02",
       "user_language": "trace procure to pay exceptions",
       "normalized": "trace procure to pay exceptions",
@@ -11954,6 +12394,28 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d1bd8392e9",
+      "user_language": "trace teams athletes seasons venues and results",
+      "normalized": "trace teams athletes seasons venues and results",
+      "relative_json": "/chum/answers/doors/trace-teams-athletes-seasons-venues-and-results-d1bd8392e9.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trace-teams-athletes-seasons-venues-and-results-d1bd8392e9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:chronosport",
+          "kind": "product",
+          "product_key": "chronosport",
+          "public_id": null,
+          "name": "Chronosport",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/chronosport/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
           "registry_name": null
         }
       ]
@@ -11998,6 +12460,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/ecoledger/",
           "public_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:bc173a6022",
+      "user_language": "track website audit changes over time",
+      "normalized": "track website audit changes over time",
+      "relative_json": "/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-radar",
+          "kind": "product",
+          "product_key": "systemia-radar",
+          "public_id": null,
+          "name": "Systemia Radar",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-radar/",
+          "public_url": "https://systemia-radar.base44.app/",
           "registry_name": null
         }
       ]
@@ -12508,6 +12992,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/coda-y-codigo/",
           "public_url": "https://codaycodigo.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a77f4704f5",
+      "user_language": "verify an Epstein-related claim against public records",
+      "normalized": "verify an epstein related claim against public records",
+      "relative_json": "/chum/answers/doors/verify-an-epstein-related-claim-against-public-records-a77f4704f5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-an-epstein-related-claim-against-public-records-a77f4704f5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:forensic-record",
+          "kind": "product",
+          "product_key": "forensic-record",
+          "public_id": null,
+          "name": "The Forensic Record",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/forensic-record/",
+          "public_url": "https://filescompanion.com/",
           "registry_name": null
         }
       ]

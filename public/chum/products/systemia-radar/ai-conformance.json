@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Radar",
+  "product_key": "systemia-radar",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://systemia-radar.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "website findings must come from observed scan evidence rather than fabricated LLM opinion",
+    "scores and competitor comparisons do not guarantee rankings, leads or revenue",
+    "weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability",
+    "checkout creation alone does not activate paid access"
+  ],
+  "commercial": {
+    "status": "source_checkout_wired_live_verification_pending",
+    "offers": [
+      {
+        "name": "Free website scan",
+        "price": "$0 per scan"
+      },
+      {
+        "name": "Radar Pro Monthly",
+        "price": "$29/month"
+      },
+      {
+        "name": "Radar Pro Yearly",
+        "price": "$290/year"
+      }
+    ],
+    "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}

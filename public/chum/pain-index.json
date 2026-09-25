@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 85,
-    "product_entries": 42,
+    "entries": 89,
+    "product_entries": 46,
     "machine_offer_entries": 43,
-    "entries_with_pain_language": 85,
+    "entries_with_pain_language": 89,
     "sell_now_machine_offers": 12,
     "entries_with_declared_mcp": 57,
     "callable_or_routable_entries": 36,
@@ -2247,6 +2247,51 @@
       ]
     },
     {
+      "capability_id": "product:chronosport",
+      "product_key": "chronosport",
+      "kind": "product",
+      "name": "Chronosport",
+      "class": "provenance_first_sports_history_and_fair_play_archive",
+      "pain_phrases": [
+        "research sports history with sources",
+        "find a historical sports event",
+        "trace teams athletes seasons venues and results",
+        "study how sports rules changed over time",
+        "audit the source trail behind a sports result",
+        "explore fair play or officiating evidence without unsupported accusations"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public read-only exploration of a versioned sports history graph and source registry",
+      "boundaries": [
+        "historical facts, corrections and rule eras remain versioned rather than silently overwritten",
+        "fair-play anomalies trigger review and must not be presented as proof of wrongdoing",
+        "source limitations and unresolved historical questions should remain visible",
+        "private account or editorial administration data is outside public discovery"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": false,
+      "confirmation": "No payment obligation is created by discovery.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:coda-y-codigo",
       "product_key": "coda-y-codigo",
       "kind": "product",
@@ -3204,6 +3249,52 @@
       ]
     },
     {
+      "capability_id": "product:forensic-record",
+      "product_key": "forensic-record",
+      "kind": "product",
+      "name": "The Forensic Record",
+      "class": "source_linked_public_record_research_archive",
+      "pain_phrases": [
+        "search source-linked Epstein court records",
+        "verify an Epstein-related claim against public records",
+        "trace a name place or document through Epstein-related records",
+        "study the legal process in Epstein-related public records",
+        "review source-linked survivor or witness testimony",
+        "separate documented evidence allegations and commentary in Epstein records"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://filescompanion.com/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public read-only guided research over source-linked court, government and civil-litigation records",
+      "boundaries": [
+        "a person's presence in a record or network does not establish culpability",
+        "attorney claims, testimony, documents, allegations and verified facts must remain distinctly labeled",
+        "citations and surrounding source context should remain accessible for verification",
+        "the archive contains material related to child sexual abuse and trafficking and should preserve appropriate content warnings",
+        "private journals, workspaces, accounts and administration surfaces remain outside public discovery"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": false,
+      "confirmation": "No payment obligation is created by discovery.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:forensiscope",
       "product_key": "forensiscope",
       "kind": "product",
@@ -3723,6 +3814,62 @@
       ]
     },
     {
+      "capability_id": "product:space-dudz",
+      "product_key": "space-dudz",
+      "kind": "product",
+      "name": "Space Dudz",
+      "class": "retro_space_streetwear_storefront",
+      "pain_phrases": [
+        "shop retro space streetwear",
+        "find psychedelic space graphic tees",
+        "buy space hoodies or apparel",
+        "shop space gifts and accessories",
+        "find kids space clothes from Baby-Rangers"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://space-dudz.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public storefront and catalog discovery with human-confirmed checkout; fulfillment begins only after authoritative payment confirmation and order review",
+      "boundaries": [
+        "live storefront product price, availability, variant and shipping terms are authoritative at purchase time",
+        "checkout creation or authorization alone is not proof of a completed order",
+        "launch orders are manually reviewed and handed off for fulfillment after payment",
+        "current checkout accepts US shipping addresses",
+        "private checkout, order, payment and customer data remain outside public discovery"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": "Varies by current product and variant",
+      "offers": [
+        {
+          "name": "Live storefront catalog",
+          "price": "Varies by current product and variant",
+          "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
+        }
+      ],
+      "commercial": {
+        "status": "source_commerce_wired",
+        "offer": "Live storefront catalog",
+        "pricing": "Varies by current product and variant",
+        "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:systemia-atlas-freight",
       "product_key": "systemia-atlas-freight",
       "kind": "product",
@@ -3877,6 +4024,68 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:systemia-radar",
+      "product_key": "systemia-radar",
+      "kind": "product",
+      "name": "Systemia Radar",
+      "class": "website_scan_competitor_monitoring_and_reporting",
+      "pain_phrases": [
+        "scan my website for problems",
+        "compare my website against competitors",
+        "show where my competitors are beating my website",
+        "create a website competitor comparison report",
+        "monitor my website with weekly rescans",
+        "track website audit changes over time"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://systemia-radar.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification",
+      "boundaries": [
+        "website findings must come from observed scan evidence rather than fabricated LLM opinion",
+        "scores and competitor comparisons do not guarantee rankings, leads or revenue",
+        "weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability",
+        "checkout creation alone does not activate paid access"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "source_checkout_wired_live_verification_pending",
+        "offers": [
+          {
+            "name": "Free website scan",
+            "price": "$0 per scan"
+          },
+          {
+            "name": "Radar Pro Monthly",
+            "price": "$29/month"
+          },
+          {
+            "name": "Radar Pro Yearly",
+            "price": "$290/year"
+          }
+        ],
+        "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

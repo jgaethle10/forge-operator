@@ -1,0 +1,26 @@
+# Systemia Radar
+
+Provider: Evercraft
+Product key: systemia-radar
+Class: website_scan_competitor_monitoring_and_reporting
+Canonical URL: https://systemia-radar.base44.app/
+Authority: public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification
+Human confirmation required: yes
+
+## Natural-language intents
+- scan my website for problems
+- compare my website against competitors
+- show where my competitors are beating my website
+- create a website competitor comparison report
+- monitor my website with weekly rescans
+- track website audit changes over time
+
+## Boundaries
+- website findings must come from observed scan evidence rather than fabricated LLM opinion
+- scores and competitor comparisons do not guarantee rankings, leads or revenue
+- weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability
+- checkout creation alone does not activate paid access
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

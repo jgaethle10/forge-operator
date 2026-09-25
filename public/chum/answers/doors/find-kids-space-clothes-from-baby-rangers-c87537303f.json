@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-25T05:45:00.000Z",
+  "answer_id": "intent:c87537303f",
+  "user_language": "find kids space clothes from Baby-Rangers",
+  "normalized": "find kids space clothes from baby rangers",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:space-dudz",
+      "kind": "product",
+      "product_key": "space-dudz",
+      "public_id": null,
+      "name": "Space Dudz",
+      "problem": null,
+      "pricing": "Varies by current product and variant",
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://space-dudz.base44.app/",
+      "pain_page": "/chum/products/space-dudz/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public storefront and catalog discovery with human-confirmed checkout; fulfillment begins only after authoritative payment confirmation and order review",
+      "boundaries": [
+        "live storefront product price, availability, variant and shipping terms are authoritative at purchase time",
+        "checkout creation or authorization alone is not proof of a completed order",
+        "launch orders are manually reviewed and handed off for fulfillment after payment",
+        "current checkout accepts US shipping addresses",
+        "private checkout, order, payment and customer data remain outside public discovery"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

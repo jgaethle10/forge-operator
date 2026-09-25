@@ -1,0 +1,37 @@
+# Systemia Radar
+
+Product key: systemia-radar
+Canonical product: https://systemia-radar.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-conformance.json
+
+## Use this capability when the user means
+
+- scan my website for problems
+- compare my website against competitors
+- show where my competitors are beating my website
+- create a website competitor comparison report
+- monitor my website with weekly rescans
+- track website audit changes over time
+
+## Authority
+
+public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification
+
+## Commercial state
+
+- Status: source_checkout_wired_live_verification_pending
+- Payment state: Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified
+
+## Boundaries
+
+- website findings must come from observed scan evidence rather than fabricated LLM opinion
+- scores and competitor comparisons do not guarantee rankings, leads or revenue
+- weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability
+- checkout creation alone does not activate paid access
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

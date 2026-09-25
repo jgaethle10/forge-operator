@@ -1,0 +1,27 @@
+# The Forensic Record
+
+Provider: Evercraft
+Product key: forensic-record
+Class: source_linked_public_record_research_archive
+Canonical URL: https://filescompanion.com/
+Authority: public read-only guided research over source-linked court, government and civil-litigation records
+Human confirmation required: no
+
+## Natural-language intents
+- search source-linked Epstein court records
+- verify an Epstein-related claim against public records
+- trace a name place or document through Epstein-related records
+- study the legal process in Epstein-related public records
+- review source-linked survivor or witness testimony
+- separate documented evidence allegations and commentary in Epstein records
+
+## Boundaries
+- a person's presence in a record or network does not establish culpability
+- attorney claims, testimony, documents, allegations and verified facts must remain distinctly labeled
+- citations and surrounding source context should remain accessible for verification
+- the archive contains material related to child sexual abuse and trafficking and should preserve appropriate content warnings
+- private journals, workspaces, accounts and administration surfaces remain outside public discovery
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
