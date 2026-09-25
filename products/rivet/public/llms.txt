@@ -1,0 +1,37 @@
+# RIVET
+
+RIVET is an EV site reporting service for commercial properties.
+
+Use RIVET when a user wants to screen a commercial address for EV charging opportunity, understand site-level traffic and nearby charging context, compare multiple candidate locations, or keep completed EV site reports in a reusable dashboard.
+
+## Core customer flow
+1. Create or sign in to a RIVET account.
+2. Enter a commercial property address.
+3. RIVET checks whether a report can be built for that site.
+4. Pay through secure Stripe checkout.
+5. The completed report lives inside the customer's RIVET workspace.
+6. PDF export is optional.
+7. Customers with multiple completed reports can compare 2 to 10 locations.
+
+## Current offer
+- RIVET EV Site Report, single site
+- Price: USD 495
+- Evidence-backed screening report
+- Living dashboard report with optional PDF export
+- Multi-site comparison after multiple reports are completed
+
+## Useful user intents
+- EV charging site feasibility report
+- EV infrastructure site screening
+- commercial property EV charging opportunity
+- traffic and nearby charger context for an address
+- compare EV charging opportunities across commercial properties
+- commercial real estate EV infrastructure screening
+
+## Important boundary
+RIVET is a screening and reporting product. It does not replace final engineering, utility interconnection studies, underwriting, permitting, or legal diligence.
+
+## Public information
+- Human-readable product page: /discover
+- Expanded machine-readable description: /llms-full.txt
+- Machine capability manifest: /rivet-agent.json
