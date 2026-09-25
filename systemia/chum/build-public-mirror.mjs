@@ -126,6 +126,7 @@ for (const product of directory.products || []) {
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
+    developer_surfaces: product.developer_surfaces || null,
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -151,6 +152,7 @@ for (const product of directory.products || []) {
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
     commercial: product.commercial || null,
+    developer_surfaces: product.developer_surfaces || null,
     provider_behavior_state: 'not_inferred_from_publication'
   };
 
@@ -164,6 +166,9 @@ for (const product of directory.products || []) {
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
+    product.developer_surfaces?.hub ? `Developer hub: ${product.developer_surfaces.hub}` : null,
+    product.developer_surfaces?.status ? `Verified status: ${product.developer_surfaces.status}` : null,
+    product.developer_surfaces?.examples ? `Examples: ${product.developer_surfaces.examples}` : null,
     '',
     '## Use this capability when the user means',
     '',
@@ -260,6 +265,8 @@ for (const product of directory.products || []) {
     '<li><a href="./llms.txt">LLM guidance</a></li>',
     '<li><a href="./ai-discovery.json">Discovery JSON</a></li>',
     '<li><a href="./ai-conformance.json">AI conformance</a></li>',
+    ...(product.developer_surfaces?.hub ? [`<li><a href="${escapeHtml(product.developer_surfaces.hub)}">Developer hub</a></li>`] : []),
+    ...(product.developer_surfaces?.status ? [`<li><a href="${escapeHtml(product.developer_surfaces.status)}">Verified status</a></li>`] : []),
     '</ul></div>',
     ...(product.commercial ? [
       '<div class="card"><h2>Commercial state</h2>',
@@ -290,7 +297,8 @@ for (const product of directory.products || []) {
     page_url: `/chum/products/${key}/`,
     registry_name: discovery.registry_name,
     mcp: discovery.mcp,
-    commercial: product.commercial || null
+    commercial: product.commercial || null,
+    developer_surfaces: product.developer_surfaces || null
   });
 }
 
@@ -349,6 +357,19 @@ const sitemapStatic = [
   '/chum/sitemap.xml',
   '/.well-known/evercraft-pain-index.json',
   '/forensiscope/',
+  '/forensiscope/developers/',
+  '/forensiscope/developers/quickstart.html',
+  '/forensiscope/developers/mcp.html',
+  '/forensiscope/developers/workflows.html',
+  '/forensiscope/developers/integrations.html',
+  '/forensiscope/developers/status.html',
+  '/forensiscope/developers/status.json',
+  '/forensiscope/developers/examples.json',
+  '/forensiscope/developers/llms.txt',
+  '/forensiscope/video-understanding/',
+  '/forensiscope/semantic-video-search/',
+  '/forensiscope/duplicate-segments/',
+  '/forensiscope/long-video-transcription/',
   '/llms.txt',
   '/llms-full.txt',
   '/ai-discovery.json',
@@ -505,6 +526,9 @@ for (const product of directory.products || []) {
   llmsLines.push(`Machine state: ${invocation.mode}`);
   if (invocation.registry_name) llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
   if (invocation.url) llmsLines.push(`Invocation: ${invocation.url}`);
+  if (product.developer_surfaces?.hub) llmsLines.push(`Developer hub: ${product.developer_surfaces.hub}`);
+  if (product.developer_surfaces?.status) llmsLines.push(`Verified status: ${product.developer_surfaces.status}`);
+  if (product.developer_surfaces?.examples) llmsLines.push(`Examples: ${product.developer_surfaces.examples}`);
   llmsLines.push(`Discovery: ${mirrorBase}/ai-discovery.json`);
   llmsLines.push(`AI conformance: ${mirrorBase}/ai-conformance.json`);
   llmsLines.push('Use when the user says or means:');
@@ -536,7 +560,8 @@ for (const product of directory.products || []) {
     human_confirmation_required: Boolean(product.human_confirmation_required),
     authority: product.authority,
     boundaries: product.boundaries || [],
-    commercial: product.commercial || null
+    commercial: product.commercial || null,
+    developer_surfaces: product.developer_surfaces || null
   });
 
   schemaServices.push({
