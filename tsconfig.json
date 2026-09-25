@@ -24,6 +24,7 @@
     "noEmit": true
   },
   "exclude": [
-    "products/rivet/**"
+    "products/rivet/**",
+    "products/aliev/base44/**"
   ]
 }

@@ -139,6 +139,7 @@ export async function startEvercraftComputeNode({
   const supported = new Set([
     'systemia.private-core-origin.v1',
     'systemia.kaidance-collider.v1',
+    'aliev.rivet-report-snapshot.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -349,6 +350,45 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result: workerResult,
             checkpoint,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'aliev.rivet-report-snapshot.v1') {
+          const address = String(body.input?.address || '').trim().slice(0, 500);
+          const mode = String(body.input?.mode || 'rivet_report_snapshot');
+          if (!address) return send(res, 422, { error: 'address_required' });
+          if (mode !== 'rivet_report_snapshot') {
+            return send(res, 422, { error: 'unsupported_aliev_mode' });
+          }
+
+          const requestId = `aliev_${randomBytes(8).toString('hex')}`;
+          const requestBody = {
+            schema: 'evercraft.aliev.rivet-report-request.v1',
+            request_id: requestId,
+            mode,
+            address,
+            requested_at: new Date().toISOString(),
+          };
+          const result = {
+            schema: 'evercraft.aliev.rivet-report-snapshot.v1',
+            request: requestBody,
+            state: 'adapter_required',
+            evidence_state: 'not_executed',
+            note: 'Yard admitted the bounded AliEV/RIVET workload. Source adapters are extracted separately; no intelligence is fabricated by the runtime.',
+          };
+          const receipt = chain.issue('aliev.rivet-report-snapshot.admitted', {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            request_id: requestId,
+            request_hash: sha(requestBody),
+            result_schema: result.schema,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
             receipt,
           });
         }

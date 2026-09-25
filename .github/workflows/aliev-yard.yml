@@ -1,0 +1,28 @@
+name: AliEV Yard extraction
+
+on:
+  pull_request:
+    paths:
+      - 'products/aliev/**'
+      - 'systemia/compute/runtime-node.mjs'
+      - '.github/workflows/aliev-yard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'products/aliev/**'
+      - 'systemia/compute/runtime-node.mjs'
+      - '.github/workflows/aliev-yard.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove extracted public evidence adapters
+        run: node products/aliev/yard-public-snapshot-proof.mjs
+      - name: Prove bounded AliEV workload on Yard
+        run: node products/aliev/yard-admission-proof.mjs

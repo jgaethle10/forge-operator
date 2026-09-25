@@ -1,0 +1,13 @@
+{
+  "schema": "evercraft.aliev.extraction-dependencies.v1",
+  "entrypoint": "base44/functions/energySiteLookup/entry.ts",
+  "pending_large_data_modules": [
+    "base44/functions/energySiteLookup/nyTraffic2025Data.ts",
+    "base44/functions/energySiteLookup/finlandAFIRCache.ts"
+  ],
+  "contract": {
+    "mode": "rivet_report_snapshot",
+    "consumer": "RIVET"
+  },
+  "state": "source_extracted_runtime_dependencies_pending"
+}
