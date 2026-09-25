@@ -69,3 +69,16 @@ npm run proof:durable-continuity
 ```
 
 This is a filesystem/process-restart proof, not yet a sudden-power-loss field certification.
+
+
+## Process restart recovery
+
+The restart drill crosses a real process boundary. A new Node process must reject an already-executed secure envelope from persisted replay state, recover the last checkpoint, then survive a SIGKILL after an intentionally torn uncommitted journal tail.
+
+Run the proof:
+
+```bash
+npm run proof:process-restart-recovery
+```
+
+This is stronger than object reload, but still not a physical power-loss certification.
