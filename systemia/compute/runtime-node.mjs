@@ -163,6 +163,33 @@ function boundedLeaseTtl(value, fallback) {
   return Math.max(30_000, Math.min(86_400_000, Math.floor(requested)));
 }
 
+function sabanAssignmentIdentity(software, assignment) {
+  const explicit = String(assignment?.idempotency_key || '').trim();
+  if (explicit) return explicit;
+
+  return 'sha256:' + sha({
+    software,
+    agent_id: assignment?.agent_id || null,
+    role: assignment?.role || null,
+    work: assignment?.work || null,
+    item: {
+      kind: assignment?.item?.kind || null,
+      key: assignment?.item?.key || null
+    }
+  });
+}
+
+function sabanAssignmentFingerprint(software, assignment) {
+  const normalized = structuredClone(assignment || {});
+  if (normalized?.item?.raw?.source?.path) {
+    normalized.item.raw.source.path = null;
+  }
+  if (normalized?.item?.raw?.authorized_source?.path) {
+    normalized.item.raw.authorized_source.path = null;
+  }
+  return 'sha256:' + sha({ software, assignment: normalized });
+}
+
 export async function startEvercraftComputeNode({
   nodeId = 'evercraft-compute-local',
   root,
@@ -199,6 +226,28 @@ export async function startEvercraftComputeNode({
   const leases = new Map();
   const services = new Map();
   const stagedBlobs = new Map();
+  const sabanInflight = new Map();
+  const sabanIdempotencyDir = path.join(allowedRoot, '.evercraft', 'saban-idempotency');
+
+  const sabanIdempotencyPath = (cacheKey) =>
+    path.join(sabanIdempotencyDir, `${cacheKey}.json`);
+
+  const readSabanIdempotency = (cacheKey) => {
+    const file = sabanIdempotencyPath(cacheKey);
+    if (!fs.existsSync(file)) return null;
+    try {
+      const record = JSON.parse(fs.readFileSync(file, 'utf8'));
+      return record?.schema === 'evercraft.saban.idempotency-record.v1'
+        ? record
+        : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const writeSabanIdempotency = (cacheKey, record) => {
+    atomicJson(sabanIdempotencyPath(cacheKey), record);
+  };
 
   const stagedLeaseDir = (leaseId) =>
     path.join(allowedRoot, '.evercraft', 'staged', String(leaseId));
@@ -505,38 +554,112 @@ export async function startEvercraftComputeNode({
             };
           }
 
-          const workerResult = await runRegisteredAssignment({
-            software,
-            assignment,
-            rootDir: CODE_ROOT,
-            executionContext: {
-              media_roots: [stagedLeaseDir(body.lease_id)]
-            }
-          });
-          const checkpoint = {
-            step: Number(body.checkpoint?.step || 0) + 1,
-            state: {
-              software_id: workerResult.software_id,
-              agent_id: workerResult.agent_id,
-              idempotency_key: workerResult.idempotency_key || null,
-              work: workerResult.work,
-              result: workerResult.result,
-            },
-            last_node: nodeId,
+          const idempotencyKey = sabanAssignmentIdentity(software, assignment);
+          const assignmentFingerprint = sabanAssignmentFingerprint(software, assignment);
+          const cacheKey = sha(`${software}:${idempotencyKey}`);
+          const existing = readSabanIdempotency(cacheKey);
+
+          if (existing && existing.assignment_fingerprint !== assignmentFingerprint) {
+            return send(res, 409, {
+              error: 'idempotency_key_conflict',
+              idempotency_key: idempotencyKey
+            });
+          }
+
+          const makeReusedResponse = (record, reuseKind) => {
+            const receipt = chain.issue('saban.assignment.reused', {
+              lease_id: body.lease_id,
+              workload_class: body.workload_class,
+              software_id: record.worker_result?.software_id || software,
+              agent_id: record.worker_result?.agent_id || assignment.agent_id,
+              idempotency_key: idempotencyKey,
+              reuse_kind: reuseKind
+            });
+            return {
+              ok: true,
+              node_id: nodeId,
+              workload_class: body.workload_class,
+              result: record.worker_result,
+              checkpoint: record.checkpoint,
+              deduplicated: true,
+              idempotency_key: idempotencyKey,
+              receipt
+            };
           };
+
+          if (existing) {
+            return send(res, 200, makeReusedResponse(existing, 'durable_cache'));
+          }
+
+          const executeOnce = async () => {
+            const workerResult = await runRegisteredAssignment({
+              software,
+              assignment: {
+                ...assignment,
+                idempotency_key: idempotencyKey
+              },
+              rootDir: CODE_ROOT,
+              executionContext: {
+                media_roots: [stagedLeaseDir(body.lease_id)]
+              }
+            });
+            const checkpoint = {
+              step: Number(body.checkpoint?.step || 0) + 1,
+              state: {
+                software_id: workerResult.software_id,
+                agent_id: workerResult.agent_id,
+                idempotency_key: workerResult.idempotency_key || idempotencyKey,
+                work: workerResult.work,
+                result: workerResult.result,
+              },
+              last_node: nodeId,
+            };
+            const record = {
+              schema: 'evercraft.saban.idempotency-record.v1',
+              created_at: new Date().toISOString(),
+              software_id: workerResult.software_id,
+              idempotency_key: idempotencyKey,
+              assignment_fingerprint: assignmentFingerprint,
+              worker_result: workerResult,
+              checkpoint
+            };
+            writeSabanIdempotency(cacheKey, record);
+            return record;
+          };
+
+          let promise = sabanInflight.get(cacheKey);
+          const reusedInflight = Boolean(promise);
+          if (!promise) {
+            promise = executeOnce();
+            sabanInflight.set(cacheKey, promise);
+          }
+
+          let record;
+          try {
+            record = await promise;
+          } finally {
+            if (!reusedInflight) sabanInflight.delete(cacheKey);
+          }
+
+          if (reusedInflight) {
+            return send(res, 200, makeReusedResponse(record, 'inflight'));
+          }
+
           const receipt = chain.issue('saban.assignment.executed', {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
-            software_id: workerResult.software_id,
-            agent_id: workerResult.agent_id,
-            idempotency_key: workerResult.idempotency_key || null,
+            software_id: record.worker_result.software_id,
+            agent_id: record.worker_result.agent_id,
+            idempotency_key: idempotencyKey,
           });
           return send(res, 200, {
             ok: true,
             node_id: nodeId,
             workload_class: body.workload_class,
-            result: workerResult,
-            checkpoint,
+            result: record.worker_result,
+            checkpoint: record.checkpoint,
+            deduplicated: false,
+            idempotency_key: idempotencyKey,
             receipt,
           });
         }
