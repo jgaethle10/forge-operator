@@ -56,3 +56,16 @@ npm run proof:partition-reconciliation
 ```
 
 The same proof also exercises authenticated AES-256-GCM delayed-delivery envelopes, destination binding, tamper rejection, expiry, and stable-message replay protection.
+
+
+## Transport diversity
+
+Evercraft Network is transport-neutral. Verified local HTTP and UDP multicast discovery can coexist with a filesystem/removable-media courier fallback, while unproven Wi-Fi Direct, BLE, and radio adapters remain explicitly planned and non-routable until field evidence exists.
+
+Run the proof:
+
+```bash
+npm run proof:transport-diversity
+```
+
+The proof removes LAN from the routing catalog and requires the same authenticated secure envelope to survive through the verified courier path. If neither LAN nor courier is available, the router must return `NO_ROUTE` instead of selecting a planned transport.
