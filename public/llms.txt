@@ -15,6 +15,9 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - CHUM pain-first text index: /chum/pain-index.txt
 - CHUM answer graph for exact natural-language problem phrases: /chum/answers/index.json
 - CHUM answer graph text mirror: /chum/answers/index.txt
+- CHUM freshness feed: /chum/freshness.xml
+- CHUM machine freshness state: /chum/freshness.json
+- CHUM content-hash crawl state: /chum/crawl-state.json
 - Official read-only discovery MCP: io.github.jgaethle10/evercraft-capability-discovery
 - Problem-to-product directory: /.well-known/evercraft-products.json
 - Crawlable CHUM capability directory: /chum/
