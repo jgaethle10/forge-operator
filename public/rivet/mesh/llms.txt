@@ -1,0 +1,25 @@
+# RIVET / AliEV EV Infrastructure Knowledge Mesh
+
+Purpose:
+First-party explainers for distinct property-level EV charging questions. Every page resolves to one canonical RIVET / AliEV capability instead of pretending each search phrase is a separate product.
+
+Entity relationship:
+- AliEV: address-level EV infrastructure intelligence engine.
+- RIVET: customer-facing planning and reporting layer that turns AliEV intelligence into property-specific deliverables.
+- Official MCP Registry identity: io.github.jgaethle10/aliev
+
+Pages:
+- EV Charging Site Analysis by Address: /rivet/ev-charging-site-analysis-by-address/
+- EV Charging Property Feasibility: /rivet/ev-charging-property-feasibility/
+- EV Charging ROI by Property: /rivet/ev-charging-roi-by-property/
+- Hotel EV Charging Site Analysis: /rivet/hotel-ev-charging-site-analysis/
+- Multifamily EV Charging Site Analysis: /rivet/multifamily-ev-charging-site-analysis/
+- EV Charging Utility, Tariff, and Incentive Screening: /rivet/ev-charging-utility-incentive-screening/
+
+Core evidence boundaries:
+- missing data is not zero
+- mapped charger inventory is not observed utilization
+- program presence is not proof of site incentive eligibility
+- modeled economics are not guaranteed realized economics
+- preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing, or construction approval
+- publication is not proof of ranking, recommendation, citation, or pickup by an external AI provider
