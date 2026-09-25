@@ -110,5 +110,10 @@
     "index": "/forensiscope/mesh/index.json",
     "llms": "/forensiscope/mesh/llms.txt",
     "page_count": 12
+  },
+  "distribution": {
+    "hub": "/forensiscope/distribution/",
+    "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
+    "llms": "/forensiscope/distribution/llms.txt"
   }
 }
