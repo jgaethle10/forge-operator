@@ -75,6 +75,7 @@ export async function runForensiScopeAnalysis({
   nodePool = null,
   rootDir = process.cwd()
 } = {}) {
+  const pipelineStartedAtMs = Date.now();
   const admittedSource = validateAuthorizedMediaSource(
     {
       source,
@@ -134,6 +135,7 @@ export async function runForensiScopeAnalysis({
     (nodePool.discover === true ||
       (Array.isArray(nodePool.endpoints) && nodePool.endpoints.length > 0));
 
+  const executionStartedAtMs = Date.now();
   const execution = distributed
     ? await executeDistributedMultiplicationPlan({
         contract,
@@ -169,6 +171,16 @@ export async function runForensiScopeAnalysis({
     execution.reconciliation.evidence_graph,
     { rootDir }
   );
+  const completedAtMs = Date.now();
+  const executionWallMs = Math.max(1, completedAtMs - executionStartedAtMs);
+  const pipelineWallMs = Math.max(1, completedAtMs - pipelineStartedAtMs);
+  const evidenceGraphBytes = Buffer.byteLength(
+    JSON.stringify(execution.reconciliation.evidence_graph),
+    'utf8'
+  );
+  const transcriptChars = String(
+    execution.reconciliation.transcription?.text || ''
+  ).length;
 
   return {
     schema: 'evercraft.forensiscope.analysis-receipt.v1',
@@ -194,6 +206,30 @@ export async function runForensiScopeAnalysis({
       strategy: formation.strategy
     },
     execution: summarizeExecution(execution),
+    metrics: {
+      pipeline_wall_time_ms: pipelineWallMs,
+      execution_wall_time_ms: executionWallMs,
+      media_duration_seconds: durationSeconds,
+      media_seconds_per_execution_second: Number(
+        (durationSeconds / (executionWallMs / 1000)).toFixed(6)
+      ),
+      source_size_bytes: admittedSource.size_bytes,
+      source_bytes_per_execution_second: Number(
+        (admittedSource.size_bytes / (executionWallMs / 1000)).toFixed(3)
+      ),
+      evidence_graph_json_bytes: evidenceGraphBytes,
+      source_to_evidence_byte_ratio:
+        evidenceGraphBytes > 0
+          ? Number((admittedSource.size_bytes / evidenceGraphBytes).toFixed(6))
+          : null,
+      transcript_chars: transcriptChars,
+      llm_evidence_atoms: Number(
+        execution.reconciliation.evidence_graph?.llm_projection?.transcript_atoms?.length || 0
+      ),
+      comparison_samples: Number(
+        execution.reconciliation.evidence_graph?.comparison_index?.perceptual_sample_count || 0
+      )
+    },
     result: {
       evidence_ref: evidence.evidence_ref,
       evidence_graph_digest: evidence.graph_digest,
