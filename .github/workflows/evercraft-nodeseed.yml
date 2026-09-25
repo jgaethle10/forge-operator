@@ -23,5 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove persistent signed node identity
+        run: node systemia/compute/node-identity-proof.mjs
       - name: Prove Evercraft NodeSeed discovery and authenticated allocation
         run: node systemia/compute/node-seed-proof.mjs
