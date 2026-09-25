@@ -109,7 +109,8 @@
     "proof:durable-continuity": "node systemia/network/durable-continuity-state-proof.mjs",
     "proof:process-restart-recovery": "node systemia/network/process-restart-recovery-proof.mjs",
     "test:aliev-discovery": "npm run chum:index && npm run chum:answers && npm run chum:mirror && node tests/aliev-discovery.test.mjs",
-    "test:rivet-brand": "node tests/rivet-brand.test.mjs"
+    "test:rivet-brand": "node tests/rivet-brand.test.mjs",
+    "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
