@@ -5,6 +5,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { discoverCapacityBeacons } from '../compute/capacity-beacon.mjs';
 
 const SELF=fileURLToPath(import.meta.url);
 const argv=process.argv.slice(2);
@@ -35,14 +36,26 @@ async function nodeMode(){
 
 async function j(url,opt={},ms=1500){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{...opt,signal:c.signal,headers:{'content-type':'application/json',...(opt.headers||{})}}),b=await r.json();if(!r.ok)throw Error(`${r.status}:${b.error||'error'}`);return b}finally{clearTimeout(t)}}
 async function ready(e){for(let i=0;i<30;i++){try{return await j(`${e}/v1/capacity`,{},300)}catch{await wait(100)}}throw Error(`unreachable capacity endpoint: ${e}`)}
-const lease=(e,n)=>j(`${e}/v1/leases`,{method:'POST',body:JSON.stringify({cpu_units:Math.max(1,Math.ceil(n/100)),memory_mb:Math.max(64,Math.ceil(n/10)),workload_class:'saban.logical-agent'})});
+const allocatorTokenFor=e=>{try{const m=JSON.parse(process.env.EVERCRAFT_CAPACITY_TOKENS_JSON||'{}');return String(m[e]||process.env.EVERCRAFT_ALLOCATOR_TOKEN||'')}catch{return String(process.env.EVERCRAFT_ALLOCATOR_TOKEN||'')}};
+const lease=(e,n)=>{const token=allocatorTokenFor(e);return j(`${e}/v1/leases`,{method:'POST',headers:token?{authorization:`Bearer ${token}`}:{},body:JSON.stringify({cpu_units:Math.max(1,Math.ceil(n/100)),memory_mb:Math.max(64,Math.ceil(n/10)),workload_class:'saban.logical-agent'})})};
 const exec=(e,g,a)=>j(`${e}/v1/jobs`,{method:'POST',body:JSON.stringify({lease_id:g.lease_id,token:g.token,agent_id:a.id,checkpoint:a.checkpoint,payload:a.payload})});
 async function each(items,limit,fn){let p=0;const out=new Array(items.length);await Promise.all(Array.from({length:Math.min(limit,items.length)},async()=>{while(true){const i=p++;if(i>=items.length)return;out[i]=await fn(items[i],i)}}));return out}
 
 async function seedMode(){
   const count=Math.max(10,Math.min(10000,Number(val('--agents','10')))), out=path.resolve(val('--out','./saban-proof-output')), chain=new Chain('saban-seed'), receipts=[], children=[];
-  let endpoints=(val('--endpoints',process.env.EVERCRAFT_CAPACITY_ENDPOINTS||'')).split(',').map(x=>x.trim()).filter(Boolean);
-  if(!endpoints.length&&!has('--no-local')){for(const [id,p] of [['local-a',47101],['local-b',47102]])children.push(spawn(process.execPath,[SELF,'--node','--node-id',id,'--port',String(p)],{stdio:'ignore'}));endpoints=['http://127.0.0.1:47101','http://127.0.0.1:47102'];}
+  let endpoints=(val('--endpoints',process.env.EVERCRAFT_CAPACITY_ENDPOINTS||'')).split(',').map(x=>x.trim()).filter(Boolean), discovery_mode=endpoints.length?'configured':'none';
+  if(!endpoints.length&&(has('--discover-capacity')||process.env.EVERCRAFT_DISCOVER_CAPACITY==='1')){
+    const beacons=await discoverCapacityBeacons({
+      bindAddress:val('--discovery-bind','0.0.0.0'),
+      multicastAddress:val('--discovery-address','239.42.24.42'),
+      port:Number(val('--discovery-port','42424')),
+      timeoutMs:Number(val('--discovery-timeout-ms','1000')),
+      joinMulticast:!has('--discovery-no-multicast')
+    });
+    endpoints=[...new Set(beacons.map(x=>x.endpoint))];
+    if(endpoints.length)discovery_mode='beacon';
+  }
+  if(!endpoints.length&&!has('--no-local')){for(const [id,p] of [['local-a',47101],['local-b',47102]])children.push(spawn(process.execPath,[SELF,'--node','--node-id',id,'--port',String(p)],{stdio:'ignore'}));endpoints=['http://127.0.0.1:47101','http://127.0.0.1:47102'];discovery_mode='local_fallback';}
   if(!endpoints.length)throw Error('no capacity discovered');
   try{
     const offers=(await Promise.all(endpoints.map(async e=>({endpoint:e,offer:await ready(e)}))));receipts.push(chain.issue('capacity.discovered',{offers:offers.map(x=>x.offer)}));
@@ -54,7 +67,7 @@ async function seedMode(){
     if(children[0]){children[0].kill('SIGTERM');await wait(250)}
     const rg=await lease(failover.endpoint,split);await each(agents.slice(0,split),96,async a=>{const r=await exec(failover.endpoint,rg,a);a.checkpoint=r.checkpoint;return r});
     receipts.push(chain.issue('saban.workload.rebound',{from:primary.offer.node_id,to:failover.offer.node_id,migrated:split}));
-    await fs.mkdir(out,{recursive:true});const summary={proof:'evercraft.saban.network-seed.v2',status:'PASS',agent_count:count,capacity_sources:offers.map(x=>x.offer.node_id),pre_enrollment_required:false,external_capacity_supported:true,checkpoint_rebind:true,migrated_agent_count:split,receipt_chain_head:chain.prev,completed_at:new Date().toISOString()};await fs.writeFile(path.join(out,'summary.json'),JSON.stringify(summary,null,2)+'\n');await fs.writeFile(path.join(out,'receipts.jsonl'),receipts.map(JSON.stringify).join('\n')+'\n');console.log(JSON.stringify(summary,null,2));
+    await fs.mkdir(out,{recursive:true});const summary={proof:'evercraft.saban.network-seed.v3',status:'PASS',agent_count:count,capacity_sources:offers.map(x=>x.offer.node_id),discovery_mode,pre_enrollment_required:false,external_capacity_supported:true,checkpoint_rebind:true,migrated_agent_count:split,receipt_chain_head:chain.prev,completed_at:new Date().toISOString()};await fs.writeFile(path.join(out,'summary.json'),JSON.stringify(summary,null,2)+'\n');await fs.writeFile(path.join(out,'receipts.jsonl'),receipts.map(JSON.stringify).join('\n')+'\n');console.log(JSON.stringify(summary,null,2));
   }finally{for(const c of children)if(!c.killed)c.kill('SIGTERM')}
 }
 
