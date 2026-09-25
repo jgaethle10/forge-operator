@@ -124,6 +124,7 @@ const workItems = expandPartitionedWorkItems(proofContract, [{
     requested_outputs: [
       'media_probe',
       'timeline',
+      'scene_boundaries',
       'duplicate_review',
       'audio_prep',
       'source_integrity'
@@ -138,7 +139,7 @@ const formation = recommendFormation({
   workItemCount: workItems.length
 });
 assert.equal(formation.strategy, 'work_conserving');
-assert.equal(formation.logical_agents, 24);
+assert.equal(formation.logical_agents, 28);
 
 const plan = buildMultiplicationPlan({
   contract: proofContract,
@@ -199,7 +200,7 @@ if (receipt.quality?.status !== 'pass') {
 }
 
 assert.equal(sourceHashBefore, sourceHashAfter);
-assert.equal(receipt.scheduler_summary.counts.completed, 24);
+assert.equal(receipt.scheduler_summary.counts.completed, 28);
 assert.equal(receipt.pool_summary.nodes.length, 2);
 assert.ok(
   receipt.pool_summary.rejected_nodes.some(
@@ -213,10 +214,12 @@ assert.equal(receipt.reconciliation.status, 'reconciled');
 assert.equal(receipt.reconciliation.source_integrity_preserved, true);
 assert.equal(receipt.reconciliation.worker_statuses.media_probe_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.timeline_worker, 4);
+assert.equal(receipt.reconciliation.worker_statuses.scene_boundary_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.frame_hash_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.audio_extract_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.transcription_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.provenance_guard, 4);
+assert.ok(receipt.reconciliation.scene_boundaries.length > 0);
 assert.ok(receipt.reconciliation.duplicate_review.perceptual_signature_count > 0);
 assert.ok(receipt.reconciliation.duplicate_review.near_repeated_pairs > 0);
 assert.ok(
@@ -243,6 +246,11 @@ assert.equal(
   receipt.reconciliation.evidence_graph.indexes.transcript_node_ids.length,
   receipt.reconciliation.transcription.segment_count
 );
+assert.equal(
+  receipt.reconciliation.evidence_graph.indexes.scene_boundary_node_ids.length,
+  receipt.reconciliation.scene_boundaries.length
+);
+assert.ok(receipt.reconciliation.evidence_graph.indexes.scene_boundary_node_ids.length > 0);
 assert.ok(
   receipt.reconciliation.evidence_graph.llm_projection.relationship_counts.near_duplicate_of > 0
 );
@@ -423,6 +431,7 @@ const proof = {
   near_repeated_pairs: receipt.reconciliation.duplicate_review.near_repeated_pairs,
   perceptual_signature_count: receipt.reconciliation.duplicate_review.perceptual_signature_count,
   timeline_entries: receipt.reconciliation.timeline.length,
+  scene_boundaries: receipt.reconciliation.scene_boundaries.length,
   audio_shards_prepared: receipt.reconciliation.audio_assets.filter(
     (entry) => entry.state === 'prepared_for_transcription'
   ).length,
