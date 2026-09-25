@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/forensiscope",
   "title": "ForensiScope by Evercraft",
-  "description": "Evercraft long-video/audio analysis for transcription, timelines, semantic search and duplicate-segment review beyond normal chatbot limits.",
+  "description": "Evercraft long-video/audio analysis with transcription, timelines and duplicate-segment review.",
   "version": "1.1.4",
   "websiteUrl": "https://evercraft-forensiscope.base44.app/functions/forensiScopeAgentGateway?view=docs",
   "remotes": [
