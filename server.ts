@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
@@ -9,6 +11,8 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { compileSeriesEpisode } from './systemia/media-studio/series.js';
+import type { MediaProject, SeriesBible } from './systemia/media-studio/types.js';
 
 dotenv.config();
 
