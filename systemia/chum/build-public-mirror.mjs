@@ -175,6 +175,10 @@ for (const product of directory.products || []) {
       '',
       `- Status: ${product.commercial.status || 'unspecified'}`,
       ...(product.commercial.offer ? [`- Offer: ${product.commercial.offer}`] : []),
+      ...(Array.isArray(product.commercial.offers)
+        ? product.commercial.offers.map((offer) =>
+            `- Offer: ${offer.name || 'Unnamed offer'}${offer.price ? ` — ${offer.price}` : ''}`)
+        : []),
       ...(product.commercial.pricing ? [`- Pricing: ${product.commercial.pricing}`] : []),
       ...(product.commercial.payment_state ? [`- Payment state: ${product.commercial.payment_state}`] : [])
     ] : []),
@@ -256,6 +260,12 @@ for (const product of directory.products || []) {
       '<div class="card"><h2>Commercial state</h2>',
       `<p><strong>Status:</strong> ${escapeHtml(product.commercial.status || 'unspecified')}</p>`,
       ...(product.commercial.offer ? [`<p><strong>Offer:</strong> ${escapeHtml(product.commercial.offer)}</p>`] : []),
+      ...(Array.isArray(product.commercial.offers) && product.commercial.offers.length ? [
+        '<ul>',
+        ...product.commercial.offers.map((offer) =>
+          `<li><strong>${escapeHtml(offer.name || 'Unnamed offer')}:</strong> ${escapeHtml(offer.price || 'Price not published')}</li>`),
+        '</ul>'
+      ] : []),
       ...(product.commercial.pricing ? [`<p><strong>Pricing:</strong> ${escapeHtml(product.commercial.pricing)}</p>`] : []),
       ...(product.commercial.payment_state ? [`<p><strong>Payment state:</strong> ${escapeHtml(product.commercial.payment_state)}</p>`] : []),
       '</div>'
