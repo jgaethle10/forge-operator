@@ -116,6 +116,24 @@ jobs:
         continue-on-error: true
         run: npm run chum:commerce-canary
 
+      - name: Form Saban revenue lanes
+        id: revenue
+        if: always()
+        continue-on-error: true
+        run: npm run saban:revenue
+
+      - name: Hunt legitimate LLM and agent ecosystems
+        id: hunter
+        if: always()
+        continue-on-error: true
+        run: npm run chum:hunt
+
+      - name: Strike federated agent-discovery registries
+        id: ard
+        if: always()
+        continue-on-error: true
+        run: npm run chum:ard-strike
+
       - name: Run authorized brand-blind provider probes
         id: providers
         if: always()
@@ -167,11 +185,14 @@ jobs:
             echo "Crawler reachability: ${{ steps.crawlers.outcome }}"
             echo "MCP / Registry: ${{ steps.mcp.outcome }}"
             echo "Sell-now commerce doors: ${{ steps.commerce.outcome }}"
+            echo "Saban revenue formation: ${{ steps.revenue.outcome }}"
+            echo "LLM ecosystem hunter: ${{ steps.hunter.outcome }}"
+            echo "ARD registry strike: ${{ steps.ard.outcome }}"
             echo "Provider probes: ${{ steps.providers.outcome }}"
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -186,6 +207,7 @@ jobs:
           name: chum-watershed-receipts
           path: |
             artifacts/chum/**
+            artifacts/saban-revenue/**
             artifacts/ai-doorway-canary.*
           if-no-files-found: warn
 
@@ -195,7 +217,7 @@ jobs:
         run: |
           set -euo pipefail
           FAILED=0
-          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
+          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
             NAME="${PAIR%%:*}"
             STATE="${PAIR#*:}"
             echo "${NAME}: ${STATE}"
