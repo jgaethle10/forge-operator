@@ -14,6 +14,20 @@ A user describes an operational pain point and desired outcome. Forge returns a 
 - the greatest operational risk
 - one immediate next action
 
+## Evercraft Machine Commerce MCP
+
+Evercraft Machine Commerce is the umbrella remote MCP for problem-first capability discovery and commerce across the public Evercraft portfolio.
+
+- Official MCP Registry name: `io.github.jgaethle10/evercraft-machine-commerce`
+- Transport: Streamable HTTP
+- Remote MCP: `https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+- Health: `https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp?action=health`
+- Registry manifest: [mcp-registry/evercraft-machine-commerce.json](mcp-registry/evercraft-machine-commerce.json)
+
+The server matches natural-language problems to the smallest truthful public Evercraft capability, exposes machine documentation separately from human buyer URLs, and can prepare checkout only after explicit human confirmation for allowlisted sell-now products. Checkout creation is not payment proof. Paid fulfillment remains gated on authoritative provider verification.
+
+Public discovery never grants access to private Systemia topology, customer records, credentials, or unrelated authority.
+
 ## Public AI discovery
 
 Forge intentionally publishes a public machine-readable discovery layer:

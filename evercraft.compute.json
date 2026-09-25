@@ -27,7 +27,9 @@
       "/chum/freshness.xml",
       "/chum/freshness.json",
       "/chum/crawl-state.json",
-      "/sitemap.xml"
+      "/sitemap.xml",
+      "/chum/hot/",
+      "/chum/hot/index.json"
     ]
   },
   "environment": {
@@ -52,7 +54,16 @@
   "capacity": {
     "mode": "dynamic-lease",
     "node_class": "physical_linux",
-    "provider_key": "evercraft-owned"
+    "provider_key": "evercraft-owned",
+    "workload_classes": [
+      "systemia.chum-public-origin.v1"
+    ],
+    "public_origin": {
+      "workload_class": "systemia.chum-public-origin.v1",
+      "mode": "read_only_static_discovery",
+      "public_route_requires_independent_verification": true,
+      "verified_origin_receipt": "/.well-known/evercraft-runtime-origin.json"
+    }
   },
   "release_gates": [
     "ci_pass",

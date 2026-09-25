@@ -39,5 +39,7 @@
     ],
     "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
   },
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

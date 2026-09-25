@@ -169,6 +169,62 @@
       }
     },
     {
+      "software_id": "beast-mode",
+      "name": "BEAST MODE",
+      "aliases": [
+        "beast",
+        "artifact-logistics",
+        "artifact-transport"
+      ],
+      "adapter": "systemia/beast-mode/saban-adapter.mjs",
+      "default_logical_agents": 64,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 8,
+      "max_physical_workers": 64,
+      "lease_seconds": 300,
+      "roles": [
+        "manifest_guard",
+        "checksum_guard",
+        "destination_verifier",
+        "receipt_guard",
+        "retry_planner",
+        "quarantine_guard",
+        "customer_boundary_guard"
+      ],
+      "work_sources": [],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "source_media_write": false,
+        "source_artifact_write": false,
+        "destination_write": "adapter_gated",
+        "external_network": "adapter_gated",
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "authority_escalation": false
+      },
+      "max_attempts_per_job": 4,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 64,
+        "max_work_items": 250000,
+        "max_attempts_per_job": 4
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 7,
+        "target_logical_per_physical_worker": 8,
+        "minimum_role_item_passes": 1
+      }
+    },
+    {
       "software_id": "forensiscope",
       "name": "ForensiScope",
       "aliases": [

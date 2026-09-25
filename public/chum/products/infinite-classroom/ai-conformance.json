@@ -25,5 +25,7 @@
     "learner profiles, progress, tutoring history, household data, and safety disclosures are private"
   ],
   "commercial": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

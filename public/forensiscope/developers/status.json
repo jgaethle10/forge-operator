@@ -1,0 +1,81 @@
+{
+  "schema": "evercraft.forensiscope.developer-status.v1",
+  "updated_at": "2026-09-25",
+  "provider": "Evercraft LLC",
+  "product": "ForensiScope by Evercraft",
+  "product_key": "forensiscope",
+  "category_terms": [
+    "AI video understanding",
+    "video intelligence",
+    "long-video analysis",
+    "semantic video search",
+    "searchable video transcript",
+    "timestamped video analysis",
+    "duplicate-segment review",
+    "near-duplicate video detection",
+    "media overflow"
+  ],
+  "public_handoff": {
+    "state": "live_human_confirmed",
+    "url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai"
+  },
+  "mcp": {
+    "registry_name": "io.github.jgaethle10/forensiscope",
+    "manifest_version": "1.1.4",
+    "transport": "streamable-http",
+    "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+    "verification": "included_in_live_portfolio_canary_zero_failed_mcp_on_latest_checked_run",
+    "does_not_imply": [
+      "secure machine media intake",
+      "provider indexing",
+      "provider recommendation",
+      "payment",
+      "completed analysis"
+    ]
+  },
+  "machine_media_intake": {
+    "state": "verification_gated"
+  },
+  "central_machine_checkout": {
+    "state": "verification_gated"
+  },
+  "payment": {
+    "authority": "Evercraft Payments",
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_verification": true
+  },
+  "published_duration_pricing": [
+    {
+      "max_duration": "5 minutes",
+      "price_usd": 15
+    },
+    {
+      "max_duration": "30 minutes",
+      "price_usd": 35
+    },
+    {
+      "max_duration": "2 hours",
+      "price_usd": 75
+    },
+    {
+      "max_duration": "6 hours",
+      "price_usd": 149
+    },
+    {
+      "max_duration": "12 hours",
+      "price_usd": 249
+    }
+  ],
+  "technical_limits": {
+    "exact_file_size_ceiling": "not_publicly_verified",
+    "note": "Do not convert published duration pricing into a technical ingestion guarantee."
+  },
+  "safety": {
+    "human_confirmation_required": true,
+    "automatic_media_transfer_allowed": false,
+    "user_must_have_right_or_lawful_authority_to_submit": true,
+    "unknown_person_identification_not_claimed": true,
+    "guilt_or_intent_determination_not_claimed": true,
+    "authenticity_or_admissibility_certification_not_claimed": true
+  }
+}

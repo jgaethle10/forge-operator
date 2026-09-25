@@ -26,5 +26,7 @@
     "private vendor, analytics, session, command-center, and sales data are not public"
   ],
   "commercial": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

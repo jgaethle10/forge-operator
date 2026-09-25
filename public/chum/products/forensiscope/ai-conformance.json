@@ -2,7 +2,10 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "ForensiScope",
   "product_key": "forensiscope",
-  "aliases": [],
+  "aliases": [
+    "ForensiScope by Evercraft",
+    "Evercraft ForensiScope"
+  ],
   "providers": [
     "chatgpt",
     "claude",
@@ -26,6 +29,47 @@
     "does not determine guilt or intent",
     "does not certify authenticity, admissibility, or government approval"
   ],
-  "commercial": null,
+  "commercial": {
+    "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
+    "offers": [
+      {
+        "name": "Up to 5 minutes",
+        "price": "$15"
+      },
+      {
+        "name": "Up to 30 minutes",
+        "price": "$35"
+      },
+      {
+        "name": "Up to 2 hours",
+        "price": "$75"
+      },
+      {
+        "name": "Up to 6 hours",
+        "price": "$149"
+      },
+      {
+        "name": "Up to 12 hours",
+        "price": "$249"
+      }
+    ],
+    "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
+  },
+  "developer_surfaces": {
+    "hub": "/forensiscope/developers/",
+    "status": "/forensiscope/developers/status.json",
+    "llms": "/forensiscope/developers/llms.txt",
+    "examples": "/forensiscope/developers/examples.json",
+    "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+    "registry_name": "io.github.jgaethle10/forensiscope",
+    "playground": "/forensiscope/developers/playground.html",
+    "clients": "/forensiscope/developers/clients/"
+  },
+  "editorial_surfaces": {
+    "hub": "/forensiscope/editorial/",
+    "index": "/forensiscope/editorial/index.json",
+    "rss": "/forensiscope/editorial/feed.xml",
+    "social_pack": "/forensiscope/editorial/social-pack.json"
+  },
   "provider_behavior_state": "not_inferred_from_publication"
 }

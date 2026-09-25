@@ -31,5 +31,7 @@
     "restricted or governed datasets retain their source terms and must not be silently bulk-republished"
   ],
   "commercial": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

@@ -1,0 +1,35 @@
+name: Remote capacity broker workload
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/remote-capacity-broker-proof.mjs'
+      - 'systemia/network/remote-broker.evercraft.compute.json'
+      - 'systemia/network/REMOTE_BROKER_WORKLOAD.md'
+      - '.github/workflows/remote-capacity-broker-workload.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/remote-capacity-broker-proof.mjs'
+      - 'systemia/network/remote-broker.evercraft.compute.json'
+      - 'systemia/network/REMOTE_BROKER_WORKLOAD.md'
+      - '.github/workflows/remote-capacity-broker-workload.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove broker as receipt-bound Evercraft Compute workload
+        run: node systemia/yard/remote-capacity-broker-proof.mjs

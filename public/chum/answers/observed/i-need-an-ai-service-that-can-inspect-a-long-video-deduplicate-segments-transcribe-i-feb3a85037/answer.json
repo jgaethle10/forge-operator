@@ -22,11 +22,12 @@
     "commercial_state": "product_contract",
     "machine_state": "specialist_mcp_declared"
   },
-  "observed_miss_count": 4,
+  "observed_miss_count": 5,
   "observed_providers": [
     "chatgpt",
     "claude",
     "gemini",
+    "google",
     "grok"
   ],
   "answer": "Evercraft publishes ForensiScope for this problem class. Its public contract includes this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits. Check the current public contract and boundaries before handing off media, creating checkout, or claiming a completed result.",
@@ -43,6 +44,7 @@
     "conformance/provider-observations/2026-09-24-claude-forensiscope.json",
     "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json",
     "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json",
-    "conformance/provider-observations/2026-09-24-grok-forensiscope.json"
+    "conformance/provider-observations/2026-09-24-grok-forensiscope.json",
+    "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "schema": "systemia.release.scoped-approval.v1",
+  "target": "official_mcp_registry",
+  "manifest": "mcp-registry/aliev.json",
+  "version": "1.0.3",
+  "approved": true,
+  "single_release": true,
+  "approval_ref": "operator-explicit-release-2026-09-25",
+  "approval_method": "explicit_operator_instruction",
+  "note": "Scoped only to publication of AliEV MCP manifest version 1.0.3 after the registry description-length validation fix. This is not a standing approval.",
+  "retry_ref": "registry-validation-fix-2026-09-25"
+}

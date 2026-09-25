@@ -1,0 +1,29 @@
+name: Saban discovery conformance policy
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/discovery-swarm.mjs'
+      - 'systemia/saban/discovery-policy.json'
+      - 'tests/saban-discovery-conformance-policy.test.mjs'
+      - '.github/workflows/saban-discovery-conformance-policy.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/saban/discovery-swarm.mjs'
+      - 'systemia/saban/discovery-policy.json'
+      - 'tests/saban-discovery-conformance-policy.test.mjs'
+      - '.github/workflows/saban-discovery-conformance-policy.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove discovery-only versus callable conformance policy
+        run: node tests/saban-discovery-conformance-policy.test.mjs

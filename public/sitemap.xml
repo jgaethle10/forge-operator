@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
-  <url><loc>/chum/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/index.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/</loc><lastmod>2026-09-25T18:15:59.053Z</lastmod></url>
+  <url><loc>/chum/index.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -11,29 +11,61 @@
   <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/revenue.txt</loc><lastmod>2026-09-25T11:50:39.649Z</lastmod></url>
   <url><loc>/chum/revenue.json</loc><lastmod>2026-09-25T11:50:39.649Z</lastmod></url>
-  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/answers/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-25T15:37:23.452Z</lastmod></url>
+  <url><loc>/chum/hot/</loc><lastmod>2026-09-25T18:15:59.053Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-25T19:31:27.361Z</lastmod></url>
   <url><loc>/chum/freshness.xml</loc></url>
   <url><loc>/chum/freshness.json</loc></url>
   <url><loc>/chum/crawl-state.json</loc></url>
   <url><loc>/chum/sitemap.xml</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/forensiscope/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/</loc><lastmod>2026-09-25T19:09:03.844Z</lastmod></url>
+  <url><loc>/forensiscope/developers/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/quickstart.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/mcp.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/workflows.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/integrations.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/status.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/status.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/examples.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/llms.txt</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/playground.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/clients/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/clients/vscode.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/developers/clients/claude-api.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/video-understanding/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/semantic-video-search/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/duplicate-segments/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/long-video-transcription/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/index.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/llms.txt</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/feed.xml</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/social-pack.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/long-video-ai-tools/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-twelve-labs/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-gemini/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-k2/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-echosaw/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-and-assemblyai/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/video-too-large-for-chatgpt/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/deduplicate-long-video-segments/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/llms-full.txt</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/schema.jsonld</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/llms-full.txt</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/ai-discovery.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/schema.jsonld</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-25T19:09:03.844Z</lastmod></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -255,206 +287,206 @@
   <url><loc>/chum/capabilities/website-launch-service-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/products/aliev/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/aliev/llms.txt</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/products/aliev/ai-discovery.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/products/aliev/ai-conformance.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/products/aliev/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/aliev/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/buildflow/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/buildflow/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/buildflow/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/buildflow/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/buildflow/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/buildflow/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/callproof-vault/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/callproof-vault/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/callproof-vault/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/callproof-vault/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/callproof-vault/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/callproof-vault/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/career-command/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/career-command/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/career-command/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/career-command/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/career-command/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/career-command/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/christmas-lights-usa/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/christmas-lights-usa/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/christmas-lights-usa/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/christmas-lights-usa/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/christmas-lights-usa/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/christmas-lights-usa/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/chronosport/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/chronosport/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/chronosport/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/chronosport/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/chronosport/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/chronosport/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/coda-y-codigo/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/coda-y-codigo/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/coda-y-codigo/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/coda-y-codigo/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/coda-y-codigo/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/coda-y-codigo/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/contractor-cloud/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/contractor-cloud/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/contractor-cloud/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/contractor-cloud/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/contractor-cloud/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/contractor-cloud/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/daytrade-lens/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/daytrade-lens/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/daytrade-lens/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/daytrade-lens/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/daytrade-lens/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/daytrade-lens/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/deck-capital-fit/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/deck-capital-fit/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/deck-capital-fit/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/deck-capital-fit/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/deck-capital-fit/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/deck-capital-fit/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/ecoledger/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/ecoledger/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/ecoledger/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/ecoledger/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/ecoledger/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/ecoledger/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/eps-estimate-engine/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/eps-estimate-engine/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/eps-estimate-engine/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/eps-estimate-engine/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/eps-estimate-engine/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/eps-estimate-engine/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/eventwave/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/eventwave/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/eventwave/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/eventwave/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/eventwave/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/eventwave/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-circles/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-circles/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-circles/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-circles/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-circles/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-circles/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-containment/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-containment/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-containment/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-containment/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-containment/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-containment/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-cosmos-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-cosmos-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-cosmos-atlas/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-cosmos-atlas/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-cosmos-atlas/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-cosmos-atlas/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-fantasy-intelligence/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-fantasy-intelligence/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-fantasy-intelligence/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-fantasy-intelligence/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-fantasy-intelligence/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-fantasy-intelligence/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-global-health-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-global-health-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-global-health-atlas/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-global-health-atlas/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-global-health-atlas/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-global-health-atlas/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-network/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-network/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-network/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-network/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-network/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-network/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-physics-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-physics-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-physics-atlas/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-physics-atlas/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-physics-atlas/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-physics-atlas/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-property-services/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-property-services/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-property-services/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-property-services/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-property-services/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-property-services/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-rewards/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-rewards/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-rewards/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-rewards/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-rewards/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-rewards/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-web/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-web/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-web/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-web/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-web/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-web/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evercraft-wildlife-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-wildlife-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-wildlife-atlas/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-wildlife-atlas/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-wildlife-atlas/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-wildlife-atlas/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evermaps/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evermaps/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evermaps/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evermaps/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evermaps/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evermaps/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/evernest/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evernest/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evernest/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evernest/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/evernest/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/evernest/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/everystage/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/everystage/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/everystage/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/everystage/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/everystage/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/everystage/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/faie/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/faie/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/faie/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/faie/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/faie/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/faie/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/findmypart/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/findmypart/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/findmypart/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/findmypart/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/findmypart/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/findmypart/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/forensic-record/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/forensic-record/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/forensic-record/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/forensic-record/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/forensiscope/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/products/forensiscope/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/forensiscope/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/forensiscope/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/forensic-record/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/forensic-record/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/forensiscope/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/forensiscope/llms.txt</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/forensiscope/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/forensiscope/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/global-energy-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/global-energy-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/global-energy-atlas/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/global-energy-atlas/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/global-energy-atlas/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/global-energy-atlas/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/globalstat/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/globalstat/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/globalstat/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/globalstat/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/globalstat/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/globalstat/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/guardian/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/guardian/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/guardian/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/guardian/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/guardian/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/guardian/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/ibmi-rescue/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/ibmi-rescue/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/ibmi-rescue/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/ibmi-rescue/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/ibmi-rescue/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/ibmi-rescue/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/infinite-classroom/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/infinite-classroom/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/infinite-classroom/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/infinite-classroom/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/infinite-classroom/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/infinite-classroom/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/little-red-book-export-qa/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/little-red-book-export-qa/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/little-red-book-export-qa/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/little-red-book-export-qa/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/little-red-book-export-qa/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/little-red-book-export-qa/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/raven-nexus/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/raven-nexus/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/raven-nexus/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/raven-nexus/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/raven-nexus/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/raven-nexus/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/roasted/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/roasted/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/roasted/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/roasted/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/roasted/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/roasted/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/skyops-parking/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/skyops-parking/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/skyops-parking/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/skyops-parking/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/skyops-parking/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/skyops-parking/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/space-dudz/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/space-dudz/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/space-dudz/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/space-dudz/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/space-dudz/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/space-dudz/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/systemia-atlas-freight/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/systemia-atlas-freight/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-atlas-freight/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-atlas-freight/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/systemia-atlas-freight/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/systemia-atlas-freight/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/systemia-decision-lab/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/systemia-decision-lab/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-decision-lab/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-decision-lab/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/systemia-decision-lab/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/systemia-decision-lab/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/systemia-field-library/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/systemia-field-library/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-field-library/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-field-library/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/systemia-field-library/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/systemia-field-library/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/systemia-radar/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/systemia-radar/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-radar/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-radar/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/systemia-radar/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/systemia-radar/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/systemia-website-audit/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/systemia-website-audit/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-website-audit/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/systemia-website-audit/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/systemia-website-audit/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/systemia-website-audit/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/talent-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/talent-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/talent-atlas/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/talent-atlas/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/talent-atlas/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/talent-atlas/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/thoughtdrop/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/thoughtdrop/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/thoughtdrop/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/thoughtdrop/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/thoughtdrop/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/thoughtdrop/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/towi-research/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/towi-research/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/towi-research/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/towi-research/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/towi-research/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/towi-research/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/website-launch/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/website-launch/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/website-launch/ai-discovery.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/website-launch/ai-conformance.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/products/website-launch/ai-discovery.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/chum/products/website-launch/ai-conformance.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json</loc><lastmod>2026-09-25T15:37:23.452Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/answers/doors/15-gb-video-analysis-0f57ef2f90/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -494,6 +526,8 @@
   <url><loc>/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-worker-competency-test-7f140524a9/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-worker-competency-test-7f140524a9.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/air-quality-work-decision-6eeb07802f/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -872,6 +906,8 @@
   <url><loc>/chum/answers/doors/find-contractors-for-a-project-f7e5e431c8.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-events-4a55dfdb73/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1478,10 +1514,14 @@
   <url><loc>/chum/answers/doors/search-source-linked-epstein-court-records-08d55e848d.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/searchable-transcript-with-timestamps-877c6043d0/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/searchable-transcript-with-timestamps-877c6043d0.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/answers/doors/searchable-video-transcript-with-timestamps-32b7c53b5a/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/doors/searchable-video-transcript-with-timestamps-32b7c53b5a.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/doors/security-camera-footage-review-8c7a4181b3/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/security-camera-footage-review-8c7a4181b3.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/semantic-segment-deduplication-4e5e912564/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/semantic-segment-deduplication-4e5e912564.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/answers/doors/semantic-video-search-across-a-long-recording-9687b2afbc/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/doors/semantic-video-search-across-a-long-recording-9687b2afbc.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/set-up-family-safety-check-ins-or-preparedness-3d83a72549/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1648,6 +1688,8 @@
   <url><loc>/chum/answers/doors/verify-candidate-ability-b2a4a3b98e.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/version-and-verify-an-ai-capability-d214fc3642/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/version-and-verify-an-ai-capability-d214fc3642.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
+  <url><loc>/chum/answers/doors/video-intelligence-for-multi-hour-recordings-12ac9b4836/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
+  <url><loc>/chum/answers/doors/video-intelligence-for-multi-hour-recordings-12ac9b4836.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/doors/video-too-big-for-ai-e157e3edf6/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/video-too-big-for-ai-e157e3edf6.json</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/video-too-large-for-ai-9ff4b426d8/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>

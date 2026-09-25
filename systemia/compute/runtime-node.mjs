@@ -9,7 +9,10 @@ import { once } from 'node:events';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
+import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
+import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
+import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -58,6 +61,45 @@ function send(res, status, body) {
 function isWithin(root, target) {
   const relative = path.relative(root, target);
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
+}
+
+function atomicJson(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o750 });
+  const tmp = `${file}.${process.pid}.${randomBytes(4).toString('hex')}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
+  fs.renameSync(tmp, file);
+}
+
+function safeMissionSourceKey(value) {
+  const key = String(value || '').trim();
+  if (!/^[a-zA-Z0-9._-]{1,96}$/.test(key)) {
+    throw new Error('mission_source_key_invalid');
+  }
+  return key;
+}
+
+function validateMissionIngressSnapshot(snapshot) {
+  if (!snapshot || snapshot.schema !== 'evercraft.kaidance.mission-snapshot.v1') {
+    throw new Error('mission_snapshot_schema_invalid');
+  }
+  const counts = snapshot.counts || {};
+  const scanned = Math.max(0, Number(counts.scanned || 0));
+  const changed = Math.max(0, Number(counts.changed || 0));
+  const admitted = Math.max(0, Number(counts.admitted || 0));
+  const held = Math.max(0, Number(counts.held || 0));
+  if (changed > scanned) throw new Error('mission_snapshot_changed_exceeds_scanned');
+  if (admitted + held > changed) {
+    throw new Error('mission_snapshot_disposition_exceeds_changed');
+  }
+  return {
+    ...snapshot,
+    counts: { scanned, changed, admitted, held },
+    snapshot_ref: String(snapshot.snapshot_ref || ''),
+    observed_at: String(snapshot.observed_at || ''),
+    evidence_refs: Array.isArray(snapshot.evidence_refs)
+      ? snapshot.evidence_refs.map(String).slice(0, 500)
+      : [],
+  };
 }
 
 function bootIdHash() {
@@ -170,7 +212,10 @@ export async function startEvercraftComputeNode({
     stagedBlobs.get(leaseId)?.get(digest) || null;
   const supported = new Set([
     'systemia.private-core-origin.v1',
+    'systemia.core-supervisor.v1',
     'systemia.kaidance-collider.v1',
+    'systemia.chum-public-origin.v1',
+    'systemia.remote-capacity-broker.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -519,6 +564,238 @@ export async function startEvercraftComputeNode({
           });
         }
 
+        if (workloadClass === 'systemia.chum-public-origin.v1') {
+          const defaultPublicRoot = path.join(CODE_ROOT, 'public');
+          const requestedPublicRoot = body.input?.public_root
+            ? path.resolve(String(body.input.public_root))
+            : defaultPublicRoot;
+          const admittedPublicRoot =
+            isWithin(allowedRoot, requestedPublicRoot) ||
+            isWithin(defaultPublicRoot, requestedPublicRoot);
+
+          if (!admittedPublicRoot) {
+            return send(res, 403, { error: 'chum_public_root_outside_admitted_roots' });
+          }
+
+          const serviceHost = String(body.input?.host || '127.0.0.1');
+          const loopbackService =
+            serviceHost === '127.0.0.1' ||
+            serviceHost === '::1' ||
+            serviceHost === 'localhost';
+          if (!loopbackService && body.input?.allow_public_bind !== true) {
+            return send(res, 403, { error: 'explicit_public_bind_authority_required' });
+          }
+
+          const runtime = await startChumPublicOrigin({
+            publicRoot: requestedPublicRoot,
+            host: serviceHost,
+            port: Number(body.input?.port || 0),
+            publicOrigin: String(body.input?.public_origin || ''),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_origin_candidate: runtime.publicOrigin || null,
+            instance_id: runtime.instanceId,
+            read_only_public_origin: true,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.remote-capacity-broker.v1') {
+          const stateRoot = path.resolve(String(body.input?.state_root || ''));
+          if (!stateRoot || !isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'remote_broker_state_outside_admitted_root' });
+          }
+
+          const authorizedDevices =
+            body.input?.authorized_devices &&
+            typeof body.input.authorized_devices === 'object' &&
+            !Array.isArray(body.input.authorized_devices)
+              ? body.input.authorized_devices
+              : {};
+          const entries = Object.entries(authorizedDevices);
+          if (entries.length === 0) {
+            return send(res, 422, { error: 'remote_broker_authorized_devices_required' });
+          }
+          for (const [fingerprint, expectedNode] of entries) {
+            if (!/^sha256:[a-f0-9]{64}$/i.test(String(fingerprint))) {
+              return send(res, 422, { error: 'remote_broker_device_fingerprint_invalid' });
+            }
+            if (
+              String(expectedNode) !== '*' &&
+              !/^[a-zA-Z0-9._-]{1,128}$/.test(String(expectedNode))
+            ) {
+              return send(res, 422, { error: 'remote_broker_node_id_invalid' });
+            }
+          }
+
+          const broker = await startOutboundCapacityBroker({
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            stateDir: stateRoot,
+            authorizedDevices,
+            challengeTtlMs: Number(body.input?.challenge_ttl_ms || 60_000),
+            sessionTtlMs: Number(body.input?.session_ttl_ms || 30 * 60_000),
+            commandTimeoutMs: Number(body.input?.command_timeout_ms || 15_000),
+            pollWaitMs: Number(body.input?.poll_wait_ms || 5_000),
+            capacityFreshMs: Number(body.input?.capacity_fresh_ms || 15_000),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime: broker,
+            service: broker,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: broker.endpoint,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/v1/remote/health',
+            instance_id: broker.instance_id,
+            secure_envelope_schema: 'evercraft.secure-envelope.v1',
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: broker.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.core-supervisor.v1') {
+          const stateRoot = path.resolve(String(body.input?.state_root || ''));
+          const yardStateDir = path.resolve(String(body.input?.yard_state_dir || ''));
+          const kaidanceDeploymentId = String(body.input?.kaidance_deployment_id || '').trim();
+
+          if (!stateRoot || !yardStateDir || !kaidanceDeploymentId) {
+            return send(res, 422, { error: 'core_supervisor_runtime_bindings_required' });
+          }
+          if (!isWithin(allowedRoot, stateRoot) || !isWithin(allowedRoot, yardStateDir)) {
+            return send(res, 403, { error: 'core_supervisor_path_outside_admitted_root' });
+          }
+
+          const workspaceRoot = path.join(stateRoot, 'workspace');
+          const legacyOut = path.join(workspaceRoot, 'legacy-rescue-watch');
+          const node001Field = path.join(workspaceRoot, 'node001-field', 'megatron');
+          const node001Status = path.join(workspaceRoot, 'node001-field', 'megatron-status');
+          const publisherLedger = path.join(workspaceRoot, 'mission-publisher', 'ledger.json');
+          const missionSourcesConfig = path.join(workspaceRoot, 'mission-sources.json');
+          fs.mkdirSync(workspaceRoot, { recursive: true, mode: 0o750 });
+          atomicJson(missionSourcesConfig, {
+            schema: 'evercraft.kaidance.mission-fabric-config.v1',
+            sources: [
+              {
+                source_key: 'legacy-rescue-opportunity-watch',
+                path: 'legacy-rescue-watch/mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
+              {
+                source_key: 'node001-megatron-field-certification',
+                path: 'node001-field/megatron-status/mission-snapshot.json',
+                required: true,
+                stale_after_seconds: 900,
+              },
+            ],
+          });
+
+          const serviceEnv = {
+            NODE_ENV: String(process.env.NODE_ENV || 'production'),
+            SYSTEMIA_YARD_STATE_DIR: yardStateDir,
+            KAIDANCE_DEPLOYMENT_ID: kaidanceDeploymentId,
+            SYSTEMIA_WORKSPACE_ROOT: workspaceRoot,
+            SYSTEMIA_LEGACY_RESCUE_SIGNALS_FILE: path.join(
+              workspaceRoot,
+              'legacy-rescue-watch',
+              'signals.json'
+            ),
+            SYSTEMIA_LEGACY_RESCUE_OUT_DIR: legacyOut,
+            SYSTEMIA_NODE001_FIELD_DIR: node001Field,
+            SYSTEMIA_NODE001_STATUS_DIR: node001Status,
+            SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
+            SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
+          };
+
+          const supervisor = new SystemiaCoreResidentSupervisor({
+            repoRoot: CODE_ROOT,
+            configPath: path.join(CODE_ROOT, 'systemia', 'core', 'resident-services.json'),
+            stateDir: path.join(stateRoot, 'supervisor'),
+            env: serviceEnv,
+          });
+          const health = supervisor.start({ immediateCycles: true });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          const service = {
+            close: async () => supervisor.stop(),
+          };
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime: supervisor,
+            service,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            health_path: `/v1/services/${serviceId}/health`,
+            supervised_service_count: health.service_count,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
         if (workloadClass === 'systemia.kaidance-collider.v1') {
           const stateRoot = path.resolve(String(body.input?.state_root || ''));
           const snapshotPath = path.resolve(String(
@@ -528,6 +805,51 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'kaidance_path_outside_admitted_root' });
           }
 
+          const managedPolicies = Array.isArray(body.input?.mission_source_policies)
+            ? body.input.mission_source_policies
+            : null;
+          let missionFabricRoot = '';
+          let missionFabricConfigPath = body.input?.mission_fabric_config_path
+            ? path.resolve(String(body.input.mission_fabric_config_path))
+            : '';
+          let missionFabricAllowedRoot = body.input?.mission_fabric_allowed_root
+            ? path.resolve(String(body.input.mission_fabric_allowed_root))
+            : (missionFabricConfigPath ? path.dirname(missionFabricConfigPath) : '');
+
+          if (managedPolicies) {
+            if (missionFabricConfigPath) {
+              return send(res, 422, { error: 'managed_and_external_mission_fabric_conflict' });
+            }
+            missionFabricRoot = path.join(stateRoot, 'mission-fabric');
+            const providersDir = path.join(missionFabricRoot, 'providers');
+            fs.mkdirSync(providersDir, { recursive: true, mode: 0o750 });
+            const seen = new Set();
+            const sources = managedPolicies.map((policy) => {
+              const sourceKey = safeMissionSourceKey(policy?.source_key);
+              if (seen.has(sourceKey)) throw new Error('mission_source_key_duplicate');
+              seen.add(sourceKey);
+              return {
+                source_key: sourceKey,
+                path: `providers/${sourceKey}.json`,
+                required: policy?.required === true,
+                stale_after_seconds: Math.max(30, Number(policy?.stale_after_seconds || 900)),
+              };
+            });
+            missionFabricConfigPath = path.join(missionFabricRoot, 'mission-sources.json');
+            missionFabricAllowedRoot = missionFabricRoot;
+            atomicJson(missionFabricConfigPath, {
+              schema: 'evercraft.kaidance.mission-fabric-config.v1',
+              sources,
+            });
+          }
+
+          if (missionFabricConfigPath && (
+            !isWithin(allowedRoot, missionFabricConfigPath) ||
+            !isWithin(allowedRoot, missionFabricAllowedRoot)
+          )) {
+            return send(res, 403, { error: 'kaidance_mission_fabric_outside_admitted_root' });
+          }
+
           const runtime = new KaidanceRuntime({
             root: stateRoot,
             colliderKey: String(body.input?.collider_key || 'systemia-collider'),
@@ -535,19 +857,23 @@ export async function startEvercraftComputeNode({
             graceSeconds: Number(body.input?.grace_seconds || 90),
             deploymentReceipt: String(body.input?.deployment_receipt || ''),
             snapshotPath,
+            missionFabricConfigPath,
+            missionFabricAllowedRoot,
             initialCheckpoint: body.input?.initial_checkpoint || null,
           });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const service = await startKaidanceHealthService({
             runtime,
             host: '127.0.0.1',
             port: 0,
           });
-          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
             runtime,
             service,
+            mission_fabric_root: missionFabricRoot || null,
+            mission_fabric_config_path: missionFabricConfigPath || null,
           });
           const result = {
             schema: 'evercraft.compute.resident-service.v1',
@@ -555,6 +881,10 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             service_url: null,
             health_path: `/v1/services/${serviceId}/health`,
+            mission_ingress_supported: Boolean(missionFabricRoot),
+            mission_ingress_path: missionFabricRoot
+              ? `/v1/services/${serviceId}/missions`
+              : null,
             heartbeat_target_seconds: runtime.state.heartbeat_target_seconds,
           };
           const receipt = chain.issue('service.started', {
@@ -578,6 +908,119 @@ export async function startEvercraftComputeNode({
         const entry = services.get(serviceHealth[1]);
         if (!entry) return send(res, 404, { error: 'service_not_found' });
         return send(res, 200, entry.runtime.health());
+      }
+
+      const remoteControlGrant = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-control-grant$/
+      );
+      if (req.method === 'POST' && remoteControlGrant) {
+        const entry = services.get(remoteControlGrant[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_control_grant_not_supported' });
+        }
+        const grant = entry.runtime.controlGrant(String(body.node_id || ''));
+        if (!grant) return send(res, 404, { error: 'remote_node_control_grant_unavailable' });
+        return send(res, 200, {
+          ok: true,
+          node_id: grant.node_id,
+          device_fingerprint: grant.device_fingerprint,
+          control_token: grant.allocator_token,
+          receipt: chain.issue('remote-capacity.control-grant.read', {
+            service_id: remoteControlGrant[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            remote_node_id: grant.node_id,
+            device_fingerprint: grant.device_fingerprint,
+          }),
+        });
+      }
+
+      const missionIngress = req.url?.match(/^\/v1\/services\/([^/]+)\/missions\/([^/]+)$/);
+      if (req.method === 'POST' && missionIngress) {
+        const entry = services.get(missionIngress[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.kaidance-collider.v1' ||
+            !entry.mission_fabric_root ||
+            !entry.mission_fabric_config_path) {
+          return send(res, 422, { error: 'mission_ingress_not_supported' });
+        }
+
+        let sourceKey;
+        try {
+          sourceKey = safeMissionSourceKey(missionIngress[2]);
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
+        const config = JSON.parse(fs.readFileSync(entry.mission_fabric_config_path, 'utf8'));
+        const source = (config.sources || []).find((row) => row.source_key === sourceKey);
+        if (!source) return send(res, 404, { error: 'mission_source_not_declared' });
+
+        let snapshot;
+        try {
+          snapshot = validateMissionIngressSnapshot(body.snapshot);
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
+        const destination = path.resolve(
+          path.dirname(entry.mission_fabric_config_path),
+          String(source.path || '')
+        );
+        if (!isWithin(entry.mission_fabric_root, destination)) {
+          return send(res, 403, { error: 'mission_source_path_outside_fabric_root' });
+        }
+        atomicJson(destination, snapshot);
+
+        const receipt = chain.issue('mission.snapshot.accepted', {
+          service_id: missionIngress[1],
+          lease_id: entry.lease_id,
+          workload_class: entry.workload_class,
+          source_key: sourceKey,
+          snapshot_ref: snapshot.snapshot_ref || null,
+          snapshot_hash: `sha256:${sha(JSON.stringify(snapshot))}`,
+        });
+        return send(res, 200, {
+          ok: true,
+          source_key: sourceKey,
+          snapshot_ref: snapshot.snapshot_ref || null,
+          receipt,
+        });
+      }
+
+      const serviceCycle = req.url?.match(/^\/v1\/services\/([^/]+)\/cycle$/);
+      if (req.method === 'POST' && serviceCycle) {
+        const entry = services.get(serviceCycle[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.kaidance-collider.v1') {
+          return send(res, 422, { error: 'cycle_trigger_not_supported' });
+        }
+        const result = await entry.runtime.runOnce(new Date());
+        return send(res, 200, {
+          ok: true,
+          service_id: serviceCycle[1],
+          cycle_result: result,
+          receipt: chain.issue('service.cycle.attempted', {
+            service_id: serviceCycle[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            result: result.ok === true ? 'completed' : `held:${result.hold || 'unknown'}`,
+          }),
+        });
       }
 
       const serviceCheckpoint = req.url?.match(/^\/v1\/services\/([^/]+)\/checkpoint$/);
@@ -695,7 +1138,6 @@ export async function startEvercraftComputeNode({
       for (const serviceId of [...services.keys()]) {
         await stopService(serviceId, 'compute_node_shutdown');
       }
-      for (const leaseId of [...leases.keys()]) cleanupStagedLease(leaseId);
       await new Promise((resolve, reject) =>
         server.close((error) => error ? reject(error) : resolve())
       );

@@ -28,5 +28,7 @@
     "pilot or contact intake creates no payment obligation unless separate verified terms are accepted"
   ],
   "commercial": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

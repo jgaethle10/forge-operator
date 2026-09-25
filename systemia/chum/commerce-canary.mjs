@@ -68,7 +68,16 @@ for(const offer of offers){
   const review=await getResponse(reviewUrl);
   const review_explicit_error=Boolean(review.json&&typeof review.json==='object'&&(review.json.ok===false||review.json.error));
   const review_door_valid=review.ok&&review.nonempty&&!review_explicit_error;
-  const valid=offer_door_valid&&review_door_valid;
+
+  const continuation=probe.json?.continuation||null;
+  const buyer_required=continuation?.mode==='direct_checkout_capable';
+  const buyer_url=typeof continuation?.buyer_url==='string'?continuation.buyer_url.trim():'';
+  const buyer=buyer_required&&buyer_url
+    ? await getResponse(buyer_url)
+    : {ok:!buyer_required,status:buyer_required?0:null,final_url:buyer_url||null,content_type:'',bytes:0,json:null,parse_error:null,nonempty:!buyer_required};
+  const buyer_explicit_error=Boolean(buyer.json&&typeof buyer.json==='object'&&(buyer.json.ok===false||buyer.json.error));
+  const buyer_door_valid=!buyer_required||Boolean(buyer_url&&buyer.ok&&buyer.nonempty&&!buyer_explicit_error);
+  const valid=offer_door_valid&&review_door_valid&&buyer_door_valid;
 
   results.push({
     public_id:offer.public_id,
@@ -91,22 +100,37 @@ for(const offer of offers){
     review_bytes:review.bytes,
     review_explicit_error,
     review_door_valid,
+    continuation_mode:continuation?.mode||null,
+    buyer_required,
+    buyer_url:buyer_url||null,
+    buyer_status:buyer.status,
+    buyer_final_url:buyer.final_url,
+    buyer_content_type:buyer.content_type,
+    buyer_bytes:buyer.bytes,
+    buyer_explicit_error,
+    buyer_door_valid,
     valid,
     reason:valid
       ?'money_path_readable'
       :!offer_door_valid
         ?(!probe.ok?`offer_http_${probe.status}`:probe.parse_error?'offer_invalid_json':!id_present?'offer_public_id_missing':'offer_error_payload')
-        :!review.ok
-          ?`review_http_${review.status}`
-          :!review.nonempty
-            ?'review_empty'
-            :'review_error_payload'
+        :!review_door_valid
+          ?(!review.ok?`review_http_${review.status}`:!review.nonempty?'review_empty':'review_error_payload')
+          :buyer_required&&!buyer_url
+            ?'buyer_url_missing'
+            :buyer_required&&!buyer.ok
+              ?`buyer_http_${buyer.status}`
+              :buyer_required&&!buyer.nonempty
+                ?'buyer_empty'
+                :'buyer_error_payload'
   });
 }
 
 const failures=results.filter(r=>!r.valid);
 const offerFailures=results.filter(r=>!r.offer_door_valid);
 const reviewFailures=results.filter(r=>!r.review_door_valid);
+const buyerRequired=results.filter(r=>r.buyer_required);
+const buyerFailures=buyerRequired.filter(r=>!r.buyer_door_valid);
 const receipt={
   schema:'evercraft.chum.commerce-canary.v1',
   generated_at:new Date().toISOString(),
@@ -128,6 +152,9 @@ const receipt={
     failed_offer_doors:offerFailures.length,
     readable_review_doors:results.length-reviewFailures.length,
     failed_review_doors:reviewFailures.length,
+    required_human_buyer_doors:buyerRequired.length,
+    readable_human_buyer_doors:buyerRequired.length-buyerFailures.length,
+    failed_human_buyer_doors:buyerFailures.length,
     healthy_money_paths:results.length-failures.length,
     failed_money_paths:failures.length
   },
@@ -142,11 +169,13 @@ const md=[
   `Sell-now offers: ${receipt.summary.sell_now_offers}`,
   `Readable machine-offer doors: ${receipt.summary.readable_offer_doors}`,
   `Readable human-review doors: ${receipt.summary.readable_review_doors}`,
+  `Required direct-sale buyer doors: ${receipt.summary.required_human_buyer_doors}`,
+  `Readable direct-sale buyer doors: ${receipt.summary.readable_human_buyer_doors}`,
   `Healthy money paths: ${receipt.summary.healthy_money_paths}`,
   `Failed money paths: ${receipt.summary.failed_money_paths}`,'',
-  '> This is a read-only money-path canary. It verifies offer discovery and the human review door, but never creates checkout, attempts payment, or treats a review URL as payment proof.','',
-  '| Offer | Public ID | State | Offer HTTP | Review HTTP | Result |','|---|---|---|---:|---:|---|',
-  ...results.map(r=>`| ${r.name} | ${r.public_id} | ${r.machine_state||''} | ${r.status} | ${r.review_status} | ${r.valid?'money path readable':r.reason} |`),
+  '> This is a read-only money-path canary. It verifies offer discovery, the human review door, and the actual buyer destination for direct-checkout offers. It never creates checkout, attempts payment, or treats a reachable URL as payment proof.','',
+  '| Offer | Public ID | State | Offer HTTP | Review HTTP | Buyer HTTP | Result |','|---|---|---|---:|---:|---:|---|',
+  ...results.map(r=>`| ${r.name} | ${r.public_id} | ${r.machine_state||''} | ${r.status} | ${r.review_status} | ${r.buyer_required?r.buyer_status:'n/a'} | ${r.valid?'money path readable':r.reason} |`),
   '','## Repair queue','',
   ...(failures.length?failures.map(r=>`- ${r.public_id}: ${r.reason} (offer HTTP ${r.status}; review HTTP ${r.review_status})`):['- All current sell-now offer and human-review doors are readable.']),
   ''

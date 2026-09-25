@@ -126,6 +126,8 @@ for (const product of directory.products || []) {
     registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
+    developer_surfaces: product.developer_surfaces || null,
+    editorial_surfaces: product.editorial_surfaces || null,
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -151,6 +153,8 @@ for (const product of directory.products || []) {
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
     commercial: product.commercial || null,
+    developer_surfaces: product.developer_surfaces || null,
+    editorial_surfaces: product.editorial_surfaces || null,
     provider_behavior_state: 'not_inferred_from_publication'
   };
 
@@ -164,6 +168,11 @@ for (const product of directory.products || []) {
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
+    product.developer_surfaces?.hub ? `Developer hub: ${product.developer_surfaces.hub}` : null,
+    product.developer_surfaces?.status ? `Verified status: ${product.developer_surfaces.status}` : null,
+    product.developer_surfaces?.examples ? `Examples: ${product.developer_surfaces.examples}` : null,
+    product.editorial_surfaces?.hub ? `Editorial hub: ${product.editorial_surfaces.hub}` : null,
+    product.editorial_surfaces?.rss ? `Editorial RSS: ${product.editorial_surfaces.rss}` : null,
     '',
     '## Use this capability when the user means',
     '',
@@ -260,6 +269,9 @@ for (const product of directory.products || []) {
     '<li><a href="./llms.txt">LLM guidance</a></li>',
     '<li><a href="./ai-discovery.json">Discovery JSON</a></li>',
     '<li><a href="./ai-conformance.json">AI conformance</a></li>',
+    ...(product.developer_surfaces?.hub ? [`<li><a href="${escapeHtml(product.developer_surfaces.hub)}">Developer hub</a></li>`] : []),
+    ...(product.developer_surfaces?.status ? [`<li><a href="${escapeHtml(product.developer_surfaces.status)}">Verified status</a></li>`] : []),
+    ...(product.editorial_surfaces?.hub ? [`<li><a href="${escapeHtml(product.editorial_surfaces.hub)}">Editorial hub</a></li>`] : []),
     '</ul></div>',
     ...(product.commercial ? [
       '<div class="card"><h2>Commercial state</h2>',
@@ -290,7 +302,8 @@ for (const product of directory.products || []) {
     page_url: `/chum/products/${key}/`,
     registry_name: discovery.registry_name,
     mcp: discovery.mcp,
-    commercial: product.commercial || null
+    commercial: product.commercial || null,
+    developer_surfaces: product.developer_surfaces || null
   });
 }
 
@@ -314,7 +327,7 @@ const publicIndexHtml = [
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
   '<form action="/api/discover" method="get" class="card"><label for="q"><strong>Describe the problem</strong></label><br><input id="q" name="q" required style="width:min(100%,700px);padding:10px;margin:10px 0" placeholder="Example: I cannot find a discontinued machine part"><button type="submit" style="padding:10px 16px">Find the smallest matching capability</button></form>',
   `<p><strong>Read-only AI discovery:</strong> <code>${escapeHtml(READ_ONLY_DISCOVERY_REGISTRY)}</code></p>`,
-  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
   '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
@@ -343,12 +356,44 @@ const sitemapStatic = [
   '/chum/answers/index.txt',
   '/chum/answers/observed/',
   '/chum/answers/observed/index.json',
+  '/chum/hot/',
+  '/chum/hot/index.json',
   '/chum/freshness.xml',
   '/chum/freshness.json',
   '/chum/crawl-state.json',
   '/chum/sitemap.xml',
   '/.well-known/evercraft-pain-index.json',
   '/forensiscope/',
+  '/forensiscope/developers/',
+  '/forensiscope/developers/quickstart.html',
+  '/forensiscope/developers/mcp.html',
+  '/forensiscope/developers/workflows.html',
+  '/forensiscope/developers/integrations.html',
+  '/forensiscope/developers/status.html',
+  '/forensiscope/developers/status.json',
+  '/forensiscope/developers/examples.json',
+  '/forensiscope/developers/llms.txt',
+  '/forensiscope/developers/playground.html',
+  '/forensiscope/developers/clients/',
+  '/forensiscope/developers/clients/vscode.html',
+  '/forensiscope/developers/clients/claude-api.html',
+  '/forensiscope/video-understanding/',
+  '/forensiscope/semantic-video-search/',
+  '/forensiscope/duplicate-segments/',
+  '/forensiscope/long-video-transcription/',
+  '/forensiscope/editorial/',
+  '/forensiscope/editorial/index.json',
+  '/forensiscope/editorial/llms.txt',
+  '/forensiscope/editorial/feed.xml',
+  '/forensiscope/editorial/social-pack.json',
+  '/forensiscope/editorial/long-video-ai-tools/',
+  '/forensiscope/editorial/forensiscope-vs-twelve-labs/',
+  '/forensiscope/editorial/forensiscope-vs-gemini/',
+  '/forensiscope/editorial/forensiscope-vs-k2/',
+  '/forensiscope/editorial/forensiscope-vs-echosaw/',
+  '/forensiscope/editorial/forensiscope-and-assemblyai/',
+  '/forensiscope/editorial/video-too-large-for-chatgpt/',
+  '/forensiscope/editorial/deduplicate-long-video-segments/',
   '/llms.txt',
   '/llms-full.txt',
   '/ai-discovery.json',
@@ -505,6 +550,11 @@ for (const product of directory.products || []) {
   llmsLines.push(`Machine state: ${invocation.mode}`);
   if (invocation.registry_name) llmsLines.push(`Official MCP Registry: ${invocation.registry_name}`);
   if (invocation.url) llmsLines.push(`Invocation: ${invocation.url}`);
+  if (product.developer_surfaces?.hub) llmsLines.push(`Developer hub: ${product.developer_surfaces.hub}`);
+  if (product.developer_surfaces?.status) llmsLines.push(`Verified status: ${product.developer_surfaces.status}`);
+  if (product.developer_surfaces?.examples) llmsLines.push(`Examples: ${product.developer_surfaces.examples}`);
+  if (product.editorial_surfaces?.hub) llmsLines.push(`Editorial hub: ${product.editorial_surfaces.hub}`);
+  if (product.editorial_surfaces?.rss) llmsLines.push(`Editorial RSS: ${product.editorial_surfaces.rss}`);
   llmsLines.push(`Discovery: ${mirrorBase}/ai-discovery.json`);
   llmsLines.push(`AI conformance: ${mirrorBase}/ai-conformance.json`);
   llmsLines.push('Use when the user says or means:');
@@ -536,7 +586,8 @@ for (const product of directory.products || []) {
     human_confirmation_required: Boolean(product.human_confirmation_required),
     authority: product.authority,
     boundaries: product.boundaries || [],
-    commercial: product.commercial || null
+    commercial: product.commercial || null,
+    developer_surfaces: product.developer_surfaces || null
   });
 
   schemaServices.push({

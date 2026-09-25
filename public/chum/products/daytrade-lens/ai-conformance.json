@@ -32,5 +32,7 @@
     "pricing": "$19/month",
     "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
   },
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

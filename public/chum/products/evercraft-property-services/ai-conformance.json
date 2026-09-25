@@ -33,5 +33,7 @@
     "pricing": "Quote required after scope review",
     "payment_state": "No payment required for public estimate intake"
   },
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

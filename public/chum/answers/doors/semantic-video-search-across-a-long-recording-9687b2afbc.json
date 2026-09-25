@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-25T05:45:00.000Z",
+  "answer_id": "intent:9687b2afbc",
+  "user_language": "semantic video search across a long recording",
+  "normalized": "semantic video search across a long recording",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:forensiscope",
+      "kind": "product",
+      "product_key": "forensiscope",
+      "public_id": null,
+      "name": "ForensiScope",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "public_url": "https://evercraft-forensiscope.base44.app/",
+      "pain_page": "/chum/products/forensiscope/",
+      "registry_name": "io.github.jgaethle10/forensiscope",
+      "direct_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "authority": "public discovery and human-submitted media analysis",
+      "boundaries": [
+        "the user must submit media themselves",
+        "the user must have the right or lawful authority to submit media",
+        "does not automatically identify unknown people",
+        "does not determine guilt or intent",
+        "does not certify authenticity, admissibility, or government approval"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

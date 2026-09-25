@@ -1,0 +1,45 @@
+{
+  "schema": "evercraft.forensiscope.examples.v1",
+  "product_key": "forensiscope",
+  "provider": "Evercraft LLC",
+  "examples": [
+    {
+      "id": "long-meeting",
+      "user_need": "I have a multi-hour meeting video and need a complete transcript, searchable timeline and important moments.",
+      "fit": "forensiscope",
+      "current_path": "human_confirmed_web_review",
+      "start_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai"
+    },
+    {
+      "id": "duplicate-segments",
+      "user_need": "Find repeated or near-duplicate segments inside this long recording and give me timestamps.",
+      "fit": "forensiscope",
+      "current_path": "human_confirmed_web_review",
+      "destructive_editing_claimed": false
+    },
+    {
+      "id": "chat-overflow",
+      "user_need": "My AI cannot take the whole video because the file is too large or long.",
+      "fit": "forensiscope",
+      "current_path": "optional_external_handoff",
+      "automatic_media_transfer_allowed": false
+    },
+    {
+      "id": "semantic-video-search",
+      "user_need": "Turn this long video into a searchable transcript and timeline so I can find moments by meaning.",
+      "fit": "forensiscope",
+      "current_path": "human_confirmed_web_review"
+    },
+    {
+      "id": "authorized-evidence",
+      "user_need": "Review authorized long-form footage and preserve source lineage with timestamped findings.",
+      "fit": "forensiscope",
+      "current_path": "human_confirmed_web_review",
+      "boundaries": [
+        "no automatic unknown-person identification",
+        "no guilt or intent determination",
+        "no authenticity or admissibility certification"
+      ]
+    }
+  ]
+}

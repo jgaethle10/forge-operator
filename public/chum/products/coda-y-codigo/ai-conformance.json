@@ -51,5 +51,7 @@
     ],
     "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
   },
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }
