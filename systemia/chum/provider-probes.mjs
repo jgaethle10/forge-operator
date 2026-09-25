@@ -5,8 +5,44 @@ const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
 const suite = readJson('chum-probes/probe-suite.json');
 const matrix = readJson('chum-probes/provider-matrix.json');
 
-const bridgeUrl = String(process.env.CHUM_PROBE_BRIDGE_URL || process.env.NEXUS_PROBE_BRIDGE_URL || '').replace(/\/$/, '');
-const bridgeToken = String(process.env.CHUM_PROBE_BRIDGE_TOKEN || process.env.NEXUS_PROBE_BRIDGE_TOKEN || '');
+const DEFAULT_BRIDGE_URL = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/chumProbeBridge';
+const bridgeUrl = String(process.env.CHUM_PROBE_BRIDGE_URL || process.env.NEXUS_PROBE_BRIDGE_URL || DEFAULT_BRIDGE_URL).replace(/\/$/, '');
+const staticBridgeToken = String(process.env.CHUM_PROBE_BRIDGE_TOKEN || process.env.NEXUS_PROBE_BRIDGE_TOKEN || '');
+const oidcAudience = 'evercraft-chum-probe';
+let bridgeAuthorizationPromise = null;
+
+async function bridgeAuthorization() {
+  if (staticBridgeToken) return `Bearer ${staticBridgeToken}`;
+  if (bridgeAuthorizationPromise) return bridgeAuthorizationPromise;
+
+  const requestUrl = String(process.env.ACTIONS_ID_TOKEN_REQUEST_URL || '');
+  const requestToken = String(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN || '');
+  if (!requestUrl || !requestToken) return null;
+
+  bridgeAuthorizationPromise = (async () => {
+    const url = new URL(requestUrl);
+    url.searchParams.set('audience', oidcAudience);
+    const response = await fetch(url, {
+      headers: {
+        accept: 'application/json',
+        authorization: `Bearer ${requestToken}`,
+        'user-agent': 'Evercraft-CHUM/0.5 (+github-oidc-probe-bridge)'
+      }
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !body?.value) {
+      throw new Error(`github_oidc_token_request_failed:${response.status}`);
+    }
+    return `Bearer ${body.value}`;
+  })();
+
+  return bridgeAuthorizationPromise;
+}
+
+function bridgeEndpoint(base) {
+  if (/\/functions\/chumProbeBridge$/i.test(base)) return base;
+  return base.endsWith('/v1/probe') ? base : `${base}/v1/probe`;
+}
 const requestedProviders = String(process.env.CHUM_PROBE_PROVIDERS || '')
   .split(',')
   .map((v) => v.trim())
@@ -67,8 +103,13 @@ async function runProbe(provider, testCase) {
     return { probe_id: probeId, provider, product_key: testCase.product_key, case_id: testCase.case_id, status: 'blocked', surface, blocked_reason: testCase.blocked_reason || 'case_disabled', observed_at: new Date().toISOString() };
   }
 
-  if (!bridgeUrl || !bridgeToken) {
+  if (!bridgeUrl) {
     return { probe_id: probeId, provider, product_key: testCase.product_key, case_id: testCase.case_id, status: 'blocked', surface, blocked_reason: 'authorized_probe_bridge_not_configured', observed_at: new Date().toISOString() };
+  }
+
+  const authorization = await bridgeAuthorization().catch(() => null);
+  if (!authorization) {
+    return { probe_id: probeId, provider, product_key: testCase.product_key, case_id: testCase.case_id, status: 'blocked', surface, blocked_reason: 'authorized_probe_bridge_identity_not_available', observed_at: new Date().toISOString() };
   }
 
   const payload = {
@@ -85,9 +126,9 @@ async function runProbe(provider, testCase) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(`${bridgeUrl}/v1/probe`, {
+    const response = await fetch(bridgeEndpoint(bridgeUrl), {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${bridgeToken}` },
+      headers: { 'content-type': 'application/json', authorization },
       body: JSON.stringify(payload),
       signal: controller.signal
     });
@@ -123,7 +164,7 @@ const receipt = {
   schema: 'evercraft.chum.cross-llm-run-receipt.v1',
   run_id: `chum-cross-llm-${startedAt.toISOString().replace(/[:.]/g, '-')}`,
   started_at: startedAt.toISOString(),
-  bridge_configured: Boolean(bridgeUrl && bridgeToken),
+  bridge_configured: Boolean(bridgeUrl && (staticBridgeToken || (process.env.ACTIONS_ID_TOKEN_REQUEST_URL && process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN))),
   providers,
   requested_cases: requestedCases,
   selected_cases: cases.map((testCase) => testCase.case_id),
