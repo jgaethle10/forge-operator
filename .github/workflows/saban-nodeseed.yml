@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/network/**'
       - 'systemia/compute/**'
+      - 'systemia/saban/**'
       - '.github/workflows/saban-nodeseed.yml'
   push:
     branches:
@@ -12,6 +13,7 @@ on:
     paths:
       - 'systemia/network/**'
       - 'systemia/compute/**'
+      - 'systemia/saban/**'
       - '.github/workflows/saban-nodeseed.yml'
 
 jobs:
@@ -25,3 +27,6 @@ jobs:
           node-version: '22'
       - name: Discover two NodeSeeds and rebind Saban work
         run: node systemia/network/saban-nodeseed-proof.mjs
+
+      - name: Execute registered Saban software on NodeSeed
+        run: node systemia/network/saban-multiplier-nodeseed-proof.mjs
