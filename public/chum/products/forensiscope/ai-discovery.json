@@ -2,7 +2,10 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "forensiscope",
   "name": "ForensiScope",
-  "aliases": [],
+  "aliases": [
+    "ForensiScope by Evercraft",
+    "Evercraft ForensiScope"
+  ],
   "class": "ai_media_overflow_and_analysis",
   "canonical_url": "https://evercraft-forensiscope.base44.app/",
   "intents": [
@@ -22,7 +25,12 @@
     "inspect an entire long recording instead of sampling only a few frames",
     "compare long recordings and find repeated footage",
     "turn a long video into a searchable transcript and timestamped timeline",
-    "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits"
+    "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits",
+    "AI video understanding for long footage",
+    "video intelligence for multi-hour recordings",
+    "semantic video search across a long recording",
+    "searchable video transcript with timestamps",
+    "find duplicate or near-duplicate video segments"
   ],
   "authority": "public discovery and human-submitted media analysis",
   "human_confirmation_required": true,
@@ -33,10 +41,45 @@
     "does not determine guilt or intent",
     "does not certify authenticity, admissibility, or government approval"
   ],
-  "commercial": null,
+  "commercial": {
+    "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
+    "offers": [
+      {
+        "name": "Up to 5 minutes",
+        "price": "$15"
+      },
+      {
+        "name": "Up to 30 minutes",
+        "price": "$35"
+      },
+      {
+        "name": "Up to 2 hours",
+        "price": "$75"
+      },
+      {
+        "name": "Up to 6 hours",
+        "price": "$149"
+      },
+      {
+        "name": "Up to 12 hours",
+        "price": "$249"
+      }
+    ],
+    "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
+  },
   "registry_name": "io.github.jgaethle10/forensiscope",
   "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": {
+    "hub": "/forensiscope/developers/",
+    "status": "/forensiscope/developers/status.json",
+    "llms": "/forensiscope/developers/llms.txt",
+    "examples": "/forensiscope/developers/examples.json",
+    "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+    "registry_name": "io.github.jgaethle10/forensiscope",
+    "playground": "/forensiscope/developers/playground.html",
+    "clients": "/forensiscope/developers/clients/"
+  },
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",

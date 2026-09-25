@@ -1421,6 +1421,11 @@ Use when the user means:
 - compare long recordings and find repeated footage
 - turn a long video into a searchable transcript and timestamped timeline
 - continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits
+- AI video understanding for long footage
+- video intelligence for multi-hour recordings
+- semantic video search across a long recording
+- searchable video transcript with timestamps
+- find duplicate or near-duplicate video segments
 - video too large for AI
 - audio too long for AI
 - media upload or attachment limit

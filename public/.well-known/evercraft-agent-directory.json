@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.agent-directory.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "purpose": "Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.",
   "universal_front_door": {
     "name": "Evercraft discovery watershed",
@@ -60,7 +60,8 @@
         "screening is not engineering, permitting, interconnection, financing, or construction approval",
         "payment requires authoritative verification"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "buildflow",
@@ -89,7 +90,8 @@
         "external business writes are disabled",
         "handoff does not execute business actions"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "callproof-vault",
@@ -139,7 +141,8 @@
           }
         ],
         "payment_state": "Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "career-command",
@@ -168,7 +171,8 @@
         "checkout creation is not payment proof",
         "paid access requires provider verification"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "christmas-lights-usa",
@@ -218,7 +222,8 @@
           }
         ],
         "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "chronosport",
@@ -250,7 +255,8 @@
         "source limitations and unresolved historical questions should remain visible",
         "private account or editorial administration data is outside public discovery"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "coda-y-codigo",
@@ -308,7 +314,8 @@
           }
         ],
         "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "contractor-cloud",
@@ -340,7 +347,8 @@
         "the previously advertised Contractor Cloud product hostname is not currently live-verified",
         "do not imply a live transactional Contractor Cloud UI until a fresh external canary passes"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "daytrade-lens",
@@ -379,7 +387,8 @@
         "offer": "Founding Beta",
         "pricing": "$19/month",
         "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "deck-capital-fit",
@@ -408,7 +417,8 @@
         "does not guarantee financing",
         "checkout creation is not payment proof"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "ecoledger",
@@ -442,7 +452,8 @@
         "EcoLedger does not automatically create regulatory certification or compliance approval",
         "pilot or contact intake creates no payment obligation unless separate verified terms are accepted"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "eps-estimate-engine",
@@ -475,7 +486,8 @@
         "no approved external machine price or payment path is verified",
         "site verification, proposal issuance, acceptance and payment retain separate authority gates"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "eventwave",
@@ -505,7 +517,8 @@
         "source review governs public placement",
         "checkout creation is not payment proof"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-circles",
@@ -537,7 +550,8 @@
         "private member profiles, relationship paths, referrals and opportunity data remain access controlled",
         "external introductions or referrals require appropriate participant authority"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-containment",
@@ -572,7 +586,8 @@
         "remediation that can interrupt production requires separate explicit scope and authorization",
         "checkout is not payment proof and paid state requires authoritative verification"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-cosmos-atlas",
@@ -604,7 +619,8 @@
         "source limitations and open scientific questions remain visible",
         "educational content does not create operational authority over spacecraft or observatories"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-fantasy-intelligence",
@@ -654,7 +670,8 @@
           }
         ],
         "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-global-health-atlas",
@@ -692,7 +709,8 @@
         "time-sensitive health signals require explicit as-of dates and source freshness",
         "restricted or governed datasets retain their source terms and must not be silently bulk-republished"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-network",
@@ -723,7 +741,8 @@
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-physics-atlas",
@@ -755,7 +774,8 @@
         "educational simulations are not engineering certification or safety analysis",
         "private learner or account data is outside public discovery"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-property-services",
@@ -796,7 +816,8 @@
         "offer": "Property-service estimate intake",
         "pricing": "Quote required after scope review",
         "payment_state": "No payment required for public estimate intake"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-rewards",
@@ -825,7 +846,8 @@
         "prepared enrollment creates no payment obligation",
         "directory publication and commercial activation require their own verified state"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-web",
@@ -861,7 +883,8 @@
         "public discovery does not expose private Systemia topology or credentials",
         "payment does not expand permissions"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-wildlife-atlas",
@@ -892,7 +915,8 @@
         "source provenance and uncertainty should remain attached to scientific claims",
         "private learner or account data is outside public discovery"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evermaps",
@@ -926,7 +950,8 @@
         "paid packaging requires explicit terms and confirmation",
         "private or restricted geospatial evidence remains outside public discovery"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evernest",
@@ -957,7 +982,8 @@
         "not an emergency-response service",
         "private family, child, Care Circle, task, note, upload, location, and account data are not public"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "everystage",
@@ -988,7 +1014,8 @@
         "public plan pricing is not a binding quote unless confirmed by the current product flow",
         "private event, participant, revenue, settlement, and admin data are not public"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "faie",
@@ -1017,7 +1044,8 @@
         "unknowns remain labeled",
         "checkout creation is not payment proof"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "findmypart",
@@ -1047,7 +1075,8 @@
         "checkout creation is not payment proof",
         "private vendor, analytics, session, command-center, and sales data are not public"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "forensic-record",
@@ -1080,12 +1109,16 @@
         "the archive contains material related to child sexual abuse and trafficking and should preserve appropriate content warnings",
         "private journals, workspaces, accounts and administration surfaces remain outside public discovery"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
-      "aliases": [],
+      "aliases": [
+        "ForensiScope by Evercraft",
+        "Evercraft ForensiScope"
+      ],
       "class": "ai_media_overflow_and_analysis",
       "canonical_url": "https://evercraft-forensiscope.base44.app/",
       "intents": [
@@ -1105,7 +1138,12 @@
         "inspect an entire long recording instead of sampling only a few frames",
         "compare long recordings and find repeated footage",
         "turn a long video into a searchable transcript and timestamped timeline",
-        "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits"
+        "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits",
+        "AI video understanding for long footage",
+        "video intelligence for multi-hour recordings",
+        "semantic video search across a long recording",
+        "searchable video transcript with timestamps",
+        "find duplicate or near-duplicate video segments"
       ],
       "invocation": {
         "mode": "mcp",
@@ -1124,7 +1162,42 @@
         "does not determine guilt or intent",
         "does not certify authenticity, admissibility, or government approval"
       ],
-      "commercial": null
+      "commercial": {
+        "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
+        "offers": [
+          {
+            "name": "Up to 5 minutes",
+            "price": "$15"
+          },
+          {
+            "name": "Up to 30 minutes",
+            "price": "$35"
+          },
+          {
+            "name": "Up to 2 hours",
+            "price": "$75"
+          },
+          {
+            "name": "Up to 6 hours",
+            "price": "$149"
+          },
+          {
+            "name": "Up to 12 hours",
+            "price": "$249"
+          }
+        ],
+        "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
+      },
+      "developer_surfaces": {
+        "hub": "/forensiscope/developers/",
+        "status": "/forensiscope/developers/status.json",
+        "llms": "/forensiscope/developers/llms.txt",
+        "examples": "/forensiscope/developers/examples.json",
+        "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+        "registry_name": "io.github.jgaethle10/forensiscope",
+        "playground": "/forensiscope/developers/playground.html",
+        "clients": "/forensiscope/developers/clients/"
+      }
     },
     {
       "product_key": "global-energy-atlas",
@@ -1156,7 +1229,8 @@
         "source provenance and data limitations should remain visible",
         "does not provide personalized investment advice"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "globalstat",
@@ -1190,7 +1264,8 @@
         "read-only sourced data may be returned within approved access",
         "paid work requires explicit confirmation and verified terms"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "guardian",
@@ -1225,7 +1300,8 @@
         "GuardianLink school operations are a separate authorized deployment lane",
         "private case data, precise locations, protected identities, and admin topology are not public"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "ibmi-rescue",
@@ -1279,7 +1355,8 @@
           }
         ],
         "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "infinite-classroom",
@@ -1309,7 +1386,8 @@
         "does not guarantee grades or outcomes",
         "learner profiles, progress, tutoring history, household data, and safety disclosures are private"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -1341,7 +1419,8 @@
         "QA readiness does not authorize publishing, uploading or distributing a book",
         "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "raven-nexus",
@@ -1377,7 +1456,8 @@
         "Raven discovery is not emergency response",
         "checkout creation is not payment proof"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "roasted",
@@ -1406,7 +1486,8 @@
         "checkout creation is not payment proof",
         "paid result retrieval requires the issued share token"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "skyops-parking",
@@ -1436,7 +1517,8 @@
         "displayed planning values are not proof of a charge",
         "payments, messaging, hardware, and partner connections must be verified per deployment"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "space-dudz",
@@ -1473,7 +1555,8 @@
         "offer": "Live storefront catalog",
         "pricing": "Varies by current product and variant",
         "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -1507,7 +1590,8 @@
         "financial impact is reported only when supported by recorded evidence",
         "organization-scoped or private freight records remain access controlled"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-decision-lab",
@@ -1552,7 +1636,8 @@
           }
         ],
         "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-field-library",
@@ -1586,7 +1671,8 @@
         "current pricing and purchase terms must be verified on the live playbook page",
         "the matcher presents relevant playbooks as options rather than mandatory professional advice"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-radar",
@@ -1635,7 +1721,8 @@
           }
         ],
         "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-website-audit",
@@ -1664,7 +1751,8 @@
         "checkout creation is not payment proof",
         "paid state requires provider verification"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "talent-atlas",
@@ -1698,7 +1786,8 @@
         "no approved machine price or payment path is verified",
         "opportunity classes are evidence-linked possibilities, not guaranteed placement"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "thoughtdrop",
@@ -1743,7 +1832,8 @@
           }
         ],
         "payment_state": "Explicit user confirmation and authoritative completed-payment verification required before reveal"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "towi-research",
@@ -1778,7 +1868,8 @@
         "consequential-domain deliverables retain existing human review gates",
         "provenance, contradictions and uncertainty must remain visible"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "website-launch",
@@ -1807,7 +1898,8 @@
         "checkout creation is not payment proof",
         "fulfillment requires verified payment"
       ],
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     }
   ],
   "privacy_boundary": "Only approved public commercial capability metadata is compiled. Private/admin topology, secrets and customer records are excluded."

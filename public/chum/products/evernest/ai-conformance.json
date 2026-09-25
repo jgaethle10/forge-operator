@@ -25,5 +25,6 @@
     "private family, child, Care Circle, task, note, upload, location, and account data are not public"
   ],
   "commercial": null,
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

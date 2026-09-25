@@ -3,7 +3,7 @@
   "provider": "Evercraft LLC",
   "generated_from": {
     "product_directory_schema": "evercraft.product-directory.v1",
-    "product_directory_updated_at": "2026-09-24",
+    "product_directory_updated_at": "2026-09-25",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-25T05:45:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
@@ -3509,6 +3509,11 @@
         "compare long recordings and find repeated footage",
         "turn a long video into a searchable transcript and timestamped timeline",
         "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits",
+        "AI video understanding for long footage",
+        "video intelligence for multi-hour recordings",
+        "semantic video search across a long recording",
+        "searchable video transcript with timestamps",
+        "find duplicate or near-duplicate video segments",
         "video too large for AI",
         "audio too long for AI",
         "media upload or attachment limit",
@@ -3559,7 +3564,32 @@
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
-      "commercial": null,
+      "commercial": {
+        "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
+        "offers": [
+          {
+            "name": "Up to 5 minutes",
+            "price": "$15"
+          },
+          {
+            "name": "Up to 30 minutes",
+            "price": "$35"
+          },
+          {
+            "name": "Up to 2 hours",
+            "price": "$75"
+          },
+          {
+            "name": "Up to 6 hours",
+            "price": "$149"
+          },
+          {
+            "name": "Up to 12 hours",
+            "price": "$249"
+          }
+        ],
+        "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,

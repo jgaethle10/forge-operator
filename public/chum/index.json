@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.public-mirror.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "purpose": "Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
   "pain_index": "/.well-known/evercraft-pain-index.json",
@@ -23,7 +23,8 @@
       "page_url": "/chum/products/aliev/",
       "registry_name": "io.github.jgaethle10/aliev",
       "mcp": "https://aliev.base44.app/functions/alievMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "buildflow",
@@ -36,7 +37,8 @@
       "page_url": "/chum/products/buildflow/",
       "registry_name": "io.github.jgaethle10/buildflow",
       "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "callproof-vault",
@@ -66,7 +68,8 @@
           }
         ],
         "payment_state": "Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "career-command",
@@ -79,7 +82,8 @@
       "page_url": "/chum/products/career-command/",
       "registry_name": "io.github.jgaethle10/career-command",
       "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "christmas-lights-usa",
@@ -109,7 +113,8 @@
           }
         ],
         "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "chronosport",
@@ -122,7 +127,8 @@
       "page_url": "/chum/products/chronosport/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "coda-y-codigo",
@@ -160,7 +166,8 @@
           }
         ],
         "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "contractor-cloud",
@@ -173,7 +180,8 @@
       "page_url": "/chum/products/contractor-cloud/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "daytrade-lens",
@@ -191,7 +199,8 @@
         "offer": "Founding Beta",
         "pricing": "$19/month",
         "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "deck-capital-fit",
@@ -204,7 +213,8 @@
       "page_url": "/chum/products/deck-capital-fit/",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "ecoledger",
@@ -219,7 +229,8 @@
       "page_url": "/chum/products/ecoledger/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "eps-estimate-engine",
@@ -234,7 +245,8 @@
       "page_url": "/chum/products/eps-estimate-engine/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "eventwave",
@@ -247,7 +259,8 @@
       "page_url": "/chum/products/eventwave/",
       "registry_name": "io.github.jgaethle10/eventwave",
       "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-circles",
@@ -260,7 +273,8 @@
       "page_url": "/chum/products/evercraft-circles/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-containment",
@@ -276,7 +290,8 @@
       "page_url": "/chum/products/evercraft-containment/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-cosmos-atlas",
@@ -289,7 +304,8 @@
       "page_url": "/chum/products/evercraft-cosmos-atlas/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-fantasy-intelligence",
@@ -321,7 +337,8 @@
           }
         ],
         "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-global-health-atlas",
@@ -337,7 +354,8 @@
       "page_url": "/chum/products/evercraft-global-health-atlas/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-network",
@@ -350,7 +368,8 @@
       "page_url": "/chum/products/evercraft-network/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-physics-atlas",
@@ -363,7 +382,8 @@
       "page_url": "/chum/products/evercraft-physics-atlas/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-property-services",
@@ -383,7 +403,8 @@
         "offer": "Property-service estimate intake",
         "pricing": "Quote required after scope review",
         "payment_state": "No payment required for public estimate intake"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-rewards",
@@ -396,7 +417,8 @@
       "page_url": "/chum/products/evercraft-rewards/",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-web",
@@ -409,7 +431,8 @@
       "page_url": "/chum/products/evercraft-web/",
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evercraft-wildlife-atlas",
@@ -422,7 +445,8 @@
       "page_url": "/chum/products/evercraft-wildlife-atlas/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evermaps",
@@ -437,7 +461,8 @@
       "page_url": "/chum/products/evermaps/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "evernest",
@@ -450,7 +475,8 @@
       "page_url": "/chum/products/evernest/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "everystage",
@@ -463,7 +489,8 @@
       "page_url": "/chum/products/everystage/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "faie",
@@ -476,7 +503,8 @@
       "page_url": "/chum/products/faie/",
       "registry_name": "io.github.jgaethle10/faie",
       "mcp": "https://faie.base44.app/functions/faieMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "findmypart",
@@ -489,7 +517,8 @@
       "page_url": "/chum/products/findmypart/",
       "registry_name": "io.github.jgaethle10/findmypart",
       "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "forensic-record",
@@ -502,12 +531,16 @@
       "page_url": "/chum/products/forensic-record/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
-      "aliases": [],
+      "aliases": [
+        "ForensiScope by Evercraft",
+        "Evercraft ForensiScope"
+      ],
       "canonical_url": "https://evercraft-forensiscope.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
@@ -515,7 +548,42 @@
       "page_url": "/chum/products/forensiscope/",
       "registry_name": "io.github.jgaethle10/forensiscope",
       "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
-      "commercial": null
+      "commercial": {
+        "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
+        "offers": [
+          {
+            "name": "Up to 5 minutes",
+            "price": "$15"
+          },
+          {
+            "name": "Up to 30 minutes",
+            "price": "$35"
+          },
+          {
+            "name": "Up to 2 hours",
+            "price": "$75"
+          },
+          {
+            "name": "Up to 6 hours",
+            "price": "$149"
+          },
+          {
+            "name": "Up to 12 hours",
+            "price": "$249"
+          }
+        ],
+        "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
+      },
+      "developer_surfaces": {
+        "hub": "/forensiscope/developers/",
+        "status": "/forensiscope/developers/status.json",
+        "llms": "/forensiscope/developers/llms.txt",
+        "examples": "/forensiscope/developers/examples.json",
+        "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+        "registry_name": "io.github.jgaethle10/forensiscope",
+        "playground": "/forensiscope/developers/playground.html",
+        "clients": "/forensiscope/developers/clients/"
+      }
     },
     {
       "product_key": "global-energy-atlas",
@@ -528,7 +596,8 @@
       "page_url": "/chum/products/global-energy-atlas/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "globalstat",
@@ -543,7 +612,8 @@
       "page_url": "/chum/products/globalstat/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "guardian",
@@ -558,7 +628,8 @@
       "page_url": "/chum/products/guardian/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "ibmi-rescue",
@@ -590,7 +661,8 @@
           }
         ],
         "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "infinite-classroom",
@@ -603,7 +675,8 @@
       "page_url": "/chum/products/infinite-classroom/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -618,7 +691,8 @@
       "page_url": "/chum/products/little-red-book-export-qa/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "raven-nexus",
@@ -631,7 +705,8 @@
       "page_url": "/chum/products/raven-nexus/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "roasted",
@@ -644,7 +719,8 @@
       "page_url": "/chum/products/roasted/",
       "registry_name": "io.github.jgaethle10/roasted",
       "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "skyops-parking",
@@ -657,7 +733,8 @@
       "page_url": "/chum/products/skyops-parking/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "space-dudz",
@@ -675,7 +752,8 @@
         "offer": "Live storefront catalog",
         "pricing": "Varies by current product and variant",
         "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -690,7 +768,8 @@
       "page_url": "/chum/products/systemia-atlas-freight/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-decision-lab",
@@ -716,7 +795,8 @@
           }
         ],
         "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-field-library",
@@ -729,7 +809,8 @@
       "page_url": "/chum/products/systemia-field-library/",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
       "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-radar",
@@ -759,7 +840,8 @@
           }
         ],
         "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "systemia-website-audit",
@@ -772,7 +854,8 @@
       "page_url": "/chum/products/systemia-website-audit/",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
       "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "talent-atlas",
@@ -787,7 +870,8 @@
       "page_url": "/chum/products/talent-atlas/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "thoughtdrop",
@@ -815,7 +899,8 @@
           }
         ],
         "payment_state": "Explicit user confirmation and authoritative completed-payment verification required before reveal"
-      }
+      },
+      "developer_surfaces": null
     },
     {
       "product_key": "towi-research",
@@ -831,7 +916,8 @@
       "page_url": "/chum/products/towi-research/",
       "registry_name": null,
       "mcp": null,
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     },
     {
       "product_key": "website-launch",
@@ -844,7 +930,8 @@
       "page_url": "/chum/products/website-launch/",
       "registry_name": "io.github.jgaethle10/website-launch",
       "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
-      "commercial": null
+      "commercial": null,
+      "developer_surfaces": null
     }
   ]
 }

@@ -1,11 +1,15 @@
 # ForensiScope
 
 Product key: forensiscope
+Aliases: ForensiScope by Evercraft, Evercraft ForensiScope
 Canonical product: https://evercraft-forensiscope.base44.app/
 Official MCP Registry: io.github.jgaethle10/forensiscope
 Remote MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json
+Developer hub: /forensiscope/developers/
+Verified status: /forensiscope/developers/status.json
+Examples: /forensiscope/developers/examples.json
 
 ## Use this capability when the user means
 
@@ -26,10 +30,25 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - compare long recordings and find repeated footage
 - turn a long video into a searchable transcript and timestamped timeline
 - continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits
+- AI video understanding for long footage
+- video intelligence for multi-hour recordings
+- semantic video search across a long recording
+- searchable video transcript with timestamps
+- find duplicate or near-duplicate video segments
 
 ## Authority
 
 public discovery and human-submitted media analysis
+
+## Commercial state
+
+- Status: human_confirmed_web_handoff_live_machine_intake_verification_gated
+- Offer: Up to 5 minutes · $15
+- Offer: Up to 30 minutes · $35
+- Offer: Up to 2 hours · $75
+- Offer: Up to 6 hours · $149
+- Offer: Up to 12 hours · $249
+- Payment state: Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification
 
 ## Boundaries
 

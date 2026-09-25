@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 93
-Unique user phrases: 643
-Candidate edges: 702
+Unique user phrases: 648
+Candidate edges: 707
 Ambiguous phrases: 59
 
 ## 15 GB video analysis
@@ -143,6 +143,13 @@ Human-readable match: /chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## AI video understanding for long footage
+Answer ID: intent:3cfef3702c
+Human-readable match: /chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## AI worker competency test
 Answer ID: intent:7f140524a9
@@ -1484,6 +1491,13 @@ Human-readable match: /chum/answers/doors/find-conversion-problems-on-my-website
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json
 Candidates:
 - Systemia Website Audit | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+
+## find duplicate or near-duplicate video segments
+Answer ID: intent:684e2ea51b
+Human-readable match: /chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## find EV charging opportunities in this market
 Answer ID: intent:c01f603871
@@ -3633,6 +3647,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## searchable video transcript with timestamps
+Answer ID: intent:32b7c53b5a
+Human-readable match: /chum/answers/doors/searchable-video-transcript-with-timestamps-32b7c53b5a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/searchable-video-transcript-with-timestamps-32b7c53b5a.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
 ## security camera footage review
 Answer ID: intent:8c7a4181b3
 Human-readable match: /chum/answers/doors/security-camera-footage-review-8c7a4181b3/
@@ -3644,6 +3665,13 @@ Candidates:
 Answer ID: intent:4e5e912564
 Human-readable match: /chum/answers/doors/semantic-segment-deduplication-4e5e912564/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/semantic-segment-deduplication-4e5e912564.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## semantic video search across a long recording
+Answer ID: intent:9687b2afbc
+Human-readable match: /chum/answers/doors/semantic-video-search-across-a-long-recording-9687b2afbc/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/semantic-video-search-across-a-long-recording-9687b2afbc.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
@@ -4236,6 +4264,13 @@ Human-readable match: /chum/answers/doors/version-and-verify-an-ai-capability-d2
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/version-and-verify-an-ai-capability-d214fc3642.json
 Candidates:
 - AI Capability Installation Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/ai-capability-install-v1/
+
+## video intelligence for multi-hour recordings
+Answer ID: intent:12ac9b4836
+Human-readable match: /chum/answers/doors/video-intelligence-for-multi-hour-recordings-12ac9b4836/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/video-intelligence-for-multi-hour-recordings-12ac9b4836.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## video too big for AI
 Answer ID: intent:e157e3edf6

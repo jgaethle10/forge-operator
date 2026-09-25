@@ -45,5 +45,6 @@
     ],
     "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
   },
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

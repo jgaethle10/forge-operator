@@ -22,6 +22,7 @@
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",

@@ -26,5 +26,6 @@
     "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
   ],
   "commercial": null,
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

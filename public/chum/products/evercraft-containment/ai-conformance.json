@@ -29,5 +29,6 @@
     "checkout is not payment proof and paid state requires authoritative verification"
   ],
   "commercial": null,
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

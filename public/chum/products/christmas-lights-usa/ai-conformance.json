@@ -44,5 +44,6 @@
     ],
     "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
   },
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

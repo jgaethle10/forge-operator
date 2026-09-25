@@ -28,5 +28,6 @@
     "payment does not expand permissions"
   ],
   "commercial": null,
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

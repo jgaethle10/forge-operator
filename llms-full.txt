@@ -1464,10 +1464,14 @@ Boundaries:
 
 ### ForensiScope
 Product key: forensiscope
+Aliases: ForensiScope by Evercraft, Evercraft ForensiScope
 Canonical: https://evercraft-forensiscope.base44.app/
 Machine state: mcp
 Official MCP Registry: io.github.jgaethle10/forensiscope
 Invocation: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+Developer hub: /forensiscope/developers/
+Verified status: /forensiscope/developers/status.json
+Examples: /forensiscope/developers/examples.json
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json
 Use when the user says or means:
@@ -1488,8 +1492,16 @@ Use when the user says or means:
 - compare long recordings and find repeated footage
 - turn a long video into a searchable transcript and timestamped timeline
 - continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits
+- AI video understanding for long footage
+- video intelligence for multi-hour recordings
+- semantic video search across a long recording
+- searchable video transcript with timestamps
+- find duplicate or near-duplicate video segments
 Authority:
 public discovery and human-submitted media analysis
+Commercial state:
+- Status: human_confirmed_web_handoff_live_machine_intake_verification_gated
+- Payment state: Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification
 Boundaries:
 - the user must submit media themselves
 - the user must have the right or lawful authority to submit media

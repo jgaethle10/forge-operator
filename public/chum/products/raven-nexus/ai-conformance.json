@@ -29,5 +29,6 @@
     "checkout creation is not payment proof"
   ],
   "commercial": null,
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

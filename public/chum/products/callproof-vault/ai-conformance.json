@@ -44,5 +44,6 @@
     ],
     "payment_state": "Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified"
   },
+  "developer_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }
