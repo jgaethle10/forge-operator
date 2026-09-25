@@ -76,5 +76,10 @@
     "index": "/forensiscope/mesh/index.json",
     "llms": "/forensiscope/mesh/llms.txt"
   },
+  "distribution_surfaces": {
+    "hub": "/forensiscope/distribution/",
+    "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
+    "llms": "/forensiscope/distribution/llms.txt"
+  },
   "provider_behavior_state": "not_inferred_from_publication"
 }

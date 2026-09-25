@@ -25,6 +25,7 @@
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
+  "distribution_surfaces": null,
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt",

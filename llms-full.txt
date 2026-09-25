@@ -1475,6 +1475,7 @@ Examples: /forensiscope/developers/examples.json
 Editorial hub: /forensiscope/editorial/
 Editorial RSS: /forensiscope/editorial/feed.xml
 Knowledge mesh: /forensiscope/mesh/
+Distribution pack: /forensiscope/distribution/
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json
 Use when the user says or means:
