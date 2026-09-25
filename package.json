@@ -101,7 +101,8 @@
     "proof:saban-formation-waves": "node systemia/saban/formation-wave-proof.mjs",
     "proof:beast-football": "node systemia/beast-mode/football.proof.mjs && node systemia/beast-mode/football-engine.proof.mjs",
     "test:forensiscope-seo-mesh": "npm run chum:mirror && node tests/forensiscope-seo-mesh.test.mjs",
-    "test:forensiscope-distribution": "npm run chum:mirror && node tests/forensiscope-distribution.test.mjs"
+    "test:forensiscope-distribution": "npm run chum:mirror && node tests/forensiscope-distribution.test.mjs",
+    "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
