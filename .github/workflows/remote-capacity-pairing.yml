@@ -1,0 +1,35 @@
+name: Remote capacity device pairing
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/remote-capacity-pairing.proof.mjs'
+      - 'systemia/network/REMOTE_CAPACITY_PAIRING.md'
+      - '.github/workflows/remote-capacity-pairing.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/remote-capacity-pairing.proof.mjs'
+      - 'systemia/network/REMOTE_CAPACITY_PAIRING.md'
+      - '.github/workflows/remote-capacity-pairing.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove trust-gated one-time NodeSeed pairing
+        run: node systemia/yard/remote-capacity-pairing.proof.mjs
