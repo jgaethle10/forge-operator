@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/systemia-field-library",
   "title": "Systemia Field Library",
-  "description": "Match contractor operating problems to practical public guides and Field Library playbooks. Read-only discovery; paid playbook contents are not exposed.",
+  "description": "Match contractor operating problems to practical Field Library playbooks. Read-only discovery.",
   "version": "1.0.0",
   "websiteUrl": "https://systemiafieldlibrary.com/",
   "remotes": [
