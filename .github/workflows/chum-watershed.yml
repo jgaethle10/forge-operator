@@ -190,6 +190,69 @@ jobs:
           NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
         run: npm run chum:providers
 
+      - name: Convert receipt-backed provider misses into discovery repairs
+        id: provider_repairs
+        if: always()
+        continue-on-error: true
+        run: |
+          npm run chum:ingest-probe-misses
+          node systemia/chum/build-observed-miss-pages.mjs
+          npm run chum:mirror
+          npm run chum:crawl-pressure
+
+      - name: Persist receipt-backed provider discovery repairs
+        id: persist_repairs
+        if: ${{ always() && steps.provider_repairs.outcome == 'success' && github.ref == 'refs/heads/main' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Evercraft CHUM"
+          git config user.email "chum@users.noreply.github.com"
+
+          rebuild_repairs() {
+            npm run chum:ingest-probe-misses
+            node systemia/chum/build-observed-miss-pages.mjs
+            npm run chum:mirror
+            npm run chum:crawl-pressure
+          }
+
+          stage_repairs() {
+            git add \
+              conformance/provider-observations \
+              public/chum/answers/observed \
+              public/sitemap.xml \
+              public/chum/crawl-state.json \
+              public/chum/freshness.json \
+              public/chum/freshness.xml \
+              public/chum/hot/index.html \
+              public/chum/hot/index.json
+          }
+
+          for ATTEMPT in 1 2 3; do
+            echo "Provider repair publish attempt ${ATTEMPT}/3"
+            git fetch origin main --quiet
+            git reset --hard origin/main
+            rebuild_repairs
+            stage_repairs
+
+            if git diff --cached --quiet; then
+              echo "No new receipt-backed provider discovery repairs to publish."
+              exit 0
+            fi
+
+            git commit -m "CHUM persist provider discovery repairs [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Receipt-backed provider discovery repairs published."
+              exit 0
+            fi
+
+            echo "Main advanced during provider repair publish attempt ${ATTEMPT}; rebuilding from the new tip."
+          done
+
+          echo "Provider discovery repair publication lost three consecutive main-branch races." >&2
+          exit 1
+
       - name: Run CHUM portfolio mesh
         id: mesh
         if: always()
@@ -209,6 +272,8 @@ jobs:
             "mcp:${{ steps.mcp.outcome }}" \
             "commerce:${{ steps.commerce.outcome }}" \
             "gauntlet:${{ steps.gauntlet.outcome }}" \
+            "provider_repairs:${{ steps.provider_repairs.outcome }}" \
+            "persist_repairs:${{ steps.persist_repairs.outcome }}" \
             "mesh:${{ steps.mesh.outcome }}"; do
             NAME="$(printf '%s' "$PAIR" | cut -d: -f1)"
             STATE="$(printf '%s' "$PAIR" | cut -d: -f2-)"
@@ -235,10 +300,12 @@ jobs:
             echo "LLM ecosystem hunter: ${{ steps.hunter.outcome }}"
             echo "ARD registry strike: ${{ steps.ard.outcome }}"
             echo "Provider probes: ${{ steps.providers.outcome }}"
+            echo "Provider miss ingestion: ${{ steps.provider_repairs.outcome }}"
+            echo "Provider repair persistence: ${{ steps.persist_repairs.outcome }}"
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/customer-gauntlet/latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/customer-gauntlet/latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/provider-miss-ingest-latest.json artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -264,7 +331,7 @@ jobs:
         run: |
           set -euo pipefail
           FAILED=0
-          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "gauntlet:${{ steps.gauntlet.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
+          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "gauntlet:${{ steps.gauntlet.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "provider_repairs:${{ steps.provider_repairs.outcome }}"             "persist_repairs:${{ steps.persist_repairs.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
             NAME="${PAIR%%:*}"
             STATE="${PAIR#*:}"
             echo "${NAME}: ${STATE}"
