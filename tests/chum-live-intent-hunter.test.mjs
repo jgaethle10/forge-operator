@@ -1,0 +1,62 @@
+import assert from 'node:assert/strict';
+import { huntLiveIntent } from '../systemia/chum/live-intent-hunter.mjs';
+
+const catalog = {
+  offers: [{
+    public_id: 'forensiscope-overflow',
+    name: 'ForensiScope',
+    intent_terms: ['video too large for AI', 'analyze hours of video'],
+    problem: 'Large media exceeds normal assistant limits.',
+    public_url: 'https://example.com/forensiscope',
+    commercial_state: 'sell_now',
+    machine_state: 'payment_ready_human_confirmation',
+    pricing: '$49',
+    offers: [{ name: 'Analysis', price: '$49' }],
+    human_confirmation_required: true
+  }]
+};
+
+const directory = { products: [] };
+const painIndex = {
+  entries: [{
+    capability_id: 'offer:forensiscope-overflow',
+    public_id: 'forensiscope-overflow',
+    product_key: 'forensiscope',
+    name: 'ForensiScope',
+    pain_phrases: ['video too large for AI', 'analyze hours of video'],
+    problem: 'Large media exceeds normal assistant limits.',
+    canonical_url: 'https://example.com/forensiscope',
+    commercial_state: 'sell_now',
+    machine_state: 'payment_ready_human_confirmation',
+    pricing: '$49',
+    human_confirmation_required: true
+  }]
+};
+
+const result = huntLiveIntent({
+  catalog,
+  directory,
+  painIndex,
+  intent: 'My AI says this three hour video is too large to analyze. I need all of it reviewed.',
+  provider: 'example-llm',
+  surface: 'chat'
+});
+
+assert.equal(result.matched, true);
+assert.equal(result.state, 'sell_now_match');
+assert.equal(result.match.name, 'ForensiScope');
+assert.equal(result.doctrine.same_turn_response, true);
+assert.equal(result.doctrine.no_private_thread_surveillance, true);
+assert.equal(result.doctrine.no_unsolicited_human_outreach, true);
+assert.equal(result.intent_retention, 'not_persisted_by_router');
+
+const miss = huntLiveIntent({
+  catalog,
+  directory,
+  painIndex,
+  intent: 'I want a recipe for tomato soup.'
+});
+assert.equal(miss.matched, false);
+assert.equal(miss.state, 'no_match');
+
+console.log('CHUM live-intent hunter proof passed.');
