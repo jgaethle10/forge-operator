@@ -183,8 +183,8 @@ export function assignmentForIndex(plan, workItems, index) {
     const blockSize = workItems.length * roles.length;
     pass = Math.floor(index / blockSize);
     const withinBlock = index % blockSize;
-    roleIndex = Math.floor(withinBlock / workItems.length);
-    workIndex = withinBlock % workItems.length;
+    workIndex = Math.floor(withinBlock / roles.length);
+    roleIndex = withinBlock % roles.length;
   }
 
   const role = roles[roleIndex];
