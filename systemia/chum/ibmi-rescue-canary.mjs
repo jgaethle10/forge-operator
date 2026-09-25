@@ -2,6 +2,7 @@
 
 const GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const PUBLIC_ID = 'ibmi-rescue-v1';
+const PRODUCT_ROUTE = 'https://findmypart.base44.app/ibmi-rescue';
 
 async function get(url) {
   const controller = new AbortController();
@@ -54,6 +55,10 @@ assert(handoffPayload.payment_obligation_created === false, 'handoff_must_not_cr
 assert(handoffPayload.human_action_required === true, 'handoff_must_require_human_action');
 assert(typeof handoffPayload.handoff_url === 'string' && handoffPayload.handoff_url.includes('view=service'), 'handoff_review_url_missing');
 
+const productRouteResponse = await get(PRODUCT_ROUTE);
+assert(productRouteResponse.response.ok, `product_route_http_${productRouteResponse.response.status}`);
+assert(/<html|<!doctype html/i.test(productRouteResponse.text), 'product_route_html_missing');
+
 const reviewResponse = await get(handoffPayload.handoff_url);
 assert(reviewResponse.response.ok, `review_http_${reviewResponse.response.status}`);
 assert(/Evercraft IBM i Rescue/i.test(reviewResponse.text), 'review_page_name_missing');
@@ -69,6 +74,7 @@ console.log(JSON.stringify({
   continuation: offerPayload.continuation.mode,
   offer_count: offerPayload.offer.offers.length,
   service_handoff_verified: true,
+  product_route_http_verified: true,
   product_specific_direct_checkout_verified: false,
   payment_created: false,
 }));
