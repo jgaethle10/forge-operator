@@ -9,6 +9,10 @@ on:
       - 'systemia/yard/field-attestation.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/field-attestation-proof.mjs'
+      - 'systemia/yard/enroll-field-device.mjs'
+      - 'systemia/yard/kaidance-pulse.mjs'
+      - 'systemia/yard/enroll-field-device.mjs'
+      - 'systemia/yard/kaidance-pulse.mjs'
       - 'systemia/compute/FIELD_ATTESTATION.md'
       - '.github/workflows/node001-field-attestation.yml'
   push:
@@ -33,5 +37,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Syntax-check Yard field CLIs
+        run: |
+          node --check systemia/yard/enroll-field-device.mjs
+          node --check systemia/yard/kaidance-pulse.mjs
       - name: Prove device identity without self-awarding field status
         run: node systemia/yard/field-attestation-proof.mjs
