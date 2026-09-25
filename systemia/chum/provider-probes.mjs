@@ -12,6 +12,16 @@ const requestedProviders = String(process.env.CHUM_PROBE_PROVIDERS || '')
   .map((v) => v.trim())
   .filter(Boolean);
 const providers = requestedProviders.length ? requestedProviders : suite.providers;
+const requestedCases = String(process.env.CHUM_PROBE_CASES || '')
+  .split(',')
+  .map((v) => v.trim())
+  .filter(Boolean);
+const cases = requestedCases.length
+  ? suite.cases.filter((testCase) => requestedCases.includes(testCase.case_id))
+  : suite.cases;
+const unknownRequestedCases = requestedCases.filter(
+  (caseId) => !suite.cases.some((testCase) => testCase.case_id === caseId)
+);
 const timeoutMs = 45000;
 const requireBridge = process.env.CHUM_REQUIRE_PROBE_BRIDGE === 'true' || process.argv.includes('--require-bridge');
 
@@ -115,6 +125,9 @@ const receipt = {
   started_at: startedAt.toISOString(),
   bridge_configured: Boolean(bridgeUrl && bridgeToken),
   providers,
+  requested_cases: requestedCases,
+  selected_cases: cases.map((testCase) => testCase.case_id),
+  unknown_requested_cases: unknownRequestedCases,
   results: []
 };
 
@@ -123,7 +136,7 @@ for (const provider of providers) {
     receipt.results.push({ provider, status: 'blocked', blocked_reason: 'provider_not_in_approved_probe_suite' });
     continue;
   }
-  for (const testCase of suite.cases) {
+  for (const testCase of cases) {
     try {
       receipt.results.push(await runProbe(provider, testCase));
     } catch (error) {
@@ -173,6 +186,12 @@ fs.writeFileSync('artifacts/chum/provider-probe-latest.md', md.join('\n') + '\n'
 
 console.log(JSON.stringify({ run_id: receipt.run_id, bridge_configured: receipt.bridge_configured, require_bridge: requireBridge, summary: receipt.summary }));
 
+if (requestedCases.length && unknownRequestedCases.length) {
+  throw new Error(`CHUM provider probe requested unknown case(s): ${unknownRequestedCases.join(', ')}`);
+}
+if (requestedCases.length && cases.length === 0) {
+  throw new Error('CHUM provider probe case filter selected zero cases.');
+}
 if (requireBridge && !receipt.bridge_configured) {
   throw new Error('CHUM provider probes are required for this run, but no authorized probe bridge is configured.');
 }
