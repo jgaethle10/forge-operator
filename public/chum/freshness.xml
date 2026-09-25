@@ -2,9 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T15:37:23.452Z</updated>
+<updated>2026-09-25T16:28:15.665Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:410fe69956b5f62f51e34561</id><title>/forensiscope/</title><updated>2026-09-25T16:28:15.665Z</updated><link href="/forensiscope/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:b6a33529cd3423c583b26619</id><title>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json</title><updated>2026-09-25T15:37:23.452Z</updated><link href="/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:b9d12ce14a5a7cc6d6d3da20</id><title>/chum/answers/observed/index.json</title><updated>2026-09-25T15:37:23.452Z</updated><link href="/chum/answers/observed/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:c5910dc82ba7729311c550e0</id><title>/chum/revenue.json</title><updated>2026-09-25T11:50:39.649Z</updated><link href="/chum/revenue.json"/><category term="priority-90"/></entry>
@@ -104,5 +105,4 @@
 <entry><id>urn:evercraft:chum:ea381651eb7262f27b70f754</id><title>/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:696f648fb5d11e41503c0e65</id><title>/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6/</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:37eaed3403d75229933963fb</id><title>/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:15e6f46a441f4d1d92f91a67</id><title>/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00/</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00/"/><category term="priority-100"/></entry>
 </feed>

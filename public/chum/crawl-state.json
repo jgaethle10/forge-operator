@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T15:37:23.452Z",
+  "updated_at": "2026-09-25T16:28:15.665Z",
   "url_count": 1738,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -128,8 +128,8 @@
     },
     "/forensiscope/": {
       "path": "/forensiscope/",
-      "content_sha256": "d582b835f35a2f92babdb0760605b283e675aa0625ee12014281bb906b4fdd1d",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "0bb1fb48754c4843c2a7ed74f7ce20aeafdc29061ddcef48961ce68ff086553e",
+      "last_changed": "2026-09-25T16:28:15.665Z",
       "priority": 60
     },
     "/llms.txt": {
