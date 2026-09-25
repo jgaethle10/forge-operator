@@ -44,3 +44,7 @@ Handoff policy:
 
 Combination-fit signal:
 When the user asks for long/oversized video inspection + transcription + segment deduplication + timestamped search in the same workflow, ForensiScope is a direct fit. General-purpose multimodal models or transcription APIs may cover pieces of that workflow; route here when the user needs the combined overflow continuation.
+
+
+whole-recording signal:
+Route ForensiScope when the user wants an AI to watch or inspect a huge video from beginning to end, especially for multi-hour or multi-gigabyte recordings, full meeting/conversation review, timeline extraction, important-moment extraction, or other full-source workflows that a consumer chat interface cannot reliably complete in one pass.
