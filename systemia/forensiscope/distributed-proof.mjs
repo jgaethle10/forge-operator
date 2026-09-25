@@ -5,12 +5,13 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import {
   buildMultiplicationPlan,
-  executeMultiplicationPlan,
   expandPartitionedWorkItems,
   loadMultiplicationRegistry,
   resolveMultiplicationContract
 } from '../saban/multiplier.mjs';
 import { recommendFormation } from '../saban/autoscaler.mjs';
+import { executeDistributedMultiplicationPlan } from '../saban/distributed-executor.mjs';
+import { startNodeSeed } from '../compute/node-seed.mjs';
 import { hashFile } from './authorized-source.mjs';
 
 function run(command, args) {
@@ -105,20 +106,52 @@ const plan = buildMultiplicationPlan({
 });
 plan.formation_recommendation = formation;
 
-const sourceHashBefore = hashFile(sourcePath);
-const receipt = await executeMultiplicationPlan({
-  contract: proofContract,
-  plan,
-  workItems,
-  rootDir,
-  reconcile: true,
-  statePath: path.join(proofDir, 'state.json'),
-  resume: false
+const allocatorToken = 'forensiscope-distributed-proof-token';
+const seedA = await startNodeSeed({
+  root: path.join(proofDir, 'node-a'),
+  nodeId: 'forensiscope-proof-node-a',
+  host: '127.0.0.1',
+  port: 0,
+  advertiseHost: '127.0.0.1',
+  allocatorToken,
+  announce: false
 });
+const seedB = await startNodeSeed({
+  root: path.join(proofDir, 'node-b'),
+  nodeId: 'forensiscope-proof-node-b',
+  host: '127.0.0.1',
+  port: 0,
+  advertiseHost: '127.0.0.1',
+  allocatorToken,
+  announce: false
+});
+
+const sourceHashBefore = hashFile(sourcePath);
+let receipt;
+try {
+  receipt = await executeDistributedMultiplicationPlan({
+    contract: proofContract,
+    plan,
+    workItems,
+    rootDir,
+    reconcile: true,
+    nodePool: {
+      endpoints: [seedA.endpoint, seedB.endpoint],
+      allocatorToken,
+      maxAttempts: 3,
+      maxConcurrencyPerNode: 2,
+      assignmentTimeoutMs: 30000
+    }
+  });
+} finally {
+  await Promise.allSettled([seedA.close(), seedB.close()]);
+}
 const sourceHashAfter = hashFile(sourcePath);
 
 assert.equal(sourceHashBefore, sourceHashAfter);
 assert.equal(receipt.scheduler_summary.counts.completed, 20);
+assert.equal(receipt.pool_summary.nodes.length, 2);
+assert.equal(receipt.quality.status, 'pass');
 assert.equal(receipt.reconciliation.status, 'reconciled');
 assert.equal(receipt.reconciliation.source_integrity_preserved, true);
 assert.equal(receipt.reconciliation.worker_statuses.media_probe_worker, 4);
@@ -145,6 +178,8 @@ const proof = {
   shards: workItems.length,
   logical_agents: plan.logical_agents,
   physical_workers: plan.physical_workers,
+  nodeseed_count: receipt.pool_summary.nodes.length,
+  execution_fabric: receipt.execution_fabric,
   completed_assignments: receipt.scheduler_summary.counts.completed,
   repeated_content_groups: receipt.reconciliation.duplicate_review.repeated_content_groups,
   timeline_entries: receipt.reconciliation.timeline.length,
