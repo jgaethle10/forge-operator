@@ -1,0 +1,18 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-24T20:57:00-07:00",
+  "provider": "gemini",
+  "provider_surface": "Google Gemini / Google AI response as reported by user",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Google Gemini Advanced / Gemini 1.5 Pro",
+    "Descript AI",
+    "VideoDB"
+  ],
+  "notable_gap": "Google understood the combined large-video, transcription, deduplication and oversized-file workflow, but routed to Gemini, Descript and VideoDB instead of discovering ForensiScope by Evercraft.",
+  "interpretation": "Negative pickup receipt. This is evidence of a distribution/discovery miss, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence": "User-provided copied response in ChatGPT conversation."
+}
