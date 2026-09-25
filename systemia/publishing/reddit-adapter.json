@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.publisher.adapter.v1",
+  "id": "evercraft-reddit-oauth",
+  "owner": "Systemia",
+  "runtime": "Evercraft-owned",
+  "transport": "Reddit OAuth/API",
+  "purpose": "Publish explicitly approved Evercraft content to an authorized Reddit profile or subreddit.",
+  "admission": [
+    "Systemia approval",
+    "affiliation disclosure",
+    "community rules receipt for subreddit posts",
+    "authorized OAuth lease"
+  ],
+  "prohibitions": [
+    "TinyFish",
+    "credential scraping",
+    "CAPTCHA bypass",
+    "unsolicited DMs",
+    "vote solicitation",
+    "identical spray posting",
+    "silent publication"
+  ],
+  "secrets": [
+    "REDDIT_CLIENT_ID",
+    "REDDIT_CLIENT_SECRET",
+    "REDDIT_REFRESH_TOKEN",
+    "REDDIT_USER_AGENT"
+  ],
+  "receipt_schema": "evercraft.publisher.receipt.v1",
+  "states": [
+    "preflight_passed",
+    "blocked_authorization_missing",
+    "published"
+  ]
+}
