@@ -92,7 +92,7 @@ export function planFormation({ request, rootDir = process.cwd() }) {
   const planned = order.map((nodeId) => {
     const node = nodesById.get(nodeId);
     const contract = resolveMultiplicationContract(node.software, registry);
-    const extra = node.inventory ? loadPrivateInventory(path.resolve(rootDir, node.inventory)) : [];
+    const extra = node.inventory ? loadPrivateInventory(path.resolve(rootDir, node.inventory), { privacy: contract.inventory_privacy || null }) : [];
     const workItems = expandPartitionedWorkItems(
       contract,
       loadWorkItems(contract, rootDir, extra)
