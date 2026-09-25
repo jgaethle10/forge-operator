@@ -34,6 +34,9 @@ jobs:
       - name: Typecheck and build
         run: npm run check
 
+      - name: Verify CHUM crawler radar
+        run: node tests/chum-crawler-radar.test.mjs
+
       - name: Verify CHUM discovery doors
         run: |
           set -euo pipefail
@@ -127,6 +130,8 @@ jobs:
             --data '{"problem":"we need an ERP but cannot survive a huge implementation and want to modernize without replacing everything","limit":3}' \
             http://127.0.0.1:3000/api/discover > /tmp/buildflow-route.json
           curl --fail --silent -D /tmp/chum-headers.txt -o /dev/null http://127.0.0.1:3000/chum/
+          curl --fail --silent -A 'OAI-SearchBot/1.0' http://127.0.0.1:3000/forensiscope/ > /dev/null
+          curl --fail --silent http://127.0.0.1:3000/api/chum/crawler-radar > /tmp/crawler-radar-runtime.json
 
           node - <<'NODE'
           const fs = require('fs');
@@ -149,11 +154,17 @@ jobs:
           const forensiscopeLlms = fs.readFileSync('/tmp/forensiscope-llms.txt','utf8');
           const buildflowRoute = JSON.parse(fs.readFileSync('/tmp/buildflow-route.json','utf8'));
           const chumHeaders = fs.readFileSync('/tmp/chum-headers.txt','utf8');
+          const crawlerRadar = JSON.parse(fs.readFileSync('/tmp/crawler-radar-runtime.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
+          if (capabilities.discovery?.crawlerRadar !== '/chum/crawler-radar.json') throw new Error('crawler radar public surface missing from capabilities');
+          if (crawlerRadar.schema !== 'evercraft.chum.crawler-radar.runtime.v1') throw new Error('crawler radar runtime schema missing');
+          if (crawlerRadar.event_count < 1) throw new Error('crawler radar did not observe the synthetic crawler request');
+          if (!crawlerRadar.paths?.some((row) => row.path === '/forensiscope/' && row.crawler_families?.['openai-search'] >= 1)) throw new Error('crawler radar did not attribute OAI-SearchBot request to ForensiScope');
+          if (crawlerRadar.privacy?.ip_recorded !== false || crawlerRadar.privacy?.visitor_identity_recorded !== false) throw new Error('crawler radar privacy boundary regressed');
           if (capabilities.discovery?.liveIntentHunter?.path !== '/api/chum/hunt') throw new Error('live-intent hunter missing from capabilities');
           if (liveHunt.ok !== true || liveHunt.schema !== 'evercraft.chum.live-intent-hunt.v1') throw new Error('live-intent hunter response contract failed');
           if (liveHunt.matched !== true || liveHunt.match?.product_key !== 'forensiscope') throw new Error('live-intent hunter did not attack media overflow with ForensiScope');

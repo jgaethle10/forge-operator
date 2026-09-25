@@ -427,6 +427,15 @@ export async function buildCrawlPressure({
     updated_at: null,
     entries: {}
   });
+  const radar = readJsonIfExists(path.join(publicRoot, 'chum', 'crawler-radar.json'), null);
+  const radarBoost = new Map(
+    radar?.schema === 'evercraft.chum.crawler-radar.v1'
+      ? (radar.surfaces || []).map((row) => [
+          String(row.path || ''),
+          row.urgency === 'strike_now' ? 60 : row.urgency === 'high' ? 35 : row.urgency === 'medium' ? 15 : 0
+        ])
+      : []
+  );
   const rawSitemap = fs.readFileSync(sitemapPath, 'utf8');
   const paths = [...new Set(sitemapPaths(rawSitemap))];
   const entries = {};
@@ -443,7 +452,7 @@ export async function buildCrawlPressure({
       path: urlPath,
       content_sha256: hash,
       last_changed: changed ? now : old.last_changed,
-      priority: crawlPriority(urlPath),
+      priority: Math.min(200, crawlPriority(urlPath) + Number(radarBoost.get(urlPath) || 0)),
       ...(old?.last_indexnow_sha256 ? { last_indexnow_sha256: old.last_indexnow_sha256 } : {}),
       ...(old?.last_indexnow_at ? { last_indexnow_at: old.last_indexnow_at } : {})
     };
@@ -464,7 +473,8 @@ export async function buildCrawlPressure({
       content_hash_controls_freshness: true,
       unchanged_pages_do_not_get_fake_lastmod_updates: true,
       indexnow_requires_live_release_byte_match: true,
-      provider_pickup_not_inferred: true
+      provider_pickup_not_inferred: true,
+      crawler_radar_feedback_can_raise_priority: true
     },
     entries
   };
