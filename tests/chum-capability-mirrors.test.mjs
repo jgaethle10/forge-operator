@@ -56,7 +56,12 @@ test('SELL NOW directory count equals live catalog',()=>{
 
 test('SELL NOW mirrors expose one human Start corridor',()=>{
   for(const row of sellNow.offers){
-    assert.match(String(row.start_url||''),/^\/api\/chum\/go\//,row.public_id);
+    assert.match(String(row.start_url||''),/^https:\/\//,row.public_id);
+    assert.match(String(row.machine_review_url||''),/^https:\/\//,row.public_id);
+    if(row.start_url_state==='machine_commerce_review_fallback'){
+      assert.equal(row.start_url,row.machine_review_url,row.public_id);
+    }
+    assert.equal(String(row.start_url||'').startsWith('/api/chum/go/'),false,row.public_id);
     const source=(machine.offers||[]).find(x=>x.public_id===row.public_id);
     assert.ok(source,row.public_id);
     const hasPaid=(source.offers||[]).some((tier)=>{
@@ -69,6 +74,8 @@ test('SELL NOW mirrors expose one human Start corridor',()=>{
 
     const record=JSON.parse(fs.readFileSync('public/chum/capabilities/'+row.public_id+'/capability.json','utf8'));
     assert.equal(record.start_url,row.start_url,row.public_id);
+    assert.equal(record.start_url_state,row.start_url_state,row.public_id);
+    assert.equal(record.machine_review_url,row.machine_review_url,row.public_id);
     const page=fs.readFileSync('public/chum/capabilities/'+row.public_id+'/index.html','utf8');
     assert.match(page,/Start here/,row.public_id);
   }

@@ -45,7 +45,7 @@
     "saban:discovery:check": "node systemia/saban/discovery-swarm.mjs --strict",
     "saban:watershed": "npm run saban:discovery && npm run saban:revenue && npm run chum:all",
     "chum:capabilities": "node systemia/chum/build-capability-mirror.mjs",
-    "test:chum-revenue": "npm run chum:revenue && node tests/chum-revenue-watershed.test.mjs",
+    "test:chum-revenue": "npm run chum:revenue && npm run test:chum-start-corridor && node tests/chum-revenue-watershed.test.mjs",
     "test:chum-capabilities": "npm run chum:capabilities && node tests/chum-capability-mirrors.test.mjs",
     "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
     "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs",
@@ -62,7 +62,8 @@
     "test:chum-live-intent": "node tests/chum-live-intent-hunter.test.mjs",
     "saban:revenue": "node systemia/saban/revenue-swarm.mjs",
     "test:saban-revenue": "node tests/saban-revenue-swarm.test.mjs",
-    "test:openai-plugin-submission": "node scripts/validate-openai-plugin-submission.mjs"
+    "test:openai-plugin-submission": "node scripts/validate-openai-plugin-submission.mjs",
+    "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

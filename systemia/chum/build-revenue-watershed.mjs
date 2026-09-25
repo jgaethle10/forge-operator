@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
 
 const MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const UNIVERSAL_MCP = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
@@ -9,13 +10,8 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
   'www.systemiacommandcenters.com'
 ]);
 
-function humanStartUrl(offer) {
-  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
-  return '/api/chum/go/' + encodeURIComponent(String(offer.public_id)) + '?surface=chum_pain_page';
-}
-
 function safeOfferUrl(offer) {
-  const fallback = MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer?.public_id || ''));
+  const fallback = machineReviewUrl(offer?.public_id, MACHINE_COMMERCE_GATEWAY);
   const value = String(offer?.public_url || '').trim();
   if (!value) return fallback;
   try {
@@ -81,12 +77,13 @@ const toPublicOffer = (offer) => ({
   payment_authority: offer.payment_authority,
   invocation_status: offer.invocation_status,
   catalog_version: offer.catalog_version,
-  machine_review_url: MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || '')),
+  machine_review_url: machineReviewUrl(offer.public_id, MACHINE_COMMERCE_GATEWAY),
   machine_offer_url: offer.commercial_state === 'sell_now'
     ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || ''))
     : null,
   universal_mcp: UNIVERSAL_MCP,
-  start_url: humanStartUrl(offer)
+  start_url: humanStartUrl(offer, { surface: 'chum_pain_page', gateway: MACHINE_COMMERCE_GATEWAY }),
+  start_url_state: humanStartState(offer)
 });
 
 const publicOffers = offers.filter((offer) => offer.commercial_state === 'sell_now').map(toPublicOffer);
@@ -140,6 +137,7 @@ const compactOffer = (offer) => ({
   machine_offer_url: offer.machine_offer_url,
   universal_mcp: offer.universal_mcp,
   start_url: offer.start_url,
+  start_url_state: offer.start_url_state,
   human_ui_required: offer.human_ui_required,
   confirmation: offer.confirmation
 });
@@ -302,6 +300,7 @@ for (const offer of output.discovery_offers) {
     machine_review_url:offer.machine_review_url,
     machine_offer_url:offer.machine_offer_url,
     start_url:offer.start_url,
+    start_url_state:offer.start_url_state,
     universal_mcp:offer.universal_mcp,
     safety:{
       fit_required:true,

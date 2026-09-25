@@ -42,8 +42,17 @@ for (const offer of canonicalSellNow) {
   if (canonicalPaidTiers.length && !compact.entry_paid_offer) {
     fail(`sell-now offer missing entry_paid_offer: ${offer.public_id}`);
   }
-  if (!String(compact.start_url || '').startsWith('/api/chum/go/')) {
-    fail(`sell-now offer missing Start URL: ${offer.public_id}`);
+  if (!String(compact.start_url || '').startsWith('https://')) {
+    fail(`sell-now offer Start URL is not absolute HTTPS: ${offer.public_id}`);
+  }
+  if (!String(compact.machine_review_url || '').startsWith('https://')) {
+    fail(`sell-now offer missing machine review URL: ${offer.public_id}`);
+  }
+  if (compact.start_url_state === 'machine_commerce_review_fallback' && compact.start_url !== compact.machine_review_url) {
+    fail(`fallback Start URL does not equal proven review door: ${offer.public_id}`);
+  }
+  if (String(compact.start_url || '').startsWith('/api/chum/go/')) {
+    fail(`unproven relative CHUM handoff leaked into public Start URL: ${offer.public_id}`);
   }
 
   const slug = String(offer.public_id || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 120);
