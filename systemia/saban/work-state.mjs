@@ -18,6 +18,7 @@ export function createWorkState({ softwareId, assignments, leaseSeconds = 300, m
       job_id: jobId,
       software_id: softwareId,
       agent_id: assignment.agent_id,
+      idempotency_key: assignment.idempotency_key || null,
       role: assignment.role,
       work: assignment.work,
       item: assignment.item ?? null,
@@ -28,6 +29,7 @@ export function createWorkState({ softwareId, assignments, leaseSeconds = 300, m
       lease: null,
       checkpoint: null,
       result: null,
+      metrics: null,
       error: null,
       created_at: nowIso(createdAt),
       updated_at: nowIso(createdAt)
@@ -121,7 +123,7 @@ export function checkpoint(state, { jobId, workerId, data, now = Date.now() }) {
   return structuredClone(job);
 }
 
-export function complete(state, { jobId, workerId, result, now = Date.now() }) {
+export function complete(state, { jobId, workerId, result, metrics = null, now = Date.now() }) {
   const job = state.jobs?.[jobId];
   if (!job) throw new Error(`Unknown job: ${jobId}`);
   if (job.state !== 'leased' || job.lease?.worker_id !== workerId) {
@@ -130,6 +132,7 @@ export function complete(state, { jobId, workerId, result, now = Date.now() }) {
 
   job.state = 'completed';
   job.result = result ?? null;
+  job.metrics = metrics ?? job.metrics ?? null;
   job.error = null;
   job.lease = null;
   job.updated_at = nowIso(now);
@@ -162,12 +165,28 @@ export function summarizeWorkState(state, now = Date.now()) {
   for (const job of Object.values(state.jobs || {})) {
     counts[job.state] = (counts[job.state] || 0) + 1;
   }
+  const durations = Object.values(state.jobs || {})
+    .map((job) => Number(job.metrics?.duration_ms))
+    .filter((value) => Number.isFinite(value) && value >= 0)
+    .sort((a, b) => a - b);
+  const p95Index = durations.length
+    ? Math.min(durations.length - 1, Math.ceil(durations.length * 0.95) - 1)
+    : -1;
+
   return {
     software_id: state.software_id,
     total: Object.keys(state.jobs || {}).length,
     counts,
     checkpointed: Object.values(state.jobs || {}).filter((job) => job.checkpoint).length,
-    retried: Object.values(state.jobs || {}).filter((job) => job.attempts > 1).length
+    retried: Object.values(state.jobs || {}).filter((job) => job.attempts > 1).length,
+    timing: {
+      measured_jobs: durations.length,
+      total_duration_ms: durations.reduce((sum, value) => sum + value, 0),
+      average_duration_ms: durations.length
+        ? Math.round(durations.reduce((sum, value) => sum + value, 0) / durations.length)
+        : null,
+      p95_duration_ms: p95Index >= 0 ? durations[p95Index] : null
+    }
   };
 }
 
