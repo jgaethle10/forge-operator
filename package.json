@@ -66,7 +66,8 @@
     "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs",
     "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs",
     "test:chum-surfaces": "npm run chum:mirror && node systemia/chum/discovery-surfaces.test.mjs",
-    "test:ibmi-rescue-discovery": "node tests/ibmi-rescue-discovery.test.mjs"
+    "test:ibmi-rescue-discovery": "node tests/ibmi-rescue-discovery.test.mjs",
+    "run:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch-runner.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
