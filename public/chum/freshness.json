@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T16:28:15.665Z",
+  "updated_at": "2026-09-25T17:23:51.580Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,27 @@
   },
   "latest_change_batch": [
     {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-25T17:23:51.580Z",
+      "priority": 88
+    },
+    {
       "path": "/forensiscope/",
-      "last_changed": "2026-09-25T16:28:15.665Z",
+      "last_changed": "2026-09-25T17:23:51.580Z",
       "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-25T17:23:51.580Z",
+      "priority": 88
+    },
+    {
       "path": "/forensiscope/",
       "url": "/forensiscope/",
-      "last_changed": "2026-09-25T16:28:15.665Z",
+      "last_changed": "2026-09-25T17:23:51.580Z",
       "priority": 60
     },
     {
@@ -1508,12 +1519,6 @@
     {
       "path": "/chum/answers/doors/connect-physical-models-to-evidence-640629f226/",
       "url": "/chum/answers/doors/connect-physical-models-to-evidence-640629f226/",
-      "last_changed": "2026-09-25T07:08:03.584Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/construction-crews-need-better-leadership-accountability-or-scheduling-2a9440a399.json",
-      "url": "/chum/answers/doors/construction-crews-need-better-leadership-accountability-or-scheduling-2a9440a399.json",
       "last_changed": "2026-09-25T07:08:03.584Z",
       "priority": 100
     }
