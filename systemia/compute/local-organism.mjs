@@ -7,6 +7,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { startNodeSeed } from './node-seed.mjs';
 import { YardOperator } from '../yard/operator.mjs';
+import { RemoteAdmissionKeeper } from './remote-admission-keeper.mjs';
 
 const MODULE_FILE = fileURLToPath(import.meta.url);
 const CODE_ROOT = path.resolve(path.dirname(MODULE_FILE), '../..');
@@ -72,6 +73,8 @@ export async function startLocalOrganism({
   releaseRef = sourceReleaseRef(),
   heartbeatTargetSeconds = 300,
   graceSeconds = 90,
+  remoteBrokerUrl = '',
+  remoteAdmissionRetryMs = 5_000,
 } = {}) {
   if (!root) throw new Error('root is required');
   if (!/^[a-f0-9]{40}$/i.test(String(releaseRef || ''))) {
@@ -102,6 +105,7 @@ export async function startLocalOrganism({
   const yard = new YardOperator({ stateDir: yardState });
   let kaidance = null;
   let core = null;
+  let remoteAdmission = null;
 
   try {
     kaidance = await yard.deployRelease({
@@ -162,6 +166,34 @@ export async function startLocalOrganism({
     }
 
     const pulse = await yard.getKaidancePulse('kaidance-local-resident');
+
+    const enrollmentRequest = {
+      schema: 'evercraft.remote-capacity.enrollment-request.v1',
+      node_id: seed.node_id,
+      device_fingerprint: seed.device_fingerprint,
+      transport: 'evercraft.outbound-capacity.v1',
+      public_ingress: false,
+      local_compute_scope: 'loopback_only',
+      field_certification_claimed: false,
+      release_ref: releaseRef,
+      requested_at: new Date().toISOString(),
+    };
+    enrollmentRequest.receipt_hash = `sha256:${sha(enrollmentRequest)}`;
+    atomicJson(
+      path.join(organismRoot, 'remote-admission-request.json'),
+      enrollmentRequest
+    );
+
+    if (String(remoteBrokerUrl || '').trim()) {
+      remoteAdmission = new RemoteAdmissionKeeper({
+        brokerUrl: String(remoteBrokerUrl).trim(),
+        localCapacityEndpoint: seed.endpoint,
+        localAllocatorToken: allocatorToken,
+        retryBaseMs: remoteAdmissionRetryMs,
+      });
+      remoteAdmission.start();
+    }
+
     const body = {
       schema: 'evercraft.local-organism-receipt.v1',
       node_id: seed.node_id,
@@ -181,6 +213,13 @@ export async function startLocalOrganism({
         deployment_receipt: core.receipt.receipt_hash,
         supervised_service_count: coreRoute.health.service_count,
         state: coreRoute.state,
+      },
+      remote_admission: {
+        configured: Boolean(String(remoteBrokerUrl || '').trim()),
+        state: remoteAdmission?.status().connected ? 'connected' :
+          String(remoteBrokerUrl || '').trim() ? 'connecting_or_degraded' : 'not_configured',
+        enrollment_request_receipt: enrollmentRequest.receipt_hash,
+        public_ingress: false,
       },
       physical_field_certification_claimed: false,
       named_cloud_required: false,
@@ -202,6 +241,8 @@ export async function startLocalOrganism({
       core,
       pulse,
       receipt,
+      enrollment_request: enrollmentRequest,
+      remote_admission: remoteAdmission,
       health: async () => {
         const [kaidanceHealth, coreHealth] = await Promise.all([
           yard.verifyRoute('kaidance-local-resident'),
@@ -219,10 +260,28 @@ export async function startLocalOrganism({
             ok: coreHealth.ok,
             state: coreHealth.state,
           },
+          remote_admission: remoteAdmission
+            ? remoteAdmission.status()
+            : {
+                schema: 'evercraft.local-organism.remote-admission-status.v1',
+                configured: false,
+                running: false,
+                connected: false,
+                public_ingress: false,
+                local_compute_scope: 'loopback_only',
+                secure_envelope_schema: 'evercraft.secure-envelope.v1',
+                attempts: 0,
+                connected_at: null,
+                last_attempt_at: null,
+                last_error: null,
+              },
           observed_at: new Date().toISOString(),
         };
       },
       close: async () => {
+        if (remoteAdmission) {
+          try { await remoteAdmission.close(); } catch {}
+        }
         yard.stopLeaseKeeper('systemia-core-local-resident');
         yard.stopContinuityKeeper('kaidance-local-resident');
         try {
@@ -239,6 +298,9 @@ export async function startLocalOrganism({
       },
     };
   } catch (error) {
+    if (remoteAdmission) {
+      try { await remoteAdmission.close(); } catch {}
+    }
     if (core) {
       try {
         await yard.stopDeployment('systemia-core-local-resident', {
@@ -267,6 +329,10 @@ if (isCli) {
     root,
     nodeId: arg('--node-id', nodeIdDefault()),
     releaseRef: arg('--release-ref', sourceReleaseRef()),
+    remoteBrokerUrl: arg(
+      '--remote-broker',
+      process.env.EVERCRAFT_REMOTE_BROKER_URL || ''
+    ),
   });
 
   console.log(JSON.stringify({
@@ -277,6 +343,15 @@ if (isCli) {
     kaidance_state: organism.pulse.state,
     kaidance_field_attestation: organism.pulse.field_attestation.state,
     systemia_core_state: organism.receipt.systemia_core.state,
+    remote_admission: organism.remote_admission
+      ? organism.remote_admission.status()
+      : {
+          configured: false,
+          connected: false,
+          public_ingress: false,
+        },
+    remote_admission_request_receipt:
+      organism.enrollment_request.receipt_hash,
     public_ingress: false,
     named_cloud_required: false,
     receipt_hash: organism.receipt.receipt_hash,
