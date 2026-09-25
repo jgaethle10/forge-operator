@@ -1,0 +1,20 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "aliev-rivet-report-snapshot",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "provider_policy": {
+    "preferred": "evercraft-owned",
+    "fallback": "none"
+  },
+  "workload_class": "aliev.rivet-report-snapshot.v1",
+  "contract": {
+    "mode": "rivet_report_snapshot",
+    "consumer": "RIVET"
+  },
+  "migration_state": "admission_ready_adapters_pending",
+  "truth_rule": "Do not report generation_state=ready until source adapters execute and source-backed evidence is present.",
+  "rollback_target": "rivet-base44-compatibility-adapter"
+}
