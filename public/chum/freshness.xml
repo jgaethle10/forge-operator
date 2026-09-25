@@ -2,9 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T23:17:57.077Z</updated>
+<updated>2026-09-25T23:24:39.926Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T23:24:39.926Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:07f632f2e0745c2b29ccde5a</id><title>/forensiscope/editorial/deduplicate-long-video-segments/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/deduplicate-long-video-segments/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:928aeff9cc1959dec5d5e8f7</id><title>/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:2b826aa10dbdf03896655b3f</id><title>/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt"/><category term="priority-86"/></entry>
@@ -16,7 +17,6 @@
 <entry><id>urn:evercraft:chum:001a721dbd4c87e8b6b383e5</id><title>/forensiscope/editorial/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:55e746b7e45710db9d108139</id><title>/forensiscope/editorial/long-video-ai-tools/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/long-video-ai-tools/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:323c5c4ac0c91d9cdabf1922</id><title>/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt"/><category term="priority-86"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:b1fd26aa6ec3256b2e57de9b</id><title>/forensiscope/editorial/</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:c70be75d75ce3c9a6e47a3b8</id><title>/forensiscope/editorial/forensiscope-and-azure-video-indexer/</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/forensiscope-and-azure-video-indexer/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:2151c1ed0457dcc732259daf</id><title>/forensiscope/editorial/forensiscope-and-nvidia-vss/</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/forensiscope-and-nvidia-vss/"/><category term="priority-60"/></entry>
