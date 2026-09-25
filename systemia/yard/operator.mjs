@@ -797,21 +797,34 @@ export class YardOperator {
   } = {}) {
     const record = this.deploymentStatus(deploymentId);
     if (!record) throw new Error('deployment not found');
-    if (record.receipt?.workload_class !== 'systemia.chum-public-origin.v1') {
-      throw new Error('deployment is not a CHUM public origin');
+
+    const workloadClass = record.receipt?.workload_class;
+    let service;
+    let healthPath;
+    if (workloadClass === 'systemia.chum-public-origin.v1') {
+      service = 'chum-public-origin';
+      healthPath = '/api/health';
+    } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
+      service = 'remote-capacity-broker';
+      healthPath = '/v1/remote/health';
+    } else {
+      throw new Error('deployment does not support a public route');
     }
 
     const normalized = normalizePublicRouteOrigin(origin, { allowLoopbackProof });
-    const health = await request(`${normalized.origin}/api/health`);
-    const matches =
+    const health = await request(`${normalized.origin}${healthPath}`);
+    const commonMatch =
       health.ok === true &&
-      health.service === 'chum-public-origin' &&
+      health.service === service &&
       health.runtime === 'Evercraft Compute' &&
       health.instance_id === record.result?.instance_id &&
       health.deployment_receipt_bound === true &&
       health.deployment_receipt_ref === record.receipt?.receipt_hash;
+    const brokerMatch =
+      workloadClass !== 'systemia.remote-capacity-broker.v1' ||
+      health.secure_envelope_schema === 'evercraft.secure-envelope.v1';
 
-    if (!matches) {
+    if (!commonMatch || !brokerMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
@@ -819,12 +832,14 @@ export class YardOperator {
     const body = {
       schema: 'evercraft.yard.public-route-receipt.v1',
       deployment_id: deploymentId,
+      workload_class: workloadClass,
+      service,
       origin: normalized.origin,
       scope: normalized.scope,
       verified: normalized.scope === 'public_https',
       deployment_receipt_hash: record.receipt.receipt_hash,
       instance_id: record.result.instance_id,
-      health_path: '/api/health',
+      health_path: healthPath,
       verification: 'instance_and_deployment_receipt_match',
       verified_at: verifiedAt,
     };
@@ -837,6 +852,31 @@ export class YardOperator {
     record.updated_at = verifiedAt;
     this.#persist(record);
     return publicRoute;
+  }
+
+  remoteCapacityBrokerReceipt(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) throw new Error('deployment not found');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (record.public_route?.verified !== true || record.public_route?.scope !== 'public_https') {
+      throw new Error('verified public HTTPS route is required');
+    }
+
+    return {
+      schema: 'evercraft.remote-capacity.public-broker.v1',
+      runtime: 'Evercraft Compute',
+      verified: true,
+      origin: record.public_route.origin,
+      health_path: record.public_route.health_path,
+      deployment_receipt_hash: record.receipt.receipt_hash,
+      public_route_receipt_hash: record.public_route.receipt_hash,
+      instance_id: record.result.instance_id,
+      secure_envelope_schema: record.result.secure_envelope_schema,
+      verified_at: record.public_route.verified_at,
+      source: 'Systemia Yard Operator',
+    };
   }
 
   runtimeOriginReceipt(deploymentId) {
