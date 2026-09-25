@@ -16,7 +16,8 @@
         "operations_history"
       ],
       "recovery_priority": "wave_1",
-      "state": "evidence_pack_available"
+      "state": "control_plane_contract_recovered_pending_runtime_parity",
+      "recovered_contract": "slices/systemia-command-center.json"
     },
     {
       "product": "Raven Nexus",
@@ -97,7 +98,8 @@
         "project_archive"
       ],
       "recovery_priority": "wave_5",
-      "state": "evidence_pack_available"
+      "state": "architecture_and_evidence_contract_recovered_pending_source_and_runtime_parity",
+      "recovered_contract": "slices/eventwave.json"
     },
     {
       "product": "EPS Field Pass",
