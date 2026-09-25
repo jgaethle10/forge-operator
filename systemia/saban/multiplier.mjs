@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { admitMultiplicationRequest } from './admission.mjs';
 import { createWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
+import { recommendFormation } from './autoscaler.mjs';
 
 const DEFAULT_REGISTRY = 'systemia/saban/multiplication-registry.json';
 
@@ -400,6 +401,7 @@ async function main() {
   const execute = hasFlag(argv, '--execute');
   const reconcile = hasFlag(argv, '--reconcile');
   const resume = hasFlag(argv, '--resume');
+  const auto = hasFlag(argv, '--auto');
   const rootDir = process.cwd();
 
   const registry = loadMultiplicationRegistry(registryPath);
@@ -409,10 +411,24 @@ async function main() {
     contract,
     loadWorkItems(contract, rootDir, extraItems)
   );
+  const formationRecommendation = auto
+    ? recommendFormation({
+        contract,
+        workItemCount: workItems.length,
+        requestedLogicalAgents: argValue(argv, '--agents', null),
+        requestedPhysicalWorkers: argValue(argv, '--workers', null),
+        telemetry: {
+          failure_rate: argValue(argv, '--failure-rate', 0),
+          queue_pressure: argValue(argv, '--queue-pressure', 0),
+          latency_pressure: argValue(argv, '--latency-pressure', 0)
+        }
+      })
+    : null;
+
   const admission = admitMultiplicationRequest({
     contract,
-    requestedLogicalAgents: argValue(argv, '--agents', contract.default_logical_agents),
-    requestedPhysicalWorkers: argValue(argv, '--workers', contract.default_physical_workers),
+    requestedLogicalAgents: formationRecommendation?.logical_agents ?? argValue(argv, '--agents', contract.default_logical_agents),
+    requestedPhysicalWorkers: formationRecommendation?.physical_workers ?? argValue(argv, '--workers', contract.default_physical_workers),
     requestedWorkItems: workItems.length,
     requestedAttempts: contract.max_attempts_per_job || 3,
     budget: contract.budget || {}
@@ -428,6 +444,7 @@ async function main() {
     workItems
   });
   plan.admission = admission;
+  plan.formation_recommendation = formationRecommendation;
 
   let receipt = {
     schema: 'evercraft.saban.multiplication-receipt.v1',
