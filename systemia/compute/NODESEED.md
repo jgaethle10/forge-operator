@@ -45,3 +45,16 @@ NodeSeed is dependency-free Node.js and can be supervised by the operating syste
 ## Boundary
 
 NodeSeed makes software capacity available. It does not grant Evercraft permission to commandeer arbitrary devices. A machine must deliberately run NodeSeed or otherwise expose a compatible, authorized capacity adapter.
+
+
+## Node identity
+
+Each NodeSeed materializes one persistent Ed25519 identity locally. The signing secret remains inside the NodeSeed root with restrictive permissions; only the public SPKI material and SHA-256 fingerprint leave the node.
+
+Capacity beacons are signed. Saban verifies the signature and confirms that the live capacity offer reports the same public fingerprint before considering that offer internally consistent.
+
+A valid signature is **identity evidence, not allocation authority**. It does not grant a lease, production permission, network membership, coverage, or emergency authority. Allocation remains a separate bounded handshake through the allocator gate.
+
+This preserves dynamic capacity. A legitimate new node does not need to have been statically registered with Evercraft before discovery. Known fingerprints may be pinned by higher-level policy, but NodeSeed identity itself is not a mandatory central device registry.
+
+The identity design carries forward the earlier Evercraft node/factory principles: Ed25519 public-key identity, local-only signing material, fingerprints for evidence, signed heartbeats, and separation of identity from authority.
