@@ -8,6 +8,7 @@ import type {
   ContinuityReport,
   DialogueCue,
   MediaProject,
+  ProductionNeed,
   SeriesBible,
   SeriesEpisodePlan,
 } from './types.js';
@@ -252,6 +253,48 @@ function proposedCanonFor(
     }));
 }
 
+function productionNeedsFor(
+  filmPlan: SeriesEpisodePlan['filmPlan'],
+  dialogue: SeriesEpisodePlan['dialogue'],
+  continuityDigest: string,
+): ProductionNeed[] {
+  const visualNeeds: ProductionNeed[] = filmPlan.generationRequests.map((request) => ({
+    id: `need-${request.id}`,
+    kind: 'video',
+    prompt: request.prompt,
+    durationSec: request.durationSec,
+    aspectRatio: request.aspectRatio,
+    sourceRequestId: request.id,
+    continuityDigest,
+    requires: [
+      'reference_identity',
+      'commercial_rights',
+      'provenance_receipt',
+      'timing_control',
+    ],
+    status: 'planned',
+  }));
+
+  const speechNeeds: ProductionNeed[] = dialogue.map((cue) => ({
+    id: `need-${cue.id}`,
+    kind: 'speech',
+    prompt: cue.text,
+    speakerId: cue.speakerId,
+    voiceProfileId: cue.voiceProfileId,
+    language: cue.language,
+    continuityDigest,
+    requires: [
+      'voice_profile',
+      'commercial_rights',
+      'provenance_receipt',
+      'timing_control',
+    ],
+    status: 'planned',
+  }));
+
+  return [...visualNeeds, ...speechNeeds];
+}
+
 export function compileSeriesEpisode(
   project: MediaProject,
   bible: SeriesBible,
@@ -296,6 +339,12 @@ export function compileSeriesEpisode(
     normalizedProject.brief.episodeNumber,
   );
 
+  const productionNeeds = productionNeedsFor(
+    filmPlan,
+    dialogue,
+    continuity.bibleDigest,
+  );
+
   const canonReceipt = digest({
     bibleDigest: continuity.bibleDigest,
     seriesId: bible.id,
@@ -320,6 +369,7 @@ export function compileSeriesEpisode(
     dialogue,
     continuity,
     proposedCanon,
+    productionNeeds,
     canonReceipt,
     createdAt: new Date().toISOString(),
   };
