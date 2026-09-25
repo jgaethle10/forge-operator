@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import { buildRevenuePressurePlan, selectRevenueProbeCase } from '../saban/revenue-pressure.mjs';
 
 const offline = process.argv.includes('--offline');
 const strict = process.argv.includes('--strict');
@@ -14,6 +15,7 @@ const readJson = (path, fallback = {}) => {
 const providerMatrix = readJson('chum-probes/provider-matrix.json', { providers: [] });
 const probeSuite = readJson('chum-probes/probe-suite.json', { cases: [] });
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json', { offers: [] });
+const revenueWatershed = readJson('public/chum/revenue.json', { offers: [] });
 
 const positiveCases = (probeSuite.cases || []).filter((x) => x.enabled && x.expected_fit);
 const sellNowOffers = (machineCatalog.offers || []).filter((x) => x.commercial_state === 'sell_now');
@@ -147,8 +149,18 @@ const knownProviders = (providerMatrix.providers || []).map((provider) => ({
   ]
 }));
 
-const hourIndex = Math.floor(now.getTime() / 3600000);
-const rotationCase = positiveCases.length ? positiveCases[hourIndex % positiveCases.length] : null;
+const revenuePressure = buildRevenuePressurePlan({
+  revenue: revenueWatershed,
+  probeSuite,
+  providerCount: (providerMatrix.providers || []).length || 7,
+  generatedAt: now
+});
+const revenueRotation = selectRevenueProbeCase({
+  plan: revenuePressure,
+  probeSuite,
+  now
+});
+const rotationCase = revenueRotation?.case || null;
 
 const receipt = {
   schema: 'evercraft.chum.llm-hunter.receipt.v1',
@@ -177,11 +189,17 @@ const receipt = {
   commercial_payload: {
     sell_now_offers: sellNowOffers.length,
     sell_now_ids: sellNowOffers.map((x) => x.public_id),
-    positive_probe_cases: positiveCases.length
+    positive_probe_cases: positiveCases.length,
+    saban_logical_work_cells: revenuePressure.logical_work_cells,
+    first_dollar_top: revenuePressure.lanes.first_dollar[0]?.public_id || null,
+    real_revenue_top: revenuePressure.lanes.real_revenue[0]?.public_id || null
   },
   rotation: rotationCase ? {
     case_id: rotationCase.case_id,
     product_key: rotationCase.product_key,
+    lane: revenueRotation.lane,
+    revenue_pressure_score: revenueRotation.score,
+    matched_public_id: revenueRotation.matched_public_id,
     prompt_sha256: crypto.createHash('sha256').update(rotationCase.prompt || '').digest('hex')
   } : null,
   known_provider_targets: knownProviders,
@@ -208,7 +226,7 @@ const md = [
   `Engage now: ${receipt.summary.engage_now}`,
   `Recon next: ${receipt.summary.recon_next}`,
   `Errors: ${receipt.summary.errors}`,
-  rotationCase ? `Rotating attack probe: ${rotationCase.case_id} → ${rotationCase.product_key}` : 'Rotating attack probe: none',
+  rotationCase ? `Rotating attack probe: ${rotationCase.case_id} → ${rotationCase.product_key} [${revenueRotation.lane}:${revenueRotation.score}]` : 'Rotating attack probe: none',
   '',
   '## Doctrine',
   '',
@@ -233,6 +251,12 @@ const publicSummary = {
   sell_now_offer_count: sellNowOffers.length,
   known_provider_target_count: knownProviders.length,
   discovered_ecosystem_count: discovered.length,
+  revenue_pressure: {
+    logical_work_cells: revenuePressure.logical_work_cells,
+    first_dollar_top: revenuePressure.lanes.first_dollar[0]?.public_id || null,
+    real_revenue_top: revenuePressure.lanes.real_revenue[0]?.public_id || null,
+    active_probe_lane: revenueRotation?.lane || null
+  },
   rules: {
     no_human_spam: true,
     legitimate_public_machine_entrances_only: true,
