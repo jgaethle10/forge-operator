@@ -1,8 +1,10 @@
+import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
+import { createNodeAttestation } from './device-identity.mjs';
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -51,6 +53,16 @@ function isWithin(root, target) {
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }
 
+function bootIdHash() {
+  try {
+    const file = '/proc/sys/kernel/random/boot_id';
+    if (!fs.existsSync(file)) return null;
+    return `sha256:${sha(fs.readFileSync(file, 'utf8').trim())}`;
+  } catch {
+    return null;
+  }
+}
+
 function boundedLeaseTtl(value, fallback) {
   const requested = Number(value || fallback);
   if (!Number.isFinite(requested)) return fallback;
@@ -64,6 +76,7 @@ export async function startEvercraftComputeNode({
   port = 0,
   leaseTtlMs = 30_000,
   allocatorToken = '',
+  deviceIdentity = null,
 } = {}) {
   if (!root) throw new Error('root is required');
   const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
@@ -71,7 +84,12 @@ export async function startEvercraftComputeNode({
   if (!loopbackHost && !allocatorTokenHash) {
     throw new Error('allocatorToken is required when Evercraft Compute listens beyond loopback');
   }
+  if (deviceIdentity && String(deviceIdentity.node_id || '') !== String(nodeId)) {
+    throw new Error('deviceIdentity node_id must match Compute nodeId');
+  }
   const allowedRoot = path.resolve(root);
+  const processStartedAt = new Date(Date.now() - process.uptime() * 1000).toISOString();
+  const hostBootIdHash = bootIdHash();
   const chain = new ReceiptChain(nodeId);
   const leases = new Map();
   const services = new Map();
@@ -128,7 +146,38 @@ export async function startEvercraftComputeNode({
           allocation_auth: allocatorTokenHash ? 'bearer' : 'loopback_only',
           resident_services_supported: true,
           lease_renewal_supported: true,
+          device_fingerprint: deviceIdentity?.fingerprint || null,
+          attestation_supported: Boolean(deviceIdentity),
           expires_at: new Date(Date.now() + 60_000).toISOString(),
+        });
+      }
+
+      if (req.method === 'POST' && req.url === '/v1/attest') {
+        if (!deviceIdentity) {
+          return send(res, 503, { error: 'device_identity_unavailable' });
+        }
+        if (allocatorTokenHash) {
+          const authorization = String(req.headers.authorization || '');
+          const presented = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+          if (!presented || sha(presented) !== allocatorTokenHash) {
+            return send(res, 401, { error: 'allocator_auth_required' });
+          }
+        }
+        const body = await readJson(req);
+        const attestation = createNodeAttestation({
+          identity: deviceIdentity,
+          nonce: body.nonce,
+          supportedWorkloads: [...supported],
+          processStartedAt,
+          bootIdHash: hostBootIdHash,
+        });
+        return send(res, 200, {
+          ok: true,
+          attestation,
+          receipt: chain.issue('node.attestation.issued', {
+            device_fingerprint: deviceIdentity.fingerprint,
+            nonce_hash: sha(String(body.nonce || '')),
+          }),
         });
       }
 
