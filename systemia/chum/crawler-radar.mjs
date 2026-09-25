@@ -427,6 +427,44 @@ export async function buildCrawlerRadar({
     ''
   ];
   fs.writeFileSync(path.join(publicDir, 'crawler-radar.txt'), lines.join('\n'));
+
+  const strikeDir = path.join(publicDir, 'strike');
+  fs.mkdirSync(strikeDir, { recursive: true });
+  const strikeSurfaces = payload.surfaces
+    .filter((row) => row.urgency === 'strike_now' || row.urgency === 'high')
+    .slice(0, 100);
+  const strikePayload = {
+    schema: 'evercraft.chum.adaptive-strike-hub.v1',
+    generated_at: payload.generated_at,
+    coordinator: 'CHUM',
+    purpose: 'Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.',
+    truth_boundary: 'Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.',
+    surfaces: strikeSurfaces.map((row) => ({
+      path: row.path,
+      score: row.score,
+      urgency: row.urgency,
+      reasons: row.reasons,
+    })),
+  };
+  fs.writeFileSync(path.join(strikeDir, 'index.json'), JSON.stringify(strikePayload, null, 2) + '\n');
+  fs.writeFileSync(path.join(strikeDir, 'index.html'), [
+    '<!doctype html>',
+    '<html lang="en"><head><meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    '<title>Evercraft CHUM Adaptive Strike Hub</title>',
+    '<meta name="description" content="Adaptive public discovery hub for high-priority Evercraft capability surfaces.">',
+    '<meta name="robots" content="index,follow,max-snippet:-1">',
+    '<link rel="alternate" type="application/json" href="./index.json">',
+    '</head><body><main>',
+    '<h1>Evercraft CHUM Adaptive Strike Hub</h1>',
+    '<p>These public surfaces currently need additional legitimate discovery attention based on freshness, observed crawler requests, and provider-pickup evidence. Inclusion is not a ranking or recommendation claim.</p>',
+    '<ol>',
+    ...strikeSurfaces.map((row) => `<li><a href="${row.path}">${row.path}</a> <small>score ${row.score} · ${row.urgency}</small></li>`),
+    '</ol>',
+    '</main></body></html>',
+    ''
+  ].join('\n'));
+
   fs.writeFileSync(path.join(artifactDir, 'crawler-radar-latest.json'), JSON.stringify(payload, null, 2) + '\n');
 
   return payload;
