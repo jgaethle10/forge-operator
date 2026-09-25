@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:21:04.218Z",
-  "url_count": 1848,
+  "updated_at": "2026-09-25T21:21:08.209Z",
+  "url_count": 1849,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -122,8 +122,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "8c4d6420376e381ef111b37469248d2087d236291517d86fc94eabebc5c92c71",
-      "last_changed": "2026-09-25T21:21:04.218Z",
+      "content_sha256": "83c04c45df3f2473f716dd972f2085b5683d2b3c49dec618d4f24265c682ae0e",
+      "last_changed": "2026-09-25T21:21:08.209Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
@@ -149,6 +149,12 @@
       "content_sha256": "ab8e54e3b3cf801cea123428aca87b4cda1e781d6e70d24b05ea3196e8bca4c4",
       "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 86
+    },
+    "/rivet/brand.json": {
+      "path": "/rivet/brand.json",
+      "content_sha256": "081c84d1f48a614451bbc794eab717fcbffeecedf3e9ebd319a42939020611b9",
+      "last_changed": "2026-09-25T21:21:08.209Z",
+      "priority": 60
     },
     "/rivet/": {
       "path": "/rivet/",

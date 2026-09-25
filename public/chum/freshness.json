@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:21:04.218Z",
+  "updated_at": "2026-09-25T21:21:08.209Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,16 +12,27 @@
   "latest_change_batch": [
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:21:04.218Z",
+      "last_changed": "2026-09-25T21:21:08.209Z",
       "priority": 80
+    },
+    {
+      "path": "/rivet/brand.json",
+      "last_changed": "2026-09-25T21:21:08.209Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:21:04.218Z",
+      "last_changed": "2026-09-25T21:21:08.209Z",
       "priority": 80
+    },
+    {
+      "path": "/rivet/brand.json",
+      "url": "/rivet/brand.json",
+      "last_changed": "2026-09-25T21:21:08.209Z",
+      "priority": 60
     },
     {
       "path": "/chum/intents/rivet-site-underwriting-v1/",
@@ -1508,12 +1519,6 @@
     {
       "path": "/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace.json",
       "url": "/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
-      "url": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 100
     }
