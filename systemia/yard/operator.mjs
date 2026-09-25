@@ -396,6 +396,24 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_origin_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
+        const brokerHealthy =
+          health.ok === true &&
+          health.service === 'remote-capacity-broker' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === job.result?.instance_id &&
+          health.secure_envelope_schema === 'evercraft.secure-envelope.v1';
+        if (!brokerHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('remote capacity broker failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_broker_health_verified_public_route_unbound';
       }
     }
 
