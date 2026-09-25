@@ -2,7 +2,8 @@ import {
   leaseNext,
   complete,
   fail,
-  summarizeWorkState
+  summarizeWorkState,
+  saveWorkState
 } from './work-state.mjs';
 
 export async function runScheduler({
@@ -11,7 +12,8 @@ export async function runScheduler({
   physicalWorkers,
   plan,
   contract,
-  rootDir = process.cwd()
+  rootDir = process.cwd(),
+  statePath = null
 }) {
   if (!adapter || typeof adapter.runAssignment !== 'function') {
     throw new Error('Scheduler requires an adapter with runAssignment().');
@@ -25,6 +27,7 @@ export async function runScheduler({
     while (true) {
       const leased = leaseNext(state, { workerId });
       if (!leased) return;
+      if (statePath) saveWorkState(statePath, state);
 
       try {
         const result = await adapter.runAssignment({
@@ -44,6 +47,7 @@ export async function runScheduler({
           workerId,
           result
         });
+        if (statePath) saveWorkState(statePath, state);
       } catch (error) {
         fail(state, {
           jobId: leased.job_id,
@@ -54,6 +58,7 @@ export async function runScheduler({
           },
           retry: true
         });
+        if (statePath) saveWorkState(statePath, state);
       }
     }
   }
@@ -61,6 +66,8 @@ export async function runScheduler({
   await Promise.all(
     Array.from({ length: workerCount }, (_, index) => runWorker(index))
   );
+
+  if (statePath) saveWorkState(statePath, state);
 
   return {
     schema: 'evercraft.saban.scheduler-receipt.v1',
