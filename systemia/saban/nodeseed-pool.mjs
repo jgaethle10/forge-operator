@@ -160,6 +160,38 @@ function pickNode(nodes, cursor) {
   return healthy[cursor % healthy.length];
 }
 
+function meetsResourceProfile(node, profile = null) {
+  if (!profile) return { eligible: true, reason: null };
+  const hint = node.capacity_hint;
+  if (!hint) {
+    return profile.require_capacity_hint === true
+      ? { eligible: false, reason: 'capacity_hint_required' }
+      : { eligible: true, reason: null };
+  }
+
+  const minCpu = Number(profile.minimum_node_cpu_units || 0);
+  const minMemory = Number(profile.minimum_node_memory_mb || 0);
+  if (minCpu && Number(hint.cpu_units || 0) < minCpu) {
+    return { eligible: false, reason: 'insufficient_cpu_capacity' };
+  }
+  if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
+    return { eligible: false, reason: 'insufficient_memory_capacity' };
+  }
+  return { eligible: true, reason: null };
+}
+
+function placementSlots(node, profile, maxConcurrencyPerNode) {
+  const maxSlots = Math.max(1, Number(maxConcurrencyPerNode || 1));
+  const hint = node.capacity_hint;
+  if (!hint || !profile) return Math.min(1, maxSlots);
+
+  const cpuPerWorker = Math.max(1, Number(profile.cpu_units_per_worker || 1));
+  const memoryPerWorker = Math.max(1, Number(profile.memory_mb_per_worker || 64));
+  const cpuSlots = Math.max(1, Math.floor(Number(hint.cpu_units || 1) / cpuPerWorker));
+  const memorySlots = Math.max(1, Math.floor(Number(hint.memory_mb || 64) / memoryPerWorker));
+  return Math.max(1, Math.min(maxSlots, cpuSlots, memorySlots));
+}
+
 export async function runNodeSeedAssignmentPool({
   software,
   assignments,
@@ -173,6 +205,7 @@ export async function runNodeSeedAssignmentPool({
   timeoutMs = 3000,
   assignmentTimeoutMs = 120000,
   requestedTtlMs = 300000,
+  resourceProfile = null,
   onEvent = null
 }) {
   if (!software) throw new Error('software is required');
@@ -193,6 +226,23 @@ export async function runNodeSeedAssignmentPool({
     throw new Error('no_eligible_nodeseed_capacity');
   }
 
+  const resourceRejected = [];
+  const eligibleNodes = resolved.nodes.filter((node) => {
+    const decision = meetsResourceProfile(node, resourceProfile);
+    if (!decision.eligible) {
+      resourceRejected.push({
+        endpoint: node.endpoint,
+        node_id: node.node_id,
+        reason: decision.reason
+      });
+    }
+    return decision.eligible;
+  });
+
+  if (!eligibleNodes.length) {
+    throw new Error('no_nodeseed_capacity_meets_resource_profile');
+  }
+
   const leaseOptions = {
     allocatorToken,
     allocatorTokens,
@@ -203,7 +253,7 @@ export async function runNodeSeedAssignmentPool({
 
   const leased = [];
   const leaseFailures = [];
-  for (const node of resolved.nodes) {
+  for (const node of eligibleNodes) {
     try {
       leased.push(await leaseNode(node, leaseOptions));
     } catch (error) {
@@ -310,17 +360,25 @@ export async function runNodeSeedAssignmentPool({
     }
   }
 
-  const workerCount = Math.max(
-    1,
-    Math.min(
-      assignments.length,
-      leased.length * Math.max(1, Number(maxConcurrencyPerNode || 1))
+  const placementRing = leased.flatMap((node) =>
+    Array.from(
+      { length: placementSlots(node, resourceProfile, maxConcurrencyPerNode) },
+      () => node
     )
   );
+
+  const workerCount = Math.max(
+    1,
+    Math.min(assignments.length, placementRing.length)
+  );
+
+  const originalLeased = leased.splice(0, leased.length, ...placementRing);
 
   await Promise.all(
     Array.from({ length: workerCount }, (_, index) => worker(index))
   );
+
+  leased.splice(0, leased.length, ...[...new Map(originalLeased.map((node) => [node.endpoint, node])).values()]);
 
   await Promise.allSettled(
     leased.map((node) => releaseNode(node, leaseOptions))
@@ -343,7 +401,7 @@ export async function runNodeSeedAssignmentPool({
       capacity_hint: node.capacity_hint,
       healthy_at_end: node.healthy !== false
     })),
-    rejected_nodes: resolved.rejected,
+    rejected_nodes: [...resolved.rejected, ...resourceRejected],
     lease_failures: leaseFailures,
     events,
     results,
