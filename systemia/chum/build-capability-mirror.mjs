@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const root = 'public/chum/capabilities';
@@ -20,10 +21,6 @@ function safePublicUrl(value,fallback){
     if(BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
     return url.toString();
   }catch{return fallback;}
-}
-function humanStartUrl(offer){
-  if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return null;
-  return '/api/chum/go/'+encodeURIComponent(String(offer.public_id))+'?surface=chum_capability_page';
 }
 function priceUsd(tier){
   const numeric=Number(tier?.price_usd);
@@ -79,7 +76,9 @@ for(const offer of catalog.offers||[]){
     payment_authority:offer.payment_authority,
     invocation_status:offer.invocation_status,
     machine_commerce_mcp:universalMcp,
-    start_url:humanStartUrl(offer),
+    machine_review_url:machineReviewUrl(offer.public_id),
+    start_url:humanStartUrl(offer,{surface:'chum_capability_page'}),
+    start_url_state:humanStartState(offer),
     entry_paid_offer:entryPaidOffer(offer),
     mirror:{
       page:pageUrl,
@@ -97,7 +96,7 @@ for(const offer of catalog.offers||[]){
     'Machine state: '+offer.machine_state,
     'Public URL: '+canonicalUrl,
     'Universal Evercraft MCP: '+universalMcp,
-    'Start here: '+(humanStartUrl(offer)||'Not a current sell-now route'),
+    'Start here: '+(humanStartUrl(offer,{surface:'chum_capability_page'})||'Not a current sell-now route'),
     '',
     '## Use this when',
     '',
@@ -173,7 +172,7 @@ for(const offer of catalog.offers||[]){
     '</ul></div>',
     '<div class="card"><h2>Inputs and outputs</h2>'+(offer.inputs?'<p><strong>Inputs:</strong> '+escapeHtml(offer.inputs)+'</p>':'')+(offer.outputs?'<p><strong>Outputs:</strong> '+escapeHtml(offer.outputs)+'</p>':'')+'</div>',
     '<div class="card"><h2>Open capability</h2>'+
-      (humanStartUrl(offer)?'<p><a href="'+escapeHtml(humanStartUrl(offer))+'"><strong>Start here</strong></a></p>':'')+
+      (humanStartUrl(offer,{surface:'chum_capability_page'})?'<p><a href="'+escapeHtml(humanStartUrl(offer,{surface:'chum_capability_page'}))+'"><strong>Start here</strong></a></p>':'')+
       (entryPaidOffer(offer)?'<p><strong>Easiest paid entry:</strong> '+escapeHtml(entryPaidOffer(offer).name||'Paid option')+' · &#36;'+escapeHtml(entryPaidOffer(offer).price_usd_normalized)+'</p>':'')+
       '<p><a href="'+escapeHtml(canonicalUrl)+'">Capability details</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>',
     '<div class="card"><h2>Authority and payment boundary</h2><p>'+escapeHtml(offer.confirmation||'Discovery creates no payment obligation.')+'</p>'+(offer.payment_authority?'<p>Payment authority: '+escapeHtml(offer.payment_authority)+'</p>':'')+'</div>',
@@ -197,6 +196,8 @@ for(const offer of catalog.offers||[]){
     json_url:record.mirror.json,
     schema_url:record.mirror.schema,
     start_url:record.start_url,
+    start_url_state:record.start_url_state,
+    machine_review_url:record.machine_review_url,
     entry_paid_offer:record.entry_paid_offer,
     use_when:offer.intent_terms||[]
   });
