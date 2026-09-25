@@ -10,6 +10,9 @@ on:
     paths:
       - "systemia/chum/llm-hunter.mjs"
       - "tests/chum-llm-hunter.test.mjs"
+      - "systemia/chum/ard-strike.mjs"
+      - "tests/chum-ard-strike.test.mjs"
+      - "mcp-registry/*.json"
       - "chum-probes/**"
       - "public/.well-known/evercraft-machine-catalog.json"
       - ".github/workflows/chum-llm-hunter.yml"
@@ -35,10 +38,27 @@ jobs:
       - name: Prove hunter safety and contracts
         run: npm run test:chum-hunter
 
+      - name: Prove federated ARD strike contracts
+        run: npm run test:chum-ard-strike
+
       - name: Hunt public LLM and agent ecosystems
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run chum:hunt
+
+      - name: Strike federated ARD discovery
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOUR="$(date -u +%H)"
+          if [ "${{ github.event_name }}" != "schedule" ] || [ "$((10#$HOUR % 6))" -eq 0 ]; then
+            echo "Submitting live Evercraft MCP endpoints into federated ARD discovery."
+            CHUM_ARD_SUBMIT=true npm run chum:ard-strike
+          else
+            echo "Recon-only ARD pass this hour; registry self-retries pending submissions."
+            CHUM_ARD_SUBMIT=false npm run chum:ard-strike
+          fi
 
       - name: Push current Evercraft doors into search discovery
         continue-on-error: true
@@ -81,4 +101,5 @@ jobs:
             artifacts/chum/mcp-canary-latest.*
             artifacts/chum/commerce-canary-latest.*
             artifacts/chum/provider-probe-latest.*
+            artifacts/chum/ard-strike-latest.*
           if-no-files-found: warn
