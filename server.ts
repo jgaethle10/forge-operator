@@ -176,6 +176,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
   '</chum/hot/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Hot Discovery Queue"',
   '</chum/crawler-radar.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Crawler Radar"',
+  '</chum/strike/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Adaptive Strike Hub"',
   `<${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"`,
 ];
 
@@ -435,6 +436,8 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       freshnessJson: '/chum/freshness.json',
       crawlState: '/chum/crawl-state.json',
       hotDiscovery: '/chum/hot/',
+      crawlerRadar: '/chum/crawler-radar.json',
+      adaptiveStrikeHub: '/chum/strike/',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
       painIndex: '/.well-known/evercraft-pain-index.json',
