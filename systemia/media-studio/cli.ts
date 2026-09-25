@@ -3,8 +3,9 @@ import path from 'node:path';
 import { compileFilmPlan } from './director.js';
 import { inspectProject } from './inspect.js';
 import { renderFilm } from './render.js';
+import { buildSabanProductionInventory } from './production-runtime.js';
 import { compileSeriesEpisode } from './series.js';
-import type { FilmPlan, MediaProject, SeriesBible } from './types.js';
+import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -25,6 +26,7 @@ function usage() {
     '  npm run media:studio -- render <plan.json> <output.mp4>',
     '  npm run media:studio -- build <project.json> <output.mp4> [plan.json]',
     '  npm run media:studio -- series <project.json> <bible.json> <series-plan.json>',
+    '  npm run media:studio -- inventory <series-plan.json> <inventory.json>',
   ].join('\n'));
 }
 
@@ -33,6 +35,19 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'inventory') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const seriesPlan = readJson<SeriesEpisodePlan>(input);
+    const inventory = buildSabanProductionInventory(seriesPlan.productionNeeds);
+    writeJson(output, inventory);
+    console.log(`Saban production inventory created: ${path.resolve(output)}`);
     return;
   }
 
