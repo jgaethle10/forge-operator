@@ -39,3 +39,10 @@ The deployment boundary is implemented in `systemia/yard/operator.mjs`.
 The operator consumes immutable release references, negotiates an `evercraft.capacity.v1` lease, invokes only an admitted workload, persists deployment state, verifies receipt completeness, and records rollback handoff authority.
 
 The first executable private workload is `systemia.private-core-origin.v1`, implemented by Evercraft Compute without any named cloud-provider dependency.
+
+
+## CHUM public origin
+
+Evercraft Compute admits `systemia.chum-public-origin.v1` as a read-only discovery workload. It serves only the admitted `public/` tree, blocks path escape and write methods, exposes `/api/health`, and dynamically emits absolute sitemap and robots references at the verified route.
+
+Yard treats local service health and public-route verification as separate states. A healthy local origin is not a public deployment. `verifyPublicRoute` must observe the exact resident `instance_id` and bound deployment receipt through a public HTTPS origin before the route is marked verified. Only then may `runtimeOriginReceipt` emit the sanitized `evercraft.runtime-origin.v1` record consumed by CHUM Crawl Pressure. Capacity node IDs, lease credentials, private endpoints and internal topology are not included in that public receipt.
