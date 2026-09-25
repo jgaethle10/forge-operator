@@ -1,0 +1,5 @@
+{
+  "schema": "evercraft.aliev-rivet.runtime-receipts.v1",
+  "purpose": "Fail-closed placeholder ledger. Replace entries only with authenticated, source-backed runtime receipts. Empty evidence must never certify release.",
+  "receipts": []
+}
