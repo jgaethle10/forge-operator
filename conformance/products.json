@@ -19,32 +19,13 @@
       "canonical_url": "https://aliev.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
+      "openapi_url": "https://aliev.base44.app/openapi.json",
       "doorway_state": "source_build_green",
       "conformance_state": "reference_implementation",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://aliev.base44.app/llms.txt",
       "origin_conformance_url": "https://aliev.base44.app/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback",
-      "openapi_state": "not_declared_until_independently_live_verified",
-      "openapi_note": "The previously declared root /openapi.json returned HTML rather than a verified OpenAPI document on the 2026-09-24 CHUM canary. AliEV discovery and invocation remain available through CHUM mirrors and the verified MCP."
-    },
-    {
-      "product_key": "buildflow",
-      "name": "BuildFlow Enterprise Operations",
-      "class": "enterprise_operations_agent",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/buildflow",
-        "version": "0.7.0",
-        "publication_state": "published"
-      },
       "chum_mirror_state": "generated_public_fallback"
     },
     {
@@ -82,19 +63,6 @@
       "chum_mirror_state": "generated_public_fallback",
       "origin_canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
       "runtime_state": "public_discovery_only_product_ui_not_live_verified"
-    },
-    {
-      "product_key": "daytrade-lens",
-      "name": "DayTrade Lens",
-      "class": "paper_trading_risk_discipline",
-      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/llms.txt",
-      "doorway_state": "chum_public_mirror_source_ready",
-      "conformance_state": "discovery_source_ready_origin_unresolved",
-      "provider_behavior_state": "not_run",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-conformance.json",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-discovery.json",
-      "chum_mirror_state": "generated_public_primary_until_origin_verified"
     },
     {
       "product_key": "deck-capital-fit",
@@ -160,20 +128,6 @@
       "origin_llms_url": "https://network-control.base44.app/llms.txt",
       "origin_discovery_url": "https://network-control.base44.app/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json",
-      "chum_mirror_state": "generated_public_fallback"
-    },
-    {
-      "product_key": "evercraft-property-services",
-      "name": "Evercraft Property Services",
-      "class": "local_property_services",
-      "canonical_url": "https://evercraftpropertyservices.com/",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt",
-      "doorway_state": "chum_public_mirror_source_ready",
-      "conformance_state": "source_ready_origin_machine_files_stale",
-      "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://evercraftpropertyservices.com/llms.txt",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-conformance.json",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json",
       "chum_mirror_state": "generated_public_fallback"
     },
     {
@@ -322,19 +276,6 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
-      "product_key": "guardian",
-      "name": "Guardian",
-      "class": "privacy_first_protection_navigation_and_prevention",
-      "canonical_url": "https://guardian-pilot.base44.app/",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
-      "doorway_state": "canonical_public_chum_mirror",
-      "conformance_state": "not_yet_propagated",
-      "provider_behavior_state": "not_run",
-      "public_web_discovery_state": "not_measured",
-      "canonical_host_machine_surface_state": "guardian host reachable; Base44 autogenerated llms.txt observed stale and /ai-discovery.json observed as HTML SPA fallback on 2026-09-24; CHUM mirror is the declared machine surface until host files are live-verified"
-    },
-    {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "class": "public_learning_discovery",
@@ -363,24 +304,6 @@
       "conformance_state": "not_yet_propagated",
       "provider_behavior_state": "not_run",
       "public_web_discovery_state": "not_measured",
-      "chum_mirror_state": "generated_public_fallback"
-    },
-    {
-      "product_key": "roasted",
-      "name": "ROASTED",
-      "class": "agent_commerce",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/roasted",
-        "version": "1.0.0",
-        "publication_state": "published"
-      },
       "chum_mirror_state": "generated_public_fallback"
     },
     {
@@ -436,25 +359,6 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
       "chum_mirror_state": "generated_public_fallback"
-    },
-    {
-      "product_key": "systemia-field-library",
-      "name": "Systemia Field Library",
-      "class": "read_only_playbook_discovery",
-      "canonical_url": "https://systemiafieldlibrary.com/",
-      "llms_url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentGateway?view=llms",
-      "discovery_url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentGateway?action=discover",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-conformance.json",
-      "doorway_state": "mcp_registry_live_llms_gateway_live",
-      "conformance_state": "live_mcp_tools_verified_registry_active",
-      "provider_behavior_state": "not_run",
-      "mcp_registry": {
-        "name": "io.github.jgaethle10/systemia-field-library",
-        "version": "1.0.0",
-        "publication_state": "published"
-      },
-      "chum_mirror_state": "generated_public_fallback",
-      "origin_llms_url": "https://systemiafieldlibrary.com/llms.txt"
     }
   ],
   "state_semantics": {
