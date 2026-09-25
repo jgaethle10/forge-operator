@@ -9,6 +9,7 @@ import {
 const inventory = machineInventory(process.cwd());
 assert.equal(inventory.schema, 'evercraft.systemia.machine-inventory.v1');
 assert.equal(inventory.summary.source_missing, 0, JSON.stringify(inventory.components.filter((row) => row.state !== 'source_present'), null, 2));
+assert.ok(inventory.summary.admitted_public_products >= 50);
 
 const plan = admitMission({
   rootDir: process.cwd(),
@@ -23,6 +24,7 @@ const plan = admitMission({
         work_key: 'discover-demand',
         title: 'Refresh machine-readable discovery surfaces',
         work_type: 'discovery',
+        product_key: 'aliev',
         software_id: 'chum',
         parallel: true,
         logical_agents: 10000
@@ -31,6 +33,7 @@ const plan = admitMission({
         work_key: 'analyze-media',
         title: 'Process long media through bounded shards',
         work_type: 'video',
+        product_key: 'forensiscope',
         software_id: 'media-pipeline',
         parallel: true,
         dependency_keys: ['discover-demand']
@@ -65,10 +68,14 @@ assert.equal(discovery.specialist_component, 'chum');
 assert.equal(discovery.execution_component, 'saban');
 assert.equal(discovery.scale_admitted, true);
 assert.equal(discovery.mission_authority, 'systemia-organism');
+assert.equal(discovery.target_product_key, 'aliev');
+assert.equal(discovery.target_product_admitted, true);
 
 const media = plan.dispatch.find((row) => row.work_key === 'analyze-media');
 assert.equal(media.execution_component, 'saban');
 assert.equal(media.software_id, 'media-pipeline');
+assert.equal(media.target_product_key, 'forensiscope');
+assert.equal(media.target_product_admitted, true);
 
 const artifact = plan.dispatch.find((row) => row.work_key === 'deliver-artifact');
 assert.equal(artifact.execution_component, 'saban');
@@ -106,6 +113,7 @@ console.log(JSON.stringify({
   admitted_tasks: plan.dispatch.length,
   scaled_tasks: plan.dispatch.filter((row) => row.scale_admitted).length,
   human_holds: plan.receipt.human_holds.length,
+  admitted_public_products: inventory.summary.admitted_public_products,
   unsupported_scale_fail_closed: unsupported.receipt.admitted === false,
   systemia_authority_preserved: true
 }, null, 2));
