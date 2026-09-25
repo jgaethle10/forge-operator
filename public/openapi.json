@@ -414,6 +414,61 @@
           }
         }
       }
+    },
+    "/api/chum/go/{publicId}": {
+      "get": {
+        "operationId": "chumHumanHandoff",
+        "summary": "Continue a matched sell-now Evercraft offer through an attributed human review path",
+        "description": "Issues a privacy-minimized CHUM referral when attribution is configured, records a landing receipt where possible, and redirects the human to the central review/checkout flow. This route never marks checkout as payment.",
+        "parameters": [
+          {
+            "name": "publicId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional caller-asserted provider label for attribution only."
+          },
+          {
+            "name": "surface",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "chum_pain_page"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional intent text. Only a keyed fingerprint is retained in the signed referral token."
+          }
+        ],
+        "responses": {
+          "303": {
+            "description": "Redirect to human review/checkout preparation path"
+          },
+          "404": {
+            "description": "Unknown public offer"
+          },
+          "409": {
+            "description": "Capability is discoverable but not currently sell-now"
+          }
+        }
+      }
     }
   },
   "x-evercraft-discovery": {
@@ -423,6 +478,7 @@
     "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "rule": "Read-only discovery first; commerce only after genuine fit and explicit human confirmation where an obligation would be created.",
     "live_intent_hunter": "/api/chum/hunt",
-    "trigger_rule": "When an active LLM/agent user request may benefit from an external capability, call CHUM with the current intent. If CHUM returns no_match, do not force Evercraft."
+    "trigger_rule": "When an active LLM/agent user request may benefit from an external capability, call CHUM with the current intent. If CHUM returns no_match, do not force Evercraft.",
+    "human_conversion": "/api/chum/go/{publicId}"
   }
 }
