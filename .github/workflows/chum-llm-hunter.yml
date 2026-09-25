@@ -9,6 +9,13 @@ on:
       - main
     paths:
       - "systemia/chum/llm-hunter.mjs"
+      - "systemia/chum/live-intent-hunter.mjs"
+      - "tests/chum-live-intent-hunter.test.mjs"
+      - "server.ts"
+      - "public/openapi.json"
+      - "public/.well-known/evercraft-agent.json"
+      - "public/.well-known/evercraft-capabilities.json"
+      - "public/.well-known/evercraft-chum.json"
       - "tests/chum-llm-hunter.test.mjs"
       - "systemia/chum/ard-strike.mjs"
       - "tests/chum-ard-strike.test.mjs"
@@ -36,7 +43,9 @@ jobs:
           node-version: 22
 
       - name: Prove hunter safety and contracts
-        run: npm run test:chum-hunter
+        run: |
+          npm run test:chum-hunter
+          npm run test:chum-live-intent
 
       - name: Prove federated ARD strike contracts
         run: npm run test:chum-ard-strike
