@@ -112,6 +112,12 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-pain-index.json > /tmp/pain-index.json
           curl --fail --silent http://127.0.0.1:3000/chum/answers/index.json > /tmp/answer-graph.json
           curl --fail --silent http://127.0.0.1:3000/chum/ > /tmp/chum.html
+          curl --fail --silent http://127.0.0.1:3000/chum/capabilities/ > /tmp/chum-capability-directory.html
+          curl --fail --silent http://127.0.0.1:3000/chum/capabilities.json > /tmp/chum-capabilities.json
+          curl --fail --silent http://127.0.0.1:3000/chum/sell-now.html > /tmp/chum-sell-now.html
+          curl --fail --silent http://127.0.0.1:3000/chum/capabilities/roasted-text-pressure-test-machine-v1/ > /tmp/chum-roasted.html
+          curl --fail --silent http://127.0.0.1:3000/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json > /tmp/chum-roasted.json
+          curl --fail --silent http://127.0.0.1:3000/chum/capabilities/littlered-kdp-export-qa-machine-v1/ > /tmp/chum-book-export.html
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
           curl --fail --silent --get \
@@ -141,6 +147,12 @@ jobs:
           const answerGraph = JSON.parse(fs.readFileSync('/tmp/answer-graph.json','utf8'));
           const portfolioRoute = JSON.parse(fs.readFileSync('/tmp/portfolio-route.json','utf8'));
           const chumHtml = fs.readFileSync('/tmp/chum.html','utf8');
+          const capabilityDirectoryHtml = fs.readFileSync('/tmp/chum-capability-directory.html','utf8');
+          const capabilityIndex = JSON.parse(fs.readFileSync('/tmp/chum-capabilities.json','utf8'));
+          const sellNowHtml = fs.readFileSync('/tmp/chum-sell-now.html','utf8');
+          const roastedHtml = fs.readFileSync('/tmp/chum-roasted.html','utf8');
+          const roastedCapability = JSON.parse(fs.readFileSync('/tmp/chum-roasted.json','utf8'));
+          const bookExportHtml = fs.readFileSync('/tmp/chum-book-export.html','utf8');
           const robots = fs.readFileSync('/tmp/robots.txt','utf8');
           const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
           const forensiscopeDiscovery = JSON.parse(fs.readFileSync('/tmp/forensiscope-discovery.json','utf8'));
@@ -174,6 +186,14 @@ jobs:
           if (answerGraph.summary?.pain_index_entries !== painIndex.entries?.length) throw new Error('answer graph/pain index parity failed');
           if (!chumHtml.includes('Describe the problem')) throw new Error('CHUM problem-language form missing');
           if (!chumHtml.includes('io.github.jgaethle10/evercraft-capability-discovery')) throw new Error('CHUM read-only MCP door missing');
+          if (!capabilityDirectoryHtml.includes('Capability Directory')) throw new Error('capability directory HTML missing from production image');
+          if (capabilityIndex.count !== 42) throw new Error('production capability directory count is stale');
+          if (capabilityIndex.sell_now_count !== 11) throw new Error('production SELL NOW count is stale');
+          if (!sellNowHtml.includes('SELL NOW')) throw new Error('SELL NOW HTML page missing');
+          if (!roastedHtml.includes('ROASTED 99¢ Text Pressure Test')) throw new Error('ROASTED capability page missing');
+          if (roastedCapability.machine_state !== 'payment_ready') throw new Error('ROASTED production capability lost payment-ready state');
+          if (!String(roastedCapability.pricing || '').includes('0.99')) throw new Error('ROASTED 99c price missing from production capability');
+          if (!bookExportHtml.includes('Book Export QA')) throw new Error('Book Export QA capability page missing');
           if (!Array.isArray(portfolioRoute.capability_matches) || !portfolioRoute.capability_matches.some((x) => x.product_key === 'findmypart')) {
             throw new Error('Full-portfolio brand-blind route did not surface FindMyPart');
           }

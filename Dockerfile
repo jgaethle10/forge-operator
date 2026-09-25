@@ -5,7 +5,7 @@ COPY package.json bun.lock ./
 RUN npm install
 
 COPY . .
-RUN npm run build
+RUN npm run chum:capabilities && npm run chum:mirror && npm run build
 
 FROM node:22-alpine AS runtime
 WORKDIR /app
