@@ -75,6 +75,12 @@
         "max_physical_workers": 64,
         "max_work_items": 250000,
         "max_attempts_per_job": 4
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "coverage_amplification",
+        "target_logical_per_physical_worker": 250,
+        "minimum_role_item_passes": 1
       }
     },
     {
@@ -125,6 +131,13 @@
         "max_physical_workers": 128,
         "max_work_items": 50000,
         "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 7,
+        "target_logical_per_physical_worker": 4,
+        "minimum_role_item_passes": 1
       }
     }
   ]
