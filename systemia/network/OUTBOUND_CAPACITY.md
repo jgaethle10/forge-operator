@@ -54,3 +54,23 @@ Remote control grants are persisted privately by the broker so a broker process 
 Production remote broker exposure requires HTTPS. Plain HTTP is accepted only for loopback proofs.
 
 This transport does not turn a Chromebook/Crostini VM into a physically field-certified Node 001. Identity, compute authorization and physical field certification remain separate claims.
+
+
+## Replay-safe session envelopes
+
+Remote commands and results are now carried inside `evercraft.secure-envelope.v1` AES-256-GCM envelopes using a session-scoped transport key issued only after NodeSeed identity attestation succeeds.
+
+The broker binds each command envelope to:
+
+- a stable command/message ID,
+- the authenticated broker source,
+- the exact node destination,
+- a short expiry,
+- the remote-capacity command kind,
+- an irreversible-action flag.
+
+The node authenticates the envelope before executing it and keeps a session replay guard plus an in-memory result cache. A duplicate command with the same authenticated message ID is not executed again. When the cached result exists, the node can resend the result instead.
+
+Results use their own authenticated envelope back to the broker. The broker verifies the node source and destination, tracks result message IDs, and safely acknowledges an already-accepted duplicate result. This makes a lost acknowledgement retryable without causing the underlying command to run twice.
+
+If execution may have happened but no authenticated result can be recovered, the broker times out and Yard receives failure. Side-effecting work is not automatically replayed after an uncertain partition. This matches the Evercraft partition-reconciliation rule: uncertain consequential execution becomes a hold, not a second attempt.
