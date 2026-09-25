@@ -7,106 +7,193 @@
   "items": [
     {
       "product": "Systemia Command Center",
-      "evidence": ["control-plane recovery record", "Systemia genesis/rules records"],
-      "evidence_class": ["architecture", "operations_history"],
+      "evidence": [
+        "control-plane recovery record",
+        "Systemia genesis/rules records"
+      ],
+      "evidence_class": [
+        "architecture",
+        "operations_history"
+      ],
       "recovery_priority": "wave_1",
       "state": "evidence_pack_available"
     },
     {
       "product": "Raven Nexus",
-      "evidence": ["house blueprint set", "internal product map", "executive/sales records"],
-      "evidence_class": ["architecture", "product_map", "commercial_spec"],
+      "evidence": [
+        "house blueprint set",
+        "internal product map",
+        "executive/sales records"
+      ],
+      "evidence_class": [
+        "architecture",
+        "product_map",
+        "commercial_spec"
+      ],
       "recovery_priority": "wave_3",
       "state": "evidence_pack_available"
     },
     {
       "product": "RIVET",
-      "evidence": ["canonical data ledger and recovery index", "site-plan output records"],
-      "evidence_class": ["data_ledger", "recovery_index", "product_output"],
+      "evidence": [
+        "canonical data ledger and recovery index",
+        "site-plan output records"
+      ],
+      "evidence_class": [
+        "data_ledger",
+        "recovery_index",
+        "product_output"
+      ],
       "recovery_priority": "wave_3",
       "state": "evidence_pack_available"
     },
     {
       "product": "Evercraft Rewards",
-      "evidence": ["founding partner pilot", "portfolio/product records"],
-      "evidence_class": ["product_spec", "commercial_spec"],
+      "evidence": [
+        "founding partner pilot",
+        "portfolio/product records"
+      ],
+      "evidence_class": [
+        "product_spec",
+        "commercial_spec"
+      ],
       "recovery_priority": "wave_3",
       "state": "evidence_pack_available"
     },
     {
       "product": "Guardian Pilot",
-      "evidence": ["partner-page record", "Raven safety architecture records"],
-      "evidence_class": ["product_spec", "architecture"],
+      "evidence": [
+        "partner-page record",
+        "Raven safety architecture records"
+      ],
+      "evidence_class": [
+        "product_spec",
+        "architecture"
+      ],
       "recovery_priority": "wave_4",
       "state": "strict_privacy_review"
     },
     {
       "product": "EverNest",
-      "evidence": ["portfolio/product records", "recovery archive references"],
-      "evidence_class": ["product_spec", "operations_history"],
+      "evidence": [
+        "portfolio/product records",
+        "recovery archive references"
+      ],
+      "evidence_class": [
+        "product_spec",
+        "operations_history"
+      ],
       "recovery_priority": "wave_4",
       "state": "strict_privacy_review"
     },
     {
       "product": "EventWave AI",
-      "evidence": ["EventWave global platform institutional record", "EventWave project folder"],
-      "evidence_class": ["institutional_record", "project_archive"],
+      "evidence": [
+        "EventWave global platform institutional record",
+        "EventWave project folder"
+      ],
+      "evidence_class": [
+        "institutional_record",
+        "project_archive"
+      ],
       "recovery_priority": "wave_5",
       "state": "evidence_pack_available"
     },
     {
       "product": "EPS Field Pass",
-      "evidence": ["legacy build log with architecture, entities, backend functions, pages, components and rep lifecycle controls"],
-      "evidence_class": ["build_log", "data_model", "backend_contract", "frontend_contract"],
+      "evidence": [
+        "legacy build log with architecture, entities, backend functions, pages, components and rep lifecycle controls"
+      ],
+      "evidence_class": [
+        "build_log",
+        "data_model",
+        "backend_contract",
+        "frontend_contract"
+      ],
       "recovery_priority": "wave_3",
-      "state": "source_reconciliation_required"
+      "state": "contract_recovered_pending_source_and_runtime_parity",
+      "recovered_contract": "slices/eps-field-pass.json"
     },
     {
       "product": "FindMyPart",
-      "evidence": ["intake workflow records", "master trackers", "product organization record"],
-      "evidence_class": ["workflow", "operational_data", "product_spec"],
+      "evidence": [
+        "intake workflow records",
+        "master trackers",
+        "product organization record"
+      ],
+      "evidence_class": [
+        "workflow",
+        "operational_data",
+        "product_spec"
+      ],
       "recovery_priority": "wave_3",
       "state": "source_reconciliation_required"
     },
     {
       "product": "SkyOps Parking",
-      "evidence": ["portfolio/product records", "institutional integration references"],
-      "evidence_class": ["product_spec", "integration_record"],
+      "evidence": [
+        "portfolio/product records",
+        "institutional integration references"
+      ],
+      "evidence_class": [
+        "product_spec",
+        "integration_record"
+      ],
       "recovery_priority": "wave_3",
       "state": "source_reconciliation_required"
     },
     {
       "product": "Evercraft Property Services",
-      "evidence": ["portfolio/product record"],
-      "evidence_class": ["product_spec"],
+      "evidence": [
+        "portfolio/product record"
+      ],
+      "evidence_class": [
+        "product_spec"
+      ],
       "recovery_priority": "wave_3",
       "state": "source_reconciliation_required"
     },
     {
       "product": "Evercraft HQ",
-      "evidence": ["portfolio tracker record"],
-      "evidence_class": ["portfolio_record"],
+      "evidence": [
+        "portfolio tracker record"
+      ],
+      "evidence_class": [
+        "portfolio_record"
+      ],
       "recovery_priority": "wave_2",
       "state": "source_reconciliation_required"
     },
     {
       "product": "Systemia Radar",
-      "evidence": ["portfolio tracker record"],
-      "evidence_class": ["portfolio_record"],
+      "evidence": [
+        "portfolio tracker record"
+      ],
+      "evidence_class": [
+        "portfolio_record"
+      ],
       "recovery_priority": "wave_5",
       "state": "source_reconciliation_required"
     },
     {
       "product": "Systemia Field Library",
-      "evidence": ["portfolio tracker record"],
-      "evidence_class": ["portfolio_record"],
+      "evidence": [
+        "portfolio tracker record"
+      ],
+      "evidence_class": [
+        "portfolio_record"
+      ],
       "recovery_priority": "wave_7",
       "state": "source_reconciliation_required"
     },
     {
       "product": "NextHire (Decision Lab)",
-      "evidence": ["portfolio tracker record"],
-      "evidence_class": ["portfolio_record"],
+      "evidence": [
+        "portfolio tracker record"
+      ],
+      "evidence_class": [
+        "portfolio_record"
+      ],
       "recovery_priority": "wave_5",
       "state": "source_reconciliation_required"
     }
