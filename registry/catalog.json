@@ -20,7 +20,11 @@
       "triggers": [
         "EV charging site",
         "charger opportunity",
-        "property EV fit"
+        "property EV fit",
+        "EV charging property opportunity",
+        "is this property good for EV charging",
+        "AI tool for EV charging site analysis",
+        "estimate EV charging opportunity"
       ]
     },
     {
