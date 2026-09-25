@@ -1,0 +1,25 @@
+name: Private Core origin bootstrap proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/core/bootstrap/**'
+      - '.github/workflows/private-core-origin.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/core/bootstrap/**'
+      - '.github/workflows/private-core-origin.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove private Git origin bootstrap
+        run: node systemia/core/bootstrap/proof.mjs
