@@ -17,6 +17,7 @@ import { queryEvidenceGraph } from './evidence-query.mjs';
 import { listForensiScopeAgentTools, invokeForensiScopeAgentTool } from './agent-tools.mjs';
 import { persistEvidenceGraph, loadEvidenceGraph, verifyEvidenceRef } from './evidence-store.mjs';
 import { listForensiScopeGatewayTools, invokeForensiScopeGatewayTool } from './agent-gateway.mjs';
+import { handleForensiScopeMcpRequest } from './mcp-protocol.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -413,6 +414,123 @@ assert.equal(gatewayPacket.result.source_sha256, sourceHashAfter);
 assert.ok(gatewayPacket.result.atoms.length > 0);
 assert.ok(/^sha256:[a-f0-9]{64}$/.test(gatewayPacket.result.packet_digest));
 
+const modernMeta = {
+  'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+  'io.modelcontextprotocol/clientCapabilities': {
+    tools: {}
+  },
+  'io.modelcontextprotocol/clientInfo': {
+    name: 'forensiscope-ci-client',
+    version: '1.0.0'
+  }
+};
+
+const mcpDiscover = handleForensiScopeMcpRequest({
+  jsonrpc: '2.0',
+  id: 1,
+  method: 'server/discover',
+  params: {
+    _meta: modernMeta
+  }
+}, { rootDir });
+assert.equal(mcpDiscover.result.resultType, 'complete');
+assert.ok(mcpDiscover.result.supportedVersions.includes('2026-07-28'));
+assert.ok(mcpDiscover.result.supportedVersions.includes('2025-11-25'));
+assert.equal(
+  mcpDiscover.result._meta['io.modelcontextprotocol/serverInfo'].name,
+  'forensiscope'
+);
+
+const modernToolList = handleForensiScopeMcpRequest({
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'tools/list',
+  params: {
+    _meta: modernMeta
+  }
+}, { rootDir });
+assert.equal(modernToolList.result.resultType, 'complete');
+assert.equal(modernToolList.result.tools.length, 4);
+assert.ok(
+  modernToolList.result.tools.every((tool) =>
+    tool.inputSchema.required.includes('evidence_ref')
+  )
+);
+
+const modernToolCall = handleForensiScopeMcpRequest({
+  jsonrpc: '2.0',
+  id: 3,
+  method: 'tools/call',
+  params: {
+    name: 'forensiscope_query_evidence',
+    arguments: {
+      evidence_ref: storedEvidence.evidence_ref,
+      query: 'boundary-3',
+      top_k: 2,
+      context_radius_seconds: 3
+    },
+    _meta: modernMeta
+  }
+}, { rootDir });
+assert.equal(modernToolCall.result.resultType, 'complete');
+assert.equal(modernToolCall.result.isError, false);
+assert.ok(modernToolCall.result.structuredContent.result.match_count > 0);
+assert.equal(
+  modernToolCall.result.structuredContent.evidence_ref,
+  storedEvidence.evidence_ref
+);
+
+const legacyInitialize = handleForensiScopeMcpRequest({
+  jsonrpc: '2.0',
+  id: 4,
+  method: 'initialize',
+  params: {
+    protocolVersion: '2025-11-25',
+    capabilities: {},
+    clientInfo: {
+      name: 'forensiscope-legacy-ci-client',
+      version: '1.0.0'
+    }
+  }
+}, { rootDir });
+assert.equal(legacyInitialize.result.protocolVersion, '2025-11-25');
+assert.equal(legacyInitialize.result.serverInfo.name, 'forensiscope');
+
+const legacyToolList = handleForensiScopeMcpRequest({
+  jsonrpc: '2.0',
+  id: 5,
+  method: 'tools/list',
+  params: {}
+}, { rootDir });
+assert.equal(legacyToolList.result.tools.length, 4);
+assert.equal(legacyToolList.result.resultType, undefined);
+
+const legacyToolCall = handleForensiScopeMcpRequest({
+  jsonrpc: '2.0',
+  id: 6,
+  method: 'tools/call',
+  params: {
+    name: 'forensiscope_build_context_packet',
+    arguments: {
+      evidence_ref: storedEvidence.evidence_ref,
+      query: 'boundary-3',
+      max_chars: 4000,
+      top_k: 3,
+      context_radius_seconds: 3
+    }
+  }
+}, { rootDir });
+assert.equal(legacyToolCall.result.isError, false);
+assert.ok(legacyToolCall.result.structuredContent.result.atoms.length > 0);
+assert.equal(
+  handleForensiScopeMcpRequest({
+    jsonrpc: '2.0',
+    method: 'notifications/initialized',
+    params: {}
+  }, { rootDir }),
+  null
+);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -458,6 +576,11 @@ const proof = {
   gateway_query_matches: gatewayQuery.result.match_count,
   gateway_context_packet_digest: gatewayPacket.result.packet_digest,
   gateway_accepts_raw_media: gatewayQuery.authority.accepts_raw_media,
+  mcp_modern_protocol: mcpDiscover.result.supportedVersions[0],
+  mcp_legacy_protocol: legacyInitialize.result.protocolVersion,
+  mcp_tool_count: modernToolList.result.tools.length,
+  mcp_modern_query_matches: modernToolCall.result.structuredContent.result.match_count,
+  mcp_legacy_context_atoms: legacyToolCall.result.structuredContent.result.atoms.length,
   public_machine_intake_enabled: false
 };
 
