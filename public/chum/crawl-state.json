@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T11:50:39.649Z",
+  "updated_at": "2026-09-25T15:37:23.452Z",
   "url_count": 1738,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -110,8 +110,8 @@
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "fe1688476fe734b05626672907d1ab2c42c4127df5fce798b390a37168d7fb60",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "ca716cc8006a59393a893dd52e41a23363626194f73e1e8d9854478634156316",
+      "last_changed": "2026-09-25T15:37:23.452Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
@@ -2714,8 +2714,8 @@
     },
     "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json": {
       "path": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
-      "content_sha256": "ac3d29d314896224ee25008bee7b007a1f1f68f4197aeade64a7677bdb7a6977",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "d728b35bcde6b06b399d69abaa9d8f941719f8e59ac78ed9c013d502b0644152",
+      "last_changed": "2026-09-25T15:37:23.452Z",
       "priority": 80
     },
     "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/llms.txt": {
