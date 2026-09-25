@@ -1,0 +1,23 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "legacy-rescue-opportunity-watch",
+  "mission_key": "legacy-software-modernization-radar-2026-09-13",
+  "runtime": "systemia-organism",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/legacy-rescue-watch.mjs",
+  "proof": "systemia/organism/legacy-rescue-watch.proof.mjs",
+  "notification_policy": {
+    "chat_scheduler": false,
+    "notify_only_on_material_change": true
+  },
+  "authority": {
+    "public_research": "autonomous",
+    "no_touch_shadow_build": "autonomous",
+    "named_outreach": "human_gate",
+    "payment_request": "human_gate",
+    "private_system_access": "explicit_authorization_required",
+    "production_mutation": "explicit_authorization_required"
+  }
+}\n
