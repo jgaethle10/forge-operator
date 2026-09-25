@@ -53,6 +53,8 @@
     "proof:offline-continuity": "node systemia/network/offline-continuity-proof.mjs --require-local-inference --out ./offline-continuity-output",
     "test:chum-crawler-policy": "node systemia/chum/discovery-lane-policy.test.mjs",
     "chum:commerce-canary": "node systemia/chum/commerce-canary.mjs",
+    "customer:gauntlet": "node systemia/customer-gauntlet/runner.mjs",
+    "test:customer-gauntlet": "node systemia/customer-gauntlet/runner.test.mjs",
     "chum:hunt": "node systemia/chum/llm-hunter.mjs",
     "chum:hunt:offline": "node systemia/chum/llm-hunter.mjs --offline",
     "test:chum-hunter": "node tests/chum-llm-hunter.test.mjs",
