@@ -888,6 +888,11 @@
         "hub": "/forensiscope/mesh/",
         "index": "/forensiscope/mesh/index.json",
         "llms": "/forensiscope/mesh/llms.txt"
+      },
+      "distribution_surfaces": {
+        "hub": "/forensiscope/distribution/",
+        "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
+        "llms": "/forensiscope/distribution/llms.txt"
       }
     },
     {
