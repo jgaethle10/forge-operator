@@ -240,7 +240,10 @@ const html = [
     `<h2><a href="${escapeHtml(offer.pain_page)}">${escapeHtml(offer.name)}</a></h2>`,
     `<p>${escapeHtml(offer.problem)}</p>`,
     `<p><strong>Pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
-    `<p><a href="${escapeHtml(offer.public_url)}">Public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
+    offer.entry_paid_offer
+      ? `<p><strong>Easiest paid entry:</strong> ${escapeHtml(offer.entry_paid_offer.name || 'Paid option')} · ${escapeHtml(offer.entry_paid_offer.price_usd_normalized)}</p>`
+      : '',
+    `<p><a href="${escapeHtml(offer.machine_review_url)}">Review purchase options</a> · <a href="${escapeHtml(offer.public_url)}">Capability details</a></p>`,
     '</article>'
   ].join('\n')),
   '</main></body></html>'
@@ -330,8 +333,15 @@ for (const offer of output.discovery_offers) {
     description:offer.problem,
     url:offer.public_url,
     provider:{'@type':'Organization',name:'Evercraft LLC'},
-    offers: offer.commercial_state === 'sell_now' && offer.pricing
-      ? {'@type':'Offer','description':offer.pricing}
+    offers: offer.commercial_state === 'sell_now' && offer.entry_paid_offer
+      ? {
+          '@type':'Offer',
+          'name':offer.entry_paid_offer.name || offer.name,
+          'price':offer.entry_paid_offer.price_usd_normalized,
+          'priceCurrency':'USD',
+          'description':offer.pricing,
+          'url':offer.machine_review_url
+        }
       : undefined,
     additionalProperty: [
       {'@type':'PropertyValue','name':'commercial_state','value':offer.commercial_state},
@@ -353,12 +363,17 @@ for (const offer of output.discovery_offers) {
     ...(offer.intent_terms || []).map((term) => `<li>${escapeHtml(term)}</li>`),
     '</ul>',
     `<p><strong>Published pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
+    offer.entry_paid_offer
+      ? `<p><strong>Easiest paid entry:</strong> ${escapeHtml(offer.entry_paid_offer.name || 'Paid option')} · ${escapeHtml(offer.entry_paid_offer.price_usd_normalized)}</p>`
+      : '',
     `<p><strong>Commercial state:</strong> ${escapeHtml(offer.commercial_state)}</p>`,
     `<p><strong>Machine state:</strong> ${escapeHtml(offer.machine_state)}</p>`,
     offer.commercial_state === 'sell_now'
       ? '<p>This capability is currently marked sell-now in the canonical catalog. Human confirmation and authoritative payment verification still apply.</p>'
       : '<p>This capability is publicly discoverable, but machine checkout is not exposed until its current commercial verification gate is satisfied.</p>',
-    `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
+    offer.commercial_state === 'sell_now'
+      ? `<p><a href="${escapeHtml(offer.machine_review_url)}">Review purchase options</a> · <a href="${escapeHtml(offer.public_url)}">Capability details</a></p>`
+      : `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
     '<p>Discovery creates no payment obligation. Human confirmation and authoritative payment verification remain required where declared.</p>',
     '</main></body></html>'
   ].join('\n');
