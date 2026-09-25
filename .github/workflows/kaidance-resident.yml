@@ -1,0 +1,31 @@
+name: KAIDANCE resident runtime
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/collider/**'
+      - 'systemia/compute/**'
+      - 'systemia/yard/**'
+      - '.github/workflows/kaidance-resident.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/collider/**'
+      - 'systemia/compute/**'
+      - 'systemia/yard/**'
+      - '.github/workflows/kaidance-resident.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove KAIDANCE resident runtime
+        run: node systemia/collider/runtime-proof.mjs
+      - name: Prove KAIDANCE through Yard and Evercraft Compute
+        run: node systemia/yard/kaidance-proof.mjs
