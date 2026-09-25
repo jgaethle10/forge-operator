@@ -81,7 +81,12 @@ ForensiScope is a registered Saban software contract rather than a generic media
 - reconciles overlap-aware transcript segments and timestamps;
 - verifies source/derivative integrity before the quality gate passes;
 - produces a deterministic evidence graph and LLM evidence projection from the reconciled result;
+- stores completed evidence graphs behind content-addressed immutable references whose digest is verified on reload;
+- exposes an internal agent-native gateway for evidence query, bounded context packets, timeline windows and duplicate relationships without accepting raw media;
+- keeps analysis-start, raw-media intake, checkout and payment authority outside the evidence-query gateway;
 - keeps public machine intake disabled until its independent security and commerce gates are actually cleared.
+
+Completed evidence can therefore be consumed in two layers: the full graph for archival or deep work, and query-specific context packets for downstream LLMs that should not ingest the entire recording or transcript. Context packets preserve source hash, evidence IDs, timestamps and a deterministic packet digest, and instruct downstream models to cite evidence IDs or state when the packet is insufficient.
 
 Transcription is an operator-configured executable contract. CI proves the interface and distributed stitching with a deterministic test engine. That proof does not imply that a specific production speech provider is installed or endorsed.
 
