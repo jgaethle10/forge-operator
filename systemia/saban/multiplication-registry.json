@@ -139,6 +139,62 @@
         "target_logical_per_physical_worker": 4,
         "minimum_role_item_passes": 1
       }
+    },
+    {
+      "software_id": "forensiscope",
+      "name": "ForensiScope",
+      "aliases": [
+        "evercraft-forensiscope",
+        "forensic-media",
+        "long-media-evidence"
+      ],
+      "adapter": "systemia/forensiscope/saban-adapter.mjs",
+      "default_logical_agents": 25,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 8,
+      "max_physical_workers": 128,
+      "lease_seconds": 1800,
+      "roles": [
+        "media_probe_worker",
+        "timeline_worker",
+        "frame_hash_worker",
+        "audio_extract_worker",
+        "provenance_guard"
+      ],
+      "work_sources": [],
+      "partitioner": {
+        "type": "media_time_windows",
+        "window_seconds": 300,
+        "overlap_seconds": 5
+      },
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "source_media_write": false,
+        "external_network": false,
+        "public_machine_intake": false,
+        "automatic_checkout": false,
+        "payment_obligation": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 128,
+        "max_work_items": 50000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 5,
+        "target_logical_per_physical_worker": 4,
+        "minimum_role_item_passes": 1
+      }
     }
   ]
 }
