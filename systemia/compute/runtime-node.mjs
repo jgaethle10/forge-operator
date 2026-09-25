@@ -627,16 +627,29 @@ export async function startEvercraftComputeNode({
             return record;
           };
 
-          let promise = sabanInflight.get(cacheKey);
-          const reusedInflight = Boolean(promise);
-          if (!promise) {
-            promise = executeOnce();
-            sabanInflight.set(cacheKey, promise);
+          let inflight = sabanInflight.get(cacheKey);
+          if (
+            inflight &&
+            inflight.assignment_fingerprint !== assignmentFingerprint
+          ) {
+            return send(res, 409, {
+              error: 'idempotency_key_conflict',
+              idempotency_key: idempotencyKey
+            });
+          }
+
+          const reusedInflight = Boolean(inflight);
+          if (!inflight) {
+            inflight = {
+              assignment_fingerprint: assignmentFingerprint,
+              promise: executeOnce()
+            };
+            sabanInflight.set(cacheKey, inflight);
           }
 
           let record;
           try {
-            record = await promise;
+            record = await inflight.promise;
           } finally {
             if (!reusedInflight) sabanInflight.delete(cacheKey);
           }
