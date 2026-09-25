@@ -14,6 +14,7 @@ on:
     branches:
       - "main"
       - "systemia/saban-software-multiplier-v1"
+      - "systemia/saban-forensiscope-v2"
     paths:
       - "systemia/saban/**"
       - "systemia/chum/saban-adapter.mjs"
