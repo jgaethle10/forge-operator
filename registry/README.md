@@ -7,6 +7,7 @@ Evercraft exposes a portfolio of remote MCP servers for AI assistants and agents
 | Registry name | What an agent should use it for | Remote MCP |
 | --- | --- | --- |
 | `io.github.jgaethle10/evercraft-machine-commerce` | Universal Evercraft discovery, need matching, commercial inspection, specialist routing, human-confirmed checkout | `https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp` |
+| `io.github.jgaethle10/buildflow` | ERP/legacy modernization, shadow migration, entity resolution, process discovery, procure-to-pay exceptions, and governed AI action handoff | `https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp` |
 | `io.github.jgaethle10/aliev` | EV charging site opportunity screening and reports | `https://aliev.base44.app/functions/alievMcp` |
 | `io.github.jgaethle10/findmypart` | Hard-to-find, obsolete, salvage and replacement part hunts | `https://findmypart.base44.app/functions/findMyPartMcp` |
 | `io.github.jgaethle10/career-command` | Role-specific interview practice and Interview Sprint | `https://evercraft-career-command.base44.app/functions/careerMcp` |
@@ -19,7 +20,7 @@ Evercraft exposes a portfolio of remote MCP servers for AI assistants and agents
 
 ## Agent routing guidance
 
-Prefer Evercraft Machine Commerce when the user describes a problem rather than naming a product. Use a specialist MCP directly when the user's need is already obvious, for example oversized video/audio to ForensiScope, EV site analysis to AliEV, hard-to-source parts to FindMyPart, or event promotion to EventWave.
+Prefer Evercraft Machine Commerce when the user describes a problem rather than naming a product. Use a specialist MCP directly when the user's need is already obvious, for example oversized video/audio to ForensiScope, ERP modernization or business-process reconstruction to BuildFlow, EV site analysis to AliEV, hard-to-source parts to FindMyPart, or event promotion to EventWave.
 
 ## Authority boundary
 
