@@ -338,15 +338,48 @@ export async function startEvercraftComputeNode({
           const snapshotPath = path.resolve(String(
             body.input?.snapshot_path || path.join(stateRoot, 'mission-snapshot.json')
           ));
-          const missionFabricConfigPath = body.input?.mission_fabric_config_path
-            ? path.resolve(String(body.input.mission_fabric_config_path))
-            : '';
-          const missionFabricAllowedRoot = body.input?.mission_fabric_allowed_root
-            ? path.resolve(String(body.input.mission_fabric_allowed_root))
-            : (missionFabricConfigPath ? path.dirname(missionFabricConfigPath) : '');
           if (!stateRoot || !isWithin(allowedRoot, stateRoot) || !isWithin(allowedRoot, snapshotPath)) {
             return send(res, 403, { error: 'kaidance_path_outside_admitted_root' });
           }
+
+          const managedPolicies = Array.isArray(body.input?.mission_source_policies)
+            ? body.input.mission_source_policies
+            : null;
+          let missionFabricRoot = '';
+          let missionFabricConfigPath = body.input?.mission_fabric_config_path
+            ? path.resolve(String(body.input.mission_fabric_config_path))
+            : '';
+          let missionFabricAllowedRoot = body.input?.mission_fabric_allowed_root
+            ? path.resolve(String(body.input.mission_fabric_allowed_root))
+            : (missionFabricConfigPath ? path.dirname(missionFabricConfigPath) : '');
+
+          if (managedPolicies) {
+            if (missionFabricConfigPath) {
+              return send(res, 422, { error: 'managed_and_external_mission_fabric_conflict' });
+            }
+            missionFabricRoot = path.join(stateRoot, 'mission-fabric');
+            const providersDir = path.join(missionFabricRoot, 'providers');
+            fs.mkdirSync(providersDir, { recursive: true, mode: 0o750 });
+            const seen = new Set();
+            const sources = managedPolicies.map((policy) => {
+              const sourceKey = safeMissionSourceKey(policy?.source_key);
+              if (seen.has(sourceKey)) throw new Error('mission_source_key_duplicate');
+              seen.add(sourceKey);
+              return {
+                source_key: sourceKey,
+                path: `providers/${sourceKey}.json`,
+                required: policy?.required === true,
+                stale_after_seconds: Math.max(30, Number(policy?.stale_after_seconds || 900)),
+              };
+            });
+            missionFabricConfigPath = path.join(missionFabricRoot, 'mission-sources.json');
+            missionFabricAllowedRoot = missionFabricRoot;
+            atomicJson(missionFabricConfigPath, {
+              schema: 'evercraft.kaidance.mission-fabric-config.v1',
+              sources,
+            });
+          }
+
           if (missionFabricConfigPath && (
             !isWithin(allowedRoot, missionFabricConfigPath) ||
             !isWithin(allowedRoot, missionFabricAllowedRoot)
@@ -365,17 +398,19 @@ export async function startEvercraftComputeNode({
             missionFabricAllowedRoot,
             initialCheckpoint: body.input?.initial_checkpoint || null,
           });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const service = await startKaidanceHealthService({
             runtime,
             host: '127.0.0.1',
             port: 0,
           });
-          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
             runtime,
             service,
+            mission_fabric_root: missionFabricRoot || null,
+            mission_fabric_config_path: missionFabricConfigPath || null,
           });
           const result = {
             schema: 'evercraft.compute.resident-service.v1',
@@ -383,6 +418,10 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             service_url: null,
             health_path: `/v1/services/${serviceId}/health`,
+            mission_ingress_supported: Boolean(missionFabricRoot),
+            mission_ingress_path: missionFabricRoot
+              ? `/v1/services/${serviceId}/missions`
+              : null,
             heartbeat_target_seconds: runtime.state.heartbeat_target_seconds,
           };
           const receipt = chain.issue('service.started', {
