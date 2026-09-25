@@ -58,3 +58,6 @@ A valid signature is **identity evidence, not allocation authority**. It does no
 This preserves dynamic capacity. A legitimate new node does not need to have been statically registered with Evercraft before discovery. Known fingerprints may be pinned by higher-level policy, but NodeSeed identity itself is not a mandatory central device registry.
 
 The identity design carries forward the earlier Evercraft node/factory principles: Ed25519 public-key identity, local-only signing material, fingerprints for evidence, signed heartbeats, and separation of identity from authority.
+
+
+Identity lineage: this consolidates the earlier Evercraft Network and Factory node identity patterns into the canonical NodeSeed path rather than creating a parallel node registry.
