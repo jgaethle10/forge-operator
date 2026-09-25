@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { allocatorTokenForOffer, discoverEligibleCapacity } from './capacity-resolver.mjs';
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -216,6 +217,63 @@ export class YardOperator {
       allocator_token: allocatorToken || null,
     });
     this.deployments.set(deploymentId, record);
+    this.#persist(record);
+    return record;
+  }
+
+  async deployDiscoveredRelease({
+    deploymentId,
+    releaseRef,
+    workloadClass,
+    input = {},
+    rollbackTarget,
+    leaseTtlMs = 30_000,
+    allocatorToken = '',
+    allocatorTokens = {},
+    discovery = {},
+    endpointTimeoutMs = 750,
+  } = {}) {
+    const resolution = await discoverEligibleCapacity({
+      workloadClass,
+      discovery,
+      endpointTimeoutMs,
+    });
+    if (!resolution.selected) {
+      const error = new Error('no eligible Evercraft capacity discovered');
+      error.resolution = resolution;
+      throw error;
+    }
+
+    const selected = resolution.selected;
+    const selectedToken = allocatorTokenForOffer(selected, {
+      allocatorToken,
+      allocatorTokens,
+    });
+    if (selected.allocation_auth === 'bearer' && !selectedToken) {
+      const error = new Error('allocator authority unavailable for selected capacity');
+      error.resolution = resolution;
+      throw error;
+    }
+
+    const record = await this.deployRelease({
+      deploymentId,
+      releaseRef,
+      workloadClass,
+      capacityEndpoint: selected.endpoint,
+      input,
+      rollbackTarget,
+      leaseTtlMs,
+      allocatorToken: selectedToken,
+    });
+    record.discovery = {
+      schema: resolution.schema,
+      receipt_hash: resolution.receipt_hash,
+      selected_node_id: selected.node_id,
+      selected_endpoint: selected.endpoint,
+      discovered_count: resolution.discovered_count,
+      eligible_count: resolution.eligible_count,
+    };
+    record.updated_at = new Date().toISOString();
     this.#persist(record);
     return record;
   }
