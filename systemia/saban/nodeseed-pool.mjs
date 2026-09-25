@@ -288,6 +288,15 @@ function meetsResourceProfile(node, profile = null) {
     }
   }
 
+  for (const service of profile.required_services || []) {
+    if (hint.services?.[service] !== true) {
+      return {
+        eligible: false,
+        reason: `missing_required_service:${service}`
+      };
+    }
+  }
+
   return { eligible: true, reason: null };
 }
 
