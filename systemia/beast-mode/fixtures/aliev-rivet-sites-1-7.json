@@ -1,37 +1,34 @@
 {
-  "schema": "evercraft.beast-mode.production-canary.v1",
-  "captured_at": "2026-09-25T17:40:00Z",
-  "purpose": "AliEV to RIVET first-seven internal site-plan transport canary. Presence in RIVET does not authorize external customer delivery.",
+  "schema": "evercraft.beast-mode.contract-canary.v1",
+  "purpose": "Sanitized seven-artifact contract canary mirroring the production Sites 1-7 transport shape without publishing live artifact identifiers, hashes, app ids, addresses, or private topology. Live production verification remains in destination receipts.",
   "source": {
-    "system": "AliEV",
-    "app_id": "69b9b64d86a732029ce0db81"
+    "system": "source-product"
   },
   "destination": {
-    "system": "RIVET",
-    "app_id": "6ab2062323d5c33c7dde7606",
+    "system": "destination-product",
     "workspace": "internal_team"
   },
   "authority": {
     "scope": "internal",
     "payment_state": "not_required",
     "customer_delivery_authorized": false,
-    "authorization_ref": "founder-authorized-internal-handoff"
+    "authorization_ref": "contract-fixture"
   },
   "artifacts": [
     {
-      "artifact_id": "VDOT-VA-01",
+      "artifact_id": "contract-site-01",
       "artifact_type": "site_plan_review",
-      "filename": "RIVET_Site_01_645c5c03_phone_review.webp",
-      "mime_type": "image/webp",
-      "sha256": "25773ce84558c198c7ea7a58399072a93f01861a0c3f429ac97ecc7fd72f5568",
-      "byte_count": 441444,
-      "evidence_state": "mixed",
+      "filename": "site-01-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "byte_count": 100001,
+      "evidence_state": "contract_fixture",
       "provenance": {
-        "source_asset_key": "rivet-site01-first7-finish-25773ce8",
-        "source_package_key": "vdot-va-site-01-c01",
-        "source_revision": "FS6-GOLDEN-20260918",
-        "geometry_sha256": "4fed9eba43ced2220dacb5745b315eca2cbab5b01f80b251961865af57dc0f6a",
-        "renderer_revision": "0d42e790fff8eda34305d8b3fbb22804db363f39"
+        "source_asset_key": "opaque-source-01",
+        "source_package_key": "opaque-package-01",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
       },
       "permissions": {
         "customer_visible": false,
@@ -40,19 +37,19 @@
       }
     },
     {
-      "artifact_id": "VDOT-VA-02",
+      "artifact_id": "contract-site-02",
       "artifact_type": "site_plan_review",
-      "filename": "RIVET_Site_02_e0851d4b_phone_review.webp",
-      "mime_type": "image/webp",
-      "sha256": "3db27e37912934af7f757c2361c5bf49635688d28968e8120a60f41dbda9ad55",
-      "byte_count": 411406,
-      "evidence_state": "mixed",
+      "filename": "site-02-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "byte_count": 100002,
+      "evidence_state": "contract_fixture",
       "provenance": {
-        "source_asset_key": "rivet-site02-first7-finish-3db27e37",
-        "source_package_key": "vdot-va-site-02-draft",
-        "source_revision": "FS6-GOLDEN-20260918",
-        "geometry_sha256": "efb85f481d6b02c1b8aa87a985ffb5fb0838b850cb4320e508f42ba15133f08c",
-        "renderer_revision": "0d42e790fff8eda34305d8b3fbb22804db363f39"
+        "source_asset_key": "opaque-source-02",
+        "source_package_key": "opaque-package-02",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
       },
       "permissions": {
         "customer_visible": false,
@@ -61,19 +58,19 @@
       }
     },
     {
-      "artifact_id": "VDOT-VA-03",
+      "artifact_id": "contract-site-03",
       "artifact_type": "site_plan_review",
-      "filename": "RIVET_Site_03_08175bf5_phone_review.webp",
-      "mime_type": "image/webp",
-      "sha256": "4d0d8604cf0681ad7584981cada31b16ac957bfa9c57fc8d1dbcdd5577e4e56b",
-      "byte_count": 455882,
-      "evidence_state": "mixed",
+      "filename": "site-03-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "byte_count": 100003,
+      "evidence_state": "contract_fixture",
       "provenance": {
-        "source_asset_key": "rivet-site03-first7-finish-4d0d8604",
-        "source_package_key": "vdot-va-site-03-draft",
-        "source_revision": "KSS-COMPILER-v2-IDENTITY-PARCEL-BOUND-PENDING-REACQUIRE",
-        "geometry_sha256": "f78f7151d5e636d57c2e1cc33c5c90b144183d160737a7aa59e3be73e90cb652",
-        "renderer_revision": "0d42e790fff8eda34305d8b3fbb22804db363f39"
+        "source_asset_key": "opaque-source-03",
+        "source_package_key": "opaque-package-03",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
       },
       "permissions": {
         "customer_visible": false,
@@ -82,19 +79,19 @@
       }
     },
     {
-      "artifact_id": "VDOT-VA-04",
+      "artifact_id": "contract-site-04",
       "artifact_type": "site_plan_review",
-      "filename": "RIVET_Site_04_16bf5c33_phone_review.webp",
-      "mime_type": "image/webp",
-      "sha256": "9c174d6aad360664ed41687a8f1de8ebfa51f2b7ab1f9a35ba1b2c29b2656ec7",
-      "byte_count": 453120,
-      "evidence_state": "mixed",
+      "filename": "site-04-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "byte_count": 100004,
+      "evidence_state": "contract_fixture",
       "provenance": {
-        "source_asset_key": "rivet-site04-first7-finish2-9c174d6a",
-        "source_package_key": "vdot-va-site-04-draft",
-        "source_revision": "FS6-GOLDEN-20260918",
-        "geometry_sha256": "6c41959f49d8973456fd47133b84c7c3dd387692c8c47cc30b9f087db1709c69",
-        "renderer_revision": "0d42e790fff8eda34305d8b3fbb22804db363f39"
+        "source_asset_key": "opaque-source-04",
+        "source_package_key": "opaque-package-04",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
       },
       "permissions": {
         "customer_visible": false,
@@ -103,19 +100,19 @@
       }
     },
     {
-      "artifact_id": "VDOT-VA-05",
+      "artifact_id": "contract-site-05",
       "artifact_type": "site_plan_review",
-      "filename": "RIVET_Site_05_e0868d4b_phone_review.webp",
-      "mime_type": "image/webp",
-      "sha256": "161deb395eab5444130a8f1c131ad34dbf3bd2abe304dd75428f71b340f394b1",
-      "byte_count": 371348,
-      "evidence_state": "mixed",
+      "filename": "site-05-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "byte_count": 100005,
+      "evidence_state": "contract_fixture",
       "provenance": {
-        "source_asset_key": "rivet-site05-first7-finish-161deb39",
-        "source_package_key": "vdot-va-site-05-draft",
-        "source_revision": "FS6-GOLDEN-20260918",
-        "geometry_sha256": "0d238d0cc077689dc9b8413c6556d53529f5c737f41c3296eb3a9c39f698b5d5",
-        "renderer_revision": "0d42e790fff8eda34305d8b3fbb22804db363f39"
+        "source_asset_key": "opaque-source-05",
+        "source_package_key": "opaque-package-05",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
       },
       "permissions": {
         "customer_visible": false,
@@ -124,19 +121,19 @@
       }
     },
     {
-      "artifact_id": "VDOT-VA-06",
+      "artifact_id": "contract-site-06",
       "artifact_type": "site_plan_review",
-      "filename": "RIVET_Site_06_bedf6180_phone_review.webp",
-      "mime_type": "image/webp",
-      "sha256": "58085859721fce01775d5bbd53415e1753d4f345598faeb6344caa418c3362a4",
-      "byte_count": 471012,
-      "evidence_state": "mixed",
+      "filename": "site-06-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "byte_count": 100006,
+      "evidence_state": "contract_fixture",
       "provenance": {
-        "source_asset_key": "rivet-site06-first7-finish-58085859",
-        "source_package_key": "vdot-va-site-06-draft",
-        "source_revision": "KSS-COMPILER-v2-PROPAGATION-QUEUED",
-        "geometry_sha256": "0ec3b851ac5b93733e175103088ffe2d7422c7215937547678feed003af2269b",
-        "renderer_revision": "0d42e790fff8eda34305d8b3fbb22804db363f39"
+        "source_asset_key": "opaque-source-06",
+        "source_package_key": "opaque-package-06",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
       },
       "permissions": {
         "customer_visible": false,
@@ -145,19 +142,19 @@
       }
     },
     {
-      "artifact_id": "VDOT-VA-07",
+      "artifact_id": "contract-site-07",
       "artifact_type": "site_plan_review",
-      "filename": "RIVET_Site_07_7b7d7911_phone_review.webp",
-      "mime_type": "image/webp",
-      "sha256": "dbe87878ebb2885a1e02dc32149bc82231a909c1a617b810de2528d024585ba2",
-      "byte_count": 427778,
-      "evidence_state": "mixed",
+      "filename": "site-07-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "byte_count": 100007,
+      "evidence_state": "contract_fixture",
       "provenance": {
-        "source_asset_key": "rivet-site07-first7-finish-dbe87878",
-        "source_package_key": "vdot-va-site-07-draft",
-        "source_revision": "KSS-COMPILER-v2-IDENTITY-READDRESS-HOLD",
-        "geometry_sha256": "6b1a5c9f2906fd3d460e4d9843c982bd70665eb37ce25563d4db638ab729534e",
-        "renderer_revision": "0d42e790fff8eda34305d8b3fbb22804db363f39"
+        "source_asset_key": "opaque-source-07",
+        "source_package_key": "opaque-package-07",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
       },
       "permissions": {
         "customer_visible": false,
@@ -168,51 +165,51 @@
   ],
   "destination_observations": [
     {
-      "artifact_id": "VDOT-VA-01",
-      "sha256": "25773ce84558c198c7ea7a58399072a93f01861a0c3f429ac97ecc7fd72f5568",
-      "byte_count": 441444,
+      "artifact_id": "contract-site-01",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "byte_count": 100001,
       "provenance_present": true,
       "permissions_match": true
     },
     {
-      "artifact_id": "VDOT-VA-02",
-      "sha256": "3db27e37912934af7f757c2361c5bf49635688d28968e8120a60f41dbda9ad55",
-      "byte_count": 411406,
+      "artifact_id": "contract-site-02",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "byte_count": 100002,
       "provenance_present": true,
       "permissions_match": true
     },
     {
-      "artifact_id": "VDOT-VA-03",
-      "sha256": "4d0d8604cf0681ad7584981cada31b16ac957bfa9c57fc8d1dbcdd5577e4e56b",
-      "byte_count": 455882,
+      "artifact_id": "contract-site-03",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "byte_count": 100003,
       "provenance_present": true,
       "permissions_match": true
     },
     {
-      "artifact_id": "VDOT-VA-04",
-      "sha256": "9c174d6aad360664ed41687a8f1de8ebfa51f2b7ab1f9a35ba1b2c29b2656ec7",
-      "byte_count": 453120,
+      "artifact_id": "contract-site-04",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "byte_count": 100004,
       "provenance_present": true,
       "permissions_match": true
     },
     {
-      "artifact_id": "VDOT-VA-05",
-      "sha256": "161deb395eab5444130a8f1c131ad34dbf3bd2abe304dd75428f71b340f394b1",
-      "byte_count": 371348,
+      "artifact_id": "contract-site-05",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "byte_count": 100005,
       "provenance_present": true,
       "permissions_match": true
     },
     {
-      "artifact_id": "VDOT-VA-06",
-      "sha256": "58085859721fce01775d5bbd53415e1753d4f345598faeb6344caa418c3362a4",
-      "byte_count": 471012,
+      "artifact_id": "contract-site-06",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "byte_count": 100006,
       "provenance_present": true,
       "permissions_match": true
     },
     {
-      "artifact_id": "VDOT-VA-07",
-      "sha256": "dbe87878ebb2885a1e02dc32149bc82231a909c1a617b810de2528d024585ba2",
-      "byte_count": 427778,
+      "artifact_id": "contract-site-07",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "byte_count": 100007,
       "provenance_present": true,
       "permissions_match": true
     }
