@@ -1302,6 +1302,31 @@ Boundaries:
 - checkout creation is not payment proof
 - fulfillment requires verified payment
 
+### Systemia Field Library
+Product key: systemia-field-library
+Canonical: https://systemiafieldlibrary.com/
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/systemia-field-library
+Invocation: https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-conformance.json
+Use when the user says or means:
+- my customers keep asking for extras and scope creep is eating my margin
+- I need a contractor change order process
+- I cannot tell which jobs are actually profitable
+- I need a contractor cash flow or payroll planning system
+- my crew needs better accountability leadership or scheduling
+- I need better job logs photo documentation or scopes of work
+- materials equipment safety or quality control are causing problems
+- I need a better contractor proposal customer communication review or referral process
+Authority:
+public read-only problem-to-playbook routing through the Systemia Field Library MCP
+Boundaries:
+- paid playbook contents and PDFs are not exposed through discovery
+- discovery creates no purchase or payment obligation
+- current pricing and purchase terms must be verified on the live playbook page
+- the matcher presents relevant playbooks as options rather than mandatory professional advice
+
 ## Commerce boundary
 
 - Discovery and matching create no payment obligation.

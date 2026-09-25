@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 66
-Product entries: 24
+Entries: 67
+Product entries: 25
 Machine-offer entries: 42
 Sell-now machine offers: 11
 
@@ -1263,6 +1263,31 @@ Use when the user means:
 - valet-style vehicle staging and retrieval
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Systemia Field Library
+Capability ID: product:systemia-field-library
+Product key: systemia-field-library
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://systemiafieldlibrary.com/
+MCP: https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
+Use when the user means:
+- my customers keep asking for extras and scope creep is eating my margin
+- I need a contractor change order process
+- I cannot tell which jobs are actually profitable
+- I need a contractor cash flow or payroll planning system
+- my crew needs better accountability leadership or scheduling
+- I need better job logs photo documentation or scopes of work
+- materials equipment safety or quality control are causing problems
+- I need a better contractor proposal customer communication review or referral process
+- contractor scope creep or change orders are costing money
+- contractor job costing or estimating is inconsistent
+- contractor cash flow payroll timing or receivables are causing stress
+- construction crews need better leadership accountability or scheduling
+- job documentation materials equipment safety or quality control need a system
+- contractor customer communication reviews or referrals need a repeatable process
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Systemia Website Audit
 Capability ID: product:systemia-website-audit

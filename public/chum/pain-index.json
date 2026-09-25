@@ -25,13 +25,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 66,
-    "product_entries": 24,
+    "entries": 67,
+    "product_entries": 25,
     "machine_offer_entries": 42,
-    "entries_with_pain_language": 66,
+    "entries_with_pain_language": 67,
     "sell_now_machine_offers": 11,
-    "entries_with_declared_mcp": 55,
-    "callable_or_routable_entries": 34,
+    "entries_with_declared_mcp": 56,
+    "callable_or_routable_entries": 35,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -3005,6 +3005,60 @@
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:systemia-field-library",
+      "product_key": "systemia-field-library",
+      "kind": "product",
+      "name": "Systemia Field Library",
+      "class": "contractor_operating_playbook_library",
+      "pain_phrases": [
+        "my customers keep asking for extras and scope creep is eating my margin",
+        "I need a contractor change order process",
+        "I cannot tell which jobs are actually profitable",
+        "I need a contractor cash flow or payroll planning system",
+        "my crew needs better accountability leadership or scheduling",
+        "I need better job logs photo documentation or scopes of work",
+        "materials equipment safety or quality control are causing problems",
+        "I need a better contractor proposal customer communication review or referral process",
+        "contractor scope creep or change orders are costing money",
+        "contractor job costing or estimating is inconsistent",
+        "contractor cash flow payroll timing or receivables are causing stress",
+        "construction crews need better leadership accountability or scheduling",
+        "job documentation materials equipment safety or quality control need a system",
+        "contractor customer communication reviews or referrals need a repeatable process"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://systemiafieldlibrary.com/",
+      "registry_name": "io.github.jgaethle10/systemia-field-library",
+      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "routing": {
+        "preferred": "specialist_mcp",
+        "target": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public read-only problem-to-playbook routing through the Systemia Field Library MCP",
+      "boundaries": [
+        "paid playbook contents and PDFs are not exposed through discovery",
+        "discovery creates no purchase or payment obligation",
+        "current pricing and purchase terms must be verified on the live playbook page",
+        "the matcher presents relevant playbooks as options rather than mandatory professional advice"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
       ]
     },
     {

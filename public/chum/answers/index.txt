@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 66
-Unique user phrases: 491
-Candidate edges: 499
+Pain-index entries: 67
+Unique user phrases: 505
+Candidate edges: 513
 Ambiguous phrases: 8
 
 ## account takeover protection
@@ -583,6 +583,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Enterprise Operations Router | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## construction crews need better leadership accountability or scheduling
+Answer ID: intent:2a9440a399
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/construction-crews-need-better-leadership-accountability-or-scheduling-2a9440a399.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
 ## construction weather operations
 Answer ID: intent:d9ae36830b
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/construction-weather-operations-d9ae36830b.json
@@ -607,6 +613,24 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
 
+## contractor cash flow payroll timing or receivables are causing stress
+Answer ID: intent:c9c2d9c21a
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## contractor customer communication reviews or referrals need a repeatable process
+Answer ID: intent:031ac09b8c
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-customer-communication-reviews-or-referrals-need-a-repeatable-process-031ac09b8c.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## contractor job costing or estimating is inconsistent
+Answer ID: intent:39128165cb
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
 ## contractor measurement tools
 Answer ID: intent:22952bd1fe
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json
@@ -618,6 +642,12 @@ Answer ID: intent:e143bcc009
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-opportunity-network-e143bcc009.json
 Candidates:
 - Evercraft Contractor Cloud | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+
+## contractor scope creep or change orders are costing money
+Answer ID: intent:9c1b5a9c0a
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
 
 ## conversion problems
 Answer ID: intent:272215f37a
@@ -1317,17 +1347,47 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Income War Map Revenue Planning | kind=machine_offer | commercial=hold | machine=discovery_only | public=/chum/intents/income-war-map-v1/
 
+## I cannot tell which jobs are actually profitable
+Answer ID: intent:7e204ff7f2
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-cannot-tell-which-jobs-are-actually-profitable-7e204ff7f2.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
 ## I have an interview tomorrow
 Answer ID: intent:0fe9809d38
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json
 Candidates:
 - Career Command Interview Practice + Interview Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
 
+## I need a better contractor proposal customer communication review or referral process
+Answer ID: intent:8009e5d764
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-better-contractor-proposal-customer-communication-review-or-referral-proc-8009e5d764.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## I need a contractor cash flow or payroll planning system
+Answer ID: intent:6439633f02
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-contractor-cash-flow-or-payroll-planning-system-6439633f02.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## I need a contractor change order process
+Answer ID: intent:474a8965c9
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-contractor-change-order-process-474a8965c9.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
 ## I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots
 Answer ID: intent:9e18952b38
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-9e18952b38.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## I need better job logs photo documentation or scopes of work
+Answer ID: intent:d20737d049
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-better-job-logs-photo-documentation-or-scopes-of-work-d20737d049.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
 
 ## identify a hard-to-source part from markings, measurements, photos, or equipment clues
 Answer ID: intent:310d387d80
@@ -1412,6 +1472,12 @@ Answer ID: intent:ea2b7ebe4d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d.json
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
+## job documentation materials equipment safety or quality control need a system
+Answer ID: intent:3819c93b82
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/job-documentation-materials-equipment-safety-or-quality-control-need-a-system-3819c93b82.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
 
 ## job interview practice
 Answer ID: intent:d7dad5994f
@@ -1623,6 +1689,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Business Entity Resolution | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## materials equipment safety or quality control are causing problems
+Answer ID: intent:0c5e327873
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/materials-equipment-safety-or-quality-control-are-causing-problems-0c5e327873.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
 ## maternal support resources
 Answer ID: intent:fd5c93b03a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/maternal-support-resources-fd5c93b03a.json
@@ -1694,6 +1766,18 @@ Answer ID: intent:483526264c
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-connection-keeps-switching-between-wifi-and-cellular-483526264c.json
 Candidates:
 - Evercraft Network Resilience + Founding Membership | kind=machine_offer | commercial=discovery_only | machine=human_handoff_only | public=https://network-control.base44.app/join
+
+## my crew needs better accountability leadership or scheduling
+Answer ID: intent:bc050a720f
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-crew-needs-better-accountability-leadership-or-scheduling-bc050a720f.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## my customers keep asking for extras and scope creep is eating my margin
+Answer ID: intent:837812790f
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-customers-keep-asking-for-extras-and-scope-creep-is-eating-my-margin-837812790f.json
+Candidates:
+- Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
 
 ## my internet connection keeps changing
 Answer ID: intent:251bcf696d

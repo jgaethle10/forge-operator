@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Field Library",
+  "product_key": "systemia-field-library",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://systemiafieldlibrary.com/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-discovery.json",
+  "registry_name": "io.github.jgaethle10/systemia-field-library",
+  "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+  "authority": "public read-only problem-to-playbook routing through the Systemia Field Library MCP",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "paid playbook contents and PDFs are not exposed through discovery",
+    "discovery creates no purchase or payment obligation",
+    "current pricing and purchase terms must be verified on the live playbook page",
+    "the matcher presents relevant playbooks as options rather than mandatory professional advice"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}
