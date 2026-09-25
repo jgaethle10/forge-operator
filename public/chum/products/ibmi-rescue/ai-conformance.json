@@ -48,5 +48,6 @@
     "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live"
   },
   "developer_surfaces": null,
+  "editorial_surfaces": null,
   "provider_behavior_state": "not_inferred_from_publication"
 }

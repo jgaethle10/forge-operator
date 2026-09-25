@@ -1472,6 +1472,8 @@ Invocation: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
 Developer hub: /forensiscope/developers/
 Verified status: /forensiscope/developers/status.json
 Examples: /forensiscope/developers/examples.json
+Editorial hub: /forensiscope/editorial/
+Editorial RSS: /forensiscope/editorial/feed.xml
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json
 Use when the user says or means:

@@ -80,6 +80,12 @@
     "playground": "/forensiscope/developers/playground.html",
     "clients": "/forensiscope/developers/clients/"
   },
+  "editorial_surfaces": {
+    "hub": "/forensiscope/editorial/",
+    "index": "/forensiscope/editorial/index.json",
+    "rss": "/forensiscope/editorial/feed.xml",
+    "social_pack": "/forensiscope/editorial/social-pack.json"
+  },
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",

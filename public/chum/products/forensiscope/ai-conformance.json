@@ -65,5 +65,11 @@
     "playground": "/forensiscope/developers/playground.html",
     "clients": "/forensiscope/developers/clients/"
   },
+  "editorial_surfaces": {
+    "hub": "/forensiscope/editorial/",
+    "index": "/forensiscope/editorial/index.json",
+    "rss": "/forensiscope/editorial/feed.xml",
+    "social_pack": "/forensiscope/editorial/social-pack.json"
+  },
   "provider_behavior_state": "not_inferred_from_publication"
 }
