@@ -1,0 +1,33 @@
+name: Remote resident reconnect
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/remote-resident-reconnect.proof.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - '.github/workflows/remote-resident-reconnect.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/network/remote-resident-reconnect.proof.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - '.github/workflows/remote-resident-reconnect.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove resident workload continuity across outbound transport reconnect
+        run: node systemia/network/remote-resident-reconnect.proof.mjs
