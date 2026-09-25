@@ -25,9 +25,14 @@ CHUM is the first discovery-scale consumer. Media fanout is the second proof lan
 - `admission.mjs`: validates contracts and grants bounded swarm resources.
 - `autoscaler.mjs`: recommends logical and physical formations from workload and telemetry.
 - `work-state.mjs`: leased job state, checkpoints, retries, dead-letter state and atomic persistence.
-- `scheduler.mjs`: bounded physical worker pool with retry/rebind semantics.
-- `kernel-proof.mjs`: recovery, 10,000-agent planning, persistence, autoscaling and media-sharding proof.
-- `formation.mjs`: dependency-aware multi-software swarm orchestration.
+- `scheduler.mjs`: bounded physical worker pool with retry/rebind semantics, stable idempotency keys and execution timing.
+- `quality-gate.mjs`: fail-closed contract quality checks for completion, roles, reconciliation, source integrity and product-specific requirements.
+- `nodeseed-pool.mjs`: authenticated distributed worker pool with capacity/service placement, retry and node failover.
+- `distributed-executor.mjs`: runs ordinary Saban plans across NodeSeed capacity without changing product adapters.
+- `private-inventory.mjs`: strips private source identifiers before portfolio-inventory work enters Saban state or receipts.
+- `portfolio-archaeology-adapter.mjs`: classifies private portfolio candidates into known public, likely alias, placeholder, internal-only, commercial-candidate and review lanes without publishing them.
+- `kernel-proof.mjs`: recovery, 10,000-agent planning, persistence, autoscaling, idempotency, timing and media-sharding proof.
+- `formation.mjs`: dependency-wave multi-software swarm orchestration. Independent nodes execute concurrently; dependent nodes wait for their declared prerequisites.
 - `spawn-broker.mjs`: governed recursive child-swarm admission with depth, count, dedupe and total-agent limits.
 - `registered-worker.mjs`: safe worker entrypoint that accepts only software already registered for multiplication.
 - `contract-doctor.mjs`: validates contracts, budgets, adapters and scaling rules before CI passes.
@@ -46,13 +51,39 @@ Evercraft Compute NodeSeed exposes `saban.multiplier-assignment.v1`. A NodeSeed 
 
 This connects Saban's logical-agent model to NodeSeed capacity discovery without turning NodeSeed into a generic remote shell.
 
+Node placement is capability-aware. Contracts may require minimum CPU/memory, executables such as `ffmpeg`, and named services. ForensiScope requires both the media toolchain and a configured transcription service before Saban will place its work on a NodeSeed. A node that can inspect media but cannot satisfy the full contract is rejected rather than partially admitted.
+
+Each logical assignment has a stable idempotency key. The key crosses local retries, registered-worker receipts, NodeSeed checkpoints and failover so a rebound worker can prove it is continuing the same logical operation. Local and distributed receipts also record execution timing, including measured-job counts, average duration and p95 duration.
+
 ## Recursive formations
 
-A Saban formation is a dependency graph of software swarms. Nodes may use different software contracts, logical-agent counts, worker pools and reconciliation rules. The spawn broker can admit child formations, including additional CHUM formations, while enforcing maximum depth, child count, per-child size, global logical-agent budget and deduplication.
+A Saban formation is a dependency graph of software swarms. Nodes may use different software contracts, logical-agent counts, worker pools and reconciliation rules. Saban executes the graph in dependency waves, so unrelated work can run concurrently instead of waiting in a global serial line. The spawn broker can admit child formations, including additional CHUM formations, while enforcing maximum depth, child count, per-child size, global logical-agent budget and deduplication.
+
+The spawn broker currently governs child admission and accounting. Automatic recursive execution of admitted child requests is intentionally separate from broker admission and must not be inferred merely because a child request was accepted.
 
 ## Failure doctrine
 
 Workers hold time-limited leases. If a worker disappears, the job returns to the queue after lease expiry unless its retry budget is exhausted. Checkpoints and work state are serializable and can be written atomically so another runtime can resume the formation.
+
+## Portfolio archaeology
+
+Inventory is not publication. Saban may accept a private runtime inventory through the `portfolio-archaeology` contract, but source identifiers are stripped before the records enter work state. The archaeology swarm fingerprints source records, checks public-name and alias similarity, detects placeholders and duplicate inventory names, and produces an admission queue. It performs zero public discovery changes by contract.
+
+This gives CHUM a discovery-before-admission lane without treating every old app, internal tool, alias or experiment as a public product.
+
+## ForensiScope multiplication
+
+ForensiScope is a registered Saban software contract rather than a generic media demo. The private execution lane:
+
+- requires explicit source authorization and SHA-256 source identity;
+- creates lossless, content-addressed time shards for remote NodeSeeds instead of forwarding private source paths;
+- runs media probing, keyframe timeline extraction, exact and perceptual duplicate review, audio preparation, transcription and provenance checks in parallel;
+- reconciles overlap-aware transcript segments and timestamps;
+- verifies source/derivative integrity before the quality gate passes;
+- produces a deterministic evidence graph and LLM evidence projection from the reconciled result;
+- keeps public machine intake disabled until its independent security and commerce gates are actually cleared.
+
+Transcription is an operator-configured executable contract. CI proves the interface and distributed stitching with a deterministic test engine. That proof does not imply that a specific production speech provider is installed or endorsed.
 
 ## Scaling doctrine
 
@@ -108,7 +139,11 @@ npm run proof:saban-kernel
 npm run proof:saban-chum
 npm run proof:saban-media
 npm run proof:saban-formation
+npm run proof:saban-formation-waves
+npm run proof:saban-portfolio-archaeology
 npm run proof:saban-nodeseed-multiplier
+npm run proof:saban-nodeseed-pool
+npm run proof:forensiscope-distributed
 ```
 
 Run the discovery watershed:
