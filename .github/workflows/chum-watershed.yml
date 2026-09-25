@@ -26,6 +26,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 env:
   # Use the canonical public origin when it is configured so generated sell-now
@@ -147,11 +148,8 @@ jobs:
         if: always()
         continue-on-error: true
         env:
-          CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
-          CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
+          CHUM_PROBE_BRIDGE_URL: "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/chumProbeBridge"
           CHUM_REQUIRE_PROBE_BRIDGE: "false"
-          NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
-          NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
         run: npm run chum:providers
 
       - name: Run CHUM portfolio mesh
