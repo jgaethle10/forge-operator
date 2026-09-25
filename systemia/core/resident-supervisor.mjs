@@ -291,7 +291,6 @@ export class SystemiaCoreResidentSupervisor {
     const timer = setInterval(() => {
       this.#runCycle(entry).catch(() => {});
     }, intervalMs);
-    timer.unref?.();
     this.timers.set(config.service_key, timer);
   }
 
@@ -398,7 +397,6 @@ export class SystemiaCoreResidentSupervisor {
         this.timers.delete(`restart:${config.service_key}`);
         this.#startResident(entry).catch(() => {});
       }, delay);
-      timer.unref?.();
       this.timers.set(`restart:${config.service_key}`, timer);
     });
   }
