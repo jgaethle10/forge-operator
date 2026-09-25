@@ -1,0 +1,27 @@
+{
+  "name": "evercraft-ai-suite",
+  "version": "0.1.0",
+  "description": "Pain-first access to Evercraft AI tools, services, and human-confirmed commerce through one universal MCP.",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft",
+    "ai-tools",
+    "mcp",
+    "business",
+    "media",
+    "website-audit",
+    "ev-charging",
+    "parts",
+    "events",
+    "career",
+    "commerce",
+    "agents"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
