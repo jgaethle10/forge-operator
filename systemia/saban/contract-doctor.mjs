@@ -25,6 +25,19 @@ function inspectContract(contract, rootDir) {
     issues.push('missing_reconciler_export');
   }
 
+  if (contract.quality) {
+    const ratio = Number(contract.quality.minimum_completion_ratio ?? 1);
+    if (!Number.isFinite(ratio) || ratio < 0 || ratio > 1) {
+      issues.push('invalid_quality_completion_ratio');
+    }
+    if (!['receipt_only', 'fail_execution'].includes(contract.quality.enforcement || 'receipt_only')) {
+      issues.push('invalid_quality_enforcement');
+    }
+    if (contract.quality.require_source_integrity === true && contract.quality.require_reconciliation !== true) {
+      issues.push('source_integrity_requires_reconciliation');
+    }
+  }
+
   if (contract.partitioner?.type === 'media_time_windows') {
     const windowSeconds = Number(contract.partitioner.window_seconds);
     const overlapSeconds = Number(contract.partitioner.overlap_seconds);
