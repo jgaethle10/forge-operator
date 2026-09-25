@@ -24,6 +24,8 @@
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: discovery and authenticated Decision Desk adjudication are implemented and build-tested; external client canary remains pending. Canonical merge remains a separate gated action.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": null,
+  "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/buildflow-entity-resolution-machine-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-entity-resolution-machine-v1/llms.txt",

@@ -39,6 +39,13 @@
   "payment_authority": "Evercraft Payments with Stripe provider verification",
   "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": "/api/chum/go/findmypart-paid-hunt-v1?surface=chum_capability_page",
+  "entry_paid_offer": {
+    "name": "Quick Hunt",
+    "price_usd": 19,
+    "billing": "one_time",
+    "price_usd_normalized": 19
+  },
   "mirror": {
     "page": "/chum/capabilities/findmypart-paid-hunt-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/llms.txt",

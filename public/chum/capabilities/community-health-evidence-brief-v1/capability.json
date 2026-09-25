@@ -23,6 +23,8 @@
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Discoverable capability; brief-specific source verification required before fulfillment.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": null,
+  "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/community-health-evidence-brief-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/community-health-evidence-brief-v1/llms.txt",

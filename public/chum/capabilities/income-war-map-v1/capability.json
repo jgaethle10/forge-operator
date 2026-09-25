@@ -25,6 +25,8 @@
   "payment_authority": "Stripe legacy adapter; checkout paused",
   "invocation_status": "Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": null,
+  "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/income-war-map-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/income-war-map-v1/llms.txt",

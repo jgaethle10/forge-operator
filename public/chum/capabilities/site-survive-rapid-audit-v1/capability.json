@@ -29,6 +29,14 @@
   "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
   "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": "/api/chum/go/site-survive-rapid-audit-v1?surface=chum_capability_page",
+  "entry_paid_offer": {
+    "name": "Site-Survive Rapid Audit",
+    "price": "$250",
+    "billing": "one_time",
+    "checkout": "human_handoff",
+    "price_usd_normalized": 250
+  },
   "mirror": {
     "page": "/chum/capabilities/site-survive-rapid-audit-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/llms.txt",

@@ -32,6 +32,8 @@
   "payment_authority": "Evercraft Payments; central machine checkout remains verification-gated.",
   "invocation_status": "LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": null,
+  "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/forensiscope-evidence-review-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/llms.txt",

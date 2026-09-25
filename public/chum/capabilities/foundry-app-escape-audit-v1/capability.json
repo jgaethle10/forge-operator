@@ -29,6 +29,14 @@
   "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
   "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": "/api/chum/go/foundry-app-escape-audit-v1?surface=chum_capability_page",
+  "entry_paid_offer": {
+    "name": "App Escape Audit",
+    "price": "$500",
+    "billing": "one_time",
+    "checkout": "human_handoff",
+    "price_usd_normalized": 500
+  },
   "mirror": {
     "page": "/chum/capabilities/foundry-app-escape-audit-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",

@@ -52,6 +52,14 @@
   "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
   "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": "/api/chum/go/aliev-site-opportunity-snapshot-v1?surface=chum_capability_page",
+  "entry_paid_offer": {
+    "offer_key": "opportunity_pack_250",
+    "name": "AliEV Qualified Opportunity Pack · Pilot",
+    "price": "$250",
+    "billing": "one_time",
+    "price_usd_normalized": 250
+  },
   "mirror": {
     "page": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",

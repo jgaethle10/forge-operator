@@ -34,6 +34,15 @@
   "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
   "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": "/api/chum/go/deck-capital-fit-sprint-machine-v1?surface=chum_capability_page",
+  "entry_paid_offer": {
+    "name": "Founding Capital Fit Sprint",
+    "price": "$49",
+    "billing": "one_time",
+    "limit": "first 20 paid cases",
+    "upgrade_credit": "$49",
+    "price_usd_normalized": 49
+  },
   "mirror": {
     "page": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",

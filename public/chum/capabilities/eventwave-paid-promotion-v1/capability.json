@@ -40,6 +40,13 @@
   "payment_authority": "Evercraft Payments with provider verification",
   "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "start_url": "/api/chum/go/eventwave-paid-promotion-v1?surface=chum_capability_page",
+  "entry_paid_offer": {
+    "name": "Event Boost",
+    "price": "$49",
+    "billing": "one_time",
+    "price_usd_normalized": 49
+  },
   "mirror": {
     "page": "/chum/capabilities/eventwave-paid-promotion-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
