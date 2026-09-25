@@ -1,0 +1,61 @@
+{
+  "name": "RIVETSitePlanChunk",
+  "type": "object",
+  "description": "Internal binary transport chunks for a RIVET-owned site-plan artifact. Chunks are reconstructed and hash-verified before display.",
+  "properties": {
+    "artifact_key": {
+      "type": "string"
+    },
+    "chunk_index": {
+      "type": "number"
+    },
+    "total_chunks": {
+      "type": "number"
+    },
+    "data_base64": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "artifact_key",
+    "chunk_index",
+    "total_chunks",
+    "data_base64",
+    "created_at"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

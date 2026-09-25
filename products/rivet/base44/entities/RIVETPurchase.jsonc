@@ -1,0 +1,156 @@
+{
+  "name": "RIVETPurchase",
+  "type": "object",
+  "description": "Server-owned RIVET reporting commerce ledger. Browser return never marks a purchase paid; payment is verified against the shared Stripe broker.",
+  "properties": {
+    "purchase_key": {
+      "type": "string"
+    },
+    "offer_key": {
+      "type": "string",
+      "enum": [
+        "rivet_report_495",
+        "rivet_portfolio_1500_5site"
+      ]
+    },
+    "offer_name": {
+      "type": "string"
+    },
+    "buyer_email": {
+      "type": "string"
+    },
+    "requested_address": {
+      "type": "string"
+    },
+    "amount_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "billing_mode": {
+      "type": "string",
+      "enum": [
+        "payment"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "cancelled",
+        "refunded",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "stripe"
+      ],
+      "default": "stripe"
+    },
+    "provider_checkout_session_id": {
+      "type": "string"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "report_key": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "referral_code": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paid_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "refunded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "purchase_key",
+    "offer_key",
+    "offer_name",
+    "amount_usd",
+    "currency",
+    "billing_mode",
+    "status",
+    "provider",
+    "created_at",
+    "updated_at"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        },
+        {
+          "data.buyer_email": "{{user.email}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

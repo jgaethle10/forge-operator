@@ -1,0 +1,129 @@
+{
+  "name": "RIVETPropertyListing",
+  "type": "object",
+  "description": "Commercial-property portfolio and marketplace candidate lane for brokers and owners. A listing never implies EV suitability; report evidence and qualification status remain explicit.",
+  "properties": {
+    "listing_key": {
+      "type": "string"
+    },
+    "broker_name": {
+      "type": "string"
+    },
+    "broker_email": {
+      "type": "string"
+    },
+    "broker_company": {
+      "type": "string"
+    },
+    "property_address": {
+      "type": "string"
+    },
+    "property_name": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "report_id": {
+      "type": "string"
+    },
+    "report_key": {
+      "type": "string"
+    },
+    "qualification_status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "screening",
+        "qualified",
+        "not_qualified",
+        "held"
+      ],
+      "default": "submitted"
+    },
+    "marketplace_status": {
+      "type": "string",
+      "enum": [
+        "not_listed",
+        "candidate",
+        "published",
+        "paused"
+      ],
+      "default": "not_listed"
+    },
+    "ev_summary": {
+      "type": "string"
+    },
+    "customer_notes": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "listing_key",
+    "property_address",
+    "qualification_status",
+    "marketplace_status",
+    "created_at",
+    "updated_at"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "data.rivet_owner": true
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Machine-readable RIVET product information
+# /llms.txt
+# /llms-full.txt
+# /rivet-agent.json
