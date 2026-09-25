@@ -299,8 +299,20 @@ export async function startEvercraftComputeNode({
           const snapshotPath = path.resolve(String(
             body.input?.snapshot_path || path.join(stateRoot, 'mission-snapshot.json')
           ));
+          const missionFabricConfigPath = body.input?.mission_fabric_config_path
+            ? path.resolve(String(body.input.mission_fabric_config_path))
+            : '';
+          const missionFabricAllowedRoot = body.input?.mission_fabric_allowed_root
+            ? path.resolve(String(body.input.mission_fabric_allowed_root))
+            : (missionFabricConfigPath ? path.dirname(missionFabricConfigPath) : '');
           if (!stateRoot || !isWithin(allowedRoot, stateRoot) || !isWithin(allowedRoot, snapshotPath)) {
             return send(res, 403, { error: 'kaidance_path_outside_admitted_root' });
+          }
+          if (missionFabricConfigPath && (
+            !isWithin(allowedRoot, missionFabricConfigPath) ||
+            !isWithin(allowedRoot, missionFabricAllowedRoot)
+          )) {
+            return send(res, 403, { error: 'kaidance_mission_fabric_outside_admitted_root' });
           }
 
           const runtime = new KaidanceRuntime({
@@ -310,6 +322,8 @@ export async function startEvercraftComputeNode({
             graceSeconds: Number(body.input?.grace_seconds || 90),
             deploymentReceipt: String(body.input?.deployment_receipt || ''),
             snapshotPath,
+            missionFabricConfigPath,
+            missionFabricAllowedRoot,
             initialCheckpoint: body.input?.initial_checkpoint || null,
           });
           const service = await startKaidanceHealthService({
