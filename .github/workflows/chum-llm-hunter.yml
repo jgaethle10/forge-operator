@@ -9,6 +9,10 @@ on:
       - main
     paths:
       - "systemia/chum/llm-hunter.mjs"
+      - "systemia/saban/revenue-swarm.mjs"
+      - "tests/saban-revenue-swarm.test.mjs"
+      - "public/chum/revenue.json"
+      - "public/.well-known/evercraft-pain-index.json"
       - "systemia/chum/live-intent-hunter.mjs"
       - "tests/chum-live-intent-hunter.test.mjs"
       - "server.ts"
