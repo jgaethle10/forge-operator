@@ -50,6 +50,8 @@ try {
   assert.equal(capacity.status, 200);
   assert.equal(capacity.body.runtime, 'Evercraft Compute');
   assert.equal(capacity.body.allocation_auth, 'bearer');
+  assert.equal(capacity.body.node_identity.algorithm, 'ed25519');
+  assert.equal(capacity.body.node_identity.public_key_fingerprint_sha256, seed.node_identity.public_key_fingerprint_sha256);
 
   const unauthorized = await raw(`${seed.endpoint}/v1/leases`, {
     method: 'POST',
@@ -68,6 +70,8 @@ try {
   });
   assert.ok(discovery.some((x) => x.endpoint === seed.endpoint));
   assert.ok(discovery.every((x) => x.carries_credentials === false));
+  assert.ok(discovery.every((x) => x.signature_verified === true));
+  assert.ok(discovery.some((x) => x.public_key_fingerprint_sha256 === seed.node_identity.public_key_fingerprint_sha256));
 
   const yard = new YardOperator({ stateDir: yardState });
   const target = path.join(computeRoot, 'git', 'systemia-core.git');
@@ -100,6 +104,10 @@ try {
     yard_authenticated_lease: true,
     private_core_origin_created: true,
     beacon_contains_credentials: false,
+    beacon_signature_verified: true,
+    node_identity_algorithm: 'ed25519',
+    identity_bound_to_capacity_offer: true,
+    signature_grants_authority: false,
     named_cloud_required: false,
   }, null, 2));
 } finally {
