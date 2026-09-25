@@ -38,7 +38,13 @@ if (fs.existsSync(OBS_ROOT)) {
     let row;
     try { row = readJson(pathname); } catch { continue; }
     if (row?.schema !== 'evercraft.provider-observation.v1') continue;
-    if (row?.source !== 'user_observed_result') continue;
+    const userObserved = row?.source === 'user_observed_result';
+    const authorizedProbe = row?.source === 'authorized_provider_probe' &&
+      typeof row?.provider_receipt_sha256 === 'string' &&
+      row.provider_receipt_sha256.length === 64 &&
+      typeof row?.response_sha256 === 'string' &&
+      row.response_sha256.length > 0;
+    if (!userObserved && !authorizedProbe) continue;
     if (row?.surfaced_forensiscope !== false && row?.surfaced_expected_product !== false && row?.surfaced_product !== false) continue;
     if (!row?.product_key || !row?.prompt) continue;
     const entry = productEntries.get(String(row.product_key));
@@ -217,10 +223,11 @@ ${e.registry_name ? '<p>Official MCP Registry: <code>' + esc(e.registry_name) + 
 const index = {
   schema: 'evercraft.chum.observed-miss-index.v1',
   provider: 'Evercraft LLC',
-  purpose: 'Crawlable question-to-capability pages generated only from receipt-backed user-observed provider misses.',
+  purpose: 'Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.',
   page_count: pages.length,
   rules: {
-    user_observed_receipts_only: true,
+    receipt_backed_observations_only: true,
+    accepted_observation_sources: ['user_observed_result', 'authorized_provider_probe'],
     dedupe_same_prompt_across_providers: true,
     no_provider_endorsement_claim: true,
     no_product_ranking_claim: true,

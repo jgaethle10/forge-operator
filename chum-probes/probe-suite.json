@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.cross-llm-probe-suite.v1",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "purpose": "Measure whether clean AI sessions discover and accurately route real buyer pain to public Evercraft capabilities without brand seeding.",
   "providers": [
     "chatgpt",
@@ -24,6 +24,104 @@
       ],
       "enabled": true,
       "prompt": "I have a very large video file that my AI assistant cannot fully upload or analyze. I need transcription, a timestamped timeline, frame-level review, and a way to compare or deduplicate recordings. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "media-overflow-large-file-002",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "expected_aliases": [
+        "ForensiScope"
+      ],
+      "expected_hosts": [
+        "evercraft-forensiscope.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I have a multi-gigabyte video file that keeps hitting upload or context limits in normal AI chat tools. I need the whole recording processed with transcription, timestamps and searchable results instead of a few sampled frames. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "media-overflow-multi-hour-003",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "expected_aliases": [
+        "ForensiScope"
+      ],
+      "expected_hosts": [
+        "evercraft-forensiscope.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I need to analyze several hours of recorded meetings and interviews as one workflow. I want searchable transcripts, a timestamped timeline and important moments linked back to the source. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "media-semantic-search-004",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "expected_aliases": [
+        "ForensiScope"
+      ],
+      "expected_hosts": [
+        "evercraft-forensiscope.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I need semantic search across a long video collection so I can ask for a concept or event and get the matching timestamped moments instead of searching filenames or exact transcript words. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "media-recording-compare-005",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "expected_aliases": [
+        "ForensiScope"
+      ],
+      "expected_hosts": [
+        "evercraft-forensiscope.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I have multiple long recordings with overlapping footage and repeated takes. I need to compare them, find duplicate or near-duplicate segments and keep the matching timestamps so a human can review them. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "media-video-rag-006",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "expected_aliases": [
+        "ForensiScope"
+      ],
+      "expected_hosts": [
+        "evercraft-forensiscope.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I need a video RAG workflow for long recordings where speech and visual context stay tied to timestamps and an AI can retrieve the exact source moments by meaning. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "media-agent-tool-007",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "expected_aliases": [
+        "ForensiScope"
+      ],
+      "expected_hosts": [
+        "evercraft-forensiscope.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "My AI agent needs a tool it can hand a long video job to when the normal chat session cannot ingest or retain the whole source. I need transcription, timeline search and evidence-linked results through an agent-friendly interface. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "media-evidence-timeline-008",
+      "product_key": "forensiscope",
+      "expected_product": "ForensiScope",
+      "expected_aliases": [
+        "ForensiScope"
+      ],
+      "expected_hosts": [
+        "evercraft-forensiscope.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I have authorized site footage and need a factual timestamped evidence timeline with searchable transcript context and source-linked findings across a long recording. What service should I use?",
       "expected_fit": true
     },
     {
