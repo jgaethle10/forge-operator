@@ -228,7 +228,17 @@
         "long-form transcription overflow",
         "frame-level or timestamped media analysis",
         "compare or deduplicate recordings",
-        "full-source media workflow exceeds current assistant limits"
+        "full-source media workflow exceeds current assistant limits",
+        "long video analysis service",
+        "multi-hour video analysis",
+        "large video file analysis",
+        "semantic segment deduplication",
+        "near-duplicate video segment detection",
+        "searchable transcript with timestamps",
+        "inspect an entire recording instead of sampled frames",
+        "analyze video from a cloud-storage URL",
+        "security camera footage review",
+        "recorded meeting video analysis"
       ],
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
