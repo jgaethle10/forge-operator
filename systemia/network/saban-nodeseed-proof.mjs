@@ -83,11 +83,13 @@ try {
   });
 
   const summary = JSON.parse(fs.readFileSync(path.join(out, 'summary.json'), 'utf8'));
-  assert.equal(summary.proof, 'evercraft.saban.network-seed.v3');
+  assert.equal(summary.proof, 'evercraft.saban.network-seed.v4');
   assert.equal(summary.status, 'PASS');
   assert.equal(summary.agent_count, 100);
   assert.equal(summary.discovery_mode, 'beacon');
+  assert.equal(summary.identity_verified_count, 2);
   assert.equal(summary.pre_enrollment_required, false);
+  assert.equal(summary.authorization_mode, 'dynamic_allocator_lease');
   assert.equal(summary.checkpoint_rebind, true);
   assert.equal(summary.migrated_agent_count, 50);
   assert.ok(summary.capacity_sources.includes('evercraft-node-a'));
@@ -99,7 +101,11 @@ try {
     schema: 'evercraft.saban.nodeseed-discovery-proof.v1',
     discovery_mode: summary.discovery_mode,
     capacity_sources: summary.capacity_sources,
+    signed_node_identity_verified: true,
+    identity_verified_count: summary.identity_verified_count,
     authenticated_allocation: true,
+    pre_enrollment_required: false,
+    authorization_mode: summary.authorization_mode,
     agent_count: summary.agent_count,
     checkpoint_rebind: summary.checkpoint_rebind,
     migrated_agent_count: summary.migrated_agent_count,
