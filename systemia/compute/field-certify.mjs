@@ -130,6 +130,8 @@ const evidence = {
   receipt_ref: sourceReceipt,
   device_fingerprint: nodeReceipt?.device_fingerprint || null,
   node_id: nodeReceipt?.node_id || null,
+  runtime_release_ref: install.source_commit || null,
+  runtime_payload_digest: install.runtime_payload_digest || null,
 };
 
 const receipt = {
@@ -144,7 +146,9 @@ const receipt = {
     evidence.telemetry_verified &&
     Boolean(evidence.host_identifier_ref) &&
     Boolean(evidence.device_fingerprint) &&
-    Boolean(evidence.node_id),
+    Boolean(evidence.node_id) &&
+    /^[a-f0-9]{40}$/i.test(String(evidence.runtime_release_ref || '')) &&
+    /^sha256:[a-f0-9]{64}$/i.test(String(evidence.runtime_payload_digest || '')),
   evidence,
   evidence_digest: `sha256:${sha(JSON.stringify(evidence))}`,
   generated_at: new Date().toISOString(),
