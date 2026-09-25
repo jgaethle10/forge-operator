@@ -27,6 +27,12 @@ on:
 permissions:
   contents: write
 
+env:
+  # Use the canonical public origin when it is configured so generated sell-now
+  # surfaces emit tracked CHUM handoff URLs instead of generic review fallbacks.
+  # If the repository variable is unset, start-corridor.mjs safely keeps the fallback.
+  CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
+
 concurrency:
   group: chum-watershed-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
