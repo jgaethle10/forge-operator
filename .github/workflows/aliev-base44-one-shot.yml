@@ -18,6 +18,9 @@ jobs:
       APP_ID: 69b9b64d86a732029ce0db81
       LIVE_URL: https://aliev.base44.app/
       BASE44_API_KEY: ${{ secrets.BASE44_API_KEY }}
+      BASE44_ACCESS_TOKEN: ${{ secrets.BASE44_ACCESS_TOKEN }}
+      BASE44_REFRESH_TOKEN: ${{ secrets.BASE44_REFRESH_TOKEN }}
+      BASE44_PERSONAL_ACCESS_TOKEN: ${{ secrets.BASE44_PERSONAL_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -25,17 +28,33 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Require unattended Base44 machine identity
+      - name: Resolve unattended Base44 machine identity
         shell: bash
         run: |
           set -euo pipefail
-          case "${BASE44_API_KEY:-}" in
-            b44k_*) echo "workspace_api_key present" ;;
-            *) echo "BASE44_API_KEY missing or invalid for unattended publish" >&2; exit 41 ;;
-          esac
+          if [[ "${BASE44_API_KEY:-}" == b44k_* ]]; then
+            echo "AUTH_CLASS=workspace_api_key" >> "$GITHUB_ENV"
+            echo "workspace_api_key present"
+          elif [[ -n "${BASE44_ACCESS_TOKEN:-}" && -n "${BASE44_REFRESH_TOKEN:-}" ]]; then
+            echo "AUTH_CLASS=refreshable_access_token" >> "$GITHUB_ENV"
+            echo "refreshable access-token identity present"
+          else
+            echo "No unattended CLI identity found." >&2
+            [[ -n "${BASE44_ACCESS_TOKEN:-}" ]] && echo "access_token_present=true" >&2 || echo "access_token_present=false" >&2
+            [[ -n "${BASE44_REFRESH_TOKEN:-}" ]] && echo "refresh_token_present=true" >&2 || echo "refresh_token_present=false" >&2
+            [[ -n "${BASE44_PERSONAL_ACCESS_TOKEN:-}" ]] && echo "personal_access_token_present=true" >&2 || echo "personal_access_token_present=false" >&2
+            exit 42
+          fi
 
       - name: Install pinned Base44 CLI
         run: npm install -g base44@0.1.17
+
+      - name: Verify provider identity without printing credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          base44 --json whoami >/tmp/whoami.json
+          node -e "const d=require('/tmp/whoami.json'); console.log(JSON.stringify({authenticated:Boolean(d),auth_class:process.env.AUTH_CLASS}))"
 
       - name: Materialize current AliEV source
         shell: bash
