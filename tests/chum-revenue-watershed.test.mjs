@@ -45,6 +45,24 @@ for (const offer of canonicalSellNow) {
   if (!String(compact.start_url || '').startsWith('https://')) {
     fail(`sell-now offer Start URL is not absolute HTTPS: ${offer.public_id}`);
   }
+  if (!compact.agent_handoff || typeof compact.agent_handoff !== 'object') {
+    fail(`sell-now offer missing agent_handoff: ${offer.public_id}`);
+  }
+  if (!String(compact.agent_handoff?.continue_via?.human_start_url || '').startsWith('https://')) {
+    fail(`sell-now offer agent handoff missing human Start URL: ${offer.public_id}`);
+  }
+  if (!String(compact.agent_handoff?.continue_via?.machine_offer_url || '').startsWith('https://')) {
+    fail(`sell-now offer agent handoff missing machine offer URL: ${offer.public_id}`);
+  }
+  if (!String(compact.agent_handoff?.continue_via?.universal_mcp || '').startsWith('https://')) {
+    fail(`sell-now offer agent handoff missing universal MCP: ${offer.public_id}`);
+  }
+  if (!/explicit human confirmation/i.test(String(compact.agent_handoff?.consent_gate || ''))) {
+    fail(`sell-now offer agent handoff lost explicit confirmation gate: ${offer.public_id}`);
+  }
+  if (!/authoritative provider verification/i.test(String(compact.agent_handoff?.completion_rule || ''))) {
+    fail(`sell-now offer agent handoff lost payment verification rule: ${offer.public_id}`);
+  }
   if (!String(compact.machine_review_url || '').startsWith('https://')) {
     fail(`sell-now offer missing machine review URL: ${offer.public_id}`);
   }
