@@ -20,6 +20,7 @@ import { listForensiScopeGatewayTools, invokeForensiScopeGatewayTool } from './a
 import { handleForensiScopeMcpRequest } from './mcp-protocol.mjs';
 import { issueEvidenceAccessToken } from './evidence-access.mjs';
 import { handleForensiScopeMcpHttp } from './mcp-http.mjs';
+import { runForensiScopeAnalysis } from './pipeline.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -660,6 +661,53 @@ const legacyHttp = handleForensiScopeMcpHttp({
 assert.equal(legacyHttp.status, 200);
 assert.equal(legacyHttp.body.result.isError, false);
 
+const pipelineReceipt = await runForensiScopeAnalysis({
+  source: {
+    path: sourcePath,
+    sha256: sourceHashAfter
+  },
+  authorization: {
+    confirmed: true,
+    scope: 'synthetic-pipeline-proof',
+    authorized_by: 'forensiscope-distributed-proof',
+    confirmed_at: new Date().toISOString()
+  },
+  jobId: 'forensiscope-single-entry-proof',
+  rootDir
+});
+assert.equal(pipelineReceipt.schema, 'evercraft.forensiscope.analysis-receipt.v1');
+assert.equal(pipelineReceipt.status, 'ready');
+assert.equal(pipelineReceipt.source.sha256, sourceHashAfter);
+assert.equal(pipelineReceipt.execution.quality.status, 'pass');
+assert.equal(pipelineReceipt.result.transcription_state, 'transcribed');
+assert.ok(pipelineReceipt.result.transcript_segments > 0);
+assert.ok(/^forensiscope-evidence:sha256:[a-f0-9]{64}$/.test(
+  pipelineReceipt.result.evidence_ref
+));
+assert.equal(pipelineReceipt.truth_boundary.source_path_returned, false);
+assert.equal(pipelineReceipt.truth_boundary.public_machine_intake_enabled, false);
+assert.equal(pipelineReceipt.truth_boundary.checkout_or_payment_created, false);
+
+const pipelineAccess = issueEvidenceAccessToken({
+  evidenceRef: pipelineReceipt.result.evidence_ref,
+  scopes: ['query'],
+  ttlSeconds: 3600,
+  subject: 'forensiscope-pipeline-proof'
+});
+const pipelineQuery = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    evidence_ref: pipelineReceipt.result.evidence_ref,
+    access_token: pipelineAccess.access_token,
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  rootDir
+});
+assert.equal(pipelineQuery.access.verified, true);
+assert.ok(pipelineQuery.result.match_count > 0);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -717,6 +765,10 @@ const proof = {
   mcp_http_header_mismatch_status: modernHttpBadTokenHeader.status,
   mcp_http_header_mismatch_code: modernHttpBadTokenHeader.body.error.code,
   mcp_http_legacy_status: legacyHttp.status,
+  single_entry_pipeline_state: pipelineReceipt.status,
+  single_entry_evidence_ref: pipelineReceipt.result.evidence_ref,
+  single_entry_transcript_segments: pipelineReceipt.result.transcript_segments,
+  single_entry_query_matches: pipelineQuery.result.match_count,
   public_machine_intake_enabled: false
 };
 
