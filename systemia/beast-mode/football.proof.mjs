@@ -52,7 +52,7 @@ assert.equal(opened.cargo_id, manifest.cargo_id);
 assert.ok(opened.artifacts.get('report').equals(first));
 assert.ok(opened.artifacts.get('plan').equals(second));
 
-const parts = splitFootball(sealed.buffer, 4096);
+const parts = splitFootball(sealed.buffer, 2048);
 assert.ok(parts.length > 1);
 const joined = joinFootball([...parts].reverse());
 assert.ok(joined.equals(sealed.buffer));
