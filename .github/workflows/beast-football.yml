@@ -1,0 +1,35 @@
+name: BEAST Football proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/beast-mode/**"
+      - "package.json"
+      - ".github/workflows/beast-football.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/beast-mode/**"
+      - "package.json"
+      - ".github/workflows/beast-football.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-football:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove BEAST base contract
+        run: npm run proof:beast-mode
+      - name: Prove Football pack throw catch unpack
+        run: npm run proof:beast-football
