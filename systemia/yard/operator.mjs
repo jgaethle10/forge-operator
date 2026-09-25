@@ -400,6 +400,87 @@ export class YardOperator {
     return record;
   }
 
+  async pushMissionSnapshot(deploymentId, {
+    sourceKey,
+    snapshot,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.kaidance-collider.v1') {
+      throw new Error('deployment is not KAIDANCE');
+    }
+    if (!record.result?.service_id || record.result?.mission_ingress_supported !== true) {
+      throw new Error('KAIDANCE mission ingress is not enabled');
+    }
+    const key = String(sourceKey || '').trim();
+    if (!/^[a-zA-Z0-9._-]{1,96}$/.test(key)) {
+      throw new Error('mission source key is invalid');
+    }
+
+    const accepted = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/missions/${encodeURIComponent(key)}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          snapshot,
+        }),
+      }
+    );
+
+    record.missions = {
+      ...(record.missions || {}),
+      [key]: {
+        snapshot_ref: accepted.snapshot_ref || null,
+        ingress_receipt_hash: accepted.receipt?.receipt_hash || null,
+        pushed_at: new Date().toISOString(),
+      },
+    };
+    record.updated_at = new Date().toISOString();
+    this.#persist(record);
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      source_key: key,
+      snapshot_ref: accepted.snapshot_ref || null,
+      receipt_hash: accepted.receipt?.receipt_hash || null,
+    };
+  }
+
+  async triggerKaidanceCycle(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.kaidance-collider.v1') {
+      throw new Error('deployment is not KAIDANCE');
+    }
+    if (!record.result?.service_id) throw new Error('KAIDANCE service is unavailable');
+
+    const attempted = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/cycle`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ token: secret.token }),
+      }
+    );
+    record.management = {
+      ...(record.management || {}),
+      last_cycle_attempt_receipt: attempted.receipt?.receipt_hash || null,
+      last_cycle_attempt_at: new Date().toISOString(),
+    };
+    record.updated_at = new Date().toISOString();
+    this.#persist(record);
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      cycle_result: attempted.cycle_result,
+      receipt_hash: attempted.receipt?.receipt_hash || null,
+    };
+  }
+
   async deployDiscoveredRelease({
     deploymentId,
     releaseRef,
