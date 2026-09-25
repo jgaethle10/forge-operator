@@ -173,10 +173,13 @@ function baseReceipt(assignment, source, bounds) {
   };
 }
 
-export async function runAssignment({ assignment, rootDir }) {
+export async function runAssignment({ assignment, rootDir, executionContext = {} }) {
   requireMediaTools();
   const raw = assignment.item?.raw || {};
-  const source = validateAuthorizedMediaSource(raw, { rootDir });
+  const source = validateAuthorizedMediaSource(raw, {
+    rootDir,
+    additionalRoots: executionContext.media_roots || []
+  });
   const bounds = shardBounds(raw);
   const receipt = baseReceipt(assignment, source, bounds);
   const outDir = artifactDir(rootDir, raw);
