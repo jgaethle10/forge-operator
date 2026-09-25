@@ -104,6 +104,17 @@ async function writeHashedRequest(req, target, maxBytes) {
   }
 }
 
+function configuredExecutableAvailable({
+  enabled,
+  executable
+}) {
+  if (String(enabled || '').toLowerCase() !== 'true') return false;
+  const command = String(executable || '').trim();
+  if (!command) return false;
+  if (path.isAbsolute(command)) return fs.existsSync(command);
+  return executableAvailable(command);
+}
+
 function boundedLeaseTtl(value, fallback) {
   const requested = Number(value || fallback);
   if (!Number.isFinite(requested)) return fallback;
@@ -136,6 +147,12 @@ export async function startEvercraftComputeNode({
   const executableCapabilities = {
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
+  };
+  const serviceCapabilities = {
+    forensiscope_transcription: configuredExecutableAvailable({
+      enabled: process.env.FORENSISCOPE_TRANSCRIBE_ENABLED,
+      executable: process.env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE
+    })
   };
   const leases = new Map();
   const services = new Map();
@@ -216,7 +233,8 @@ export async function startEvercraftComputeNode({
           capacity_hint: {
             cpu_units: Math.max(1, os.cpus()?.length || 1),
             memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024)),
-            executables: executableCapabilities
+            executables: executableCapabilities,
+            services: serviceCapabilities
           },
           expires_at: new Date(Date.now() + 60_000).toISOString(),
         });
