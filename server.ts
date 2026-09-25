@@ -9,6 +9,7 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 
 dotenv.config();
 
@@ -26,6 +27,10 @@ const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.tr
 const machineCommerceGatewayUrl =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const crawlerRadarStore = createCrawlerRadarStore({
+  maxEvents: Number(process.env.CHUM_CRAWLER_RADAR_MAX_EVENTS || 5000),
+  persistPath: process.env.CHUM_CRAWLER_OBSERVATION_PATH?.trim() || '',
+});
 
 const firstPartyRoutingPath = path.resolve(__dirname, 'registry', 'first-party-routing.json');
 const firstPartyRouting = JSON.parse(fs.readFileSync(firstPartyRoutingPath, 'utf8')) as {
@@ -170,6 +175,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
   '</chum/hot/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Hot Discovery Queue"',
+  '</chum/crawler-radar.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Crawler Radar"',
   `<${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"`,
 ];
 
@@ -184,8 +190,24 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname.startsWith('/chum/') ||
     pathname === '/api/capabilities' ||
     pathname === '/api/discover' ||
-    pathname === '/api/revenue-watershed';
+    pathname === '/api/revenue-watershed' ||
+    pathname === '/api/chum/crawler-radar';
 }
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (isChumDiscoverySurface(req.path) && (req.method === 'GET' || req.method === 'HEAD')) {
+    res.on('finish', () => {
+      crawlerRadarStore.observe({
+        pathname: req.path,
+        method: req.method,
+        userAgent: req.get('user-agent') || '',
+        statusCode: res.statusCode,
+        observedAt: new Date(),
+      });
+    });
+  }
+  next();
+});
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   if (!isChumDiscoverySurface(req.path)) {
@@ -290,6 +312,11 @@ app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
     return;
   }
   next();
+});
+
+app.get('/api/chum/crawler-radar', (_req: Request, res: Response) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json(crawlerRadarStore.snapshot());
 });
 
 function loadPublicMachineCatalog(): any {
