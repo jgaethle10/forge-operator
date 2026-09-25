@@ -24,7 +24,7 @@
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs && node systemia/release/scoped-approval.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
-    "test:media-studio": "node --import tsx --test systemia/media-studio/director.test.ts",
+    "test:media-studio": "node --import tsx --test systemia/media-studio/*.test.ts",
     "check:probes": "node scripts/validate-nexus-cross-llm-probes.mjs",
     "probe:cross-llm": "node scripts/run-nexus-cross-llm-probes.mjs",
     "chum:mirror": "node systemia/chum/build-public-mirror.mjs",
