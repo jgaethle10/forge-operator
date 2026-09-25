@@ -43,3 +43,15 @@ npm run proof:blackout-resilience
 The current automated drill replicates critical state across three Hearth nodes, verifies delayed-message expiry and duplicate suppression, then removes the primary Nexus, Guardian, team runtime, and two Hearth replicas. The mission must resume on the surviving Nexus from the final Hearth copy while Guardian, team runtime, and local inference remain available on secondary nodes.
 
 This remains a control-plane proof. Physical Wi-Fi Direct, BLE, radio, power-loss, battery, and multi-device partition tests still require field receipts.
+
+## Partition reconciliation
+
+Blackout survival is incomplete unless the fabric can reconnect safely. The reconciliation layer validates checkpoint lineage, rejects corruption, refuses to auto-resolve genuine forks, plans Hearth replica refill, and classifies recovered delayed work so irreversible actions are held instead of replayed.
+
+Run the proof:
+
+```bash
+npm run proof:partition-reconciliation
+```
+
+The same proof also exercises authenticated AES-256-GCM delayed-delivery envelopes, destination binding, tamper rejection, expiry, and stable-message replay protection.
