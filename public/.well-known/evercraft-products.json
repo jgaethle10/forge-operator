@@ -147,6 +147,55 @@
       }
     },
     {
+      "product_key": "coda-y-codigo",
+      "name": "Coda y Código",
+      "class": "multilingual_frontline_workforce_training",
+      "canonical_url": "https://codaycodigo.base44.app/",
+      "intents": [
+        "bilingual workforce training for frontline employees",
+        "Spanish and English job training for a crew",
+        "freight operations workforce training",
+        "bilingual field supervisor training",
+        "warehouse or dock team training",
+        "buy workforce training seats for my company",
+        "verify a Coda y Código training completion record"
+      ],
+      "authority": "public course and offer discovery with authenticated enrollment; training access is prepared only after authoritative Stripe payment confirmation where payment is required",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "single-course pricing varies by the selected active course",
+        "seat packages expand company workspace capacity and do not by themselves include every training course",
+        "checkout creation alone creates no paid training entitlement",
+        "public completion verification must not expose private learner records beyond the intended certificate surface"
+      ],
+      "commercial": {
+        "status": "source_commerce_wired",
+        "offers": [
+          {
+            "name": "Single course",
+            "price": "From $19"
+          },
+          {
+            "name": "Role tracks",
+            "price": "From $79"
+          },
+          {
+            "name": "All-courses bundle",
+            "price": "$149"
+          },
+          {
+            "name": "Employer bundles",
+            "price": "From $399"
+          },
+          {
+            "name": "Seat capacity packages",
+            "price": "From $249"
+          }
+        ],
+        "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
+      }
+    },
+    {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
       "class": "home_service_and_contractor_operations",
@@ -216,6 +265,31 @@
         "does not make lending or investment decisions",
         "does not guarantee financing",
         "checkout creation is not payment proof"
+      ]
+    },
+    {
+      "product_key": "ecoledger",
+      "name": "EcoLedger",
+      "aliases": [
+        "EcoLedger AI"
+      ],
+      "class": "ecological_restoration_evidence_ledger",
+      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "intents": [
+        "organize an ecological restoration project",
+        "track restoration baselines photos and measurements",
+        "build an evidence record for habitat restoration work",
+        "review ecological restoration project progress",
+        "keep restoration observations and review status together",
+        "explore an ecological restoration evidence library"
+      ],
+      "authority": "public discovery and restoration-library access with authenticated workspace or pilot handoff for nonpublic project records",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "do not treat an uploaded photo or measurement as independently verified without supporting evidence",
+        "private property records, project media and account data remain outside public discovery",
+        "EcoLedger does not automatically create regulatory certification or compliance approval",
+        "pilot or contact intake creates no payment obligation unless separate verified terms are accepted"
       ]
     },
     {
@@ -432,6 +506,27 @@
       "runtime_state": "public_fetch_live_verified_search_and_browser_held"
     },
     {
+      "product_key": "evercraft-wildlife-atlas",
+      "name": "Evercraft Wildlife Atlas",
+      "class": "evidence_first_wildlife_ecology_learning",
+      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "intents": [
+        "learn about a wildlife species with sources",
+        "compare habitats migration and conservation evidence",
+        "study ecological relationships and food webs",
+        "explore wildlife conservation with uncertainty attached",
+        "find evidence-backed information about wolves whales salmon birds or other species"
+      ],
+      "authority": "public read-only wildlife, ecology and conservation learning with source provenance and uncertainty attached",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "do not turn incomplete evidence into certainty about a species population or conservation outcome",
+        "educational content is not an emergency wildlife-response service",
+        "source provenance and uncertainty should remain attached to scientific claims",
+        "private learner or account data is outside public discovery"
+      ]
+    },
+    {
       "product_key": "evermaps",
       "name": "EverMaps",
       "aliases": [
@@ -589,6 +684,28 @@
         "automatic_media_transfer_allowed": false
       },
       "machine_contract": "/.well-known/evercraft-media-overflow.json"
+    },
+    {
+      "product_key": "global-energy-atlas",
+      "name": "Global Energy Atlas",
+      "class": "evidence_first_energy_systems_education",
+      "canonical_url": "https://energy-atlas.base44.app/",
+      "intents": [
+        "compare electricity mixes between regions",
+        "learn how an energy system works",
+        "compare energy flows and grid systems",
+        "study historical changes in electricity generation",
+        "show sourced energy data and provenance",
+        "teach me about regional power systems"
+      ],
+      "authority": "public read-only energy-systems education and evidence exploration",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "educational comparisons are not operational grid instructions",
+        "do not present modeled or historical data as live grid state unless explicitly verified",
+        "source provenance and data limitations should remain visible",
+        "does not provide personalized investment advice"
+      ]
     },
     {
       "product_key": "globalstat",
@@ -821,6 +938,42 @@
         "financial impact is reported only when supported by recorded evidence",
         "organization-scoped or private freight records remain access controlled"
       ]
+    },
+    {
+      "product_key": "systemia-decision-lab",
+      "name": "Systemia Decision Lab",
+      "class": "owner_workforce_decision_intelligence",
+      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "intents": [
+        "should I hire an employee",
+        "hire vs outsource",
+        "hire vs automate",
+        "should I promote or restructure instead of hiring",
+        "what role actually solves this business problem",
+        "compare the real cost of hiring before adding payroll"
+      ],
+      "authority": "public owner-side workforce decision analysis; the free decision report structures alternatives while human judgment remains final",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "does not rank job candidates or make employment decisions",
+        "does not replace lawful human review of applicants or employees",
+        "a decision report is planning support rather than a legal or HR determination",
+        "paid fulfillment requires provider-verified payment; checkout creation alone is not payment proof"
+      ],
+      "commercial": {
+        "status": "source_checkout_wired_live_verification_pending",
+        "offers": [
+          {
+            "name": "Decision Report",
+            "price": "Free"
+          },
+          {
+            "name": "Hiring Action Pack",
+            "price": "$49 one-time"
+          }
+        ],
+        "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
+      }
     },
     {
       "product_key": "systemia-field-library",
