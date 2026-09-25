@@ -1,19 +1,17 @@
 {
-  "schema": "evercraft.rivet-aliev.discovery.v1",
+  "schema": "evercraft.rivet.discovery.v2",
   "provider": "Evercraft LLC",
-  "name": "RIVET / AliEV EV Infrastructure Intelligence",
+  "name": "RIVET",
   "aliases": [
-    "RIVET",
     "Evercraft RIVET",
-    "RIVET EV Infrastructure Intelligence",
-    "AliEV",
-    "AliEV EV Charging Opportunity Intelligence",
-    "AliEV EV Site Analysis"
+    "RIVET EV Infrastructure Intelligence"
   ],
-  "relationship": {
-    "aliev": "Address-level EV infrastructure intelligence engine.",
-    "rivet": "Customer-facing planning and reporting layer that turns AliEV intelligence into property-specific deliverables."
-  },
+  "purpose": "Turn location data into confident EV infrastructure decisions.",
+  "process": [
+    "locate",
+    "assess",
+    "decide"
+  ],
   "use_when": [
     "should I install EV chargers at my property",
     "EV charger feasibility by address",
@@ -40,11 +38,11 @@
     "modeled economics",
     "preliminary planning outputs"
   ],
-  "canonical_aliev": "https://aliev.base44.app/",
-  "registry_name": "io.github.jgaethle10/aliev",
-  "mcp": "https://aliev.base44.app/functions/alievMcp",
-  "chum_product": "/chum/products/aliev/",
-  "boundaries": [
+  "public_surface": "/rivet/",
+  "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
+  "knowledge_mesh": "/rivet/mesh/",
+  "brand_manifest": "/rivet/brand.json",
+  "evidence_boundaries": [
     "missing data is not zero",
     "mapped charger inventory is not observed utilization",
     "program presence is not proof of site incentive eligibility",
