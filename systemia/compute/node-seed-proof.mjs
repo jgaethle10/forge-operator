@@ -52,6 +52,8 @@ try {
   assert.equal(capacity.body.allocation_auth, 'bearer');
   assert.equal(capacity.body.node_identity.algorithm, 'ed25519');
   assert.equal(capacity.body.node_identity.public_key_fingerprint_sha256, seed.node_identity.public_key_fingerprint_sha256);
+  assert.equal(capacity.body.node_identity.algorithm, 'ed25519');
+  assert.equal(capacity.body.node_identity.public_key_fingerprint_sha256, seed.node_identity.public_key_fingerprint_sha256);
 
   const unauthorized = await raw(`${seed.endpoint}/v1/leases`, {
     method: 'POST',
@@ -70,6 +72,8 @@ try {
   });
   assert.ok(discovery.some((x) => x.endpoint === seed.endpoint));
   assert.ok(discovery.every((x) => x.carries_credentials === false));
+  assert.ok(discovery.every((x) => x.signature_verified === true));
+  assert.ok(discovery.some((x) => x.public_key_fingerprint_sha256 === seed.node_identity.public_key_fingerprint_sha256));
   assert.ok(discovery.every((x) => x.signature_verified === true));
   assert.ok(discovery.some((x) => x.public_key_fingerprint_sha256 === seed.node_identity.public_key_fingerprint_sha256));
 
