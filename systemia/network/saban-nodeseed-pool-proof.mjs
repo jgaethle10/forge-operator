@@ -78,6 +78,9 @@ try {
   assert.equal(receipt.completed_assignments, assignments.length);
   assert.equal(receipt.failed_assignments, 0);
   assert.ok(receipt.failover_assignments > 0);
+  assert.equal(receipt.lease_renewals.supported_nodes, 2);
+  assert.ok(receipt.lease_renewals.renewed >= 2);
+  assert.equal(receipt.lease_renewals.failed, 0);
   assert.ok(
     receipt.events.some(
       (event) =>
@@ -120,6 +123,7 @@ try {
     completed: receipt.completed_assignments,
     failed: receipt.failed_assignments,
     failovers: receipt.failover_assignments,
+    lease_renewals: receipt.lease_renewals.renewed,
     idempotency_preserved: true,
     killed_node: 'saban-pool-node-a',
     surviving_node: 'saban-pool-node-b'
