@@ -874,7 +874,9 @@
         "llms": "/forensiscope/developers/llms.txt",
         "examples": "/forensiscope/developers/examples.json",
         "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
-        "registry_name": "io.github.jgaethle10/forensiscope"
+        "registry_name": "io.github.jgaethle10/forensiscope",
+        "playground": "/forensiscope/developers/playground.html",
+        "clients": "/forensiscope/developers/clients/"
       }
     },
     {
