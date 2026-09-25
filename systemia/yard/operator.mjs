@@ -321,6 +321,23 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_health_verified';
+      } else if (workloadClass === 'systemia.core-supervisor.v1') {
+        const coreHealthy =
+          health.running === true &&
+          Number(health.failed_count || 0) === 0 &&
+          Number(health.held_count || 0) === 0 &&
+          Number(health.service_count || 0) > 0;
+        if (!coreHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Systemia Core supervisor failed initial health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_core_health_verified';
       }
     }
 
@@ -712,7 +729,16 @@ export class YardOperator {
         record.management.health_path,
         record.lease.capacity_endpoint
       ).toString());
-      const ok = health.state === 'healthy' && health.coverage_receipt_valid === true;
+      let ok = false;
+      if (record.receipt?.workload_class === 'systemia.kaidance-collider.v1') {
+        ok = health.state === 'healthy' && health.coverage_receipt_valid === true;
+      } else if (record.receipt?.workload_class === 'systemia.core-supervisor.v1') {
+        ok =
+          health.running === true &&
+          Number(health.failed_count || 0) === 0 &&
+          Number(health.held_count || 0) === 0 &&
+          Number(health.service_count || 0) > 0;
+      }
       return { ok, state: ok ? 'healthy' : 'degraded', health };
     } catch (error) {
       return { ok: false, state: 'unreachable', error: String(error?.message || error) };

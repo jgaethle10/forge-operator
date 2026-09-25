@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
+import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -138,6 +139,7 @@ export async function startEvercraftComputeNode({
   const services = new Map();
   const supported = new Set([
     'systemia.private-core-origin.v1',
+    'systemia.core-supervisor.v1',
     'systemia.kaidance-collider.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
@@ -364,6 +366,100 @@ export async function startEvercraftComputeNode({
           });
           const receipt = chain.issue('workload.completed', {
             lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.core-supervisor.v1') {
+          const stateRoot = path.resolve(String(body.input?.state_root || ''));
+          const yardStateDir = path.resolve(String(body.input?.yard_state_dir || ''));
+          const kaidanceDeploymentId = String(body.input?.kaidance_deployment_id || '').trim();
+
+          if (!stateRoot || !yardStateDir || !kaidanceDeploymentId) {
+            return send(res, 422, { error: 'core_supervisor_runtime_bindings_required' });
+          }
+          if (!isWithin(allowedRoot, stateRoot) || !isWithin(allowedRoot, yardStateDir)) {
+            return send(res, 403, { error: 'core_supervisor_path_outside_admitted_root' });
+          }
+
+          const workspaceRoot = path.join(stateRoot, 'workspace');
+          const legacyOut = path.join(workspaceRoot, 'legacy-rescue-watch');
+          const node001Field = path.join(workspaceRoot, 'node001-field', 'megatron');
+          const node001Status = path.join(workspaceRoot, 'node001-field', 'megatron-status');
+          const publisherLedger = path.join(workspaceRoot, 'mission-publisher', 'ledger.json');
+          const missionSourcesConfig = path.join(workspaceRoot, 'mission-sources.json');
+          fs.mkdirSync(workspaceRoot, { recursive: true, mode: 0o750 });
+          atomicJson(missionSourcesConfig, {
+            schema: 'evercraft.kaidance.mission-fabric-config.v1',
+            sources: [
+              {
+                source_key: 'legacy-rescue-opportunity-watch',
+                path: 'legacy-rescue-watch/mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
+              {
+                source_key: 'node001-megatron-field-certification',
+                path: 'node001-field/megatron-status/mission-snapshot.json',
+                required: true,
+                stale_after_seconds: 900,
+              },
+            ],
+          });
+
+          const serviceEnv = {
+            NODE_ENV: String(process.env.NODE_ENV || 'production'),
+            SYSTEMIA_YARD_STATE_DIR: yardStateDir,
+            KAIDANCE_DEPLOYMENT_ID: kaidanceDeploymentId,
+            SYSTEMIA_WORKSPACE_ROOT: workspaceRoot,
+            SYSTEMIA_LEGACY_RESCUE_SIGNALS_FILE: path.join(
+              workspaceRoot,
+              'legacy-rescue-watch',
+              'signals.json'
+            ),
+            SYSTEMIA_LEGACY_RESCUE_OUT_DIR: legacyOut,
+            SYSTEMIA_NODE001_FIELD_DIR: node001Field,
+            SYSTEMIA_NODE001_STATUS_DIR: node001Status,
+            SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
+            SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
+          };
+
+          const supervisor = new SystemiaCoreResidentSupervisor({
+            repoRoot: CODE_ROOT,
+            configPath: path.join(CODE_ROOT, 'systemia', 'core', 'resident-services.json'),
+            stateDir: path.join(stateRoot, 'supervisor'),
+            env: serviceEnv,
+          });
+          const health = supervisor.start({ immediateCycles: true });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          const service = {
+            close: async () => supervisor.stop(),
+          };
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime: supervisor,
+            service,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            health_path: `/v1/services/${serviceId}/health`,
+            supervised_service_count: health.service_count,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
             workload_class: body.workload_class,
             result_schema: result.schema,
           });

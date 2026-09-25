@@ -6,14 +6,22 @@
       "mode": "cycle",
       "manifest": "systemia/organism/legacy-rescue-watch.workflow.json",
       "executable": "systemia/organism/legacy-rescue-watch-runner.mjs",
-      "cadence_seconds": 300
+      "cadence_seconds": 300,
+      "optional_env_args": {
+        "--signals": "SYSTEMIA_LEGACY_RESCUE_SIGNALS_FILE",
+        "--out": "SYSTEMIA_LEGACY_RESCUE_OUT_DIR"
+      }
     },
     {
       "service_key": "node001-field-certification-watch",
       "mode": "cycle",
       "manifest": "systemia/organism/node001-field-certification.workflow.json",
       "executable": "systemia/organism/node001-field-certification-runner.mjs",
-      "cadence_seconds": 300
+      "cadence_seconds": 300,
+      "optional_env_args": {
+        "--dir": "SYSTEMIA_NODE001_FIELD_DIR",
+        "--out": "SYSTEMIA_NODE001_STATUS_DIR"
+      }
     },
     {
       "service_key": "kaidance-mission-publisher",
@@ -29,7 +37,8 @@
       },
       "optional_env_args": {
         "--allowed-root": "SYSTEMIA_WORKSPACE_ROOT",
-        "--ledger": "SYSTEMIA_MISSION_PUBLISHER_LEDGER"
+        "--ledger": "SYSTEMIA_MISSION_PUBLISHER_LEDGER",
+        "--config": "SYSTEMIA_MISSION_SOURCES_CONFIG"
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000
