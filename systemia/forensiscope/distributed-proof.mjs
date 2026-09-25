@@ -270,6 +270,7 @@ const agentTools = listForensiScopeAgentTools();
 assert.deepEqual(
   agentTools.map((tool) => tool.name).sort(),
   [
+    'forensiscope_build_context_packet',
     'forensiscope_get_duplicate_relationships',
     'forensiscope_get_timeline',
     'forensiscope_query_evidence'
@@ -311,6 +312,27 @@ const agentDuplicates = invokeForensiScopeAgentTool({
 assert.ok(agentDuplicates.count > 0);
 assert.equal(agentDuplicates.source_sha256, sourceHashAfter);
 
+const contextPacket = invokeForensiScopeAgentTool({
+  name: 'forensiscope_build_context_packet',
+  args: {
+    query: 'boundary-3',
+    max_chars: 4000,
+    top_k: 3,
+    context_radius_seconds: 3
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.equal(contextPacket.schema, 'evercraft.forensiscope.context-packet.v1');
+assert.equal(contextPacket.source_sha256, sourceHashAfter);
+assert.ok(contextPacket.atoms.length > 0);
+assert.ok(contextPacket.evidence_ids.length > 0);
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(contextPacket.packet_digest));
+assert.ok(contextPacket.used_chars_estimate <= contextPacket.budget_chars);
+assert.equal(
+  contextPacket.downstream_instruction.answer_only_from_packet_or_explicitly_state_insufficient_evidence,
+  true
+);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -344,6 +366,9 @@ const proof = {
   agent_query_matches: agentEvidenceQuery.match_count,
   agent_timeline_nodes: agentTimeline.count,
   agent_near_duplicate_relationships: agentDuplicates.count,
+  context_packet_atoms: contextPacket.atoms.length,
+  context_packet_digest: contextPacket.packet_digest,
+  context_packet_budget_chars: contextPacket.budget_chars,
   public_machine_intake_enabled: false
 };
 
