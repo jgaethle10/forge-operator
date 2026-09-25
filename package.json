@@ -73,7 +73,12 @@
     "proof:legacy-rescue-link-discovery": "node systemia/organism/legacy-rescue-link-discovery.proof.mjs",
     "chum:crawl-pressure": "node systemia/chum/crawl-accelerator.mjs",
     "chum:crawl-pressure:broadcast": "node systemia/chum/crawl-accelerator.mjs --broadcast",
-    "test:chum-crawl-pressure": "node tests/chum-crawl-accelerator.test.mjs"
+    "test:chum-crawl-pressure": "node tests/chum-crawl-accelerator.test.mjs",
+    "saban:multiply": "node systemia/saban/multiplier.mjs",
+    "saban:chum:10000": "node systemia/saban/multiplier.mjs --software chum --agents 10000 --workers 32",
+    "proof:saban-kernel": "node systemia/saban/kernel-proof.mjs",
+    "proof:saban-chum": "node systemia/saban/multiplier.mjs --software chum --agents 512 --workers 16 --execute",
+    "proof:saban-media": "node systemia/saban/multiplier.mjs --software media-pipeline --inventory systemia/saban/fixtures/media-job.json --agents 32 --workers 4 --execute --reconcile"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
