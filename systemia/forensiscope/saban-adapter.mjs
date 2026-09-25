@@ -102,6 +102,154 @@ function keyframeTimeline(sourcePath, bounds) {
     .filter((frame) => Number.isFinite(frame.timestamp_seconds));
 }
 
+function perceptualFrameSignatures(sourcePath, bounds, sampleSeconds = 2) {
+  const result = spawnSync('ffmpeg', [
+    '-v', 'error',
+    '-ss', String(bounds.start),
+    '-t', String(bounds.duration),
+    '-i', sourcePath,
+    '-map', '0:v:0',
+    '-vf', `fps=1/${sampleSeconds},scale=9:8:flags=area,format=rgb24`,
+    '-f', 'rawvideo',
+    '-pix_fmt', 'rgb24',
+    'pipe:1'
+  ], {
+    encoding: null,
+    maxBuffer: 64 * 1024 * 1024
+  });
+
+  if (result.status !== 0) {
+    throw new Error(
+      `perceptual frame hashing failed: ${String(result.stderr || '').trim().slice(-500)}`
+    );
+  }
+
+  const bytes = Buffer.isBuffer(result.stdout)
+    ? result.stdout
+    : Buffer.from(result.stdout || []);
+  const frameBytes = 9 * 8 * 3;
+  const signatures = [];
+
+  for (let offset = 0; offset + frameBytes <= bytes.length; offset += frameBytes) {
+    const frame = bytes.subarray(offset, offset + frameBytes);
+    let hash = 0n;
+    let bit = 0n;
+    let rSum = 0;
+    let gSum = 0;
+    let bSum = 0;
+
+    for (let y = 0; y < 8; y += 1) {
+      for (let x = 0; x < 9; x += 1) {
+        const pixel = (y * 9 + x) * 3;
+        rSum += frame[pixel];
+        gSum += frame[pixel + 1];
+        bSum += frame[pixel + 2];
+      }
+
+      for (let x = 0; x < 8; x += 1) {
+        const left = (y * 9 + x) * 3;
+        const right = (y * 9 + x + 1) * 3;
+        const leftLuma =
+          frame[left] * 299 +
+          frame[left + 1] * 587 +
+          frame[left + 2] * 114;
+        const rightLuma =
+          frame[right] * 299 +
+          frame[right + 1] * 587 +
+          frame[right + 2] * 114;
+        if (leftLuma > rightLuma) hash |= 1n << bit;
+        bit += 1n;
+      }
+    }
+
+    const pixels = 9 * 8;
+    signatures.push({
+      sample_index: signatures.length,
+      timestamp_seconds:
+        bounds.offset + bounds.start + signatures.length * sampleSeconds,
+      dhash64: hash.toString(16).padStart(16, '0'),
+      mean_rgb: [
+        Math.round(rSum / pixels),
+        Math.round(gSum / pixels),
+        Math.round(bSum / pixels)
+      ]
+    });
+  }
+
+  return signatures;
+}
+
+function hammingHex(a, b) {
+  let value = BigInt(`0x${a}`) ^ BigInt(`0x${b}`);
+  let count = 0;
+  while (value) {
+    value &= value - 1n;
+    count += 1;
+  }
+  return count;
+}
+
+function colorDistance(a = [], b = []) {
+  return [0, 1, 2].reduce(
+    (sum, index) => sum + Math.abs(Number(a[index] || 0) - Number(b[index] || 0)),
+    0
+  );
+}
+
+function nearDuplicatePairs(signatures, {
+  maxHamming = 6,
+  maxColorDistance = 42,
+  maxPairs = 500
+} = {}) {
+  const buckets = new Map();
+  const pairs = [];
+  const seen = new Set();
+
+  for (const signature of signatures) {
+    const bands = [
+      signature.dhash64.slice(0, 4),
+      signature.dhash64.slice(4, 8),
+      signature.dhash64.slice(8, 12),
+      signature.dhash64.slice(12, 16)
+    ];
+
+    const candidates = new Set();
+    for (const band of bands) {
+      for (const prior of buckets.get(band) || []) candidates.add(prior);
+    }
+
+    for (const prior of candidates) {
+      const pairKey = [
+        Math.min(prior.sample_index, signature.sample_index),
+        Math.max(prior.sample_index, signature.sample_index)
+      ].join(':');
+      if (seen.has(pairKey)) continue;
+      seen.add(pairKey);
+
+      const hamming = hammingHex(prior.dhash64, signature.dhash64);
+      const color = colorDistance(prior.mean_rgb, signature.mean_rgb);
+      if (hamming <= maxHamming && color <= maxColorDistance) {
+        pairs.push({
+          first_timestamp_seconds: prior.timestamp_seconds,
+          second_timestamp_seconds: signature.timestamp_seconds,
+          hamming_distance: hamming,
+          color_distance: color,
+          first_shard_index: prior.shard_index ?? null,
+          second_shard_index: signature.shard_index ?? null
+        });
+        if (pairs.length >= maxPairs) return pairs;
+      }
+    }
+
+    for (const band of bands) {
+      if (!buckets.has(band)) buckets.set(band, []);
+      buckets.get(band).push(signature);
+    }
+  }
+
+  return pairs;
+}
+
 function frameHashes(sourcePath, bounds, sampleSeconds = 2) {
   const result = run('ffmpeg', [
     '-v', 'error',
@@ -222,7 +370,8 @@ export async function runAssignment({ assignment, rootDir, executionContext = {}
         ...receipt,
         data: {
           sample_interval_seconds: 2,
-          frame_hashes: frameHashes(source.path, bounds, 2)
+          frame_hashes: frameHashes(source.path, bounds, 2),
+          perceptual_signatures: perceptualFrameSignatures(source.path, bounds, 2)
         }
       };
 
@@ -277,6 +426,7 @@ function dedupeTimeline(entries) {
 
 export async function reconcile({ results, contract }) {
   const frameOccurrences = new Map();
+  const perceptualSignatures = [];
   const timeline = [];
   const audio = [];
   const provenance = [];
@@ -290,6 +440,13 @@ export async function reconcile({ results, contract }) {
       if (!frameOccurrences.has(frame.hash)) frameOccurrences.set(frame.hash, []);
       frameOccurrences.get(frame.hash).push({
         timestamp_seconds: frame.timestamp_seconds,
+        shard_index: result.shard?.shard_index ?? null
+      });
+    }
+
+    for (const signature of result?.data?.perceptual_signatures || []) {
+      perceptualSignatures.push({
+        ...signature,
         shard_index: result.shard?.shard_index ?? null
       });
     }
@@ -317,6 +474,15 @@ export async function reconcile({ results, contract }) {
     });
   }
 
+  const perceptualPairs = nearDuplicatePairs(
+    perceptualSignatures.sort((a, b) => a.timestamp_seconds - b.timestamp_seconds)
+  );
+  const nearRepeatedPairs = perceptualPairs.filter(
+    (pair) =>
+      Math.abs(pair.second_timestamp_seconds - pair.first_timestamp_seconds) >
+      Math.max(2, overlap + 1)
+  );
+
   const originalHashes = new Set(
     provenance
       .map((entry) => entry?.original_source_sha256)
@@ -338,7 +504,11 @@ export async function reconcile({ results, contract }) {
     duplicate_review: {
       duplicate_hash_groups: duplicates.length,
       repeated_content_groups: repeatedContent.length,
-      groups: duplicates.slice(0, 200)
+      perceptual_signature_count: perceptualSignatures.length,
+      near_duplicate_pairs: perceptualPairs.length,
+      near_repeated_pairs: nearRepeatedPairs.length,
+      exact_groups: duplicates.slice(0, 200),
+      perceptual_pairs: nearRepeatedPairs.slice(0, 200)
     },
     audio_assets: audio,
     transcription: {
