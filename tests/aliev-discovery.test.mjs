@@ -89,6 +89,28 @@ for (const route of ['/rivet/','/rivet/llms.txt','/rivet/discovery.json']) {
   if (!sitemap.includes(route)) fail('sitemap missing dedicated RIVET route: ' + route);
 }
 
+
+const rivetMesh = JSON.parse(fs.readFileSync('public/rivet/mesh/index.json','utf8'));
+if (rivetMesh.schema !== 'evercraft.rivet-aliev.semantic-mesh.v1') fail('RIVET semantic mesh schema');
+if (!Array.isArray(rivetMesh.pages) || rivetMesh.pages.length !== 6) fail('RIVET semantic mesh expected 6 pages');
+const meshSlugs = new Set();
+for (const page of rivetMesh.pages) {
+  if (meshSlugs.has(page.slug)) fail('RIVET semantic mesh duplicate slug: ' + page.slug);
+  meshSlugs.add(page.slug);
+  const file = 'public' + page.url + 'index.html';
+  if (!fs.existsSync(file)) fail('RIVET semantic mesh missing page: ' + file);
+  const html = fs.readFileSync(file,'utf8');
+  if (!html.includes('RIVET / AliEV')) fail('RIVET semantic mesh lost entity anchor: ' + page.slug);
+  if (!html.includes('Evidence boundaries')) fail('RIVET semantic mesh lost evidence boundary: ' + page.slug);
+  if (!html.includes('io.github.jgaethle10/aliev')) fail('RIVET semantic mesh lost registry identity: ' + page.slug);
+  if (/[\u2013\u2014]/.test(html)) fail('RIVET semantic mesh contains forbidden dash: ' + page.slug);
+  if (html.length < 2400) fail('RIVET semantic mesh thin page: ' + page.slug);
+  if (!sitemap.includes(page.url)) fail('sitemap missing RIVET semantic mesh route: ' + page.url);
+}
+for (const route of ['/rivet/mesh/','/rivet/mesh/index.json','/rivet/mesh/llms.txt']) {
+  if (!sitemap.includes(route)) fail('sitemap missing RIVET semantic mesh hub route: ' + route);
+}
+
 console.log('ALIEV_DISCOVERY_PASS', JSON.stringify({
   aliases: product.aliases.length,
   intents: product.intents.length,
