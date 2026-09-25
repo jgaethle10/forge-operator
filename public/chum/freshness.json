@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:40:35.059Z",
+  "updated_at": "2026-09-25T23:17:57.077Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,204 @@
   },
   "latest_change_batch": [
     {
+      "path": "/forensiscope/editorial/deduplicate-long-video-segments/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-gemini/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-k2/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/long-video-ai-tools/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:40:35.059Z",
+      "last_changed": "2026-09-25T23:17:57.077Z",
       "priority": 80
+    },
+    {
+      "path": "/forensiscope/editorial/",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-nvidia-vss/",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/index.json",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/semantic-neighborhood.json",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/social-pack.json",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/forensiscope/editorial/deduplicate-long-video-segments/llms.txt",
+      "url": "/forensiscope/editorial/deduplicate-long-video-segments/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt",
+      "url": "/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt",
+      "url": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt",
+      "url": "/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt",
+      "url": "/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-gemini/llms.txt",
+      "url": "/forensiscope/editorial/forensiscope-vs-gemini/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-k2/llms.txt",
+      "url": "/forensiscope/editorial/forensiscope-vs-k2/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt",
+      "url": "/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/llms.txt",
+      "url": "/forensiscope/editorial/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/long-video-ai-tools/llms.txt",
+      "url": "/forensiscope/editorial/long-video-ai-tools/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
+      "path": "/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt",
+      "url": "/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:40:35.059Z",
+      "last_changed": "2026-09-25T23:17:57.077Z",
       "priority": 80
+    },
+    {
+      "path": "/forensiscope/editorial/",
+      "url": "/forensiscope/editorial/",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/",
+      "url": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/forensiscope-and-nvidia-vss/",
+      "url": "/forensiscope/editorial/forensiscope-and-nvidia-vss/",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/index.json",
+      "url": "/forensiscope/editorial/index.json",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/semantic-neighborhood.json",
+      "url": "/forensiscope/editorial/semantic-neighborhood.json",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    {
+      "path": "/forensiscope/editorial/social-pack.json",
+      "url": "/forensiscope/editorial/social-pack.json",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
     },
     {
       "path": "/rivet/brand.json",
@@ -1412,108 +1599,6 @@
     {
       "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
       "url": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "url": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "url": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automate-this-workflow-2bf95f92d8.json",
-      "url": "/chum/answers/doors/automate-this-workflow-2bf95f92d8.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/automation-persistence-f812c17c66.json",
-      "url": "/chum/answers/doors/automation-persistence-f812c17c66.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
-      "url": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
-      "url": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json",
-      "url": "/chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json",
-      "url": "/chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
-      "url": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
-      "url": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
-      "url": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json",
-      "url": "/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
-      "url": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "url": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json",
-      "url": "/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
-      "url": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace.json",
-      "url": "/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace.json",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 100
     }

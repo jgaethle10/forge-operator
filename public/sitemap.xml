@@ -19,7 +19,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-25T15:37:23.452Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-25T21:09:32.168Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-25T21:40:35.059Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/chum/freshness.xml</loc></url>
   <url><loc>/chum/freshness.json</loc></url>
   <url><loc>/chum/crawl-state.json</loc></url>
@@ -56,11 +56,12 @@
   <url><loc>/forensiscope/semantic-video-search/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/forensiscope/duplicate-segments/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/forensiscope/long-video-transcription/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
-  <url><loc>/forensiscope/editorial/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
-  <url><loc>/forensiscope/editorial/index.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
-  <url><loc>/forensiscope/editorial/llms.txt</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/index.json</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/forensiscope/editorial/feed.xml</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
-  <url><loc>/forensiscope/editorial/social-pack.json</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/social-pack.json</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/semantic-neighborhood.json</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/forensiscope/editorial/long-video-ai-tools/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/forensiscope/editorial/forensiscope-vs-twelve-labs/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/forensiscope/editorial/forensiscope-vs-gemini/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
@@ -101,6 +102,18 @@
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/long-video-ai-tools/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-gemini/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-k2/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/deduplicate-long-video-segments/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-and-azure-video-indexer/</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-and-nvidia-vss/</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
+  <url><loc>/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt</loc><lastmod>2026-09-25T23:17:57.077Z</lastmod></url>
   <url><loc>/chum/intents/agent-proving-mission-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/agent-proving-mission-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/agent-proving-mission-v1/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>

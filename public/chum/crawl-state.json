@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:40:35.059Z",
-  "url_count": 1849,
+  "updated_at": "2026-09-25T23:17:57.077Z",
+  "url_count": 1862,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -122,8 +122,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "29adbd1f2bc9bc48155bbf86e9181a2911168159740ccdbb88444754c8cba32b",
-      "last_changed": "2026-09-25T21:40:35.059Z",
+      "content_sha256": "35dca3afedeafd553f147af5fbafc22afe629e42448e09351f40df2602b9da8b",
+      "last_changed": "2026-09-25T23:17:57.077Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
@@ -326,20 +326,20 @@
     },
     "/forensiscope/editorial/": {
       "path": "/forensiscope/editorial/",
-      "content_sha256": "dbe27c1146d1234a334682771f1e51ea9721689ea4a1935c15868437173f4a3d",
-      "last_changed": "2026-09-25T19:09:08.195Z",
+      "content_sha256": "d8d95f9555a70a2028a7e9d1f3e4145cc55ba102c21dfe0a753dba0752822bbc",
+      "last_changed": "2026-09-25T23:17:57.077Z",
       "priority": 60
     },
     "/forensiscope/editorial/index.json": {
       "path": "/forensiscope/editorial/index.json",
-      "content_sha256": "3309f88944f240c2507165cdc6d76144189c236f5141045c4d4d7015b986a462",
-      "last_changed": "2026-09-25T19:09:08.195Z",
+      "content_sha256": "b02f182e3cc9a201e6011ddcb58eceff43c27771b696e02185498730eb1597f0",
+      "last_changed": "2026-09-25T23:17:57.077Z",
       "priority": 60
     },
     "/forensiscope/editorial/llms.txt": {
       "path": "/forensiscope/editorial/llms.txt",
-      "content_sha256": "d382e41cd119e2c908247f9d659d6011ba8b4cf32305563a360986cd5eb3a5de",
-      "last_changed": "2026-09-25T19:09:08.195Z",
+      "content_sha256": "cefe84a3073f7233c2d6dae9ca2cda322e9b12e82acae99b503fc335bd2908eb",
+      "last_changed": "2026-09-25T23:17:57.077Z",
       "priority": 86
     },
     "/forensiscope/editorial/feed.xml": {
@@ -350,8 +350,14 @@
     },
     "/forensiscope/editorial/social-pack.json": {
       "path": "/forensiscope/editorial/social-pack.json",
-      "content_sha256": "4d5f000ffc8016ca1d84164183072c137d2ceaf83c4d15ff3e70a1a76be610c9",
-      "last_changed": "2026-09-25T19:09:08.195Z",
+      "content_sha256": "80e1e52bca5fbfa116fe2f66d7615ac75368efcaa519c98eef0808186b4bf7cf",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    "/forensiscope/editorial/semantic-neighborhood.json": {
+      "path": "/forensiscope/editorial/semantic-neighborhood.json",
+      "content_sha256": "c14d65a33c25380ef9c4a59b7f3b00d5ac71a53f5fb9cb3bf9ada3644e8b91df",
+      "last_changed": "2026-09-25T23:17:57.077Z",
       "priority": 60
     },
     "/forensiscope/editorial/long-video-ai-tools/": {
@@ -593,6 +599,78 @@
       "content_sha256": "cf8234bf26055b7f3db9dc6ee3db3886690506b35ee89e4e4fae6abde11456fe",
       "last_changed": "2026-09-25T06:50:26.447Z",
       "priority": 84
+    },
+    "/forensiscope/editorial/long-video-ai-tools/llms.txt": {
+      "path": "/forensiscope/editorial/long-video-ai-tools/llms.txt",
+      "content_sha256": "c9e8bdd60b6f419a3ea56d665b1f94d9cbff168e3ef0669d552077ccf91bec2c",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt": {
+      "path": "/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt",
+      "content_sha256": "a98e4f05b641687d439305457908e811385b60d3703cfe07a2874c23da947272",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/forensiscope-vs-gemini/llms.txt": {
+      "path": "/forensiscope/editorial/forensiscope-vs-gemini/llms.txt",
+      "content_sha256": "99ac776ae17cb3287501bdb1836be5aa926d09c764f5b95cd00dbb90e82f9493",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/forensiscope-vs-k2/llms.txt": {
+      "path": "/forensiscope/editorial/forensiscope-vs-k2/llms.txt",
+      "content_sha256": "cff5c4b684e69872eabe89558c4665d880ff3bdc6cf39c6589d1ab49d2a8c134",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt": {
+      "path": "/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt",
+      "content_sha256": "f8637073ca3a6767c3c9bdb78da7d7ca70ffc7351fb3337d74666bc95719b8a1",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt": {
+      "path": "/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt",
+      "content_sha256": "6c5192f7877947d334d56e3a387b712e7db3b5a960579bd92f56a8c763be23c0",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt": {
+      "path": "/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt",
+      "content_sha256": "ff112c3ee55f12b6470791bee84f7b7f922bb302ded02ee4bd5c566b08241695",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/deduplicate-long-video-segments/llms.txt": {
+      "path": "/forensiscope/editorial/deduplicate-long-video-segments/llms.txt",
+      "content_sha256": "99671ea60bf5a395e81ba714d60a8b0234c6876c3e46974ce0859cf7065f76a9",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/forensiscope-and-azure-video-indexer/": {
+      "path": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/",
+      "content_sha256": "eafe7b7d6ad8eb5168c97d5b55b98eabc0011a858a81d47cc35607dace1bf759",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    "/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt": {
+      "path": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt",
+      "content_sha256": "c0ad7f31488069a4d894104e3e938ac7434ef41348de38a181ca0a1d7a726057",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
+    },
+    "/forensiscope/editorial/forensiscope-and-nvidia-vss/": {
+      "path": "/forensiscope/editorial/forensiscope-and-nvidia-vss/",
+      "content_sha256": "68d403ac9a7878836deb471e52df959084d484611b3f38bbd59a070562eafa38",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 60
+    },
+    "/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt": {
+      "path": "/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt",
+      "content_sha256": "6b09f1842dbeb3f30aa7b66c9289e432f4fe4169825e62f62dd91fae16f825c6",
+      "last_changed": "2026-09-25T23:17:57.077Z",
+      "priority": 86
     },
     "/chum/intents/agent-proving-mission-v1/": {
       "path": "/chum/intents/agent-proving-mission-v1/",
