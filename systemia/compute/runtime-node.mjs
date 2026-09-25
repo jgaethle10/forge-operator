@@ -77,6 +77,7 @@ export async function startEvercraftComputeNode({
   leaseTtlMs = 30_000,
   allocatorToken = '',
   deviceIdentity = null,
+  runtimeRelease = null,
 } = {}) {
   if (!root) throw new Error('root is required');
   const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
@@ -148,6 +149,8 @@ export async function startEvercraftComputeNode({
           lease_renewal_supported: true,
           device_fingerprint: deviceIdentity?.fingerprint || null,
           attestation_supported: Boolean(deviceIdentity),
+          runtime_release_ref: runtimeRelease?.source_commit || null,
+          runtime_payload_digest: runtimeRelease?.payload_digest || null,
           expires_at: new Date(Date.now() + 60_000).toISOString(),
         });
       }
@@ -170,6 +173,8 @@ export async function startEvercraftComputeNode({
           supportedWorkloads: [...supported],
           processStartedAt,
           bootIdHash: hostBootIdHash,
+          runtimeReleaseRef: runtimeRelease?.source_commit || null,
+          runtimePayloadDigest: runtimeRelease?.payload_digest || null,
         });
         return send(res, 200, {
           ok: true,
