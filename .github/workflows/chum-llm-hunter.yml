@@ -1,0 +1,84 @@
+name: CHUM LLM hunter
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "11 * * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/chum/llm-hunter.mjs"
+      - "tests/chum-llm-hunter.test.mjs"
+      - "chum-probes/**"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - ".github/workflows/chum-llm-hunter.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chum-llm-hunter
+  cancel-in-progress: true
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove hunter safety and contracts
+        run: npm run test:chum-hunter
+
+      - name: Hunt public LLM and agent ecosystems
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run chum:hunt
+
+      - name: Push current Evercraft doors into search discovery
+        continue-on-error: true
+        run: npm run chum:announce
+
+      - name: Verify Official MCP Registry and remote MCP doors
+        continue-on-error: true
+        run: npm run chum:mcp
+
+      - name: Verify sell-now commerce doors
+        continue-on-error: true
+        run: npm run chum:commerce-canary
+
+      - name: Rotate one brand-blind pain attack across authorized providers
+        continue-on-error: true
+        env:
+          CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
+          CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
+          NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
+          NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if { [ -n "${CHUM_PROBE_BRIDGE_URL:-}" ] && [ -n "${CHUM_PROBE_BRIDGE_TOKEN:-}" ]; } || { [ -n "${NEXUS_PROBE_BRIDGE_URL:-}" ] && [ -n "${NEXUS_PROBE_BRIDGE_TOKEN:-}" ]; }; then
+            CASE_ID="$(node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('chum-probes/probe-suite.json'));const c=s.cases.filter(x=>x.enabled&&x.expected_fit);const i=Math.floor(Date.now()/3600000)%c.length;process.stdout.write(c[i].case_id)")"
+            echo "Attacking provider discovery with case: $CASE_ID"
+            CHUM_PROBE_CASES="$CASE_ID" npm run chum:providers
+          else
+            echo "Authorized provider bridge is not configured; direct provider attack is blocked, not faked."
+          fi
+
+      - name: Upload hunter receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chum-llm-hunter-receipts
+          path: |
+            artifacts/chum/llm-hunter-latest.*
+            artifacts/chum/indexnow-latest.*
+            artifacts/chum/mcp-canary-latest.*
+            artifacts/chum/commerce-canary-latest.*
+            artifacts/chum/provider-probe-latest.*
+          if-no-files-found: warn
