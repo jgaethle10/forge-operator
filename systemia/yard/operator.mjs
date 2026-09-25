@@ -76,6 +76,7 @@ export class YardOperator {
     input = {},
     rollbackTarget,
     leaseTtlMs = 30_000,
+    allocatorToken = '',
   } = {}) {
     if (!deploymentId) throw new Error('deploymentId is required');
     if (!immutableRelease(releaseRef)) throw new Error('releaseRef must be immutable');
@@ -94,6 +95,7 @@ export class YardOperator {
 
     const lease = await request(`${capacityEndpoint}/v1/leases`, {
       method: 'POST',
+      headers: allocatorToken ? { authorization: `Bearer ${allocatorToken}` } : {},
       body: JSON.stringify({
         workload_class: workloadClass,
         requested_ttl_ms: leaseTtlMs,
@@ -211,6 +213,7 @@ export class YardOperator {
       lease_id: lease.lease_id,
       token: lease.token,
       capacity_endpoint: capacityEndpoint,
+      allocator_token: allocatorToken || null,
     });
     this.deployments.set(deploymentId, record);
     this.#persist(record);

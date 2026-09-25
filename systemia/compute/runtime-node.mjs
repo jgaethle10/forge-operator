@@ -63,8 +63,14 @@ export async function startEvercraftComputeNode({
   host = '127.0.0.1',
   port = 0,
   leaseTtlMs = 30_000,
+  allocatorToken = '',
 } = {}) {
   if (!root) throw new Error('root is required');
+  const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
+  const allocatorTokenHash = allocatorToken ? sha(String(allocatorToken)) : null;
+  if (!loopbackHost && !allocatorTokenHash) {
+    throw new Error('allocatorToken is required when Evercraft Compute listens beyond loopback');
+  }
   const allowedRoot = path.resolve(root);
   const chain = new ReceiptChain(nodeId);
   const leases = new Map();
@@ -118,6 +124,7 @@ export async function startEvercraftComputeNode({
           platform: `${process.platform}/${process.arch}`,
           supported_workloads: [...supported],
           allocation: 'explicit_lease',
+          allocation_auth: allocatorTokenHash ? 'bearer' : 'loopback_only',
           resident_services_supported: true,
           lease_renewal_supported: true,
           expires_at: new Date(Date.now() + 60_000).toISOString(),
@@ -125,6 +132,13 @@ export async function startEvercraftComputeNode({
       }
 
       if (req.method === 'POST' && req.url === '/v1/leases') {
+        if (allocatorTokenHash) {
+          const authorization = String(req.headers.authorization || '');
+          const presented = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+          if (!presented || sha(presented) !== allocatorTokenHash) {
+            return send(res, 401, { error: 'allocator_auth_required' });
+          }
+        }
         const body = await readJson(req);
         const workloadClass = String(body.workload_class || '');
         if (!supported.has(workloadClass)) {
