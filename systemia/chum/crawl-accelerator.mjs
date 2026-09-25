@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { buildCrawlOffensePlan, emptyCrawlObservationState } from './crawl-observatory.mjs';
 
 const INDEXNOW_ENDPOINT = 'https://api.indexnow.org/indexnow';
 const INDEXNOW_KEY = '8aef5f814d0b9c2896c1bc753c65c9bc';
@@ -312,7 +313,7 @@ async function remoteMatches({ origin, entry, publicRoot, timeoutMs = 10000 }) {
   }
 }
 
-async function broadcastIndexNow({ origin, state, publicRoot, maxUrls = 1000 }) {
+async function broadcastIndexNow({ origin, state, publicRoot, maxUrls = 1000, offensePriorityByPath = {} }) {
   if (!origin) {
     const pending = Object.values(state.entries)
       .filter((entry) => entry.content_sha256 !== entry.last_indexnow_sha256).length;
@@ -338,7 +339,7 @@ async function broadcastIndexNow({ origin, state, publicRoot, maxUrls = 1000 }) 
 
   const pending = Object.values(state.entries)
     .filter((entry) => entry.content_sha256 !== entry.last_indexnow_sha256)
-    .sort((a, b) => Number(b.priority || 0) - Number(a.priority || 0) || String(a.path).localeCompare(String(b.path)))
+    .sort((a, b) => Number(offensePriorityByPath[b.path] ?? b.priority || 0) - Number(offensePriorityByPath[a.path] ?? a.priority || 0) || String(a.path).localeCompare(String(b.path)))
     .slice(0, Math.max(1, Math.min(10000, Number(maxUrls) || 1000)));
 
   const verified = [];
@@ -469,6 +470,22 @@ export async function buildCrawlPressure({
     entries
   };
 
+  const observationSnapshotPath = process.env.CHUM_CRAWL_OBSERVATION_STATE || path.join(artifactDir, 'crawl-observation-live.json');
+  const observationPayload = readJsonIfExists(observationSnapshotPath, null);
+  const observationState = observationPayload?.schema === 'evercraft.chum.crawl-observation-state.v1'
+    ? observationPayload
+    : observationPayload?.state?.schema === 'evercraft.chum.crawl-observation-state.v1'
+      ? observationPayload.state
+      : emptyCrawlObservationState();
+  const offensePlan = buildCrawlOffensePlan({
+    crawlState: state,
+    observationState,
+    now,
+    maxTargets: Number(process.env.CHUM_SONAR_MAX_TARGETS || 250),
+  });
+  const offensePriorityByPath = Object.fromEntries(offensePlan.targets.map((row) => [row.path, row.offense_score]));
+  fs.writeFileSync(path.join(artifactDir, 'crawl-offense-plan-latest.json'), JSON.stringify(offensePlan, null, 2) + '\n');
+
   rewriteSitemap({ sitemapPath, paths, entries });
 
   writeFreshnessFeed({
@@ -490,7 +507,8 @@ export async function buildCrawlPressure({
         origin: normalizedOrigin,
         state,
         publicRoot,
-        maxUrls: maxBroadcastUrls
+        maxUrls: maxBroadcastUrls,
+        offensePriorityByPath
       })
     : {
         status: 'not_requested',
@@ -510,6 +528,12 @@ export async function buildCrawlPressure({
     origin_receipt_hash: originResolution.receipt_hash || null,
     indexed_surfaces: state.url_count,
     changed_surfaces: changedEntries.length,
+    sonar: {
+      observation_source: observationPayload ? observationSnapshotPath : 'not_available',
+      observation_evidence_state: offensePlan.observation_evidence_state,
+      offense_targets: offensePlan.target_count,
+      top_targets: offensePlan.targets.slice(0, 10).map((row) => ({ path: row.path, offense_score: row.offense_score, reasons: row.reasons })),
+    },
     broadcast: broadcastResult,
     outputs: {
       state: 'public/chum/crawl-state.json',
@@ -518,7 +542,8 @@ export async function buildCrawlPressure({
       hot_discovery_html: 'public/chum/hot/index.html',
       hot_discovery_json: 'public/chum/hot/index.json',
       sitemap: 'public/sitemap.xml',
-      indexnow_key: 'public/' + INDEXNOW_KEY_FILE
+      indexnow_key: 'public/' + INDEXNOW_KEY_FILE,
+      crawl_offense_plan: 'artifacts/chum/crawl-offense-plan-latest.json'
     },
     truth_boundary: 'This engine can accelerate legitimate discovery signals and request recrawls. It cannot compel a third-party crawler to fetch, index, rank, cite, recommend or convert a page.'
   };
@@ -532,6 +557,8 @@ export async function buildCrawlPressure({
     'Origin source: ' + receipt.origin_source,
     'Tracked public surfaces: ' + receipt.indexed_surfaces,
     'Content changes detected: ' + receipt.changed_surfaces,
+    'CHUM Sonar offense targets: ' + Number(receipt.sonar?.offense_targets || 0),
+    'CHUM Sonar observation source: ' + String(receipt.sonar?.observation_source || 'not_available'),
     'IndexNow state: ' + receipt.broadcast.status,
     'IndexNow submitted: ' + Number(receipt.broadcast.submitted || 0),
     'Still pending: ' + Number(receipt.broadcast.pending || 0),
