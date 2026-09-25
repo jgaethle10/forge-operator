@@ -3,7 +3,8 @@ import path from 'node:path';
 import { compileFilmPlan } from './director.js';
 import { inspectProject } from './inspect.js';
 import { renderFilm } from './render.js';
-import type { FilmPlan, MediaProject } from './types.js';
+import { compileSeriesEpisode } from './series.js';
+import type { FilmPlan, MediaProject, SeriesBible } from './types.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -23,6 +24,7 @@ function usage() {
     '  npm run media:studio -- plan <project.json> <plan.json>',
     '  npm run media:studio -- render <plan.json> <output.mp4>',
     '  npm run media:studio -- build <project.json> <output.mp4> [plan.json]',
+    '  npm run media:studio -- series <project.json> <bible.json> <series-plan.json>',
   ].join('\n'));
 }
 
@@ -31,6 +33,20 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'series') {
+    if (!input || !output || !optionalPlan) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const project = inspectProject(readJson<MediaProject>(input));
+    const bible = readJson<SeriesBible>(output);
+    const seriesPlan = compileSeriesEpisode(project, bible);
+    writeJson(optionalPlan, seriesPlan);
+    console.log(`Series plan created: ${path.resolve(optionalPlan)}`);
     return;
   }
 
