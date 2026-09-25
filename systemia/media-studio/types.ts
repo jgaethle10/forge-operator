@@ -1,5 +1,5 @@
 export type MediaKind = 'image' | 'video' | 'audio';
-export type ProjectFormat = 'commercial' | 'social_short' | 'short_film';
+export type ProjectFormat = 'commercial' | 'social_short' | 'short_film' | 'episode';
 export type AspectRatio = '9:16' | '16:9' | '1:1';
 export type RightsState = 'owned' | 'licensed' | 'unknown' | 'restricted';
 
@@ -13,6 +13,22 @@ export interface SourceAsset {
   rights?: RightsState;
   tags?: string[];
   notes?: string;
+  entityRefs?: string[];
+}
+
+export interface DialogueLine {
+  id?: string;
+  speakerId: string;
+  text: string;
+  emotion?: string;
+  delivery?: string;
+  language?: string;
+}
+
+export interface ContinuityClaim {
+  subjectId: string;
+  key: string;
+  value: string;
 }
 
 export interface ProjectBrief {
@@ -23,6 +39,11 @@ export interface ProjectBrief {
   audience?: string;
   cta?: string;
   style?: string;
+  seriesId?: string;
+  episodeId?: string;
+  episodeNumber?: number;
+  dialogue?: DialogueLine[];
+  continuityClaims?: ContinuityClaim[];
 }
 
 export interface MediaProject {
@@ -86,5 +107,79 @@ export interface FilmPlan {
   generationRequests: GenerationRequest[];
   provenance: ProvenanceRecord[];
   warnings: string[];
+  createdAt: string;
+}
+
+export type ContinuityEntityKind =
+  | 'character'
+  | 'voice'
+  | 'location'
+  | 'prop'
+  | 'brand'
+  | 'style';
+
+export interface ContinuityEntity {
+  id: string;
+  kind: ContinuityEntityKind;
+  name: string;
+  description?: string;
+  immutableTraits?: Record<string, string>;
+  voiceProfileId?: string;
+  referenceAssetIds?: string[];
+}
+
+export interface CanonFact {
+  subjectId: string;
+  key: string;
+  value: string;
+  locked?: boolean;
+  introducedEpisode?: number;
+}
+
+export interface SeriesBible {
+  schema: 'evercraft.fallen.series-bible.v1';
+  id: string;
+  title: string;
+  logline?: string;
+  styleRules?: string[];
+  entities: ContinuityEntity[];
+  canon: CanonFact[];
+}
+
+export interface ContinuityCheck {
+  type: 'entity' | 'canon' | 'voice' | 'asset';
+  subjectId: string;
+  status: 'pass' | 'warning' | 'fail';
+  message: string;
+}
+
+export interface ContinuityReport {
+  status: 'pass' | 'warning' | 'fail';
+  checks: ContinuityCheck[];
+  bibleDigest: string;
+  continuityPrompt: string;
+}
+
+export interface DialogueCue {
+  id: string;
+  speakerId: string;
+  voiceProfileId: string;
+  text: string;
+  emotion?: string;
+  delivery?: string;
+  language?: string;
+}
+
+export interface SeriesEpisodePlan {
+  schema: 'evercraft.fallen.series-plan.v1';
+  seriesId: string;
+  episodeId: string;
+  episodeNumber?: number;
+  title: string;
+  filmPlan: FilmPlan;
+  dialogue: DialogueCue[];
+  continuity: ContinuityReport;
+  proposedCanon: CanonFact[];
+  canonReceipt: string;
   createdAt: string;
 }
