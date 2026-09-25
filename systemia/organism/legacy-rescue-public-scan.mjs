@@ -133,6 +133,7 @@ export async function scanLegacyRescuePublicSources({
     const firstSeen = !previous?.fingerprint;
     const changed = Boolean(previous?.fingerprint && previous.fingerprint !== fingerprint);
     const discoveredLinks = source.discover_links === true ? extractCandidateLinks(rawBody, source) : [];
+    const linkBaselineMissing = source.discover_links === true && !Array.isArray(previous?.known_links);
     const newLinks = source.discover_links === true ? newCandidateLinks(previous?.known_links || [], discoveredLinks) : [];
 
     nextState.sources[source.key] = {
@@ -150,7 +151,7 @@ export async function scanLegacyRescuePublicSources({
       signals.push(sourceSignal(source, firstSeen ? 'new_signal' : 'amendment', observedAt, fingerprint));
     }
 
-    const linksToEmit = firstSeen && source.emit_links_on_first_seen !== true ? [] : newLinks;
+    const linksToEmit = (firstSeen || linkBaselineMissing) && source.emit_links_on_first_seen !== true ? [] : newLinks;
     for (const link of linksToEmit) {
       signals.push(sourceSignal(
         source,
@@ -173,6 +174,7 @@ export async function scanLegacyRescuePublicSources({
       bytes: nextState.sources[source.key].bytes,
       discovered_links: discoveredLinks.length,
       new_links: newLinks.length,
+      link_baseline_missing: linkBaselineMissing,
       emitted_link_signals: linksToEmit.length,
     });
   }
