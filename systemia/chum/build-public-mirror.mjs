@@ -376,6 +376,7 @@ const sitemapStatic = [
   '/.well-known/evercraft-pain-index.json',
   '/rivet/discovery.json',
   '/rivet/llms.txt',
+  '/rivet/brand.json',
   '/rivet/',
   '/rivet/ev-charging-utility-incentive-screening/',
   '/rivet/multifamily-ev-charging-site-analysis/',
