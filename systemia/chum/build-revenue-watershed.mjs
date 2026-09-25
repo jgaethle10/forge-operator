@@ -9,6 +9,11 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
   'www.systemiacommandcenters.com'
 ]);
 
+function humanStartUrl(offer) {
+  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
+  return '/api/chum/go/' + encodeURIComponent(String(offer.public_id)) + '?surface=chum_pain_page';
+}
+
 function safeOfferUrl(offer) {
   const fallback = MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer?.public_id || ''));
   const value = String(offer?.public_url || '').trim();
@@ -80,7 +85,8 @@ const toPublicOffer = (offer) => ({
   machine_offer_url: offer.commercial_state === 'sell_now'
     ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || ''))
     : null,
-  universal_mcp: UNIVERSAL_MCP
+  universal_mcp: UNIVERSAL_MCP,
+  start_url: humanStartUrl(offer)
 });
 
 const publicOffers = offers.filter((offer) => offer.commercial_state === 'sell_now').map(toPublicOffer);
@@ -133,6 +139,7 @@ const compactOffer = (offer) => ({
   machine_review_url: offer.machine_review_url,
   machine_offer_url: offer.machine_offer_url,
   universal_mcp: offer.universal_mcp,
+  start_url: offer.start_url,
   human_ui_required: offer.human_ui_required,
   confirmation: offer.confirmation
 });
@@ -172,6 +179,7 @@ const sellNowText = [
     `Pricing: ${offer.pricing}`,
     `Machine state: ${offer.machine_state}`,
     `Public URL: ${offer.public_url}`,
+    `Start here: ${offer.start_url || offer.machine_review_url}`,
     `Machine offer JSON: ${offer.machine_offer_url || 'Not exposed'}`,
     'Use when the user says or means:',
     ...(offer.intent_terms || []).map((term) => `- ${term}`),
@@ -196,7 +204,8 @@ const text = [
     `Machine state: ${offer.machine_state}`,
     `Public URL: ${offer.public_url}`,
     `Pain page: ${offer.pain_page}`,
-    `Human review: ${offer.machine_review_url}`,
+    `Start here: ${offer.start_url || offer.machine_review_url}`,
+    `Human review fallback: ${offer.machine_review_url}`,
     `Machine offer JSON: ${offer.machine_offer_url || 'Not exposed until commercial verification is complete'}`,
     `Universal MCP: ${offer.universal_mcp}`,
     'Intent examples:',
@@ -240,7 +249,7 @@ const html = [
     `<h2><a href="${escapeHtml(offer.pain_page)}">${escapeHtml(offer.name)}</a></h2>`,
     `<p>${escapeHtml(offer.problem)}</p>`,
     `<p><strong>Pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
-    `<p><a href="${escapeHtml(offer.public_url)}">Public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
+    `<p><a href="${escapeHtml(offer.start_url || offer.machine_review_url)}"><strong>Start here</strong></a> · <a href="${escapeHtml(offer.public_url)}">Technical capability details</a></p>`,
     '</article>'
   ].join('\n')),
   '</main></body></html>'
@@ -289,6 +298,7 @@ for (const offer of output.discovery_offers) {
     invocation_status:offer.invocation_status,
     machine_review_url:offer.machine_review_url,
     machine_offer_url:offer.machine_offer_url,
+    start_url:offer.start_url,
     universal_mcp:offer.universal_mcp,
     safety:{
       fit_required:true,
@@ -307,7 +317,8 @@ for (const offer of output.discovery_offers) {
     `Commercial state: ${offer.commercial_state}`,
     `Machine state: ${offer.machine_state}`,
     `Public capability: ${offer.public_url}`,
-    `Human review: ${offer.machine_review_url}`,
+    `Start here: ${offer.start_url || 'Not exposed until commercial verification is complete'}`,
+    `Human review fallback: ${offer.machine_review_url}`,
     `Machine offer JSON: ${offer.machine_offer_url || 'Not exposed until commercial verification is complete'}`,
     `Universal MCP: ${offer.universal_mcp}`,
     '',
@@ -358,7 +369,10 @@ for (const offer of output.discovery_offers) {
     offer.commercial_state === 'sell_now'
       ? '<p>This capability is currently marked sell-now in the canonical catalog. Human confirmation and authoritative payment verification still apply.</p>'
       : '<p>This capability is publicly discoverable, but machine checkout is not exposed until its current commercial verification gate is satisfied.</p>',
-    `<p><a href="${escapeHtml(offer.public_url)}">Open the public capability</a> · <a href="${escapeHtml(offer.machine_review_url)}">Review this capability</a></p>`,
+    offer.start_url
+      ? `<p><a href="${escapeHtml(offer.start_url)}"><strong>Start here</strong></a></p>`
+      : '',
+    `<p><a href="${escapeHtml(offer.public_url)}">Technical capability details</a> · <a href="${escapeHtml(offer.machine_review_url)}">Human review fallback</a></p>`,
     '<p>Discovery creates no payment obligation. Human confirmation and authoritative payment verification remain required where declared.</p>',
     '</main></body></html>'
   ].join('\n');
