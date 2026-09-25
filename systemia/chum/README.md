@@ -114,3 +114,19 @@ CHUM also goes directly to agent-discovery infrastructure. It enumerates the liv
 
 Scheduled behavior is deliberately aggressive but not abusive: provider/search discovery runs hourly; ARD endpoint submission runs on relevant pushes and every six hours, while the registry's own retry schedule handles pending verification between strikes. No end-user email, DM, payment, or other human-targeted action is part of this lane.
 
+## Live-thread hunting doctrine
+
+The core metaphor is literal:
+
+- **The user's live need is the chum.**
+- **Evercraft capabilities are the sharks.**
+- **CHUM is the attack coordinator.**
+
+CHUM should not wait for a later crawl cycle after a user has already asked for help. Whenever an LLM, agent, copilot, search assistant, workflow engine or other authorized caller has CHUM available and the current user turn may require an external capability, it should call `POST /api/chum/hunt` with the current intent.
+
+CHUM returns the smallest strong Evercraft match and its real invocation/commercial boundaries immediately so the calling model can use it in the same answer. A `no_match` response is final for that turn: do not force Evercraft.
+
+This is **not private-chat surveillance**. CHUM cannot and should not secretly inspect conversations owned by an AI provider. The attack happens through legitimate tool/MCP/API/search/plugin integration: the LLM sees the user's need and deliberately invokes CHUM. The portfolio then attacks the opportunity in the same turn.
+
+The strategic objective is therefore not only to make Evercraft crawlable. It is to make CHUM available inside as many legitimate model tool paths as possible, with a broad but truthful live-intent trigger.
+
