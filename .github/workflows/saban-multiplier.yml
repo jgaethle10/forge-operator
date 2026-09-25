@@ -5,6 +5,9 @@ on:
     paths:
       - "systemia/saban/**"
       - "systemia/chum/saban-adapter.mjs"
+      - "systemia/forensiscope/**"
+      - "systemia/compute/**"
+      - "systemia/network/saban-**"
       - "package.json"
       - ".github/workflows/saban-multiplier.yml"
   push:
@@ -14,6 +17,9 @@ on:
     paths:
       - "systemia/saban/**"
       - "systemia/chum/saban-adapter.mjs"
+      - "systemia/forensiscope/**"
+      - "systemia/compute/**"
+      - "systemia/network/saban-**"
       - "package.json"
       - ".github/workflows/saban-multiplier.yml"
 
@@ -48,6 +54,12 @@ jobs:
 
       - name: Execute registered Saban assignment on NodeSeed
         run: npm run proof:saban-nodeseed-multiplier
+
+      - name: Prove active NodeSeed pool failover
+        run: npm run proof:saban-nodeseed-pool
+
+      - name: Prove distributed ForensiScope media execution
+        run: npm run proof:forensiscope-distributed
 
       - name: Plan full CHUM formation
         run: npm run saban:chum:10000
