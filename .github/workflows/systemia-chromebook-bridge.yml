@@ -1,0 +1,118 @@
+name: Systemia Chromebook Bridge
+
+on:
+  push:
+    branches:
+      - "systemia/live-bridge"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: systemia-chromebook-live-bridge
+  cancel-in-progress: true
+
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout bridge revision
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Build production server
+        run: npm run build
+
+      - name: Start Systemia admission service
+        env:
+          NODE_ENV: production
+          GEMINI_API_KEY: bridge-not-used
+          PORT: "3000"
+        run: |
+          set -euo pipefail
+          nohup npm start > /tmp/systemia-server.log 2>&1 &
+          echo $! > /tmp/systemia-server.pid
+          for i in $(seq 1 45); do
+            if curl --fail --silent http://127.0.0.1:3000/api/health >/tmp/systemia-health.json; then
+              cat /tmp/systemia-health.json
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/systemia-server.log || true
+          exit 1
+
+      - name: Start outbound HTTPS bridge
+        run: |
+          set -euo pipefail
+          curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /tmp/cloudflared
+          chmod +x /tmp/cloudflared
+          nohup /tmp/cloudflared tunnel --no-autoupdate --url http://127.0.0.1:3000 > /tmp/cloudflared.log 2>&1 &
+          echo $! > /tmp/cloudflared.pid
+
+          URL=""
+          for i in $(seq 1 60); do
+            URL="$(grep -Eo 'https://[-a-z0-9]+\.trycloudflare\.com' /tmp/cloudflared.log | tail -n 1 || true)"
+            if [ -n "$URL" ]; then
+              break
+            fi
+            sleep 1
+          done
+
+          if [ -z "$URL" ]; then
+            echo "Bridge URL was not issued."
+            cat /tmp/cloudflared.log || true
+            exit 1
+          fi
+
+          echo "$URL" | tee /tmp/systemia-bridge-url.txt
+          echo "SYSTEMIA_BRIDGE_URL=$URL" >> "$GITHUB_ENV"
+          {
+            echo "## Systemia Chromebook bootstrap bridge"
+            echo
+            echo "Bridge: $URL"
+            echo
+            echo "This is a temporary outbound tunnel for the authenticated Chromebook admission proof. It is not the durable production route."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify public health
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            if curl --fail --silent "$SYSTEMIA_BRIDGE_URL/api/health" | tee /tmp/public-health.json; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
+
+      - name: Publish bridge locator
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-chromebook-bridge
+          path: /tmp/systemia-bridge-url.txt
+          retention-days: 1
+
+      - name: Keep bridge alive
+        run: |
+          set -euo pipefail
+          echo "SYSTEMIA_BRIDGE_READY $SYSTEMIA_BRIDGE_URL"
+          for i in $(seq 1 50); do
+            date -u +"bridge heartbeat %Y-%m-%dT%H:%M:%SZ"
+            curl --fail --silent "$SYSTEMIA_BRIDGE_URL/api/health" >/dev/null || {
+              echo "Bridge health check failed"
+              cat /tmp/cloudflared.log || true
+              cat /tmp/systemia-server.log || true
+              exit 1
+            }
+            sleep 60
+          done
