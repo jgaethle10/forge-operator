@@ -159,7 +159,11 @@ for (const product of directory.products || []) {
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
     distribution_surfaces: product.distribution_surfaces || null,
-    provider_behavior_state: 'not_inferred_from_publication'
+    provider_behavior_state: 'not_inferred_from_publication',
+    machine_commerce_handoff_state:
+      conf?.machine_commerce_handoff_state ||
+      product.commercial?.machine_commerce_handoff?.state ||
+      null
   };
 
   const llms = [
