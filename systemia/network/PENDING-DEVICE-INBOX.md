@@ -23,3 +23,5 @@ The public broker does not expose an admin list of pending devices. Systemia/Yar
 Authorization remains the separate explicit Yard action already defined by the remote-device trust lifecycle. It requires an approval reference and the exact pending fingerprint/node pair. Authorization clears the matching pending record. Revocation remains independently available.
 
 The local-organism admission keeper may submit a pending request after ordinary registration is rejected as unauthorized. It then continues retrying normal admission. The device does not become connected until Systemia authorizes it.
+
+The pending inbox is identity evidence, not an authorization queue processor: only an explicit Yard authorization decision can convert a pending identity into remote capacity authority.
