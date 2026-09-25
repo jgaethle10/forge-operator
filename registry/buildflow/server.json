@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/buildflow",
   "title": "BuildFlow Enterprise Operations",
-  "description": "Discover, route, and hand off enterprise operations problems without exposing private records.",
-  "version": "0.7.0",
+  "description": "ERP modernization, shadow migration, entity resolution, process discovery, and governed AI handoff.",
+  "version": "0.7.1",
   "websiteUrl": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
   "remotes": [
     {
