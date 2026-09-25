@@ -383,6 +383,7 @@ const sitemapStatic = [
   '/forensiscope/long-video-transcription/',
   '/forensiscope/editorial/',
   '/forensiscope/editorial/index.json',
+  '/forensiscope/editorial/llms.txt',
   '/forensiscope/editorial/feed.xml',
   '/forensiscope/editorial/social-pack.json',
   '/forensiscope/editorial/long-video-ai-tools/',
