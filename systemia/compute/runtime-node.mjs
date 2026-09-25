@@ -53,6 +53,45 @@ function isWithin(root, target) {
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }
 
+function atomicJson(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o750 });
+  const tmp = `${file}.${process.pid}.${randomBytes(4).toString('hex')}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
+  fs.renameSync(tmp, file);
+}
+
+function safeMissionSourceKey(value) {
+  const key = String(value || '').trim();
+  if (!/^[a-zA-Z0-9._-]{1,96}$/.test(key)) {
+    throw new Error('mission_source_key_invalid');
+  }
+  return key;
+}
+
+function validateMissionIngressSnapshot(snapshot) {
+  if (!snapshot || snapshot.schema !== 'evercraft.kaidance.mission-snapshot.v1') {
+    throw new Error('mission_snapshot_schema_invalid');
+  }
+  const counts = snapshot.counts || {};
+  const scanned = Math.max(0, Number(counts.scanned || 0));
+  const changed = Math.max(0, Number(counts.changed || 0));
+  const admitted = Math.max(0, Number(counts.admitted || 0));
+  const held = Math.max(0, Number(counts.held || 0));
+  if (changed > scanned) throw new Error('mission_snapshot_changed_exceeds_scanned');
+  if (admitted + held > changed) {
+    throw new Error('mission_snapshot_disposition_exceeds_changed');
+  }
+  return {
+    ...snapshot,
+    counts: { scanned, changed, admitted, held },
+    snapshot_ref: String(snapshot.snapshot_ref || ''),
+    observed_at: String(snapshot.observed_at || ''),
+    evidence_refs: Array.isArray(snapshot.evidence_refs)
+      ? snapshot.evidence_refs.map(String).slice(0, 500)
+      : [],
+  };
+}
+
 function bootIdHash() {
   try {
     const file = '/proc/sys/kernel/random/boot_id';
