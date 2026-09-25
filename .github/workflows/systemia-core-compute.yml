@@ -1,0 +1,31 @@
+name: Systemia Core on Evercraft Compute
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/**'
+      - 'systemia/core/bootstrap/**'
+      - 'systemia/core/evercraft.compute.json'
+      - 'systemia/core/COMPUTE_HANDOFF.md'
+      - '.github/workflows/systemia-core-compute.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/compute/**'
+      - 'systemia/core/bootstrap/**'
+      - 'systemia/core/evercraft.compute.json'
+      - 'systemia/core/COMPUTE_HANDOFF.md'
+      - '.github/workflows/systemia-core-compute.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove private Core workload on Evercraft Compute
+        run: node systemia/compute/proof-private-core-origin.mjs
