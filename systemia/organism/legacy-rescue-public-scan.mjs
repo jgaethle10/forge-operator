@@ -2,6 +2,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { extractCandidateLinks, newCandidateLinks } from './legacy-rescue-link-discovery.mjs';
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -48,16 +49,17 @@ function due(previous, source, nowMs) {
   return nowMs - last >= minMinutes * 60_000;
 }
 
-function sourceSignal(source, changeType, observedAt, fingerprint) {
+function sourceSignal(source, changeType, observedAt, fingerprint, overrides = {}) {
+  const signalUrl = clean(overrides.url || source.url);
   return {
     signal_key: `public-source|${source.key}|${fingerprint}`,
     source: source.name || source.key,
-    title: source.signal_title || `${source.name || source.key} changed`,
-    url: source.url,
+    title: clean(overrides.title || source.signal_title || `${source.name || source.key} changed`),
+    url: signalUrl,
     change_type: changeType,
     published_at: observedAt,
     deadline: clean(source.deadline || ''),
-    evidence_refs: [`public-source:${source.key}`, source.url],
+    evidence_refs: [...new Set([`public-source:${source.key}`, source.url, signalUrl, ...(overrides.evidence_refs || [])].filter(Boolean))],
     urgency: Number(source.urgency || 0),
     buyer_access: Number(source.buyer_access || 0),
     proofability: Number(source.proofability || 0),
@@ -125,10 +127,13 @@ export async function scanLegacyRescuePublicSources({
       continue;
     }
 
-    const body = normalizeBody(await response.text());
+    const rawBody = await response.text();
+    const body = normalizeBody(rawBody);
     const fingerprint = sha256(body);
     const firstSeen = !previous?.fingerprint;
     const changed = Boolean(previous?.fingerprint && previous.fingerprint !== fingerprint);
+    const discoveredLinks = source.discover_links === true ? extractCandidateLinks(rawBody, source) : [];
+    const newLinks = source.discover_links === true ? newCandidateLinks(previous?.known_links || [], discoveredLinks) : [];
 
     nextState.sources[source.key] = {
       url: source.url,
@@ -138,17 +143,37 @@ export async function scanLegacyRescuePublicSources({
       last_changed_at: changed || firstSeen ? observedAt : previous?.last_changed_at || null,
       last_http_status: Number(response.status || 200),
       last_error: null,
+      known_links: discoveredLinks,
     };
 
-    if ((firstSeen && source.emit_on_first_seen === true) || changed) {
+    if ((firstSeen && source.emit_on_first_seen === true) || (changed && source.emit_body_change_signal !== false)) {
       signals.push(sourceSignal(source, firstSeen ? 'new_signal' : 'amendment', observedAt, fingerprint));
     }
+
+    const linksToEmit = firstSeen && source.emit_links_on_first_seen !== true ? [] : newLinks;
+    for (const link of linksToEmit) {
+      signals.push(sourceSignal(
+        source,
+        'new_signal',
+        observedAt,
+        sha256(link.url),
+        {
+          title: link.title || `${source.name || source.key} discovered a new legacy-modernization link`,
+          url: link.url,
+          evidence_refs: [`listing-source:${source.url}`],
+        },
+      ));
+    }
+
     receipts.push({
       key: source.key,
       state: firstSeen ? 'seeded' : changed ? 'changed' : 'unchanged',
       url: source.url,
       fingerprint,
       bytes: nextState.sources[source.key].bytes,
+      discovered_links: discoveredLinks.length,
+      new_links: newLinks.length,
+      emitted_link_signals: linksToEmit.length,
     });
   }
 
