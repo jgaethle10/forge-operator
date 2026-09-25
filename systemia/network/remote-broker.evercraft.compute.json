@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "systemia-remote-capacity-broker",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "capacity_protocol": "evercraft.capacity.v1",
+  "workload_class": "systemia.remote-capacity-broker.v1",
+  "service_type": "resident",
+  "public_route_required": true,
+  "public_health_path": "/v1/remote/health",
+  "security": {
+    "node_identity": "existing NodeSeed Ed25519 attestation",
+    "secure_envelope": "evercraft.secure-envelope.v1",
+    "authorized_devices_required": true,
+    "local_allocator_secret_leaves_node": false,
+    "remote_control_grants_public": false,
+    "remote_control_grants_require_broker_compute_lease": true,
+    "replay_policy": "uncertain side-effect execution holds instead of replay"
+  },
+  "route_acceptance": [
+    "local broker health verified",
+    "deployment receipt bound into broker health",
+    "public route uses HTTPS",
+    "public health matches broker instance ID",
+    "public health matches Yard deployment receipt",
+    "secure envelope schema matches"
+  ],
+  "provider_policy": {
+    "named_cloud_dependency": false,
+    "silent_fallback": false
+  }
+}

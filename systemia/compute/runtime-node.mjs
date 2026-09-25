@@ -9,6 +9,7 @@ import { createNodeAttestation } from './device-identity.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
+import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -143,6 +144,7 @@ export async function startEvercraftComputeNode({
     'systemia.core-supervisor.v1',
     'systemia.kaidance-collider.v1',
     'systemia.chum-public-origin.v1',
+    'systemia.remote-capacity-broker.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -443,6 +445,81 @@ export async function startEvercraftComputeNode({
           });
         }
 
+        if (workloadClass === 'systemia.remote-capacity-broker.v1') {
+          const stateRoot = path.resolve(String(body.input?.state_root || ''));
+          if (!stateRoot || !isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'remote_broker_state_outside_admitted_root' });
+          }
+
+          const authorizedDevices =
+            body.input?.authorized_devices &&
+            typeof body.input.authorized_devices === 'object' &&
+            !Array.isArray(body.input.authorized_devices)
+              ? body.input.authorized_devices
+              : {};
+          const entries = Object.entries(authorizedDevices);
+          if (entries.length === 0) {
+            return send(res, 422, { error: 'remote_broker_authorized_devices_required' });
+          }
+          for (const [fingerprint, expectedNode] of entries) {
+            if (!/^sha256:[a-f0-9]{64}$/i.test(String(fingerprint))) {
+              return send(res, 422, { error: 'remote_broker_device_fingerprint_invalid' });
+            }
+            if (
+              String(expectedNode) !== '*' &&
+              !/^[a-zA-Z0-9._-]{1,128}$/.test(String(expectedNode))
+            ) {
+              return send(res, 422, { error: 'remote_broker_node_id_invalid' });
+            }
+          }
+
+          const broker = await startOutboundCapacityBroker({
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            stateDir: stateRoot,
+            authorizedDevices,
+            challengeTtlMs: Number(body.input?.challenge_ttl_ms || 60_000),
+            sessionTtlMs: Number(body.input?.session_ttl_ms || 30 * 60_000),
+            commandTimeoutMs: Number(body.input?.command_timeout_ms || 15_000),
+            pollWaitMs: Number(body.input?.poll_wait_ms || 5_000),
+            capacityFreshMs: Number(body.input?.capacity_fresh_ms || 15_000),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime: broker,
+            service: broker,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: broker.endpoint,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/v1/remote/health',
+            instance_id: broker.instance_id,
+            secure_envelope_schema: 'evercraft.secure-envelope.v1',
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: broker.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
         if (workloadClass === 'systemia.core-supervisor.v1') {
           const stateRoot = path.resolve(String(body.input?.state_root || ''));
           const yardStateDir = path.resolve(String(body.input?.yard_state_dir || ''));
@@ -649,6 +726,37 @@ export async function startEvercraftComputeNode({
         const entry = services.get(serviceHealth[1]);
         if (!entry) return send(res, 404, { error: 'service_not_found' });
         return send(res, 200, entry.runtime.health());
+      }
+
+      const remoteControlGrant = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-control-grant$/
+      );
+      if (req.method === 'POST' && remoteControlGrant) {
+        const entry = services.get(remoteControlGrant[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_control_grant_not_supported' });
+        }
+        const grant = entry.runtime.controlGrant(String(body.node_id || ''));
+        if (!grant) return send(res, 404, { error: 'remote_node_control_grant_unavailable' });
+        return send(res, 200, {
+          ok: true,
+          node_id: grant.node_id,
+          device_fingerprint: grant.device_fingerprint,
+          control_token: grant.allocator_token,
+          receipt: chain.issue('remote-capacity.control-grant.read', {
+            service_id: remoteControlGrant[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            remote_node_id: grant.node_id,
+            device_fingerprint: grant.device_fingerprint,
+          }),
+        });
       }
 
       const missionIngress = req.url?.match(/^\/v1\/services\/([^/]+)\/missions\/([^/]+)$/);
