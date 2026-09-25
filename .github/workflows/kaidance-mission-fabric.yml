@@ -8,6 +8,10 @@ on:
       - 'systemia/collider/mission-fabric.proof.mjs'
       - 'systemia/collider/runtime.mjs'
       - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/mission-ingress-proof.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/mission-ingress-proof.mjs'
       - '.github/workflows/kaidance-mission-fabric.yml'
   push:
     branches:
@@ -31,3 +35,5 @@ jobs:
           node-version: '22'
       - name: Prove KAIDANCE multi-mission fabric
         run: node systemia/collider/mission-fabric.proof.mjs
+      - name: Prove authenticated Yard mission ingress
+        run: node systemia/yard/mission-ingress-proof.mjs
