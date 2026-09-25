@@ -243,8 +243,8 @@ export async function startEvercraftComputeNode({
             schema: 'evercraft.compute.resident-service.v1',
             service_id: serviceId,
             workload_class: body.workload_class,
-            service_url: service.url,
-            health_url: service.health_url,
+            service_url: null,
+            health_path: `/v1/services/${serviceId}/health`,
             heartbeat_target_seconds: runtime.state.heartbeat_target_seconds,
           };
           const receipt = chain.issue('service.started', {
