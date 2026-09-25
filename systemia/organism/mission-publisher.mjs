@@ -289,7 +289,6 @@ export class SystemiaMissionPublisher {
     this.timer = setInterval(() => {
       this.syncOnce(this.clock()).catch(() => {});
     }, Math.max(5_000, Number(intervalMs || 60_000)));
-    this.timer.unref?.();
   }
 
   stop() {
