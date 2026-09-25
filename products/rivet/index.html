@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/rivet-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="manifest" href="/manifest.json" />
+    <style>
+      @import url('https://cdn.jsdelivr.net/fontsource/css/open-sauce-one@5.3.0/latin.css');
+      @import url('https://cdn.jsdelivr.net/fontsource/css/public-sans@5.3.0/latin.css');
+    </style>
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem('rivet-theme') || 'light';
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+          document.documentElement.dataset.theme = theme;
+        } catch {}
+      })();
+    </script>
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="RIVET LLM guide" />
+    <link rel="alternate" type="application/json" href="/rivet-agent.json" title="RIVET machine manifest" />
+    <meta name="theme-color" content="#F5F2EA" />
+    <meta name="description" content="RIVET provides evidence-backed EV site reporting for commercial properties, with address screening, secure checkout, living reports, PDF export, and multi-site comparison." />
+    <meta name="keywords" content="EV site report, EV charging site feasibility, commercial property EV charging, EV infrastructure screening, charging station site analysis, commercial real estate EV" />
+    <meta property="og:title" content="RIVET | EV Site Reporting" />
+    <meta property="og:description" content="Turn a commercial address into an evidence-backed EV site screening report and compare candidate locations." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "RIVET EV Site Reporting",
+        "serviceType": "EV charging site screening and reporting",
+        "description": "Evidence-backed EV site reporting for commercial properties with living dashboard delivery, optional PDF export, and multi-site comparison.",
+        "audience": {
+          "@type": "BusinessAudience",
+          "audienceType": "Commercial property owners, brokers, EV infrastructure teams and site operators"
+        },
+        "offers": {
+          "@type": "Offer",
+          "name": "RIVET EV Site Report - Single Site",
+          "price": "495",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    </script>
+    <title>RIVET | EV Site Reporting</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

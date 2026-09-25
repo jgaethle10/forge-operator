@@ -1,0 +1,17 @@
+{
+  "name": "RIVET EV Reporting",
+  "short_name": "RIVET",
+  "description": "EV site reporting for commercial properties.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F2EA",
+  "theme_color": "#F5F2EA",
+  "icons": [
+    {
+      "src": "/rivet-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

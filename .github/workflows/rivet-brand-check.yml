@@ -1,0 +1,32 @@
+name: RIVET brand + release gate
+
+on:
+  pull_request:
+    paths:
+      - "products/rivet/**"
+      - ".github/workflows/rivet-brand-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "products/rivet/**"
+      - ".github/workflows/rivet-brand-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: products/rivet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: products/rivet/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm run security:audit
