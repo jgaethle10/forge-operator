@@ -1,6 +1,9 @@
 import { rankDiscoveryCandidates } from './discovery-router.mjs';
 import { rankPain } from './pain-index-lib.mjs';
 
+const MACHINE_COMMERCE_GATEWAY =
+  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+
 function clampLimit(value) {
   const n = Number(value);
   if (!Number.isFinite(n)) return 3;
@@ -82,6 +85,46 @@ function projectOfferMatch(entry) {
   };
 }
 
+function continuationFor(match, state) {
+  if (!match) return null;
+
+  const reviewUrl = match.public_id
+    ? MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(match.public_id)
+    : null;
+
+  if (state === 'sell_now_match' || state === 'sell_now_discovery_match') {
+    return {
+      mode: 'human_confirmed_commercial_handoff',
+      public_id: match.public_id || null,
+      capability_url: match.canonical_url || null,
+      review_url: reviewUrl,
+      specialist_mcp: match.mcp || match.routing?.target || null,
+      pricing: match.pricing || null,
+      human_ui_required: Boolean(match.human_ui_required),
+      checkout_creation_requires_explicit_human_confirmation: true,
+      checkout_is_payment_proof: false,
+      paid_state_requires_authoritative_provider_verification: true,
+      next_user_step: 'Explain why the capability fits and offer the review door. If the user chooses a paid offer, obtain explicit confirmation before checkout preparation.'
+    };
+  }
+
+  if (state === 'callable_match') {
+    return {
+      mode: 'bounded_machine_route',
+      capability_url: match.canonical_url || null,
+      specialist_mcp: match.mcp || match.routing?.target || null,
+      paid_state_not_inferred: true,
+      next_user_step: 'Continue through the declared bounded machine route only if the user requested the action and the caller has authority.'
+    };
+  }
+
+  return {
+    mode: 'discovery_only',
+    capability_url: match.canonical_url || null,
+    next_user_step: 'Explain the capability only. Do not imply invocation, checkout, payment, entitlement, or fulfillment authority.'
+  };
+}
+
 function dedupe(matches) {
   const seen = new Set();
   const out = [];
@@ -138,6 +181,7 @@ export function huntLiveIntent({
     intent_retention: 'not_persisted_by_router',
     match: top,
     alternatives: ranked.slice(1),
+    continuation: continuationFor(top, state),
     attack_instruction: attackInstruction(state),
     doctrine: {
       trigger: 'live_user_intent',
@@ -148,6 +192,7 @@ export function huntLiveIntent({
       fit_before_sale: true,
       no_match_means_no_forced_evercraft_offer: true,
       human_confirmation_for_payment_obligation: true,
+      same_turn_continuation_envelope: true,
       checkout_is_not_payment_proof: true
     }
   };
