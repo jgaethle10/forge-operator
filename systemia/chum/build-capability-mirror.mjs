@@ -152,6 +152,7 @@ for(const offer of catalog.offers||[]){
     ]
   };
 
+  const isRivet=id==='rivet-site-underwriting-v1';
   const html=[
     '<!doctype html>',
     '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
@@ -161,7 +162,9 @@ for(const offer of catalog.offers||[]){
     '<link rel="alternate" type="text/plain" href="./llms.txt">',
     '<link rel="alternate" type="application/json" href="./capability.json">',
     '<script type="application/ld+json">'+JSON.stringify(jsonLd).replace(/</g,'\\u003c')+'</script>',
-    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
+    isRivet
+      ? '<link rel="stylesheet" href="/rivet/brand.css"><style>main{width:min(920px,calc(100% - 36px));margin:56px auto}.card{margin:18px 0}.muted{color:var(--rivet-slate)}code{background:rgba(100,116,139,.12);padding:.15rem .35rem;border-radius:.3rem}</style>'
+      : '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
     '</head><body><main>',
     '<p class="muted">EVERCRAFT · PUBLIC MACHINE CAPABILITY</p>',
     '<h1>'+escapeHtml(offer.name)+'</h1>',
