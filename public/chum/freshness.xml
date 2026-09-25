@@ -2,9 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T20:57:58.745Z</updated>
+<updated>2026-09-25T21:09:32.472Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T21:09:32.472Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:a3e8c77f221fee705d18c291</id><title>/rivet/llms.txt</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/rivet/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:c5fe63433c60ffd9fb3bb01b</id><title>/rivet/</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/rivet/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:c594ca901ae0bade4383f6b3</id><title>/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:bf39b024c0eae8e35e505e63</id><title>/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:646e32b3f779d3a69241e11c</id><title>/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json"/><category term="priority-100"/></entry>
@@ -49,20 +53,16 @@
 <entry><id>urn:evercraft:chum:371b032072954cb3004e4663</id><title>/chum/products/aliev/llms.txt</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/products/aliev/llms.txt"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:42d664f1d14d5fb9ff690930</id><title>/.well-known/evercraft-pain-index.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/.well-known/evercraft-pain-index.json"/><category term="priority-90"/></entry>
 <entry><id>urn:evercraft:chum:0e181ab18adead50737d7723</id><title>/llms-full.txt</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/llms-full.txt"/><category term="priority-86"/></entry>
-<entry><id>urn:evercraft:chum:a3e8c77f221fee705d18c291</id><title>/rivet/llms.txt</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/rivet/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:901775e23cd6e7d85bd20643</id><title>/.well-known/evercraft-agent-directory.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/.well-known/evercraft-agent-directory.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:3235f46797d260d8413f1667</id><title>/chum/answers/</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:f7fc88a8da08584220d59519</id><title>/chum/answers/index.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:37d28cd6c3d1e6b46c8259a0</id><title>/chum/answers/index.txt</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/index.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6d9c0abbf1642687807b64f6</id><title>/chum/index.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:54c615f3a47d6649bffba47c</id><title>/chum/pain-index.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/pain-index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:dd55382bdac459cac744435b</id><title>/chum/pain-index.txt</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/pain-index.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:c5fe63433c60ffd9fb3bb01b</id><title>/rivet/</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/rivet/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:2576ed5e803c8026a98fb469</id><title>/rivet/discovery.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/rivet/discovery.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:63b39bc20528f53ce2aa50b9</id><title>/schema.jsonld</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/schema.jsonld"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:85b28624a8b31b9bd8767fd1</id><title>/.well-known/evercraft-products.json</title><updated>2026-09-25T20:57:51.133Z</updated><link href="/.well-known/evercraft-products.json"/><category term="priority-88"/></entry>
-<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-25T20:35:45.020Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:a6d006e91962383a5b586a82</id><title>/chum/answers/doors/as-400-modernization-assessment-49430f448e.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/answers/doors/as-400-modernization-assessment-49430f448e.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:70728a777fa3c962b2fdfefb</id><title>/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:c30d56bce5a11818514adbb0</id><title>/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json"/><category term="priority-100"/></entry>
