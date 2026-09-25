@@ -138,7 +138,6 @@ const compactOffer = (offer) => ({
   universal_mcp: offer.universal_mcp,
   start_url: offer.start_url,
   start_url_state: offer.start_url_state,
-  machine_review_url: offer.machine_review_url,
   human_ui_required: offer.human_ui_required,
   confirmation: offer.confirmation
 });
