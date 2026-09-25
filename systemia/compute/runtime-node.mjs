@@ -5,6 +5,7 @@ import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { once } from 'node:events';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
@@ -76,6 +77,33 @@ function executableAvailable(command) {
   return result.status === 0;
 }
 
+async function writeHashedRequest(req, target, maxBytes) {
+  const hash = createHash('sha256');
+  let bytes = 0;
+  const stream = fs.createWriteStream(target, { mode: 0o600 });
+
+  try {
+    for await (const chunk of req) {
+      bytes += chunk.length;
+      if (bytes > maxBytes) {
+        throw new Error('staged_blob_too_large');
+      }
+      hash.update(chunk);
+      if (!stream.write(chunk)) await once(stream, 'drain');
+    }
+    stream.end();
+    await once(stream, 'finish');
+    return {
+      bytes,
+      digest: hash.digest('hex')
+    };
+  } catch (error) {
+    stream.destroy();
+    fs.rmSync(target, { force: true });
+    throw error;
+  }
+}
+
 function boundedLeaseTtl(value, fallback) {
   const requested = Number(value || fallback);
   if (!Number.isFinite(requested)) return fallback;
@@ -90,6 +118,7 @@ export async function startEvercraftComputeNode({
   leaseTtlMs = 30_000,
   allocatorToken = '',
   deviceIdentity = null,
+  maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
 } = {}) {
   if (!root) throw new Error('root is required');
   const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
@@ -110,6 +139,18 @@ export async function startEvercraftComputeNode({
   };
   const leases = new Map();
   const services = new Map();
+  const stagedBlobs = new Map();
+
+  const stagedLeaseDir = (leaseId) =>
+    path.join(allowedRoot, '.evercraft', 'staged', String(leaseId));
+
+  const cleanupStagedLease = (leaseId) => {
+    stagedBlobs.delete(leaseId);
+    fs.rmSync(stagedLeaseDir(leaseId), { recursive: true, force: true });
+  };
+
+  const stagedBlobFor = (leaseId, digest) =>
+    stagedBlobs.get(leaseId)?.get(digest) || null;
   const supported = new Set([
     'systemia.private-core-origin.v1',
     'systemia.kaidance-collider.v1',
@@ -136,6 +177,12 @@ export async function startEvercraftComputeNode({
       const lease = leases.get(entry.lease_id);
       if (!lease || lease.expires_at < now) {
         stopService(serviceId, 'lease_expired').catch(() => {});
+      }
+    }
+    for (const [leaseId, lease] of leases.entries()) {
+      if (lease.expires_at < now) {
+        cleanupStagedLease(leaseId);
+        leases.delete(leaseId);
       }
     }
   }, 1_000);
@@ -261,6 +308,82 @@ export async function startEvercraftComputeNode({
         });
       }
 
+      const blobUpload = req.url?.match(/^\/v1\/leases\/([^/]+)\/blobs\/([a-f0-9]{64})$/i);
+      if (req.method === 'PUT' && blobUpload) {
+        const leaseId = blobUpload[1];
+        const digest = blobUpload[2].toLowerCase();
+        const lease = leases.get(leaseId);
+        const authorization = String(req.headers.authorization || '');
+        const presented = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+
+        if (!lease || !presented || lease.token_hash !== sha(presented)) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (lease.expires_at < Date.now()) {
+          return send(res, 410, { error: 'expired_lease' });
+        }
+        if (lease.workload_class !== 'saban.multiplier-assignment.v1') {
+          return send(res, 422, { error: 'blob_staging_not_allowed_for_workload' });
+        }
+
+        const extension = String(req.headers['x-evercraft-blob-extension'] || '.bin').toLowerCase();
+        if (!/^\.[a-z0-9]{1,8}$/.test(extension)) {
+          return send(res, 422, { error: 'invalid_blob_extension' });
+        }
+
+        const existing = stagedBlobFor(leaseId, digest);
+        if (existing) {
+          return send(res, 200, {
+            ok: true,
+            blob_ref: `sha256:${digest}`,
+            size_bytes: existing.size_bytes,
+            extension: existing.extension,
+            deduplicated: true,
+            receipt: chain.issue('blob.stage.reused', {
+              lease_id: leaseId,
+              sha256: `sha256:${digest}`,
+              size_bytes: existing.size_bytes
+            })
+          });
+        }
+
+        const dir = stagedLeaseDir(leaseId);
+        fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+        const temp = path.join(dir, `.${digest}.${randomBytes(4).toString('hex')}.partial`);
+        const target = path.join(dir, `${digest}${extension}`);
+        const written = await writeHashedRequest(req, temp, maxStagedBlobBytes);
+
+        if (written.digest !== digest) {
+          fs.rmSync(temp, { force: true });
+          return send(res, 422, {
+            error: 'staged_blob_hash_mismatch',
+            expected: `sha256:${digest}`,
+            observed: `sha256:${written.digest}`
+          });
+        }
+
+        fs.renameSync(temp, target);
+        if (!stagedBlobs.has(leaseId)) stagedBlobs.set(leaseId, new Map());
+        stagedBlobs.get(leaseId).set(digest, {
+          path: target,
+          size_bytes: written.bytes,
+          extension
+        });
+
+        return send(res, 201, {
+          ok: true,
+          blob_ref: `sha256:${digest}`,
+          size_bytes: written.bytes,
+          extension,
+          deduplicated: false,
+          receipt: chain.issue('blob.staged', {
+            lease_id: leaseId,
+            sha256: `sha256:${digest}`,
+            size_bytes: written.bytes
+          })
+        });
+      }
+
       if (req.method === 'POST' && req.url === '/v1/jobs') {
         const body = await readJson(req);
         const lease = leases.get(body.lease_id);
@@ -296,15 +419,36 @@ export async function startEvercraftComputeNode({
 
         if (workloadClass === 'saban.multiplier-assignment.v1') {
           const software = String(body.input?.software || '');
-          const assignment = body.input?.assignment;
+          let assignment = body.input?.assignment;
           if (!software || !assignment) {
             return send(res, 422, { error: 'registered_assignment_required' });
+          }
+
+          const blobDigestRaw = assignment?.item?.raw?.source?.blob_sha256;
+          if (blobDigestRaw) {
+            const digest = String(blobDigestRaw).replace(/^sha256:/, '').toLowerCase();
+            if (!/^[a-f0-9]{64}$/.test(digest)) {
+              return send(res, 422, { error: 'invalid_staged_blob_reference' });
+            }
+            const staged = stagedBlobFor(body.lease_id, digest);
+            if (!staged) {
+              return send(res, 422, { error: 'staged_blob_not_found' });
+            }
+            assignment = structuredClone(assignment);
+            assignment.item.raw.source = {
+              ...assignment.item.raw.source,
+              path: staged.path,
+              sha256: `sha256:${digest}`
+            };
           }
 
           const workerResult = await runRegisteredAssignment({
             software,
             assignment,
             rootDir: CODE_ROOT,
+            executionContext: {
+              media_roots: [stagedLeaseDir(body.lease_id)]
+            }
           });
           const checkpoint = {
             step: Number(body.checkpoint?.step || 0) + 1,
@@ -489,6 +633,7 @@ export async function startEvercraftComputeNode({
         for (const [serviceId, entry] of services.entries()) {
           if (entry.lease_id === leaseId) await stopService(serviceId, 'lease_released');
         }
+        cleanupStagedLease(leaseId);
         leases.delete(leaseId);
         return send(res, 200, {
           ok: true,
@@ -530,6 +675,7 @@ export async function startEvercraftComputeNode({
       for (const serviceId of [...services.keys()]) {
         await stopService(serviceId, 'compute_node_shutdown');
       }
+      for (const leaseId of [...leases.keys()]) cleanupStagedLease(leaseId);
       await new Promise((resolve, reject) =>
         server.close((error) => error ? reject(error) : resolve())
       );
