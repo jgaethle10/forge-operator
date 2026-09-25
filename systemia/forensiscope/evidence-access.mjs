@@ -3,7 +3,13 @@ import crypto from 'node:crypto';
 const TOKEN_PREFIX = 'forensiscope-access-v1';
 const AUDIENCE = 'forensiscope-evidence';
 const MAX_TTL_SECONDS = 24 * 60 * 60;
-const ALLOWED_SCOPES = new Set(['query', 'timeline', 'duplicates', 'context']);
+const ALLOWED_SCOPES = new Set([
+  'query',
+  'timeline',
+  'duplicates',
+  'context',
+  'compare'
+]);
 
 function base64url(value) {
   return Buffer.from(value).toString('base64url');
