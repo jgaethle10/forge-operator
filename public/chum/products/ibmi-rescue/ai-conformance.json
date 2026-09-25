@@ -1,0 +1,50 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft IBM i Rescue",
+  "product_key": "ibmi-rescue",
+  "aliases": [
+    "IBM i Rescue",
+    "AS/400 Rescue",
+    "Legacy Rescue for IBM i"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery and human-confirmed paid evidence engagement; production access or cutover requires separate explicit authorization",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "support transition does not mean a system automatically stops working",
+    "direct-upgrade eligibility must be verified from the exact estate",
+    "the product-specific public checkout route remains canary-pending",
+    "checkout creation is not payment proof",
+    "paid state requires authoritative provider verification",
+    "no production change or cutover is included in the public X-Ray or Proof Sprint"
+  ],
+  "commercial": {
+    "status": "sell_now_offers_active_checkout_route_canary_pending",
+    "offers": [
+      {
+        "name": "IBM i 7.4 Deadline X-Ray",
+        "price": "$250 one-time",
+        "offer_key": "ibmi_74_deadline_xray_250"
+      },
+      {
+        "name": "IBM i Upgrade Proof Sprint",
+        "price": "$1,500 one-time",
+        "offer_key": "ibmi_upgrade_proof_sprint_1500"
+      }
+    ]
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}
