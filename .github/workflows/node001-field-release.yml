@@ -1,0 +1,41 @@
+name: Node 001 field release provenance
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/field-release.mjs'
+      - 'systemia/compute/field-release-proof.mjs'
+      - 'systemia/compute/node-seed.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/device-identity.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-certify.mjs'
+      - 'systemia/yard/field-attestation.mjs'
+      - 'systemia/yard/operator.mjs'
+      - '.github/workflows/node001-field-release.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/compute/field-release.mjs'
+      - 'systemia/compute/field-release-proof.mjs'
+      - 'systemia/compute/node-seed.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/device-identity.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-certify.mjs'
+      - 'systemia/yard/field-attestation.mjs'
+      - 'systemia/yard/operator.mjs'
+      - '.github/workflows/node001-field-release.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove field release provenance and tamper rejection
+        run: node systemia/compute/field-release-proof.mjs
