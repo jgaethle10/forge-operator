@@ -30,6 +30,11 @@ Examples:
 Public discovery:
 /forensiscope/discovery.json
 
+Private next-generation runtime:
+- Proof-verified distributed Saban/NodeSeed execution now includes timestamped transcription, overlap-aware reconciliation, visual scene-boundary detection, exact and perceptual duplicate analysis, source integrity, deterministic evidence graphs, immutable evidence references, evidence query, timeline retrieval, duplicate-relationship retrieval, and context-budgeted LLM evidence packets.
+- The proof-verified agent gateway accepts completed immutable evidence references only. It does not accept raw media, start analysis jobs, create checkout, or create payment obligations.
+- This next-generation runtime is not yet exposed through the current public MCP. Do not claim public invocation until a separate public canary verifies that surface.
+
 Important truth boundaries:
 - secure machine media intake remains verification-gated
 - central machine checkout remains verification-gated

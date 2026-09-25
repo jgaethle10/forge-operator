@@ -244,6 +244,7 @@
       "roles": [
         "media_probe_worker",
         "timeline_worker",
+        "scene_boundary_worker",
         "frame_hash_worker",
         "audio_extract_worker",
         "transcription_worker",
@@ -279,7 +280,7 @@
       "assignment_strategy": "role_item_cartesian",
       "scaling": {
         "strategy": "work_conserving",
-        "max_agents_per_item": 6,
+        "max_agents_per_item": 7,
         "target_logical_per_physical_worker": 4,
         "minimum_role_item_passes": 1
       },
