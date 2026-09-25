@@ -373,6 +373,182 @@ export async function startOutboundCapacityBroker({
         return send(res, 503, { error: 'remote_broker_shutting_down' });
       }
 
+      if (req.method === 'POST' && url.pathname === '/v1/remote/pair/challenge') {
+        if (pairingEnabled !== true) {
+          return send(res, 404, { error: 'remote_pairing_disabled' });
+        }
+        prunePairingPermits();
+        const body = await readJson(req);
+        const permitId = String(body.permit_id || '');
+        const permitToken = String(body.permit_token || '');
+        const nodeId = safeNodeId(body.node_id);
+        const fingerprint = String(body.device_fingerprint || '');
+        const permit = pairingPermits.permits[permitId];
+
+        if (
+          !permit ||
+          permit.used === true ||
+          Number(permit.expires_at_ms || 0) <= Date.now() ||
+          permit.token_hash !== sha(permitToken) ||
+          permit.node_id !== nodeId
+        ) {
+          return send(res, 401, { error: 'pairing_permit_invalid_or_expired' });
+        }
+        if (!/^sha256:[a-f0-9]{64}$/i.test(fingerprint)) {
+          return send(res, 422, { error: 'pairing_device_fingerprint_invalid' });
+        }
+        if (
+          permit.expected_fingerprint &&
+          permit.expected_fingerprint !== fingerprint
+        ) {
+          return send(res, 403, { error: 'pairing_device_fingerprint_mismatch' });
+        }
+
+        const challengeId = `pair_challenge_${randomBytes(10).toString('hex')}`;
+        const nonce = randomBytes(24).toString('hex');
+        challenges.set(challengeId, {
+          purpose: 'pairing',
+          permit_id: permitId,
+          permit_token_hash: sha(permitToken),
+          node_id: nodeId,
+          device_fingerprint: fingerprint,
+          nonce,
+          expires_at: Math.min(
+            Date.now() + challengeTtlMs,
+            Number(permit.expires_at_ms || 0)
+          ),
+        });
+
+        return send(res, 200, {
+          schema: 'evercraft.remote-capacity.pairing-challenge.v1',
+          challenge_id: challengeId,
+          nonce,
+          expires_at: new Date(
+            Math.min(Date.now() + challengeTtlMs, Number(permit.expires_at_ms || 0))
+          ).toISOString(),
+        });
+      }
+
+      if (req.method === 'POST' && url.pathname === '/v1/remote/pair/complete') {
+        if (pairingEnabled !== true) {
+          return send(res, 404, { error: 'remote_pairing_disabled' });
+        }
+        const body = await readJson(req);
+        const challengeId = String(body.challenge_id || '');
+        const permitToken = String(body.permit_token || '');
+        const challenge = challenges.get(challengeId);
+        if (
+          !challenge ||
+          challenge.purpose !== 'pairing' ||
+          challenge.expires_at <= Date.now()
+        ) {
+          return send(res, 401, { error: 'pairing_challenge_invalid_or_expired' });
+        }
+
+        const permit = pairingPermits.permits[challenge.permit_id];
+        if (
+          !permit ||
+          permit.used === true ||
+          Number(permit.expires_at_ms || 0) <= Date.now() ||
+          permit.token_hash !== sha(permitToken) ||
+          challenge.permit_token_hash !== sha(permitToken)
+        ) {
+          challenges.delete(challengeId);
+          return send(res, 401, { error: 'pairing_permit_invalid_or_expired' });
+        }
+
+        const verification = verifyNodeAttestation({
+          attestation: body.attestation,
+          expectedNonce: challenge.nonce,
+          expectedNodeId: challenge.node_id,
+          maxAgeMs: challengeTtlMs,
+        });
+        if (!verification.ok) {
+          return send(res, 401, {
+            error: 'pairing_attestation_rejected',
+            reason: verification.reason,
+          });
+        }
+        if (
+          verification.device_fingerprint !== challenge.device_fingerprint ||
+          (permit.expected_fingerprint &&
+            permit.expected_fingerprint !== verification.device_fingerprint)
+        ) {
+          return send(res, 403, { error: 'pairing_identity_mismatch' });
+        }
+        if (!validCapacity(
+          body.capacity,
+          verification.node_id,
+          verification.device_fingerprint
+        )) {
+          return send(res, 422, { error: 'capacity_offer_invalid' });
+        }
+
+        for (const [fingerprint, device] of Object.entries(pairedDevices.devices || {})) {
+          if (
+            device?.node_id === verification.node_id &&
+            fingerprint !== verification.device_fingerprint
+          ) {
+            delete pairedDevices.devices[fingerprint];
+            authorized.delete(fingerprint);
+          }
+        }
+
+        const existingGrant = persisted.grants[verification.node_id];
+        if (
+          existingGrant &&
+          existingGrant.device_fingerprint !== verification.device_fingerprint
+        ) {
+          delete persisted.grants[verification.node_id];
+          atomicJson(grantsFile, persisted);
+        }
+
+        const active = nodes.get(verification.node_id);
+        if (
+          active &&
+          active.device_fingerprint !== verification.device_fingerprint
+        ) {
+          active.session_expires_at = 0;
+          nodes.delete(verification.node_id);
+        }
+
+        const pairedAt = new Date().toISOString();
+        pairedDevices.devices[verification.device_fingerprint] = {
+          node_id: verification.node_id,
+          device_fingerprint: verification.device_fingerprint,
+          paired_at: pairedAt,
+          authorization_ref_hash: permit.authorization_ref_hash,
+        };
+        authorized.set(
+          verification.device_fingerprint,
+          verification.node_id
+        );
+        permit.used = true;
+        challenges.delete(challengeId);
+        delete pairingPermits.permits[challenge.permit_id];
+        persistPairedDevices();
+        persistPairingPermits();
+
+        const receiptBody = {
+          schema: 'evercraft.remote-capacity.pairing-receipt.v1',
+          node_id: verification.node_id,
+          device_fingerprint: verification.device_fingerprint,
+          authorization_ref_hash: permit.authorization_ref_hash,
+          paired_at: pairedAt,
+          single_use_permit_consumed: true,
+        };
+        return send(res, 200, {
+          ok: true,
+          paired: true,
+          node_id: verification.node_id,
+          device_fingerprint: verification.device_fingerprint,
+          receipt: {
+            ...receiptBody,
+            receipt_hash: `sha256:${sha(JSON.stringify(receiptBody))}`,
+          },
+        });
+      }
+
       if (req.method === 'POST' && url.pathname === '/v1/remote/challenge') {
         const body = await readJson(req);
         const nodeId = safeNodeId(body.node_id);
@@ -384,6 +560,7 @@ export async function startOutboundCapacityBroker({
         const challengeId = `challenge_${randomBytes(10).toString('hex')}`;
         const nonce = randomBytes(24).toString('hex');
         challenges.set(challengeId, {
+          purpose: 'session',
           node_id: nodeId,
           device_fingerprint: fingerprint,
           nonce,
@@ -400,7 +577,11 @@ export async function startOutboundCapacityBroker({
       if (req.method === 'POST' && url.pathname === '/v1/remote/register') {
         const body = await readJson(req);
         const challenge = challenges.get(String(body.challenge_id || ''));
-        if (!challenge || challenge.expires_at <= Date.now()) {
+        if (
+          !challenge ||
+          challenge.purpose !== 'session' ||
+          challenge.expires_at <= Date.now()
+        ) {
           return send(res, 401, { error: 'challenge_invalid_or_expired' });
         }
         challenges.delete(String(body.challenge_id || ''));
@@ -645,6 +826,7 @@ export async function startOutboundCapacityBroker({
       deploymentReceiptRef = value;
       return health();
     },
+    issuePairingPermit,
     controlGrant(nodeId) {
       const id = safeNodeId(nodeId);
       const node = nodes.get(id);
