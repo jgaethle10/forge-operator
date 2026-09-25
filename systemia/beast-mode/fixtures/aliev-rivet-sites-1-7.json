@@ -1,0 +1,217 @@
+{
+  "schema": "evercraft.beast-mode.contract-canary.v1",
+  "purpose": "Sanitized seven-artifact contract canary mirroring the production Sites 1-7 transport shape without publishing live artifact identifiers, hashes, app ids, addresses, or private topology. Live production verification remains in destination receipts.",
+  "source": {
+    "system": "source-product"
+  },
+  "destination": {
+    "system": "destination-product",
+    "workspace": "internal_team"
+  },
+  "authority": {
+    "scope": "internal",
+    "payment_state": "not_required",
+    "customer_delivery_authorized": false,
+    "authorization_ref": "contract-fixture"
+  },
+  "artifacts": [
+    {
+      "artifact_id": "contract-site-01",
+      "artifact_type": "site_plan_review",
+      "filename": "site-01-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "byte_count": 100001,
+      "evidence_state": "contract_fixture",
+      "provenance": {
+        "source_asset_key": "opaque-source-01",
+        "source_package_key": "opaque-package-01",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
+      },
+      "permissions": {
+        "customer_visible": false,
+        "external_delivery_authorized": false,
+        "mutation_authorized": false
+      }
+    },
+    {
+      "artifact_id": "contract-site-02",
+      "artifact_type": "site_plan_review",
+      "filename": "site-02-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "byte_count": 100002,
+      "evidence_state": "contract_fixture",
+      "provenance": {
+        "source_asset_key": "opaque-source-02",
+        "source_package_key": "opaque-package-02",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
+      },
+      "permissions": {
+        "customer_visible": false,
+        "external_delivery_authorized": false,
+        "mutation_authorized": false
+      }
+    },
+    {
+      "artifact_id": "contract-site-03",
+      "artifact_type": "site_plan_review",
+      "filename": "site-03-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "byte_count": 100003,
+      "evidence_state": "contract_fixture",
+      "provenance": {
+        "source_asset_key": "opaque-source-03",
+        "source_package_key": "opaque-package-03",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
+      },
+      "permissions": {
+        "customer_visible": false,
+        "external_delivery_authorized": false,
+        "mutation_authorized": false
+      }
+    },
+    {
+      "artifact_id": "contract-site-04",
+      "artifact_type": "site_plan_review",
+      "filename": "site-04-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "byte_count": 100004,
+      "evidence_state": "contract_fixture",
+      "provenance": {
+        "source_asset_key": "opaque-source-04",
+        "source_package_key": "opaque-package-04",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
+      },
+      "permissions": {
+        "customer_visible": false,
+        "external_delivery_authorized": false,
+        "mutation_authorized": false
+      }
+    },
+    {
+      "artifact_id": "contract-site-05",
+      "artifact_type": "site_plan_review",
+      "filename": "site-05-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "byte_count": 100005,
+      "evidence_state": "contract_fixture",
+      "provenance": {
+        "source_asset_key": "opaque-source-05",
+        "source_package_key": "opaque-package-05",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
+      },
+      "permissions": {
+        "customer_visible": false,
+        "external_delivery_authorized": false,
+        "mutation_authorized": false
+      }
+    },
+    {
+      "artifact_id": "contract-site-06",
+      "artifact_type": "site_plan_review",
+      "filename": "site-06-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "byte_count": 100006,
+      "evidence_state": "contract_fixture",
+      "provenance": {
+        "source_asset_key": "opaque-source-06",
+        "source_package_key": "opaque-package-06",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
+      },
+      "permissions": {
+        "customer_visible": false,
+        "external_delivery_authorized": false,
+        "mutation_authorized": false
+      }
+    },
+    {
+      "artifact_id": "contract-site-07",
+      "artifact_type": "site_plan_review",
+      "filename": "site-07-review.bin",
+      "mime_type": "application/octet-stream",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "byte_count": 100007,
+      "evidence_state": "contract_fixture",
+      "provenance": {
+        "source_asset_key": "opaque-source-07",
+        "source_package_key": "opaque-package-07",
+        "source_revision": "fixture-v1",
+        "geometry_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "renderer_revision": "fixture-renderer"
+      },
+      "permissions": {
+        "customer_visible": false,
+        "external_delivery_authorized": false,
+        "mutation_authorized": false
+      }
+    }
+  ],
+  "destination_observations": [
+    {
+      "artifact_id": "contract-site-01",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "byte_count": 100001,
+      "provenance_present": true,
+      "permissions_match": true
+    },
+    {
+      "artifact_id": "contract-site-02",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "byte_count": 100002,
+      "provenance_present": true,
+      "permissions_match": true
+    },
+    {
+      "artifact_id": "contract-site-03",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "byte_count": 100003,
+      "provenance_present": true,
+      "permissions_match": true
+    },
+    {
+      "artifact_id": "contract-site-04",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+      "byte_count": 100004,
+      "provenance_present": true,
+      "permissions_match": true
+    },
+    {
+      "artifact_id": "contract-site-05",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+      "byte_count": 100005,
+      "provenance_present": true,
+      "permissions_match": true
+    },
+    {
+      "artifact_id": "contract-site-06",
+      "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+      "byte_count": 100006,
+      "provenance_present": true,
+      "permissions_match": true
+    },
+    {
+      "artifact_id": "contract-site-07",
+      "sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+      "byte_count": 100007,
+      "provenance_present": true,
+      "permissions_match": true
+    }
+  ]
+}
