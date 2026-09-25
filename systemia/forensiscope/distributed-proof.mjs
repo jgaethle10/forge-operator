@@ -16,6 +16,7 @@ import { hashFile } from './authorized-source.mjs';
 import { queryEvidenceGraph } from './evidence-query.mjs';
 import { listForensiScopeAgentTools, invokeForensiScopeAgentTool } from './agent-tools.mjs';
 import { persistEvidenceGraph, loadEvidenceGraph, verifyEvidenceRef } from './evidence-store.mjs';
+import { listForensiScopeGatewayTools, invokeForensiScopeGatewayTool } from './agent-gateway.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -364,6 +365,46 @@ const persistedEvidenceQuery = invokeForensiScopeAgentTool({
 assert.ok(persistedEvidenceQuery.match_count > 0);
 assert.equal(persistedEvidenceQuery.hits[0].source_sha256, sourceHashAfter);
 
+const gatewayTools = listForensiScopeGatewayTools();
+assert.equal(gatewayTools.length, 4);
+assert.ok(
+  gatewayTools.every((tool) =>
+    tool.inputSchema.required.includes('evidence_ref')
+  )
+);
+
+const gatewayQuery = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    evidence_ref: storedEvidence.evidence_ref,
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  rootDir
+});
+assert.equal(gatewayQuery.schema, 'evercraft.forensiscope.gateway-result.v1');
+assert.equal(gatewayQuery.evidence_ref, storedEvidence.evidence_ref);
+assert.equal(gatewayQuery.graph_digest, storedEvidence.graph_digest);
+assert.equal(gatewayQuery.authority.accepts_raw_media, false);
+assert.equal(gatewayQuery.authority.starts_analysis_jobs, false);
+assert.ok(gatewayQuery.result.match_count > 0);
+
+const gatewayPacket = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_build_context_packet',
+  args: {
+    evidence_ref: storedEvidence.evidence_ref,
+    query: 'boundary-3',
+    max_chars: 4000,
+    top_k: 3,
+    context_radius_seconds: 3
+  },
+  rootDir
+});
+assert.equal(gatewayPacket.result.source_sha256, sourceHashAfter);
+assert.ok(gatewayPacket.result.atoms.length > 0);
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(gatewayPacket.result.packet_digest));
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -404,6 +445,10 @@ const proof = {
   evidence_graph_digest: storedEvidence.graph_digest,
   evidence_ref_verified: verifiedEvidence.verified,
   persisted_evidence_query_matches: persistedEvidenceQuery.match_count,
+  gateway_tool_count: gatewayTools.length,
+  gateway_query_matches: gatewayQuery.result.match_count,
+  gateway_context_packet_digest: gatewayPacket.result.packet_digest,
+  gateway_accepts_raw_media: gatewayQuery.authority.accepts_raw_media,
   public_machine_intake_enabled: false
 };
 
