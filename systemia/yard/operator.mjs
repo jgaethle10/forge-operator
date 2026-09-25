@@ -17,6 +17,47 @@ function immutableRelease(ref) {
     /@sha256:[a-f0-9]{64}$/i.test(value);
 }
 
+function normalizePublicRouteOrigin(value, { allowLoopbackProof = false } = {}) {
+  const raw = String(value || '').trim();
+  if (!raw) throw new Error('public origin is required');
+  let url;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error('public origin must be an absolute URL');
+  }
+  if (url.username || url.password) throw new Error('public origin credentials are not allowed');
+  const host = url.hostname.toLowerCase();
+  const loopback =
+    host === 'localhost' ||
+    host === '127.0.0.1' ||
+    host === '::1' ||
+    host === '[::1]';
+
+  if (loopback) {
+    if (!allowLoopbackProof) throw new Error('loopback is not a public route');
+    if (!['http:', 'https:'].includes(url.protocol)) throw new Error('unsupported public route protocol');
+  } else if (url.protocol !== 'https:') {
+    throw new Error('public route must use HTTPS');
+  }
+
+  if (!loopback && (
+    /^10\./.test(host) ||
+    /^127\./.test(host) ||
+    /^169\.254\./.test(host) ||
+    /^192\.168\./.test(host) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+    host.endsWith('.local')
+  )) {
+    throw new Error('private-network origin is not a public route');
+  }
+
+  return {
+    origin: url.origin,
+    scope: loopback ? 'loopback_proof' : 'public_https',
+  };
+}
+
 async function request(url, options = {}) {
   const response = await fetch(url, {
     ...options,
@@ -338,6 +379,23 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_core_health_verified';
+      } else if (workloadClass === 'systemia.chum-public-origin.v1') {
+        const originHealthy =
+          health.ok === true &&
+          health.service === 'chum-public-origin' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === job.result?.instance_id;
+        if (!originHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('CHUM public origin failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_origin_health_verified_public_route_unbound';
       }
     }
 
@@ -715,9 +773,128 @@ export class YardOperator {
     };
   }
 
+  async verifyPublicRoute(deploymentId, {
+    origin,
+    allowLoopbackProof = false,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) throw new Error('deployment not found');
+    if (record.receipt?.workload_class !== 'systemia.chum-public-origin.v1') {
+      throw new Error('deployment is not a CHUM public origin');
+    }
+
+    const normalized = normalizePublicRouteOrigin(origin, { allowLoopbackProof });
+    const health = await request(`${normalized.origin}/api/health`);
+    const matches =
+      health.ok === true &&
+      health.service === 'chum-public-origin' &&
+      health.runtime === 'Evercraft Compute' &&
+      health.instance_id === record.result?.instance_id &&
+      health.deployment_receipt_bound === true &&
+      health.deployment_receipt_ref === record.receipt?.receipt_hash;
+
+    if (!matches) {
+      throw new Error('public route health does not match this deployment receipt and instance');
+    }
+
+    const verifiedAt = new Date().toISOString();
+    const body = {
+      schema: 'evercraft.yard.public-route-receipt.v1',
+      deployment_id: deploymentId,
+      origin: normalized.origin,
+      scope: normalized.scope,
+      verified: normalized.scope === 'public_https',
+      deployment_receipt_hash: record.receipt.receipt_hash,
+      instance_id: record.result.instance_id,
+      health_path: '/api/health',
+      verification: 'instance_and_deployment_receipt_match',
+      verified_at: verifiedAt,
+    };
+    const publicRoute = {
+      ...body,
+      receipt_hash: sha(body),
+    };
+
+    record.public_route = publicRoute;
+    record.updated_at = verifiedAt;
+    this.#persist(record);
+    return publicRoute;
+  }
+
+  runtimeOriginReceipt(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) throw new Error('deployment not found');
+    if (record.receipt?.workload_class !== 'systemia.chum-public-origin.v1') {
+      throw new Error('deployment is not a CHUM public origin');
+    }
+    if (record.public_route?.verified !== true || record.public_route?.scope !== 'public_https') {
+      throw new Error('verified public HTTPS route is required');
+    }
+
+    return {
+      schema: 'evercraft.runtime-origin.v1',
+      runtime: 'forge-operator',
+      verified: true,
+      origin: record.public_route.origin,
+      deployment_receipt_hash: record.receipt.receipt_hash,
+      public_route_receipt_hash: record.public_route.receipt_hash,
+      verified_at: record.public_route.verified_at,
+      health_path: '/api/health',
+      source: 'Systemia Yard Operator',
+    };
+  }
+
   async verifyRoute(deploymentId) {
     const record = this.deploymentStatus(deploymentId);
     if (!record) return { ok: false, state: 'missing' };
+
+    if (record.receipt?.workload_class === 'systemia.chum-public-origin.v1') {
+      if (record.public_route?.verified === true) {
+        try {
+          const health = await request(`${record.public_route.origin}/api/health`);
+          const ok =
+            health.ok === true &&
+            health.service === 'chum-public-origin' &&
+            health.instance_id === record.result?.instance_id &&
+            health.deployment_receipt_ref === record.receipt?.receipt_hash;
+          return {
+            ok,
+            state: ok ? 'public_route_verified' : 'public_route_mismatch',
+            origin: record.public_route.origin,
+            public_route_receipt: record.public_route.receipt_hash,
+            health,
+          };
+        } catch (error) {
+          return {
+            ok: false,
+            state: 'public_route_unreachable',
+            origin: record.public_route.origin,
+            error: String(error?.message || error),
+          };
+        }
+      }
+
+      if (record.management?.health_path) {
+        try {
+          const health = await request(new URL(
+            record.management.health_path,
+            record.lease.capacity_endpoint
+          ).toString());
+          return {
+            ok: false,
+            state: 'public_route_unbound',
+            local_health_ok:
+              health.ok === true &&
+              health.service === 'chum-public-origin' &&
+              health.instance_id === record.result?.instance_id,
+            health,
+          };
+        } catch (error) {
+          return { ok: false, state: 'local_origin_unreachable', error: String(error?.message || error) };
+        }
+      }
+    }
+
     if (!record.management?.health_path) {
       return {
         ok: record.receipt?.route_verification === 'private_origin_not_publicly_routed',
@@ -810,7 +987,9 @@ export class YardOperator {
   }
 
   getLiveUrl(deploymentId) {
-    return this.deploymentStatus(deploymentId)?.receipt?.live_url || null;
+    const record = this.deploymentStatus(deploymentId);
+    if (record?.public_route?.verified === true) return record.public_route.origin;
+    return record?.receipt?.live_url || null;
   }
 
   async stopDeployment(deploymentId, { reason = 'operator_requested' } = {}) {
