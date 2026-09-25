@@ -385,7 +385,8 @@ export async function runNodeSeedAssignmentPool({
     index,
     attempts: 0,
     checkpoint: null,
-    last_node_id: null
+    last_node_id: null,
+    total_duration_ms: 0
   }));
   const results = new Array(assignments.length);
   const failures = [];
@@ -409,6 +410,7 @@ export async function runNodeSeedAssignmentPool({
       }
 
       job.attempts += 1;
+      const attemptStartedAt = Date.now();
       try {
         const preparedAssignment = typeof prepareAssignment === 'function'
           ? await prepareAssignment({
@@ -438,11 +440,14 @@ export async function runNodeSeedAssignmentPool({
           job.last_node_id && job.last_node_id !== response.node_id
         );
 
+        job.total_duration_ms += Math.max(0, Date.now() - attemptStartedAt);
         results[job.index] = {
           status: 'completed',
           assignment: job.assignment,
+          idempotency_key: job.assignment.idempotency_key || null,
           node_id: response.node_id,
           attempts: job.attempts,
+          duration_ms: job.total_duration_ms,
           failover,
           checkpoint: response.checkpoint || null,
           result: response.result,
@@ -453,9 +458,11 @@ export async function runNodeSeedAssignmentPool({
           type: failover ? 'assignment.failover.completed' : 'assignment.completed',
           agent_id: job.assignment.agent_id,
           node_id: response.node_id,
-          attempts: job.attempts
+          attempts: job.attempts,
+          duration_ms: job.total_duration_ms
         });
       } catch (error) {
+        job.total_duration_ms += Math.max(0, Date.now() - attemptStartedAt);
         const reason = error instanceof Error ? error.message : String(error);
         job.last_node_id = node.node_id;
         node.healthy = false;
@@ -481,7 +488,9 @@ export async function runNodeSeedAssignmentPool({
           results[job.index] = {
             status: 'failed',
             assignment: job.assignment,
+            idempotency_key: job.assignment.idempotency_key || null,
             attempts: job.attempts,
+            duration_ms: job.total_duration_ms,
             last_node_id: node.node_id,
             reason
           };
