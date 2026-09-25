@@ -41,6 +41,54 @@ function hashFile(file) {
   return `sha256:${hash.digest('hex')}`;
 }
 
+export async function stageFileOnNode(
+  node,
+  filePath,
+  options = {},
+  {
+    expectedHash = null,
+    extension = null
+  } = {}
+) {
+  const resolved = path.resolve(String(filePath));
+  if (!fs.existsSync(resolved) || !fs.statSync(resolved).isFile()) {
+    throw new Error('source_staging_file_missing');
+  }
+
+  const observedHash = hashFile(resolved);
+  if (expectedHash && expectedHash !== observedHash) {
+    throw new Error('source_staging_hash_mismatch');
+  }
+
+  const digest = observedHash.replace(/^sha256:/, '');
+  node.staged_digests ||= new Set();
+  if (!node.staged_digests.has(digest)) {
+    const safeExtension = String(
+      extension || path.extname(resolved).toLowerCase() || '.bin'
+    ).toLowerCase();
+    await requestJson(
+      `${node.endpoint}/v1/leases/${node.lease_id}/blobs/${digest}`,
+      {
+        method: 'PUT',
+        headers: {
+          authorization: `Bearer ${node.lease_token}`,
+          'content-type': 'application/octet-stream',
+          'x-evercraft-blob-extension': safeExtension
+        },
+        body: fs.createReadStream(resolved),
+        duplex: 'half'
+      },
+      options.assignmentTimeoutMs || 120000
+    );
+    node.staged_digests.add(digest);
+  }
+
+  return {
+    blob_sha256: observedHash,
+    size_bytes: fs.statSync(resolved).size
+  };
+}
+
 async function stageSourceOnNode(node, assignment, options, hashCache) {
   const raw = assignment?.item?.raw || {};
   const source = raw.source || raw.authorized_source;
@@ -50,10 +98,6 @@ async function stageSourceOnNode(node, assignment, options, hashCache) {
   }
 
   const sourcePath = path.resolve(String(source.path));
-  if (!fs.existsSync(sourcePath) || !fs.statSync(sourcePath).isFile()) {
-    throw new Error('source_staging_file_missing');
-  }
-
   let observedHash = hashCache.get(sourcePath);
   if (!observedHash) {
     observedHash = hashFile(sourcePath);
@@ -63,33 +107,16 @@ async function stageSourceOnNode(node, assignment, options, hashCache) {
     throw new Error('source_staging_hash_mismatch');
   }
 
-  const digest = observedHash.replace(/^sha256:/, '');
-  node.staged_digests ||= new Set();
-  if (!node.staged_digests.has(digest)) {
-    const extension = path.extname(sourcePath).toLowerCase() || '.bin';
-    await requestJson(
-      `${node.endpoint}/v1/leases/${node.lease_id}/blobs/${digest}`,
-      {
-        method: 'PUT',
-        headers: {
-          authorization: `Bearer ${node.lease_token}`,
-          'content-type': 'application/octet-stream',
-          'x-evercraft-blob-extension': extension
-        },
-        body: fs.createReadStream(sourcePath),
-        duplex: 'half'
-      },
-      options.assignmentTimeoutMs || 120000
-    );
-    node.staged_digests.add(digest);
-  }
+  const staged = await stageFileOnNode(node, sourcePath, options, {
+    expectedHash: observedHash
+  });
 
   const prepared = structuredClone(assignment);
   prepared.item.raw.source = {
     ...source,
     path: null,
-    sha256: observedHash,
-    blob_sha256: observedHash,
+    sha256: staged.blob_sha256,
+    blob_sha256: staged.blob_sha256,
     original_path_redacted: true
   };
   return prepared;
@@ -291,6 +318,7 @@ export async function runNodeSeedAssignmentPool({
   requestedTtlMs = 300000,
   resourceProfile = null,
   stageAuthorizedSources = false,
+  prepareAssignment = null,
   onEvent = null
 }) {
   if (!software) throw new Error('software is required');
@@ -382,14 +410,21 @@ export async function runNodeSeedAssignmentPool({
 
       job.attempts += 1;
       try {
-        const preparedAssignment = stageAuthorizedSources
-          ? await stageSourceOnNode(
+        const preparedAssignment = typeof prepareAssignment === 'function'
+          ? await prepareAssignment({
               node,
-              job.assignment,
+              assignment: job.assignment,
               leaseOptions,
-              sourceHashCache
-            )
-          : job.assignment;
+              stageFileOnNode
+            })
+          : stageAuthorizedSources
+            ? await stageSourceOnNode(
+                node,
+                job.assignment,
+                leaseOptions,
+                sourceHashCache
+              )
+            : job.assignment;
 
         const response = await executeAssignment(
           node,
