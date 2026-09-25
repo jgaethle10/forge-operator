@@ -472,7 +472,10 @@ function normalizeTranscriptText(value) {
 function mergeTranscriptSegments(entries, overlapSeconds = 0) {
   const merged = [];
   const recentByText = new Map();
-  const tolerance = Math.max(0.75, Number(overlapSeconds || 0) + 0.25);
+  const timestampTolerance = Math.min(
+    1.5,
+    Math.max(0.5, Number(overlapSeconds || 0) * 0.25)
+  );
 
   for (const segment of [...entries].sort((a, b) =>
     a.start_seconds - b.start_seconds || a.end_seconds - b.end_seconds
@@ -482,11 +485,10 @@ function mergeTranscriptSegments(entries, overlapSeconds = 0) {
 
     const recent = recentByText.get(key) || [];
     const duplicate = recent.find((existing) => {
-      const startsClose = Math.abs(existing.start_seconds - segment.start_seconds) <= tolerance;
-      const overlap =
-        Math.min(existing.end_seconds, segment.end_seconds) -
-        Math.max(existing.start_seconds, segment.start_seconds);
-      return startsClose || overlap > 0;
+      if (existing.shard_index === segment.shard_index) return false;
+      const startDelta = Math.abs(existing.start_seconds - segment.start_seconds);
+      const endDelta = Math.abs(existing.end_seconds - segment.end_seconds);
+      return startDelta <= timestampTolerance && endDelta <= Math.max(1, timestampTolerance);
     });
 
     if (duplicate) {
@@ -502,7 +504,9 @@ function mergeTranscriptSegments(entries, overlapSeconds = 0) {
     const accepted = { ...segment };
     merged.push(accepted);
     const nextRecent = [...recent, accepted]
-      .filter((existing) => segment.start_seconds - existing.end_seconds <= tolerance * 2)
+      .filter((existing) =>
+        segment.start_seconds - existing.end_seconds <= Math.max(2, Number(overlapSeconds || 0) + 1)
+      )
       .slice(-8);
     recentByText.set(key, nextRecent);
   }
@@ -588,7 +592,12 @@ export async function reconcile({ results, contract }) {
     originalHashes.size <= 1;
   const repeatedContent = duplicates.filter((entry) => entry.classification === 'repeated_content');
   const transcriptSegments = mergeTranscriptSegments(
-    transcriptionShards.flatMap((entry) => entry.segments || []),
+    transcriptionShards.flatMap((entry) =>
+      (entry.segments || []).map((segment) => ({
+        ...segment,
+        shard_index: entry.shard_index
+      }))
+    ),
     overlap
   );
   const engineIds = [...new Set(
