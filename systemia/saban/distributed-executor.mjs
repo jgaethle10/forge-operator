@@ -29,6 +29,14 @@ function schedulerSummary(poolReceipt) {
   const completed = Number(poolReceipt.completed_assignments || 0);
   const failed = Number(poolReceipt.failed_assignments || 0);
   const results = poolReceipt.results || [];
+  const durations = results
+    .map((row) => Number(row?.duration_ms))
+    .filter((value) => Number.isFinite(value) && value >= 0)
+    .sort((a, b) => a - b);
+  const p95Index = durations.length
+    ? Math.min(durations.length - 1, Math.ceil(durations.length * 0.95) - 1)
+    : -1;
+
   return {
     total: Number(poolReceipt.requested_assignments || completed + failed),
     counts: {
@@ -36,7 +44,15 @@ function schedulerSummary(poolReceipt) {
       ...(failed ? { dead_letter: failed } : {})
     },
     checkpointed: results.filter((row) => row?.checkpoint).length,
-    retried: results.filter((row) => Number(row?.attempts || 0) > 1).length
+    retried: results.filter((row) => Number(row?.attempts || 0) > 1).length,
+    timing: {
+      measured_jobs: durations.length,
+      total_duration_ms: durations.reduce((sum, value) => sum + value, 0),
+      average_duration_ms: durations.length
+        ? Math.round(durations.reduce((sum, value) => sum + value, 0) / durations.length)
+        : null,
+      p95_duration_ms: p95Index >= 0 ? durations[p95Index] : null
+    }
   };
 }
 
