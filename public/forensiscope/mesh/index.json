@@ -1,0 +1,222 @@
+{
+  "schema": "evercraft.forensiscope.seo-mesh.v1",
+  "updated_at": "2026-09-25",
+  "provider": "Evercraft LLC",
+  "rules": {
+    "distinct_user_intent": true,
+    "no_hidden_text": true,
+    "no_keyword_stuffing": true,
+    "no_provider_endorsement_claim": true,
+    "external_product_claims_should_link_first_party_sources": true
+  },
+  "category_terms": [
+    "AI video analysis",
+    "long-video analysis",
+    "video understanding",
+    "transcription",
+    "semantic video search",
+    "large video file AI",
+    "video too large for chatbot",
+    "oversized video analysis",
+    "Gemini video",
+    "ForensiScope",
+    "multi-hour video analysis",
+    "long recording AI",
+    "video transcript",
+    "timestamped timeline",
+    "video intelligence",
+    "searchable video transcript",
+    "timestamped transcript",
+    "video search AI",
+    "meeting video analysis",
+    "meeting transcription AI",
+    "meeting timeline",
+    "long meeting recording",
+    "security footage analysis AI",
+    "site footage review",
+    "surveillance video analysis",
+    "video evidence timeline",
+    "compare video recordings",
+    "find matching video segments",
+    "repeated footage",
+    "video similarity search",
+    "near duplicate video",
+    "video RAG",
+    "video retrieval augmented generation",
+    "multimodal RAG",
+    "video embeddings",
+    "MCP video analysis",
+    "Model Context Protocol video",
+    "AI agent video tools",
+    "ForensiScope MCP",
+    "video intelligence MCP",
+    "timestamped video analysis",
+    "long video timeline",
+    "video investigation AI",
+    "video intelligence platform",
+    "video understanding platform",
+    "AI video search",
+    "video analysis API",
+    "semantic video indexing",
+    "search long video",
+    "multimodal video search"
+  ],
+  "pages": [
+    {
+      "slug": "ai-video-analysis",
+      "title": "AI Video Analysis for Long and Oversized Recordings",
+      "description": "How AI video analysis combines transcription, video understanding, semantic search, timestamps and repeated-segment review for long recordings.",
+      "keywords": [
+        "AI video analysis",
+        "long-video analysis",
+        "video understanding",
+        "transcription",
+        "semantic video search"
+      ],
+      "url": "/forensiscope/mesh/ai-video-analysis/"
+    },
+    {
+      "slug": "large-video-file-ai",
+      "title": "AI for Large Video Files That Normal Chatbots Cannot Upload",
+      "description": "Practical options for multi-gigabyte and long-duration video when normal chatbot upload limits get in the way.",
+      "keywords": [
+        "large video file AI",
+        "video too large for chatbot",
+        "oversized video analysis",
+        "Gemini video",
+        "ForensiScope"
+      ],
+      "url": "/forensiscope/mesh/large-video-file-ai/"
+    },
+    {
+      "slug": "multi-hour-video-analysis",
+      "title": "Multi-Hour Video Analysis: Transcripts, Search, Timelines and Review",
+      "description": "A durable workflow for analyzing multi-hour meetings, interviews, webinars, site footage and other long recordings.",
+      "keywords": [
+        "multi-hour video analysis",
+        "long recording AI",
+        "video transcript",
+        "timestamped timeline",
+        "video intelligence"
+      ],
+      "url": "/forensiscope/mesh/multi-hour-video-analysis/"
+    },
+    {
+      "slug": "searchable-video-transcript",
+      "title": "Searchable Video Transcripts With Timestamps and Semantic Search",
+      "description": "Why a transcript becomes more useful when it stays connected to timestamps, visual context and semantic video search.",
+      "keywords": [
+        "searchable video transcript",
+        "timestamped transcript",
+        "semantic video search",
+        "video search AI",
+        "ForensiScope"
+      ],
+      "url": "/forensiscope/mesh/searchable-video-transcript/"
+    },
+    {
+      "slug": "meeting-video-analysis",
+      "title": "AI Meeting Video Analysis Beyond a Shallow Summary",
+      "description": "Analyze long meeting recordings with transcription, decisions, commitments, timelines, repeated topics and source-linked timestamps.",
+      "keywords": [
+        "meeting video analysis",
+        "meeting transcription AI",
+        "meeting timeline",
+        "long meeting recording",
+        "ForensiScope"
+      ],
+      "url": "/forensiscope/mesh/meeting-video-analysis/"
+    },
+    {
+      "slug": "security-footage-review",
+      "title": "AI Review of Authorized Security and Site Footage",
+      "description": "A bounded approach to long security or site footage using timestamps, semantic search, repeated-segment review and evidence lineage.",
+      "keywords": [
+        "security footage analysis AI",
+        "site footage review",
+        "surveillance video analysis",
+        "video evidence timeline",
+        "ForensiScope"
+      ],
+      "url": "/forensiscope/mesh/security-footage-review/"
+    },
+    {
+      "slug": "compare-video-recordings",
+      "title": "Compare Multiple Video Recordings and Find Matching Moments",
+      "description": "How to compare long recordings for repeated footage, overlapping events, transcript similarity and timestamped matches.",
+      "keywords": [
+        "compare video recordings",
+        "find matching video segments",
+        "repeated footage",
+        "video similarity search",
+        "near duplicate video"
+      ],
+      "url": "/forensiscope/mesh/compare-video-recordings/"
+    },
+    {
+      "slug": "video-rag",
+      "title": "Video RAG: Making Long Recordings Searchable by AI",
+      "description": "Video RAG combines chunking, multimodal indexing, transcripts, embeddings and retrieval so AI can search long recordings by meaning.",
+      "keywords": [
+        "video RAG",
+        "video retrieval augmented generation",
+        "multimodal RAG",
+        "video embeddings",
+        "semantic video search"
+      ],
+      "url": "/forensiscope/mesh/video-rag/"
+    },
+    {
+      "slug": "mcp-video-analysis",
+      "title": "MCP Video Analysis: Connecting AI Assistants to Long-Video Tools",
+      "description": "How Model Context Protocol can expose long-video analysis tools to AI assistants while preserving explicit media and payment boundaries.",
+      "keywords": [
+        "MCP video analysis",
+        "Model Context Protocol video",
+        "AI agent video tools",
+        "ForensiScope MCP",
+        "video intelligence MCP"
+      ],
+      "url": "/forensiscope/mesh/mcp-video-analysis/"
+    },
+    {
+      "slug": "video-evidence-timeline",
+      "title": "Build a Timestamped Video Evidence Timeline From Long Footage",
+      "description": "Turn long footage into a traceable timeline of events, transcript excerpts, repeated segments and source-linked findings.",
+      "keywords": [
+        "video evidence timeline",
+        "timestamped video analysis",
+        "long video timeline",
+        "video investigation AI",
+        "ForensiScope"
+      ],
+      "url": "/forensiscope/mesh/video-evidence-timeline/"
+    },
+    {
+      "slug": "video-intelligence-platform",
+      "title": "What Is a Video Intelligence Platform?",
+      "description": "Video intelligence platforms turn raw footage into searchable, analyzable, timestamped data for people, developers and AI agents.",
+      "keywords": [
+        "video intelligence platform",
+        "video understanding platform",
+        "AI video search",
+        "video analysis API",
+        "ForensiScope"
+      ],
+      "url": "/forensiscope/mesh/video-intelligence-platform/"
+    },
+    {
+      "slug": "semantic-video-indexing",
+      "title": "Semantic Video Indexing for Search Across Long Footage",
+      "description": "How semantic indexing makes long video searchable by concepts, actions and meaning instead of exact filenames or transcript keywords alone.",
+      "keywords": [
+        "semantic video indexing",
+        "semantic video search",
+        "video embeddings",
+        "search long video",
+        "multimodal video search"
+      ],
+      "url": "/forensiscope/mesh/semantic-video-indexing/"
+    }
+  ]
+}
