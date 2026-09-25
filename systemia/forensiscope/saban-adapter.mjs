@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { validateAuthorizedMediaSource, hashFile } from './authorized-source.mjs';
+import { transcribePreparedAudio } from './transcription-engine.mjs';
 
 function safeId(value) {
   return String(value || 'item')
@@ -312,6 +313,31 @@ function extractAudio(sourcePath, bounds, outFile) {
   };
 }
 
+function transcribeShard(sourcePath, bounds, outFile) {
+  const audio = extractAudio(sourcePath, bounds, outFile);
+  if (audio.state !== 'prepared_for_transcription') {
+    return {
+      state: 'audio_unavailable',
+      engine_id: null,
+      reason: audio.reason || audio.state,
+      segments: [],
+      audio_state: audio.state
+    };
+  }
+
+  const transcript = transcribePreparedAudio({
+    audioPath: audio.path,
+    bounds
+  });
+
+  return {
+    ...transcript,
+    audio_state: audio.state,
+    audio_sha256: audio.sha256,
+    audio_size_bytes: audio.size_bytes
+  };
+}
+
 function baseReceipt(assignment, source, bounds) {
   return {
     schema: 'evercraft.forensiscope.shard-result.v1',
@@ -385,6 +411,16 @@ export async function runAssignment({ assignment, rootDir, executionContext = {}
       };
     }
 
+    case 'transcription_worker': {
+      const audioPath = path.join(outDir, 'transcription-input.wav');
+      return {
+        ...receipt,
+        data: {
+          transcription: transcribeShard(source.path, bounds, audioPath)
+        }
+      };
+    }
+
     case 'provenance_guard': {
       const observed = hashFile(source.path);
       return {
@@ -424,11 +460,62 @@ function dedupeTimeline(entries) {
     });
 }
 
+function normalizeTranscriptText(value) {
+  return String(value || '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function mergeTranscriptSegments(entries, overlapSeconds = 0) {
+  const merged = [];
+  const recentByText = new Map();
+  const tolerance = Math.max(0.75, Number(overlapSeconds || 0) + 0.25);
+
+  for (const segment of [...entries].sort((a, b) =>
+    a.start_seconds - b.start_seconds || a.end_seconds - b.end_seconds
+  )) {
+    const key = normalizeTranscriptText(segment.text);
+    if (!key) continue;
+
+    const recent = recentByText.get(key) || [];
+    const duplicate = recent.find((existing) => {
+      const startsClose = Math.abs(existing.start_seconds - segment.start_seconds) <= tolerance;
+      const overlap =
+        Math.min(existing.end_seconds, segment.end_seconds) -
+        Math.max(existing.start_seconds, segment.start_seconds);
+      return startsClose || overlap > 0;
+    });
+
+    if (duplicate) {
+      if (
+        Number.isFinite(segment.confidence) &&
+        (!Number.isFinite(duplicate.confidence) || segment.confidence > duplicate.confidence)
+      ) {
+        duplicate.confidence = segment.confidence;
+      }
+      continue;
+    }
+
+    const accepted = { ...segment };
+    merged.push(accepted);
+    const nextRecent = [...recent, accepted]
+      .filter((existing) => segment.start_seconds - existing.end_seconds <= tolerance * 2)
+      .slice(-8);
+    recentByText.set(key, nextRecent);
+  }
+
+  return merged;
+}
+
 export async function reconcile({ results, contract }) {
   const frameOccurrences = new Map();
   const perceptualSignatures = [];
   const timeline = [];
   const audio = [];
+  const transcriptionShards = [];
   const provenance = [];
   const workerStatuses = {};
 
@@ -456,6 +543,14 @@ export async function reconcile({ results, contract }) {
       audio.push({
         shard_index: result.shard?.shard_index ?? null,
         ...result.data.audio
+      });
+    }
+    if (result?.data?.transcription) {
+      transcriptionShards.push({
+        shard_index: result.shard?.shard_index ?? null,
+        start_seconds: result.shard?.start_seconds ?? null,
+        end_seconds: result.shard?.end_seconds ?? null,
+        ...result.data.transcription
       });
     }
     if (result?.role === 'provenance_guard') provenance.push(result.data);
@@ -492,6 +587,23 @@ export async function reconcile({ results, contract }) {
     provenance.every((entry) => entry?.source_unchanged === true) &&
     originalHashes.size <= 1;
   const repeatedContent = duplicates.filter((entry) => entry.classification === 'repeated_content');
+  const transcriptSegments = mergeTranscriptSegments(
+    transcriptionShards.flatMap((entry) => entry.segments || []),
+    overlap
+  );
+  const engineIds = [...new Set(
+    transcriptionShards.map((entry) => entry.engine_id).filter(Boolean)
+  )].sort();
+  const transcribedShards = transcriptionShards.filter((entry) => entry.state === 'transcribed').length;
+  const transcriptErrors = transcriptionShards.filter((entry) =>
+    ['engine_error', 'invalid_engine_output', 'engine_configuration_error'].includes(entry.state)
+  ).length;
+  const engineUnavailable = transcriptionShards.some((entry) =>
+    ['engine_not_configured', 'engine_configuration_error'].includes(entry.state)
+  );
+  const transcriptionState = transcriptSegments.length
+    ? (transcriptErrors ? 'partial' : 'transcribed')
+    : (engineUnavailable ? 'engine_not_configured' : 'not_available');
 
   return {
     schema: 'evercraft.forensiscope.reconciliation.v1',
@@ -512,9 +624,14 @@ export async function reconcile({ results, contract }) {
     },
     audio_assets: audio,
     transcription: {
-      state: audio.some((entry) => entry.state === 'prepared_for_transcription')
-        ? 'audio_prepared_engine_not_bound'
-        : 'not_available'
+      state: transcriptionState,
+      engine_ids: engineIds,
+      shard_count: transcriptionShards.length,
+      transcribed_shards: transcribedShards,
+      error_shards: transcriptErrors,
+      segment_count: transcriptSegments.length,
+      segments: transcriptSegments,
+      text: transcriptSegments.map((entry) => entry.text).join(' ')
     }
   };
 }
