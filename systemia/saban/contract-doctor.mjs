@@ -69,6 +69,16 @@ function inspectContract(contract, rootDir) {
         issues.push('invalid_required_executables');
       }
     }
+    if (contract.resources.required_services) {
+      if (
+        !Array.isArray(contract.resources.required_services) ||
+        contract.resources.required_services.some(
+          (value) => typeof value !== 'string' || !value.trim()
+        )
+      ) {
+        issues.push('invalid_required_services');
+      }
+    }
   }
 
   if (contract.partitioner?.type === 'media_time_windows') {
