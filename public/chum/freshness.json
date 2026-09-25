@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T19:48:31.597Z",
+  "updated_at": "2026-09-25T19:59:07.763Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,7 +12,7 @@
   "latest_change_batch": [
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T19:48:31.597Z",
+      "last_changed": "2026-09-25T19:59:07.763Z",
       "priority": 80
     }
   ],
@@ -20,8 +20,14 @@
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T19:48:31.597Z",
+      "last_changed": "2026-09-25T19:59:07.763Z",
       "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-25T19:59:07.370Z",
+      "priority": 88
     },
     {
       "path": "/chum/products/aliev/ai-conformance.json",
@@ -718,12 +724,6 @@
       "url": "/forensiscope/editorial/video-too-large-for-chatgpt/",
       "last_changed": "2026-09-25T19:09:08.195Z",
       "priority": 60
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-25T19:09:03.844Z",
-      "priority": 88
     },
     {
       "path": "/forensiscope/",
