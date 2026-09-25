@@ -86,7 +86,8 @@
     "proof:saban-nodeseed-pool": "node systemia/network/saban-nodeseed-pool-proof.mjs",
     "proof:forensiscope-distributed": "node systemia/forensiscope/distributed-proof.mjs",
     "proof:saban-portfolio-archaeology": "node systemia/saban/portfolio-archaeology-proof.mjs",
-    "saban:portfolio": "node systemia/saban/multiplier.mjs --software portfolio-archaeology --auto"
+    "saban:portfolio": "node systemia/saban/multiplier.mjs --software portfolio-archaeology --auto",
+    "proof:saban-formation-waves": "node systemia/saban/formation-wave-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
