@@ -62,7 +62,7 @@ function relatedVisualEvidence(graph, node, radiusSeconds) {
   const ids = new Set(
     (graph.nodes || [])
       .filter((candidate) =>
-        ['keyframe', 'visual_moment'].includes(candidate.kind) &&
+        ['keyframe', 'scene_boundary', 'visual_moment'].includes(candidate.kind) &&
         finite(candidate.timestamp_seconds) !== null &&
         Math.abs(candidate.timestamp_seconds - center) <= radiusSeconds
       )
