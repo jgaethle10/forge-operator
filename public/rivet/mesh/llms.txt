@@ -1,12 +1,15 @@
-# RIVET / AliEV EV Infrastructure Knowledge Mesh
+# RIVET EV Infrastructure Knowledge Mesh
 
 Purpose:
-First-party explainers for distinct property-level EV charging questions. Every page resolves to one canonical RIVET / AliEV capability instead of pretending each search phrase is a separate product.
+First-party explainers for distinct property-level EV charging questions. Every page resolves to one canonical RIVET capability instead of pretending each search phrase is a separate product.
 
-Entity relationship:
-- AliEV: address-level EV infrastructure intelligence engine.
-- RIVET: customer-facing planning and reporting layer that turns AliEV intelligence into property-specific deliverables.
-- Official MCP Registry identity: io.github.jgaethle10/aliev
+Canonical identity:
+- Product: RIVET
+- Purpose: turn location data into confident EV infrastructure decisions
+- Process: locate, assess, decide
+- Public surface: /rivet/
+- Machine capability: /chum/capabilities/rivet-site-underwriting-v1/
+- Brand manifest: /rivet/brand.json
 
 Pages:
 - EV Charging Site Analysis by Address: /rivet/ev-charging-site-analysis-by-address/
