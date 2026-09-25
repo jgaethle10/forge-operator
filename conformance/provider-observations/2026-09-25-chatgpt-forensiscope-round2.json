@@ -1,0 +1,18 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-25T08:05:00-07:00",
+  "provider": "chatgpt",
+  "provider_surface": "ChatGPT consumer chat, user-reported",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": true,
+  "observed_alternatives": [
+    "Twelve Labs",
+    "Google Gemini / Google Cloud",
+    "AssemblyAI"
+  ],
+  "pickup_detail": "ChatGPT explicitly surfaced ForensiScope by name and described it as the overflow-layer category for large-video analysis, deduplication, searchable evidence timelines, and workflows beyond ordinary chat attachment limits.",
+  "interpretation": "Positive pickup receipt. This proves one user-observed ChatGPT response surfaced ForensiScope for this brand-blind prompt. It does not prove durable indexing, universal recommendation behavior, conversion, or endorsement.",
+  "evidence": "User-provided copied ChatGPT response in this conversation."
+}
