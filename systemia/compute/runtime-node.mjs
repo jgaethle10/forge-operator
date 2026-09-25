@@ -270,6 +270,29 @@ export async function startEvercraftComputeNode({
         return send(res, 200, entry.runtime.health());
       }
 
+      const serviceDeploymentReceipt = req.url?.match(/^\/v1\/services\/([^/]+)\/deployment-receipt$/);
+      if (req.method === 'POST' && serviceDeploymentReceipt) {
+        const entry = services.get(serviceDeploymentReceipt[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        const health = entry.runtime.setDeploymentReceipt(String(body.receipt_ref || ''));
+        return send(res, 200, {
+          ok: true,
+          service_id: serviceDeploymentReceipt[1],
+          health,
+          receipt: chain.issue('service.deployment-receipt.bound', {
+            service_id: serviceDeploymentReceipt[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            deployment_receipt_ref: String(body.receipt_ref || ''),
+          }),
+        });
+      }
+
       const serviceStop = req.url?.match(/^\/v1\/services\/([^/]+)\/stop$/);
       if (req.method === 'POST' && serviceStop) {
         const entry = services.get(serviceStop[1]);
