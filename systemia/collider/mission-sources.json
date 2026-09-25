@@ -3,13 +3,13 @@
   "sources": [
     {
       "source_key": "legacy-rescue-opportunity-watch",
-      "path": "../../../artifacts/legacy-rescue-watch/mission-snapshot.json",
+      "path": "../../artifacts/legacy-rescue-watch/mission-snapshot.json",
       "required": false,
       "stale_after_seconds": 900
     },
     {
       "source_key": "node001-megatron-field-certification",
-      "path": "../../../artifacts/node001-field/megatron-status/mission-snapshot.json",
+      "path": "../../artifacts/node001-field/megatron-status/mission-snapshot.json",
       "required": true,
       "stale_after_seconds": 900
     }
