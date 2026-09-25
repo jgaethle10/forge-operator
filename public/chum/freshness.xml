@@ -2,9 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T17:29:56.413Z</updated>
+<updated>2026-09-25T18:15:59.053Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:9897894058be7f4d3e2fbce7</id><title>/chum/</title><updated>2026-09-25T18:15:59.053Z</updated><link href="/chum/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-25T18:15:59.053Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T18:15:59.053Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:e04c93daeaa9ac64f77ad032</id><title>/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:06bebf8c5e78ca57041f59ba</id><title>/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:cc9438252e9bd7b50c6ec571</id><title>/chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b.json"/><category term="priority-100"/></entry>
@@ -102,7 +105,4 @@
 <entry><id>urn:evercraft:chum:1ebee688eff17673219f995d</id><title>/chum/products/systemia-atlas-freight/ai-conformance.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/products/systemia-atlas-freight/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:050a4daacfe9062d92054a54</id><title>/chum/products/systemia-atlas-freight/ai-discovery.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/products/systemia-atlas-freight/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:06c92032e7ed66534eb70f93</id><title>/chum/products/systemia-decision-lab/ai-conformance.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/products/systemia-decision-lab/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:048fb40180a78f4d4f4dfb61</id><title>/chum/products/systemia-decision-lab/ai-discovery.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/products/systemia-decision-lab/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:9f3bf95bed8cd9c0a5248dba</id><title>/chum/products/systemia-field-library/ai-conformance.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/products/systemia-field-library/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:226902b44e59635f7dd9af50</id><title>/chum/products/systemia-field-library/ai-discovery.json</title><updated>2026-09-25T17:29:56.413Z</updated><link href="/chum/products/systemia-field-library/ai-discovery.json"/><category term="priority-94"/></entry>
 </feed>

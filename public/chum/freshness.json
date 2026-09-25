@@ -2,15 +2,49 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T17:29:56.413Z",
+  "updated_at": "2026-09-25T18:15:59.053Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
     "key_path": "/8aef5f814d0b9c2896c1bc753c65c9bc.txt",
     "submission_policy": "Only content whose live bytes match the current release is eligible for IndexNow broadcast."
   },
-  "latest_change_batch": [],
+  "latest_change_batch": [
+    {
+      "path": "/chum/",
+      "last_changed": "2026-09-25T18:15:59.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-25T18:15:59.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "last_changed": "2026-09-25T18:15:59.053Z",
+      "priority": 80
+    }
+  ],
   "recent_surfaces": [
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-09-25T18:15:59.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-25T18:15:59.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-25T18:15:59.053Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
       "url": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
@@ -1490,24 +1524,6 @@
     {
       "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d/",
       "url": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d/",
-      "last_changed": "2026-09-25T07:08:03.584Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "url": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "last_changed": "2026-09-25T07:08:03.584Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994/",
-      "url": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994/",
-      "last_changed": "2026-09-25T07:08:03.584Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "url": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
       "last_changed": "2026-09-25T07:08:03.584Z",
       "priority": 100
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
-  <url><loc>/chum/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/</loc><lastmod>2026-09-25T18:15:59.053Z</lastmod></url>
   <url><loc>/chum/index.json</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -18,6 +18,8 @@
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-25T15:37:23.452Z</lastmod></url>
+  <url><loc>/chum/hot/</loc><lastmod>2026-09-25T18:15:59.053Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-25T18:15:59.053Z</lastmod></url>
   <url><loc>/chum/freshness.xml</loc></url>
   <url><loc>/chum/freshness.json</loc></url>
   <url><loc>/chum/crawl-state.json</loc></url>
