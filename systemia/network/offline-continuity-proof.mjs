@@ -89,6 +89,7 @@ async function nodeMode() {
   const roles = rolesFromArg();
   const localInference = has('--local-inference');
   const queue = [];
+  const queuedMessageIds = new Set();
   const checkpoints = new Map();
   const chain = new ReceiptChain(nodeId);
 
@@ -129,21 +130,53 @@ async function nodeMode() {
       if (req.method === 'POST' && req.url === '/v1/messages') {
         const body = await jsonBody(req);
         const messageId = body.message_id || `msg_${randomBytes(8).toString('hex')}`;
+        const expiresAt = body.expires_at || null;
+        if (expiresAt && Date.parse(expiresAt) <= Date.now()) {
+          return send(res, 410, {
+            error: 'message_expired',
+            message_id: messageId
+          });
+        }
+        if (queuedMessageIds.has(messageId)) {
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            queued: false,
+            duplicate: true,
+            queue_depth: queue.length,
+            message_id: messageId,
+            receipt: chain.issue('continuity.message.duplicate_suppressed', { message_id: messageId })
+          });
+        }
         const envelope = {
           message_id: messageId,
           kind: String(body.kind || 'continuity.message'),
           mission_id: String(body.mission_id || ''),
           payload: body.payload ?? null,
-          expires_at: body.expires_at || null,
+          expires_at: expiresAt,
           received_at: new Date().toISOString()
         };
+        queuedMessageIds.add(messageId);
         queue.push(envelope);
         return send(res, 202, {
           ok: true,
           node_id: nodeId,
           queued: true,
+          duplicate: false,
           queue_depth: queue.length,
           receipt: chain.issue('continuity.message.accepted', { message_id: messageId, kind: envelope.kind })
+        });
+      }
+      if (req.method === 'GET' && req.url?.startsWith('/v1/checkpoints/')) {
+        const checkpointId = decodeURIComponent(req.url.split('/').pop() || '');
+        if (!checkpoints.has(checkpointId)) {
+          return send(res, 404, { error: 'checkpoint_not_found', checkpoint_id: checkpointId });
+        }
+        return send(res, 200, {
+          ok: true,
+          node_id: nodeId,
+          checkpoint_id: checkpointId,
+          state: checkpoints.get(checkpointId)
         });
       }
       if (req.method === 'POST' && req.url === '/v1/checkpoints') {
