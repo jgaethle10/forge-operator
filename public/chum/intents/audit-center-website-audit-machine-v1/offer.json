@@ -45,7 +45,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
   "human_ui_required": false,
   "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.",
   "payment_authority": "Systemia Audit Center / Stripe, provider-verified",

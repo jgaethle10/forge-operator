@@ -32,7 +32,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1",
   "human_ui_required": false,
   "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.",
   "payment_authority": "ROASTED / Stripe, provider-verified",

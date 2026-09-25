@@ -4,7 +4,7 @@ Problem: A buyer has one bounded agriculture, land, water, production or resilie
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Commercial state: sell_now
 Machine state: payment_ready
-Public capability: https://faie.base44.app/functions/faieAgentGateway?view=docs
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
 Start here: /api/chum/go/faie-signal-brief-v1?surface=chum_pain_page
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=faie-signal-brief-v1

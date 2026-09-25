@@ -4,7 +4,7 @@ Problem: A decision-maker needs a sourced research answer with provenance, contr
 Pricing: No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=towi-evidence-research-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=towi-evidence-research-machine-v1
 Machine offer JSON: Not exposed until commercial verification is complete

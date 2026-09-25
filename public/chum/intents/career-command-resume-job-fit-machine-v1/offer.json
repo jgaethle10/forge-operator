@@ -24,7 +24,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verify",
   "machine_state": "discovery_only",
-  "public_url": "https://evercraft-career-command.base44.app/",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-resume-job-fit-machine-v1",
   "human_ui_required": false,
   "confirmation": "No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.",
   "payment_authority": "Evercraft Payments",

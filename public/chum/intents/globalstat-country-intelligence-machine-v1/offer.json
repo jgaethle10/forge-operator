@@ -17,7 +17,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=globalstat-country-intelligence-machine-v1",
   "human_ui_required": false,
   "confirmation": "Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.",
   "payment_authority": "No verified Evercraft Payments path for this capability.",

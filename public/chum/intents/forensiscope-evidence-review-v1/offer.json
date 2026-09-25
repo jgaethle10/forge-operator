@@ -25,7 +25,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "discovery_only",
-  "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1",
   "human_ui_required": false,
   "confirmation": "Evidence authorization and payment confirmation are required. Secure machine intake remains disabled until current security tests pass.",
   "payment_authority": "Evercraft Payments; central machine checkout remains verification-gated.",

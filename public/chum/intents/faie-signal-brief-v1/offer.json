@@ -32,7 +32,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1",
   "human_ui_required": false,
   "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.",
   "payment_authority": "FAIE / Stripe, provider-verified",

@@ -37,7 +37,7 @@
   },
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
   "human_ui_required": false,
   "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
   "payment_authority": "Evercraft Website Service / Stripe, provider-verified",

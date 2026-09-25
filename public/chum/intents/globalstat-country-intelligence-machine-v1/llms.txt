@@ -4,7 +4,7 @@ Problem: An analyst or agent needs country-level comparative data with sources, 
 Pricing: Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=globalstat-country-intelligence-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=globalstat-country-intelligence-machine-v1
 Machine offer JSON: Not exposed until commercial verification is complete

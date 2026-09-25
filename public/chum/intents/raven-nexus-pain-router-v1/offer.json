@@ -25,7 +25,7 @@
   "entry_paid_offer": null,
   "commercial_state": "verification_required",
   "machine_state": "invocation_ready",
-  "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=raven-nexus-pain-router-v1",
   "human_ui_required": false,
   "confirmation": "Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.",
   "payment_authority": "Raven Nexus / Evercraft Payments where a specific matched offer is verified; the pain router has no silent payment authority.",

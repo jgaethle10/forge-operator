@@ -24,7 +24,7 @@
   "entry_paid_offer": null,
   "commercial_state": "discovery_only",
   "machine_state": "specialist_discovery_ready_runtime_gated",
-  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-web-browser-agent-v1",
   "human_ui_required": false,
   "confirmation": "Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.",
   "payment_authority": "No public machine checkout is advertised for Evercraft Web yet.",

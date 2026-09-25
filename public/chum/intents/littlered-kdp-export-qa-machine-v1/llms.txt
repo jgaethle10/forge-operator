@@ -4,7 +4,7 @@ Problem: An author or publishing workflow needs a bounded preflight on page-coun
 Pricing: No approved external machine price/payment path was found. Do not auto-quote.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=littlered-kdp-export-qa-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=littlered-kdp-export-qa-machine-v1
 Machine offer JSON: Not exposed until commercial verification is complete

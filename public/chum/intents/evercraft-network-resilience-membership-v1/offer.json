@@ -31,7 +31,7 @@
   "entry_paid_offer": null,
   "commercial_state": "discovery_only",
   "machine_state": "human_handoff_only",
-  "public_url": "https://network-control.base44.app/join",
+  "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-network-resilience-membership-v1",
   "human_ui_required": true,
   "confirmation": "AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.",
   "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",

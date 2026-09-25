@@ -4,7 +4,7 @@ Problem: A person, team or representative wants a structured view of demonstrate
 Pricing: No approved machine price/payment path was verified. Do not auto-quote.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-evidence-profile-machine-v1
 Start here: Not exposed until commercial verification is complete
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-evidence-profile-machine-v1
 Machine offer JSON: Not exposed until commercial verification is complete

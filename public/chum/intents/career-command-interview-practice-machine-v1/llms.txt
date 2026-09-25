@@ -4,7 +4,7 @@ Problem: A candidate needs role-specific practice and candid evidence-based feed
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Commercial state: sell_now
 Machine state: payment_ready
-Public capability: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
 Start here: /api/chum/go/career-command-interview-practice-machine-v1?surface=chum_pain_page
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1

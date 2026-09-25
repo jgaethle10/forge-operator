@@ -4,7 +4,7 @@ Problem: A founder, operator or project owner needs bounded capital-path researc
 Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Commercial state: sell_now
 Machine state: payment_ready
-Public capability: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
 Start here: /api/chum/go/deck-capital-fit-sprint-machine-v1?surface=chum_pain_page
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1
