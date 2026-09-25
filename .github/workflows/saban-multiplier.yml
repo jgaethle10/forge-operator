@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Validate multiplication contracts
+        run: npm run check:saban-contracts
+
       - name: Prove kernel recovery and sharding
         run: npm run proof:saban-kernel
 
