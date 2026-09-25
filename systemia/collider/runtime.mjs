@@ -97,6 +97,20 @@ export class KaidanceRuntime {
     }
   }
 
+  setDeploymentReceipt(receiptRef) {
+    const value = String(receiptRef || '').trim();
+    if (!value) throw new Error('deployment receipt is required');
+    this.deploymentReceipt = value;
+    this.state = {
+      ...this.state,
+      state_version: Number(this.state.state_version || 0) + 1,
+      last_deployment_receipt: value,
+      updated_at: this.clock().toISOString(),
+    };
+    atomicJson(this.stateFile, this.state);
+    return this.health();
+  }
+
   health(now = this.clock()) {
     const core = kaidanceHealth(this.state, now);
     return {
