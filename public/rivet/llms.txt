@@ -33,6 +33,17 @@ Canonical AliEV product: https://aliev.base44.app/
 CHUM product record: /chum/products/aliev/
 Machine-readable RIVET / AliEV discovery: /rivet/discovery.json
 
+## Knowledge mesh
+
+Machine-readable mesh: /rivet/mesh/index.json
+Mesh LLM guide: /rivet/mesh/llms.txt
+- EV Charging Site Analysis by Address: /rivet/ev-charging-site-analysis-by-address/
+- EV Charging Property Feasibility: /rivet/ev-charging-property-feasibility/
+- EV Charging ROI by Property: /rivet/ev-charging-roi-by-property/
+- Hotel EV Charging Site Analysis: /rivet/hotel-ev-charging-site-analysis/
+- Multifamily EV Charging Site Analysis: /rivet/multifamily-ev-charging-site-analysis/
+- EV Charging Utility, Tariff, and Incentive Screening: /rivet/ev-charging-utility-incentive-screening/
+
 ## Evidence boundaries
 
 - Missing data is not zero.

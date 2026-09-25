@@ -1,0 +1,116 @@
+{
+  "schema": "evercraft.rivet-aliev.semantic-mesh.v1",
+  "updated_at": "2026-09-25",
+  "provider": "Evercraft LLC",
+  "canonical_service": "RIVET / AliEV EV Infrastructure Intelligence",
+  "registry_name": "io.github.jgaethle10/aliev",
+  "canonical_product": "https://aliev.base44.app/",
+  "rules": {
+    "distinct_user_intent": true,
+    "single_canonical_capability": true,
+    "no_hidden_text": true,
+    "no_keyword_stuffing": true,
+    "no_provider_endorsement_claim": true,
+    "evidence_boundaries_required": true
+  },
+  "category_terms": [
+    "EV charging site analysis by address",
+    "EV charger feasibility by address",
+    "property EV charging analysis",
+    "EV site intelligence",
+    "EV charging property feasibility",
+    "is my property good for EV charging",
+    "EV charger property screening",
+    "EV infrastructure feasibility",
+    "EV charging ROI by property",
+    "EV charger economics by address",
+    "EV charging revenue estimate property",
+    "EV charger utilization model",
+    "hotel EV charging site analysis",
+    "hotel EV charger feasibility",
+    "EV charging for hotel property",
+    "destination charging hotel",
+    "multifamily EV charging site analysis",
+    "apartment EV charger feasibility",
+    "EV charging apartment property",
+    "multifamily EV infrastructure",
+    "EV charging utility tariff incentives",
+    "EV charger utility territory by address",
+    "EV charging demand charges",
+    "EV charging incentives property"
+  ],
+  "pages": [
+    {
+      "slug": "ev-charging-site-analysis-by-address",
+      "title": "EV Charging Site Analysis by Address",
+      "description": "What an address-level EV charging site analysis should evaluate before a property owner spends money on chargers.",
+      "keywords": [
+        "EV charging site analysis by address",
+        "EV charger feasibility by address",
+        "property EV charging analysis",
+        "EV site intelligence"
+      ],
+      "url": "/rivet/ev-charging-site-analysis-by-address/"
+    },
+    {
+      "slug": "ev-charging-property-feasibility",
+      "title": "EV Charging Property Feasibility",
+      "description": "A property-first framework for deciding whether a hotel, apartment, retail, workplace, parking, or fleet site is worth deeper EV charging diligence.",
+      "keywords": [
+        "EV charging property feasibility",
+        "is my property good for EV charging",
+        "EV charger property screening",
+        "EV infrastructure feasibility"
+      ],
+      "url": "/rivet/ev-charging-property-feasibility/"
+    },
+    {
+      "slug": "ev-charging-roi-by-property",
+      "title": "EV Charging ROI by Property",
+      "description": "How to model EV charging economics for one property without confusing assumptions, public evidence, and observed operating data.",
+      "keywords": [
+        "EV charging ROI by property",
+        "EV charger economics by address",
+        "EV charging revenue estimate property",
+        "EV charger utilization model"
+      ],
+      "url": "/rivet/ev-charging-roi-by-property/"
+    },
+    {
+      "slug": "hotel-ev-charging-site-analysis",
+      "title": "Hotel EV Charging Site Analysis",
+      "description": "What hotels should evaluate when screening an address for guest EV charging, destination charging, competition, utility context, incentives, and economics.",
+      "keywords": [
+        "hotel EV charging site analysis",
+        "hotel EV charger feasibility",
+        "EV charging for hotel property",
+        "destination charging hotel"
+      ],
+      "url": "/rivet/hotel-ev-charging-site-analysis/"
+    },
+    {
+      "slug": "multifamily-ev-charging-site-analysis",
+      "title": "Multifamily EV Charging Site Analysis",
+      "description": "Address-level EV charging screening for apartments and multifamily properties, including resident demand, parking patterns, utility context, incentives, and preliminary planning.",
+      "keywords": [
+        "multifamily EV charging site analysis",
+        "apartment EV charger feasibility",
+        "EV charging apartment property",
+        "multifamily EV infrastructure"
+      ],
+      "url": "/rivet/multifamily-ev-charging-site-analysis/"
+    },
+    {
+      "slug": "ev-charging-utility-incentive-screening",
+      "title": "EV Charging Utility, Tariff, and Incentive Screening",
+      "description": "How utility territory, rate design, demand charges, make-ready programs, and incentives affect the economics of an EV charging property.",
+      "keywords": [
+        "EV charging utility tariff incentives",
+        "EV charger utility territory by address",
+        "EV charging demand charges",
+        "EV charging incentives property"
+      ],
+      "url": "/rivet/ev-charging-utility-incentive-screening/"
+    }
+  ]
+}
