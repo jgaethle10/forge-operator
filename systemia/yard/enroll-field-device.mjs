@@ -42,6 +42,8 @@ console.log(JSON.stringify({
   node_id: enrollment.node_id,
   device_fingerprint: enrollment.device_fingerprint,
   field_evidence_receipt: enrollment.field_evidence_receipt,
+  runtime_release_ref: enrollment.runtime_release_ref,
+  runtime_payload_digest: enrollment.runtime_payload_digest,
   receipt_hash: enrollment.receipt_hash,
   enrolled_at: enrollment.enrolled_at,
 }, null, 2));
