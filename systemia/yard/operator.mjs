@@ -5,6 +5,7 @@ import { allocatorTokenForOffer, discoverEligibleCapacity } from './capacity-res
 import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 import { buildKaidancePulse } from '../collider/pulse.mjs';
 import { createFieldEnrollment, evaluateFieldAttestation } from './field-attestation.mjs';
+import { buildCrawlPressure } from '../chum/crawl-accelerator.mjs';
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -842,6 +843,76 @@ export class YardOperator {
       health_path: '/api/health',
       source: 'Systemia Yard Operator',
     };
+  }
+
+  async activateCrawlPressure(deploymentId, {
+    root = process.cwd(),
+    maxBroadcastUrls = 1000,
+  } = {}) {
+    const runtimeOrigin = this.runtimeOriginReceipt(deploymentId);
+    const resolvedRoot = path.resolve(root);
+    const publicRoot = path.join(resolvedRoot, 'public');
+    if (!fs.existsSync(publicRoot) || !fs.statSync(publicRoot).isDirectory()) {
+      throw new Error('crawl pressure root must contain public/');
+    }
+
+    const wellKnown = path.join(publicRoot, '.well-known');
+    fs.mkdirSync(wellKnown, { recursive: true });
+    const originReceiptPath = path.join(wellKnown, 'evercraft-runtime-origin.json');
+    const tmp = `${originReceiptPath}.${process.pid}.${randomBytes(4).toString('hex')}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify(runtimeOrigin, null, 2) + '\n', { mode: 0o644 });
+    fs.renameSync(tmp, originReceiptPath);
+
+    const crawl = await buildCrawlPressure({
+      root: resolvedRoot,
+      origin: runtimeOrigin.origin,
+      broadcast: true,
+      maxBroadcastUrls,
+    });
+
+    const record = this.deploymentStatus(deploymentId);
+    const body = {
+      schema: 'evercraft.yard.crawl-activation-receipt.v1',
+      deployment_id: deploymentId,
+      deployment_receipt_hash: record.receipt.receipt_hash,
+      public_route_receipt_hash: record.public_route.receipt_hash,
+      origin: runtimeOrigin.origin,
+      runtime_origin_receipt: 'public/.well-known/evercraft-runtime-origin.json',
+      crawl_pressure_receipt: 'artifacts/chum/crawl-pressure-latest.json',
+      broadcast_state: crawl.broadcast?.status || 'unknown',
+      submitted: Number(crawl.broadcast?.submitted || 0),
+      pending: Number(crawl.broadcast?.pending || 0),
+      activated_at: new Date().toISOString(),
+    };
+    const activation = {
+      ...body,
+      receipt_hash: sha(body),
+    };
+    record.crawl_activation = activation;
+    record.updated_at = activation.activated_at;
+    this.#persist(record);
+    return {
+      schema: 'evercraft.yard.public-origin-activation.v1',
+      runtime_origin: runtimeOrigin,
+      public_route: record.public_route,
+      crawl,
+      activation,
+    };
+  }
+
+  async verifyAndActivatePublicRoute(deploymentId, {
+    origin,
+    root = process.cwd(),
+    maxBroadcastUrls = 1000,
+  } = {}) {
+    const publicRoute = await this.verifyPublicRoute(deploymentId, { origin });
+    if (publicRoute.verified !== true || publicRoute.scope !== 'public_https') {
+      throw new Error('public HTTPS verification is required before crawl activation');
+    }
+    return this.activateCrawlPressure(deploymentId, {
+      root,
+      maxBroadcastUrls,
+    });
   }
 
   async verifyRoute(deploymentId) {

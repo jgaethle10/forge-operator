@@ -71,6 +71,57 @@ try {
     () => yard.runtimeOriginReceipt('chum-public-origin-proof'),
     /verified public HTTPS route is required/
   );
+  await assert.rejects(
+    yard.activateCrawlPressure('chum-public-origin-proof', { root }),
+    /verified public HTTPS route is required/
+  );
+
+  const originalFetch = globalThis.fetch;
+  let indexNowPayload = null;
+  globalThis.fetch = async (input, init = {}) => {
+    const raw = typeof input === 'string'
+      ? input
+      : input instanceof URL
+        ? input.toString()
+        : input.url;
+    if (raw.startsWith('https://public-origin.example.test')) {
+      const target = new URL(raw);
+      return originalFetch(deployment.result.local_url + target.pathname + target.search, init);
+    }
+    if (raw === 'https://api.indexnow.org/indexnow') {
+      indexNowPayload = JSON.parse(String(init.body || '{}'));
+      return new Response('', { status: 200 });
+    }
+    return originalFetch(input, init);
+  };
+
+  let activation;
+  try {
+    activation = await yard.verifyAndActivatePublicRoute('chum-public-origin-proof', {
+      origin: 'https://public-origin.example.test',
+      root,
+      maxBroadcastUrls: 100
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  assert.equal(activation.public_route.verified, true);
+  assert.equal(activation.public_route.scope, 'public_https');
+  assert.equal(activation.runtime_origin.verified, true);
+  assert.equal(activation.runtime_origin.origin, 'https://public-origin.example.test');
+  assert.equal(activation.crawl.broadcast.status, 'accepted');
+  assert.equal(activation.crawl.broadcast.submitted, 1);
+  assert.equal(activation.activation.submitted, 1);
+  assert.deepEqual(indexNowPayload.urlList, ['https://public-origin.example.test/chum/']);
+
+  const exportedOrigin = JSON.parse(fs.readFileSync(
+    path.join(publicRoot, '.well-known', 'evercraft-runtime-origin.json'),
+    'utf8'
+  ));
+  assert.equal(exportedOrigin.verified, true);
+  assert.equal(exportedOrigin.origin, 'https://public-origin.example.test');
+  assert.equal(yard.getLiveUrl('chum-public-origin-proof'), 'https://public-origin.example.test');
 
   const stop = await yard.stopDeployment('chum-public-origin-proof', { reason: 'proof_complete' });
   assert.equal(stop.ok, true);
@@ -82,8 +133,13 @@ try {
     public_root_bounded: true,
     initial_local_health_verified: true,
     public_route_fails_closed_until_https_verified: true,
+    verified_route_activates_crawl_pressure: true,
+    runtime_origin_receipt_written: true,
+    indexnow_broadcast_proved: true,
     deployment_receipt: deployment.receipt.receipt_hash,
-    local_route_receipt: localProof.receipt_hash
+    local_route_receipt: localProof.receipt_hash,
+    public_route_receipt: activation.public_route.receipt_hash,
+    crawl_activation_receipt: activation.activation.receipt_hash
   }, null, 2));
 } finally {
   await node.close();

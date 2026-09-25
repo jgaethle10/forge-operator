@@ -46,3 +46,10 @@ The first executable private workload is `systemia.private-core-origin.v1`, impl
 Evercraft Compute admits `systemia.chum-public-origin.v1` as a read-only discovery workload. It serves only the admitted `public/` tree, blocks path escape and write methods, exposes `/api/health`, and dynamically emits absolute sitemap and robots references at the verified route.
 
 Yard treats local service health and public-route verification as separate states. A healthy local origin is not a public deployment. `verifyPublicRoute` must observe the exact resident `instance_id` and bound deployment receipt through a public HTTPS origin before the route is marked verified. Only then may `runtimeOriginReceipt` emit the sanitized `evercraft.runtime-origin.v1` record consumed by CHUM Crawl Pressure. Capacity node IDs, lease credentials, private endpoints and internal topology are not included in that public receipt.
+
+
+### Route-to-crawl activation
+
+Once a CHUM origin has passed the public HTTPS route gate, Yard can call `verifyAndActivatePublicRoute`. That operation writes only the sanitized `evercraft.runtime-origin.v1` receipt into the public tree, runs Crawl Pressure against the verified origin, rechecks live page bytes, and submits eligible pending URLs through IndexNow. The activation produces its own `evercraft.yard.crawl-activation-receipt.v1` with submitted and pending counts.
+
+A loopback proof or merely healthy local service cannot activate this path. The public route must match the exact resident instance and deployment receipt first.
