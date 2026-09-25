@@ -17,7 +17,10 @@
     },
     "browser_handoff": {
       "method": "GET",
-      "path": "/api/chum/go/{publicId}"
+      "path": "/api/chum/go/{publicId}",
+      "availability": "source_runtime_only_until_a_public_forge_host_is_declared",
+      "public_default": false,
+      "note": "Keep this richer signed-attribution corridor for a future public Forge runtime. Public CHUM Start links currently use the live Machine Commerce gateway so buyers never land on an undeployed relative API route."
     }
   },
   "stages": {
@@ -34,5 +37,6 @@
   },
   "revenue_rule": "Only payment_verified events accepted through the trusted ingest boundary may count toward verified revenue.",
   "provider_rule": "A provider claim in a referral is attribution metadata, not proof that the named AI provider discovered or recommended Evercraft.",
-  "human_gate": "Sell-now discovery may expose a Start path, but discovery and attribution create no payment obligation. Checkout still requires the product's explicit human confirmation and paid state still requires authoritative provider verification."
+  "human_gate": "Sell-now discovery may expose a Start path, but discovery and attribution create no payment obligation. Checkout still requires the product's explicit human confirmation and paid state still requires authoritative provider verification.",
+  "public_start_authority": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}&ec_source=chum&ec_surface=chum_public"
 }
