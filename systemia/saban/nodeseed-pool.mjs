@@ -1,3 +1,6 @@
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
 import { discoverCapacityBeacons } from '../compute/capacity-beacon.mjs';
 
 async function requestJson(url, options = {}, timeoutMs = 5000) {
@@ -20,6 +23,76 @@ async function requestJson(url, options = {}, timeoutMs = 5000) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+function hashFile(file) {
+  const hash = crypto.createHash('sha256');
+  const fd = fs.openSync(file, 'r');
+  const buffer = Buffer.allocUnsafe(1024 * 1024);
+  try {
+    while (true) {
+      const bytes = fs.readSync(fd, buffer, 0, buffer.length, null);
+      if (!bytes) break;
+      hash.update(buffer.subarray(0, bytes));
+    }
+  } finally {
+    fs.closeSync(fd);
+  }
+  return `sha256:${hash.digest('hex')}`;
+}
+
+async function stageSourceOnNode(node, assignment, options, hashCache) {
+  const raw = assignment?.item?.raw || {};
+  const source = raw.source || raw.authorized_source;
+  if (!source?.path) return assignment;
+  if (raw.authorization?.confirmed !== true) {
+    throw new Error('source_staging_requires_explicit_authorization');
+  }
+
+  const sourcePath = path.resolve(String(source.path));
+  if (!fs.existsSync(sourcePath) || !fs.statSync(sourcePath).isFile()) {
+    throw new Error('source_staging_file_missing');
+  }
+
+  let observedHash = hashCache.get(sourcePath);
+  if (!observedHash) {
+    observedHash = hashFile(sourcePath);
+    hashCache.set(sourcePath, observedHash);
+  }
+  if (source.sha256 && source.sha256 !== observedHash) {
+    throw new Error('source_staging_hash_mismatch');
+  }
+
+  const digest = observedHash.replace(/^sha256:/, '');
+  node.staged_digests ||= new Set();
+  if (!node.staged_digests.has(digest)) {
+    const extension = path.extname(sourcePath).toLowerCase() || '.bin';
+    await requestJson(
+      `${node.endpoint}/v1/leases/${node.lease_id}/blobs/${digest}`,
+      {
+        method: 'PUT',
+        headers: {
+          authorization: `Bearer ${node.lease_token}`,
+          'content-type': 'application/octet-stream',
+          'x-evercraft-blob-extension': extension
+        },
+        body: fs.createReadStream(sourcePath),
+        duplex: 'half'
+      },
+      options.assignmentTimeoutMs || 120000
+    );
+    node.staged_digests.add(digest);
+  }
+
+  const prepared = structuredClone(assignment);
+  prepared.item.raw.source = {
+    ...source,
+    path: null,
+    sha256: observedHash,
+    blob_sha256: observedHash,
+    original_path_redacted: true
+  };
+  return prepared;
 }
 
 function normalizeEndpoint(value) {
@@ -75,7 +148,8 @@ async function leaseNode(node, options = {}) {
     ...node,
     lease_id: lease.lease_id,
     lease_token: lease.token,
-    expires_at: lease.expires_at
+    expires_at: lease.expires_at,
+    staged_digests: new Set()
   };
 }
 
@@ -216,6 +290,7 @@ export async function runNodeSeedAssignmentPool({
   assignmentTimeoutMs = 120000,
   requestedTtlMs = 300000,
   resourceProfile = null,
+  stageAuthorizedSources = false,
   onEvent = null
 }) {
   if (!software) throw new Error('software is required');
@@ -286,6 +361,7 @@ export async function runNodeSeedAssignmentPool({
   }));
   const results = new Array(assignments.length);
   const failures = [];
+  const sourceHashCache = new Map();
   const events = [];
   const emit = async (event) => {
     events.push(event);
@@ -306,10 +382,19 @@ export async function runNodeSeedAssignmentPool({
 
       job.attempts += 1;
       try {
+        const preparedAssignment = stageAuthorizedSources
+          ? await stageSourceOnNode(
+              node,
+              job.assignment,
+              leaseOptions,
+              sourceHashCache
+            )
+          : job.assignment;
+
         const response = await executeAssignment(
           node,
           software,
-          job.assignment,
+          preparedAssignment,
           job.checkpoint,
           leaseOptions
         );
