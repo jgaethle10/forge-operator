@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import { runLocalLennox } from './lennox-engine.mjs';
 
 const catalogPath='public/.well-known/evercraft-machine-catalog.json';
 const personasPath='systemia/customer-gauntlet/personas.json';
@@ -42,8 +43,8 @@ function severity(code){
   return 'P2';
 }
 
-async function runInteractive(offer,persona){
-  if(!bridgeUrl || !bridgeToken) return {status:'BLOCKED',reason:'owned_raven_nexus_customer_bridge_not_configured'};
+async function runBridgeLennox(offer,persona){
+  if(!bridgeUrl || !bridgeToken) return null;
   const payload={
     schema:'evercraft.customer-gauntlet.request.v1',
     session_isolation:'new_clean_customer',
@@ -58,13 +59,53 @@ async function runInteractive(offer,persona){
       capture:['screenshots','console_errors','network_failures','dom_summary','checkout_state','payment_verification','entitlement_state','fulfillment_state','receipt_state']
     }
   };
-  const r=await fetch(bridgeUrl+'/v1/customer-gauntlet',{
-    method:'POST',
-    headers:{'content-type':'application/json','authorization':`Bearer ${bridgeToken}`},
-    body:JSON.stringify(payload)
-  });
-  const body=await r.json().catch(()=>({status:'FAILED',error:'non_json_bridge_response'}));
-  return {...body,http_status:r.status};
+  try{
+    const r=await fetch(bridgeUrl+'/v1/customer-gauntlet',{
+      method:'POST',
+      headers:{'content-type':'application/json','authorization':`Bearer ${bridgeToken}`},
+      body:JSON.stringify(payload)
+    });
+    const body=await r.json().catch(()=>({status:'FAILED',error:'non_json_bridge_response'}));
+    return {...body,http_status:r.status,engine:body.engine||'raven_nexus_customer_bridge'};
+  }catch(error){
+    return {
+      status:'FAILED',
+      engine:'raven_nexus_customer_bridge',
+      error:error instanceof Error?error.message:String(error),
+      findings:[{
+        code:'browser_runtime_failure',
+        severity:'P1',
+        stage:'owned_browser',
+        detail:error instanceof Error?error.message:String(error)
+      }]
+    };
+  }
+}
+
+async function runInteractive(offer,persona,{reviewUrl,buyerUrl}={}){
+  const local=await runLocalLennox({offer,persona,reviewUrl,buyerUrl,timeoutMs});
+  const bridge=await runBridgeLennox(offer,persona);
+  const findings=[
+    ...(Array.isArray(local.findings)?local.findings:[]),
+    ...(Array.isArray(bridge?.findings)?bridge.findings:[])
+  ];
+  const blockedChecks=new Set(local.blocked_checks||[]);
+  for(const completed of bridge?.checks_completed||[]) blockedChecks.delete(completed);
+  for(const blocked of bridge?.blocked_checks||[]) blockedChecks.add(blocked);
+  return {
+    status:bridge?.status || local.status,
+    engine:bridge ? 'raven_nexus_lennox_hybrid_v1' : local.engine,
+    owned_execution:true,
+    local,
+    bridge,
+    findings,
+    checks_completed:[...new Set([
+      ...(local.checks_completed||[]),
+      ...(bridge?.checks_completed||[])
+    ])],
+    blocked_checks:[...blockedChecks],
+    interactive_depth:bridge?'owned_browser_bridge_plus_protocol':'owned_protocol'
+  };
 }
 
 const offers=(catalog.offers||[]).filter(o=>o?.public_id&&o?.commercial_state==='sell_now');
@@ -85,7 +126,7 @@ for(const offer of offers){
 
   const personaResults=[];
   for(const persona of personas.personas){
-    personaResults.push({persona_id:persona.id,...await runInteractive(offer,persona)});
+    personaResults.push({persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewUrl.toString(),buyerUrl})});
   }
   for(const p of personaResults){
     for(const f of Array.isArray(p.findings)?p.findings:[]) findings.push({...f,persona_id:p.persona_id,severity:f.severity||severity(f.code)});
@@ -93,10 +134,13 @@ for(const offer of offers){
 
   const highest=findings.some(f=>f.severity==='P0')?'P0':findings.some(f=>f.severity==='P1')?'P1':findings.length?'P2':null;
   const interactiveBlocked=personaResults.every(p=>p.status==='BLOCKED');
+  const visualBlocked=personaResults.filter(p=>(p.blocked_checks||[]).some(x=>['pixel_visual_diff','visual_clipping','javascript_console_errors','keyboard_tab_order'].includes(x))).length;
+  const paymentBlocked=personaResults.filter(p=>(p.blocked_checks||[]).includes('provider_payment_verification')).length;
+  const fulfillmentBlocked=personaResults.filter(p=>(p.blocked_checks||[]).includes('fulfillment_verification')).length;
   results.push({
     public_id:offer.public_id,name:offer.name,pricing:offer.pricing,
     doorway:{offer_status:machine.status,review_status:review.status,buyer_status:buyer?.status??null,buyer_url:buyerUrl||null},
-    interactive:{blocked:interactiveBlocked,personas:personaResults},
+    interactive:{blocked:interactiveBlocked,visual_blocked:visualBlocked,payment_blocked:paymentBlocked,fulfillment_blocked:fulfillmentBlocked,personas:personaResults},
     findings,highest_severity:highest,
     disposition:highest==='P0'?'QUARANTINE':highest==='P1'?'REPAIR_REQUIRED':'OPEN'
   });
@@ -118,8 +162,13 @@ const receipt={
     open:results.filter(r=>r.disposition==='OPEN').length,
     repair_required:results.filter(r=>r.disposition==='REPAIR_REQUIRED').length,
     quarantined:results.filter(r=>r.disposition==='QUARANTINE').length,
+    owned_protocol_executor:true,
     interactive_bridge_configured:Boolean(bridgeUrl&&bridgeToken),
-    interactive_blocked:results.filter(r=>r.interactive.blocked).length
+    interactive_blocked:results.filter(r=>r.interactive.blocked).length,
+    local_lennox_completed:results.reduce((n,r)=>n+r.interactive.personas.filter(p=>p.local?.owned_execution===true).length,0),
+    visual_browser_blocked:results.reduce((n,r)=>n+r.interactive.visual_blocked,0),
+    sandbox_payment_blocked:allowSandboxPurchase?0:results.reduce((n,r)=>n+r.interactive.payment_blocked,0),
+    fulfillment_verification_blocked:results.reduce((n,r)=>n+r.interactive.fulfillment_blocked,0)
   },
   results
 };
@@ -134,7 +183,12 @@ fs.writeFileSync(outDir+'/latest.md',[
   `Open: ${receipt.summary.open}`,
   `Repair required: ${receipt.summary.repair_required}`,
   `Quarantined: ${receipt.summary.quarantined}`,
-  `Interactive Raven Nexus configured: ${receipt.summary.interactive_bridge_configured}`,'',
+  `Owned Lennox protocol executor: ${receipt.summary.owned_protocol_executor}`,
+  `Interactive Raven Nexus browser bridge configured: ${receipt.summary.interactive_bridge_configured}`,
+  `Local Lennox persona runs: ${receipt.summary.local_lennox_completed}`,
+  `Visual/browser checks still blocked: ${receipt.summary.visual_browser_blocked}`,
+  `Sandbox payment checks blocked: ${receipt.summary.sandbox_payment_blocked}`,
+  `Fulfillment verification checks blocked: ${receipt.summary.fulfillment_verification_blocked}`,'',
   '| Offer | Offer | Review | Buyer | Highest | Disposition | Lennox |',
   '|---|---:|---:|---:|---|---|---|',...rows,'',
   '> BLOCKED is never treated as PASS. Automated runs do not perform live charges.',''
