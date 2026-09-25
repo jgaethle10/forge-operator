@@ -10,8 +10,6 @@ function arg(name, fallback = null) {
   const i = process.argv.indexOf(name);
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 }
-function has(name) { return process.argv.includes(name); }
-
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
@@ -46,11 +44,14 @@ const preflightFile = path.resolve(arg('--preflight', path.join(root, 'node001-p
 const installReceiptFile = path.resolve(arg('--install-receipt', path.join(root, 'install-receipt.json')));
 const operatorRef = String(arg('--operator-ref', ''));
 const sourceReceipt = String(arg('--receipt-ref', ''));
-const physicalObserved = has('--physical-observed');
-const offlineVerified = has('--offline-verified');
+const physicalObserved = process.argv.includes('--physical-observed');
+const offlineReceiptFile = path.resolve(
+  arg('--offline-receipt', path.join(root, 'offline-receipt.json'))
+);
 
 if (!fs.existsSync(preflightFile)) throw new Error('preflight receipt missing');
 if (!fs.existsSync(installReceiptFile)) throw new Error('install receipt missing');
+if (!fs.existsSync(offlineReceiptFile)) throw new Error('offline receipt missing');
 if (!operatorRef) throw new Error('--operator-ref is required');
 if (!sourceReceipt) throw new Error('--receipt-ref is required');
 
@@ -69,6 +70,33 @@ const rebootPersistence = Boolean(
 const nodeReceiptFile = path.join(root, 'nodeseed-receipt.json');
 const telemetryVerified = fs.existsSync(nodeReceiptFile) && service.active;
 const nodeReceipt = telemetryVerified ? readJson(nodeReceiptFile) : null;
+const offline = readJson(offlineReceiptFile);
+const offlineBody = {
+  schema: offline.schema,
+  node_id: offline.node_id,
+  device_fingerprint: offline.device_fingerprint,
+  default_route_absent: offline.default_route_absent,
+  local_compute_health_verified: offline.local_compute_health_verified,
+  runtime: offline.runtime,
+  boot_id_hash: offline.boot_id_hash,
+  observed_at: offline.observed_at,
+};
+const offlineHashValid =
+  offline.receipt_hash === `sha256:${sha(JSON.stringify(offlineBody))}`;
+const offlineFresh =
+  Number.isFinite(Date.parse(offline.observed_at)) &&
+  Date.now() - Date.parse(offline.observed_at) <= 24 * 60 * 60 * 1000;
+const offlineVerified = Boolean(
+  offline.schema === 'evercraft.node001.offline-receipt.v1' &&
+  offline.verified === true &&
+  offlineHashValid &&
+  offlineFresh &&
+  currentBoot &&
+  offline.boot_id_hash === currentBoot &&
+  nodeReceipt &&
+  offline.node_id === nodeReceipt.node_id &&
+  offline.device_fingerprint === nodeReceipt.device_fingerprint
+);
 
 const evidence = {
   schema: 'evercraft.node001.field-evidence.v1',
@@ -82,6 +110,7 @@ const evidence = {
   free_disk_gib: Number(preflight.observed?.free_disk_gib || 0),
   reboot_persistence_verified: rebootPersistence,
   offline_operation_verified: offlineVerified,
+  offline_receipt_ref: offlineVerified ? offline.receipt_hash : null,
   telemetry_verified: telemetryVerified,
   host_identifier_ref: preflight.observed?.host_identifier_ref || null,
   test_date: new Date().toISOString(),
