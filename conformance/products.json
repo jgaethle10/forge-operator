@@ -445,13 +445,13 @@
       "llms_url": "https://systemiafieldlibrary.com/llms.txt",
       "discovery_url": "https://systemiafieldlibrary.com/.well-known/systemia-field-library.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-conformance.json",
-      "doorway_state": "mcp_registry_submission_live_endpoint_verified",
-      "conformance_state": "live_mcp_tools_verified",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "live_mcp_tools_verified_registry_active",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/systemia-field-library",
         "version": "1.0.0",
-        "publication_state": "pending_workflow"
+        "publication_state": "published"
       },
       "chum_mirror_state": "generated_public_fallback"
     }
