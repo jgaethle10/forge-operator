@@ -541,7 +541,15 @@
         "network resilience software",
         "member device reconnect visibility",
         "continuity readiness tools",
-        "Evercraft Network membership"
+        "Evercraft Network membership",
+        "keep my application connected when Wi-Fi and cellular paths change",
+        "application continuity across changing internet connections",
+        "software network continuity without changing carriers",
+        "household connectivity resilience software",
+        "business connectivity resilience software",
+        "device reconnect and health visibility",
+        "continuity visibility when an authorized internet path changes",
+        "resilient application identity across authorized network changes"
       ],
       "authority": "public product discovery and human-directed membership interaction",
       "human_confirmation_required": true,
@@ -550,6 +558,9 @@
         "not 911 or PSAP integration",
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
+      ],
+      "aliases": [
+        "Evercraft Network Resilience"
       ]
     },
     {
