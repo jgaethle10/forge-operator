@@ -1,0 +1,100 @@
+name: AliEV Base44 one-shot publish
+
+on:
+  push:
+    branches:
+      - release/aliev-siteplans-20260924
+    paths:
+      - .github/workflows/aliev-base44-one-shot.yml
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APP_ID: 69b9b64d86a732029ce0db81
+      LIVE_URL: https://aliev.base44.app/
+      BASE44_API_KEY: ${{ secrets.BASE44_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Require unattended Base44 machine identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${BASE44_API_KEY:-}" in
+            b44k_*) echo "workspace_api_key present" ;;
+            *) echo "BASE44_API_KEY missing or invalid for unattended publish" >&2; exit 41 ;;
+          esac
+
+      - name: Install pinned Base44 CLI
+        run: npm install -g base44@0.1.17
+
+      - name: Materialize current AliEV source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/aliev-release
+          mkdir -p /tmp/aliev-release
+          base44 --app-id "$APP_ID" eject -p /tmp/aliev-release -y
+
+      - name: Verify exact Site Planner fix is present
+        shell: bash
+        working-directory: /tmp/aliev-release
+        run: |
+          set -euo pipefail
+          test -f src/components/RIVETSiteDesignStudio.jsx
+          grep -Fq "paycheckBatch" src/components/RIVETSiteDesignStudio.jsx
+          grep -Fq "Technical details" src/components/RIVETSiteDesignStudio.jsx
+          grep -Fq "Review transport fetch failed" src/components/RIVETSiteDesignStudio.jsx
+          test -s public/rivet-review/site01.b64
+          test -s public/rivet-review/site02.b64
+          test -s public/rivet-review/site03.hex
+          test -s public/rivet-review/site04.b64
+          test -s public/rivet-review/site05.hex
+          test -s public/rivet-review/site06.hex
+          test -s public/rivet-review/site07.hex
+          echo "AliEV Site Planner release signatures present"
+
+      - name: Install dependencies
+        working-directory: /tmp/aliev-release
+        run: npm ci
+
+      - name: Run AliEV production gates
+        working-directory: /tmp/aliev-release
+        run: npm run build
+
+      - name: Publish AliEV site
+        working-directory: /tmp/aliev-release
+        shell: bash
+        run: |
+          set -euo pipefail
+          base44 --app-id "$APP_ID" site deploy -y --no-build
+
+      - name: Verify live bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for attempt in $(seq 1 12); do
+            rm -f /tmp/aliev-live.html /tmp/aliev-live.js
+            if curl -fsSL --max-time 20 "$LIVE_URL" -o /tmp/aliev-live.html; then
+              js=$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' /tmp/aliev-live.html | head -1 || true)
+              if [ -n "$js" ] && curl -fsSL --max-time 20 "${LIVE_URL}${js}" -o /tmp/aliev-live.js; then
+                if grep -Fq "Technical details" /tmp/aliev-live.js && grep -Fq "Review transport fetch failed" /tmp/aliev-live.js; then
+                  ok=1
+                  echo "PASS live AliEV bundle contains Site Planner release signatures"
+                  break
+                fi
+              fi
+            fi
+            sleep 10
+          done
+          test "$ok" = "1"
