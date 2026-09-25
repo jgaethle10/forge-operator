@@ -205,8 +205,19 @@ try {
     path.join(yardState, 'remote-enrollment-broker.json'),
     'utf8'
   );
-  assert.ok(yardRecord.includes(approvalRevoke));
   assert.ok(!yardRecord.includes(remoteAllocatorToken));
+
+  const yardAuthorizationLedger = fs.readFileSync(
+    path.join(
+      yardState,
+      '.remote-device-authorizations',
+      'remote-enrollment-broker.jsonl'
+    ),
+    'utf8'
+  );
+  assert.ok(yardAuthorizationLedger.includes(approvalAuthorize));
+  assert.ok(yardAuthorizationLedger.includes(approvalRevoke));
+  assert.ok(!yardAuthorizationLedger.includes(remoteAllocatorToken));
 
   await yard.stopDeployment('remote-enrollment-broker', {
     reason: 'proof_complete',
@@ -224,7 +235,9 @@ try {
     live_session_cut_on_revoke: true,
     revoked_device_rejected: true,
     revocation_survives_broker_restart: true,
+    yard_authorization_audit_survives_broker_redeploy: true,
     local_allocator_secret_persisted_in_yard_record: false,
+    local_allocator_secret_persisted_in_authorization_ledger: false,
     request_or_discovery_self_authorizes: false,
     human_trust_boundary_preserved: true,
   }, null, 2));
