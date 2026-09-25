@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.beast-mode.capability.v1",
+  "name": "BEAST MODE",
+  "description": "Paid, human-authorized verified artifact courier for AI agents and applications.",
+  "discovery": {
+    "audiences": ["llm", "agent", "application"],
+    "intents": ["carry_artifacts", "deliver_large_files", "verified_transfer", "agent_handoff"],
+    "football_protocol": "evercraft.beast-mode.football.v1"
+  },
+  "workflow": ["quote", "authorize", "create_cargo", "attach", "throw", "delivery_status", "receipt"],
+  "commercial": {
+    "metering_dimensions": ["bytes", "artifact_count", "destination_complexity", "retention", "verification_depth", "priority"],
+    "payment_required_before_external_delivery": true,
+    "agent_may_create_financial_obligation": false,
+    "human_or_customer_authority_required": true
+  },
+  "authority": {
+    "default_scope": "commercial_external",
+    "capability_expiry_required": true,
+    "source_scope_required": true,
+    "destination_scope_required": true,
+    "customer_delivery_authorized_required": true,
+    "authority_escalation": false
+  },
+  "integrity": {
+    "sha256_required": true,
+    "byte_count_required": true,
+    "provenance_required": true,
+    "destination_readback_required": true,
+    "receipt_required": true
+  },
+  "privacy": {
+    "internal_topology_public": false,
+    "credentials_public": false,
+    "customer_data_public": false,
+    "unrestricted_transfer_endpoint": false
+  }
+}
