@@ -26,7 +26,11 @@ CHUM is the first discovery-scale consumer. Media fanout is the second proof lan
 - `autoscaler.mjs`: recommends logical and physical formations from workload and telemetry.
 - `work-state.mjs`: leased job state, checkpoints, retries, dead-letter state and atomic persistence.
 - `scheduler.mjs`: bounded physical worker pool with retry/rebind semantics.
-- `kernel-proof.mjs`: recovery, 10,000-agent planning and media-sharding proof.
+- `kernel-proof.mjs`: recovery, 10,000-agent planning, persistence, autoscaling and media-sharding proof.
+- `formation.mjs`: dependency-aware multi-software swarm orchestration.
+- `spawn-broker.mjs`: governed recursive child-swarm admission with depth, count, dedupe and total-agent limits.
+- `registered-worker.mjs`: safe worker entrypoint that accepts only software already registered for multiplication.
+- `contract-doctor.mjs`: validates contracts, budgets, adapters and scaling rules before CI passes.
 - `../chum/saban-adapter.mjs`: CHUM product-discovery adapter.
 - `chunk-adapter.mjs`: neutral bounded shard adapter for product-specific executors.
 
@@ -35,6 +39,16 @@ CHUM is the first discovery-scale consumer. Media fanout is the second proof lan
 Saban distinguishes logical agents from physical workers. A formation can contain 10,000 logical agents without launching 10,000 operating-system processes. Logical work is leased over a bounded worker pool.
 
 For contracts using `role_item_cartesian`, Saban covers every role × work-item pair before beginning duplicate passes. This prevents random hash allocation from leaving important roles or shards untouched.
+
+## Distributed execution
+
+Evercraft Compute NodeSeed exposes `saban.multiplier-assignment.v1`. A NodeSeed may execute a Saban assignment only through an authenticated capacity lease and only through `registered-worker.mjs`. The request names a registered software ID rather than an arbitrary code path. The registry resolves the adapter, contract validation runs again at the worker boundary, and the NodeSeed returns both a Saban worker receipt and an Evercraft Compute receipt.
+
+This connects Saban's logical-agent model to NodeSeed capacity discovery without turning NodeSeed into a generic remote shell.
+
+## Recursive formations
+
+A Saban formation is a dependency graph of software swarms. Nodes may use different software contracts, logical-agent counts, worker pools and reconciliation rules. The spawn broker can admit child formations, including additional CHUM formations, while enforcing maximum depth, child count, per-child size, global logical-agent budget and deduplication.
 
 ## Failure doctrine
 
@@ -89,9 +103,12 @@ npm run saban:multiply -- --software chum --auto --execute --resume --state arti
 Run kernel proofs:
 
 ```bash
+npm run check:saban-contracts
 npm run proof:saban-kernel
 npm run proof:saban-chum
 npm run proof:saban-media
+npm run proof:saban-formation
+npm run proof:saban-nodeseed-multiplier
 ```
 
 Run the discovery watershed:
