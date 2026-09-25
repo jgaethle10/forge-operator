@@ -169,9 +169,15 @@ export function reconcileCheckpoints(replicas) {
     String(b.checkpoint.committed_at).localeCompare(String(a.checkpoint.committed_at))
   );
   const canonical = sorted[0];
+  const validatedLatestByNode = new Map(
+    valid.map((row) => [row.node_id, row.checkpoint])
+  );
   const refillNodes = (replicas || [])
     .filter((row) => row.node_id !== canonical.node_id)
-    .filter((row) => row.checkpoint?.checkpoint_hash !== canonical.checkpoint.checkpoint_hash)
+    .filter((row) => {
+      const validated = validatedLatestByNode.get(row.node_id);
+      return !validated || validated.checkpoint_hash !== canonical.checkpoint.checkpoint_hash;
+    })
     .map((row) => row.node_id);
 
   return {
