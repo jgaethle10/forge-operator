@@ -1,0 +1,13 @@
+import fs from 'node:fs'; import {spawnSync} from 'node:child_process';
+const dir='.tmp-reddit-test'; fs.mkdirSync(dir,{recursive:true});
+const ok={title:'t',body:'Disclosure: Evercraft',destination:'u/test',affiliation_disclosed:true,community_rules_checked:false};
+fs.writeFileSync(dir+'/ok.json',JSON.stringify(ok));
+let r=spawnSync(process.execPath,['systemia/publishing/reddit-publisher.mjs',dir+'/ok.json'],{encoding:'utf8'});
+if(r.status!==0||!r.stdout.includes('preflight_passed')) throw new Error('profile preflight failed '+r.stderr);
+const bad={...ok,destination:'r/test'};
+fs.writeFileSync(dir+'/bad.json',JSON.stringify(bad));
+r=spawnSync(process.execPath,['systemia/publishing/reddit-publisher.mjs',dir+'/bad.json'],{encoding:'utf8'});
+if(r.status===0) throw new Error('subreddit rules gate failed open');
+const pub=spawnSync(process.execPath,['systemia/publishing/reddit-publisher.mjs',dir+'/ok.json','--publish'],{encoding:'utf8',env:{...process.env,REDDIT_CLIENT_ID:'',REDDIT_CLIENT_SECRET:'',REDDIT_REFRESH_TOKEN:''}});
+if(pub.status!==3||!pub.stdout.includes('blocked_authorization_missing')) throw new Error('authorization gate failed');
+console.log('EVERCRAFT_REDDIT_ADAPTER_PASS');
