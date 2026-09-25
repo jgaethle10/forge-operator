@@ -11,8 +11,6 @@ on:
       - 'systemia/yard/field-attestation-proof.mjs'
       - 'systemia/yard/enroll-field-device.mjs'
       - 'systemia/yard/kaidance-pulse.mjs'
-      - 'systemia/yard/enroll-field-device.mjs'
-      - 'systemia/yard/kaidance-pulse.mjs'
       - 'systemia/compute/FIELD_ATTESTATION.md'
       - '.github/workflows/node001-field-attestation.yml'
   push:
@@ -25,6 +23,8 @@ on:
       - 'systemia/yard/field-attestation.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/field-attestation-proof.mjs'
+      - 'systemia/yard/enroll-field-device.mjs'
+      - 'systemia/yard/kaidance-pulse.mjs'
       - 'systemia/compute/FIELD_ATTESTATION.md'
       - '.github/workflows/node001-field-attestation.yml'
 
