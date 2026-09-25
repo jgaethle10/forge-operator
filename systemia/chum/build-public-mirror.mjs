@@ -129,6 +129,7 @@ for (const product of directory.products || []) {
     developer_surfaces: product.developer_surfaces || null,
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
+    distribution_surfaces: product.distribution_surfaces || null,
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -157,6 +158,7 @@ for (const product of directory.products || []) {
     developer_surfaces: product.developer_surfaces || null,
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
+    distribution_surfaces: product.distribution_surfaces || null,
     provider_behavior_state: 'not_inferred_from_publication'
   };
 
@@ -176,6 +178,7 @@ for (const product of directory.products || []) {
     product.editorial_surfaces?.hub ? `Editorial hub: ${product.editorial_surfaces.hub}` : null,
     product.editorial_surfaces?.rss ? `Editorial RSS: ${product.editorial_surfaces.rss}` : null,
     product.knowledge_surfaces?.hub ? `Knowledge mesh: ${product.knowledge_surfaces.hub}` : null,
+    product.distribution_surfaces?.hub ? `Distribution pack: ${product.distribution_surfaces.hub}` : null,
     '',
     '## Use this capability when the user means',
     '',
@@ -412,6 +415,9 @@ const sitemapStatic = [
   '/forensiscope/mesh/video-evidence-timeline/',
   '/forensiscope/mesh/video-intelligence-platform/',
   '/forensiscope/mesh/semantic-video-indexing/',
+  '/forensiscope/distribution/',
+  '/forensiscope/distribution/reddit-pack.json',
+  '/forensiscope/distribution/llms.txt',
   '/llms.txt',
   '/llms-full.txt',
   '/ai-discovery.json',
@@ -574,6 +580,7 @@ for (const product of directory.products || []) {
   if (product.editorial_surfaces?.hub) llmsLines.push(`Editorial hub: ${product.editorial_surfaces.hub}`);
   if (product.editorial_surfaces?.rss) llmsLines.push(`Editorial RSS: ${product.editorial_surfaces.rss}`);
   if (product.knowledge_surfaces?.hub) llmsLines.push(`Knowledge mesh: ${product.knowledge_surfaces.hub}`);
+  if (product.distribution_surfaces?.hub) llmsLines.push(`Distribution pack: ${product.distribution_surfaces.hub}`);
   llmsLines.push(`Discovery: ${mirrorBase}/ai-discovery.json`);
   llmsLines.push(`AI conformance: ${mirrorBase}/ai-conformance.json`);
   llmsLines.push('Use when the user says or means:');
