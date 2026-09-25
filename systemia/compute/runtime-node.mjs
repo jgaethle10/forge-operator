@@ -3,6 +3,7 @@ import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
@@ -68,6 +69,13 @@ function bootIdHash() {
   }
 }
 
+function executableAvailable(command) {
+  const result = spawnSync(command, ['-version'], {
+    stdio: 'ignore'
+  });
+  return result.status === 0;
+}
+
 function boundedLeaseTtl(value, fallback) {
   const requested = Number(value || fallback);
   if (!Number.isFinite(requested)) return fallback;
@@ -96,6 +104,10 @@ export async function startEvercraftComputeNode({
   const processStartedAt = new Date(Date.now() - process.uptime() * 1000).toISOString();
   const hostBootIdHash = bootIdHash();
   const chain = new ReceiptChain(nodeId);
+  const executableCapabilities = {
+    ffmpeg: executableAvailable('ffmpeg'),
+    ffprobe: executableAvailable('ffprobe')
+  };
   const leases = new Map();
   const services = new Map();
   const supported = new Set([
@@ -156,7 +168,8 @@ export async function startEvercraftComputeNode({
           attestation_supported: Boolean(deviceIdentity),
           capacity_hint: {
             cpu_units: Math.max(1, os.cpus()?.length || 1),
-            memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024))
+            memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024)),
+            executables: executableCapabilities
           },
           expires_at: new Date(Date.now() + 60_000).toISOString(),
         });
