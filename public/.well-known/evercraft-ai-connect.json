@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.ai-connect.v1",
+  "provider": "Evercraft LLC",
+  "updated_at": "2026-09-24",
+  "universal_mcp": {
+    "name": "Evercraft Machine Commerce",
+    "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+  },
+  "specialist_mcps": [
+    {
+      "name": "Systemia Field Library",
+      "url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "registry_name": "io.github.jgaethle10/systemia-field-library",
+      "state": "live_endpoint_verified_registry_publication_in_progress"
+    }
+  ],
+  "provider_paths": [
+    {
+      "provider": "openai",
+      "distribution": "public_plugin_review_and_directory",
+      "state": "publisher_review_required",
+      "note": "API account access is separate from public plugin approval."
+    },
+    {
+      "provider": "anthropic_claude",
+      "distribution": "custom_remote_mcp_connector",
+      "state": "available_to_supported_paid_plans"
+    },
+    {
+      "provider": "google_gemini",
+      "distribution": "custom_app_remote_mcp",
+      "state": "available_where Gemini Custom apps are enabled"
+    },
+    {
+      "provider": "xai_grok",
+      "distribution": "custom_remote_mcp_connector",
+      "state": "available"
+    },
+    {
+      "provider": "microsoft_365_copilot",
+      "distribution": "federated_connector_partner_center",
+      "state": "certification_required_for_gallery"
+    }
+  ],
+  "boundary": "Connecting or discovering Evercraft grants no payment or consequential-action authority. Each tool retains its own explicit permission and human-confirmation rules."
+}
