@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T19:31:27.361Z",
+  "updated_at": "2026-09-25T19:43:20.133Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,7 +12,7 @@
   "latest_change_batch": [
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T19:31:27.361Z",
+      "last_changed": "2026-09-25T19:43:20.133Z",
       "priority": 80
     }
   ],
@@ -20,7 +20,7 @@
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T19:31:27.361Z",
+      "last_changed": "2026-09-25T19:43:20.133Z",
       "priority": 80
     },
     {
