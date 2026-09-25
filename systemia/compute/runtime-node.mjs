@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import http from 'node:http';
+import os from 'node:os';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -153,6 +154,10 @@ export async function startEvercraftComputeNode({
           lease_renewal_supported: true,
           device_fingerprint: deviceIdentity?.fingerprint || null,
           attestation_supported: Boolean(deviceIdentity),
+          capacity_hint: {
+            cpu_units: Math.max(1, os.cpus()?.length || 1),
+            memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024))
+          },
           expires_at: new Date(Date.now() + 60_000).toISOString(),
         });
       }
