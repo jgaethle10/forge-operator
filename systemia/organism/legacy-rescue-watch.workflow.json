@@ -2,7 +2,7 @@
   "schema": "evercraft.systemia.workflow-manifest.v1",
   "workflow_key": "legacy-rescue-opportunity-watch",
   "mission_key": "legacy-software-modernization-radar-2026-09-13",
-  "runtime": "systemia-organism",
+  "runtime": "systemia-organism+collider",
   "collider_compatible": true,
   "cadence_seconds": 300,
   "material_change_only": true,
@@ -19,5 +19,25 @@
     "payment_request": "human_gate",
     "private_system_access": "explicit_authorization_required",
     "production_mutation": "explicit_authorization_required"
+  },
+  "runner": "systemia/organism/legacy-rescue-watch-runner.mjs",
+  "outputs": {
+    "cycle_report": "artifacts/legacy-rescue-watch/latest.json",
+    "mission_snapshot": "artifacts/legacy-rescue-watch/mission-snapshot.json",
+    "radar_input": "artifacts/legacy-rescue-watch/radar-input.json"
+  },
+  "input_contract": {
+    "signals_file": "artifacts/legacy-rescue-watch/signals.json",
+    "accepted_shape": "array or object with signals[]",
+    "producers": [
+      "CHUM",
+      "Saban",
+      "authorized public-research adapters"
+    ]
+  },
+  "collider": {
+    "heartbeat_seconds": 300,
+    "mission_snapshot_schema": "evercraft.kaidance.mission-snapshot.v1",
+    "material_change_only": true
   }
-}\n
+}
