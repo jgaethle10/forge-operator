@@ -44,7 +44,7 @@ jobs:
       - name: Build adaptive crawler radar
         env:
           CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
-        run: npm run chum:crawler-radar
+        run: node systemia/chum/crawler-radar.mjs
 
       - name: Verify live release and request recrawl
         env:
