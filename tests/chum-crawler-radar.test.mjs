@@ -31,7 +31,7 @@ store.observe({
   method: 'GET',
   userAgent: 'OAI-SearchBot/1.0',
   statusCode: 200,
-  observedAt: '2026-09-25T20:00:00Z',
+  observedAt: '2026-09-25T19:50:00Z',
 });
 store.observe({
   pathname: '/chum/products/aliev/',
