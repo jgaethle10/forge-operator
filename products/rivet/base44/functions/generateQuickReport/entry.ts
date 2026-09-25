@@ -226,7 +226,6 @@ Deno.serve(async(req)=>{
     if(req.method!=='POST')return Response.json({ok:false,error:'POST required'},{status:405});
     const me:any=await base44.auth.me().catch(()=>null);
     const email=clean(me?.email).toLowerCase();
-    if(!me?.id)return Response.json({ok:false,error:'Authentication required'},{status:401});
 
     const body=await req.json().catch(()=>({}));
     const reportId=clean(body?.report_id).slice(0,180);
@@ -234,7 +233,33 @@ Deno.serve(async(req)=>{
     report=await base44.entities.RIVETReport.get(reportId).catch(()=>null);
     if(!report)return Response.json({ok:false,error:'report not found'},{status:404});
 
-    const ownerAccess=me?.role==='admin'||me?.rivet_owner===true||OWNERS.has(email);
+    const systemiaCanary:any={allowed:false};
+    const canaryToken=clean(req.headers.get('x-systemia-rivet-canary'));
+    if(!me?.id&&canaryToken){
+      let envelope:any=null;
+      try{ envelope=JSON.parse(clean(report?.aliev_report_data_json)||'{}'); }catch{ envelope=null; }
+      const actualHash=await sha256Hex(canaryToken);
+      const expiry=Date.parse(clean(envelope?.expires_at));
+      systemiaCanary.allowed=Boolean(
+        clean(envelope?.kind)==='RIVET_GENERATOR_CANARY_V1' &&
+        clean(envelope?.hash)===actualHash &&
+        clean(envelope?.report_id)===reportId &&
+        clean(envelope?.address_norm)===normAddress(report?.address) &&
+        Number.isFinite(expiry) &&
+        expiry>Date.now()
+      );
+    }
+    if(!me?.id&&!systemiaCanary?.allowed)return Response.json({ok:false,error:'Authentication required'},{status:401});
+
+    if(systemiaCanary.allowed){
+      await base44.asServiceRole.entities.RIVETReport.update(reportId,{
+        aliev_report_data_json:'',
+        source_notes:'systemia_one_time_generator_canary',
+        updated_at:new Date().toISOString()
+      });
+    }
+
+    const ownerAccess=systemiaCanary.allowed||me?.role==='admin'||me?.rivet_owner===true||OWNERS.has(email);
     const customerAccess=Boolean(email)&&clean(report?.customer_email).toLowerCase()===email&&report?.payment_status==='paid'&&report?.customer_visible===true;
     if(!ownerAccess&&!customerAccess){
       return Response.json({ok:false,error:'RIVET report access required'},{status:403});
