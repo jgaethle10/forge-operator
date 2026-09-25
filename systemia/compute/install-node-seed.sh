@@ -42,7 +42,17 @@ chmod 0750 "${STATE_ROOT}" "${ENV_DIR}"
 chown -R evercraft:evercraft "${STATE_ROOT}"
 
 rm -rf "${INSTALL_ROOT:?}/"*
-cp -a "${SOURCE_ROOT}/." "${INSTALL_ROOT}/"
+mkdir -p   "${INSTALL_ROOT}/systemia/compute"   "${INSTALL_ROOT}/systemia/collider"   "${INSTALL_ROOT}/systemia/core/bootstrap"
+
+for file in   node-seed.mjs   runtime-node.mjs   capacity-beacon.mjs   device-identity.mjs   field-preflight.mjs   field-certify.mjs; do
+  install -m 0644 "${SOURCE_ROOT}/systemia/compute/${file}"     "${INSTALL_ROOT}/systemia/compute/${file}"
+done
+
+for file in kernel.mjs runtime.mjs; do
+  install -m 0644 "${SOURCE_ROOT}/systemia/collider/${file}"     "${INSTALL_ROOT}/systemia/collider/${file}"
+done
+
+install -m 0644   "${SOURCE_ROOT}/systemia/core/bootstrap/private-origin.mjs"   "${INSTALL_ROOT}/systemia/core/bootstrap/private-origin.mjs"
 
 ALLOCATOR_TOKEN="${EVERCRAFT_ALLOCATOR_TOKEN:-}"
 if [[ -z "${ALLOCATOR_TOKEN}" ]]; then
