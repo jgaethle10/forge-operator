@@ -85,6 +85,10 @@ export class YardOperator {
     fs.mkdirSync(path.join(this.stateDir, '.checkpoints'), { recursive: true, mode: 0o700 });
     fs.mkdirSync(path.join(this.stateDir, '.field-enrollments'), { recursive: true, mode: 0o700 });
     fs.mkdirSync(path.join(this.stateDir, '.field-attestations'), { recursive: true, mode: 0o700 });
+    fs.mkdirSync(
+      path.join(this.stateDir, '.remote-device-authorizations'),
+      { recursive: true, mode: 0o700 }
+    );
   }
 
   #safeId(deploymentId) {
@@ -140,6 +144,22 @@ export class YardOperator {
       this.stateDir,
       '.field-attestations',
       `${this.#safeId(deploymentId)}.json`
+    );
+  }
+
+  #remoteDeviceAuthorizationLedgerFile(deploymentId) {
+    return path.join(
+      this.stateDir,
+      '.remote-device-authorizations',
+      `${this.#safeId(deploymentId)}.jsonl`
+    );
+  }
+
+  #appendRemoteDeviceAuthorizationDecision(deploymentId, decision) {
+    fs.appendFileSync(
+      this.#remoteDeviceAuthorizationLedgerFile(deploymentId),
+      JSON.stringify(decision) + '\n',
+      { mode: 0o600 }
     );
   }
 
@@ -923,6 +943,7 @@ export class YardOperator {
     };
     record.updated_at = decision.decided_at;
     this.#persist(record);
+    this.#appendRemoteDeviceAuthorizationDecision(deploymentId, decision);
     return decision;
   }
 
