@@ -1,0 +1,125 @@
+{
+  "schema": "evercraft.systemia.drive-recovery-slice.v1",
+  "product": "EPS Field Pass",
+  "source_class": "legacy_build_log",
+  "recovery_state": "contract_recovered_pending_source_and_runtime_parity",
+  "architecture": {
+    "surface": "mobile_first_field_sales_operations",
+    "portals": ["rep", "admin"],
+    "requirements": [
+      "role-aware portal mode",
+      "admin route protection",
+      "authorized portal switching",
+      "rep lifecycle access gating",
+      "historical data preservation on deactivation"
+    ]
+  },
+  "entities": [
+    "Rep",
+    "CommissionRule",
+    "RoleplaySession",
+    "RepScript",
+    "Commission",
+    "Lead",
+    "RepBadge",
+    "DoorKnockSession",
+    "TrainingResource",
+    "QRScan",
+    "DoorLog"
+  ],
+  "backend_functions": [
+    "aiAssistSuggestions",
+    "checkAndAwardBadges",
+    "createCommissionOnClose",
+    "roleplayTurn",
+    "saveRepProfile",
+    "scoreRoleplay",
+    "trackScriptUsage"
+  ],
+  "rep_portal_surfaces": [
+    "RepDashboard",
+    "ActiveSession",
+    "RepProfile",
+    "TrainingHub",
+    "RepEarnings",
+    "AccountSettings"
+  ],
+  "admin_surfaces": [
+    "AdminGate",
+    "AdminDashboard",
+    "AdminReps",
+    "AdminLeads",
+    "RepProfileBuilder"
+  ],
+  "public_surfaces": [
+    "HomeownerView"
+  ],
+  "critical_components": [
+    "CoachingCard",
+    "ScriptBank",
+    "AIAssist",
+    "AIFieldWhisperer",
+    "MomentumScore",
+    "StreakTracker",
+    "DailyMissionCard",
+    "DailyGoalTracker",
+    "ProjectedEarningsRadar",
+    "FollowUpQueue",
+    "LiveLeaderboard",
+    "DoorMapView",
+    "LeadKanban",
+    "DoorLogButtons",
+    "SessionTimer",
+    "RecentDoorLogs",
+    "CommissionFlash",
+    "RepHeadshot",
+    "RepBadges",
+    "TrustBadges",
+    "RoleplaySelector",
+    "RoleplayChat",
+    "RoleplayScorecard",
+    "AdminWarRoom",
+    "AdminCoachingSignals",
+    "AdminCommissions",
+    "AdminRepsList",
+    "AdminRepCard",
+    "AdminRepProfileDrawer",
+    "AdminAddRepModal",
+    "DeactivationModal",
+    "DeactivatedScreen",
+    "PortalSwitcher",
+    "ProtectedRoute",
+    "ErrorBoundary"
+  ],
+  "rep_lifecycle_contract": {
+    "fields": ["status", "is_active", "deactivated_at", "deactivated_by"],
+    "deactivation": [
+      "explicit confirmation required",
+      "blocks rep application access",
+      "preserves historical leads logs and commissions",
+      "invalidates onboarding invite where applicable"
+    ],
+    "reactivation": "must restore active access without rewriting historical records",
+    "hard_delete": "must fail closed when dependent logs leads or commissions exist"
+  },
+  "acceptance": [
+    "authenticated rep cannot access rep surfaces after deactivation",
+    "authorized admin retains management access to deactivated rep records",
+    "reactivation restores access",
+    "hard delete is blocked when dependent historical records exist",
+    "commission creation on eligible close/book events is idempotent",
+    "roleplay and AI assistance actions preserve user/rep authorization boundaries",
+    "map/session tracking does not expose another rep's restricted data",
+    "historical data remains queryable after deactivation",
+    "tests pass before any legacy runtime retirement"
+  ],
+  "not_recovered_yet": [
+    "exact source files",
+    "database rules and indexes",
+    "auth implementation details",
+    "runtime secrets",
+    "deployment configuration",
+    "production data",
+    "live parity proof"
+  ]
+}

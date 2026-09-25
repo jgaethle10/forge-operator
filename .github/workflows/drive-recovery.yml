@@ -1,0 +1,25 @@
+name: Drive recovery guard
+
+on:
+  pull_request:
+    paths:
+      - "systemia/migrations/drive-recovery/**"
+      - "systemia/migrations/base44-exit/estate-snapshot.json"
+      - "scripts/validate-drive-recovery.mjs"
+      - ".github/workflows/drive-recovery.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/migrations/drive-recovery/**"
+      - "systemia/migrations/base44-exit/estate-snapshot.json"
+      - "scripts/validate-drive-recovery.mjs"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/validate-drive-recovery.mjs

@@ -2,120 +2,32 @@
   "schema": "evercraft.systemia.base44-estate-snapshot.v1",
   "observed_at": "2026-09-24",
   "observed_apps_minimum": 100,
-  "observed_source_state": "s3",
-  "note": "Snapshot intentionally omits Base44 app IDs, private URLs, credentials and internal topology.",
+  "observed_source_state": "s3_plus_connected_drive_recovery",
+  "note": "Snapshot intentionally omits Base44 app IDs, Drive file IDs, private URLs, credentials, customer data and internal topology.",
   "queue": [
-    {
-      "product": "Systemia Command Center",
-      "wave": 1,
-      "role": "core_control_plane_shell",
-      "target": "private_systemia_core_plus_yard",
-      "state": "extract_first"
-    },
-    {
-      "product": "Systemia Remote Ops",
-      "wave": 1,
-      "role": "core_operations",
-      "target": "private_systemia_core_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "Evercraft AI Workforce",
-      "wave": 1,
-      "role": "agent_execution",
-      "target": "systemia_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "Evercraft InternalOps",
-      "wave": 1,
-      "role": "internal_operations",
-      "target": "systemia_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "Systemia Audit Center",
-      "wave": 1,
-      "role": "audit_and_receipts",
-      "target": "systemia_plus_github",
-      "state": "queued"
-    },
-    {
-      "product": "Evercraft AI Suite",
-      "wave": 2,
-      "role": "shared_machine_services",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "Raven Nexus",
-      "wave": 3,
-      "role": "revenue_critical_product",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "ForensiScope",
-      "wave": 3,
-      "role": "revenue_critical_product",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "AliEV",
-      "wave": 3,
-      "role": "revenue_critical_product",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "RIVET",
-      "wave": 3,
-      "role": "revenue_critical_product",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "Evercraft Rewards",
-      "wave": 3,
-      "role": "engagement_and_identity",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "Guardian Pilot",
-      "wave": 4,
-      "role": "safety_product",
-      "target": "github_plus_yard",
-      "state": "queued_strict_privacy"
-    },
-    {
-      "product": "EverNest",
-      "wave": 4,
-      "role": "family_product",
-      "target": "github_plus_yard",
-      "state": "queued_strict_privacy"
-    },
-    {
-      "product": "Evercraft Network",
-      "wave": 4,
-      "role": "continuity_network",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "EventWave AI",
-      "wave": 5,
-      "role": "event_intelligence",
-      "target": "github_plus_yard",
-      "state": "queued"
-    },
-    {
-      "product": "FAIE",
-      "wave": 5,
-      "role": "research_intelligence",
-      "target": "github_plus_yard",
-      "state": "queued"
-    }
+    {"product":"Systemia Command Center","wave":1,"role":"core_control_plane_shell","target":"private_systemia_core_plus_yard","state":"extract_first"},
+    {"product":"Systemia Remote Ops","wave":1,"role":"core_operations","target":"private_systemia_core_plus_yard","state":"queued"},
+    {"product":"Evercraft AI Workforce","wave":1,"role":"agent_execution","target":"systemia_plus_yard","state":"queued"},
+    {"product":"Evercraft InternalOps","wave":1,"role":"internal_operations","target":"systemia_plus_yard","state":"queued"},
+    {"product":"Systemia Audit Center","wave":1,"role":"audit_and_receipts","target":"systemia_plus_github","state":"queued"},
+    {"product":"Evercraft AI Suite","wave":2,"role":"shared_machine_services","target":"github_plus_yard","state":"queued"},
+    {"product":"Evercraft HQ","wave":2,"role":"institutional_shell","target":"systemia_plus_github","state":"drive_recovery_queued"},
+    {"product":"Raven Nexus","wave":3,"role":"revenue_critical_product","target":"github_plus_yard","state":"queued"},
+    {"product":"ForensiScope","wave":3,"role":"revenue_critical_product","target":"github_plus_yard","state":"queued"},
+    {"product":"AliEV","wave":3,"role":"revenue_critical_product","target":"github_plus_yard","state":"queued"},
+    {"product":"RIVET","wave":3,"role":"revenue_critical_product","target":"github_plus_yard","state":"queued"},
+    {"product":"Evercraft Rewards","wave":3,"role":"engagement_and_identity","target":"github_plus_yard","state":"queued"},
+    {"product":"EPS Field Pass","wave":3,"role":"field_sales_operations","target":"github_plus_yard","state":"drive_recovery_queued"},
+    {"product":"FindMyPart","wave":3,"role":"revenue_critical_product","target":"github_plus_yard","state":"drive_recovery_queued"},
+    {"product":"SkyOps Parking","wave":3,"role":"parking_operations","target":"github_plus_yard","state":"drive_recovery_queued"},
+    {"product":"Evercraft Property Services","wave":3,"role":"local_services_operations","target":"github_plus_yard","state":"drive_recovery_queued"},
+    {"product":"Guardian Pilot","wave":4,"role":"safety_product","target":"github_plus_yard","state":"queued_strict_privacy"},
+    {"product":"EverNest","wave":4,"role":"family_product","target":"github_plus_yard","state":"queued_strict_privacy"},
+    {"product":"Evercraft Network","wave":4,"role":"continuity_network","target":"github_plus_yard","state":"queued"},
+    {"product":"EventWave AI","wave":5,"role":"event_intelligence","target":"github_plus_yard","state":"queued"},
+    {"product":"FAIE","wave":5,"role":"research_intelligence","target":"github_plus_yard","state":"queued"},
+    {"product":"Systemia Radar","wave":5,"role":"lead_magnet_audit_surface","target":"github_plus_yard","state":"drive_recovery_queued"},
+    {"product":"NextHire (Decision Lab)","wave":5,"role":"decision_support_product","target":"github_plus_yard","state":"drive_recovery_queued"},
+    {"product":"Systemia Field Library","wave":7,"role":"knowledge_product","target":"github_plus_yard","state":"drive_recovery_queued"}
   ]
 }
