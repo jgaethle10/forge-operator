@@ -9,6 +9,7 @@ import { createWorkState, saveWorkState, loadWorkState } from './work-state.mjs'
 import { runScheduler } from './scheduler.mjs';
 import { recommendFormation } from './autoscaler.mjs';
 import { createSpawnLedger, admitSpawnRequest } from './spawn-broker.mjs';
+import { runRegisteredAssignment } from './registered-worker.mjs';
 import fs from 'node:fs';
 
 const registry = loadMultiplicationRegistry();
@@ -175,6 +176,31 @@ const unknownChild = admitSpawnRequest({
 });
 assert.equal(unknownChild.admitted, false);
 
+const registeredWorkerReceipt = await runRegisteredAssignment({
+  software: 'chum',
+  assignment: {
+    agent_id: 'registered-worker-proof',
+    role: 'surface_auditor',
+    work: {
+      kind: 'product',
+      key: 'proof-product',
+      source_file: null
+    },
+    item: {
+      kind: 'product',
+      key: 'proof-product',
+      raw: {
+        canonical_url: 'https://example.com',
+        intents: ['one', 'two', 'three'],
+        authority: 'proof',
+        boundaries: ['public only']
+      }
+    }
+  }
+});
+assert.equal(registeredWorkerReceipt.software_id, 'chum');
+assert.equal(registeredWorkerReceipt.result.status, 'finding');
+
 console.log(JSON.stringify({
   schema: 'evercraft.saban.kernel-proof.v1',
   logical_plan_agents: plan.logical_agents,
@@ -186,5 +212,6 @@ console.log(JSON.stringify({
   chum_auto_logical_agents: pressuredChumFormation.logical_agents,
   governed_spawn_children: spawnLedger.children.length,
   governed_spawn_logical_agents: spawnLedger.total_logical_agents,
+  registered_worker: registeredWorkerReceipt.software_id,
   status: 'pass'
 }));
