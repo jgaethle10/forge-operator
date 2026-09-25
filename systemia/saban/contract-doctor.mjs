@@ -38,6 +38,20 @@ function inspectContract(contract, rootDir) {
     }
   }
 
+  if (contract.resources) {
+    for (const field of [
+      'minimum_node_cpu_units',
+      'minimum_node_memory_mb',
+      'cpu_units_per_worker',
+      'memory_mb_per_worker'
+    ]) {
+      const value = Number(contract.resources[field] || 0);
+      if (!Number.isFinite(value) || value <= 0) {
+        issues.push(`invalid_resource_profile_${field}`);
+      }
+    }
+  }
+
   if (contract.partitioner?.type === 'media_time_windows') {
     const windowSeconds = Number(contract.partitioner.window_seconds);
     const overlapSeconds = Number(contract.partitioner.overlap_seconds);
