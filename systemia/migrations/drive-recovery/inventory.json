@@ -46,7 +46,8 @@
         "product_output"
       ],
       "recovery_priority": "wave_3",
-      "state": "evidence_pack_available"
+      "state": "data_semantics_and_durability_contract_recovered_pending_source_and_restore_parity",
+      "recovered_contract": "slices/rivet.json"
     },
     {
       "product": "Evercraft Rewards",
