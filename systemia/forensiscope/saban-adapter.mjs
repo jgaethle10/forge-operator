@@ -36,10 +36,23 @@ function shardBounds(raw = {}) {
   const start = Number(raw.start_seconds ?? 0);
   const end = Number(raw.end_seconds ?? raw.duration_seconds ?? 0);
   const duration = Number(raw.duration_seconds ?? Math.max(0, end - start));
-  if (!Number.isFinite(start) || !Number.isFinite(duration) || duration <= 0) {
-    throw new Error('ForensiScope shard requires valid start_seconds and duration_seconds.');
+  const offset = Number(raw.timeline_offset_seconds ?? 0);
+  if (
+    !Number.isFinite(start) ||
+    !Number.isFinite(duration) ||
+    duration <= 0 ||
+    !Number.isFinite(offset)
+  ) {
+    throw new Error('ForensiScope shard requires valid timing metadata.');
   }
-  return { start, duration, end: start + duration };
+  return {
+    start,
+    duration,
+    end: start + duration,
+    offset,
+    absolute_start: offset + start,
+    absolute_end: offset + start + duration
+  };
 }
 
 function artifactDir(rootDir, raw) {
@@ -83,7 +96,7 @@ function keyframeTimeline(sourcePath, bounds) {
     .filter((frame) => Number(frame.key_frame) === 1)
     .slice(0, 500)
     .map((frame) => ({
-      timestamp_seconds: Number(frame.best_effort_timestamp_time),
+      timestamp_seconds: Number(frame.best_effort_timestamp_time) + bounds.offset,
       pict_type: frame.pict_type || null
     }))
     .filter((frame) => Number.isFinite(frame.timestamp_seconds));
@@ -110,7 +123,7 @@ function frameHashes(sourcePath, bounds, sampleSeconds = 2) {
     if (!/^[a-f0-9]{32,128}$/i.test(digest || '')) continue;
     hashes.push({
       sample_index: hashes.length,
-      timestamp_seconds: bounds.start + hashes.length * sampleSeconds,
+      timestamp_seconds: bounds.offset + bounds.start + hashes.length * sampleSeconds,
       hash: digest.toLowerCase()
     });
   }
@@ -161,12 +174,15 @@ function baseReceipt(assignment, source, bounds) {
     shard: {
       parent_key: assignment.item?.raw?.parent_key || null,
       shard_index: Number(assignment.item?.raw?.shard_index ?? 0),
-      start_seconds: bounds.start,
-      end_seconds: bounds.end,
+      start_seconds: bounds.absolute_start,
+      end_seconds: bounds.absolute_end,
       duration_seconds: bounds.duration
     },
     source: {
       sha256: source.sha256,
+      original_sha256: assignment.item?.raw?.source?.original_sha256 || source.sha256,
+      derivative_kind: assignment.item?.raw?.source?.derivative_kind || null,
+      derivative_lossless: assignment.item?.raw?.source?.derivative_lossless ?? null,
       size_bytes: source.size_bytes,
       extension: source.extension
     }
@@ -227,8 +243,11 @@ export async function runAssignment({ assignment, rootDir, executionContext = {}
         data: {
           source_hash_before: source.sha256,
           source_hash_after: observed,
+          original_source_sha256: raw.source?.original_sha256 || source.sha256,
           source_unchanged: observed === source.sha256,
-          source_write_performed: false
+          source_write_performed: false,
+          derivative_kind: raw.source?.derivative_kind || null,
+          derivative_lossless: raw.source?.derivative_lossless ?? null
         }
       };
     }
@@ -298,13 +317,22 @@ export async function reconcile({ results, contract }) {
     });
   }
 
-  const provenanceOk = provenance.every((entry) => entry?.source_unchanged === true);
+  const originalHashes = new Set(
+    provenance
+      .map((entry) => entry?.original_source_sha256)
+      .filter(Boolean)
+  );
+  const provenanceOk =
+    provenance.every((entry) => entry?.source_unchanged === true) &&
+    originalHashes.size <= 1;
   const repeatedContent = duplicates.filter((entry) => entry.classification === 'repeated_content');
 
   return {
     schema: 'evercraft.forensiscope.reconciliation.v1',
     status: provenanceOk ? 'reconciled' : 'reconciliation_failed',
     source_integrity_preserved: provenanceOk,
+    original_source_sha256: originalHashes.size === 1 ? [...originalHashes][0] : null,
+    derivative_integrity_checks: provenance.length,
     worker_statuses: workerStatuses,
     timeline: dedupeTimeline(timeline),
     duplicate_review: {
