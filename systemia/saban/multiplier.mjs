@@ -4,7 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { admitMultiplicationRequest } from './admission.mjs';
-import { createWorkState } from './work-state.mjs';
+import { createWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
 
 const DEFAULT_REGISTRY = 'systemia/saban/multiplication-registry.json';
@@ -295,7 +295,9 @@ export async function executeMultiplicationPlan({
   plan,
   workItems,
   rootDir = process.cwd(),
-  reconcile = false
+  reconcile = false,
+  statePath = null,
+  resume = false
 }) {
   if (!contract.adapter) {
     throw new Error(`No execution adapter declared for ${contract.software_id}`);
@@ -312,12 +314,14 @@ export async function executeMultiplicationPlan({
     (_, index) => assignmentForIndex(plan, workItems, index)
   );
 
-  const state = createWorkState({
-    softwareId: plan.software_id,
-    assignments,
-    leaseSeconds: plan.lease_seconds,
-    maxAttempts: Number(contract.max_attempts_per_job || 3)
-  });
+  const state = resume && statePath && fs.existsSync(statePath)
+    ? loadWorkState(statePath)
+    : createWorkState({
+        softwareId: plan.software_id,
+        assignments,
+        leaseSeconds: plan.lease_seconds,
+        maxAttempts: Number(contract.max_attempts_per_job || 3)
+      });
 
   const schedulerReceipt = await runScheduler({
     state,
@@ -325,7 +329,8 @@ export async function executeMultiplicationPlan({
     physicalWorkers: plan.physical_workers,
     plan,
     contract,
-    rootDir
+    rootDir,
+    statePath
   });
 
   const results = Object.values(schedulerReceipt.state.jobs || {})
@@ -353,6 +358,7 @@ export async function executeMultiplicationPlan({
     work_item_count: plan.work_item_count,
     result_summary: summarizeResults(results),
     scheduler_summary: schedulerReceipt.summary,
+    state_path: statePath,
     sample_results: results.slice(0, 24),
     reconciliation
   };
@@ -380,6 +386,7 @@ async function main() {
   const inventoryPath = argValue(argv, '--inventory', null);
   const execute = hasFlag(argv, '--execute');
   const reconcile = hasFlag(argv, '--reconcile');
+  const resume = hasFlag(argv, '--resume');
   const rootDir = process.cwd();
 
   const registry = loadMultiplicationRegistry(registryPath);
@@ -417,13 +424,20 @@ async function main() {
   };
 
   if (execute) {
+    const statePath = argValue(
+      argv,
+      '--state',
+      path.join('artifacts', 'saban-multiplier', `${contract.software_id}-state.json`)
+    );
     receipt = {
       ...(await executeMultiplicationPlan({
         contract,
         plan,
         workItems,
         rootDir,
-        reconcile
+        reconcile,
+        statePath,
+        resume
       })),
       mode: reconcile ? 'execute_and_reconcile' : 'execute',
       plan
