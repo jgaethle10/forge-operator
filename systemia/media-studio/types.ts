@@ -170,6 +170,37 @@ export interface DialogueCue {
   language?: string;
 }
 
+export type CreativeTaskKind =
+  | 'image'
+  | 'video'
+  | 'speech'
+  | 'music'
+  | 'sfx'
+  | 'lip_sync';
+
+export type CreativeRequirement =
+  | 'reference_identity'
+  | 'voice_profile'
+  | 'seed_control'
+  | 'commercial_rights'
+  | 'provenance_receipt'
+  | 'timing_control';
+
+export interface ProductionNeed {
+  id: string;
+  kind: CreativeTaskKind;
+  prompt?: string;
+  durationSec?: number;
+  aspectRatio?: AspectRatio;
+  speakerId?: string;
+  voiceProfileId?: string;
+  language?: string;
+  sourceRequestId?: string;
+  continuityDigest: string;
+  requires: CreativeRequirement[];
+  status: 'planned' | 'routed' | 'completed' | 'blocked';
+}
+
 export interface SeriesEpisodePlan {
   schema: 'evercraft.fallen.series-plan.v1';
   seriesId: string;
@@ -180,6 +211,7 @@ export interface SeriesEpisodePlan {
   dialogue: DialogueCue[];
   continuity: ContinuityReport;
   proposedCanon: CanonFact[];
+  productionNeeds: ProductionNeed[];
   canonReceipt: string;
   createdAt: string;
 }
