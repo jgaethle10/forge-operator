@@ -13,6 +13,7 @@ import { recommendFormation } from '../saban/autoscaler.mjs';
 import { executeDistributedMultiplicationPlan } from '../saban/distributed-executor.mjs';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { hashFile } from './authorized-source.mjs';
+import { queryEvidenceGraph } from './evidence-query.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -248,6 +249,22 @@ assert.ok(
     .every((node) => node.engine_id === 'forensiscope-ci-contract')
 );
 
+const evidenceQuery = queryEvidenceGraph(
+  receipt.reconciliation.evidence_graph,
+  {
+    query: 'boundary-3',
+    topK: 3,
+    contextRadiusSeconds: 3
+  }
+);
+assert.equal(evidenceQuery.schema, 'evercraft.forensiscope.evidence-query-result.v1');
+assert.ok(evidenceQuery.match_count > 0);
+assert.ok(evidenceQuery.hits[0].text.includes('boundary-3'));
+assert.equal(evidenceQuery.hits[0].source_sha256, sourceHashAfter);
+assert.ok(evidenceQuery.hits[0].evidence_id);
+assert.equal(evidenceQuery.answer_policy.evidence_retrieval_only, true);
+assert.equal(evidenceQuery.answer_policy.unsupported_answer_generation, false);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -275,6 +292,8 @@ const proof = {
   evidence_graph_nodes: receipt.reconciliation.evidence_graph.node_count,
   evidence_graph_edges: receipt.reconciliation.evidence_graph.edge_count,
   llm_evidence_atoms: receipt.reconciliation.evidence_graph.llm_projection.transcript_atoms.length,
+  evidence_query_matches: evidenceQuery.match_count,
+  evidence_query_top_id: evidenceQuery.hits[0].evidence_id,
   public_machine_intake_enabled: false
 };
 
