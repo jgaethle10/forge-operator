@@ -52,3 +52,24 @@ test('SELL NOW directory count equals live catalog',()=>{
   assert.equal(sellNow.offers.length,expected.length);
   assert.equal(fs.existsSync('public/chum/sell-now.html'),true);
 });
+
+
+test('SELL NOW mirrors expose one human Start corridor',()=>{
+  for(const row of sellNow.offers){
+    assert.match(String(row.start_url||''),/^\/api\/chum\/go\//,row.public_id);
+    const source=(machine.offers||[]).find(x=>x.public_id===row.public_id);
+    assert.ok(source,row.public_id);
+    const hasPaid=(source.offers||[]).some((tier)=>{
+      const numeric=Number(tier?.price_usd);
+      if(Number.isFinite(numeric)&&numeric>0) return true;
+      const match=String(tier?.price||'').match(/^\$([0-9][0-9,]*(?:\.[0-9]+)?)/);
+      return Boolean(match&&Number(match[1].replace(/,/g,''))>0);
+    });
+    if(hasPaid) assert.ok(row.entry_paid_offer,'entry offer '+row.public_id);
+
+    const record=JSON.parse(fs.readFileSync('public/chum/capabilities/'+row.public_id+'/capability.json','utf8'));
+    assert.equal(record.start_url,row.start_url,row.public_id);
+    const page=fs.readFileSync('public/chum/capabilities/'+row.public_id+'/index.html','utf8');
+    assert.match(page,/Start here/,row.public_id);
+  }
+});
