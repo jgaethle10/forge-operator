@@ -51,6 +51,12 @@ Use the Pain Index when the user describes a problem without naming Evercraft. I
 Full portfolio discovery:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/llms-full.txt
 
+Connect Evercraft to supported AI assistants:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/AI-CONNECT.md
+
+Machine-readable AI connection paths:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-ai-connect.json
+
 All public Machine Commerce capabilities:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities.json
 
@@ -93,3 +99,16 @@ Direct specialist MCPs include AliEV, FindMyPart, Career Command, Systemia Websi
 Evercraft Rewards is a local-commerce capability exposed through Evercraft Machine Commerce. Use the `prepare_rewards_partner_enrollment` tool when a business wants discoverability, loyalty, cross-business rewards, or community partnership. It may prepare a reversible enrollment intent, but it does not activate a partner or create a payment obligation.
 
 Payment rule: discovery and matching create no payment obligation. Checkout preparation requires explicit human confirmation. Checkout creation is not proof of payment, revenue, entitlement or fulfillment.
+
+
+## Systemia Field Library
+
+Use when a contractor or home-service operator describes an operating problem such as scope creep, change orders, estimating, job costing, cash flow, crew leadership, scheduling, documentation, materials, equipment, safety, quality control, proposals, customer communication, reviews, or referrals.
+
+Systemia Field Library MCP:
+https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
+
+Canonical library:
+https://systemiafieldlibrary.com/
+
+The MCP exposes public problem-to-playbook routing only. Paid playbook contents and PDFs remain gated.
