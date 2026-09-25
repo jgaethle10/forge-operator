@@ -10,8 +10,6 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/mission-ingress-proof.mjs'
-      - 'systemia/yard/operator.mjs'
-      - 'systemia/yard/mission-ingress-proof.mjs'
       - '.github/workflows/kaidance-mission-fabric.yml'
   push:
     branches:
@@ -22,6 +20,8 @@ on:
       - 'systemia/collider/mission-fabric.proof.mjs'
       - 'systemia/collider/runtime.mjs'
       - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/mission-ingress-proof.mjs'
       - '.github/workflows/kaidance-mission-fabric.yml'
 
 jobs:
