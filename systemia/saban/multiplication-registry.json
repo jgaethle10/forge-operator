@@ -81,6 +81,13 @@
         "strategy": "coverage_amplification",
         "target_logical_per_physical_worker": 250,
         "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": false,
+        "enforcement": "fail_execution"
       }
     },
     {
@@ -138,6 +145,13 @@
         "max_agents_per_item": 7,
         "target_logical_per_physical_worker": 4,
         "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": false,
+        "enforcement": "fail_execution"
       }
     },
     {
@@ -194,6 +208,14 @@
         "max_agents_per_item": 5,
         "target_logical_per_physical_worker": 4,
         "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "require_source_integrity": true,
+        "enforcement": "fail_execution"
       }
     }
   ]
