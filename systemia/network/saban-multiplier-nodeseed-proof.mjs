@@ -155,6 +155,27 @@ try {
   assert.equal(conflict?.body?.error, 'idempotency_key_conflict');
   assert.equal(conflict?.body?.idempotency_key, idempotencyKey);
 
+  const idempotencyDir = path.join(root, '.evercraft', 'saban-idempotency');
+  const recordFiles = fs.readdirSync(idempotencyDir).filter((name) => name.endsWith('.json'));
+  assert.equal(recordFiles.length, 1);
+  const recordPath = path.join(idempotencyDir, recordFiles[0]);
+  const tampered = JSON.parse(fs.readFileSync(recordPath, 'utf8'));
+  tampered.worker_result.software_id = 'tampered-software';
+  fs.writeFileSync(recordPath, JSON.stringify(tampered, null, 2) + '\n');
+
+  let integrityFailure = null;
+  try {
+    await execute(seed, leaseRecord, originalAssignment);
+  } catch (error) {
+    integrityFailure = error;
+  }
+
+  assert.equal(integrityFailure?.status, 500);
+  assert.equal(
+    integrityFailure?.body?.error,
+    'saban_idempotency_record_integrity_failed'
+  );
+
   await requestJson(`${seed.endpoint}/v1/leases/${leaseRecord.lease_id}/release`, {
     method: 'POST',
     body: JSON.stringify({
@@ -171,7 +192,8 @@ try {
     checkpoint_step: execution.checkpoint.step,
     immediate_retry_deduplicated: true,
     restart_retry_deduplicated: true,
-    idempotency_conflict_rejected: true
+    idempotency_conflict_rejected: true,
+    tampered_idempotency_record_failed_closed: true
   }));
 } finally {
   await seed.close().catch(() => {});
