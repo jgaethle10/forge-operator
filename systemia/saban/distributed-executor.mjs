@@ -70,6 +70,7 @@ export async function executeDistributedMultiplicationPlan({
     assignmentTimeoutMs: Number(nodePool.assignmentTimeoutMs || 120000),
     requestedTtlMs: Number(nodePool.requestedTtlMs || Math.max(300000, plan.lease_seconds * 1000)),
     resourceProfile: contract.resources || null,
+    stageAuthorizedSources: contract.transport?.stage_authorized_sources === true,
     onEvent: nodePool.onEvent || null
   });
 
