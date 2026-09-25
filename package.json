@@ -64,7 +64,7 @@
     "test:saban-revenue": "node tests/saban-revenue-swarm.test.mjs",
     "test:openai-plugin-submission": "node scripts/validate-openai-plugin-submission.mjs",
     "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs",
-    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan && npm run proof:legacy-rescue-link-discovery",
+    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan && npm run proof:legacy-rescue-link-discovery && npm run proof:legacy-rescue-strike-admission",
     "test:chum-surfaces": "npm run chum:mirror && node systemia/chum/discovery-surfaces.test.mjs",
     "test:ibmi-rescue-discovery": "node tests/ibmi-rescue-discovery.test.mjs",
     "run:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch-runner.mjs",
@@ -101,7 +101,8 @@
     "proof:saban-formation-waves": "node systemia/saban/formation-wave-proof.mjs",
     "proof:beast-football": "node systemia/beast-mode/football.proof.mjs && node systemia/beast-mode/football-engine.proof.mjs",
     "test:forensiscope-seo-mesh": "npm run chum:mirror && node tests/forensiscope-seo-mesh.test.mjs",
-    "test:forensiscope-distribution": "npm run chum:mirror && node tests/forensiscope-distribution.test.mjs"
+    "test:forensiscope-distribution": "npm run chum:mirror && node tests/forensiscope-distribution.test.mjs",
+    "proof:legacy-rescue-strike-admission": "node systemia/organism/legacy-rescue-strike-admission.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
