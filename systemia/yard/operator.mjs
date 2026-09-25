@@ -35,8 +35,10 @@ export class YardOperator {
     this.stateDir = path.resolve(stateDir);
     this.deployments = new Map();
     this.leaseKeepers = new Map();
+    this.checkpointKeepers = new Map();
     fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o750 });
     fs.mkdirSync(path.join(this.stateDir, '.lease-secrets'), { recursive: true, mode: 0o700 });
+    fs.mkdirSync(path.join(this.stateDir, '.checkpoints'), { recursive: true, mode: 0o700 });
   }
 
   #safeId(deploymentId) {
@@ -65,6 +67,24 @@ export class YardOperator {
 
   #loadLeaseSecret(deploymentId) {
     const file = this.#secretFile(deploymentId);
+    if (!fs.existsSync(file)) return null;
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  }
+
+  #checkpointFile(deploymentId) {
+    return path.join(this.stateDir, '.checkpoints', `${this.#safeId(deploymentId)}.json`);
+  }
+
+  #saveCheckpoint(deploymentId, checkpointRecord) {
+    fs.writeFileSync(
+      this.#checkpointFile(deploymentId),
+      JSON.stringify(checkpointRecord, null, 2) + '\n',
+      { mode: 0o600 }
+    );
+  }
+
+  #loadCheckpoint(deploymentId) {
+    const file = this.#checkpointFile(deploymentId);
     if (!fs.existsSync(file)) return null;
     return JSON.parse(fs.readFileSync(file, 'utf8'));
   }
@@ -278,6 +298,139 @@ export class YardOperator {
     return record;
   }
 
+  async checkpointDeployment(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (!record.result?.service_id) throw new Error('deployment is not a resident service');
+
+    const captured = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/checkpoint`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ token: secret.token }),
+      }
+    );
+    if (captured.checkpoint?.schema !== 'evercraft.kaidance.checkpoint.v1') {
+      throw new Error('resident checkpoint schema invalid');
+    }
+
+    const checkpointRecord = {
+      schema: 'evercraft.yard.continuity-checkpoint.v1',
+      deployment_id: deploymentId,
+      source_node_id: record.receipt?.capacity_node_id || null,
+      source_deployment_receipt: record.receipt?.receipt_hash || null,
+      compute_checkpoint_receipt: captured.receipt?.receipt_hash || null,
+      captured_at: new Date().toISOString(),
+      checkpoint: captured.checkpoint,
+    };
+    checkpointRecord.receipt_hash = sha(checkpointRecord);
+    this.#saveCheckpoint(deploymentId, checkpointRecord);
+
+    record.continuity = {
+      ...(record.continuity || {}),
+      last_checkpoint_receipt: checkpointRecord.receipt_hash,
+      last_checkpoint_state_hash: captured.checkpoint.state_hash,
+      last_checkpoint_at: checkpointRecord.captured_at,
+    };
+    record.updated_at = new Date().toISOString();
+    this.#persist(record);
+    return checkpointRecord;
+  }
+
+  startCheckpointKeeper(deploymentId, { everyMs = 60_000 } = {}) {
+    if (this.checkpointKeepers.has(deploymentId)) return;
+    const timer = setInterval(() => {
+      this.checkpointDeployment(deploymentId).catch(() => {});
+    }, Math.max(30_000, everyMs));
+    timer.unref?.();
+    this.checkpointKeepers.set(deploymentId, timer);
+  }
+
+  stopCheckpointKeeper(deploymentId) {
+    const timer = this.checkpointKeepers.get(deploymentId);
+    if (timer) clearInterval(timer);
+    this.checkpointKeepers.delete(deploymentId);
+  }
+
+  async rebindDiscoveredRelease({
+    deploymentId,
+    allocatorToken = '',
+    allocatorTokens = {},
+    discovery = {},
+    endpointTimeoutMs = 750,
+    leaseTtlMs = 30_000,
+    input = {},
+    inputByNode = {},
+  } = {}) {
+    const previous = this.deploymentStatus(deploymentId);
+    if (!previous) throw new Error('deployment not found');
+    if (previous.receipt?.workload_class !== 'systemia.kaidance-collider.v1') {
+      throw new Error('automatic rebind currently supports KAIDANCE resident deployments only');
+    }
+
+    const saved = this.#loadCheckpoint(deploymentId);
+    if (!saved?.checkpoint) throw new Error('continuity checkpoint unavailable');
+
+    const failedNodeId = String(previous.receipt?.capacity_node_id || '');
+    const resolution = await discoverEligibleCapacity({
+      workloadClass: previous.receipt.workload_class,
+      discovery,
+      endpointTimeoutMs,
+      excludeNodeIds: failedNodeId ? [failedNodeId] : [],
+    });
+    if (!resolution.selected) {
+      const error = new Error('no alternate Evercraft capacity discovered');
+      error.resolution = resolution;
+      throw error;
+    }
+
+    const selected = resolution.selected;
+    const selectedToken = allocatorTokenForOffer(selected, {
+      allocatorToken,
+      allocatorTokens,
+    });
+    if (selected.allocation_auth === 'bearer' && !selectedToken) {
+      const error = new Error('allocator authority unavailable for rebound capacity');
+      error.resolution = resolution;
+      throw error;
+    }
+
+    const nodeInput = inputByNode?.[selected.node_id] || input;
+    const next = await this.deployRelease({
+      deploymentId,
+      releaseRef: previous.receipt.release_ref,
+      workloadClass: previous.receipt.workload_class,
+      capacityEndpoint: selected.endpoint,
+      input: {
+        ...nodeInput,
+        initial_checkpoint: saved.checkpoint,
+      },
+      rollbackTarget: previous.receipt.rollback_target,
+      leaseTtlMs,
+      allocatorToken: selectedToken,
+    });
+
+    next.discovery = {
+      schema: resolution.schema,
+      receipt_hash: resolution.receipt_hash,
+      selected_node_id: selected.node_id,
+      selected_endpoint: selected.endpoint,
+      discovered_count: resolution.discovered_count,
+      eligible_count: resolution.eligible_count,
+    };
+    next.continuity = {
+      previous_node_id: failedNodeId || null,
+      previous_deployment_receipt: previous.receipt.receipt_hash,
+      checkpoint_receipt: saved.receipt_hash,
+      checkpoint_state_hash: saved.checkpoint.state_hash,
+      rebound_at: new Date().toISOString(),
+    };
+    next.updated_at = new Date().toISOString();
+    this.#persist(next);
+    return next;
+  }
+
   deploymentStatus(deploymentId) {
     if (this.deployments.has(deploymentId)) return this.deployments.get(deploymentId);
     const file = path.join(this.stateDir, `${this.#safeId(deploymentId)}.json`);
@@ -371,6 +524,25 @@ export class YardOperator {
     this.leaseKeepers.delete(deploymentId);
   }
 
+  startContinuityKeeper(deploymentId, {
+    leaseTtlMs = 3_600_000,
+    renewEveryMs = 1_800_000,
+    checkpointEveryMs = 60_000,
+  } = {}) {
+    this.startLeaseKeeper(deploymentId, {
+      ttlMs: leaseTtlMs,
+      renewEveryMs,
+    });
+    this.startCheckpointKeeper(deploymentId, {
+      everyMs: checkpointEveryMs,
+    });
+  }
+
+  stopContinuityKeeper(deploymentId) {
+    this.stopLeaseKeeper(deploymentId);
+    this.stopCheckpointKeeper(deploymentId);
+  }
+
   getLiveUrl(deploymentId) {
     return this.deploymentStatus(deploymentId)?.receipt?.live_url || null;
   }
@@ -379,7 +551,7 @@ export class YardOperator {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);
     if (!record || !secret) throw new Error('deployment lease authority unavailable');
-    this.stopLeaseKeeper(deploymentId);
+    this.stopContinuityKeeper(deploymentId);
 
     if (record.result?.service_id) {
       await request(
