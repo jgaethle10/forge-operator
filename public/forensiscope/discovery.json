@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.forensiscope.discovery.v1",
-  "name": "ForensiScope",
+  "name": "ForensiScope by Evercraft",
   "provider": "Evercraft LLC",
   "product_key": "forensiscope",
   "class": "ai_media_overflow_and_analysis",
@@ -35,5 +35,9 @@
   "overflow_contract": "/.well-known/evercraft-media-overflow.json",
   "commercial_state_source": "/.well-known/evercraft-machine-catalog.json",
   "human_confirmation_required": true,
-  "automatic_media_transfer_allowed": false
+  "automatic_media_transfer_allowed": false,
+  "aliases": [
+    "ForensiScope",
+    "Evercraft ForensiScope"
+  ]
 }
