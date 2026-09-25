@@ -1,0 +1,33 @@
+name: Systemia Core resident supervisor
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/core/resident-supervisor.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/resident-supervisor-runner.mjs'
+      - 'systemia/core/resident-supervisor.proof.mjs'
+      - 'systemia/core/RESIDENT_SUPERVISOR.md'
+      - '.github/workflows/systemia-core-resident-supervisor.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/core/resident-supervisor.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/resident-supervisor-runner.mjs'
+      - 'systemia/core/resident-supervisor.proof.mjs'
+      - 'systemia/core/RESIDENT_SUPERVISOR.md'
+      - '.github/workflows/systemia-core-resident-supervisor.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove mixed cycle/resident supervision
+        run: node systemia/core/resident-supervisor.proof.mjs
