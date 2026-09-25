@@ -359,6 +359,28 @@
       ]
     },
     {
+      "product_key": "evercraft-circles",
+      "name": "Evercraft Circles",
+      "class": "trusted_professional_network_and_referral_roster",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
+      "intents": [
+        "build a trusted professional referral network",
+        "organize a business networking circle",
+        "find a trusted professional through relationship paths",
+        "build a professional roster instead of a social feed",
+        "track referrals and professional introductions",
+        "join a founding professional networking beta"
+      ],
+      "authority": "public product discovery and human-directed onboarding into a professional networking beta",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "network relationships and referrals are user-directed rather than autonomous endorsements",
+        "joining a Circle does not guarantee business, leads, revenue or successful referrals",
+        "private member profiles, relationship paths, referrals and opportunity data remain access controlled",
+        "external introductions or referrals require appropriate participant authority"
+      ]
+    },
+    {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
       "aliases": [
@@ -382,6 +404,28 @@
         "do not send passwords API keys cookies tokens or private credential material through public intake",
         "remediation that can interrupt production requires separate explicit scope and authorization",
         "checkout is not payment proof and paid state requires authoritative verification"
+      ]
+    },
+    {
+      "product_key": "evercraft-cosmos-atlas",
+      "name": "Evercraft Cosmos Atlas",
+      "class": "evidence_led_astronomy_and_space_learning",
+      "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+      "intents": [
+        "learn astronomy with sources",
+        "study planets stars galaxies and black holes",
+        "understand how astronomers know what they know",
+        "explore space missions and observatories with evidence",
+        "learn how signals become astronomical inferences",
+        "study planetary defense or cosmic motion"
+      ],
+      "authority": "public read-only astronomy, mission and evidence learning with source provenance, confidence and open questions attached",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "observations, models and inferences should remain distinguishable",
+        "an astronomical image or signal should not be described as proving more than the underlying evidence supports",
+        "source limitations and open scientific questions remain visible",
+        "educational content does not create operational authority over spacecraft or observatories"
       ]
     },
     {
@@ -427,6 +471,35 @@
       }
     },
     {
+      "product_key": "evercraft-global-health-atlas",
+      "name": "Evercraft Global Health Atlas",
+      "aliases": [
+        "Evercraft Health Atlas",
+        "Global Health Atlas"
+      ],
+      "class": "evidence_labeled_public_health_intelligence_atlas",
+      "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "intents": [
+        "explore global public health data with sources",
+        "compare population health indicators",
+        "study pandemic intelligence and outbreak evidence",
+        "explore wastewater or genomic surveillance",
+        "study One Health signals",
+        "research disease evidence with uncertainty attached",
+        "find public health data blind spots"
+      ],
+      "authority": "public read-only evidence-labeled population and public-health intelligence with source traceability and uncertainty preserved",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "not a substitute for personal medical diagnosis, treatment or emergency guidance",
+        "official public-health authorities remain authoritative for active emergency instructions",
+        "observed measurements, modeled estimates, forecasts and alerts must remain distinctly labeled",
+        "absence of a surveillance signal can reflect missing coverage rather than absence of disease",
+        "time-sensitive health signals require explicit as-of dates and source freshness",
+        "restricted or governed datasets retain their source terms and must not be silently bulk-republished"
+      ]
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "application_network_continuity",
@@ -445,6 +518,28 @@
         "not 911 or PSAP integration",
         "not guaranteed geographic coverage or emergency backhaul",
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
+      ]
+    },
+    {
+      "product_key": "evercraft-physics-atlas",
+      "name": "Evercraft Physics Atlas",
+      "class": "evidence_led_physics_learning",
+      "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+      "intents": [
+        "learn physics interactively",
+        "study mechanics gravity or thermodynamics",
+        "learn electromagnetism waves or optics",
+        "explore relativity quantum nuclear or particle physics",
+        "test a physics prediction before seeing the answer",
+        "connect physical models to evidence"
+      ],
+      "authority": "public read-only physics learning and interactive prediction exercises",
+      "human_confirmation_required": false,
+      "boundaries": [
+        "simplified teaching models must be labeled as models rather than direct measurements",
+        "equations and scientific uncertainty should remain visible where material",
+        "educational simulations are not engineering certification or safety analysis",
+        "private learner or account data is outside public discovery"
       ]
     },
     {
