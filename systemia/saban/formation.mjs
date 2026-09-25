@@ -75,6 +75,33 @@ export function topologicalOrder(nodes) {
   return ordered;
 }
 
+export function topologicalWaves(nodes) {
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const remaining = new Set(nodes.map((node) => node.id));
+  const completed = new Set();
+  const waves = [];
+
+  while (remaining.size) {
+    const wave = [...remaining]
+      .filter((id) =>
+        (byId.get(id)?.depends_on || []).every((dependency) => completed.has(dependency))
+      )
+      .sort();
+
+    if (!wave.length) {
+      throw new Error('Formation dependency graph contains a cycle or unresolved dependency.');
+    }
+
+    waves.push(wave);
+    for (const id of wave) {
+      remaining.delete(id);
+      completed.add(id);
+    }
+  }
+
+  return waves;
+}
+
 export function planFormation({ request, rootDir = process.cwd() }) {
   if (!request || !Array.isArray(request.nodes) || request.nodes.length === 0) {
     throw new Error('Formation request must contain nodes.');
@@ -87,6 +114,7 @@ export function planFormation({ request, rootDir = process.cwd() }) {
 
   const registry = loadMultiplicationRegistry();
   const order = topologicalOrder(request.nodes);
+  const waves = topologicalWaves(request.nodes);
   const nodesById = new Map(request.nodes.map((node) => [node.id, node]));
 
   const planned = order.map((nodeId) => {
@@ -148,26 +176,35 @@ export function planFormation({ request, rootDir = process.cwd() }) {
     formation_id: safeId(request.formation_id || `formation-${Date.now()}`),
     generated_at: new Date().toISOString(),
     execution_order: order,
+    execution_waves: waves,
     nodes: planned
   };
 }
 
 export async function executeFormation({ formation, rootDir = process.cwd() }) {
   const receipts = [];
+  const receiptByNode = new Map();
   const byNode = new Map(formation.nodes.map((node) => [node.node_id, node]));
+  const waves = formation.execution_waves || topologicalWaves(
+    formation.nodes.map((node) => ({
+      id: node.node_id,
+      depends_on: node.depends_on || []
+    }))
+  );
 
-  for (const nodeId of formation.execution_order) {
+  async function executeNode(nodeId) {
     const node = byNode.get(nodeId);
-    const dependencyReceipts = receipts.filter((receipt) => node.depends_on.includes(receipt.node_id));
+    const dependencyReceipts = (node.depends_on || [])
+      .map((dependency) => receiptByNode.get(dependency))
+      .filter(Boolean);
     const blocked = dependencyReceipts.some((receipt) => receipt.status !== 'completed');
 
     if (blocked) {
-      receipts.push({
+      return {
         node_id: nodeId,
         software_id: node.plan.software_id,
         status: 'blocked_by_dependency'
-      });
-      continue;
+      };
     }
 
     const statePath = path.join(
@@ -215,20 +252,28 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
           ? 'completed_with_dead_letter'
           : 'completed';
 
-      receipts.push({
+      return {
         node_id: nodeId,
         software_id: node.plan.software_id,
         execution_mode: distributed ? 'nodeseed_pool' : 'local',
         status,
         receipt
-      });
+      };
     } catch (error) {
-      receipts.push({
+      return {
         node_id: nodeId,
         software_id: node.plan.software_id,
         status: 'failed',
         error: error instanceof Error ? error.message : String(error)
-      });
+      };
+    }
+  }
+
+  for (const wave of waves) {
+    const waveReceipts = await Promise.all(wave.map((nodeId) => executeNode(nodeId)));
+    for (const receipt of waveReceipts) {
+      receipts.push(receipt);
+      receiptByNode.set(receipt.node_id, receipt);
     }
   }
 
@@ -237,6 +282,7 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
     formation_id: formation.formation_id,
     generated_at: new Date().toISOString(),
     execution_order: formation.execution_order,
+    execution_waves: waves,
     nodes: receipts,
     summary: {
       total: receipts.length,
@@ -267,6 +313,7 @@ async function main() {
         generated_at: new Date().toISOString(),
         mode: 'plan_only',
         execution_order: formation.execution_order,
+        execution_waves: formation.execution_waves,
         nodes: formation.nodes.map((node) => ({
           node_id: node.node_id,
           software_id: node.plan.software_id,
