@@ -26,7 +26,8 @@
     "intent_router": "/api/discover?q={natural-language-problem}",
     "revenue_router": "/api/revenue-watershed",
     "schema": "/schema.jsonld",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "network": "/.well-known/evercraft-network.json"
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
