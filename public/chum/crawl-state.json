@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T18:31:05.179Z",
+  "updated_at": "2026-09-25T19:09:04.037Z",
   "url_count": 1767,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -122,8 +122,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "59cd0675dbcbadd8b05515b1965e9f43e7d5e87c0779775fe052736e85569c79",
-      "last_changed": "2026-09-25T18:31:05.179Z",
+      "content_sha256": "494bc4e82b76c02f40c7f868a7397f81126501d2e141d253f2225330e96991b1",
+      "last_changed": "2026-09-25T19:09:04.037Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
@@ -140,8 +140,8 @@
     },
     "/forensiscope/": {
       "path": "/forensiscope/",
-      "content_sha256": "93250a45332ccf9b983d1b4baea4ce418eef6b29542e36a7bbf2744dcd802681",
-      "last_changed": "2026-09-25T17:23:51.580Z",
+      "content_sha256": "634702c9a8e431ae2c86a50d0b7e286220fa1f9f82121e86d7e426dba15cda69",
+      "last_changed": "2026-09-25T19:09:03.844Z",
       "priority": 60
     },
     "/forensiscope/developers/": {
@@ -302,8 +302,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "b0f9da07b2aac04b982ff6a28809191ba422a55ed1ccf0ef4416783b84a2a582",
-      "last_changed": "2026-09-25T17:23:51.580Z",
+      "content_sha256": "ba67cecfc9d0e026a7735e5e0f543b691403302cf992ea92b903c035e5b4bfc5",
+      "last_changed": "2026-09-25T19:09:03.844Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
