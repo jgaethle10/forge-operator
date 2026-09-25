@@ -455,6 +455,7 @@ export async function startEvercraftComputeNode({
             state: {
               software_id: workerResult.software_id,
               agent_id: workerResult.agent_id,
+              idempotency_key: workerResult.idempotency_key || null,
               work: workerResult.work,
               result: workerResult.result,
             },
@@ -465,6 +466,7 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             software_id: workerResult.software_id,
             agent_id: workerResult.agent_id,
+            idempotency_key: workerResult.idempotency_key || null,
           });
           return send(res, 200, {
             ok: true,
