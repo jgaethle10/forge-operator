@@ -74,7 +74,7 @@ console.log(JSON.stringify({
   cargo_id: manifest.cargo_id,
   artifact_count: manifest.artifacts.length,
   receipt_id: delivered.receipt.receipt_id,
-  verified_internal_first_seven: true,
+  seven_artifact_contract_canary_passed: true,
   external_delivery_authority_preserved: true,
   mismatch_quarantines: true
 }, null, 2));
