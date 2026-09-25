@@ -2,9 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T07:08:03.584Z</updated>
+<updated>2026-09-25T11:50:39.649Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:c5910dc82ba7729311c550e0</id><title>/chum/revenue.json</title><updated>2026-09-25T11:50:39.649Z</updated><link href="/chum/revenue.json"/><category term="priority-90"/></entry>
+<entry><id>urn:evercraft:chum:612a4f1214eb03f297993cdf</id><title>/chum/revenue.txt</title><updated>2026-09-25T11:50:39.649Z</updated><link href="/chum/revenue.txt"/><category term="priority-90"/></entry>
 <entry><id>urn:evercraft:chum:a62f1d5d931a4d69ebe32bdc</id><title>/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:66d3519524cc291f001f5a53</id><title>/chum/answers/doors/15-gb-video-analysis-0f57ef2f90/</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/15-gb-video-analysis-0f57ef2f90/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:468b942d87576d83646646d7</id><title>/chum/answers/doors/4-hour-video-analysis-b25c640591.json</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/4-hour-video-analysis-b25c640591.json"/><category term="priority-100"/></entry>
@@ -103,6 +105,4 @@
 <entry><id>urn:evercraft:chum:15e6f46a441f4d1d92f91a67</id><title>/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00/</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:5ec9d7fc4d362bdaa0801abf</id><title>/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:5681e0e1259452cc0ba3b123</id><title>/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e/</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e/"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:7571fbcba58a2a31aa57f81e</id><title>/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:b3c9d6fd6cbc9b4b47a953ff</id><title>/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d/</title><updated>2026-09-25T07:08:03.584Z</updated><link href="/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d/"/><category term="priority-100"/></entry>
 </feed>
