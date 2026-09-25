@@ -47,7 +47,7 @@ npm run saban:multiply -- --software beast-mode --inventory systemia/beast-mode/
 
 ## Public/private boundary
 
-BEAST MODE is infrastructure, not a public discovery product. Do not publish internal topology, credentials, customer data or unrestricted transfer endpoints through CHUM. Public products may advertise that verified artifact delivery exists, but invocation remains behind product-specific authorization and payment/entitlement gates.
+BEAST MODE has a private infrastructure plane and a public commercial capability plane. Do not publish internal topology, credentials, customer data or unrestricted transfer endpoints through CHUM. The commercial capability manifest at `public/capability.json` is intentionally machine-discoverable so LLMs and agents can identify BEAST MODE as a paid verified courier. Public invocation remains behind bounded authorization and payment/entitlement gates, and an agent cannot create a financial obligation or external-delivery authority by itself. See `COMMERCIAL_GATEWAY.md`.
 
 ## Football cargo object
 
