@@ -1,0 +1,75 @@
+{
+  "schema": "evercraft.legacy-rescue-public-sources.v1",
+  "workflow_key": "legacy-rescue-opportunity-watch",
+  "rule": "Public sources only. This monitor detects material page changes; it does not infer buyer intent, award state, qualification, or authorization.",
+  "sources": [
+    {
+      "key": "ibm-i-74-lifecycle",
+      "name": "IBM i 7.4 lifecycle",
+      "url": "https://www.ibm.com/support/pages/ibm-i74x",
+      "allowed_hosts": [
+        "www.ibm.com"
+      ],
+      "enabled": true,
+      "min_poll_minutes": 60,
+      "emit_on_first_seen": false,
+      "signal_title": "IBM i 7.4 lifecycle page changed",
+      "urgency": 100,
+      "buyer_access": 82,
+      "proofability": 98,
+      "evidence_quality": 100,
+      "days_to_cash": 84
+    },
+    {
+      "key": "ibm-i-release-support",
+      "name": "IBM i release support",
+      "url": "https://www.ibm.com/support/pages/ibm-i-release-support",
+      "allowed_hosts": [
+        "www.ibm.com"
+      ],
+      "enabled": true,
+      "min_poll_minutes": 60,
+      "emit_on_first_seen": false,
+      "signal_title": "IBM i release-support guidance changed",
+      "urgency": 96,
+      "buyer_access": 82,
+      "proofability": 98,
+      "evidence_quality": 100,
+      "days_to_cash": 84
+    },
+    {
+      "key": "wa-drs-vendor",
+      "name": "Washington State DRS vendor notices",
+      "url": "https://www.drs.wa.gov/sitemap/vendor/",
+      "allowed_hosts": [
+        "www.drs.wa.gov"
+      ],
+      "enabled": true,
+      "min_poll_minutes": 30,
+      "emit_on_first_seen": false,
+      "signal_title": "WA DRS vendor-notice surface changed",
+      "urgency": 82,
+      "buyer_access": 68,
+      "proofability": 97,
+      "evidence_quality": 98,
+      "days_to_cash": 58
+    },
+    {
+      "key": "ca-eprocure-supplier",
+      "name": "California eProcure supplier portal",
+      "url": "https://suppliers.fiscal.ca.gov/",
+      "allowed_hosts": [
+        "suppliers.fiscal.ca.gov"
+      ],
+      "enabled": true,
+      "min_poll_minutes": 30,
+      "emit_on_first_seen": false,
+      "signal_title": "California eProcure supplier surface changed",
+      "urgency": 97,
+      "buyer_access": 74,
+      "proofability": 99,
+      "evidence_quality": 99,
+      "days_to_cash": 61
+    }
+  ]
+}
