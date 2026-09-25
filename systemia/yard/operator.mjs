@@ -854,6 +854,73 @@ export class YardOperator {
     return publicRoute;
   }
 
+  async issueRemotePairingPermit(deploymentId, {
+    nodeId,
+    authorizationRef,
+    expectedFingerprint = '',
+    ttlMs = 10 * 60_000,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (record.result?.pairing_enabled !== true) {
+      throw new Error('remote capacity broker pairing is not enabled');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const authRef = String(authorizationRef || '').trim();
+    if (!authRef) {
+      throw new Error('explicit trust-boundary authorization reference is required');
+    }
+
+    const issued = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-pairing-permit`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          node_id: String(nodeId || ''),
+          expected_fingerprint: String(expectedFingerprint || ''),
+          authorization_ref: authRef,
+          ttl_ms: ttlMs,
+        }),
+      }
+    );
+
+    const audit = {
+      node_id: issued.permit?.node_id || null,
+      expected_fingerprint: issued.permit?.expected_fingerprint || null,
+      expires_at: issued.permit?.expires_at || null,
+      permit_receipt_hash: issued.receipt?.receipt_hash || null,
+      authorization_ref_hash: `sha256:${sha(authRef)}`,
+      issued_at: new Date().toISOString(),
+    };
+    record.pairing = {
+      ...(record.pairing || {}),
+      last_permit: audit,
+    };
+    record.updated_at = audit.issued_at;
+    this.#persist(record);
+
+    return {
+      schema: 'evercraft.yard.remote-pairing-permit.v1',
+      broker_deployment_id: deploymentId,
+      permit_id: issued.permit?.permit_id || null,
+      permit_token: issued.permit?.permit_token || null,
+      node_id: issued.permit?.node_id || null,
+      expected_fingerprint: issued.permit?.expected_fingerprint || null,
+      expires_at: issued.permit?.expires_at || null,
+      single_use: true,
+      trust_boundary_authorized: true,
+      permit_receipt_hash: issued.receipt?.receipt_hash || null,
+    };
+  }
+
   async remoteCapacityGrant(deploymentId, nodeId, {
     allowLoopbackProof = false,
   } = {}) {

@@ -458,8 +458,11 @@ export async function startEvercraftComputeNode({
               ? body.input.authorized_devices
               : {};
           const entries = Object.entries(authorizedDevices);
-          if (entries.length === 0) {
-            return send(res, 422, { error: 'remote_broker_authorized_devices_required' });
+          const pairingEnabled = body.input?.pairing_enabled === true;
+          if (entries.length === 0 && !pairingEnabled) {
+            return send(res, 422, {
+              error: 'remote_broker_authorized_devices_or_pairing_required',
+            });
           }
           for (const [fingerprint, expectedNode] of entries) {
             if (!/^sha256:[a-f0-9]{64}$/i.test(String(fingerprint))) {
@@ -478,6 +481,10 @@ export async function startEvercraftComputeNode({
             port: Number(body.input?.port || 0),
             stateDir: stateRoot,
             authorizedDevices,
+            pairingEnabled,
+            pairingPermitTtlMs: Number(
+              body.input?.pairing_permit_ttl_ms || 10 * 60_000
+            ),
             challengeTtlMs: Number(body.input?.challenge_ttl_ms || 60_000),
             sessionTtlMs: Number(body.input?.session_ttl_ms || 30 * 60_000),
             commandTimeoutMs: Number(body.input?.command_timeout_ms || 15_000),
@@ -503,6 +510,7 @@ export async function startEvercraftComputeNode({
             public_health_path: '/v1/remote/health',
             instance_id: broker.instance_id,
             secure_envelope_schema: 'evercraft.secure-envelope.v1',
+            pairing_enabled: pairingEnabled,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
@@ -755,6 +763,54 @@ export async function startEvercraftComputeNode({
             workload_class: entry.workload_class,
             remote_node_id: grant.node_id,
             device_fingerprint: grant.device_fingerprint,
+          }),
+        });
+      }
+
+      const remotePairingPermit = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-pairing-permit$/
+      );
+      if (req.method === 'POST' && remotePairingPermit) {
+        const entry = services.get(remotePairingPermit[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_pairing_permit_not_supported' });
+        }
+        const authorizationRef = String(body.authorization_ref || '').trim();
+        if (!authorizationRef) {
+          return send(res, 422, { error: 'pairing_authorization_ref_required' });
+        }
+
+        let permit;
+        try {
+          permit = entry.runtime.issuePairingPermit({
+            nodeId: String(body.node_id || ''),
+            authorizationRef,
+            expectedFingerprint: String(body.expected_fingerprint || ''),
+            ttlMs: Number(body.ttl_ms || 10 * 60_000),
+          });
+        } catch (error) {
+          return send(res, 422, {
+            error: String(error?.message || error),
+          });
+        }
+
+        return send(res, 200, {
+          ok: true,
+          permit,
+          receipt: chain.issue('remote-capacity.pairing-permit.issued', {
+            service_id: remotePairingPermit[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            remote_node_id: permit.node_id,
+            expected_fingerprint: permit.expected_fingerprint,
+            expires_at: permit.expires_at,
+            authorization_ref_hash: `sha256:${sha(authorizationRef)}`,
           }),
         });
       }
