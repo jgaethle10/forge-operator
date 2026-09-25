@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "systemia-core-private-origin",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "capacity_protocol": "evercraft.capacity.v1",
+  "workload_class": "systemia.private-core-origin.v1",
+  "provider_policy": {
+    "named_cloud_dependency": false,
+    "provider_specific_adapter_required": false,
+    "allocation": "legitimately_granted_runtime_capacity",
+    "silent_fallback": false
+  },
+  "source_boundary": {
+    "public_bootstrap_code": "forge-operator",
+    "private_core_source": "never_in_public_repo"
+  },
+  "security": {
+    "arbitrary_shell": false,
+    "workload_allowlist": true,
+    "lease_required": true,
+    "filesystem_root_bounded": true,
+    "receipt_required": true
+  },
+  "acceptance": [
+    "capacity_offer_verified",
+    "lease_granted",
+    "private_origin_created",
+    "git_hardening_verified",
+    "path_escape_rejected",
+    "arbitrary_workload_rejected",
+    "workload_receipt_issued"
+  ]
+}

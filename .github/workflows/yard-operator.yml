@@ -1,0 +1,29 @@
+name: Yard Operator proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/yard/**'
+      - 'systemia/compute/**'
+      - 'systemia/core/bootstrap/**'
+      - '.github/workflows/yard-operator.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/yard/**'
+      - 'systemia/compute/**'
+      - 'systemia/core/bootstrap/**'
+      - '.github/workflows/yard-operator.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Yard Operator over Evercraft Compute
+        run: node systemia/yard/proof.mjs
