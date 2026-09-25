@@ -156,6 +156,15 @@ async function inspectNode(endpoint, options = {}) {
   };
 }
 
+function desiredLeaseTtlMs(options = {}) {
+  const requested = Number(options.requestedTtlMs || 300000);
+  const assignmentWindow = Math.max(
+    30000,
+    Number(options.assignmentTimeoutMs || 120000)
+  );
+  return Math.max(requested, assignmentWindow * 2 + 30000);
+}
+
 async function leaseNode(node, options = {}) {
   const token = tokenFor(node.endpoint, options);
   const headers = token ? { authorization: `Bearer ${token}` } : {};
@@ -166,7 +175,7 @@ async function leaseNode(node, options = {}) {
       headers,
       body: JSON.stringify({
         workload_class: 'saban.multiplier-assignment.v1',
-        requested_ttl_ms: Number(options.requestedTtlMs || 300000)
+        requested_ttl_ms: desiredLeaseTtlMs(options)
       })
     },
     options.timeoutMs || 5000
@@ -191,7 +200,7 @@ async function renewNode(node, options = {}) {
       method: 'POST',
       body: JSON.stringify({
         token: node.lease_token,
-        requested_ttl_ms: Number(options.requestedTtlMs || 300000)
+        requested_ttl_ms: desiredLeaseTtlMs(options)
       })
     },
     options.timeoutMs || 3000
@@ -597,16 +606,18 @@ export async function runNodeSeedAssignmentPool({
   const executionNodes = placementRing;
   const pickExecutionNode = (cursorValue) => pickNode(executionNodes, cursorValue);
 
-  await Promise.all(
-    Array.from({ length: workerCount }, (_, index) => worker(index, pickExecutionNode))
-  );
+  try {
+    await Promise.all(
+      Array.from({ length: workerCount }, (_, index) => worker(index, pickExecutionNode))
+    );
+  } finally {
+    renewalsStopped = true;
+    for (const timer of renewalTimers) clearInterval(timer);
 
-  renewalsStopped = true;
-  for (const timer of renewalTimers) clearInterval(timer);
-
-  await Promise.allSettled(
-    leased.map((node) => releaseNode(node, leaseOptions))
-  );
+    await Promise.allSettled(
+      leased.map((node) => releaseNode(node, leaseOptions))
+    );
+  }
 
   const completed = results.filter((row) => row?.status === 'completed');
   const failovers = completed.filter((row) => row.failover);
