@@ -212,7 +212,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 function requestOrigin(req: Request): string {
-  const configured = String(process.env.PUBLIC_BASE_URL || '').trim();
+  const configured = String(process.env.CHUM_PUBLIC_ORIGIN || process.env.PUBLIC_BASE_URL || '').trim();
   if (configured) {
     try {
       const parsed = new URL(configured);
