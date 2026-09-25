@@ -1,0 +1,29 @@
+name: AliEV intelligence spine proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/aliev/**'
+      - 'systemia/beast-mode/**'
+      - 'package.json'
+      - '.github/workflows/aliev-intelligence-spine.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/aliev/**'
+      - 'systemia/beast-mode/**'
+      - 'package.json'
+      - '.github/workflows/aliev-intelligence-spine.yml'
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run proof:aliev-spine
+      - run: npm run proof:beast-mode
