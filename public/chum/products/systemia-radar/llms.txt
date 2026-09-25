@@ -21,6 +21,9 @@ public free website scan and paid competitive-monitoring offer discovery; paid a
 ## Commercial state
 
 - Status: source_checkout_wired_live_verification_pending
+- Offer: Free website scan · $0 per scan
+- Offer: Radar Pro Monthly · $29/month
+- Offer: Radar Pro Yearly · $290/year
 - Payment state: Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified
 
 ## Boundaries

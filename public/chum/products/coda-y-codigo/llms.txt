@@ -22,6 +22,11 @@ public course and offer discovery with authenticated enrollment; training access
 ## Commercial state
 
 - Status: source_commerce_wired
+- Offer: Single course · From $19
+- Offer: Role tracks · From $79
+- Offer: All-courses bundle · $149
+- Offer: Employer bundles · From $399
+- Offer: Seat capacity packages · From $249
 - Payment state: Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation
 
 ## Boundaries

@@ -20,6 +20,8 @@ public offer discovery, free anonymous message submission and human-confirmed pa
 ## Commercial state
 
 - Status: payment_runtime_verified
+- Offer: Anonymous message submission · Free
+- Offer: Reveal one selected locked message · $0.99 one-time
 - Payment state: Explicit user confirmation and authoritative completed-payment verification required before reveal
 
 ## Boundaries

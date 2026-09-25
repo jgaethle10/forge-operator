@@ -21,6 +21,9 @@ public offer discovery and human-confirmed one-run purchase; entitlement exists 
 ## Commercial state
 
 - Status: payment_runtime_verified
+- Offer: Quick Decision · $0.99 one-time
+- Offer: Full Optimization · $2.99 one-time
+- Offer: Game-Day Command Brief · $4.99 one-time
 - Payment state: Explicit user confirmation and authoritative completed-payment verification required
 
 ## Boundaries
