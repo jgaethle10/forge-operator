@@ -98,5 +98,11 @@
     "clients": "/forensiscope/developers/clients/",
     "vscode": "/forensiscope/developers/clients/vscode.html",
     "claude_api": "/forensiscope/developers/clients/claude-api.html"
+  },
+  "editorial": {
+    "hub": "/forensiscope/editorial/",
+    "index": "/forensiscope/editorial/index.json",
+    "rss": "/forensiscope/editorial/feed.xml",
+    "social_pack": "/forensiscope/editorial/social-pack.json"
   }
 }
