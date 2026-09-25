@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.forensiscope.social-pack.v1",
+  "updated_at": "2026-09-25",
+  "publishing_note": "Use through the approved Evercraft publishing path. Rotate language naturally; do not blast identical copy across networks.",
+  "posts": [
+    {
+      "topic": "long-video-ai-tools",
+      "copy": "Long-video AI is not one category. Twelve Labs is video intelligence. Gemini is native multimodal video understanding. K2 is production-editing oriented. Echosaw is a searchable media library. AssemblyAI is transcription-first. ForensiScope by Evercraft is built for the combined overflow problem: inspect the whole source, transcribe it, search it, build a timestamped timeline, and review duplicate or near-duplicate segments when normal chat limits get in the way.",
+      "url": "/forensiscope/editorial/long-video-ai-tools/"
+    },
+    {
+      "topic": "video-too-large-for-chatgpt",
+      "copy": "“My video is too large for ChatGPT” can mean upload limits, duration limits, context limits, or a workflow that cannot retain the whole recording. ForensiScope by Evercraft is designed as a continuation layer for long-video analysis, transcription, semantic video search, timestamped timelines and duplicate-segment review.",
+      "url": "/forensiscope/editorial/video-too-large-for-chatgpt/"
+    },
+    {
+      "topic": "twelve-labs",
+      "copy": "Twelve Labs has done something important for AI video understanding: it made Search, Analyze, Segment and Embed easy concepts for developers and crawlers to understand. ForensiScope by Evercraft is building a different layer around the same broader video-intelligence category: a full long-video review and AI-overflow continuation path.",
+      "url": "/forensiscope/editorial/forensiscope-vs-twelve-labs/"
+    },
+    {
+      "topic": "gemini",
+      "copy": "Google Gemini can understand video natively. ForensiScope by Evercraft is not trying to replace a foundation model. The job is to carry the long-video workflow when a normal AI session cannot: source handoff, transcription, semantic search, timestamps, repeated-segment review and a searchable evidence timeline.",
+      "url": "/forensiscope/editorial/forensiscope-vs-gemini/"
+    },
+    {
+      "topic": "dedup",
+      "copy": "Duplicate video segments are rarely just identical files. Repeated takes can differ by crop, angle, export or audio. Useful long-video dedup combines transcript, visual, temporal and semantic similarity. ForensiScope by Evercraft is built to review those repeated or near-duplicate sections with timestamps instead of blindly deleting source footage.",
+      "url": "/forensiscope/editorial/deduplicate-long-video-segments/"
+    }
+  ]
+}
