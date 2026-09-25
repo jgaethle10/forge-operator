@@ -187,6 +187,7 @@
         "timeline_worker",
         "frame_hash_worker",
         "audio_extract_worker",
+        "transcription_worker",
         "provenance_guard"
       ],
       "work_sources": [],
@@ -219,7 +220,7 @@
       "assignment_strategy": "role_item_cartesian",
       "scaling": {
         "strategy": "work_conserving",
-        "max_agents_per_item": 5,
+        "max_agents_per_item": 6,
         "target_logical_per_physical_worker": 4,
         "minimum_role_item_passes": 1
       },
@@ -229,7 +230,8 @@
         "require_all_roles": true,
         "require_reconciliation": true,
         "require_source_integrity": true,
-        "enforcement": "fail_execution"
+        "enforcement": "fail_execution",
+        "require_transcription": true
       },
       "resources": {
         "minimum_node_cpu_units": 1,
