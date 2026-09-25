@@ -241,6 +241,14 @@
           "ffmpeg",
           "ffprobe"
         ]
+      },
+      "transport": {
+        "type": "nodeseed_content_addressed_source",
+        "stage_authorized_sources": true,
+        "lease_scoped": true,
+        "hash_algorithm": "sha256",
+        "source_path_forwarding": false,
+        "cleanup_on_lease_end": true
       }
     }
   ]
