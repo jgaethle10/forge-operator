@@ -1,0 +1,116 @@
+{
+  "schema": "evercraft.systemia.drive-recovery-slice.v1",
+  "product": "RIVET",
+  "source_class": "canonical_data_ledger_and_recovery_index",
+  "recovery_state": "data_semantics_and_durability_contract_recovered_pending_source_and_restore_parity",
+  "canonical_data_principles": {
+    "missing_is_never_zero": true,
+    "evidence_order": [
+      "observed_verified",
+      "authorized_operator",
+      "public_proxy",
+      "modeled_estimated",
+      "not_observable_with_proxy"
+    ],
+    "semantic_isolation": [
+      "stock",
+      "new_registrations",
+      "charging_usage_aggregate",
+      "infrastructure_inventory",
+      "live_availability",
+      "tariffs",
+      "modeled_estimates",
+      "indicators"
+    ]
+  },
+  "semantic_rules": [
+    "registration_flow_must_not_be_reinterpreted_as_stock",
+    "point_in_time_stock_must_not_be_reinterpreted_as_flow",
+    "aggregate_usage_must_not_be_reinterpreted_as_individual_sessions",
+    "missing_source_rows_remain_null_or_not_reported",
+    "hybrid_must_not_be_reclassified_as_plugin_hybrid_without_source_evidence",
+    "registration_share_must_not_be_converted_into_stock",
+    "static_infrastructure_inventory_and_live_status_are_separate_evidence_layers",
+    "tariffs_are_separate_from_inventory_and_availability",
+    "capped_time_series_reads_sort_newest_first_and_disclose_the_cap"
+  ],
+  "persistence_contract": {
+    "primary": "named_rivet_entities_or_equivalent_canonical_datastores_with_provenance_and_semantic_type",
+    "drive_role": "redundant_historical_ledger_and_snapshot_source",
+    "github_role": "schemas_adapters_tests_migration_logic_and_release_history",
+    "rule": "chat_or_agent_narration_is_never_canonical_data_storage"
+  },
+  "source_lineage_required": [
+    "source_name",
+    "source_url_or_public_reference",
+    "license_or_reuse_terms",
+    "reference_period",
+    "geography",
+    "semantic_type",
+    "confidence_or_evidence_state",
+    "known_exclusions_or_scope_limits"
+  ],
+  "durability_gate": {
+    "required": [
+      "raw_snapshot_or_export_mechanism",
+      "critical_schema_export",
+      "clean_rebuild",
+      "restore_from_canonical_artifacts",
+      "record_count_or_checksum_reconciliation",
+      "semantic_invariant_checks",
+      "runtime_query_acceptance",
+      "rollback_target"
+    ],
+    "rule": "do_not_claim_data_cannot_be_lost_until_a_clean_restore_test_passes"
+  },
+  "productization_gate": [
+    "customer_facing_experience_exposes_recovered_data",
+    "freshness_is_visible",
+    "provenance_is_visible",
+    "drilldown_is_available_where_supported",
+    "comparison_does_not_mix_incompatible_semantics",
+    "mobile_and_speed_qa_pass",
+    "runtime_acceptance_is_distinct_from_build_success"
+  ],
+  "source_registry_classes": [
+    "official_government_statistics",
+    "official_transport_and_infrastructure_data",
+    "official_open_data_catalogs",
+    "licensed_public_aggregates"
+  ],
+  "privacy_and_public_repo_boundary": {
+    "never_commit": [
+      "customer_or_site_private_rows",
+      "private_drive_locators",
+      "credentials",
+      "provider_secrets",
+      "private_internal_topology"
+    ],
+    "safe_to_commit": [
+      "schemas",
+      "semantic_contracts",
+      "source_adapter_code",
+      "tests",
+      "fixtures_without_private_rows",
+      "migration_and_restore_logic"
+    ]
+  },
+  "acceptance": [
+    "semantic_types_survive_migration_without_coercion",
+    "missing_values_do_not_turn_into_zero",
+    "source_lineage_survives_export_and_restore",
+    "static_and_dynamic_charging_layers_remain_separate",
+    "response_caps_and_partial_coverage_are_explicit",
+    "clean_restore_reconciles_against_expected_counts_or_checksums",
+    "customer_facing_queries_are_live_verified_after_restore",
+    "no_world_class_or_durability_certification_until_all_named_gates_pass"
+  ],
+  "not_recovered_yet": [
+    "full_raw_data_snapshots",
+    "production_rows",
+    "provider_credentials",
+    "complete_restore_automation",
+    "clean_restore_receipt",
+    "live_post_restore_product_acceptance"
+  ]
+}
