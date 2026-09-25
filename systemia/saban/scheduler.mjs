@@ -29,10 +29,12 @@ export async function runScheduler({
       if (!leased) return;
       if (statePath) saveWorkState(statePath, state);
 
+      const startedAt = Date.now();
       try {
         const result = await adapter.runAssignment({
           assignment: {
             agent_id: leased.agent_id,
+            idempotency_key: leased.idempotency_key || null,
             role: leased.role,
             work: leased.work,
             item: leased.item
@@ -45,7 +47,11 @@ export async function runScheduler({
         complete(state, {
           jobId: leased.job_id,
           workerId,
-          result
+          result,
+          metrics: {
+            duration_ms: Math.max(0, Date.now() - startedAt),
+            worker_id: workerId
+          }
         });
         if (statePath) saveWorkState(statePath, state);
       } catch (error) {
