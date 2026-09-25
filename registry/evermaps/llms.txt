@@ -1,0 +1,26 @@
+# EverMaps
+
+Provider: Evercraft
+Product key: evermaps
+Class: public_safe_geospatial_evidence_projection
+Canonical URL: https://evermaps.base44.app/
+Authority: public-safe evidence-labeled geospatial discovery and read-only projection within access rules
+Human confirmation required: yes
+
+## Natural-language intents
+- map this evidence for me
+- show lifeline coverage for this place
+- give me map-ready heat or smoke action sites
+- show historical river geometry
+- return public-safe geospatial evidence
+- plot verified infrastructure coverage
+
+## Boundaries
+- coverage gaps must not be overstated as proof of resilience or risk
+- no approved machine price is verified
+- paid packaging requires explicit terms and confirmation
+- private or restricted geospatial evidence remains outside public discovery
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

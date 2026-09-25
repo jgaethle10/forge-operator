@@ -1,0 +1,48 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Christmas Lights USA",
+  "product_key": "christmas-lights-usa",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "Christmas Lights USA is a marketplace and project-intake platform, not the contractor performing installation",
+    "planning estimates are guidance rather than contractor bids or guaranteed final prices",
+    "installer availability varies by market and season",
+    "homeowner project submission is free and creates no obligation to hire",
+    "private customer, installer, admin, payment-session and lead-contact data are not public"
+  ],
+  "commercial": {
+    "status": "public_marketplace_offer",
+    "offers": [
+      {
+        "name": "Homeowner planning estimator",
+        "price": "Free"
+      },
+      {
+        "name": "Homeowner project request",
+        "price": "Free"
+      },
+      {
+        "name": "Installer lead unlock",
+        "price": "$50 per selected lead when available"
+      }
+    ],
+    "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}

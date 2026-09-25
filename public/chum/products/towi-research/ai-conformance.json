@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "TOWI Evidence-Controlled Research Brief",
+  "product_key": "towi-research",
+  "aliases": [
+    "TOWI",
+    "TOWI AI"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no approved fixed machine price is verified",
+    "research scoping creates no payment obligation",
+    "consequential-domain deliverables retain existing human review gates",
+    "provenance, contradictions and uncertainty must remain visible"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

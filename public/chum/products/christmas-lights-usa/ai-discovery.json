@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "christmas-lights-usa",
+  "name": "Christmas Lights USA",
+  "aliases": [],
+  "class": "holiday_lighting_marketplace_and_project_planning",
+  "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+  "intents": [
+    "estimate a professional Christmas light project",
+    "find holiday light installers near me",
+    "submit a Christmas light installation request",
+    "join a holiday lighting installer marketplace",
+    "buy a Christmas light installation lead",
+    "plan professional holiday lighting for my property"
+  ],
+  "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "Christmas Lights USA is a marketplace and project-intake platform, not the contractor performing installation",
+    "planning estimates are guidance rather than contractor bids or guaranteed final prices",
+    "installer availability varies by market and season",
+    "homeowner project submission is free and creates no obligation to hire",
+    "private customer, installer, admin, payment-session and lead-contact data are not public"
+  ],
+  "commercial": {
+    "status": "public_marketplace_offer",
+    "offers": [
+      {
+        "name": "Homeowner planning estimator",
+        "price": "Free"
+      },
+      {
+        "name": "Homeowner project request",
+        "price": "Free"
+      },
+      {
+        "name": "Installer lead unlock",
+        "price": "$50 per selected lead when available"
+      }
+    ],
+    "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
+  },
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-conformance.json",
+    "page": "/chum/products/christmas-lights-usa/"
+  }
+}

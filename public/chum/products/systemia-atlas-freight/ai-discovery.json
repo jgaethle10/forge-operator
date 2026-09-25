@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "systemia-atlas-freight",
+  "name": "Systemia Atlas Freight Load Exception Intelligence",
+  "aliases": [
+    "Systemia Atlas"
+  ],
+  "class": "freight_load_exception_and_document_intelligence",
+  "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+  "intents": [
+    "what is wrong with this load",
+    "audit this freight load for exceptions",
+    "check this carrier and load paperwork",
+    "find missing POD or rate mismatches",
+    "summarize freight risk on this shipment",
+    "what recoverable charges or detention issues exist"
+  ],
+  "authority": "public discovery of read-only freight exception intelligence within authorized organization scope",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no approved machine price or payment path is verified",
+    "analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action",
+    "financial impact is reported only when supported by recorded evidence",
+    "organization-scoped or private freight records remain access controlled"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-conformance.json",
+    "page": "/chum/products/systemia-atlas-freight/"
+  }
+}

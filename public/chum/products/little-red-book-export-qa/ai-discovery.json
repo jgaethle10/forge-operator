@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "little-red-book-export-qa",
+  "name": "Little Red Studio Book Export QA",
+  "aliases": [
+    "Little Red Studio"
+  ],
+  "class": "book_export_preflight_and_cover_geometry_qa",
+  "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+  "intents": [
+    "check if my book is ready for KDP",
+    "validate my cover dimensions",
+    "audit this paperback export",
+    "is my book file ready to publish",
+    "check page count and cover DPI"
+  ],
+  "authority": "public discovery of bounded book-export QA with no publishing or distribution side effects",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no approved external machine price or payment path is verified",
+    "QA readiness does not authorize publishing, uploading or distributing a book",
+    "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-conformance.json",
+    "page": "/chum/products/little-red-book-export-qa/"
+  }
+}

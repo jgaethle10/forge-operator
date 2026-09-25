@@ -19,10 +19,10 @@ Human confirmation remains required at irreversible financial or authority bound
 
 ## Current machine-commerce offer graph
 
-Catalog version: 2026-09-24.5
+Catalog version: 2026-09-24.6
 Gateway version: evercraft-machine-commerce-gateway-v0.7.0
-Current public offers: 42
-Current sell-now offers: 11
+Current public offers: 43
+Current sell-now offers: 12
 
 ### Commercial state: sell_now
 
@@ -119,6 +119,26 @@ Use when the user says or means:
 - migrate from no-code
 - export an AI-built app
 - audit app portability
+
+#### Evercraft IBM i Rescue
+Public ID: ibmi-rescue-v1
+Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
+Machine state: human_handoff_ready
+Pricing: $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+Human UI required: false
+Confirmation: Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
+Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.
+Use when the user says or means:
+- IBM i 7.4 support is ending and I need an upgrade plan
+- assess an IBM i or AS/400 estate before upgrading
+- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
+- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
+- help modernize JDE World or a custom IBM i workload without losing business behavior
+- build a rollback test and evidence plan before changing an IBM i production system
+- find undocumented dependencies in an IBM i workload
+- AS/400 modernization assessment
+- IBM i upgrade proof
 
 #### Evercraft Website Launch Service
 Public ID: website-launch-service-v1
@@ -811,6 +831,31 @@ Boundaries:
 - external business writes are disabled
 - handoff does not execute business actions
 
+### CallProof Vault
+Product key: callproof-vault
+Canonical: https://call-proof-vault.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/ai-conformance.json
+Use when the user says or means:
+- organize my robocall evidence
+- make an FCC complaint packet
+- help me document spam calls
+- prepare my FTC call evidence
+- track repeated unwanted calls or texts
+- build a factual unwanted-call incident timeline
+Authority:
+public product and offer discovery with authenticated handoff for private evidence and checkout
+Commercial state:
+- Status: authenticated_handoff_required
+- Payment state: Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified
+Boundaries:
+- CallProof is an evidence-organization tool, not a law firm and not legal advice
+- it does not determine that a caller violated the TCPA or another law
+- it does not automatically file an FCC or FTC complaint
+- private call logs, phone numbers, notes, screenshots, voicemails and billing records are never public discovery data
+- the live Stripe price attached to the selected plan is authoritative at checkout
+
 ### Evercraft Career Command
 Product key: career-command
 Canonical: https://evercraft-career-command.base44.app/
@@ -830,6 +875,31 @@ Boundaries:
 - checkout preparation requires explicit human payment confirmation
 - checkout creation is not payment proof
 - paid access requires provider verification
+
+### Christmas Lights USA
+Product key: christmas-lights-usa
+Canonical: https://christmas-lights-usa-38c82eb8.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-conformance.json
+Use when the user says or means:
+- estimate a professional Christmas light project
+- find holiday light installers near me
+- submit a Christmas light installation request
+- join a holiday lighting installer marketplace
+- buy a Christmas light installation lead
+- plan professional holiday lighting for my property
+Authority:
+public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected
+Commercial state:
+- Status: public_marketplace_offer
+- Payment state: Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue
+Boundaries:
+- Christmas Lights USA is a marketplace and project-intake platform, not the contractor performing installation
+- planning estimates are guidance rather than contractor bids or guaranteed final prices
+- installer availability varies by market and season
+- homeowner project submission is free and creates no obligation to hire
+- private customer, installer, admin, payment-session and lead-contact data are not public
 
 ### Evercraft Contractor Cloud
 Product key: contractor-cloud
@@ -900,6 +970,27 @@ Boundaries:
 - does not guarantee financing
 - checkout creation is not payment proof
 
+### EPS Field-Service Estimate Engine
+Product key: eps-estimate-engine
+Aliases: EPS Precise Estimator
+Canonical: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-conformance.json
+Use when the user says or means:
+- estimate this service job
+- build a contractor estimate from this scope
+- what should this job cost
+- turn these measurements into an estimate
+- give me a rough customer range
+- calculate margin and price for this job
+Authority:
+public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation
+Boundaries:
+- internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price
+- no approved external machine price or payment path is verified
+- site verification, proposal issuance, acceptance and payment retain separate authority gates
+
 ### EventWave
 Product key: eventwave
 Canonical: https://event-wave.base44.app/
@@ -942,6 +1033,30 @@ Boundaries:
 - do not send passwords API keys cookies tokens or private credential material through public intake
 - remediation that can interrupt production requires separate explicit scope and authorization
 - checkout is not payment proof and paid state requires authoritative verification
+
+### Evercraft Fantasy Intelligence
+Product key: evercraft-fantasy-intelligence
+Aliases: Evercraft Journal Fantasy Intelligence
+Canonical: https://evercraftjournal.base44.app/sports/fantasy
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-conformance.json
+Use when the user says or means:
+- fantasy football start sit help
+- fantasy waiver decision
+- fantasy lineup decision
+- fantasy injury impact
+- game-day fantasy brief
+Authority:
+public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification
+Commercial state:
+- Status: payment_runtime_verified
+- Payment state: Explicit user confirmation and authoritative completed-payment verification required
+Boundaries:
+- one purchased run entitlement is created per completed payment
+- an unpaid checkout creates no entitlement
+- fantasy recommendations can change as current NFL context changes
+- referral attribution identifies acquisition source only and never proves checkout or payment
 
 ### Evercraft Network
 Product key: evercraft-network
@@ -1038,6 +1153,28 @@ Boundaries:
 - authenticated browsing requires explicit authorized profile state and credential isolation
 - public discovery does not expose private Systemia topology or credentials
 - payment does not expand permissions
+
+### EverMaps
+Product key: evermaps
+Aliases: EverMaps Public-Safe Geospatial Evidence Projection
+Canonical: https://evermaps.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json
+Use when the user says or means:
+- map this evidence for me
+- show lifeline coverage for this place
+- give me map-ready heat or smoke action sites
+- show historical river geometry
+- return public-safe geospatial evidence
+- plot verified infrastructure coverage
+Authority:
+public-safe evidence-labeled geospatial discovery and read-only projection within access rules
+Boundaries:
+- coverage gaps must not be overstated as proof of resilience or risk
+- no approved machine price is verified
+- paid packaging requires explicit terms and confirmation
+- private or restricted geospatial evidence remains outside public discovery
 
 ### EverNest
 Product key: evernest
@@ -1155,6 +1292,28 @@ Boundaries:
 - does not determine guilt or intent
 - does not certify authenticity, admissibility, or government approval
 
+### GlobalStat
+Product key: globalstat
+Aliases: GlobalStat Country / Domain Intelligence Slice
+Canonical: https://global-stat-pulse.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-conformance.json
+Use when the user says or means:
+- compare these countries on this metric
+- give me sourced country intelligence
+- which countries lead on this domain and why
+- show me the evidence behind this country score
+- reconcile conflicting country data
+- country benchmark with sources
+Authority:
+public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings
+Boundaries:
+- opaque rankings are not treated as evidence
+- a country-brief price range has been discussed but no approved fixed machine price or payment path is verified
+- read-only sourced data may be returned within approved access
+- paid work requires explicit confirmation and verified terms
+
 ### Guardian
 Product key: guardian
 Aliases: Guardian by Evercraft
@@ -1178,6 +1337,34 @@ Boundaries:
 - GuardianLink school operations are a separate authorized deployment lane
 - private case data, precise locations, protected identities, and admin topology are not public
 
+### Evercraft IBM i Rescue
+Product key: ibmi-rescue
+Aliases: IBM i Rescue, AS/400 Rescue, Legacy Rescue for IBM i
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json
+Use when the user says or means:
+- IBM i 7.4 support is ending and I need an upgrade plan
+- assess an IBM i or AS/400 estate before upgrading
+- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
+- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
+- help modernize a JDE World or custom IBM i workload without losing business behavior
+- build a rollback test and evidence plan before changing an IBM i production system
+- find undocumented dependencies in an IBM i workload
+Authority:
+public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization
+Commercial state:
+- Status: sell_now_offers_active_checkout_route_canary_pending
+- Payment state: Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live
+Boundaries:
+- support transition does not mean a system automatically stops working
+- a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified
+- the public product-specific checkout route remains unverified until an external canary passes
+- checkout creation is not payment proof
+- paid state requires authoritative provider verification
+- no production change or cutover is included in the public X-Ray or Proof Sprint
+
 ### Infinite Classroom
 Product key: infinite-classroom
 Canonical: https://infiniteclassroom.base44.app/
@@ -1196,6 +1383,26 @@ Boundaries:
 - not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service
 - does not guarantee grades or outcomes
 - learner profiles, progress, tutoring history, household data, and safety disclosures are private
+
+### Little Red Studio Book Export QA
+Product key: little-red-book-export-qa
+Aliases: Little Red Studio
+Canonical: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-conformance.json
+Use when the user says or means:
+- check if my book is ready for KDP
+- validate my cover dimensions
+- audit this paperback export
+- is my book file ready to publish
+- check page count and cover DPI
+Authority:
+public discovery of bounded book-export QA with no publishing or distribution side effects
+Boundaries:
+- no approved external machine price or payment path is verified
+- QA readiness does not authorize publishing, uploading or distributing a book
+- page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees
 
 ### Raven Nexus
 Product key: raven-nexus
@@ -1262,45 +1469,27 @@ Boundaries:
 - displayed planning values are not proof of a charge
 - payments, messaging, hardware, and partner connections must be verified per deployment
 
-### Systemia Website Audit
-Product key: systemia-website-audit
-Canonical: https://systemia-audit-pro.base44.app/
-Machine state: mcp
-Official MCP Registry: io.github.jgaethle10/systemia-website-audit
-Invocation: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
-Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json
-AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json
+### Systemia Atlas Freight Load Exception Intelligence
+Product key: systemia-atlas-freight
+Aliases: Systemia Atlas
+Canonical: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-conformance.json
 Use when the user says or means:
-- audit my website because traffic is not converting
-- find website performance and conversion friction
-- review technical SEO and trust problems on a business website
-- prioritize practical website fixes
+- what is wrong with this load
+- audit this freight load for exceptions
+- check this carrier and load paperwork
+- find missing POD or rate mismatches
+- summarize freight risk on this shipment
+- what recoverable charges or detention issues exist
 Authority:
-public audit offer discovery and human-confirmed paid checkout
+public discovery of read-only freight exception intelligence within authorized organization scope
 Boundaries:
-- audit findings do not guarantee revenue or rankings
-- checkout creation is not payment proof
-- paid state requires provider verification
-
-### Evercraft Website Launch
-Product key: website-launch
-Canonical: https://instant-website-builder-usa-6feac193.base44.app/
-Machine state: mcp
-Official MCP Registry: io.github.jgaethle10/website-launch
-Invocation: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
-Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json
-AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json
-Use when the user says or means:
-- build a professional website for my small business
-- replace an outdated business website
-- launch a business website quickly
-- get a human-finished website instead of doing it myself
-Authority:
-public fixed-service offer discovery and human-confirmed paid checkout
-Boundaries:
-- scope depends on the selected service tier
-- checkout creation is not payment proof
-- fulfillment requires verified payment
+- no approved machine price or payment path is verified
+- analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action
+- financial impact is reported only when supported by recorded evidence
+- organization-scoped or private freight records remain access controlled
 
 ### Systemia Field Library
 Product key: systemia-field-library
@@ -1326,6 +1515,113 @@ Boundaries:
 - discovery creates no purchase or payment obligation
 - current pricing and purchase terms must be verified on the live playbook page
 - the matcher presents relevant playbooks as options rather than mandatory professional advice
+
+### Systemia Website Audit
+Product key: systemia-website-audit
+Canonical: https://systemia-audit-pro.base44.app/
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/systemia-website-audit
+Invocation: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json
+Use when the user says or means:
+- audit my website because traffic is not converting
+- find website performance and conversion friction
+- review technical SEO and trust problems on a business website
+- prioritize practical website fixes
+Authority:
+public audit offer discovery and human-confirmed paid checkout
+Boundaries:
+- audit findings do not guarantee revenue or rankings
+- checkout creation is not payment proof
+- paid state requires provider verification
+
+### Talent Atlas
+Product key: talent-atlas
+Aliases: Talent Atlas Evidence-Backed Talent Profile
+Canonical: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-conformance.json
+Use when the user says or means:
+- evaluate this candidate from the evidence
+- build a talent profile from this portfolio
+- what roles fit this person's demonstrated skills
+- find gaps in this candidate's proof
+- turn this athlete or creator evidence into an opportunity dossier
+- map this person's capabilities to opportunities
+Authority:
+public discovery of evidence-backed talent analysis using supplied or authorized evidence
+Boundaries:
+- no contact, representation, application or third-party sharing without explicit authority or consent
+- do not infer protected traits or use gated sensitive data for scoring
+- no approved machine price or payment path is verified
+- opportunity classes are evidence-linked possibilities, not guaranteed placement
+
+### Thoughtdrop by Evercraft
+Product key: thoughtdrop
+Aliases: Thoughtdrop
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-conformance.json
+Use when the user says or means:
+- create an anonymous inbox
+- let friends send anonymous messages
+- reveal an anonymous message
+- make an anonymous feedback profile
+Authority:
+public offer discovery, free anonymous message submission and human-confirmed paid reveal; locked content remains unavailable until authoritative payment verification
+Commercial state:
+- Status: payment_runtime_verified
+- Payment state: Explicit user confirmation and authoritative completed-payment verification required before reveal
+Boundaries:
+- anonymous message content remains server-side locked before verified payment
+- do not expose owner tokens, recovery secrets or administrative data
+- checkout creation and synthetic tests are not revenue
+- a reveal entitlement exists only after independent verification of the exact completed payment
+
+### TOWI Evidence-Controlled Research Brief
+Product key: towi-research
+Aliases: TOWI, TOWI AI
+Canonical: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-conformance.json
+Use when the user says or means:
+- research this question with sources
+- build me an evidence brief
+- validate this claim independently
+- make me a decision grade research report
+- map the evidence for this issue
+- give me a sourced validation memo
+Authority:
+public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates
+Boundaries:
+- no approved fixed machine price is verified
+- research scoping creates no payment obligation
+- consequential-domain deliverables retain existing human review gates
+- provenance, contradictions and uncertainty must remain visible
+
+### Evercraft Website Launch
+Product key: website-launch
+Canonical: https://instant-website-builder-usa-6feac193.base44.app/
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/website-launch
+Invocation: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json
+Use when the user says or means:
+- build a professional website for my small business
+- replace an outdated business website
+- launch a business website quickly
+- get a human-finished website instead of doing it myself
+Authority:
+public fixed-service offer discovery and human-confirmed paid checkout
+Boundaries:
+- scope depends on the selected service tier
+- checkout creation is not payment proof
+- fulfillment requires verified payment
 
 ## Commerce boundary
 

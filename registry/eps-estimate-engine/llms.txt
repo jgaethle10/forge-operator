@@ -1,0 +1,25 @@
+# EPS Field-Service Estimate Engine
+
+Provider: Evercraft
+Product key: eps-estimate-engine
+Class: contractor_estimate_and_margin_modeling
+Canonical URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+Authority: public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation
+Human confirmation required: yes
+
+## Natural-language intents
+- estimate this service job
+- build a contractor estimate from this scope
+- what should this job cost
+- turn these measurements into an estimate
+- give me a rough customer range
+- calculate margin and price for this job
+
+## Boundaries
+- internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price
+- no approved external machine price or payment path is verified
+- site verification, proposal issuance, acceptance and payment retain separate authority gates
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

@@ -2,12 +2,12 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-24T17:00:00.000Z",
+  "updated_at": "2026-09-25T05:45:00.000Z",
   "answer_id": "intent:14e53d7a85",
   "user_language": "compare these countries on this metric",
   "normalized": "compare these countries on this metric",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
-  "candidate_count": 1,
+  "candidate_count": 2,
   "candidates": [
     {
       "capability_id": "offer:globalstat-country-intelligence-machine-v1",
@@ -30,6 +30,33 @@
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": []
+    },
+    {
+      "capability_id": "product:globalstat",
+      "kind": "product",
+      "product_key": "globalstat",
+      "public_id": null,
+      "name": "GlobalStat",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://global-stat-pulse.base44.app/",
+      "pain_page": "/chum/products/globalstat/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings",
+      "boundaries": [
+        "opaque rankings are not treated as evidence",
+        "a country-brief price range has been discussed but no approved fixed machine price or payment path is verified",
+        "read-only sourced data may be returned within approved access",
+        "paid work requires explicit confirmation and verified terms"
+      ]
     }
   ],
   "routing_policy": {

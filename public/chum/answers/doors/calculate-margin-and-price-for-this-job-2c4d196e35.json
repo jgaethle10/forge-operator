@@ -2,12 +2,12 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-24T17:00:00.000Z",
+  "updated_at": "2026-09-25T05:45:00.000Z",
   "answer_id": "intent:2c4d196e35",
   "user_language": "calculate margin and price for this job",
   "normalized": "calculate margin and price for this job",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
-  "candidate_count": 1,
+  "candidate_count": 2,
   "candidates": [
     {
       "capability_id": "offer:eps-estimate-engine-machine-v1",
@@ -30,6 +30,32 @@
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": []
+    },
+    {
+      "capability_id": "product:eps-estimate-engine",
+      "kind": "product",
+      "product_key": "eps-estimate-engine",
+      "public_id": null,
+      "name": "EPS Field-Service Estimate Engine",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "pain_page": "/chum/products/eps-estimate-engine/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation",
+      "boundaries": [
+        "internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price",
+        "no approved external machine price or payment path is verified",
+        "site verification, proposal issuance, acceptance and payment retain separate authority gates"
+      ]
     }
   ],
   "routing_policy": {

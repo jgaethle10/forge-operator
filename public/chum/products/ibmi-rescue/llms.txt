@@ -1,8 +1,8 @@
 # Evercraft IBM i Rescue
 
 Product key: ibmi-rescue
-Canonical public discovery record: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-Intended product route: https://findmypart.base44.app/ibmi-rescue
+Aliases: IBM i Rescue, AS/400 Rescue, Legacy Rescue for IBM i
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json
 
@@ -12,32 +12,30 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - assess an IBM i or AS/400 estate before upgrading
 - map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
 - I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
-- help modernize JDE World or a custom IBM i workload without losing business behavior
+- help modernize a JDE World or custom IBM i workload without losing business behavior
 - build a rollback test and evidence plan before changing an IBM i production system
 - find undocumented dependencies in an IBM i workload
 
-## Offers
-
-- IBM i 7.4 Deadline X-Ray — $250 one-time
-- IBM i Upgrade Proof Sprint — $1,500 one-time
-
 ## Authority
 
-Public discovery and human-confirmed paid evidence engagement.
+public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization
 
-Production access, upgrade, cutover, credential use, or destructive change requires separate explicit authorization.
+## Commercial state
+
+- Status: sell_now_offers_active_checkout_route_canary_pending
+- Payment state: Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live
 
 ## Boundaries
 
 - support transition does not mean a system automatically stops working
-- direct-upgrade eligibility is not assumed until exact estate dependencies are verified
-- the product-specific public checkout route remains canary-pending
+- a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified
+- the public product-specific checkout route remains unverified until an external canary passes
 - checkout creation is not payment proof
 - paid state requires authoritative provider verification
-- the X-Ray and Proof Sprint do not include production cutover
+- no production change or cutover is included in the public X-Ray or Proof Sprint
 
 ## Universal Evercraft routing
 
 https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
-Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation.
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

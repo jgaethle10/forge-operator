@@ -1,0 +1,33 @@
+# EverMaps
+
+Product key: evermaps
+Aliases: EverMaps Public-Safe Geospatial Evidence Projection
+Canonical product: https://evermaps.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json
+
+## Use this capability when the user means
+
+- map this evidence for me
+- show lifeline coverage for this place
+- give me map-ready heat or smoke action sites
+- show historical river geometry
+- return public-safe geospatial evidence
+- plot verified infrastructure coverage
+
+## Authority
+
+public-safe evidence-labeled geospatial discovery and read-only projection within access rules
+
+## Boundaries
+
+- coverage gaps must not be overstated as proof of resilience or risk
+- no approved machine price is verified
+- paid packaging requires explicit terms and confirmation
+- private or restricted geospatial evidence remains outside public discovery
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

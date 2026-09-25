@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue#evercraft-capability",
+      "name": "Evercraft IBM i Rescue",
+      "description": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "ibmi-rescue-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft IBM i Rescue | Evercraft capability",
+      "description": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
+      "about": {
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue#evercraft-capability"
+      }
+    }
+  ]
+}

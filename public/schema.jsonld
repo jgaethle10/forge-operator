@@ -46,6 +46,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://call-proof-vault.base44.app/#evercraft-service",
+      "name": "CallProof Vault",
+      "alternateName": [],
+      "url": "https://call-proof-vault.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "unwanted_call_and_text_evidence_organization",
+      "description": "organize my robocall evidence; make an FCC complaint packet; help me document spam calls; prepare my FTC call evidence"
+    },
+    {
+      "@type": "Service",
       "@id": "https://evercraft-career-command.base44.app/#evercraft-service",
       "name": "Evercraft Career Command",
       "alternateName": [],
@@ -55,6 +67,18 @@
       },
       "serviceType": "interview_practice_and_career_preparation",
       "description": "practice for a job interview tomorrow; run a role-specific mock interview; prepare concise interview stories and answers; get structured interview practice before an upcoming interview"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://christmas-lights-usa-38c82eb8.base44.app/#evercraft-service",
+      "name": "Christmas Lights USA",
+      "alternateName": [],
+      "url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "holiday_lighting_marketplace_and_project_planning",
+      "description": "estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace"
     },
     {
       "@type": "Service",
@@ -94,6 +118,20 @@
     },
     {
       "@type": "Service",
+      "@id": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs#evercraft-service",
+      "name": "EPS Field-Service Estimate Engine",
+      "alternateName": [
+        "EPS Precise Estimator"
+      ],
+      "url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "contractor_estimate_and_margin_modeling",
+      "description": "estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate"
+    },
+    {
+      "@type": "Service",
       "@id": "https://event-wave.base44.app/#evercraft-service",
       "name": "EventWave",
       "alternateName": [],
@@ -118,6 +156,20 @@
       },
       "serviceType": "ai_persistence_and_automation_security_diagnostics",
       "description": "what is still running after I turned the automation off; audit my AI agents and automations for persistence; find orphaned cron jobs callbacks webhooks retries queues or credentials; map how disabled or deleted agents could regenerate"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evercraftjournal.base44.app/sports/fantasy#evercraft-service",
+      "name": "Evercraft Fantasy Intelligence",
+      "alternateName": [
+        "Evercraft Journal Fantasy Intelligence"
+      ],
+      "url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "fantasy_football_decision_intelligence",
+      "description": "fantasy football start sit help; fantasy waiver decision; fantasy lineup decision; fantasy injury impact"
     },
     {
       "@type": "Service",
@@ -168,6 +220,20 @@
       },
       "serviceType": "ai_web_fetch_search_browser_infrastructure",
       "description": "fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://evermaps.base44.app/#evercraft-service",
+      "name": "EverMaps",
+      "alternateName": [
+        "EverMaps Public-Safe Geospatial Evidence Projection"
+      ],
+      "url": "https://evermaps.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "public_safe_geospatial_evidence_projection",
+      "description": "map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry"
     },
     {
       "@type": "Service",
@@ -231,6 +297,20 @@
     },
     {
       "@type": "Service",
+      "@id": "https://global-stat-pulse.base44.app/#evercraft-service",
+      "name": "GlobalStat",
+      "alternateName": [
+        "GlobalStat Country / Domain Intelligence Slice"
+      ],
+      "url": "https://global-stat-pulse.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "country_comparison_and_evidence_intelligence",
+      "description": "compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score"
+    },
+    {
+      "@type": "Service",
       "@id": "https://guardian-pilot.base44.app/#evercraft-service",
       "name": "Guardian",
       "alternateName": [
@@ -245,6 +325,22 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue#evercraft-service",
+      "name": "Evercraft IBM i Rescue",
+      "alternateName": [
+        "IBM i Rescue",
+        "AS/400 Rescue",
+        "Legacy Rescue for IBM i"
+      ],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ibmi_upgrade_and_legacy_modernization_evidence",
+      "description": "IBM i 7.4 support is ending and I need an upgrade plan; assess an IBM i or AS/400 estate before upgrading; map RPG CL COBOL DB2 jobs and integrations before IBM i modernization; I am worried an IBM i upgrade will break batch jobs interfaces or vendor software"
+    },
+    {
+      "@type": "Service",
       "@id": "https://infiniteclassroom.base44.app/#evercraft-service",
       "name": "Infinite Classroom",
       "alternateName": [],
@@ -254,6 +350,20 @@
       },
       "serviceType": "ai_supported_learning",
       "description": "AI-supported subject learning; guided homework help without simply giving the answer; cross-subject learning; ASL and Deaf culture learning"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs#evercraft-service",
+      "name": "Little Red Studio Book Export QA",
+      "alternateName": [
+        "Little Red Studio"
+      ],
+      "url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "book_export_preflight_and_cover_geometry_qa",
+      "description": "check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish"
     },
     {
       "@type": "Service",
@@ -293,27 +403,17 @@
     },
     {
       "@type": "Service",
-      "@id": "https://systemia-audit-pro.base44.app/#evercraft-service",
-      "name": "Systemia Website Audit",
-      "alternateName": [],
-      "url": "https://systemia-audit-pro.base44.app/",
+      "@id": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs#evercraft-service",
+      "name": "Systemia Atlas Freight Load Exception Intelligence",
+      "alternateName": [
+        "Systemia Atlas"
+      ],
+      "url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
-      "serviceType": "website_conversion_and_technical_audit",
-      "description": "audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes"
-    },
-    {
-      "@type": "Service",
-      "@id": "https://instant-website-builder-usa-6feac193.base44.app/#evercraft-service",
-      "name": "Evercraft Website Launch",
-      "alternateName": [],
-      "url": "https://instant-website-builder-usa-6feac193.base44.app/",
-      "provider": {
-        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
-      },
-      "serviceType": "done_for_you_business_website_service",
-      "description": "build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself"
+      "serviceType": "freight_load_exception_and_document_intelligence",
+      "description": "what is wrong with this load; audit this freight load for exceptions; check this carrier and load paperwork; find missing POD or rate mismatches"
     },
     {
       "@type": "Service",
@@ -326,6 +426,73 @@
       },
       "serviceType": "contractor_operating_playbook_library",
       "description": "my customers keep asking for extras and scope creep is eating my margin; I need a contractor change order process; I cannot tell which jobs are actually profitable; I need a contractor cash flow or payroll planning system"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://systemia-audit-pro.base44.app/#evercraft-service",
+      "name": "Systemia Website Audit",
+      "alternateName": [],
+      "url": "https://systemia-audit-pro.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "website_conversion_and_technical_audit",
+      "description": "audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs#evercraft-service",
+      "name": "Talent Atlas",
+      "alternateName": [
+        "Talent Atlas Evidence-Backed Talent Profile"
+      ],
+      "url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_backed_talent_profile_and_opportunity_mapping",
+      "description": "evaluate this candidate from the evidence; build a talent profile from this portfolio; what roles fit this person's demonstrated skills; find gaps in this candidate's proof"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop#evercraft-service",
+      "name": "Thoughtdrop by Evercraft",
+      "alternateName": [
+        "Thoughtdrop"
+      ],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "anonymous_inbox_and_micro_purchase_reveal",
+      "description": "create an anonymous inbox; let friends send anonymous messages; reveal an anonymous message; make an anonymous feedback profile"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs#evercraft-service",
+      "name": "TOWI Evidence-Controlled Research Brief",
+      "alternateName": [
+        "TOWI",
+        "TOWI AI"
+      ],
+      "url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_controlled_research_and_validation",
+      "description": "research this question with sources; build me an evidence brief; validate this claim independently; make me a decision grade research report"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://instant-website-builder-usa-6feac193.base44.app/#evercraft-service",
+      "name": "Evercraft Website Launch",
+      "alternateName": [],
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "done_for_you_business_website_service",
+      "description": "build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself"
     },
     {
       "@type": "Service",
@@ -410,6 +577,17 @@
       "name": "Evercraft Foundry App Escape Audit",
       "description": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
       "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-ibmi-rescue-v1",
+      "name": "Evercraft IBM i Rescue",
+      "description": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },

@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "EverMaps",
+  "product_key": "evermaps",
+  "aliases": [
+    "EverMaps Public-Safe Geospatial Evidence Projection"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evermaps.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public-safe evidence-labeled geospatial discovery and read-only projection within access rules",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "coverage gaps must not be overstated as proof of resilience or risk",
+    "no approved machine price is verified",
+    "paid packaging requires explicit terms and confirmation",
+    "private or restricted geospatial evidence remains outside public discovery"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

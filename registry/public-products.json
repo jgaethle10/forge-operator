@@ -35,6 +35,19 @@
       }
     },
     {
+      "product_key": "callproof-vault",
+      "name": "CallProof Vault",
+      "class": "unwanted_call_and_text_evidence_organization",
+      "canonical_url": "https://call-proof-vault.base44.app/",
+      "github_record": "./callproof-vault/README.md",
+      "llms": "./callproof-vault/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "class": "interview_practice_and_career_preparation",
@@ -45,6 +58,19 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://evercraft-career-command.base44.app/functions/careerMcp"
+      }
+    },
+    {
+      "product_key": "christmas-lights-usa",
+      "name": "Christmas Lights USA",
+      "class": "holiday_lighting_marketplace_and_project_planning",
+      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "github_record": "./christmas-lights-usa/README.md",
+      "llms": "./christmas-lights-usa/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -87,6 +113,19 @@
       }
     },
     {
+      "product_key": "eps-estimate-engine",
+      "name": "EPS Field-Service Estimate Engine",
+      "class": "contractor_estimate_and_margin_modeling",
+      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "github_record": "./eps-estimate-engine/README.md",
+      "llms": "./eps-estimate-engine/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "eventwave",
       "name": "EventWave",
       "class": "event_discovery_and_labeled_promotion",
@@ -106,6 +145,19 @@
       "canonical_url": "https://evercraft.base44.app/containment",
       "github_record": "./evercraft-containment/README.md",
       "llms": "./evercraft-containment/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "evercraft-fantasy-intelligence",
+      "name": "Evercraft Fantasy Intelligence",
+      "class": "fantasy_football_decision_intelligence",
+      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "github_record": "./evercraft-fantasy-intelligence/README.md",
+      "llms": "./evercraft-fantasy-intelligence/llms.txt",
       "registry_name": null,
       "invocation": {
         "mode": "discovery_only",
@@ -162,6 +214,19 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
+      }
+    },
+    {
+      "product_key": "evermaps",
+      "name": "EverMaps",
+      "class": "public_safe_geospatial_evidence_projection",
+      "canonical_url": "https://evermaps.base44.app/",
+      "github_record": "./evermaps/README.md",
+      "llms": "./evermaps/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -230,6 +295,19 @@
       }
     },
     {
+      "product_key": "globalstat",
+      "name": "GlobalStat",
+      "class": "country_comparison_and_evidence_intelligence",
+      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "github_record": "./globalstat/README.md",
+      "llms": "./globalstat/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "guardian",
       "name": "Guardian",
       "class": "privacy_first_protection_navigation_and_prevention",
@@ -262,6 +340,19 @@
       "canonical_url": "https://infiniteclassroom.base44.app/",
       "github_record": "./infinite-classroom/README.md",
       "llms": "./infinite-classroom/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "little-red-book-export-qa",
+      "name": "Little Red Studio Book Export QA",
+      "class": "book_export_preflight_and_cover_geometry_qa",
+      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "github_record": "./little-red-book-export-qa/README.md",
+      "llms": "./little-red-book-export-qa/llms.txt",
       "registry_name": null,
       "invocation": {
         "mode": "discovery_only",
@@ -308,6 +399,19 @@
       }
     },
     {
+      "product_key": "systemia-atlas-freight",
+      "name": "Systemia Atlas Freight Load Exception Intelligence",
+      "class": "freight_load_exception_and_document_intelligence",
+      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "github_record": "./systemia-atlas-freight/README.md",
+      "llms": "./systemia-atlas-freight/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "systemia-field-library",
       "name": "Systemia Field Library",
       "class": "contractor_operating_playbook_library",
@@ -331,6 +435,45 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
+      }
+    },
+    {
+      "product_key": "talent-atlas",
+      "name": "Talent Atlas",
+      "class": "evidence_backed_talent_profile_and_opportunity_mapping",
+      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "github_record": "./talent-atlas/README.md",
+      "llms": "./talent-atlas/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "thoughtdrop",
+      "name": "Thoughtdrop by Evercraft",
+      "class": "anonymous_inbox_and_micro_purchase_reveal",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+      "github_record": "./thoughtdrop/README.md",
+      "llms": "./thoughtdrop/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "towi-research",
+      "name": "TOWI Evidence-Controlled Research Brief",
+      "class": "evidence_controlled_research_and_validation",
+      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "github_record": "./towi-research/README.md",
+      "llms": "./towi-research/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {

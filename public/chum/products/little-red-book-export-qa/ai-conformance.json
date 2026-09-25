@@ -1,0 +1,31 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Little Red Studio Book Export QA",
+  "product_key": "little-red-book-export-qa",
+  "aliases": [
+    "Little Red Studio"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery of bounded book-export QA with no publishing or distribution side effects",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no approved external machine price or payment path is verified",
+    "QA readiness does not authorize publishing, uploading or distributing a book",
+    "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

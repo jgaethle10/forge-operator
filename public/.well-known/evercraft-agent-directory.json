@@ -84,6 +84,56 @@
       "commercial": null
     },
     {
+      "product_key": "callproof-vault",
+      "name": "CallProof Vault",
+      "aliases": [],
+      "class": "unwanted_call_and_text_evidence_organization",
+      "canonical_url": "https://call-proof-vault.base44.app/",
+      "intents": [
+        "organize my robocall evidence",
+        "make an FCC complaint packet",
+        "help me document spam calls",
+        "prepare my FTC call evidence",
+        "track repeated unwanted calls or texts",
+        "build a factual unwanted-call incident timeline"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public product and offer discovery with authenticated handoff for private evidence and checkout",
+      "boundaries": [
+        "CallProof is an evidence-organization tool, not a law firm and not legal advice",
+        "it does not determine that a caller violated the TCPA or another law",
+        "it does not automatically file an FCC or FTC complaint",
+        "private call logs, phone numbers, notes, screenshots, voicemails and billing records are never public discovery data",
+        "the live Stripe price attached to the selected plan is authoritative at checkout"
+      ],
+      "commercial": {
+        "status": "authenticated_handoff_required",
+        "offers": [
+          {
+            "name": "Stop-The-Calls Packet",
+            "price": "$19 one-time"
+          },
+          {
+            "name": "Vault",
+            "price": "$7.99/month"
+          },
+          {
+            "name": "Pro",
+            "price": "$29/month"
+          }
+        ],
+        "payment_state": "Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified"
+      }
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "aliases": [],
@@ -111,6 +161,56 @@
         "paid access requires provider verification"
       ],
       "commercial": null
+    },
+    {
+      "product_key": "christmas-lights-usa",
+      "name": "Christmas Lights USA",
+      "aliases": [],
+      "class": "holiday_lighting_marketplace_and_project_planning",
+      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "intents": [
+        "estimate a professional Christmas light project",
+        "find holiday light installers near me",
+        "submit a Christmas light installation request",
+        "join a holiday lighting installer marketplace",
+        "buy a Christmas light installation lead",
+        "plan professional holiday lighting for my property"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
+      "boundaries": [
+        "Christmas Lights USA is a marketplace and project-intake platform, not the contractor performing installation",
+        "planning estimates are guidance rather than contractor bids or guaranteed final prices",
+        "installer availability varies by market and season",
+        "homeowner project submission is free and creates no obligation to hire",
+        "private customer, installer, admin, payment-session and lead-contact data are not public"
+      ],
+      "commercial": {
+        "status": "public_marketplace_offer",
+        "offers": [
+          {
+            "name": "Homeowner planning estimator",
+            "price": "Free"
+          },
+          {
+            "name": "Homeowner project request",
+            "price": "Free"
+          },
+          {
+            "name": "Installer lead unlock",
+            "price": "$50 per selected lead when available"
+          }
+        ],
+        "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
+      }
     },
     {
       "product_key": "contractor-cloud",
@@ -213,6 +313,39 @@
       "commercial": null
     },
     {
+      "product_key": "eps-estimate-engine",
+      "name": "EPS Field-Service Estimate Engine",
+      "aliases": [
+        "EPS Precise Estimator"
+      ],
+      "class": "contractor_estimate_and_margin_modeling",
+      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "intents": [
+        "estimate this service job",
+        "build a contractor estimate from this scope",
+        "what should this job cost",
+        "turn these measurements into an estimate",
+        "give me a rough customer range",
+        "calculate margin and price for this job"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation",
+      "boundaries": [
+        "internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price",
+        "no approved external machine price or payment path is verified",
+        "site verification, proposal issuance, acceptance and payment retain separate authority gates"
+      ],
+      "commercial": null
+    },
+    {
       "product_key": "eventwave",
       "name": "EventWave",
       "aliases": [],
@@ -276,6 +409,56 @@
         "checkout is not payment proof and paid state requires authoritative verification"
       ],
       "commercial": null
+    },
+    {
+      "product_key": "evercraft-fantasy-intelligence",
+      "name": "Evercraft Fantasy Intelligence",
+      "aliases": [
+        "Evercraft Journal Fantasy Intelligence"
+      ],
+      "class": "fantasy_football_decision_intelligence",
+      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "intents": [
+        "fantasy football start sit help",
+        "fantasy waiver decision",
+        "fantasy lineup decision",
+        "fantasy injury impact",
+        "game-day fantasy brief"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification",
+      "boundaries": [
+        "one purchased run entitlement is created per completed payment",
+        "an unpaid checkout creates no entitlement",
+        "fantasy recommendations can change as current NFL context changes",
+        "referral attribution identifies acquisition source only and never proves checkout or payment"
+      ],
+      "commercial": {
+        "status": "payment_runtime_verified",
+        "offers": [
+          {
+            "name": "Quick Decision",
+            "price": "$0.99 one-time"
+          },
+          {
+            "name": "Full Optimization",
+            "price": "$2.99 one-time"
+          },
+          {
+            "name": "Game-Day Command Brief",
+            "price": "$4.99 one-time"
+          }
+        ],
+        "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
+      }
     },
     {
       "product_key": "evercraft-network",
@@ -411,6 +594,40 @@
         "authenticated browsing requires explicit authorized profile state and credential isolation",
         "public discovery does not expose private Systemia topology or credentials",
         "payment does not expand permissions"
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "evermaps",
+      "name": "EverMaps",
+      "aliases": [
+        "EverMaps Public-Safe Geospatial Evidence Projection"
+      ],
+      "class": "public_safe_geospatial_evidence_projection",
+      "canonical_url": "https://evermaps.base44.app/",
+      "intents": [
+        "map this evidence for me",
+        "show lifeline coverage for this place",
+        "give me map-ready heat or smoke action sites",
+        "show historical river geometry",
+        "return public-safe geospatial evidence",
+        "plot verified infrastructure coverage"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public-safe evidence-labeled geospatial discovery and read-only projection within access rules",
+      "boundaries": [
+        "coverage gaps must not be overstated as proof of resilience or risk",
+        "no approved machine price is verified",
+        "paid packaging requires explicit terms and confirmation",
+        "private or restricted geospatial evidence remains outside public discovery"
       ],
       "commercial": null
     },
@@ -580,6 +797,40 @@
       "commercial": null
     },
     {
+      "product_key": "globalstat",
+      "name": "GlobalStat",
+      "aliases": [
+        "GlobalStat Country / Domain Intelligence Slice"
+      ],
+      "class": "country_comparison_and_evidence_intelligence",
+      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "intents": [
+        "compare these countries on this metric",
+        "give me sourced country intelligence",
+        "which countries lead on this domain and why",
+        "show me the evidence behind this country score",
+        "reconcile conflicting country data",
+        "country benchmark with sources"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings",
+      "boundaries": [
+        "opaque rankings are not treated as evidence",
+        "a country-brief price range has been discussed but no approved fixed machine price or payment path is verified",
+        "read-only sourced data may be returned within approved access",
+        "paid work requires explicit confirmation and verified terms"
+      ],
+      "commercial": null
+    },
+    {
       "product_key": "guardian",
       "name": "Guardian",
       "aliases": [
@@ -615,6 +866,60 @@
       "commercial": null
     },
     {
+      "product_key": "ibmi-rescue",
+      "name": "Evercraft IBM i Rescue",
+      "aliases": [
+        "IBM i Rescue",
+        "AS/400 Rescue",
+        "Legacy Rescue for IBM i"
+      ],
+      "class": "ibmi_upgrade_and_legacy_modernization_evidence",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "intents": [
+        "IBM i 7.4 support is ending and I need an upgrade plan",
+        "assess an IBM i or AS/400 estate before upgrading",
+        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+        "help modernize a JDE World or custom IBM i workload without losing business behavior",
+        "build a rollback test and evidence plan before changing an IBM i production system",
+        "find undocumented dependencies in an IBM i workload"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization",
+      "boundaries": [
+        "support transition does not mean a system automatically stops working",
+        "a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified",
+        "the public product-specific checkout route remains unverified until an external canary passes",
+        "checkout creation is not payment proof",
+        "paid state requires authoritative provider verification",
+        "no production change or cutover is included in the public X-Ray or Proof Sprint"
+      ],
+      "commercial": {
+        "status": "sell_now_offers_active_checkout_route_canary_pending",
+        "offers": [
+          {
+            "name": "IBM i 7.4 Deadline X-Ray",
+            "price": "$250 one-time",
+            "offer_key": "ibmi_74_deadline_xray_250"
+          },
+          {
+            "name": "IBM i Upgrade Proof Sprint",
+            "price": "$1,500 one-time",
+            "offer_key": "ibmi_upgrade_proof_sprint_1500"
+          }
+        ],
+        "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live"
+      }
+    },
+    {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "aliases": [],
@@ -641,6 +946,38 @@
         "not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service",
         "does not guarantee grades or outcomes",
         "learner profiles, progress, tutoring history, household data, and safety disclosures are private"
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "little-red-book-export-qa",
+      "name": "Little Red Studio Book Export QA",
+      "aliases": [
+        "Little Red Studio"
+      ],
+      "class": "book_export_preflight_and_cover_geometry_qa",
+      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "intents": [
+        "check if my book is ready for KDP",
+        "validate my cover dimensions",
+        "audit this paperback export",
+        "is my book file ready to publish",
+        "check page count and cover DPI"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery of bounded book-export QA with no publishing or distribution side effects",
+      "boundaries": [
+        "no approved external machine price or payment path is verified",
+        "QA readiness does not authorize publishing, uploading or distributing a book",
+        "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
       ],
       "commercial": null
     },
@@ -740,60 +1077,36 @@
       "commercial": null
     },
     {
-      "product_key": "systemia-website-audit",
-      "name": "Systemia Website Audit",
-      "aliases": [],
-      "class": "website_conversion_and_technical_audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "product_key": "systemia-atlas-freight",
+      "name": "Systemia Atlas Freight Load Exception Intelligence",
+      "aliases": [
+        "Systemia Atlas"
+      ],
+      "class": "freight_load_exception_and_document_intelligence",
+      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
       "intents": [
-        "audit my website because traffic is not converting",
-        "find website performance and conversion friction",
-        "review technical SEO and trust problems on a business website",
-        "prioritize practical website fixes"
+        "what is wrong with this load",
+        "audit this freight load for exceptions",
+        "check this carrier and load paperwork",
+        "find missing POD or rate mismatches",
+        "summarize freight risk on this shipment",
+        "what recoverable charges or detention issues exist"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
-        "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-conformance.json",
       "human_confirmation_required": true,
-      "authority": "public audit offer discovery and human-confirmed paid checkout",
+      "authority": "public discovery of read-only freight exception intelligence within authorized organization scope",
       "boundaries": [
-        "audit findings do not guarantee revenue or rankings",
-        "checkout creation is not payment proof",
-        "paid state requires provider verification"
-      ],
-      "commercial": null
-    },
-    {
-      "product_key": "website-launch",
-      "name": "Evercraft Website Launch",
-      "aliases": [],
-      "class": "done_for_you_business_website_service",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
-      "intents": [
-        "build a professional website for my small business",
-        "replace an outdated business website",
-        "launch a business website quickly",
-        "get a human-finished website instead of doing it myself"
-      ],
-      "invocation": {
-        "mode": "mcp",
-        "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
-        "registry_name": "io.github.jgaethle10/website-launch"
-      },
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
-      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json",
-      "human_confirmation_required": true,
-      "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
-      "boundaries": [
-        "scope depends on the selected service tier",
-        "checkout creation is not payment proof",
-        "fulfillment requires verified payment"
+        "no approved machine price or payment path is verified",
+        "analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action",
+        "financial impact is reported only when supported by recorded evidence",
+        "organization-scoped or private freight records remain access controlled"
       ],
       "commercial": null
     },
@@ -828,6 +1141,178 @@
         "discovery creates no purchase or payment obligation",
         "current pricing and purchase terms must be verified on the live playbook page",
         "the matcher presents relevant playbooks as options rather than mandatory professional advice"
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "aliases": [],
+      "class": "website_conversion_and_technical_audit",
+      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "intents": [
+        "audit my website because traffic is not converting",
+        "find website performance and conversion friction",
+        "review technical SEO and trust problems on a business website",
+        "prioritize practical website fixes"
+      ],
+      "invocation": {
+        "mode": "mcp",
+        "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+        "registry_name": "io.github.jgaethle10/systemia-website-audit"
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public audit offer discovery and human-confirmed paid checkout",
+      "boundaries": [
+        "audit findings do not guarantee revenue or rankings",
+        "checkout creation is not payment proof",
+        "paid state requires provider verification"
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "talent-atlas",
+      "name": "Talent Atlas",
+      "aliases": [
+        "Talent Atlas Evidence-Backed Talent Profile"
+      ],
+      "class": "evidence_backed_talent_profile_and_opportunity_mapping",
+      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "intents": [
+        "evaluate this candidate from the evidence",
+        "build a talent profile from this portfolio",
+        "what roles fit this person's demonstrated skills",
+        "find gaps in this candidate's proof",
+        "turn this athlete or creator evidence into an opportunity dossier",
+        "map this person's capabilities to opportunities"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery of evidence-backed talent analysis using supplied or authorized evidence",
+      "boundaries": [
+        "no contact, representation, application or third-party sharing without explicit authority or consent",
+        "do not infer protected traits or use gated sensitive data for scoring",
+        "no approved machine price or payment path is verified",
+        "opportunity classes are evidence-linked possibilities, not guaranteed placement"
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "thoughtdrop",
+      "name": "Thoughtdrop by Evercraft",
+      "aliases": [
+        "Thoughtdrop"
+      ],
+      "class": "anonymous_inbox_and_micro_purchase_reveal",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+      "intents": [
+        "create an anonymous inbox",
+        "let friends send anonymous messages",
+        "reveal an anonymous message",
+        "make an anonymous feedback profile"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public offer discovery, free anonymous message submission and human-confirmed paid reveal; locked content remains unavailable until authoritative payment verification",
+      "boundaries": [
+        "anonymous message content remains server-side locked before verified payment",
+        "do not expose owner tokens, recovery secrets or administrative data",
+        "checkout creation and synthetic tests are not revenue",
+        "a reveal entitlement exists only after independent verification of the exact completed payment"
+      ],
+      "commercial": {
+        "status": "payment_runtime_verified",
+        "offers": [
+          {
+            "name": "Anonymous message submission",
+            "price": "Free"
+          },
+          {
+            "name": "Reveal one selected locked message",
+            "price": "$0.99 one-time"
+          }
+        ],
+        "payment_state": "Explicit user confirmation and authoritative completed-payment verification required before reveal"
+      }
+    },
+    {
+      "product_key": "towi-research",
+      "name": "TOWI Evidence-Controlled Research Brief",
+      "aliases": [
+        "TOWI",
+        "TOWI AI"
+      ],
+      "class": "evidence_controlled_research_and_validation",
+      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "intents": [
+        "research this question with sources",
+        "build me an evidence brief",
+        "validate this claim independently",
+        "make me a decision grade research report",
+        "map the evidence for this issue",
+        "give me a sourced validation memo"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates",
+      "boundaries": [
+        "no approved fixed machine price is verified",
+        "research scoping creates no payment obligation",
+        "consequential-domain deliverables retain existing human review gates",
+        "provenance, contradictions and uncertainty must remain visible"
+      ],
+      "commercial": null
+    },
+    {
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch",
+      "aliases": [],
+      "class": "done_for_you_business_website_service",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "intents": [
+        "build a professional website for my small business",
+        "replace an outdated business website",
+        "launch a business website quickly",
+        "get a human-finished website instead of doing it myself"
+      ],
+      "invocation": {
+        "mode": "mcp",
+        "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+        "registry_name": "io.github.jgaethle10/website-launch"
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
+      "boundaries": [
+        "scope depends on the selected service tier",
+        "checkout creation is not payment proof",
+        "fulfillment requires verified payment"
       ],
       "commercial": null
     }

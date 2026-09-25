@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "eps-estimate-engine",
+  "name": "EPS Field-Service Estimate Engine",
+  "aliases": [
+    "EPS Precise Estimator"
+  ],
+  "class": "contractor_estimate_and_margin_modeling",
+  "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+  "intents": [
+    "estimate this service job",
+    "build a contractor estimate from this scope",
+    "what should this job cost",
+    "turn these measurements into an estimate",
+    "give me a rough customer range",
+    "calculate margin and price for this job"
+  ],
+  "authority": "public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price",
+    "no approved external machine price or payment path is verified",
+    "site verification, proposal issuance, acceptance and payment retain separate authority gates"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-conformance.json",
+    "page": "/chum/products/eps-estimate-engine/"
+  }
+}

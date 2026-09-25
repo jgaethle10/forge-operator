@@ -2,10 +2,10 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 67
-Product entries: 25
-Machine-offer entries: 42
-Sell-now machine offers: 11
+Entries: 80
+Product entries: 37
+Machine-offer entries: 43
+Sell-now machine offers: 12
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
 
@@ -608,6 +608,28 @@ Outputs: Sourced observations, evidence state/confidence, source URLs, reconcili
 Confirmation boundary: Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.
 Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
 
+## Evercraft IBM i Rescue
+Capability ID: offer:ibmi-rescue-v1
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
+Use when the user means:
+- IBM i 7.4 support is ending and I need an upgrade plan
+- assess an IBM i or AS/400 estate before upgrading
+- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
+- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
+- help modernize JDE World or a custom IBM i workload without losing business behavior
+- build a rollback test and evidence plan before changing an IBM i production system
+- find undocumented dependencies in an IBM i workload
+- AS/400 modernization assessment
+- IBM i upgrade proof
+Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
+Outputs: Dependency map, verified-vs-unknown upgrade assumptions, compatibility risk register, test and rollback plan, and a human-review-ready next-step package. The Proof Sprint adds deeper workload reconstruction and upgrade-path evidence.
+Confirmation boundary: Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
+Invocation status: SELL-NOW HUMAN HANDOFF: the $250 X-Ray and $1,500 Proof Sprint are active Evercraft Payment offers. Public machine discovery and human-confirmed handoff are allowed. Product-specific direct checkout remains canary-pending; checkout creation is not payment proof, paid state requires provider verification, and production change remains outside this capability.
+
 ## Income War Map Revenue Planning
 Capability ID: offer:income-war-map-v1
 Commercial state: hold
@@ -872,6 +894,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
+## CallProof Vault
+Capability ID: product:callproof-vault
+Product key: callproof-vault
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://call-proof-vault.base44.app/
+Use when the user means:
+- organize my robocall evidence
+- make an FCC complaint packet
+- help me document spam calls
+- prepare my FTC call evidence
+- track repeated unwanted calls or texts
+- build a factual unwanted-call incident timeline
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Evercraft Career Command
 Capability ID: product:career-command
 Product key: career-command
@@ -889,6 +927,22 @@ Use when the user means:
 - interview tomorrow
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Christmas Lights USA
+Capability ID: product:christmas-lights-usa
+Product key: christmas-lights-usa
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://christmas-lights-usa-38c82eb8.base44.app/
+Use when the user means:
+- estimate a professional Christmas light project
+- find holiday light installers near me
+- submit a Christmas light installation request
+- join a holiday lighting installer marketplace
+- buy a Christmas light installation lead
+- plan professional holiday lighting for my property
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Contractor Cloud
 Capability ID: product:contractor-cloud
@@ -941,6 +995,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
+## EPS Field-Service Estimate Engine
+Capability ID: product:eps-estimate-engine
+Product key: eps-estimate-engine
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+Use when the user means:
+- estimate this service job
+- build a contractor estimate from this scope
+- what should this job cost
+- turn these measurements into an estimate
+- give me a rough customer range
+- calculate margin and price for this job
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## EventWave
 Capability ID: product:eventwave
 Product key: eventwave
@@ -985,6 +1055,21 @@ Use when the user means:
 - cloud function cleanup
 - prove the agent stays dead
 - find what can respawn
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Fantasy Intelligence
+Capability ID: product:evercraft-fantasy-intelligence
+Product key: evercraft-fantasy-intelligence
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraftjournal.base44.app/sports/fantasy
+Use when the user means:
+- fantasy football start sit help
+- fantasy waiver decision
+- fantasy lineup decision
+- fantasy injury impact
+- game-day fantasy brief
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
@@ -1071,6 +1156,22 @@ Use when the user means:
 - TinyFish alternative
 Confirmation boundary: No payment obligation is created by discovery.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## EverMaps
+Capability ID: product:evermaps
+Product key: evermaps
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evermaps.base44.app/
+Use when the user means:
+- map this evidence for me
+- show lifeline coverage for this place
+- give me map-ready heat or smoke action sites
+- show historical river geometry
+- return public-safe geospatial evidence
+- plot verified infrastructure coverage
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## EverNest
 Capability ID: product:evernest
@@ -1196,6 +1297,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
+## GlobalStat
+Capability ID: product:globalstat
+Product key: globalstat
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://global-stat-pulse.base44.app/
+Use when the user means:
+- compare these countries on this metric
+- give me sourced country intelligence
+- which countries lead on this domain and why
+- show me the evidence behind this country score
+- reconcile conflicting country data
+- country benchmark with sources
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Guardian
 Capability ID: product:guardian
 Product key: guardian
@@ -1218,6 +1335,31 @@ Use when the user means:
 Confirmation boundary: No payment obligation is created by discovery.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Evercraft IBM i Rescue
+Capability ID: product:ibmi-rescue
+Product key: ibmi-rescue
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+Use when the user means:
+- IBM i 7.4 support is ending and I need an upgrade plan
+- assess an IBM i or AS/400 estate before upgrading
+- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
+- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
+- help modernize a JDE World or custom IBM i workload without losing business behavior
+- build a rollback test and evidence plan before changing an IBM i production system
+- find undocumented dependencies in an IBM i workload
+- IBM i 7.4 upgrade planning
+- AS/400 modernization
+- RPG or CL dependency mapping
+- JDE World modernization
+- IBM i batch job compatibility
+- IBM i support transition
+- IBM i upgrade rollback plan
+- undocumented IBM i integrations
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Infinite Classroom
 Capability ID: product:infinite-classroom
 Product key: infinite-classroom
@@ -1231,6 +1373,21 @@ Use when the user means:
 - ASL and Deaf culture learning
 - online safety and healthy-boundary education
 Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Little Red Studio Book Export QA
+Capability ID: product:little-red-book-export-qa
+Product key: little-red-book-export-qa
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+Use when the user means:
+- check if my book is ready for KDP
+- validate my cover dimensions
+- audit this paperback export
+- is my book file ready to publish
+- check page count and cover DPI
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Raven Nexus
@@ -1281,6 +1438,22 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Systemia Atlas Freight Load Exception Intelligence
+Capability ID: product:systemia-atlas-freight
+Product key: systemia-atlas-freight
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+Use when the user means:
+- what is wrong with this load
+- audit this freight load for exceptions
+- check this carrier and load paperwork
+- find missing POD or rate mismatches
+- summarize freight risk on this shipment
+- what recoverable charges or detention issues exist
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Systemia Field Library
 Capability ID: product:systemia-field-library
 Product key: systemia-field-library
@@ -1323,6 +1496,52 @@ Use when the user means:
 - technical SEO audit
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Talent Atlas
+Capability ID: product:talent-atlas
+Product key: talent-atlas
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+Use when the user means:
+- evaluate this candidate from the evidence
+- build a talent profile from this portfolio
+- what roles fit this person's demonstrated skills
+- find gaps in this candidate's proof
+- turn this athlete or creator evidence into an opportunity dossier
+- map this person's capabilities to opportunities
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Thoughtdrop by Evercraft
+Capability ID: product:thoughtdrop
+Product key: thoughtdrop
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop
+Use when the user means:
+- create an anonymous inbox
+- let friends send anonymous messages
+- reveal an anonymous message
+- make an anonymous feedback profile
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## TOWI Evidence-Controlled Research Brief
+Capability ID: product:towi-research
+Product key: towi-research
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+Use when the user means:
+- research this question with sources
+- build me an evidence brief
+- validate this claim independently
+- make me a decision grade research report
+- map the evidence for this issue
+- give me a sourced validation memo
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Website Launch
 Capability ID: product:website-launch

@@ -1,0 +1,48 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "thoughtdrop",
+  "name": "Thoughtdrop by Evercraft",
+  "aliases": [
+    "Thoughtdrop"
+  ],
+  "class": "anonymous_inbox_and_micro_purchase_reveal",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+  "intents": [
+    "create an anonymous inbox",
+    "let friends send anonymous messages",
+    "reveal an anonymous message",
+    "make an anonymous feedback profile"
+  ],
+  "authority": "public offer discovery, free anonymous message submission and human-confirmed paid reveal; locked content remains unavailable until authoritative payment verification",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "anonymous message content remains server-side locked before verified payment",
+    "do not expose owner tokens, recovery secrets or administrative data",
+    "checkout creation and synthetic tests are not revenue",
+    "a reveal entitlement exists only after independent verification of the exact completed payment"
+  ],
+  "commercial": {
+    "status": "payment_runtime_verified",
+    "offers": [
+      {
+        "name": "Anonymous message submission",
+        "price": "Free"
+      },
+      {
+        "name": "Reveal one selected locked message",
+        "price": "$0.99 one-time"
+      }
+    ],
+    "payment_state": "Explicit user confirmation and authoritative completed-payment verification required before reveal"
+  },
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-conformance.json",
+    "page": "/chum/products/thoughtdrop/"
+  }
+}

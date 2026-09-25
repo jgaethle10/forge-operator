@@ -1,0 +1,33 @@
+# Systemia Atlas Freight Load Exception Intelligence
+
+Product key: systemia-atlas-freight
+Aliases: Systemia Atlas
+Canonical product: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-conformance.json
+
+## Use this capability when the user means
+
+- what is wrong with this load
+- audit this freight load for exceptions
+- check this carrier and load paperwork
+- find missing POD or rate mismatches
+- summarize freight risk on this shipment
+- what recoverable charges or detention issues exist
+
+## Authority
+
+public discovery of read-only freight exception intelligence within authorized organization scope
+
+## Boundaries
+
+- no approved machine price or payment path is verified
+- analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action
+- financial impact is reported only when supported by recorded evidence
+- organization-scoped or private freight records remain access controlled
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

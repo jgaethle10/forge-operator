@@ -1,0 +1,26 @@
+# TOWI Evidence-Controlled Research Brief
+
+Provider: Evercraft
+Product key: towi-research
+Class: evidence_controlled_research_and_validation
+Canonical URL: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+Authority: public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates
+Human confirmation required: yes
+
+## Natural-language intents
+- research this question with sources
+- build me an evidence brief
+- validate this claim independently
+- make me a decision grade research report
+- map the evidence for this issue
+- give me a sourced validation memo
+
+## Boundaries
+- no approved fixed machine price is verified
+- research scoping creates no payment obligation
+- consequential-domain deliverables retain existing human review gates
+- provenance, contradictions and uncertainty must remain visible
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

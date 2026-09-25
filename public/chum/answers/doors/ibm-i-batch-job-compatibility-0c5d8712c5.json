@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-25T05:45:00.000Z",
+  "answer_id": "intent:0c5d8712c5",
+  "user_language": "IBM i batch job compatibility",
+  "normalized": "ibm i batch job compatibility",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:ibmi-rescue",
+      "kind": "product",
+      "product_key": "ibmi-rescue",
+      "public_id": null,
+      "name": "Evercraft IBM i Rescue",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "pain_page": "/chum/products/ibmi-rescue/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization",
+      "boundaries": [
+        "support transition does not mean a system automatically stops working",
+        "a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified",
+        "the public product-specific checkout route remains unverified until an external canary passes",
+        "checkout creation is not payment proof",
+        "paid state requires authoritative provider verification",
+        "no production change or cutover is included in the public X-Ray or Proof Sprint"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

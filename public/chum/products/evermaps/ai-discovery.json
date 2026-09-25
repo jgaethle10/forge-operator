@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evermaps",
+  "name": "EverMaps",
+  "aliases": [
+    "EverMaps Public-Safe Geospatial Evidence Projection"
+  ],
+  "class": "public_safe_geospatial_evidence_projection",
+  "canonical_url": "https://evermaps.base44.app/",
+  "intents": [
+    "map this evidence for me",
+    "show lifeline coverage for this place",
+    "give me map-ready heat or smoke action sites",
+    "show historical river geometry",
+    "return public-safe geospatial evidence",
+    "plot verified infrastructure coverage"
+  ],
+  "authority": "public-safe evidence-labeled geospatial discovery and read-only projection within access rules",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "coverage gaps must not be overstated as proof of resilience or risk",
+    "no approved machine price is verified",
+    "paid packaging requires explicit terms and confirmation",
+    "private or restricted geospatial evidence remains outside public discovery"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json",
+    "page": "/chum/products/evermaps/"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-fantasy-intelligence",
+  "name": "Evercraft Fantasy Intelligence",
+  "aliases": [
+    "Evercraft Journal Fantasy Intelligence"
+  ],
+  "class": "fantasy_football_decision_intelligence",
+  "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+  "intents": [
+    "fantasy football start sit help",
+    "fantasy waiver decision",
+    "fantasy lineup decision",
+    "fantasy injury impact",
+    "game-day fantasy brief"
+  ],
+  "authority": "public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "one purchased run entitlement is created per completed payment",
+    "an unpaid checkout creates no entitlement",
+    "fantasy recommendations can change as current NFL context changes",
+    "referral attribution identifies acquisition source only and never proves checkout or payment"
+  ],
+  "commercial": {
+    "status": "payment_runtime_verified",
+    "offers": [
+      {
+        "name": "Quick Decision",
+        "price": "$0.99 one-time"
+      },
+      {
+        "name": "Full Optimization",
+        "price": "$2.99 one-time"
+      },
+      {
+        "name": "Game-Day Command Brief",
+        "price": "$4.99 one-time"
+      }
+    ],
+    "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
+  },
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-conformance.json",
+    "page": "/chum/products/evercraft-fantasy-intelligence/"
+  }
+}

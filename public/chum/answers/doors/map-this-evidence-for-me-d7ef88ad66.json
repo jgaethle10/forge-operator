@@ -2,12 +2,12 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-24T17:00:00.000Z",
+  "updated_at": "2026-09-25T05:45:00.000Z",
   "answer_id": "intent:d7ef88ad66",
   "user_language": "map this evidence for me",
   "normalized": "map this evidence for me",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
-  "candidate_count": 1,
+  "candidate_count": 2,
   "candidates": [
     {
       "capability_id": "offer:evermaps-evidence-projection-machine-v1",
@@ -30,6 +30,33 @@
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": []
+    },
+    {
+      "capability_id": "product:evermaps",
+      "kind": "product",
+      "product_key": "evermaps",
+      "public_id": null,
+      "name": "EverMaps",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://evermaps.base44.app/",
+      "pain_page": "/chum/products/evermaps/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public-safe evidence-labeled geospatial discovery and read-only projection within access rules",
+      "boundaries": [
+        "coverage gaps must not be overstated as proof of resilience or risk",
+        "no approved machine price is verified",
+        "paid packaging requires explicit terms and confirmation",
+        "private or restricted geospatial evidence remains outside public discovery"
+      ]
     }
   ],
   "routing_policy": {

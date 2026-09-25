@@ -1,0 +1,33 @@
+# GlobalStat
+
+Product key: globalstat
+Aliases: GlobalStat Country / Domain Intelligence Slice
+Canonical product: https://global-stat-pulse.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-conformance.json
+
+## Use this capability when the user means
+
+- compare these countries on this metric
+- give me sourced country intelligence
+- which countries lead on this domain and why
+- show me the evidence behind this country score
+- reconcile conflicting country data
+- country benchmark with sources
+
+## Authority
+
+public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings
+
+## Boundaries
+
+- opaque rankings are not treated as evidence
+- a country-brief price range has been discussed but no approved fixed machine price or payment path is verified
+- read-only sourced data may be returned within approved access
+- paid work requires explicit confirmation and verified terms
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

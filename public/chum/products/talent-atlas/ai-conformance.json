@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Talent Atlas",
+  "product_key": "talent-atlas",
+  "aliases": [
+    "Talent Atlas Evidence-Backed Talent Profile"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery of evidence-backed talent analysis using supplied or authorized evidence",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no contact, representation, application or third-party sharing without explicit authority or consent",
+    "do not infer protected traits or use gated sensitive data for scoring",
+    "no approved machine price or payment path is verified",
+    "opportunity classes are evidence-linked possibilities, not guaranteed placement"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

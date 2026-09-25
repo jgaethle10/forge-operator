@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-24T17:00:00.000Z",
+  "updated_at": "2026-09-25T05:45:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 67,
-    "unique_user_phrases": 522,
-    "mapped_candidate_edges": 530,
-    "ambiguous_phrases": 8,
-    "product_candidates": 25,
-    "machine_offer_candidates": 42
+    "pain_index_entries": 80,
+    "unique_user_phrases": 557,
+    "mapped_candidate_edges": 616,
+    "ambiguous_phrases": 59,
+    "product_candidates": 37,
+    "machine_offer_candidates": 43
   },
   "doors": [
     {
@@ -711,6 +711,50 @@
       ]
     },
     {
+      "answer_id": "intent:11f60c6d3a",
+      "user_language": "AS/400 modernization",
+      "normalized": "as 400 modernization",
+      "relative_json": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:49430f448e",
+      "user_language": "AS/400 modernization assessment",
+      "normalized": "as 400 modernization assessment",
+      "relative_json": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:960d5b1784",
       "user_language": "ASL and Deaf culture learning",
       "normalized": "asl and deaf culture learning",
@@ -728,6 +772,40 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/infinite-classroom/",
           "public_url": "https://infiniteclassroom.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:70ac865541",
+      "user_language": "assess an IBM i or AS/400 estate before upgrading",
+      "normalized": "assess an ibm i or as 400 estate before upgrading",
+      "relative_json": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
       ]
@@ -1002,7 +1080,7 @@
       "normalized": "audit this freight load for exceptions",
       "relative_json": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:freight-load-exception-intelligence-machine-v1",
@@ -1015,6 +1093,18 @@
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-atlas-freight",
+          "kind": "product",
+          "product_key": "systemia-atlas-freight",
+          "public_id": null,
+          "name": "Systemia Atlas Freight Load Exception Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-atlas-freight/",
+          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -1024,7 +1114,7 @@
       "normalized": "audit this paperback export",
       "relative_json": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:littlered-kdp-export-qa-machine-v1",
@@ -1035,6 +1125,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
+          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:little-red-book-export-qa",
+          "kind": "product",
+          "product_key": "little-red-book-export-qa",
+          "public_id": null,
+          "name": "Little Red Studio Book Export QA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -1268,7 +1370,7 @@
       "normalized": "build a contractor estimate from this scope",
       "relative_json": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
@@ -1280,6 +1382,40 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:eps-estimate-engine",
+          "kind": "product",
+          "product_key": "eps-estimate-engine",
+          "public_id": null,
+          "name": "EPS Field-Service Estimate Engine",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/eps-estimate-engine/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:242d097258",
+      "user_language": "build a factual unwanted-call incident timeline",
+      "normalized": "build a factual unwanted call incident timeline",
+      "relative_json": "/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:callproof-vault",
+          "kind": "product",
+          "product_key": "callproof-vault",
+          "public_id": null,
+          "name": "CallProof Vault",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/callproof-vault/",
+          "public_url": "https://call-proof-vault.base44.app/",
           "registry_name": null
         }
       ]
@@ -1329,6 +1465,40 @@
       ]
     },
     {
+      "answer_id": "intent:030d199287",
+      "user_language": "build a rollback test and evidence plan before changing an IBM i production system",
+      "normalized": "build a rollback test and evidence plan before changing an ibm i production system",
+      "relative_json": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:baefc8483b",
       "user_language": "build a sourced brief about farm water land or production risk",
       "normalized": "build a sourced brief about farm water land or production risk",
@@ -1356,7 +1526,7 @@
       "normalized": "build a talent profile from this portfolio",
       "relative_json": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:talent-evidence-profile-machine-v1",
@@ -1367,6 +1537,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:talent-atlas",
+          "kind": "product",
+          "product_key": "talent-atlas",
+          "public_id": null,
+          "name": "Talent Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/talent-atlas/",
           "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -1444,7 +1626,7 @@
       "normalized": "build me an evidence brief",
       "relative_json": "/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:towi-evidence-research-machine-v1",
@@ -1455,6 +1637,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:towi-research",
+          "kind": "product",
+          "product_key": "towi-research",
+          "public_id": null,
+          "name": "TOWI Evidence-Controlled Research Brief",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/towi-research/",
           "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -1615,6 +1809,28 @@
       ]
     },
     {
+      "answer_id": "intent:5ec6340858",
+      "user_language": "buy a Christmas light installation lead",
+      "normalized": "buy a christmas light installation lead",
+      "relative_json": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:785fc960f0",
       "user_language": "buy event promotion",
       "normalized": "buy event promotion",
@@ -1664,7 +1880,7 @@
       "normalized": "calculate margin and price for this job",
       "relative_json": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
@@ -1675,6 +1891,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:eps-estimate-engine",
+          "kind": "product",
+          "product_key": "eps-estimate-engine",
+          "public_id": null,
+          "name": "EPS Field-Service Estimate Engine",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/eps-estimate-engine/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -1818,7 +2046,7 @@
       "normalized": "check if my book is ready for kdp",
       "relative_json": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:littlered-kdp-export-qa-machine-v1",
@@ -1829,6 +2057,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
+          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:little-red-book-export-qa",
+          "kind": "product",
+          "product_key": "little-red-book-export-qa",
+          "public_id": null,
+          "name": "Little Red Studio Book Export QA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -1884,7 +2124,7 @@
       "normalized": "check page count and cover dpi",
       "relative_json": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:littlered-kdp-export-qa-machine-v1",
@@ -1897,6 +2137,18 @@
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:little-red-book-export-qa",
+          "kind": "product",
+          "product_key": "little-red-book-export-qa",
+          "public_id": null,
+          "name": "Little Red Studio Book Export QA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/little-red-book-export-qa/",
+          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -1906,7 +2158,7 @@
       "normalized": "check this carrier and load paperwork",
       "relative_json": "/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:freight-load-exception-intelligence-machine-v1",
@@ -1917,6 +2169,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-atlas-freight",
+          "kind": "product",
+          "product_key": "systemia-atlas-freight",
+          "public_id": null,
+          "name": "Systemia Atlas Freight Load Exception Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -2170,7 +2434,7 @@
       "normalized": "compare these countries on this metric",
       "relative_json": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:globalstat-country-intelligence-machine-v1",
@@ -2182,6 +2446,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:globalstat",
+          "kind": "product",
+          "product_key": "globalstat",
+          "public_id": null,
+          "name": "GlobalStat",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/globalstat/",
+          "public_url": "https://global-stat-pulse.base44.app/",
           "registry_name": null
         }
       ]
@@ -2522,7 +2798,7 @@
       "normalized": "country benchmark with sources",
       "relative_json": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:globalstat-country-intelligence-machine-v1",
@@ -2534,6 +2810,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:globalstat",
+          "kind": "product",
+          "product_key": "globalstat",
+          "public_id": null,
+          "name": "GlobalStat",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/globalstat/",
+          "public_url": "https://global-stat-pulse.base44.app/",
           "registry_name": null
         }
       ]
@@ -2556,6 +2844,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/community-health-evidence-brief-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1cf7f12421",
+      "user_language": "create an anonymous inbox",
+      "normalized": "create an anonymous inbox",
+      "relative_json": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:thoughtdrop",
+          "kind": "product",
+          "product_key": "thoughtdrop",
+          "public_id": null,
+          "name": "Thoughtdrop by Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/thoughtdrop/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
           "registry_name": null
         }
       ]
@@ -2847,12 +3157,34 @@
       ]
     },
     {
+      "answer_id": "intent:d420395d77",
+      "user_language": "estimate a professional Christmas light project",
+      "normalized": "estimate a professional christmas light project",
+      "relative_json": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:4e138afdda",
       "user_language": "estimate this service job",
       "normalized": "estimate this service job",
       "relative_json": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
@@ -2863,6 +3195,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:eps-estimate-engine",
+          "kind": "product",
+          "product_key": "eps-estimate-engine",
+          "public_id": null,
+          "name": "EPS Field-Service Estimate Engine",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/eps-estimate-engine/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -3072,7 +3416,7 @@
       "normalized": "evaluate this candidate from the evidence",
       "relative_json": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:talent-evidence-profile-machine-v1",
@@ -3083,6 +3427,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:talent-atlas",
+          "kind": "product",
+          "product_key": "talent-atlas",
+          "public_id": null,
+          "name": "Talent Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/talent-atlas/",
           "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -3316,6 +3672,94 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evernest/",
           "public_url": "https://evernest-home.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c235dd3e4d",
+      "user_language": "fantasy football start sit help",
+      "normalized": "fantasy football start sit help",
+      "relative_json": "/chum/answers/doors/fantasy-football-start-sit-help-c235dd3e4d.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-football-start-sit-help-c235dd3e4d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-fantasy-intelligence",
+          "kind": "product",
+          "product_key": "evercraft-fantasy-intelligence",
+          "public_id": null,
+          "name": "Evercraft Fantasy Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-fantasy-intelligence/",
+          "public_url": "https://evercraftjournal.base44.app/sports/fantasy",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f2685d2748",
+      "user_language": "fantasy injury impact",
+      "normalized": "fantasy injury impact",
+      "relative_json": "/chum/answers/doors/fantasy-injury-impact-f2685d2748.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-injury-impact-f2685d2748.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-fantasy-intelligence",
+          "kind": "product",
+          "product_key": "evercraft-fantasy-intelligence",
+          "public_id": null,
+          "name": "Evercraft Fantasy Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-fantasy-intelligence/",
+          "public_url": "https://evercraftjournal.base44.app/sports/fantasy",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a3315bba17",
+      "user_language": "fantasy lineup decision",
+      "normalized": "fantasy lineup decision",
+      "relative_json": "/chum/answers/doors/fantasy-lineup-decision-a3315bba17.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-lineup-decision-a3315bba17.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-fantasy-intelligence",
+          "kind": "product",
+          "product_key": "evercraft-fantasy-intelligence",
+          "public_id": null,
+          "name": "Evercraft Fantasy Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-fantasy-intelligence/",
+          "public_url": "https://evercraftjournal.base44.app/sports/fantasy",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:4cce1eb1db",
+      "user_language": "fantasy waiver decision",
+      "normalized": "fantasy waiver decision",
+      "relative_json": "/chum/answers/doors/fantasy-waiver-decision-4cce1eb1db.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-waiver-decision-4cce1eb1db.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-fantasy-intelligence",
+          "kind": "product",
+          "product_key": "evercraft-fantasy-intelligence",
+          "public_id": null,
+          "name": "Evercraft Fantasy Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-fantasy-intelligence/",
+          "public_url": "https://evercraftjournal.base44.app/sports/fantasy",
           "registry_name": null
         }
       ]
@@ -3744,7 +4188,7 @@
       "normalized": "find gaps in this candidate s proof",
       "relative_json": "/chum/answers/doors/find-gaps-in-this-candidate-s-proof-2c2dbfdfec.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-gaps-in-this-candidate-s-proof-2c2dbfdfec.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:talent-evidence-profile-machine-v1",
@@ -3756,6 +4200,40 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:talent-atlas",
+          "kind": "product",
+          "product_key": "talent-atlas",
+          "public_id": null,
+          "name": "Talent Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/talent-atlas/",
+          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:98fc8fa4ba",
+      "user_language": "find holiday light installers near me",
+      "normalized": "find holiday light installers near me",
+      "relative_json": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
           "registry_name": null
         }
       ]
@@ -3788,7 +4266,7 @@
       "normalized": "find missing pod or rate mismatches",
       "relative_json": "/chum/answers/doors/find-missing-pod-or-rate-mismatches-d7a7e22349.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-missing-pod-or-rate-mismatches-d7a7e22349.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:freight-load-exception-intelligence-machine-v1",
@@ -3799,6 +4277,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-atlas-freight",
+          "kind": "product",
+          "product_key": "systemia-atlas-freight",
+          "public_id": null,
+          "name": "Systemia Atlas Freight Load Exception Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -4091,6 +4581,40 @@
       ]
     },
     {
+      "answer_id": "intent:5d2d519d2f",
+      "user_language": "find undocumented dependencies in an IBM i workload",
+      "normalized": "find undocumented dependencies in an ibm i workload",
+      "relative_json": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:229db803d4",
       "user_language": "find verified help for housing shelter food benefits transportation childcare income or legal aid",
       "normalized": "find verified help for housing shelter food benefits transportation childcare income or legal aid",
@@ -4241,6 +4765,28 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f5d56d847a",
+      "user_language": "game-day fantasy brief",
+      "normalized": "game day fantasy brief",
+      "relative_json": "/chum/answers/doors/game-day-fantasy-brief-f5d56d847a.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/game-day-fantasy-brief-f5d56d847a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-fantasy-intelligence",
+          "kind": "product",
+          "product_key": "evercraft-fantasy-intelligence",
+          "public_id": null,
+          "name": "Evercraft Fantasy Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-fantasy-intelligence/",
+          "public_url": "https://evercraftjournal.base44.app/sports/fantasy",
+          "registry_name": null
         }
       ]
     },
@@ -4404,7 +4950,7 @@
       "normalized": "give me a rough customer range",
       "relative_json": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
@@ -4417,6 +4963,18 @@
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:eps-estimate-engine",
+          "kind": "product",
+          "product_key": "eps-estimate-engine",
+          "public_id": null,
+          "name": "EPS Field-Service Estimate Engine",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/eps-estimate-engine/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -4426,7 +4984,7 @@
       "normalized": "give me a sourced validation memo",
       "relative_json": "/chum/answers/doors/give-me-a-sourced-validation-memo-8cc2af920b.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-a-sourced-validation-memo-8cc2af920b.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:towi-evidence-research-machine-v1",
@@ -4437,6 +4995,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:towi-research",
+          "kind": "product",
+          "product_key": "towi-research",
+          "public_id": null,
+          "name": "TOWI Evidence-Controlled Research Brief",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/towi-research/",
           "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -4470,7 +5040,7 @@
       "normalized": "give me map ready heat or smoke action sites",
       "relative_json": "/chum/answers/doors/give-me-map-ready-heat-or-smoke-action-sites-62499579ce.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-map-ready-heat-or-smoke-action-sites-62499579ce.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:evermaps-evidence-projection-machine-v1",
@@ -4483,6 +5053,18 @@
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:evermaps",
+          "kind": "product",
+          "product_key": "evermaps",
+          "public_id": null,
+          "name": "EverMaps",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evermaps/",
+          "public_url": "https://evermaps.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -4492,7 +5074,7 @@
       "normalized": "give me sourced country intelligence",
       "relative_json": "/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:globalstat-country-intelligence-machine-v1",
@@ -4504,6 +5086,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:globalstat",
+          "kind": "product",
+          "product_key": "globalstat",
+          "public_id": null,
+          "name": "GlobalStat",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/globalstat/",
+          "public_url": "https://global-stat-pulse.base44.app/",
           "registry_name": null
         }
       ]
@@ -4756,7 +5350,7 @@
       "normalized": "help me document spam calls",
       "relative_json": "/chum/answers/doors/help-me-document-spam-calls-6a08485e85.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-document-spam-calls-6a08485e85.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:callproof-complaint-packet-machine-v1",
@@ -4767,6 +5361,18 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
+          "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:callproof-vault",
+          "kind": "product",
+          "product_key": "callproof-vault",
+          "public_id": null,
+          "name": "CallProof Vault",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/callproof-vault/",
           "public_url": "https://call-proof-vault.base44.app/",
           "registry_name": null
         }
@@ -4900,6 +5506,50 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-containment/",
           "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:33f9cbc5b5",
+      "user_language": "help modernize a JDE World or custom IBM i workload without losing business behavior",
+      "normalized": "help modernize a jde world or custom ibm i workload without losing business behavior",
+      "relative_json": "/chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f9c27a8bcc",
+      "user_language": "help modernize JDE World or a custom IBM i workload without losing business behavior",
+      "normalized": "help modernize jde world or a custom ibm i workload without losing business behavior",
+      "relative_json": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
       ]
@@ -5071,6 +5721,40 @@
       ]
     },
     {
+      "answer_id": "intent:a25b87dd23",
+      "user_language": "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+      "normalized": "i am worried an ibm i upgrade will break batch jobs interfaces or vendor software",
+      "relative_json": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7e204ff7f2",
       "user_language": "I cannot tell which jobs are actually profitable",
       "normalized": "i cannot tell which jobs are actually profitable",
@@ -5221,6 +5905,150 @@
           "pain_page": "/chum/products/systemia-field-library/",
           "public_url": "https://systemiafieldlibrary.com/",
           "registry_name": "io.github.jgaethle10/systemia-field-library"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ca1da8e065",
+      "user_language": "IBM i 7.4 support is ending and I need an upgrade plan",
+      "normalized": "ibm i 7 4 support is ending and i need an upgrade plan",
+      "relative_json": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:05c52de953",
+      "user_language": "IBM i 7.4 upgrade planning",
+      "normalized": "ibm i 7 4 upgrade planning",
+      "relative_json": "/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0c5d8712c5",
+      "user_language": "IBM i batch job compatibility",
+      "normalized": "ibm i batch job compatibility",
+      "relative_json": "/chum/answers/doors/ibm-i-batch-job-compatibility-0c5d8712c5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-batch-job-compatibility-0c5d8712c5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:72436ddbfd",
+      "user_language": "IBM i support transition",
+      "normalized": "ibm i support transition",
+      "relative_json": "/chum/answers/doors/ibm-i-support-transition-72436ddbfd.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-support-transition-72436ddbfd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:240178e2de",
+      "user_language": "IBM i upgrade proof",
+      "normalized": "ibm i upgrade proof",
+      "relative_json": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6b1f2184fe",
+      "user_language": "IBM i upgrade rollback plan",
+      "normalized": "ibm i upgrade rollback plan",
+      "relative_json": "/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
         }
       ]
     },
@@ -5494,7 +6322,7 @@
       "normalized": "is my book file ready to publish",
       "relative_json": "/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:littlered-kdp-export-qa-machine-v1",
@@ -5505,6 +6333,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
+          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:little-red-book-export-qa",
+          "kind": "product",
+          "product_key": "little-red-book-export-qa",
+          "public_id": null,
+          "name": "Little Red Studio Book Export QA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -5550,6 +6390,28 @@
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
           "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:963d1229f5",
+      "user_language": "JDE World modernization",
+      "normalized": "jde world modernization",
+      "relative_json": "/chum/answers/doors/jde-world-modernization-963d1229f5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/jde-world-modernization-963d1229f5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
       ]
@@ -5639,6 +6501,28 @@
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:caff03634f",
+      "user_language": "join a holiday lighting installer marketplace",
+      "normalized": "join a holiday lighting installer marketplace",
+      "relative_json": "/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -5929,6 +6813,28 @@
       ]
     },
     {
+      "answer_id": "intent:e9790ee764",
+      "user_language": "let friends send anonymous messages",
+      "normalized": "let friends send anonymous messages",
+      "relative_json": "/chum/answers/doors/let-friends-send-anonymous-messages-e9790ee764.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/let-friends-send-anonymous-messages-e9790ee764.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:thoughtdrop",
+          "kind": "product",
+          "product_key": "thoughtdrop",
+          "public_id": null,
+          "name": "Thoughtdrop by Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/thoughtdrop/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:beec517170",
       "user_language": "live web API for an AI agent",
       "normalized": "live web api for an ai agent",
@@ -6061,12 +6967,34 @@
       ]
     },
     {
+      "answer_id": "intent:ab7ee25254",
+      "user_language": "make an anonymous feedback profile",
+      "normalized": "make an anonymous feedback profile",
+      "relative_json": "/chum/answers/doors/make-an-anonymous-feedback-profile-ab7ee25254.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-an-anonymous-feedback-profile-ab7ee25254.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:thoughtdrop",
+          "kind": "product",
+          "product_key": "thoughtdrop",
+          "public_id": null,
+          "name": "Thoughtdrop by Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/thoughtdrop/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:888018751c",
       "user_language": "make an FCC complaint packet",
       "normalized": "make an fcc complaint packet",
       "relative_json": "/chum/answers/doors/make-an-fcc-complaint-packet-888018751c.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-an-fcc-complaint-packet-888018751c.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:callproof-complaint-packet-machine-v1",
@@ -6077,6 +7005,18 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
+          "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:callproof-vault",
+          "kind": "product",
+          "product_key": "callproof-vault",
+          "public_id": null,
+          "name": "CallProof Vault",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/callproof-vault/",
           "public_url": "https://call-proof-vault.base44.app/",
           "registry_name": null
         }
@@ -6110,7 +7050,7 @@
       "normalized": "make me a decision grade research report",
       "relative_json": "/chum/answers/doors/make-me-a-decision-grade-research-report-1b0d24ff89.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-me-a-decision-grade-research-report-1b0d24ff89.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:towi-evidence-research-machine-v1",
@@ -6121,6 +7061,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:towi-research",
+          "kind": "product",
+          "product_key": "towi-research",
+          "public_id": null,
+          "name": "TOWI Evidence-Controlled Research Brief",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/towi-research/",
           "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -6303,12 +7255,46 @@
       ]
     },
     {
+      "answer_id": "intent:aa38657636",
+      "user_language": "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+      "normalized": "map rpg cl cobol db2 jobs and integrations before ibm i modernization",
+      "relative_json": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:4cb357b7d1",
       "user_language": "map the evidence for this issue",
       "normalized": "map the evidence for this issue",
       "relative_json": "/chum/answers/doors/map-the-evidence-for-this-issue-4cb357b7d1.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-the-evidence-for-this-issue-4cb357b7d1.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:towi-evidence-research-machine-v1",
@@ -6321,6 +7307,18 @@
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
           "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:towi-research",
+          "kind": "product",
+          "product_key": "towi-research",
+          "public_id": null,
+          "name": "TOWI Evidence-Controlled Research Brief",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/towi-research/",
+          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -6330,7 +7328,7 @@
       "normalized": "map this evidence for me",
       "relative_json": "/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:evermaps-evidence-projection-machine-v1",
@@ -6343,6 +7341,18 @@
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:evermaps",
+          "kind": "product",
+          "product_key": "evermaps",
+          "public_id": null,
+          "name": "EverMaps",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evermaps/",
+          "public_url": "https://evermaps.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -6352,7 +7362,7 @@
       "normalized": "map this person s capabilities to opportunities",
       "relative_json": "/chum/answers/doors/map-this-person-s-capabilities-to-opportunities-1aee2bf6f9.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-this-person-s-capabilities-to-opportunities-1aee2bf6f9.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:talent-evidence-profile-machine-v1",
@@ -6363,6 +7373,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:talent-atlas",
+          "kind": "product",
+          "product_key": "talent-atlas",
+          "public_id": null,
+          "name": "Talent Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/talent-atlas/",
           "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -6958,7 +7980,7 @@
       "normalized": "organize my robocall evidence",
       "relative_json": "/chum/answers/doors/organize-my-robocall-evidence-a776d0ce65.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-my-robocall-evidence-a776d0ce65.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:callproof-complaint-packet-machine-v1",
@@ -6969,6 +7991,18 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
+          "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:callproof-vault",
+          "kind": "product",
+          "product_key": "callproof-vault",
+          "public_id": null,
+          "name": "CallProof Vault",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/callproof-vault/",
           "public_url": "https://call-proof-vault.base44.app/",
           "registry_name": null
         }
@@ -7261,6 +8295,28 @@
       ]
     },
     {
+      "answer_id": "intent:a886251485",
+      "user_language": "plan professional holiday lighting for my property",
+      "normalized": "plan professional holiday lighting for my property",
+      "relative_json": "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:89ca564562",
       "user_language": "Playwright API",
       "normalized": "playwright api",
@@ -7332,7 +8388,7 @@
       "normalized": "plot verified infrastructure coverage",
       "relative_json": "/chum/answers/doors/plot-verified-infrastructure-coverage-0d95c3deea.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plot-verified-infrastructure-coverage-0d95c3deea.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:evermaps-evidence-projection-machine-v1",
@@ -7344,6 +8400,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:evermaps",
+          "kind": "product",
+          "product_key": "evermaps",
+          "public_id": null,
+          "name": "EverMaps",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evermaps/",
+          "public_url": "https://evermaps.base44.app/",
           "registry_name": null
         }
       ]
@@ -7552,7 +8620,7 @@
       "normalized": "prepare my ftc call evidence",
       "relative_json": "/chum/answers/doors/prepare-my-ftc-call-evidence-681bd55283.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prepare-my-ftc-call-evidence-681bd55283.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:callproof-complaint-packet-machine-v1",
@@ -7563,6 +8631,18 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
+          "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:callproof-vault",
+          "kind": "product",
+          "product_key": "callproof-vault",
+          "public_id": null,
+          "name": "CallProof Vault",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/callproof-vault/",
           "public_url": "https://call-proof-vault.base44.app/",
           "registry_name": null
         }
@@ -8378,7 +9458,7 @@
       "normalized": "reconcile conflicting country data",
       "relative_json": "/chum/answers/doors/reconcile-conflicting-country-data-412cd9dd79.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reconcile-conflicting-country-data-412cd9dd79.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:globalstat-country-intelligence-machine-v1",
@@ -8390,6 +9470,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:globalstat",
+          "kind": "product",
+          "product_key": "globalstat",
+          "public_id": null,
+          "name": "GlobalStat",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/globalstat/",
+          "public_url": "https://global-stat-pulse.base44.app/",
           "registry_name": null
         }
       ]
@@ -8752,7 +9844,7 @@
       "normalized": "research this question with sources",
       "relative_json": "/chum/answers/doors/research-this-question-with-sources-892e1034a8.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-this-question-with-sources-892e1034a8.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:towi-evidence-research-machine-v1",
@@ -8763,6 +9855,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:towi-research",
+          "kind": "product",
+          "product_key": "towi-research",
+          "public_id": null,
+          "name": "TOWI Evidence-Controlled Research Brief",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/towi-research/",
           "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -8818,7 +9922,7 @@
       "normalized": "return public safe geospatial evidence",
       "relative_json": "/chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:evermaps-evidence-projection-machine-v1",
@@ -8830,6 +9934,40 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:evermaps",
+          "kind": "product",
+          "product_key": "evermaps",
+          "public_id": null,
+          "name": "EverMaps",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evermaps/",
+          "public_url": "https://evermaps.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:4c6f804231",
+      "user_language": "reveal an anonymous message",
+      "normalized": "reveal an anonymous message",
+      "relative_json": "/chum/answers/doors/reveal-an-anonymous-message-4c6f804231.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reveal-an-anonymous-message-4c6f804231.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:thoughtdrop",
+          "kind": "product",
+          "product_key": "thoughtdrop",
+          "public_id": null,
+          "name": "Thoughtdrop by Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/thoughtdrop/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
           "registry_name": null
         }
       ]
@@ -9265,6 +10403,28 @@
       ]
     },
     {
+      "answer_id": "intent:f10d59f52b",
+      "user_language": "RPG or CL dependency mapping",
+      "normalized": "rpg or cl dependency mapping",
+      "relative_json": "/chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:242e81edfb",
       "user_language": "run a role-specific mock interview",
       "normalized": "run a role specific mock interview",
@@ -9490,7 +10650,7 @@
       "normalized": "show historical river geometry",
       "relative_json": "/chum/answers/doors/show-historical-river-geometry-e09f8dfd42.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-historical-river-geometry-e09f8dfd42.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:evermaps-evidence-projection-machine-v1",
@@ -9502,6 +10662,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:evermaps",
+          "kind": "product",
+          "product_key": "evermaps",
+          "public_id": null,
+          "name": "EverMaps",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evermaps/",
+          "public_url": "https://evermaps.base44.app/",
           "registry_name": null
         }
       ]
@@ -9512,7 +10684,7 @@
       "normalized": "show lifeline coverage for this place",
       "relative_json": "/chum/answers/doors/show-lifeline-coverage-for-this-place-f8ad89bc25.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-lifeline-coverage-for-this-place-f8ad89bc25.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:evermaps-evidence-projection-machine-v1",
@@ -9525,6 +10697,18 @@
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:evermaps",
+          "kind": "product",
+          "product_key": "evermaps",
+          "public_id": null,
+          "name": "EverMaps",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evermaps/",
+          "public_url": "https://evermaps.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -9534,7 +10718,7 @@
       "normalized": "show me the evidence behind this country score",
       "relative_json": "/chum/answers/doors/show-me-the-evidence-behind-this-country-score-109cf14b4b.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-evidence-behind-this-country-score-109cf14b4b.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:globalstat-country-intelligence-machine-v1",
@@ -9546,6 +10730,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:globalstat",
+          "kind": "product",
+          "product_key": "globalstat",
+          "public_id": null,
+          "name": "GlobalStat",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/globalstat/",
+          "public_url": "https://global-stat-pulse.base44.app/",
           "registry_name": null
         }
       ]
@@ -9771,12 +10967,34 @@
       ]
     },
     {
+      "answer_id": "intent:19aba7fcec",
+      "user_language": "submit a Christmas light installation request",
+      "normalized": "submit a christmas light installation request",
+      "relative_json": "/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:19d8b224ce",
       "user_language": "summarize freight risk on this shipment",
       "normalized": "summarize freight risk on this shipment",
       "relative_json": "/chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:freight-load-exception-intelligence-machine-v1",
@@ -9787,6 +11005,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-atlas-freight",
+          "kind": "product",
+          "product_key": "systemia-atlas-freight",
+          "public_id": null,
+          "name": "Systemia Atlas Freight Load Exception Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -10157,6 +11387,28 @@
       ]
     },
     {
+      "answer_id": "intent:1625a03283",
+      "user_language": "track repeated unwanted calls or texts",
+      "normalized": "track repeated unwanted calls or texts",
+      "relative_json": "/chum/answers/doors/track-repeated-unwanted-calls-or-texts-1625a03283.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-repeated-unwanted-calls-or-texts-1625a03283.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:callproof-vault",
+          "kind": "product",
+          "product_key": "callproof-vault",
+          "public_id": null,
+          "name": "CallProof Vault",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/callproof-vault/",
+          "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ea560dba5a",
       "user_language": "transcribe a huge video and remove duplicate or repeated segments",
       "normalized": "transcribe a huge video and remove duplicate or repeated segments",
@@ -10338,7 +11590,7 @@
       "normalized": "turn these measurements into an estimate",
       "relative_json": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
@@ -10351,6 +11603,18 @@
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:eps-estimate-engine",
+          "kind": "product",
+          "product_key": "eps-estimate-engine",
+          "public_id": null,
+          "name": "EPS Field-Service Estimate Engine",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/eps-estimate-engine/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -10360,7 +11624,7 @@
       "normalized": "turn this athlete or creator evidence into an opportunity dossier",
       "relative_json": "/chum/answers/doors/turn-this-athlete-or-creator-evidence-into-an-opportunity-dossier-e7b99446da.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-athlete-or-creator-evidence-into-an-opportunity-dossier-e7b99446da.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:talent-evidence-profile-machine-v1",
@@ -10371,6 +11635,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:talent-atlas",
+          "kind": "product",
+          "product_key": "talent-atlas",
+          "public_id": null,
+          "name": "Talent Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/talent-atlas/",
           "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -10394,6 +11670,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9a48a464ea",
+      "user_language": "undocumented IBM i integrations",
+      "normalized": "undocumented ibm i integrations",
+      "relative_json": "/chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
       ]
@@ -10448,7 +11746,7 @@
       "normalized": "validate my cover dimensions",
       "relative_json": "/chum/answers/doors/validate-my-cover-dimensions-34a89ab4b2.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/validate-my-cover-dimensions-34a89ab4b2.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:littlered-kdp-export-qa-machine-v1",
@@ -10461,6 +11759,18 @@
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:little-red-book-export-qa",
+          "kind": "product",
+          "product_key": "little-red-book-export-qa",
+          "public_id": null,
+          "name": "Little Red Studio Book Export QA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/little-red-book-export-qa/",
+          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -10470,7 +11780,7 @@
       "normalized": "validate this claim independently",
       "relative_json": "/chum/answers/doors/validate-this-claim-independently-6adc29d2ce.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/validate-this-claim-independently-6adc29d2ce.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:towi-evidence-research-machine-v1",
@@ -10481,6 +11791,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:towi-research",
+          "kind": "product",
+          "product_key": "towi-research",
+          "public_id": null,
+          "name": "TOWI Evidence-Controlled Research Brief",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/towi-research/",
           "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -11130,7 +12452,7 @@
       "normalized": "what is wrong with this load",
       "relative_json": "/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:freight-load-exception-intelligence-machine-v1",
@@ -11141,6 +12463,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
+          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-atlas-freight",
+          "kind": "product",
+          "product_key": "systemia-atlas-freight",
+          "public_id": null,
+          "name": "Systemia Atlas Freight Load Exception Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -11196,7 +12530,7 @@
       "normalized": "what recoverable charges or detention issues exist",
       "relative_json": "/chum/answers/doors/what-recoverable-charges-or-detention-issues-exist-bfdc5214ff.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-recoverable-charges-or-detention-issues-exist-bfdc5214ff.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:freight-load-exception-intelligence-machine-v1",
@@ -11209,6 +12543,18 @@
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-atlas-freight",
+          "kind": "product",
+          "product_key": "systemia-atlas-freight",
+          "public_id": null,
+          "name": "Systemia Atlas Freight Load Exception Intelligence",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-atlas-freight/",
+          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -11218,7 +12564,7 @@
       "normalized": "what roles fit this person s demonstrated skills",
       "relative_json": "/chum/answers/doors/what-roles-fit-this-person-s-demonstrated-skills-fce581490e.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-roles-fit-this-person-s-demonstrated-skills-fce581490e.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:talent-evidence-profile-machine-v1",
@@ -11231,6 +12577,18 @@
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:talent-atlas",
+          "kind": "product",
+          "product_key": "talent-atlas",
+          "public_id": null,
+          "name": "Talent Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/talent-atlas/",
+          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -11240,7 +12598,7 @@
       "normalized": "what should this job cost",
       "relative_json": "/chum/answers/doors/what-should-this-job-cost-923f227308.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-should-this-job-cost-923f227308.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
@@ -11251,6 +12609,18 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:eps-estimate-engine",
+          "kind": "product",
+          "product_key": "eps-estimate-engine",
+          "public_id": null,
+          "name": "EPS Field-Service Estimate Engine",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/eps-estimate-engine/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
@@ -11328,7 +12698,7 @@
       "normalized": "which countries lead on this domain and why",
       "relative_json": "/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d.json",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:globalstat-country-intelligence-machine-v1",
@@ -11340,6 +12710,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:globalstat",
+          "kind": "product",
+          "product_key": "globalstat",
+          "public_id": null,
+          "name": "GlobalStat",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/globalstat/",
+          "public_url": "https://global-stat-pulse.base44.app/",
           "registry_name": null
         }
       ]

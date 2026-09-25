@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "globalstat",
+  "name": "GlobalStat",
+  "aliases": [
+    "GlobalStat Country / Domain Intelligence Slice"
+  ],
+  "class": "country_comparison_and_evidence_intelligence",
+  "canonical_url": "https://global-stat-pulse.base44.app/",
+  "intents": [
+    "compare these countries on this metric",
+    "give me sourced country intelligence",
+    "which countries lead on this domain and why",
+    "show me the evidence behind this country score",
+    "reconcile conflicting country data",
+    "country benchmark with sources"
+  ],
+  "authority": "public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "opaque rankings are not treated as evidence",
+    "a country-brief price range has been discussed but no approved fixed machine price or payment path is verified",
+    "read-only sourced data may be returned within approved access",
+    "paid work requires explicit confirmation and verified terms"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-conformance.json",
+    "page": "/chum/products/globalstat/"
+  }
+}

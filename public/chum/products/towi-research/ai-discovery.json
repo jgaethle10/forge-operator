@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "towi-research",
+  "name": "TOWI Evidence-Controlled Research Brief",
+  "aliases": [
+    "TOWI",
+    "TOWI AI"
+  ],
+  "class": "evidence_controlled_research_and_validation",
+  "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+  "intents": [
+    "research this question with sources",
+    "build me an evidence brief",
+    "validate this claim independently",
+    "make me a decision grade research report",
+    "map the evidence for this issue",
+    "give me a sourced validation memo"
+  ],
+  "authority": "public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no approved fixed machine price is verified",
+    "research scoping creates no payment obligation",
+    "consequential-domain deliverables retain existing human review gates",
+    "provenance, contradictions and uncertainty must remain visible"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-conformance.json",
+    "page": "/chum/products/towi-research/"
+  }
+}

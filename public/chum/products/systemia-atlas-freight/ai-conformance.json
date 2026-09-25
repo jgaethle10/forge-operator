@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Atlas Freight Load Exception Intelligence",
+  "product_key": "systemia-atlas-freight",
+  "aliases": [
+    "Systemia Atlas"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery of read-only freight exception intelligence within authorized organization scope",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no approved machine price or payment path is verified",
+    "analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action",
+    "financial impact is reported only when supported by recorded evidence",
+    "organization-scoped or private freight records remain access controlled"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

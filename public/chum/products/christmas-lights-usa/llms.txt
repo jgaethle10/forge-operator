@@ -1,0 +1,38 @@
+# Christmas Lights USA
+
+Product key: christmas-lights-usa
+Canonical product: https://christmas-lights-usa-38c82eb8.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-conformance.json
+
+## Use this capability when the user means
+
+- estimate a professional Christmas light project
+- find holiday light installers near me
+- submit a Christmas light installation request
+- join a holiday lighting installer marketplace
+- buy a Christmas light installation lead
+- plan professional holiday lighting for my property
+
+## Authority
+
+public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected
+
+## Commercial state
+
+- Status: public_marketplace_offer
+- Payment state: Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue
+
+## Boundaries
+
+- Christmas Lights USA is a marketplace and project-intake platform, not the contractor performing installation
+- planning estimates are guidance rather than contractor bids or guaranteed final prices
+- installer availability varies by market and season
+- homeowner project submission is free and creates no obligation to hire
+- private customer, installer, admin, payment-session and lead-contact data are not public
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

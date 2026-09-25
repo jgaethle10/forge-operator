@@ -5,7 +5,7 @@
     "product_directory_schema": "evercraft.product-directory.v1",
     "product_directory_updated_at": "2026-09-24",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
-    "machine_catalog_source_generated_at": "2026-09-24T17:00:00.000Z",
+    "machine_catalog_source_generated_at": "2026-09-25T05:45:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
     "registry_updated_at": "2026-09-24"
   },
@@ -25,13 +25,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 67,
-    "product_entries": 25,
-    "machine_offer_entries": 42,
-    "entries_with_pain_language": 67,
-    "sell_now_machine_offers": 11,
-    "entries_with_declared_mcp": 56,
-    "callable_or_routable_entries": 35,
+    "entries": 80,
+    "product_entries": 37,
+    "machine_offer_entries": 43,
+    "entries_with_pain_language": 80,
+    "sell_now_machine_offers": 12,
+    "entries_with_declared_mcp": 57,
+    "callable_or_routable_entries": 36,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -1410,6 +1410,64 @@
       ]
     },
     {
+      "capability_id": "offer:ibmi-rescue-v1",
+      "product_key": null,
+      "public_id": "ibmi-rescue-v1",
+      "kind": "machine_offer",
+      "name": "Evercraft IBM i Rescue",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "IBM i 7.4 support is ending and I need an upgrade plan",
+        "assess an IBM i or AS/400 estate before upgrading",
+        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+        "help modernize JDE World or a custom IBM i workload without losing business behavior",
+        "build a rollback test and evidence plan before changing an IBM i production system",
+        "find undocumented dependencies in an IBM i workload",
+        "AS/400 modernization assessment",
+        "IBM i upgrade proof"
+      ],
+      "problem": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
+      "inputs": "A bounded authorized estate or workload description. Deeper work may use customer-supplied inventories, source listings, job schedules, configuration exports, vendor/version details and other evidence the customer is authorized to provide.",
+      "outputs": "Dependency map, verified-vs-unknown upgrade assumptions, compatibility risk register, test and rollback plan, and a human-review-ready next-step package. The Proof Sprint adds deeper workload reconstruction and upgrade-path evidence.",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "$250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.",
+      "offers": [
+        {
+          "offer_key": "ibmi_74_deadline_xray_250",
+          "name": "IBM i 7.4 Deadline X-Ray",
+          "price": "$250",
+          "billing": "one_time",
+          "checkout": "human_handoff"
+        },
+        {
+          "offer_key": "ibmi_upgrade_proof_sprint_1500",
+          "name": "IBM i Upgrade Proof Sprint",
+          "price": "$1,500",
+          "billing": "one_time",
+          "checkout": "human_handoff"
+        }
+      ],
+      "human_confirmation_required": true,
+      "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
+      "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.",
+      "invocation_status": "SELL-NOW HUMAN HANDOFF: the $250 X-Ray and $1,500 Proof Sprint are active Evercraft Payment offers. Public machine discovery and human-confirmed handoff are allowed. Product-specific direct checkout remains canary-pending; checkout creation is not payment proof, paid state requires provider verification, and production change remains outside this capability.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
       "capability_id": "offer:income-war-map-v1",
       "product_key": null,
       "public_id": "income-war-map-v1",
@@ -2017,6 +2075,69 @@
       ]
     },
     {
+      "capability_id": "product:callproof-vault",
+      "product_key": "callproof-vault",
+      "kind": "product",
+      "name": "CallProof Vault",
+      "class": "unwanted_call_and_text_evidence_organization",
+      "pain_phrases": [
+        "organize my robocall evidence",
+        "make an FCC complaint packet",
+        "help me document spam calls",
+        "prepare my FTC call evidence",
+        "track repeated unwanted calls or texts",
+        "build a factual unwanted-call incident timeline"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://call-proof-vault.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public product and offer discovery with authenticated handoff for private evidence and checkout",
+      "boundaries": [
+        "CallProof is an evidence-organization tool, not a law firm and not legal advice",
+        "it does not determine that a caller violated the TCPA or another law",
+        "it does not automatically file an FCC or FTC complaint",
+        "private call logs, phone numbers, notes, screenshots, voicemails and billing records are never public discovery data",
+        "the live Stripe price attached to the selected plan is authoritative at checkout"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "authenticated_handoff_required",
+        "offers": [
+          {
+            "name": "Stop-The-Calls Packet",
+            "price": "$19 one-time"
+          },
+          {
+            "name": "Vault",
+            "price": "$7.99/month"
+          },
+          {
+            "name": "Pro",
+            "price": "$29/month"
+          }
+        ],
+        "payment_state": "Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:career-command",
       "product_key": "career-command",
       "kind": "product",
@@ -2060,6 +2181,69 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:christmas-lights-usa",
+      "product_key": "christmas-lights-usa",
+      "kind": "product",
+      "name": "Christmas Lights USA",
+      "class": "holiday_lighting_marketplace_and_project_planning",
+      "pain_phrases": [
+        "estimate a professional Christmas light project",
+        "find holiday light installers near me",
+        "submit a Christmas light installation request",
+        "join a holiday lighting installer marketplace",
+        "buy a Christmas light installation lead",
+        "plan professional holiday lighting for my property"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
+      "boundaries": [
+        "Christmas Lights USA is a marketplace and project-intake platform, not the contractor performing installation",
+        "planning estimates are guidance rather than contractor bids or guaranteed final prices",
+        "installer availability varies by market and season",
+        "homeowner project submission is free and creates no obligation to hire",
+        "private customer, installer, admin, payment-session and lead-contact data are not public"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "public_marketplace_offer",
+        "offers": [
+          {
+            "name": "Homeowner planning estimator",
+            "price": "Free"
+          },
+          {
+            "name": "Homeowner project request",
+            "price": "Free"
+          },
+          {
+            "name": "Installer lead unlock",
+            "price": "$50 per selected lead when available"
+          }
+        ],
+        "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {
@@ -2212,6 +2396,50 @@
       ]
     },
     {
+      "capability_id": "product:eps-estimate-engine",
+      "product_key": "eps-estimate-engine",
+      "kind": "product",
+      "name": "EPS Field-Service Estimate Engine",
+      "class": "contractor_estimate_and_margin_modeling",
+      "pain_phrases": [
+        "estimate this service job",
+        "build a contractor estimate from this scope",
+        "what should this job cost",
+        "turn these measurements into an estimate",
+        "give me a rough customer range",
+        "calculate margin and price for this job"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation",
+      "boundaries": [
+        "internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price",
+        "no approved external machine price or payment path is verified",
+        "site verification, proposal issuance, acceptance and payment retain separate authority gates"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:eventwave",
       "product_key": "eventwave",
       "kind": "product",
@@ -2307,6 +2535,67 @@
       "pricing": null,
       "offers": [],
       "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:evercraft-fantasy-intelligence",
+      "product_key": "evercraft-fantasy-intelligence",
+      "kind": "product",
+      "name": "Evercraft Fantasy Intelligence",
+      "class": "fantasy_football_decision_intelligence",
+      "pain_phrases": [
+        "fantasy football start sit help",
+        "fantasy waiver decision",
+        "fantasy lineup decision",
+        "fantasy injury impact",
+        "game-day fantasy brief"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification",
+      "boundaries": [
+        "one purchased run entitlement is created per completed payment",
+        "an unpaid checkout creates no entitlement",
+        "fantasy recommendations can change as current NFL context changes",
+        "referral attribution identifies acquisition source only and never proves checkout or payment"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "payment_runtime_verified",
+        "offers": [
+          {
+            "name": "Quick Decision",
+            "price": "$0.99 one-time"
+          },
+          {
+            "name": "Full Optimization",
+            "price": "$2.99 one-time"
+          },
+          {
+            "name": "Game-Day Command Brief",
+            "price": "$4.99 one-time"
+          }
+        ],
+        "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
@@ -2524,6 +2813,51 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:evermaps",
+      "product_key": "evermaps",
+      "kind": "product",
+      "name": "EverMaps",
+      "class": "public_safe_geospatial_evidence_projection",
+      "pain_phrases": [
+        "map this evidence for me",
+        "show lifeline coverage for this place",
+        "give me map-ready heat or smoke action sites",
+        "show historical river geometry",
+        "return public-safe geospatial evidence",
+        "plot verified infrastructure coverage"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://evermaps.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public-safe evidence-labeled geospatial discovery and read-only projection within access rules",
+      "boundaries": [
+        "coverage gaps must not be overstated as proof of resilience or risk",
+        "no approved machine price is verified",
+        "paid packaging requires explicit terms and confirmation",
+        "private or restricted geospatial evidence remains outside public discovery"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {
@@ -2794,6 +3128,51 @@
       ]
     },
     {
+      "capability_id": "product:globalstat",
+      "product_key": "globalstat",
+      "kind": "product",
+      "name": "GlobalStat",
+      "class": "country_comparison_and_evidence_intelligence",
+      "pain_phrases": [
+        "compare these countries on this metric",
+        "give me sourced country intelligence",
+        "which countries lead on this domain and why",
+        "show me the evidence behind this country score",
+        "reconcile conflicting country data",
+        "country benchmark with sources"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings",
+      "boundaries": [
+        "opaque rankings are not treated as evidence",
+        "a country-brief price range has been discussed but no approved fixed machine price or payment path is verified",
+        "read-only sourced data may be returned within approved access",
+        "paid work requires explicit confirmation and verified terms"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:guardian",
       "product_key": "guardian",
       "kind": "product",
@@ -2846,6 +3225,77 @@
       ]
     },
     {
+      "capability_id": "product:ibmi-rescue",
+      "product_key": "ibmi-rescue",
+      "kind": "product",
+      "name": "Evercraft IBM i Rescue",
+      "class": "ibmi_upgrade_and_legacy_modernization_evidence",
+      "pain_phrases": [
+        "IBM i 7.4 support is ending and I need an upgrade plan",
+        "assess an IBM i or AS/400 estate before upgrading",
+        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+        "help modernize a JDE World or custom IBM i workload without losing business behavior",
+        "build a rollback test and evidence plan before changing an IBM i production system",
+        "find undocumented dependencies in an IBM i workload",
+        "IBM i 7.4 upgrade planning",
+        "AS/400 modernization",
+        "RPG or CL dependency mapping",
+        "JDE World modernization",
+        "IBM i batch job compatibility",
+        "IBM i support transition",
+        "IBM i upgrade rollback plan",
+        "undocumented IBM i integrations"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization",
+      "boundaries": [
+        "support transition does not mean a system automatically stops working",
+        "a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified",
+        "the public product-specific checkout route remains unverified until an external canary passes",
+        "checkout creation is not payment proof",
+        "paid state requires authoritative provider verification",
+        "no production change or cutover is included in the public X-Ray or Proof Sprint"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "sell_now_offers_active_checkout_route_canary_pending",
+        "offers": [
+          {
+            "name": "IBM i 7.4 Deadline X-Ray",
+            "price": "$250 one-time",
+            "offer_key": "ibmi_74_deadline_xray_250"
+          },
+          {
+            "name": "IBM i Upgrade Proof Sprint",
+            "price": "$1,500 one-time",
+            "offer_key": "ibmi_upgrade_proof_sprint_1500"
+          }
+        ],
+        "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:infinite-classroom",
       "product_key": "infinite-classroom",
       "kind": "product",
@@ -2882,6 +3332,49 @@
       "commercial": null,
       "human_confirmation_required": false,
       "confirmation": "No payment obligation is created by discovery.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:little-red-book-export-qa",
+      "product_key": "little-red-book-export-qa",
+      "kind": "product",
+      "name": "Little Red Studio Book Export QA",
+      "class": "book_export_preflight_and_cover_geometry_qa",
+      "pain_phrases": [
+        "check if my book is ready for KDP",
+        "validate my cover dimensions",
+        "audit this paperback export",
+        "is my book file ready to publish",
+        "check page count and cover DPI"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery of bounded book-export QA with no publishing or distribution side effects",
+      "boundaries": [
+        "no approved external machine price or payment path is verified",
+        "QA readiness does not authorize publishing, uploading or distributing a book",
+        "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
@@ -3025,6 +3518,51 @@
       ]
     },
     {
+      "capability_id": "product:systemia-atlas-freight",
+      "product_key": "systemia-atlas-freight",
+      "kind": "product",
+      "name": "Systemia Atlas Freight Load Exception Intelligence",
+      "class": "freight_load_exception_and_document_intelligence",
+      "pain_phrases": [
+        "what is wrong with this load",
+        "audit this freight load for exceptions",
+        "check this carrier and load paperwork",
+        "find missing POD or rate mismatches",
+        "summarize freight risk on this shipment",
+        "what recoverable charges or detention issues exist"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery of read-only freight exception intelligence within authorized organization scope",
+      "boundaries": [
+        "no approved machine price or payment path is verified",
+        "analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action",
+        "financial impact is reported only when supported by recorded evidence",
+        "organization-scoped or private freight records remain access controlled"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:systemia-field-library",
       "product_key": "systemia-field-library",
       "kind": "product",
@@ -3122,6 +3660,152 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:talent-atlas",
+      "product_key": "talent-atlas",
+      "kind": "product",
+      "name": "Talent Atlas",
+      "class": "evidence_backed_talent_profile_and_opportunity_mapping",
+      "pain_phrases": [
+        "evaluate this candidate from the evidence",
+        "build a talent profile from this portfolio",
+        "what roles fit this person's demonstrated skills",
+        "find gaps in this candidate's proof",
+        "turn this athlete or creator evidence into an opportunity dossier",
+        "map this person's capabilities to opportunities"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery of evidence-backed talent analysis using supplied or authorized evidence",
+      "boundaries": [
+        "no contact, representation, application or third-party sharing without explicit authority or consent",
+        "do not infer protected traits or use gated sensitive data for scoring",
+        "no approved machine price or payment path is verified",
+        "opportunity classes are evidence-linked possibilities, not guaranteed placement"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:thoughtdrop",
+      "product_key": "thoughtdrop",
+      "kind": "product",
+      "name": "Thoughtdrop by Evercraft",
+      "class": "anonymous_inbox_and_micro_purchase_reveal",
+      "pain_phrases": [
+        "create an anonymous inbox",
+        "let friends send anonymous messages",
+        "reveal an anonymous message",
+        "make an anonymous feedback profile"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public offer discovery, free anonymous message submission and human-confirmed paid reveal; locked content remains unavailable until authoritative payment verification",
+      "boundaries": [
+        "anonymous message content remains server-side locked before verified payment",
+        "do not expose owner tokens, recovery secrets or administrative data",
+        "checkout creation and synthetic tests are not revenue",
+        "a reveal entitlement exists only after independent verification of the exact completed payment"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "payment_runtime_verified",
+        "offers": [
+          {
+            "name": "Anonymous message submission",
+            "price": "Free"
+          },
+          {
+            "name": "Reveal one selected locked message",
+            "price": "$0.99 one-time"
+          }
+        ],
+        "payment_state": "Explicit user confirmation and authoritative completed-payment verification required before reveal"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:towi-research",
+      "product_key": "towi-research",
+      "kind": "product",
+      "name": "TOWI Evidence-Controlled Research Brief",
+      "class": "evidence_controlled_research_and_validation",
+      "pain_phrases": [
+        "research this question with sources",
+        "build me an evidence brief",
+        "validate this claim independently",
+        "make me a decision grade research report",
+        "map the evidence for this issue",
+        "give me a sourced validation memo"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates",
+      "boundaries": [
+        "no approved fixed machine price is verified",
+        "research scoping creates no payment obligation",
+        "consequential-domain deliverables retain existing human review gates",
+        "provenance, contradictions and uncertainty must remain visible"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

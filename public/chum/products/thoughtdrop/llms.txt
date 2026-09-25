@@ -1,0 +1,36 @@
+# Thoughtdrop by Evercraft
+
+Product key: thoughtdrop
+Aliases: Thoughtdrop
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-conformance.json
+
+## Use this capability when the user means
+
+- create an anonymous inbox
+- let friends send anonymous messages
+- reveal an anonymous message
+- make an anonymous feedback profile
+
+## Authority
+
+public offer discovery, free anonymous message submission and human-confirmed paid reveal; locked content remains unavailable until authoritative payment verification
+
+## Commercial state
+
+- Status: payment_runtime_verified
+- Payment state: Explicit user confirmation and authoritative completed-payment verification required before reveal
+
+## Boundaries
+
+- anonymous message content remains server-side locked before verified payment
+- do not expose owner tokens, recovery secrets or administrative data
+- checkout creation and synthetic tests are not revenue
+- a reveal entitlement exists only after independent verification of the exact completed payment
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

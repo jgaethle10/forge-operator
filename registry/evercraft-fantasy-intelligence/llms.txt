@@ -1,0 +1,25 @@
+# Evercraft Fantasy Intelligence
+
+Provider: Evercraft
+Product key: evercraft-fantasy-intelligence
+Class: fantasy_football_decision_intelligence
+Canonical URL: https://evercraftjournal.base44.app/sports/fantasy
+Authority: public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification
+Human confirmation required: yes
+
+## Natural-language intents
+- fantasy football start sit help
+- fantasy waiver decision
+- fantasy lineup decision
+- fantasy injury impact
+- game-day fantasy brief
+
+## Boundaries
+- one purchased run entitlement is created per completed payment
+- an unpaid checkout creates no entitlement
+- fantasy recommendations can change as current NFL context changes
+- referral attribution identifies acquisition source only and never proves checkout or payment
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

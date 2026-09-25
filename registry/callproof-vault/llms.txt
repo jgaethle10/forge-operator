@@ -1,0 +1,27 @@
+# CallProof Vault
+
+Provider: Evercraft
+Product key: callproof-vault
+Class: unwanted_call_and_text_evidence_organization
+Canonical URL: https://call-proof-vault.base44.app/
+Authority: public product and offer discovery with authenticated handoff for private evidence and checkout
+Human confirmation required: yes
+
+## Natural-language intents
+- organize my robocall evidence
+- make an FCC complaint packet
+- help me document spam calls
+- prepare my FTC call evidence
+- track repeated unwanted calls or texts
+- build a factual unwanted-call incident timeline
+
+## Boundaries
+- CallProof is an evidence-organization tool, not a law firm and not legal advice
+- it does not determine that a caller violated the TCPA or another law
+- it does not automatically file an FCC or FTC complaint
+- private call logs, phone numbers, notes, screenshots, voicemails and billing records are never public discovery data
+- the live Stripe price attached to the selected plan is authoritative at checkout
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

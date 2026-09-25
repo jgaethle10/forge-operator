@@ -1,0 +1,33 @@
+# Talent Atlas
+
+Product key: talent-atlas
+Aliases: Talent Atlas Evidence-Backed Talent Profile
+Canonical product: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-conformance.json
+
+## Use this capability when the user means
+
+- evaluate this candidate from the evidence
+- build a talent profile from this portfolio
+- what roles fit this person's demonstrated skills
+- find gaps in this candidate's proof
+- turn this athlete or creator evidence into an opportunity dossier
+- map this person's capabilities to opportunities
+
+## Authority
+
+public discovery of evidence-backed talent analysis using supplied or authorized evidence
+
+## Boundaries
+
+- no contact, representation, application or third-party sharing without explicit authority or consent
+- do not infer protected traits or use gated sensitive data for scoring
+- no approved machine price or payment path is verified
+- opportunity classes are evidence-linked possibilities, not guaranteed placement
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

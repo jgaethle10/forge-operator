@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "GlobalStat",
+  "product_key": "globalstat",
+  "aliases": [
+    "GlobalStat Country / Domain Intelligence Slice"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://global-stat-pulse.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "opaque rankings are not treated as evidence",
+    "a country-brief price range has been discussed but no approved fixed machine price or payment path is verified",
+    "read-only sourced data may be returned within approved access",
+    "paid work requires explicit confirmation and verified terms"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

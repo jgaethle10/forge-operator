@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Fantasy Intelligence",
+  "product_key": "evercraft-fantasy-intelligence",
+  "aliases": [
+    "Evercraft Journal Fantasy Intelligence"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "one purchased run entitlement is created per completed payment",
+    "an unpaid checkout creates no entitlement",
+    "fantasy recommendations can change as current NFL context changes",
+    "referral attribution identifies acquisition source only and never proves checkout or payment"
+  ],
+  "commercial": {
+    "status": "payment_runtime_verified",
+    "offers": [
+      {
+        "name": "Quick Decision",
+        "price": "$0.99 one-time"
+      },
+      {
+        "name": "Full Optimization",
+        "price": "$2.99 one-time"
+      },
+      {
+        "name": "Game-Day Command Brief",
+        "price": "$4.99 one-time"
+      }
+    ],
+    "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}

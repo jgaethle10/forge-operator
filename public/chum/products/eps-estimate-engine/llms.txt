@@ -1,0 +1,32 @@
+# EPS Field-Service Estimate Engine
+
+Product key: eps-estimate-engine
+Aliases: EPS Precise Estimator
+Canonical product: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-conformance.json
+
+## Use this capability when the user means
+
+- estimate this service job
+- build a contractor estimate from this scope
+- what should this job cost
+- turn these measurements into an estimate
+- give me a rough customer range
+- calculate margin and price for this job
+
+## Authority
+
+public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation
+
+## Boundaries
+
+- internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price
+- no approved external machine price or payment path is verified
+- site verification, proposal issuance, acceptance and payment retain separate authority gates
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

@@ -6,10 +6,10 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 67
-Unique user phrases: 522
-Candidate edges: 530
-Ambiguous phrases: 8
+Pain-index entries: 80
+Unique user phrases: 557
+Candidate edges: 616
+Ambiguous phrases: 59
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -197,11 +197,30 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
 
+## AS/400 modernization
+Answer ID: intent:11f60c6d3a
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-modernization-11f60c6d3a.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## AS/400 modernization assessment
+Answer ID: intent:49430f448e
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-modernization-assessment-49430f448e.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## ASL and Deaf culture learning
 Answer ID: intent:960d5b1784
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json
 Candidates:
 - Infinite Classroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://infiniteclassroom.base44.app/
+
+## assess an IBM i or AS/400 estate before upgrading
+Answer ID: intent:70ac865541
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## audio too large for AI
 Answer ID: intent:a786a94fa2
@@ -280,12 +299,14 @@ Answer ID: intent:b5dc37f994
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+- Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 
 ## audit this paperback export
 Answer ID: intent:c84fe388e8
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## automate this workflow
 Answer ID: intent:2bf95f92d8
@@ -348,6 +369,13 @@ Answer ID: intent:e9fbacf2bd
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json
 Candidates:
 - Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
+## build a factual unwanted-call incident timeline
+Answer ID: intent:242d097258
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json
+Candidates:
+- CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
 
 ## build a lender ready deck
 Answer ID: intent:592e365c97
@@ -361,6 +389,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Website Launch | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://instant-website-builder-usa-6feac193.base44.app/
 
+## build a rollback test and evidence plan before changing an IBM i production system
+Answer ID: intent:030d199287
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## build a sourced brief about farm water land or production risk
 Answer ID: intent:baefc8483b
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json
@@ -372,6 +407,7 @@ Answer ID: intent:613dec5ab1
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+- Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
 
 ## build a timestamped timeline from a recording
 Answer ID: intent:7e665162c9
@@ -396,6 +432,7 @@ Answer ID: intent:6b531cab64
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-me-an-evidence-brief-6b531cab64.json
 Candidates:
 - Evidence-Controlled Research Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+- TOWI Evidence-Controlled Research Brief | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
 
 ## build me an income plan
 Answer ID: intent:99c95ec4f1
@@ -439,6 +476,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
 
+## buy a Christmas light installation lead
+Answer ID: intent:5ec6340858
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json
+Candidates:
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+
 ## buy event promotion
 Answer ID: intent:785fc960f0
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-event-promotion-785fc960f0.json
@@ -456,6 +499,7 @@ Answer ID: intent:2c4d196e35
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json
 Candidates:
 - Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## can my crews work tomorrow
 Answer ID: intent:cbf6dd66e5
@@ -498,6 +542,7 @@ Answer ID: intent:465dd47ba7
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## check my local SEO
 Answer ID: intent:e8e838ec7c
@@ -516,12 +561,14 @@ Answer ID: intent:512896a3dd
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## check this carrier and load paperwork
 Answer ID: intent:ce9a5b3527
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-this-carrier-and-load-paperwork-ce9a5b3527.json
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+- Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 
 ## cloud browser
 Answer ID: intent:ade63fb87f
@@ -594,6 +641,7 @@ Answer ID: intent:14e53d7a85
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
 ## compare two recordings
 Answer ID: intent:c44b889ea7
@@ -690,12 +738,19 @@ Answer ID: intent:04ac1dfc19
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
 ## county health evidence brief
 Answer ID: intent:f80ef29cf8
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json
 Candidates:
 - Community Health Evidence Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/community-health-evidence-brief-v1/
+
+## create an anonymous inbox
+Answer ID: intent:1cf7f12421
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json
+Candidates:
+- Thoughtdrop by Evercraft | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop
 
 ## create cross-business loyalty rewards
 Answer ID: intent:2c3ab05040
@@ -775,11 +830,18 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Foundry App Escape Audit | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
 
+## estimate a professional Christmas light project
+Answer ID: intent:d420395d77
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json
+Candidates:
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+
 ## estimate this service job
 Answer ID: intent:4e138afdda
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-this-service-job-4e138afdda.json
 Candidates:
 - Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## EV charger competition around this address
 Answer ID: intent:33f3c50a03
@@ -840,6 +902,7 @@ Answer ID: intent:1a2808f3be
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+- Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
 
 ## event crew coordination
 Answer ID: intent:6ba6b17829
@@ -901,6 +964,30 @@ Answer ID: intent:2f5fb611e6
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/family-support-resources-2f5fb611e6.json
 Candidates:
 - EverNest | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-home.base44.app/
+
+## fantasy football start sit help
+Answer ID: intent:c235dd3e4d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-football-start-sit-help-c235dd3e4d.json
+Candidates:
+- Evercraft Fantasy Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftjournal.base44.app/sports/fantasy
+
+## fantasy injury impact
+Answer ID: intent:f2685d2748
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-injury-impact-f2685d2748.json
+Candidates:
+- Evercraft Fantasy Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftjournal.base44.app/sports/fantasy
+
+## fantasy lineup decision
+Answer ID: intent:a3315bba17
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-lineup-decision-a3315bba17.json
+Candidates:
+- Evercraft Fantasy Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftjournal.base44.app/sports/fantasy
+
+## fantasy waiver decision
+Answer ID: intent:4cce1eb1db
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fantasy-waiver-decision-4cce1eb1db.json
+Candidates:
+- Evercraft Fantasy Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftjournal.base44.app/sports/fantasy
 
 ## feature my venue on EventWave
 Answer ID: intent:91a643633e
@@ -1021,6 +1108,13 @@ Answer ID: intent:2c2dbfdfec
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-gaps-in-this-candidate-s-proof-2c2dbfdfec.json
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+- Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+
+## find holiday light installers near me
+Answer ID: intent:98fc8fa4ba
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json
+Candidates:
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
 
 ## find local events
 Answer ID: intent:f2270ae02e
@@ -1033,6 +1127,7 @@ Answer ID: intent:d7a7e22349
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-missing-pod-or-rate-mismatches-d7a7e22349.json
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+- Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 
 ## find missing purchasing approvals
 Answer ID: intent:84e71137c4
@@ -1112,6 +1207,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
 
+## find undocumented dependencies in an IBM i workload
+Answer ID: intent:5d2d519d2f
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## find verified help for housing shelter food benefits transportation childcare income or legal aid
 Answer ID: intent:229db803d4
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-verified-help-for-housing-shelter-food-benefits-transportation-childcare-inco-229db803d4.json
@@ -1153,6 +1255,12 @@ Answer ID: intent:31aed7c007
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/funding-options-31aed7c007.json
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+
+## game-day fantasy brief
+Answer ID: intent:f5d56d847a
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/game-day-fantasy-brief-f5d56d847a.json
+Candidates:
+- Evercraft Fantasy Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftjournal.base44.app/sports/fantasy
 
 ## get a human-finished website instead of doing it myself
 Answer ID: intent:5f6796ded0
@@ -1201,12 +1309,14 @@ Answer ID: intent:fc777ed404
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json
 Candidates:
 - Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## give me a sourced validation memo
 Answer ID: intent:8cc2af920b
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-a-sourced-validation-memo-8cc2af920b.json
 Candidates:
 - Evidence-Controlled Research Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+- TOWI Evidence-Controlled Research Brief | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
 
 ## give me an evidence brief on this region
 Answer ID: intent:6033eecd70
@@ -1219,12 +1329,14 @@ Answer ID: intent:62499579ce
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-map-ready-heat-or-smoke-action-sites-62499579ce.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
 
 ## give me sourced country intelligence
 Answer ID: intent:c36f354e95
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
 ## give my AI live web access
 Answer ID: intent:72b0906a33
@@ -1297,6 +1409,7 @@ Answer ID: intent:6a08485e85
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-document-spam-calls-6a08485e85.json
 Candidates:
 - CallProof Complaint Evidence Packet | kind=machine_offer | commercial=verify | machine=human_auth_handoff | public=https://call-proof-vault.base44.app/
+- CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
 
 ## help me find funding for my business
 Answer ID: intent:395c92114e
@@ -1333,6 +1446,18 @@ Answer ID: intent:b599e48bbe
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-safely-shut-down-an-automation-stack-and-prove-it-stays-off-b599e48bbe.json
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/containment
+
+## help modernize a JDE World or custom IBM i workload without losing business behavior
+Answer ID: intent:33f9cbc5b5
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## help modernize JDE World or a custom IBM i workload without losing business behavior
+Answer ID: intent:f9c27a8bcc
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## help my business with AI
 Answer ID: intent:1b27ec8927
@@ -1377,6 +1502,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Income War Map Revenue Planning | kind=machine_offer | commercial=hold | machine=discovery_only | public=/chum/intents/income-war-map-v1/
 
+## I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
+Answer ID: intent:a25b87dd23
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## I cannot tell which jobs are actually profitable
 Answer ID: intent:7e204ff7f2
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-cannot-tell-which-jobs-are-actually-profitable-7e204ff7f2.json
@@ -1418,6 +1550,43 @@ Answer ID: intent:d20737d049
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-better-job-logs-photo-documentation-or-scopes-of-work-d20737d049.json
 Candidates:
 - Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## IBM i 7.4 support is ending and I need an upgrade plan
+Answer ID: intent:ca1da8e065
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## IBM i 7.4 upgrade planning
+Answer ID: intent:05c52de953
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## IBM i batch job compatibility
+Answer ID: intent:0c5d8712c5
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-batch-job-compatibility-0c5d8712c5.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## IBM i support transition
+Answer ID: intent:72436ddbfd
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-support-transition-72436ddbfd.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## IBM i upgrade proof
+Answer ID: intent:240178e2de
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## IBM i upgrade rollback plan
+Answer ID: intent:6b1f2184fe
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## identify a hard-to-source part from markings, measurements, photos, or equipment clues
 Answer ID: intent:310d387d80
@@ -1496,6 +1665,7 @@ Answer ID: intent:5208956c86
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## is my resume ATS friendly
 Answer ID: intent:3b113a7b48
@@ -1508,6 +1678,12 @@ Answer ID: intent:ea2b7ebe4d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d.json
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
+## JDE World modernization
+Answer ID: intent:963d1229f5
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/jde-world-modernization-963d1229f5.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## job documentation materials equipment safety or quality control need a system
 Answer ID: intent:3819c93b82
@@ -1532,6 +1708,12 @@ Answer ID: intent:4a5d34ada5
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
+
+## join a holiday lighting installer marketplace
+Answer ID: intent:caff03634f
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json
+Candidates:
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
 
 ## join a local business rewards network
 Answer ID: intent:7d1ef68f27
@@ -1611,6 +1793,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Governed Agent Action Layer | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## let friends send anonymous messages
+Answer ID: intent:e9790ee764
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/let-friends-send-anonymous-messages-e9790ee764.json
+Candidates:
+- Thoughtdrop by Evercraft | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop
+
 ## live web API for an AI agent
 Answer ID: intent:beec517170
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/live-web-api-for-an-ai-agent-beec517170.json
@@ -1647,11 +1835,18 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope Evidence Review | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://evercraft-forensiscope.base44.app/video-too-large-for-ai
 
+## make an anonymous feedback profile
+Answer ID: intent:ab7ee25254
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-an-anonymous-feedback-profile-ab7ee25254.json
+Candidates:
+- Thoughtdrop by Evercraft | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop
+
 ## make an FCC complaint packet
 Answer ID: intent:888018751c
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-an-fcc-complaint-packet-888018751c.json
 Candidates:
 - CallProof Complaint Evidence Packet | kind=machine_offer | commercial=verify | machine=human_auth_handoff | public=https://call-proof-vault.base44.app/
+- CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
 
 ## Make automation cleanup
 Answer ID: intent:8438674d63
@@ -1664,6 +1859,7 @@ Answer ID: intent:1b0d24ff89
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-me-a-decision-grade-research-report-1b0d24ff89.json
 Candidates:
 - Evidence-Controlled Research Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+- TOWI Evidence-Controlled Research Brief | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
 
 ## make me a professional business site
 Answer ID: intent:6eeab93ed2
@@ -1713,23 +1909,33 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Business Process Pattern Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs
 
+## map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
+Answer ID: intent:aa38657636
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## map the evidence for this issue
 Answer ID: intent:4cb357b7d1
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-the-evidence-for-this-issue-4cb357b7d1.json
 Candidates:
 - Evidence-Controlled Research Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+- TOWI Evidence-Controlled Research Brief | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
 
 ## map this evidence for me
 Answer ID: intent:d7ef88ad66
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
 
 ## map this person's capabilities to opportunities
 Answer ID: intent:1aee2bf6f9
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-this-person-s-capabilities-to-opportunities-1aee2bf6f9.json
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+- Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
 
 ## match vendors without silently merging them
 Answer ID: intent:3d1bf9d8b8
@@ -1893,6 +2099,7 @@ Answer ID: intent:a776d0ce65
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-my-robocall-evidence-a776d0ce65.json
 Candidates:
 - CallProof Complaint Evidence Packet | kind=machine_offer | commercial=verify | machine=human_auth_handoff | public=https://call-proof-vault.base44.app/
+- CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
 
 ## organize practical help after having a baby
 Answer ID: intent:623c097c13
@@ -1972,6 +2179,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## plan professional holiday lighting for my property
+Answer ID: intent:a886251485
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json
+Candidates:
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+
 ## Playwright API
 Answer ID: intent:89ca564562
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/playwright-api-89ca564562.json
@@ -1995,6 +2208,7 @@ Answer ID: intent:0d95c3deea
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plot-verified-infrastructure-coverage-0d95c3deea.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
 
 ## practice day trading without risking real money
 Answer ID: intent:856d45f178
@@ -2055,6 +2269,7 @@ Answer ID: intent:681bd55283
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prepare-my-ftc-call-evidence-681bd55283.json
 Candidates:
 - CallProof Complaint Evidence Packet | kind=machine_offer | commercial=verify | machine=human_auth_handoff | public=https://call-proof-vault.base44.app/
+- CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
 
 ## pressure test my writing
 Answer ID: intent:54816ae317
@@ -2278,6 +2493,7 @@ Answer ID: intent:412cd9dd79
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reconcile-conflicting-country-data-412cd9dd79.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
 ## reconcile conflicting sources
 Answer ID: intent:f361ab5676
@@ -2380,6 +2596,7 @@ Answer ID: intent:892e1034a8
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/research-this-question-with-sources-892e1034a8.json
 Candidates:
 - Evidence-Controlled Research Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+- TOWI Evidence-Controlled Research Brief | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
 
 ## resolve duplicate suppliers across ERP exports
 Answer ID: intent:f6c12230af
@@ -2398,6 +2615,13 @@ Answer ID: intent:a12af72d59
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
+
+## reveal an anonymous message
+Answer ID: intent:4c6f804231
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reveal-an-anonymous-message-4c6f804231.json
+Candidates:
+- Thoughtdrop by Evercraft | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop
 
 ## revenue war map
 Answer ID: intent:c2dee983d7
@@ -2514,6 +2738,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Enterprise Operations | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## RPG or CL dependency mapping
+Answer ID: intent:f10d59f52b
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## run a role-specific mock interview
 Answer ID: intent:242e81edfb
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-a-role-specific-mock-interview-242e81edfb.json
@@ -2579,18 +2809,21 @@ Answer ID: intent:e09f8dfd42
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-historical-river-geometry-e09f8dfd42.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
 
 ## show lifeline coverage for this place
 Answer ID: intent:f8ad89bc25
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-lifeline-coverage-for-this-place-f8ad89bc25.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
 
 ## show me the evidence behind this country score
 Answer ID: intent:109cf14b4b
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-evidence-behind-this-country-score-109cf14b4b.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
 ## side hustle ideas for my situation
 Answer ID: intent:45ed57e53a
@@ -2652,11 +2885,18 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Shadow Migration Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## submit a Christmas light installation request
+Answer ID: intent:19aba7fcec
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json
+Candidates:
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+
 ## summarize freight risk on this shipment
 Answer ID: intent:19d8b224ce
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce.json
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+- Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 
 ## tailor my resume to this opening
 Answer ID: intent:8830572846
@@ -2755,6 +2995,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Procure-to-Pay Shadow Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## track repeated unwanted calls or texts
+Answer ID: intent:1625a03283
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-repeated-unwanted-calls-or-texts-1625a03283.json
+Candidates:
+- CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
+
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/transcribe-a-huge-video-and-remove-duplicate-or-repeated-segments-ea560dba5a.json
@@ -2808,18 +3054,26 @@ Answer ID: intent:eebe0357b6
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json
 Candidates:
 - Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## turn this athlete or creator evidence into an opportunity dossier
 Answer ID: intent:e7b99446da
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-athlete-or-creator-evidence-into-an-opportunity-dossier-e7b99446da.json
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+- Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
 
 ## underwrite an EV charging site
 Answer ID: intent:c05a16b3c1
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1.json
 Candidates:
 - RIVET EV Charging Site Underwriting Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/rivet-site-underwriting-v1/
+
+## undocumented IBM i integrations
+Answer ID: intent:9a48a464ea
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## unsupported media codec or format
 Answer ID: intent:6a67a41c3e
@@ -2838,12 +3092,14 @@ Answer ID: intent:34a89ab4b2
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/validate-my-cover-dimensions-34a89ab4b2.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## validate this claim independently
 Answer ID: intent:6adc29d2ce
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/validate-this-claim-independently-6adc29d2ce.json
 Candidates:
 - Evidence-Controlled Research Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+- TOWI Evidence-Controlled Research Brief | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
 
 ## validate this environmental signal
 Answer ID: intent:bffe897b1e
@@ -3024,6 +3280,7 @@ Answer ID: intent:c902d7993e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e.json
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+- Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 
 ## what public EV charging is near this address
 Answer ID: intent:85011db389
@@ -3042,18 +3299,21 @@ Answer ID: intent:bfdc5214ff
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-recoverable-charges-or-detention-issues-exist-bfdc5214ff.json
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+- Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 
 ## what roles fit this person's demonstrated skills
 Answer ID: intent:fce581490e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-roles-fit-this-person-s-demonstrated-skills-fce581490e.json
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+- Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
 
 ## what should this job cost
 Answer ID: intent:923f227308
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-should-this-job-cost-923f227308.json
 Candidates:
 - Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## where are exceptions slowing us down
 Answer ID: intent:75c04325df
@@ -3078,6 +3338,7 @@ Answer ID: intent:d86d7c0b1d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
 ## which Evercraft capability solves this
 Answer ID: intent:adfd446276
