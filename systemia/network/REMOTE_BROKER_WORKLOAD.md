@@ -40,3 +40,24 @@ For production use, `remoteCapacityGrant()` requires a verified public HTTPS bro
 The workload requires an explicit map of NodeSeed device fingerprints to expected node IDs. Unknown self-signed devices cannot enroll themselves.
 
 Dynamic pairing can be added as a separate bounded authorization workflow without changing the runtime contract.
+
+
+## Dynamic device enrollment
+
+The broker may start with zero authorized remote devices. That does not make registration open.
+
+A remote NodeSeed is allowed to complete the broker challenge only after Systemia/Yard authorizes the exact pair:
+
+- device-key fingerprint,
+- NodeSeed node ID.
+
+Authorization and revocation are broker-management actions behind the broker's active Evercraft Compute lease. Both require an explicit approval reference and both produce persisted receipts.
+
+A local organism's `remote-admission-request.json` is therefore an enrollment request only. Discovery, possession of the request file, or successful reachability to the broker never grants trust.
+
+Yard exposes bounded management actions for this lifecycle:
+
+- authorize an exact device fingerprint/node pair,
+- revoke that exact pair.
+
+Revocation immediately invalidates the live broker session for the matching device, removes its persisted control grant, and survives broker restart. The local NodeSeed's allocator secret remains on the node and is never part of the enrollment record.

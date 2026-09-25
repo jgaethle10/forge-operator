@@ -13,11 +13,17 @@
   "security": {
     "node_identity": "existing NodeSeed Ed25519 attestation",
     "secure_envelope": "evercraft.secure-envelope.v1",
-    "authorized_devices_required": true,
+    "authorized_devices_required": false,
     "local_allocator_secret_leaves_node": false,
     "remote_control_grants_public": false,
     "remote_control_grants_require_broker_compute_lease": true,
-    "replay_policy": "uncertain side-effect execution holds instead of replay"
+    "replay_policy": "uncertain side-effect execution holds instead of replay",
+    "remote_registration_requires_explicit_authorization": true,
+    "dynamic_authorization_requires_broker_compute_lease": true,
+    "authorization_mutation_requires_approval_reference": true,
+    "authorization_and_revocation_persist": true,
+    "revocation_disconnects_live_session": true,
+    "enrollment_request_grants_authority": false
   },
   "route_acceptance": [
     "local broker health verified",
