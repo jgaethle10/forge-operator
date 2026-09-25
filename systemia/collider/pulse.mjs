@@ -11,12 +11,14 @@ export function buildKaidancePulse({
   const field = fieldAttestation && fieldAttestation.verified === true
     ? {
         state: 'verified',
-        receipt: String(fieldAttestation.receipt || ''),
+        receipt: String(fieldAttestation.receipt_hash || fieldAttestation.receipt || ''),
+        enrollment_receipt: fieldAttestation.enrollment_receipt || null,
         verified_at: String(fieldAttestation.verified_at || ''),
       }
     : {
         state: 'not_verified',
         receipt: null,
+        enrollment_receipt: null,
         verified_at: null,
       };
 
@@ -35,6 +37,14 @@ export function buildKaidancePulse({
     held_count: Number(health.held_count || 0),
     deployment_receipt: health.deployment_receipt || null,
     compute_node_id: deployment?.receipt?.capacity_node_id || null,
+    runtime_release_ref:
+      fieldAttestation?.runtime_release_ref ||
+      deployment?.receipt?.capacity_runtime_release_ref ||
+      null,
+    runtime_payload_digest:
+      fieldAttestation?.runtime_payload_digest ||
+      deployment?.receipt?.capacity_runtime_payload_digest ||
+      null,
     continuity: continuity ? {
       action: continuity.action || null,
       receipt_hash: continuity.receipt_hash || null,
