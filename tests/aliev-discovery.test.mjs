@@ -78,11 +78,14 @@ for (const pathname of [
   if (!fs.existsSync(pathname)) fail('dedicated RIVET surface missing: ' + pathname);
 }
 const rivetHtml = fs.readFileSync('public/rivet/index.html','utf8');
-if (!rivetHtml.includes('RIVET / AliEV') || !rivetHtml.includes('EV charging')) fail('RIVET landing lost entity or category anchor');
+if (!rivetHtml.includes('RIVET') || !rivetHtml.includes('EV infrastructure intelligence')) fail('RIVET landing lost entity or category anchor');
+if (rivetHtml.includes('RIVET / AliEV')) fail('customer-facing RIVET landing leaked joined legacy identity');
+if (rivetHtml.includes('aliev.base44.app')) fail('customer-facing RIVET landing leaked legacy runtime route');
 const rivetDiscovery = JSON.parse(fs.readFileSync('public/rivet/discovery.json','utf8'));
-if (rivetDiscovery.registry_name !== 'io.github.jgaethle10/aliev') fail('RIVET landing registry identity drifted');
-if (rivetDiscovery.relationship?.aliev !== 'Address-level EV infrastructure intelligence engine.') fail('AliEV role missing');
-if (!(rivetDiscovery.aliases || []).includes('RIVET')) fail('RIVET machine alias missing');
+if (rivetDiscovery.name !== 'RIVET') fail('RIVET landing canonical name drifted');
+if (!(rivetDiscovery.aliases || []).includes('RIVET EV Infrastructure Intelligence')) fail('RIVET machine alias missing');
+if (rivetDiscovery.machine_capability !== '/chum/capabilities/rivet-site-underwriting-v1/') fail('RIVET capability route drifted');
+if (rivetDiscovery.brand_manifest !== '/rivet/brand.json') fail('RIVET brand manifest route missing');
 
 const sitemap = fs.readFileSync('public/sitemap.xml','utf8');
 for (const route of ['/rivet/','/rivet/llms.txt','/rivet/discovery.json']) {
