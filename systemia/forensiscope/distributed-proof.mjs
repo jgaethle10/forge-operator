@@ -21,6 +21,7 @@ import { handleForensiScopeMcpRequest } from './mcp-protocol.mjs';
 import { issueEvidenceAccessToken } from './evidence-access.mjs';
 import { handleForensiScopeMcpHttp } from './mcp-http.mjs';
 import { runForensiScopeAnalysis } from './pipeline.mjs';
+import { compareForensiScopeEvidence } from './evidence-compare.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -99,6 +100,20 @@ run('ffmpeg', [
 ]);
 
 const sourceHash = hashFile(sourcePath);
+
+const comparisonSourcePath = path.join(sourceDir, 'synthetic-repeat-remuxed.mkv');
+run('ffmpeg', [
+  '-v', 'error',
+  '-i', sourcePath,
+  '-map', '0',
+  '-c', 'copy',
+  '-metadata', 'comment=forensiscope-cross-recording-proof',
+  '-y',
+  comparisonSourcePath
+]);
+const comparisonSourceHash = hashFile(comparisonSourcePath);
+assert.notEqual(sourceHash, comparisonSourceHash);
+
 const registry = loadMultiplicationRegistry();
 const registeredContract = resolveMultiplicationContract('forensiscope', registry);
 const proofContract = {
@@ -708,6 +723,50 @@ const pipelineQuery = invokeForensiScopeGatewayTool({
 assert.equal(pipelineQuery.access.verified, true);
 assert.ok(pipelineQuery.result.match_count > 0);
 
+const comparisonPipelineReceipt = await runForensiScopeAnalysis({
+  source: {
+    path: comparisonSourcePath,
+    sha256: comparisonSourceHash
+  },
+  authorization: {
+    confirmed: true,
+    scope: 'synthetic-cross-recording-proof',
+    authorized_by: 'forensiscope-distributed-proof',
+    confirmed_at: new Date().toISOString()
+  },
+  jobId: 'forensiscope-cross-recording-proof',
+  rootDir
+});
+assert.equal(comparisonPipelineReceipt.status, 'ready');
+assert.equal(comparisonPipelineReceipt.source.sha256, comparisonSourceHash);
+assert.notEqual(
+  comparisonPipelineReceipt.result.evidence_ref,
+  pipelineReceipt.result.evidence_ref
+);
+
+const comparisonGraphA = loadEvidenceGraph(
+  pipelineReceipt.result.evidence_ref,
+  { rootDir }
+).graph;
+const comparisonGraphB = loadEvidenceGraph(
+  comparisonPipelineReceipt.result.evidence_ref,
+  { rootDir }
+).graph;
+assert.ok(comparisonGraphA.comparison_index.perceptual_sample_count > 0);
+assert.ok(comparisonGraphB.comparison_index.perceptual_sample_count > 0);
+
+const crossRecording = compareForensiScopeEvidence(
+  comparisonGraphA,
+  comparisonGraphB
+);
+assert.equal(
+  crossRecording.schema,
+  'evercraft.forensiscope.cross-recording-comparison.v1'
+);
+assert.equal(crossRecording.identical_source_hash, false);
+assert.ok(crossRecording.match_count > 0);
+assert.ok(crossRecording.decoded_visual_matches > 0);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -769,6 +828,10 @@ const proof = {
   single_entry_evidence_ref: pipelineReceipt.result.evidence_ref,
   single_entry_transcript_segments: pipelineReceipt.result.transcript_segments,
   single_entry_query_matches: pipelineQuery.result.match_count,
+  comparison_source_sha256: comparisonSourceHash,
+  comparison_evidence_ref: comparisonPipelineReceipt.result.evidence_ref,
+  cross_recording_matches: crossRecording.match_count,
+  cross_recording_decoded_visual_matches: crossRecording.decoded_visual_matches,
   public_machine_intake_enabled: false
 };
 
