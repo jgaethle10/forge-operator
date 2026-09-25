@@ -24,7 +24,8 @@
   "outputs": {
     "cycle_report": "artifacts/legacy-rescue-watch/latest.json",
     "mission_snapshot": "artifacts/legacy-rescue-watch/mission-snapshot.json",
-    "radar_input": "artifacts/legacy-rescue-watch/radar-input.json"
+    "radar_input": "artifacts/legacy-rescue-watch/radar-input.json",
+    "strike_admission": "artifacts/legacy-rescue-watch/strike-admission.json"
   },
   "input_contract": {
     "signals_file": "artifacts/legacy-rescue-watch/signals.json",
@@ -39,5 +40,15 @@
     "heartbeat_seconds": 300,
     "mission_snapshot_schema": "evercraft.kaidance.mission-snapshot.v1",
     "material_change_only": true
+  },
+  "promotion_policy": {
+    "strike_candidate_threshold": 80,
+    "research_queue_threshold": 65,
+    "top_material_candidate_only": true,
+    "auto_admit_no_touch_strike_goal": true,
+    "named_outreach": "human_gate",
+    "payment_request": "human_gate",
+    "private_system_access": "explicit_authorization_required",
+    "production_mutation": "explicit_authorization_required"
   }
 }
