@@ -80,6 +80,7 @@ export async function startOutboundNodeAgent({
   brokerUrl,
   localCapacityEndpoint,
   localAllocatorToken,
+  pairingPermit = null,
   pollBackoffMs = 100,
   capacityRefreshEveryPoll = true,
 } = {}) {
@@ -94,6 +95,10 @@ export async function startOutboundNodeAgent({
   }
 
   let running = true;
+  let pairingPermitId = String(pairingPermit?.permit_id || '');
+  let pairingPermitToken = String(pairingPermit?.permit_token || '');
+  let pairingPermitConsumed = false;
+  let pairingReceiptHash = null;
   let sessionToken = '';
   let transportKey = '';
   let commandReplayGuard = new ReplayGuard();
@@ -125,6 +130,58 @@ export async function startOutboundNodeAgent({
     });
   }
 
+  async function pairDevice(capacity) {
+    if (!pairingPermitId || !pairingPermitToken) {
+      throw new Error('remote_pairing_permit_unavailable');
+    }
+
+    const challenged = await jsonRequest(
+      `${broker}/v1/remote/pair/challenge`,
+      {
+        method: 'POST',
+        body: {
+          permit_id: pairingPermitId,
+          permit_token: pairingPermitToken,
+          node_id: nodeId,
+          device_fingerprint: deviceFingerprint,
+        },
+      }
+    );
+    if (!challenged.ok) {
+      throw new Error(`remote_pairing_challenge_failed:${challenged.status}`);
+    }
+
+    const attested = await localRequest('/v1/attest', {
+      method: 'POST',
+      body: { nonce: challenged.body.nonce },
+      injectAllocatorAuth: true,
+    });
+    if (!attested.ok) {
+      throw new Error(`local_pairing_attestation_failed:${attested.status}`);
+    }
+
+    const completed = await jsonRequest(
+      `${broker}/v1/remote/pair/complete`,
+      {
+        method: 'POST',
+        body: {
+          challenge_id: challenged.body.challenge_id,
+          permit_token: pairingPermitToken,
+          attestation: attested.body.attestation,
+          capacity,
+        },
+      }
+    );
+    if (!completed.ok || completed.body?.paired !== true) {
+      throw new Error(`remote_pairing_complete_failed:${completed.status}`);
+    }
+
+    pairingPermitConsumed = true;
+    pairingReceiptHash = completed.body?.receipt?.receipt_hash || null;
+    pairingPermitToken = '';
+    return completed.body;
+  }
+
   async function register() {
     const capacityResponse = await localRequest('/v1/capacity');
     if (!capacityResponse.ok) {
@@ -137,13 +194,27 @@ export async function startOutboundNodeAgent({
       throw new Error('local Compute capacity is missing device identity');
     }
 
-    const challenge = await jsonRequest(`${broker}/v1/remote/challenge`, {
+    let challenge = await jsonRequest(`${broker}/v1/remote/challenge`, {
       method: 'POST',
       body: {
         node_id: nodeId,
         device_fingerprint: deviceFingerprint,
       },
     });
+    if (
+      challenge.status === 403 &&
+      pairingPermitId &&
+      pairingPermitToken
+    ) {
+      await pairDevice(capacity);
+      challenge = await jsonRequest(`${broker}/v1/remote/challenge`, {
+        method: 'POST',
+        body: {
+          node_id: nodeId,
+          device_fingerprint: deviceFingerprint,
+        },
+      });
+    }
     if (!challenge.ok) {
       throw new Error(`remote_challenge_failed:${challenge.status}`);
     }
@@ -358,6 +429,8 @@ export async function startOutboundNodeAgent({
         secure_commands_opened: secureCommandsOpened,
         duplicate_commands_suppressed: duplicateCommandsSuppressed,
         result_retry_count: resultRetryCount,
+        paired_during_session: pairingPermitConsumed,
+        pairing_receipt_hash: pairingReceiptHash,
       };
     },
     close: async () => {
