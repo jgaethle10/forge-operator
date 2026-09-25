@@ -19,8 +19,8 @@
     "chum:validate": "node scripts/validate-chum-probes.mjs",
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
-    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run test:chum-revenue && npm run chum:index && npm run chum:answers && npm run chum:capabilities && npm run chum:mirror && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run chum && npm run chum:crawlers && npm run chum:mcp",
-    "check": "npm run test:signal-fabric-engine && npm run test:signal-fabric && npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run proof:offline-continuity && npm run test:media-studio && npm run check:ai && npm run test:openai-plugin-submission && npm run test:chum-crawler-policy && npm run test:chum-capabilities && npm run test:chum-hunter && npm run test:chum-ard-strike && npm run test:chum-live-intent && npm run chum:mirror && npm run saban:discovery && npm run saban:discovery:check && npm run test:saban-revenue && npm run test:chum-revenue && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run check:probes && npm run lint && npm run build",
+    "chum:all": "npm run chum:sync && npm run chum:revenue && npm run test:chum-revenue && npm run chum:index && npm run chum:answers && npm run chum:capabilities && npm run chum:mirror && npm run test:chum-surfaces && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run chum && npm run chum:crawlers && npm run chum:mcp",
+    "check": "npm run test:signal-fabric-engine && npm run test:signal-fabric && npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run proof:offline-continuity && npm run test:media-studio && npm run check:ai && npm run test:openai-plugin-submission && npm run test:chum-crawler-policy && npm run test:chum-capabilities && npm run test:chum-hunter && npm run test:chum-ard-strike && npm run test:chum-live-intent && npm run chum:mirror && npm run saban:discovery && npm run saban:discovery:check && npm run test:saban-revenue && npm run test:chum-revenue && npm run test:chum-surfaces && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
@@ -63,7 +63,8 @@
     "saban:revenue": "node systemia/saban/revenue-swarm.mjs",
     "test:saban-revenue": "node tests/saban-revenue-swarm.test.mjs",
     "test:openai-plugin-submission": "node scripts/validate-openai-plugin-submission.mjs",
-    "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs"
+    "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs",
+    "test:chum-surfaces": "npm run chum:mirror && node systemia/chum/discovery-surfaces.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
