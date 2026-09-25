@@ -196,9 +196,51 @@ export interface ProductionNeed {
   voiceProfileId?: string;
   language?: string;
   sourceRequestId?: string;
+  continuityEntityIds?: string[];
   continuityDigest: string;
   requires: CreativeRequirement[];
   status: 'planned' | 'routed' | 'completed' | 'blocked';
+}
+
+export interface ProductionArtifact {
+  path: string;
+  digest: string;
+  kind: MediaKind;
+  mimeType?: string;
+  durationSec?: number;
+  aspectRatio?: AspectRatio;
+}
+
+export interface IdentityEvidence {
+  entityId: string;
+  verifierId: string;
+  verifierState: 'declared' | 'verified';
+  score: number;
+  threshold: number;
+  referenceAssetIds: string[];
+  candidateDigest: string;
+}
+
+export interface ProductionReceipt {
+  schema: 'evercraft.fallen.production-receipt.v1';
+  needId: string;
+  departmentId: string;
+  continuityDigest: string;
+  artifactDigest: string;
+  commercialRights: 'allowed' | 'unknown' | 'denied';
+  provenance: 'complete' | 'missing';
+  voiceProfileId?: string;
+  durationSec?: number;
+  providerModel?: string;
+  providerRequestId?: string;
+  generatedAt: string;
+}
+
+export interface ProductionAdmission {
+  needId: string;
+  status: 'accepted' | 'rejected';
+  reasons: string[];
+  artifactDigest?: string;
 }
 
 export interface SeriesEpisodePlan {
