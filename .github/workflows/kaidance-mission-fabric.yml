@@ -1,0 +1,39 @@
+name: KAIDANCE mission fabric
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/collider/mission-fabric.mjs'
+      - 'systemia/collider/mission-sources.json'
+      - 'systemia/collider/mission-fabric.proof.mjs'
+      - 'systemia/collider/runtime.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/mission-ingress-proof.mjs'
+      - '.github/workflows/kaidance-mission-fabric.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/collider/mission-fabric.mjs'
+      - 'systemia/collider/mission-sources.json'
+      - 'systemia/collider/mission-fabric.proof.mjs'
+      - 'systemia/collider/runtime.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/mission-ingress-proof.mjs'
+      - '.github/workflows/kaidance-mission-fabric.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove KAIDANCE multi-mission fabric
+        run: node systemia/collider/mission-fabric.proof.mjs
+      - name: Prove authenticated Yard mission ingress
+        run: node systemia/yard/mission-ingress-proof.mjs
