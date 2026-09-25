@@ -127,6 +127,8 @@ const syntheticFieldEvidence = {
   test_date: new Date().toISOString(),
   operator_ref: 'synthetic-contract-fixture',
   receipt_ref: 'synthetic-field-receipt',
+  runtime_release_ref: 'b'.repeat(40),
+  runtime_payload_digest: 'sha256:' + 'c'.repeat(64),
 };
 const syntheticEvaluation = evaluateNode001FieldEvidence(syntheticFieldEvidence);
 assert.equal(syntheticEvaluation.ok, true);
