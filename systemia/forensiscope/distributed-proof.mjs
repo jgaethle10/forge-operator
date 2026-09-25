@@ -14,6 +14,7 @@ import { executeDistributedMultiplicationPlan } from '../saban/distributed-execu
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { hashFile } from './authorized-source.mjs';
 import { queryEvidenceGraph } from './evidence-query.mjs';
+import { listForensiScopeAgentTools, invokeForensiScopeAgentTool } from './agent-tools.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -265,6 +266,51 @@ assert.ok(evidenceQuery.hits[0].evidence_id);
 assert.equal(evidenceQuery.answer_policy.evidence_retrieval_only, true);
 assert.equal(evidenceQuery.answer_policy.unsupported_answer_generation, false);
 
+const agentTools = listForensiScopeAgentTools();
+assert.deepEqual(
+  agentTools.map((tool) => tool.name).sort(),
+  [
+    'forensiscope_get_duplicate_relationships',
+    'forensiscope_get_timeline',
+    'forensiscope_query_evidence'
+  ]
+);
+
+const agentEvidenceQuery = invokeForensiScopeAgentTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.ok(agentEvidenceQuery.match_count > 0);
+assert.equal(agentEvidenceQuery.hits[0].source_sha256, sourceHashAfter);
+
+const agentTimeline = invokeForensiScopeAgentTool({
+  name: 'forensiscope_get_timeline',
+  args: {
+    start_seconds: 0,
+    end_seconds: 8,
+    limit: 50
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.ok(agentTimeline.count > 0);
+assert.equal(agentTimeline.source_sha256, sourceHashAfter);
+
+const agentDuplicates = invokeForensiScopeAgentTool({
+  name: 'forensiscope_get_duplicate_relationships',
+  args: {
+    kind: 'near',
+    limit: 50
+  },
+  graph: receipt.reconciliation.evidence_graph
+});
+assert.ok(agentDuplicates.count > 0);
+assert.equal(agentDuplicates.source_sha256, sourceHashAfter);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -294,6 +340,10 @@ const proof = {
   llm_evidence_atoms: receipt.reconciliation.evidence_graph.llm_projection.transcript_atoms.length,
   evidence_query_matches: evidenceQuery.match_count,
   evidence_query_top_id: evidenceQuery.hits[0].evidence_id,
+  agent_tool_count: agentTools.length,
+  agent_query_matches: agentEvidenceQuery.match_count,
+  agent_timeline_nodes: agentTimeline.count,
+  agent_near_duplicate_relationships: agentDuplicates.count,
   public_machine_intake_enabled: false
 };
 
