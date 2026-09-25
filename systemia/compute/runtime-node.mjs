@@ -447,6 +447,78 @@ export async function startEvercraftComputeNode({
         return send(res, 200, entry.runtime.health());
       }
 
+      const missionIngress = req.url?.match(/^\/v1\/services\/([^/]+)\/missions\/([^/]+)$/);
+      if (req.method === 'POST' && missionIngress) {
+        const entry = services.get(missionIngress[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.kaidance-collider.v1' ||
+            !entry.mission_fabric_root ||
+            !entry.mission_fabric_config_path) {
+          return send(res, 422, { error: 'mission_ingress_not_supported' });
+        }
+
+        const sourceKey = safeMissionSourceKey(missionIngress[2]);
+        const config = JSON.parse(fs.readFileSync(entry.mission_fabric_config_path, 'utf8'));
+        const source = (config.sources || []).find((row) => row.source_key === sourceKey);
+        if (!source) return send(res, 404, { error: 'mission_source_not_declared' });
+
+        const snapshot = validateMissionIngressSnapshot(body.snapshot);
+        const destination = path.resolve(
+          path.dirname(entry.mission_fabric_config_path),
+          String(source.path || '')
+        );
+        if (!isWithin(entry.mission_fabric_root, destination)) {
+          return send(res, 403, { error: 'mission_source_path_outside_fabric_root' });
+        }
+        atomicJson(destination, snapshot);
+
+        const receipt = chain.issue('mission.snapshot.accepted', {
+          service_id: missionIngress[1],
+          lease_id: entry.lease_id,
+          workload_class: entry.workload_class,
+          source_key: sourceKey,
+          snapshot_ref: snapshot.snapshot_ref || null,
+          snapshot_hash: `sha256:${sha(JSON.stringify(snapshot))}`,
+        });
+        return send(res, 200, {
+          ok: true,
+          source_key: sourceKey,
+          snapshot_ref: snapshot.snapshot_ref || null,
+          receipt,
+        });
+      }
+
+      const serviceCycle = req.url?.match(/^\/v1\/services\/([^/]+)\/cycle$/);
+      if (req.method === 'POST' && serviceCycle) {
+        const entry = services.get(serviceCycle[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.kaidance-collider.v1') {
+          return send(res, 422, { error: 'cycle_trigger_not_supported' });
+        }
+        const result = await entry.runtime.runOnce(new Date());
+        return send(res, 200, {
+          ok: true,
+          service_id: serviceCycle[1],
+          cycle_result: result,
+          receipt: chain.issue('service.cycle.attempted', {
+            service_id: serviceCycle[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            result: result.ok === true ? 'completed' : `held:${result.hold || 'unknown'}`,
+          }),
+        });
+      }
+
       const serviceCheckpoint = req.url?.match(/^\/v1\/services\/([^/]+)\/checkpoint$/);
       if (req.method === 'POST' && serviceCheckpoint) {
         const entry = services.get(serviceCheckpoint[1]);
