@@ -8,6 +8,7 @@ import {
   dedupeLegacyRescueSignals,
   shouldSurfaceLegacyRescueChange,
 } from './legacy-rescue-watch.mjs';
+import { evaluateLegacyRescueCycle } from './legacy-rescue-watch-runner.mjs';
 
 assert.equal(LEGACY_RESCUE_WATCH.schema, 'evercraft.systemia.workflow.v1');
 assert.equal(LEGACY_RESCUE_WATCH.cadence_seconds, 300);
@@ -76,3 +77,39 @@ console.log(JSON.stringify({
   high_signal: high,
   deduped_signals: deduped.length,
 }, null, 2));
+
+const cycle = evaluateLegacyRescueCycle({
+  cycleKey: '2026-09-24T21:40:00.000Z',
+  now: new Date('2026-09-24T21:40:00.000Z'),
+  signals: [
+    {
+      source: 'IBM',
+      title: 'IBM i 7.4 lifecycle',
+      change_type: 'deadline_change',
+      url: 'https://example.test/ibmi',
+      urgency: 100,
+      buyer_access: 82,
+      proofability: 98,
+      evidence_quality: 100,
+      days_to_cash: 84,
+    },
+    {
+      source: 'noise',
+      title: 'unchanged legacy article',
+      change_type: 'unchanged_poll',
+      url: 'https://example.test/noise',
+      urgency: 20,
+      buyer_access: 20,
+      proofability: 20,
+      evidence_quality: 20,
+      days_to_cash: 20,
+    },
+  ],
+});
+assert.equal(cycle.counts.scanned, 2);
+assert.equal(cycle.counts.changed, 1);
+assert.equal(cycle.counts.admitted, 1);
+assert.equal(cycle.counts.held, 0);
+assert.equal(cycle.top_candidate.title, 'IBM i 7.4 lifecycle');
+assert.equal(cycle.mission_snapshot.schema, 'evercraft.kaidance.mission-snapshot.v1');
+assert.equal(cycle.doctrine.named_outreach_requires_human_gate, true);
