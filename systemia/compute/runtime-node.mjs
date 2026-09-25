@@ -57,6 +57,45 @@ function isWithin(root, target) {
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }
 
+function atomicJson(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o750 });
+  const tmp = `${file}.${process.pid}.${randomBytes(4).toString('hex')}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
+  fs.renameSync(tmp, file);
+}
+
+function safeMissionSourceKey(value) {
+  const key = String(value || '').trim();
+  if (!/^[a-zA-Z0-9._-]{1,96}$/.test(key)) {
+    throw new Error('mission_source_key_invalid');
+  }
+  return key;
+}
+
+function validateMissionIngressSnapshot(snapshot) {
+  if (!snapshot || snapshot.schema !== 'evercraft.kaidance.mission-snapshot.v1') {
+    throw new Error('mission_snapshot_schema_invalid');
+  }
+  const counts = snapshot.counts || {};
+  const scanned = Math.max(0, Number(counts.scanned || 0));
+  const changed = Math.max(0, Number(counts.changed || 0));
+  const admitted = Math.max(0, Number(counts.admitted || 0));
+  const held = Math.max(0, Number(counts.held || 0));
+  if (changed > scanned) throw new Error('mission_snapshot_changed_exceeds_scanned');
+  if (admitted + held > changed) {
+    throw new Error('mission_snapshot_disposition_exceeds_changed');
+  }
+  return {
+    ...snapshot,
+    counts: { scanned, changed, admitted, held },
+    snapshot_ref: String(snapshot.snapshot_ref || ''),
+    observed_at: String(snapshot.observed_at || ''),
+    evidence_refs: Array.isArray(snapshot.evidence_refs)
+      ? snapshot.evidence_refs.map(String).slice(0, 500)
+      : [],
+  };
+}
+
 function bootIdHash() {
   try {
     const file = '/proc/sys/kernel/random/boot_id';
@@ -346,6 +385,51 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'kaidance_path_outside_admitted_root' });
           }
 
+          const managedPolicies = Array.isArray(body.input?.mission_source_policies)
+            ? body.input.mission_source_policies
+            : null;
+          let missionFabricRoot = '';
+          let missionFabricConfigPath = body.input?.mission_fabric_config_path
+            ? path.resolve(String(body.input.mission_fabric_config_path))
+            : '';
+          let missionFabricAllowedRoot = body.input?.mission_fabric_allowed_root
+            ? path.resolve(String(body.input.mission_fabric_allowed_root))
+            : (missionFabricConfigPath ? path.dirname(missionFabricConfigPath) : '');
+
+          if (managedPolicies) {
+            if (missionFabricConfigPath) {
+              return send(res, 422, { error: 'managed_and_external_mission_fabric_conflict' });
+            }
+            missionFabricRoot = path.join(stateRoot, 'mission-fabric');
+            const providersDir = path.join(missionFabricRoot, 'providers');
+            fs.mkdirSync(providersDir, { recursive: true, mode: 0o750 });
+            const seen = new Set();
+            const sources = managedPolicies.map((policy) => {
+              const sourceKey = safeMissionSourceKey(policy?.source_key);
+              if (seen.has(sourceKey)) throw new Error('mission_source_key_duplicate');
+              seen.add(sourceKey);
+              return {
+                source_key: sourceKey,
+                path: `providers/${sourceKey}.json`,
+                required: policy?.required === true,
+                stale_after_seconds: Math.max(30, Number(policy?.stale_after_seconds || 900)),
+              };
+            });
+            missionFabricConfigPath = path.join(missionFabricRoot, 'mission-sources.json');
+            missionFabricAllowedRoot = missionFabricRoot;
+            atomicJson(missionFabricConfigPath, {
+              schema: 'evercraft.kaidance.mission-fabric-config.v1',
+              sources,
+            });
+          }
+
+          if (missionFabricConfigPath && (
+            !isWithin(allowedRoot, missionFabricConfigPath) ||
+            !isWithin(allowedRoot, missionFabricAllowedRoot)
+          )) {
+            return send(res, 403, { error: 'kaidance_mission_fabric_outside_admitted_root' });
+          }
+
           const runtime = new KaidanceRuntime({
             root: stateRoot,
             colliderKey: String(body.input?.collider_key || 'systemia-collider'),
@@ -353,19 +437,23 @@ export async function startEvercraftComputeNode({
             graceSeconds: Number(body.input?.grace_seconds || 90),
             deploymentReceipt: String(body.input?.deployment_receipt || ''),
             snapshotPath,
+            missionFabricConfigPath,
+            missionFabricAllowedRoot,
             initialCheckpoint: body.input?.initial_checkpoint || null,
           });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const service = await startKaidanceHealthService({
             runtime,
             host: '127.0.0.1',
             port: 0,
           });
-          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
             runtime,
             service,
+            mission_fabric_root: missionFabricRoot || null,
+            mission_fabric_config_path: missionFabricConfigPath || null,
           });
           const result = {
             schema: 'evercraft.compute.resident-service.v1',
@@ -373,6 +461,10 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             service_url: null,
             health_path: `/v1/services/${serviceId}/health`,
+            mission_ingress_supported: Boolean(missionFabricRoot),
+            mission_ingress_path: missionFabricRoot
+              ? `/v1/services/${serviceId}/missions`
+              : null,
             heartbeat_target_seconds: runtime.state.heartbeat_target_seconds,
           };
           const receipt = chain.issue('service.started', {
@@ -396,6 +488,88 @@ export async function startEvercraftComputeNode({
         const entry = services.get(serviceHealth[1]);
         if (!entry) return send(res, 404, { error: 'service_not_found' });
         return send(res, 200, entry.runtime.health());
+      }
+
+      const missionIngress = req.url?.match(/^\/v1\/services\/([^/]+)\/missions\/([^/]+)$/);
+      if (req.method === 'POST' && missionIngress) {
+        const entry = services.get(missionIngress[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.kaidance-collider.v1' ||
+            !entry.mission_fabric_root ||
+            !entry.mission_fabric_config_path) {
+          return send(res, 422, { error: 'mission_ingress_not_supported' });
+        }
+
+        let sourceKey;
+        try {
+          sourceKey = safeMissionSourceKey(missionIngress[2]);
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
+        const config = JSON.parse(fs.readFileSync(entry.mission_fabric_config_path, 'utf8'));
+        const source = (config.sources || []).find((row) => row.source_key === sourceKey);
+        if (!source) return send(res, 404, { error: 'mission_source_not_declared' });
+
+        let snapshot;
+        try {
+          snapshot = validateMissionIngressSnapshot(body.snapshot);
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
+        const destination = path.resolve(
+          path.dirname(entry.mission_fabric_config_path),
+          String(source.path || '')
+        );
+        if (!isWithin(entry.mission_fabric_root, destination)) {
+          return send(res, 403, { error: 'mission_source_path_outside_fabric_root' });
+        }
+        atomicJson(destination, snapshot);
+
+        const receipt = chain.issue('mission.snapshot.accepted', {
+          service_id: missionIngress[1],
+          lease_id: entry.lease_id,
+          workload_class: entry.workload_class,
+          source_key: sourceKey,
+          snapshot_ref: snapshot.snapshot_ref || null,
+          snapshot_hash: `sha256:${sha(JSON.stringify(snapshot))}`,
+        });
+        return send(res, 200, {
+          ok: true,
+          source_key: sourceKey,
+          snapshot_ref: snapshot.snapshot_ref || null,
+          receipt,
+        });
+      }
+
+      const serviceCycle = req.url?.match(/^\/v1\/services\/([^/]+)\/cycle$/);
+      if (req.method === 'POST' && serviceCycle) {
+        const entry = services.get(serviceCycle[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.kaidance-collider.v1') {
+          return send(res, 422, { error: 'cycle_trigger_not_supported' });
+        }
+        const result = await entry.runtime.runOnce(new Date());
+        return send(res, 200, {
+          ok: true,
+          service_id: serviceCycle[1],
+          cycle_result: result,
+          receipt: chain.issue('service.cycle.attempted', {
+            service_id: serviceCycle[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            result: result.ok === true ? 'completed' : `held:${result.hold || 'unknown'}`,
+          }),
+        });
       }
 
       const serviceCheckpoint = req.url?.match(/^\/v1\/services\/([^/]+)\/checkpoint$/);
