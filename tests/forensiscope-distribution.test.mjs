@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+const fail=(m)=>{throw new Error('FORENSISCOPE_DISTRIBUTION_FAIL: '+m);};
+const pack=JSON.parse(fs.readFileSync('public/forensiscope/distribution/reddit-pack.json','utf8'));
+if(pack.schema!=='evercraft.forensiscope.reddit-distribution-pack.v1') fail('schema');
+if(!pack.rules?.disclose_affiliation) fail('affiliation disclosure missing');
+if(!pack.rules?.community_rules_must_be_checked_at_post_time) fail('community rules gate missing');
+if(pack.variants?.length<3) fail('expected discussion variants');
+for(const v of pack.variants||[]) if(!/Disclosure:/i.test(v.body||'')) fail('variant lacks disclosure: '+v.id);
+const sitemap=fs.readFileSync('public/sitemap.xml','utf8');
+for(const route of ['/forensiscope/distribution/','/forensiscope/distribution/reddit-pack.json','/forensiscope/distribution/llms.txt']) if(!sitemap.includes(route)) fail('sitemap missing '+route);
+console.log('FORENSISCOPE_DISTRIBUTION_PASS',JSON.stringify({variants:pack.variants.length}));
