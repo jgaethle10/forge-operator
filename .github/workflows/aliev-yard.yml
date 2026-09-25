@@ -22,5 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove extracted public evidence adapters
+        run: node products/aliev/yard-public-snapshot-proof.mjs
       - name: Prove bounded AliEV workload on Yard
         run: node products/aliev/yard-admission-proof.mjs
