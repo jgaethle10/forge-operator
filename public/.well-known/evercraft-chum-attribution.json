@@ -14,10 +14,14 @@
     "contract": {
       "method": "GET",
       "path": "/api/chum/attribution"
+    },
+    "browser_handoff": {
+      "method": "GET",
+      "path": "/api/chum/go/{publicId}"
     }
   },
   "stages": {
-    "landing": "A signed CHUM referral recorded a public landing receipt.",
+    "landing": "A signed CHUM referral recorded a public landing receipt before a human review handoff when attribution is configured.",
     "checkout_started": "A user entered an approved checkout path. This is not payment.",
     "payment_verified": "Trusted server-side/payment-authority evidence verified a payment. Public callers cannot assert this stage.",
     "fulfilled": "Trusted evidence records fulfillment after a verified payment."
@@ -30,5 +34,5 @@
   },
   "revenue_rule": "Only payment_verified events accepted through the trusted ingest boundary may count toward verified revenue.",
   "provider_rule": "A provider claim in a referral is attribution metadata, not proof that the named AI provider discovered or recommended Evercraft.",
-  "human_gate": "Discovery and attribution create no payment obligation. Existing explicit human confirmation rules remain in force."
+  "human_gate": "Sell-now discovery may expose a Start path, but discovery and attribution create no payment obligation. Checkout still requires the product's explicit human confirmation and paid state still requires authoritative provider verification."
 }
