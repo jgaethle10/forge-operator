@@ -18,6 +18,7 @@ import { listForensiScopeAgentTools, invokeForensiScopeAgentTool } from './agent
 import { persistEvidenceGraph, loadEvidenceGraph, verifyEvidenceRef } from './evidence-store.mjs';
 import { listForensiScopeGatewayTools, invokeForensiScopeGatewayTool } from './agent-gateway.mjs';
 import { handleForensiScopeMcpRequest } from './mcp-protocol.mjs';
+import { issueEvidenceAccessToken } from './evidence-access.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -35,6 +36,8 @@ const sourceDir = path.resolve(rootDir, 'artifacts/forensiscope-intake/proof');
 const proofDir = path.resolve(rootDir, 'artifacts/forensiscope-proof');
 fs.mkdirSync(sourceDir, { recursive: true });
 fs.mkdirSync(proofDir, { recursive: true });
+process.env.FORENSISCOPE_EVIDENCE_ACCESS_KEY =
+  'forensiscope-ci-proof-access-key-2026-09-25-immutable';
 
 run('ffmpeg', ['-version']);
 run('ffprobe', ['-version']);
@@ -351,6 +354,22 @@ const storedEvidence = persistEvidenceGraph(
 assert.ok(/^forensiscope-evidence:sha256:[a-f0-9]{64}$/.test(storedEvidence.evidence_ref));
 assert.equal(storedEvidence.source_sha256, sourceHashAfter);
 
+const evidenceAccess = issueEvidenceAccessToken({
+  evidenceRef: storedEvidence.evidence_ref,
+  scopes: ['query', 'timeline', 'duplicates', 'context'],
+  ttlSeconds: 3600,
+  subject: 'forensiscope-distributed-proof'
+});
+assert.ok(evidenceAccess.access_token.startsWith('forensiscope-access-v1.'));
+assert.deepEqual(evidenceAccess.scopes, ['context', 'duplicates', 'query', 'timeline']);
+
+const queryOnlyAccess = issueEvidenceAccessToken({
+  evidenceRef: storedEvidence.evidence_ref,
+  scopes: ['query'],
+  ttlSeconds: 3600,
+  subject: 'forensiscope-query-only-proof'
+});
+
 const loadedEvidence = loadEvidenceGraph(storedEvidence.evidence_ref, { rootDir });
 assert.equal(loadedEvidence.graph.source_sha256, sourceHashAfter);
 assert.equal(
@@ -378,7 +397,8 @@ const gatewayTools = listForensiScopeGatewayTools();
 assert.equal(gatewayTools.length, 4);
 assert.ok(
   gatewayTools.every((tool) =>
-    tool.inputSchema.required.includes('evidence_ref')
+    tool.inputSchema.required.includes('evidence_ref') &&
+    tool.inputSchema.required.includes('access_token')
   )
 );
 
@@ -386,6 +406,7 @@ const gatewayQuery = invokeForensiScopeGatewayTool({
   name: 'forensiscope_query_evidence',
   args: {
     evidence_ref: storedEvidence.evidence_ref,
+    access_token: evidenceAccess.access_token,
     query: 'boundary-3',
     top_k: 2,
     context_radius_seconds: 3
@@ -403,6 +424,7 @@ const gatewayPacket = invokeForensiScopeGatewayTool({
   name: 'forensiscope_build_context_packet',
   args: {
     evidence_ref: storedEvidence.evidence_ref,
+    access_token: evidenceAccess.access_token,
     query: 'boundary-3',
     max_chars: 4000,
     top_k: 3,
@@ -413,6 +435,22 @@ const gatewayPacket = invokeForensiScopeGatewayTool({
 assert.equal(gatewayPacket.result.source_sha256, sourceHashAfter);
 assert.ok(gatewayPacket.result.atoms.length > 0);
 assert.ok(/^sha256:[a-f0-9]{64}$/.test(gatewayPacket.result.packet_digest));
+assert.equal(gatewayPacket.access.verified, true);
+assert.equal(gatewayPacket.access.required_scope, 'context');
+
+assert.throws(
+  () => invokeForensiScopeGatewayTool({
+    name: 'forensiscope_build_context_packet',
+    args: {
+      evidence_ref: storedEvidence.evidence_ref,
+      access_token: queryOnlyAccess.access_token,
+      query: 'boundary-3',
+      max_chars: 4000
+    },
+    rootDir
+  }),
+  /lacks required scope: context/
+);
 
 const modernMeta = {
   'io.modelcontextprotocol/protocolVersion': '2026-07-28',
@@ -465,6 +503,7 @@ const modernToolCall = handleForensiScopeMcpRequest({
     name: 'forensiscope_query_evidence',
     arguments: {
       evidence_ref: storedEvidence.evidence_ref,
+      access_token: evidenceAccess.access_token,
       query: 'boundary-3',
       top_k: 2,
       context_radius_seconds: 3
@@ -513,6 +552,7 @@ const legacyToolCall = handleForensiScopeMcpRequest({
     name: 'forensiscope_build_context_packet',
     arguments: {
       evidence_ref: storedEvidence.evidence_ref,
+      access_token: evidenceAccess.access_token,
       query: 'boundary-3',
       max_chars: 4000,
       top_k: 3,
@@ -576,6 +616,9 @@ const proof = {
   gateway_query_matches: gatewayQuery.result.match_count,
   gateway_context_packet_digest: gatewayPacket.result.packet_digest,
   gateway_accepts_raw_media: gatewayQuery.authority.accepts_raw_media,
+  evidence_access_scopes: evidenceAccess.scopes,
+  gateway_access_verified: gatewayQuery.access.verified,
+  gateway_access_scope: gatewayQuery.access.required_scope,
   mcp_modern_protocol: mcpDiscover.result.supportedVersions[0],
   mcp_legacy_protocol: legacyInitialize.result.protocolVersion,
   mcp_tool_count: modernToolList.result.tools.length,
