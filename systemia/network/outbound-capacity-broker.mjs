@@ -51,6 +51,22 @@ function safeNodeId(value) {
   return nodeId;
 }
 
+function safeDeviceFingerprint(value) {
+  const fingerprint = String(value || '').trim().toLowerCase();
+  if (!/^sha256:[a-f0-9]{64}$/.test(fingerprint)) {
+    throw new Error('remote_device_fingerprint_invalid');
+  }
+  return fingerprint;
+}
+
+function safeApprovalRef(value) {
+  const ref = String(value || '').trim();
+  if (!ref || ref.length > 512) {
+    throw new Error('remote_device_approval_ref_required');
+  }
+  return ref;
+}
+
 function atomicJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
   const tmp = `${file}.${process.pid}.tmp`;
@@ -93,13 +109,30 @@ export async function startOutboundCapacityBroker({
 } = {}) {
   if (!stateDir) throw new Error('stateDir is required');
   const authorized = normalizeAuthorizedDevices(authorizedDevices);
-  if (authorized.size === 0) {
-    throw new Error('at least one authorized device fingerprint is required');
-  }
 
   const root = path.resolve(stateDir);
   const grantsFile = path.join(root, 'control-grants.json');
+  const authorizationsFile = path.join(root, 'device-authorizations.json');
   fs.mkdirSync(root, { recursive: true, mode: 0o700 });
+
+  const authorizationState = fs.existsSync(authorizationsFile)
+    ? JSON.parse(fs.readFileSync(authorizationsFile, 'utf8'))
+    : {
+        schema: 'evercraft.remote-capacity.device-authorizations.v1',
+        decisions: {},
+      };
+  if (authorizationState.schema !== 'evercraft.remote-capacity.device-authorizations.v1') {
+    throw new Error('remote_device_authorizations_invalid');
+  }
+
+  for (const decision of Object.values(authorizationState.decisions || {})) {
+    const fingerprint = safeDeviceFingerprint(decision.device_fingerprint);
+    if (decision.status === 'authorized') {
+      authorized.set(fingerprint, safeNodeId(decision.node_id));
+    } else if (decision.status === 'revoked') {
+      authorized.delete(fingerprint);
+    }
+  }
 
   const persisted = fs.existsSync(grantsFile)
     ? JSON.parse(fs.readFileSync(grantsFile, 'utf8'))
@@ -135,6 +168,130 @@ export async function startOutboundCapacityBroker({
   function authorizedPair(fingerprint, nodeId) {
     const expected = authorized.get(String(fingerprint || ''));
     return expected === '*' || expected === nodeId;
+  }
+
+  function persistAuthorizationDecision(decision) {
+    authorizationState.decisions[decision.device_fingerprint] = decision;
+    atomicJson(authorizationsFile, authorizationState);
+  }
+
+  function authorizationReceipt(action, {
+    deviceFingerprint,
+    nodeId,
+    approvalRef,
+  }) {
+    const body = {
+      schema: 'evercraft.remote-capacity.device-authorization-receipt.v1',
+      action,
+      device_fingerprint: deviceFingerprint,
+      node_id: nodeId,
+      approval_ref: approvalRef,
+      decided_at: new Date().toISOString(),
+    };
+    return {
+      ...body,
+      receipt_hash: `sha256:${sha(JSON.stringify(body))}`,
+    };
+  }
+
+  function disconnectAuthorizedNode(nodeId, fingerprint, reason) {
+    const node = nodes.get(nodeId);
+    if (!node || node.device_fingerprint !== fingerprint) return false;
+
+    node.session_expires_at = 0;
+    for (const pending of node.pending.values()) {
+      clearTimeout(pending.timer);
+      pending.reject(new Error(reason));
+    }
+    node.pending.clear();
+    node.queue.length = 0;
+    for (const waiter of node.waiters) {
+      clearTimeout(waiter.timer);
+      waiter.resolve(null);
+    }
+    node.waiters.length = 0;
+    nodes.delete(nodeId);
+    return true;
+  }
+
+  function authorizeDevice({
+    deviceFingerprint,
+    nodeId,
+    approvalRef,
+  }) {
+    const fingerprint = safeDeviceFingerprint(deviceFingerprint);
+    const id = safeNodeId(nodeId);
+    const approval = safeApprovalRef(approvalRef);
+
+    for (const [otherFingerprint, expectedNode] of authorized.entries()) {
+      if (
+        otherFingerprint !== fingerprint &&
+        expectedNode !== '*' &&
+        expectedNode === id
+      ) {
+        throw new Error('remote_node_id_already_authorized');
+      }
+    }
+
+    authorized.set(fingerprint, id);
+    const receipt = authorizationReceipt('authorize', {
+      deviceFingerprint: fingerprint,
+      nodeId: id,
+      approvalRef: approval,
+    });
+    persistAuthorizationDecision({
+      device_fingerprint: fingerprint,
+      node_id: id,
+      status: 'authorized',
+      approval_ref: approval,
+      decided_at: receipt.decided_at,
+      decision_receipt_hash: receipt.receipt_hash,
+    });
+    return receipt;
+  }
+
+  function revokeDevice({
+    deviceFingerprint,
+    nodeId,
+    approvalRef,
+  }) {
+    const fingerprint = safeDeviceFingerprint(deviceFingerprint);
+    const id = safeNodeId(nodeId);
+    const approval = safeApprovalRef(approvalRef);
+    const expected = authorized.get(fingerprint);
+    if (!(expected === '*' || expected === id)) {
+      throw new Error('remote_device_authorization_not_found');
+    }
+
+    authorized.delete(fingerprint);
+    const disconnected = disconnectAuthorizedNode(
+      id,
+      fingerprint,
+      'remote_device_authorization_revoked'
+    );
+    const grant = persisted.grants[id];
+    if (grant?.device_fingerprint === fingerprint) {
+      delete persisted.grants[id];
+      atomicJson(grantsFile, persisted);
+    }
+
+    const receipt = authorizationReceipt('revoke', {
+      deviceFingerprint: fingerprint,
+      nodeId: id,
+      approvalRef: approval,
+    });
+    persistAuthorizationDecision({
+      device_fingerprint: fingerprint,
+      node_id: id,
+      status: 'revoked',
+      approval_ref: approval,
+      decided_at: receipt.decided_at,
+      decision_receipt_hash: receipt.receipt_hash,
+    });
+    return {
+      ...receipt,
+      live_session_disconnected: disconnected,
+    };
   }
 
   function persistGrant(node) {
@@ -548,6 +705,14 @@ export async function startOutboundCapacityBroker({
       if (!value) throw new Error('deployment receipt is required');
       deploymentReceiptRef = value;
       return health();
+    },
+    authorizeDevice,
+    revokeDevice,
+    authorizedDevices() {
+      return [...authorized.entries()].map(([device_fingerprint, node_id]) => ({
+        device_fingerprint,
+        node_id,
+      }));
     },
     controlGrant(nodeId) {
       const id = safeNodeId(nodeId);
