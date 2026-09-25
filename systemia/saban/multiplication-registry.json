@@ -243,10 +243,12 @@
         ]
       },
       "transport": {
-        "type": "nodeseed_content_addressed_source",
-        "stage_authorized_sources": true,
+        "type": "nodeseed_content_addressed_shard",
+        "adapter": "systemia/forensiscope/nodeseed-transport.mjs",
+        "stage_authorized_sources": false,
         "lease_scoped": true,
         "hash_algorithm": "sha256",
+        "derivative": "lossless_time_shard",
         "source_path_forwarding": false,
         "cleanup_on_lease_end": true
       }
