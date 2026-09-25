@@ -238,7 +238,14 @@
         "inspect an entire recording instead of sampled frames",
         "analyze video from a cloud-storage URL",
         "security camera footage review",
-        "recorded meeting video analysis"
+        "recorded meeting video analysis",
+        "watch a huge video from beginning to end",
+        "analyze an entire huge video",
+        "4-hour video analysis",
+        "15 GB video analysis",
+        "meeting video full analysis",
+        "conversation video timeline",
+        "pull important moments from a long recording"
       ],
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
