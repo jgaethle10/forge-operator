@@ -44,7 +44,7 @@ chown -R evercraft:evercraft "${STATE_ROOT}"
 rm -rf "${INSTALL_ROOT:?}/"*
 mkdir -p   "${INSTALL_ROOT}/systemia/compute"   "${INSTALL_ROOT}/systemia/collider"   "${INSTALL_ROOT}/systemia/core/bootstrap"
 
-for file in   node-seed.mjs   runtime-node.mjs   capacity-beacon.mjs   device-identity.mjs   field-preflight.mjs   field-certify.mjs; do
+for file in node-seed.mjs runtime-node.mjs capacity-beacon.mjs device-identity.mjs field-preflight.mjs field-certify.mjs field-offline-check.mjs; do
   install -m 0644 "${SOURCE_ROOT}/systemia/compute/${file}"     "${INSTALL_ROOT}/systemia/compute/${file}"
 done
 
