@@ -462,12 +462,22 @@ export async function startEvercraftComputeNode({
           return send(res, 422, { error: 'mission_ingress_not_supported' });
         }
 
-        const sourceKey = safeMissionSourceKey(missionIngress[2]);
+        let sourceKey;
+        try {
+          sourceKey = safeMissionSourceKey(missionIngress[2]);
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
         const config = JSON.parse(fs.readFileSync(entry.mission_fabric_config_path, 'utf8'));
         const source = (config.sources || []).find((row) => row.source_key === sourceKey);
         if (!source) return send(res, 404, { error: 'mission_source_not_declared' });
 
-        const snapshot = validateMissionIngressSnapshot(body.snapshot);
+        let snapshot;
+        try {
+          snapshot = validateMissionIngressSnapshot(body.snapshot);
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
         const destination = path.resolve(
           path.dirname(entry.mission_fabric_config_path),
           String(source.path || '')
