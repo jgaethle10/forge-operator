@@ -811,6 +811,57 @@ assert.ok(gatewayComparison.access.every((entry) => entry.verified === true));
 assert.ok(gatewayComparison.result.match_count > 0);
 assert.ok(gatewayComparison.result.decoded_visual_matches > 0);
 
+const mcpComparisonBody = {
+  jsonrpc: '2.0',
+  id: 9,
+  method: 'tools/call',
+  params: {
+    name: 'forensiscope_compare_evidence',
+    arguments: {
+      evidence_ref_a: pipelineReceipt.result.evidence_ref,
+      access_token_a: comparisonAccessA.access_token,
+      evidence_ref_b: comparisonPipelineReceipt.result.evidence_ref,
+      access_token_b: comparisonAccessB.access_token,
+      max_matches: 100
+    },
+    _meta: modernMeta
+  }
+};
+const mcpComparisonHttp = handleForensiScopeMcpHttp({
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    'mcp-protocol-version': '2026-07-28',
+    'mcp-method': 'tools/call',
+    'mcp-name': 'forensiscope_compare_evidence',
+    'mcp-param-evidence-access-a': comparisonAccessA.access_token,
+    'mcp-param-evidence-access-b': comparisonAccessB.access_token
+  },
+  body: mcpComparisonBody,
+  rootDir
+});
+assert.equal(mcpComparisonHttp.status, 200);
+assert.equal(mcpComparisonHttp.body.result.isError, false);
+assert.ok(
+  mcpComparisonHttp.body.result.structuredContent.result.match_count > 0
+);
+
+const mcpComparisonBadHeader = handleForensiScopeMcpHttp({
+  method: 'POST',
+  headers: {
+    'content-type': 'application/json',
+    'mcp-protocol-version': '2026-07-28',
+    'mcp-method': 'tools/call',
+    'mcp-name': 'forensiscope_compare_evidence',
+    'mcp-param-evidence-access-a': comparisonAccessA.access_token,
+    'mcp-param-evidence-access-b': comparisonAccessA.access_token
+  },
+  body: mcpComparisonBody,
+  rootDir
+});
+assert.equal(mcpComparisonBadHeader.status, 400);
+assert.equal(mcpComparisonBadHeader.body.error.code, -32020);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -879,6 +930,9 @@ const proof = {
   gateway_cross_recording_matches: gatewayComparison.result.match_count,
   gateway_cross_recording_decoded_visual_matches:
     gatewayComparison.result.decoded_visual_matches,
+  mcp_cross_recording_matches:
+    mcpComparisonHttp.body.result.structuredContent.result.match_count,
+  mcp_cross_recording_header_guard: mcpComparisonBadHeader.body.error.code,
   public_machine_intake_enabled: false
 };
 
