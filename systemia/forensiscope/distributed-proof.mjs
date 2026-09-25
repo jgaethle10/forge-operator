@@ -34,6 +34,28 @@ fs.mkdirSync(proofDir, { recursive: true });
 run('ffmpeg', ['-version']);
 run('ffprobe', ['-version']);
 
+const mockTranscriberPath = path.join(proofDir, 'mock-transcriber.mjs');
+fs.writeFileSync(
+  mockTranscriberPath,
+  [
+    "const duration = Number(process.argv[3] || 0);",
+    "const offset = Number(process.argv[4] || 0);",
+    "const first = { start_seconds: 0.2, end_seconds: Math.min(duration, 0.8), text: 'boundary-' + Math.round(offset), confidence: 0.99 };",
+    "const tailStart = Math.max(0.2, duration - 0.8);",
+    "const second = { start_seconds: tailStart, end_seconds: Math.min(duration, tailStart + 0.5), text: 'boundary-' + Math.round(offset + tailStart), confidence: 0.98 };",
+    "console.log(JSON.stringify({segments:[first, second]}));"
+  ].join('\\n') + '\\n'
+);
+process.env.FORENSISCOPE_TRANSCRIBE_ENABLED = 'true';
+process.env.FORENSISCOPE_TRANSCRIBE_ENGINE_ID = 'forensiscope-ci-contract';
+process.env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE = process.execPath;
+process.env.FORENSISCOPE_TRANSCRIBE_ARGS_JSON = JSON.stringify([
+  mockTranscriberPath,
+  '{input}',
+  '{duration}',
+  '{timeline_offset}'
+]);
+
 const sourcePath = path.join(sourceDir, 'synthetic-repeat.mkv');
 run('ffmpeg', [
   '-v', 'error',
@@ -96,7 +118,7 @@ const formation = recommendFormation({
   workItemCount: workItems.length
 });
 assert.equal(formation.strategy, 'work_conserving');
-assert.equal(formation.logical_agents, 20);
+assert.equal(formation.logical_agents, 24);
 
 const plan = buildMultiplicationPlan({
   contract: proofContract,
@@ -149,7 +171,7 @@ try {
 const sourceHashAfter = hashFile(sourcePath);
 
 assert.equal(sourceHashBefore, sourceHashAfter);
-assert.equal(receipt.scheduler_summary.counts.completed, 20);
+assert.equal(receipt.scheduler_summary.counts.completed, 24);
 assert.equal(receipt.pool_summary.nodes.length, 2);
 assert.equal(receipt.quality.status, 'pass');
 assert.equal(receipt.reconciliation.status, 'reconciled');
@@ -158,6 +180,7 @@ assert.equal(receipt.reconciliation.worker_statuses.media_probe_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.timeline_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.frame_hash_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.audio_extract_worker, 4);
+assert.equal(receipt.reconciliation.worker_statuses.transcription_worker, 4);
 assert.equal(receipt.reconciliation.worker_statuses.provenance_guard, 4);
 assert.ok(receipt.reconciliation.duplicate_review.repeated_content_groups > 0);
 assert.ok(
@@ -165,10 +188,13 @@ assert.ok(
     (entry) => entry.state === 'prepared_for_transcription'
   )
 );
-assert.equal(
-  receipt.reconciliation.transcription.state,
-  'audio_prepared_engine_not_bound'
+assert.equal(receipt.reconciliation.transcription.state, 'transcribed');
+assert.deepEqual(
+  receipt.reconciliation.transcription.engine_ids,
+  ['forensiscope-ci-contract']
 );
+assert.equal(receipt.reconciliation.transcription.segment_count, 5);
+assert.ok(receipt.reconciliation.transcription.text.includes('boundary-3'));
 
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
@@ -187,6 +213,8 @@ const proof = {
     (entry) => entry.state === 'prepared_for_transcription'
   ).length,
   transcription_state: receipt.reconciliation.transcription.state,
+  transcription_engine_ids: receipt.reconciliation.transcription.engine_ids,
+  transcript_segments: receipt.reconciliation.transcription.segment_count,
   public_machine_intake_enabled: false
 };
 
