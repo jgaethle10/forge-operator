@@ -78,7 +78,7 @@
         "long-media",
         "video-pipeline"
       ],
-      "adapter": "systemia/media/saban-adapter.mjs",
+      "adapter": "systemia/saban/chunk-adapter.mjs",
       "default_logical_agents": 256,
       "max_logical_agents": 10000,
       "default_physical_workers": 16,
