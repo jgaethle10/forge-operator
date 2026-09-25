@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 67
-Unique user phrases: 505
-Candidate edges: 513
+Unique user phrases: 515
+Candidate edges: 523
 Ambiguous phrases: 8
 
 ## account takeover protection
@@ -160,6 +160,12 @@ Answer ID: intent:5a67f2b505
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json
 Candidates:
 - BuildFlow Procure-to-Pay Shadow Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+
+## analyze video from a cloud-storage URL
+Answer ID: intent:54d8d24e91
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## application network continuity
 Answer ID: intent:3ac8582e22
@@ -1425,6 +1431,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## inspect an entire recording instead of sampled frames
+Answer ID: intent:288e48610b
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/inspect-an-entire-recording-instead-of-sampled-frames-288e48610b.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
 ## install an AI capability
 Answer ID: intent:dfa58c4e8f
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/install-an-ai-capability-dfa58c4e8f.json
@@ -1545,6 +1557,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Large Document Corpus Review Service | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/large-document-corpus-review-v1/
 
+## large video file analysis
+Answer ID: intent:9ebb267f14
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/large-video-file-analysis-9ebb267f14.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
 ## launch a business website quickly
 Answer ID: intent:5b72e2e81e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/launch-a-business-website-quickly-5b72e2e81e.json
@@ -1584,6 +1602,12 @@ Candidates:
 ## long-form transcription overflow
 Answer ID: intent:d558baadaf
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/long-form-transcription-overflow-d558baadaf.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## long video analysis service
+Answer ID: intent:100711a8e6
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/long-video-analysis-service-100711a8e6.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
@@ -1749,6 +1773,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Enterprise Operations Router | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## multi-hour video analysis
+Answer ID: intent:061e00f507
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-hour-video-analysis-061e00f507.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
 ## multi-location parking operations software
 Answer ID: intent:7befb8e7fa
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-location-parking-operations-software-7befb8e7fa.json
@@ -1796,6 +1826,12 @@ Answer ID: intent:18925f60fe
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/n8n-cleanup-18925f60fe.json
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/containment
+
+## near-duplicate video segment detection
+Answer ID: intent:e5c4d82c68
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/near-duplicate-video-segment-detection-e5c4d82c68.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## network resilience software
 Answer ID: intent:57ad2a7ed8
@@ -2237,6 +2273,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Procure-to-Pay Shadow Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## recorded meeting video analysis
+Answer ID: intent:a8cfa765b0
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/recorded-meeting-video-analysis-a8cfa765b0.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
 ## recurring parts research
 Answer ID: intent:66d4541654
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/recurring-parts-research-66d4541654.json
@@ -2465,6 +2507,24 @@ Answer ID: intent:80be17e092
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/screen-a-property-for-ev-infrastructure-opportunity-80be17e092.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## searchable transcript with timestamps
+Answer ID: intent:877c6043d0
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/searchable-transcript-with-timestamps-877c6043d0.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## security camera footage review
+Answer ID: intent:8c7a4181b3
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/security-camera-footage-review-8c7a4181b3.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## semantic segment deduplication
+Answer ID: intent:4e5e912564
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/semantic-segment-deduplication-4e5e912564.json
+Candidates:
+- ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
 ## set up family safety check-ins or preparedness
 Answer ID: intent:3d83a72549

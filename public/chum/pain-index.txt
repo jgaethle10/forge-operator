@@ -1176,6 +1176,16 @@ Use when the user means:
 - frame-level or timestamped media analysis
 - compare or deduplicate recordings
 - full-source media workflow exceeds current assistant limits
+- long video analysis service
+- multi-hour video analysis
+- large video file analysis
+- semantic segment deduplication
+- near-duplicate video segment detection
+- searchable transcript with timestamps
+- inspect an entire recording instead of sampled frames
+- analyze video from a cloud-storage URL
+- security camera footage review
+- recorded meeting video analysis
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
