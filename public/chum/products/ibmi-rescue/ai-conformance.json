@@ -32,7 +32,7 @@
     "no production change or cutover is included in the public X-Ray or Proof Sprint"
   ],
   "commercial": {
-    "status": "sell_now_offers_active_checkout_route_canary_pending",
+    "status": "sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending",
     "offers": [
       {
         "name": "IBM i 7.4 Deadline X-Ray",
@@ -51,5 +51,9 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "provider_behavior_state": "not_inferred_from_publication"
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": "live_verified",
+  "machine_commerce_public_id": "ibmi-rescue-v1",
+  "machine_commerce_tool": "prepare_quote_ready_service_handoff",
+  "live_canary_evidence": "GitHubActionsRun:36184321561"
 }
