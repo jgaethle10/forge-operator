@@ -44,3 +44,41 @@ bash systemia/compute/install-local-organism-user.sh
 The installer copies the reviewed source into `~/.local/share/evercraft/forge-operator`, stores runtime state under `~/.local/state/evercraft/organism`, and enables `evercraft-local-organism.service` as a user service.
 
 The service creates no public ingress. Remote Systemia admission can be layered on later as an outbound-only transport without changing the local runtime contracts.
+
+
+## Outbound remote admission
+
+The local organism can attach to the canonical remote-capacity broker without opening any public listener on the Chromebook/Crostini side.
+
+Configure the broker before installation:
+
+```bash
+EVERCRAFT_REMOTE_BROKER_URL="https://<verified-broker-origin>" \
+bash systemia/compute/install-local-organism-user.sh
+```
+
+The installer stores that URL in `~/.config/evercraft/local-organism.env` with mode 0600 and the user service reads it through `EnvironmentFile`. Reinstalling without a new broker URL preserves the existing private configuration.
+
+The organism always writes:
+
+```
+~/.local/state/evercraft/organism/remote-admission-request.json
+```
+
+That request contains the NodeSeed node ID and public device-key fingerprint, plus the explicit facts that the transport is outbound-only and that physical field certification is not claimed. It contains no allocator token or private key.
+
+A broker does not trust the request by itself. Systemia must separately authorize the exact device fingerprint. Registration then still requires the live broker challenge and NodeSeed Ed25519 attestation.
+
+### Failure behavior
+
+Remote admission is deliberately non-fatal to the local organism.
+
+If the broker is unavailable or the fingerprint is not yet authorized:
+
+- NodeSeed remains loopback-only and alive;
+- KAIDANCE continues locally;
+- Systemia Core continues locally;
+- the admission keeper retries with bounded exponential backoff;
+- local health reports remote admission as disconnected/degraded.
+
+Once the broker becomes reachable and the device is authorized, the same running organism attaches outbound automatically. No local runtime redeploy and no public ingress are required.
