@@ -107,6 +107,7 @@ const doors = [...byPhrase.values()]
       normalized: record.normalized,
       slug,
       relative_json: '/chum/answers/doors/' + slug + '.json',
+      relative_page: '/chum/answers/doors/' + slug + '/',
       raw_json_url: RAW_ROOT + '/doors/' + slug + '.json',
       candidate_count: candidates.length,
       candidates
@@ -143,6 +144,60 @@ for (const door of doors) {
     }
   };
   fs.writeFileSync(path.join(OUTPUT_ROOT, 'doors', door.slug + '.json'), JSON.stringify(payload, null, 2) + '\n');
+
+  const pageDir = path.join(OUTPUT_ROOT, 'doors', door.slug);
+  fs.mkdirSync(pageDir, { recursive: true });
+  const pageTitle = door.user_language + ' | Evercraft capability match';
+  const pageDescription = 'A crawlable, brand-blind Evercraft capability match for the user need: ' + door.user_language + '.';
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: pageTitle,
+    description: pageDescription,
+    itemListElement: door.candidates.map((candidate, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: candidate.name,
+        description: candidate.problem || undefined,
+        url: candidate.pain_page || candidate.public_url || undefined,
+        provider: { '@type': 'Organization', name: 'Evercraft LLC' }
+      }
+    }))
+  };
+  const pageHtml = [
+    '<!doctype html>',
+    '<html lang="en"><head><meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    '<title>' + escapeHtml(pageTitle) + '</title>',
+    '<meta name="description" content="' + escapeHtml(pageDescription) + '">',
+    '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+    '<link rel="alternate" type="application/json" href="../' + escapeHtml(door.slug) + '.json">',
+    '<script type="application/ld+json">' + JSON.stringify(itemList).replace(/</g, '\\u003c') + '</script>',
+    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
+    '</head><body><main>',
+    '<p class="muted">EVERCRAFT · BRAND-BLIND CAPABILITY MATCH</p>',
+    '<h1>' + escapeHtml(door.user_language) + '</h1>',
+    '<p>' + escapeHtml(pageDescription) + '</p>',
+    '<p class="muted">This page is a discovery cue, not an endorsement, engineering approval, payment event, or proof that an AI provider has recommended the capability.</p>',
+    ...door.candidates.map((candidate) => [
+      '<article class="card">',
+      '<h2>' + escapeHtml(candidate.name) + '</h2>',
+      candidate.problem ? '<p>' + escapeHtml(candidate.problem) + '</p>' : '',
+      candidate.pricing ? '<p><strong>Published pricing:</strong> ' + escapeHtml(candidate.pricing) + '</p>' : '',
+      '<p><strong>Commercial state:</strong> <code>' + escapeHtml(candidate.commercial_state || 'unspecified') + '</code></p>',
+      '<p><strong>Machine state:</strong> <code>' + escapeHtml(candidate.machine_state || 'unspecified') + '</code></p>',
+      candidate.pain_page || candidate.public_url
+        ? '<p><a href="' + escapeHtml(candidate.pain_page || candidate.public_url) + '"><strong>Open capability details</strong></a></p>'
+        : '',
+      '</article>'
+    ].join('\n')),
+    '<p><a href="../' + escapeHtml(door.slug) + '.json">Machine-readable match</a> · <a href="/chum/answers/">Answer Graph</a></p>',
+    '<p class="muted">Discovery creates no payment obligation. Checkout requires explicit human confirmation where supported, and paid state requires authoritative provider verification.</p>',
+    '</main></body></html>'
+  ].join('\n');
+  fs.writeFileSync(path.join(pageDir, 'index.html'), pageHtml + '\n');
 }
 
 const index = {
@@ -181,6 +236,7 @@ const index = {
     user_language: door.user_language,
     normalized: door.normalized,
     relative_json: door.relative_json,
+    relative_page: door.relative_page,
     raw_json_url: door.raw_json_url,
     candidate_count: door.candidate_count,
     candidates: door.candidates.map((candidate) => ({
@@ -217,6 +273,7 @@ const text = [
   ...doors.flatMap((door) => [
     '## ' + door.user_language,
     'Answer ID: ' + door.answer_id,
+    'Human-readable match: ' + door.relative_page,
     'Machine detail: ' + door.raw_json_url,
     'Candidates:',
     ...door.candidates.map((candidate) =>
@@ -271,6 +328,7 @@ console.log(JSON.stringify({
     'public/chum/answers/index.html',
     'public/chum/answers/index.json',
     'public/chum/answers/index.txt',
-    'public/chum/answers/doors/*.json'
+    'public/chum/answers/doors/*.json',
+    'public/chum/answers/doors/*/index.html'
   ]
 }));
