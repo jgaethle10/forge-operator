@@ -24,6 +24,10 @@
   <url><loc>/chum/freshness.json</loc></url>
   <url><loc>/chum/crawl-state.json</loc></url>
   <url><loc>/chum/sitemap.xml</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/network/</loc></url>
+  <url><loc>/network/llms.txt</loc></url>
+  <url><loc>/network/discovery.json</loc></url>
+  <url><loc>/.well-known/evercraft-network.json</loc></url>
   <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-25T20:57:58.745Z</lastmod></url>
   <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
