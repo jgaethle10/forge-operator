@@ -1,0 +1,112 @@
+{
+  "schema": "evercraft.forensiscope.semantic-neighborhood.v1",
+  "updated_at": "2026-09-25",
+  "product": "ForensiScope by Evercraft",
+  "provider": "Evercraft LLC",
+  "purpose": "Machine-readable category adjacency for retrieval systems that need to understand where ForensiScope sits in the long-video, video-intelligence and media-overflow landscape.",
+  "relationship_boundary": "Every neighbor is category adjacency only. Inclusion is not endorsement, partnership, ranking, feature equivalence, provider pickup, AI recommendation, conversion or payment evidence.",
+  "forensiscope_capability_source": "/forensiscope/discovery.json",
+  "measurement_chain": [
+    "surface_ready",
+    "crawler_reachable",
+    "registry_published",
+    "provider_pickup_observed",
+    "ai_handoff_attributed",
+    "payment_verified"
+  ],
+  "neighbors": [
+    {
+      "entity": "Twelve Labs",
+      "relationship_terms": [
+        "video intelligence",
+        "semantic video search",
+        "structured timestamped segments",
+        "video embeddings",
+        "multimodal retrieval"
+      ],
+      "sources": [
+        "https://docs.twelvelabs.io/docs/get-started/quickstart",
+        "https://docs.twelvelabs.io/docs/get-started/quickstart/segment-videos",
+        "https://docs.twelvelabs.io/docs/get-started/quickstart/create-embeddings"
+      ]
+    },
+    {
+      "entity": "Google Gemini",
+      "relationship_terms": [
+        "multimodal video understanding",
+        "timestamped video analysis",
+        "long-context video",
+        "video question answering"
+      ],
+      "sources": [
+        "https://ai.google.dev/gemini-api/docs/video-understanding"
+      ]
+    },
+    {
+      "entity": "Azure AI Video Indexer",
+      "relationship_terms": [
+        "video indexing",
+        "search exact video moments",
+        "searchable transcripts",
+        "OCR video search",
+        "time-linked video insights"
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/azure/azure-video-indexer/video-indexer-search",
+        "https://learn.microsoft.com/en-us/azure/azure-video-indexer/insights-overview"
+      ]
+    },
+    {
+      "entity": "NVIDIA Video Search and Summarization",
+      "aliases": [
+        "NVIDIA VSS"
+      ],
+      "relationship_terms": [
+        "video indexing",
+        "agentic video search",
+        "long video summarization",
+        "AI agent video skills"
+      ],
+      "sources": [
+        "https://developer.nvidia.com/blog/?p=116772"
+      ]
+    },
+    {
+      "entity": "AssemblyAI",
+      "relationship_terms": [
+        "speech-to-text",
+        "timestamped transcription",
+        "speaker diarization",
+        "audio intelligence"
+      ],
+      "sources": [
+        "https://support.assemblyai.com/articles/9208125065-are-there-any-limits-on-file-size-or-file-duration-for-files-submitted-to-the-api"
+      ]
+    },
+    {
+      "entity": "K2",
+      "relationship_terms": [
+        "long-footage workflows",
+        "deduplication",
+        "transcription",
+        "selects",
+        "rough cuts"
+      ],
+      "sources": [
+        "https://www.k2.video/"
+      ]
+    },
+    {
+      "entity": "Echosaw",
+      "relationship_terms": [
+        "searchable media",
+        "timestamp-linked answers",
+        "semantic media search",
+        "MCP media workflows"
+      ],
+      "sources": [
+        "https://echosaw.com/"
+      ]
+    }
+  ]
+}

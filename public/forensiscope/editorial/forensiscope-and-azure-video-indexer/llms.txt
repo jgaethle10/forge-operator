@@ -1,0 +1,29 @@
+# ForensiScope by Evercraft and Azure AI Video Indexer for searchable video evidence
+
+Compare ForensiScope by Evercraft with Azure AI Video Indexer across searchable video moments, transcripts, OCR-linked insights, timelines and long-media review workflows.
+
+Canonical HTML:
+/forensiscope/editorial/forensiscope-and-azure-video-indexer/
+
+Product:
+ForensiScope by Evercraft
+
+Provider:
+Evercraft LLC
+
+Semantic terms for this article:
+- Azure AI Video Indexer
+- video indexing
+- OCR video search
+- search exact video moments
+- timestamped video insights
+- searchable transcripts
+
+External first-party sources:
+- Microsoft Learn: search exact moments: https://learn.microsoft.com/en-us/azure/azure-video-indexer/video-indexer-search
+- Microsoft Learn: Video Indexer insights: https://learn.microsoft.com/en-us/azure/azure-video-indexer/insights-overview
+
+Truth boundary:
+- Category adjacency does not imply endorsement, partnership, ranking, feature equivalence, provider pickup, AI recommendation, conversion or payment.
+- ForensiScope capability claims are bounded by /forensiscope/discovery.json and /forensiscope/developers/status.json.
+- Discovery and opening a human review path do not create a payment obligation.

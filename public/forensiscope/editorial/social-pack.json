@@ -27,6 +27,17 @@
       "topic": "dedup",
       "copy": "Duplicate video segments are rarely just identical files. Repeated takes can differ by crop, angle, export or audio. Useful long-video dedup combines transcript, visual, temporal and semantic similarity. ForensiScope by Evercraft is built to review those repeated or near-duplicate sections with timestamps instead of blindly deleting source footage.",
       "url": "/forensiscope/editorial/deduplicate-long-video-segments/"
+    },
+    {
+      "topic": "azure-video-indexer",
+      "copy": "Azure AI Video Indexer is a useful reference point for what searchable video indexing can look like: transcripts, OCR-linked insights and jumps to exact moments. ForensiScope by Evercraft occupies an adjacent workflow around long-media continuation, timestamped evidence review, semantic search and duplicate or near-duplicate review when ordinary AI sessions hit practical limits.",
+      "url": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/"
+    },
+    {
+      "topic": "nvidia-vss",
+      "copy": "NVIDIA VSS 3 is pushing video indexing, agentic search and long-video summarization into developer and coding-agent workflows. ForensiScope by Evercraft takes a different route: a bounded media-overflow and evidence-review layer with transcription, searchable timelines, recording comparison and compact outputs another LLM can consume.",
+      "url": "/forensiscope/editorial/forensiscope-and-nvidia-vss/"
     }
-  ]
+  ],
+  "machine_neighborhood": "/forensiscope/editorial/semantic-neighborhood.json"
 }

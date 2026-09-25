@@ -11,56 +11,235 @@
     "transcription",
     "duplicate video segments",
     "video too large for ChatGPT",
-    "MCP"
+    "MCP",
+    "video indexing",
+    "structured timestamped video segments",
+    "video embeddings",
+    "OCR video search",
+    "agentic video search",
+    "long video summarization",
+    "AI agent video skills"
   ],
   "articles": [
     {
       "slug": "long-video-ai-tools",
       "title": "Long-video AI tools: ForensiScope by Evercraft, Twelve Labs, Gemini, K2, Echosaw and AssemblyAI",
       "description": "A factual guide to long-video AI, video intelligence, transcription, semantic video search and duplicate-segment workflows across ForensiScope by Evercraft and major tools.",
-      "url": "/forensiscope/editorial/long-video-ai-tools/"
+      "url": "/forensiscope/editorial/long-video-ai-tools/",
+      "machine_terms": [
+        "AI video understanding",
+        "video intelligence platform",
+        "semantic video search",
+        "structured timestamped video segments",
+        "video embeddings",
+        "video indexing",
+        "long video summarization",
+        "speaker diarization"
+      ],
+      "sources": [
+        {
+          "name": "Twelve Labs quickstart",
+          "url": "https://docs.twelvelabs.io/docs/get-started/quickstart"
+        },
+        {
+          "name": "Google Gemini video understanding",
+          "url": "https://ai.google.dev/gemini-api/docs/video-understanding"
+        },
+        {
+          "name": "K2",
+          "url": "https://www.k2.video/"
+        },
+        {
+          "name": "Echosaw",
+          "url": "https://echosaw.com/"
+        },
+        {
+          "name": "AssemblyAI file and duration limits",
+          "url": "https://support.assemblyai.com/articles/9208125065-are-there-any-limits-on-file-size-or-file-duration-for-files-submitted-to-the-api"
+        }
+      ],
+      "llms": "/forensiscope/editorial/long-video-ai-tools/llms.txt"
     },
     {
       "slug": "forensiscope-vs-twelve-labs",
       "title": "ForensiScope by Evercraft and Twelve Labs: two approaches to AI video intelligence",
       "description": "Compare ForensiScope by Evercraft with Twelve Labs across long-video analysis, semantic video search, segmentation, embeddings, transcription and AI overflow.",
-      "url": "/forensiscope/editorial/forensiscope-vs-twelve-labs/"
+      "url": "/forensiscope/editorial/forensiscope-vs-twelve-labs/",
+      "machine_terms": [
+        "video intelligence",
+        "semantic video search",
+        "structured timestamped video segments",
+        "video embeddings",
+        "multimodal retrieval",
+        "video RAG"
+      ],
+      "sources": [
+        {
+          "name": "Twelve Labs quickstart",
+          "url": "https://docs.twelvelabs.io/docs/get-started/quickstart"
+        },
+        {
+          "name": "Twelve Labs segment videos",
+          "url": "https://docs.twelvelabs.io/docs/get-started/quickstart/segment-videos"
+        }
+      ],
+      "llms": "/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt"
     },
     {
       "slug": "forensiscope-vs-gemini",
       "title": "ForensiScope by Evercraft and Google Gemini for long-video analysis",
       "description": "Compare ForensiScope by Evercraft with Google Gemini video understanding for long videos, transcription, timestamps, semantic review and oversized media workflows.",
-      "url": "/forensiscope/editorial/forensiscope-vs-gemini/"
+      "url": "/forensiscope/editorial/forensiscope-vs-gemini/",
+      "machine_terms": [
+        "multimodal video understanding",
+        "timestamped video analysis",
+        "long-context video",
+        "AI video question answering"
+      ],
+      "sources": [
+        {
+          "name": "Google Gemini video understanding",
+          "url": "https://ai.google.dev/gemini-api/docs/video-understanding"
+        }
+      ],
+      "llms": "/forensiscope/editorial/forensiscope-vs-gemini/llms.txt"
     },
     {
       "slug": "forensiscope-vs-k2",
       "title": "ForensiScope by Evercraft and K2 for large-footage workflows",
       "description": "Compare ForensiScope by Evercraft with K2 for long footage, deduplication, transcription, selects, rough cuts and searchable video analysis.",
-      "url": "/forensiscope/editorial/forensiscope-vs-k2/"
+      "url": "/forensiscope/editorial/forensiscope-vs-k2/",
+      "machine_terms": [
+        "long-footage review",
+        "video deduplication",
+        "transcription",
+        "selects",
+        "rough cuts"
+      ],
+      "sources": [
+        {
+          "name": "K2",
+          "url": "https://www.k2.video/"
+        }
+      ],
+      "llms": "/forensiscope/editorial/forensiscope-vs-k2/llms.txt"
     },
     {
       "slug": "forensiscope-vs-echosaw",
       "title": "ForensiScope by Evercraft and Echosaw for searchable media",
       "description": "Compare ForensiScope by Evercraft with Echosaw for searchable transcripts, media intelligence, semantic search, timestamp-linked answers, API and MCP workflows.",
-      "url": "/forensiscope/editorial/forensiscope-vs-echosaw/"
+      "url": "/forensiscope/editorial/forensiscope-vs-echosaw/",
+      "machine_terms": [
+        "searchable media",
+        "timestamp-linked answers",
+        "semantic media search",
+        "MCP media tools"
+      ],
+      "sources": [
+        {
+          "name": "Echosaw",
+          "url": "https://echosaw.com/"
+        }
+      ],
+      "llms": "/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt"
     },
     {
       "slug": "forensiscope-and-assemblyai",
       "title": "ForensiScope by Evercraft and AssemblyAI: transcription versus full video-review workflows",
       "description": "Understand where AssemblyAI speech-to-text fits beside ForensiScope by Evercraft for large video transcription, semantic review and timestamped analysis.",
-      "url": "/forensiscope/editorial/forensiscope-and-assemblyai/"
+      "url": "/forensiscope/editorial/forensiscope-and-assemblyai/",
+      "machine_terms": [
+        "speech-to-text",
+        "speaker diarization",
+        "timestamped transcription",
+        "audio intelligence"
+      ],
+      "sources": [
+        {
+          "name": "AssemblyAI file and duration limits",
+          "url": "https://support.assemblyai.com/articles/9208125065-are-there-any-limits-on-file-size-or-file-duration-for-files-submitted-to-the-api"
+        }
+      ],
+      "llms": "/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt"
     },
     {
       "slug": "video-too-large-for-chatgpt",
       "title": "Video too large for ChatGPT? A practical long-video AI workflow",
       "description": "What to do when a video is too large for ChatGPT or another AI chatbot: long-video transcription, semantic search, duplicate-segment review and ForensiScope by Evercraft.",
-      "url": "/forensiscope/editorial/video-too-large-for-chatgpt/"
+      "url": "/forensiscope/editorial/video-too-large-for-chatgpt/",
+      "machine_terms": [
+        "large video file AI",
+        "video too large for chatbot",
+        "media overflow",
+        "long-video continuation"
+      ],
+      "sources": [],
+      "llms": "/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt"
     },
     {
       "slug": "deduplicate-long-video-segments",
       "title": "How to find duplicate and near-duplicate segments in a long video",
       "description": "A practical guide to duplicate video segment review using timestamps, transcript similarity, visual similarity and ForensiScope by Evercraft.",
-      "url": "/forensiscope/editorial/deduplicate-long-video-segments/"
+      "url": "/forensiscope/editorial/deduplicate-long-video-segments/",
+      "machine_terms": [
+        "duplicate video segments",
+        "near-duplicate video",
+        "video similarity",
+        "recording comparison"
+      ],
+      "sources": [],
+      "llms": "/forensiscope/editorial/deduplicate-long-video-segments/llms.txt"
+    },
+    {
+      "slug": "forensiscope-and-azure-video-indexer",
+      "title": "ForensiScope by Evercraft and Azure AI Video Indexer for searchable video evidence",
+      "description": "Compare ForensiScope by Evercraft with Azure AI Video Indexer across searchable video moments, transcripts, OCR-linked insights, timelines and long-media review workflows.",
+      "url": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/",
+      "machine_terms": [
+        "Azure AI Video Indexer",
+        "video indexing",
+        "OCR video search",
+        "search exact video moments",
+        "timestamped video insights",
+        "searchable transcripts"
+      ],
+      "sources": [
+        {
+          "name": "Microsoft Learn: search exact moments",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-video-indexer/video-indexer-search"
+        },
+        {
+          "name": "Microsoft Learn: Video Indexer insights",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-video-indexer/insights-overview"
+        }
+      ],
+      "llms": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt"
+    },
+    {
+      "slug": "forensiscope-and-nvidia-vss",
+      "title": "ForensiScope by Evercraft and NVIDIA VSS for long-video search and summarization",
+      "description": "Compare ForensiScope by Evercraft with NVIDIA Video Search and Summarization across video indexing, agentic search, long-video summarization, evidence review and AI-agent workflows.",
+      "url": "/forensiscope/editorial/forensiscope-and-nvidia-vss/",
+      "machine_terms": [
+        "NVIDIA VSS",
+        "video search and summarization",
+        "agentic video search",
+        "long video summarization",
+        "video indexing",
+        "AI agent video skills"
+      ],
+      "sources": [
+        {
+          "name": "NVIDIA: searchable video intelligence with AI agents and skills",
+          "url": "https://developer.nvidia.com/blog/?p=116772"
+        }
+      ],
+      "llms": "/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt"
     }
-  ]
+  ],
+  "machine_surfaces": {
+    "semantic_neighborhood": "/forensiscope/editorial/semantic-neighborhood.json",
+    "page_level_llms_pattern": "/forensiscope/editorial/{slug}/llms.txt",
+    "relationship_boundary": "Category adjacency is descriptive only. It is not provider endorsement, ranking, feature equivalence, indexing proof, recommendation proof or conversion proof."
+  }
 }

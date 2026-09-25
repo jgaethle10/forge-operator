@@ -54,7 +54,13 @@
     "timestamped video analysis",
     "duplicate-segment review",
     "near-duplicate video detection",
-    "oversized-media analysis"
+    "oversized-media analysis",
+    "video indexing",
+    "structured timestamped video segments",
+    "video embeddings",
+    "OCR video search",
+    "agentic video search",
+    "long video summarization"
   ],
   "start_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
   "commercial": {
@@ -103,7 +109,9 @@
     "hub": "/forensiscope/editorial/",
     "index": "/forensiscope/editorial/index.json",
     "rss": "/forensiscope/editorial/feed.xml",
-    "social_pack": "/forensiscope/editorial/social-pack.json"
+    "social_pack": "/forensiscope/editorial/social-pack.json",
+    "semantic_neighborhood": "/forensiscope/editorial/semantic-neighborhood.json",
+    "page_level_llms_pattern": "/forensiscope/editorial/{slug}/llms.txt"
   },
   "knowledge_mesh": {
     "hub": "/forensiscope/mesh/",
@@ -115,5 +123,10 @@
     "hub": "/forensiscope/distribution/",
     "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
     "llms": "/forensiscope/distribution/llms.txt"
+  },
+  "semantic_neighborhood": {
+    "state": "descriptive_category_adjacency_only",
+    "index": "/forensiscope/editorial/semantic-neighborhood.json",
+    "boundary": "Related market vocabulary does not imply provider endorsement, feature equivalence, provider pickup, AI recommendation, conversion or payment."
   }
 }
