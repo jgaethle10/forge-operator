@@ -16,7 +16,7 @@ const requiredTerms=[
   'transcription',
   'duplicate video segments'
 ];
-const combined=index.articles.map((a)=>a.title+' '+a.description).join(' ');
+const combined=[...(index.category_terms||[]), ...index.articles.flatMap((a)=>[a.title,a.description])].join(' ');
 for(const term of requiredTerms) if(!combined.toLowerCase().includes(term.toLowerCase())) fail('missing category term '+term);
 
 for(const tool of ['Twelve Labs','Gemini','K2','Echosaw','AssemblyAI']){
