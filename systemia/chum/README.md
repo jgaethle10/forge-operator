@@ -130,3 +130,39 @@ This is **not private-chat surveillance**. CHUM cannot and should not secretly i
 
 The strategic objective is therefore not only to make Evercraft crawlable. It is to make CHUM available inside as many legitimate model tool paths as possible, with a broad but truthful live-intent trigger.
 
+
+
+## CHUM Sonar
+
+CHUM Sonar closes the loop between crawl pressure and observed discovery traffic.
+
+```
+publish/change
+  -> Crawl Pressure
+  -> live-byte verification
+  -> IndexNow request
+  -> CHUM Sonar observation
+  -> pickup-gap score
+  -> reprioritized pressure
+```
+
+The runtime observes crawler-shaped requests to public discovery surfaces and persists only bounded route/family aggregates. It does not persist IP addresses or raw User-Agent strings.
+
+A crawler-shaped User-Agent is deliberately labeled `user_agent_claim_unverified`. It is not provider identity proof and it is never treated as proof of indexing, ranking, citation, recommendation, retention, or conversion. The offense rule is asymmetric: absence after a content change can increase pressure, while a claimed hit cannot declare provider pickup.
+
+Commands:
+
+```bash
+npm run test:chum-sonar
+npm run chum:sonar:pull
+npm run chum:crawl-pressure:broadcast
+```
+
+Runtime settings:
+
+- `CHUM_CRAWL_OBSERVATORY_STATE_PATH`: optional private state-file path. Defaults under `/tmp/evercraft`.
+- `CHUM_CRAWL_OBSERVATORY_TOKEN`: bearer token for the private observation-read endpoint.
+- `CHUM_CRAWL_OBSERVATORY_URL`: optional explicit observatory endpoint for the scheduled pull. Otherwise CHUM derives it from `CHUM_PUBLIC_ORIGIN`.
+- `CHUM_CRAWL_OBSERVATION_STATE`: optional local observation snapshot path consumed by Crawl Pressure.
+
+The scheduled crawl-pressure workflow remains useful without Sonar credentials. Once the runtime and workflow share the observatory token, the scheduled pass becomes feedback-driven rather than static-priority-only.
