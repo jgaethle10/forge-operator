@@ -5,8 +5,10 @@ import {
   loadMultiplicationRegistry,
   resolveMultiplicationContract
 } from './multiplier.mjs';
-import { createWorkState } from './work-state.mjs';
+import { createWorkState, saveWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
+import { recommendFormation } from './autoscaler.mjs';
+import fs from 'node:fs';
 
 const registry = loadMultiplicationRegistry();
 const chum = resolveMultiplicationContract('chum', registry);
@@ -29,6 +31,9 @@ const plan = buildMultiplicationPlan({
 assert.equal(plan.logical_agents, 10000);
 assert.equal(plan.physical_workers, 32);
 assert.equal(plan.sample_assignments.length, 24);
+assert.equal(plan.assignment_strategy, 'role_item_cartesian');
+assert.equal(plan.sample_assignments[0].role, chum.roles[0]);
+assert.equal(plan.sample_assignments[0].work.key, syntheticItems[0].key);
 
 const smallAssignments = Array.from({ length: 64 }, (_, index) => ({
   agent_id: `proof-agent-${index + 1}`,
@@ -77,6 +82,12 @@ assert.equal(receipt.summary.total, 64);
 assert.equal(receipt.summary.counts.completed, 64);
 assert.ok(receipt.summary.retried > 0);
 
+const statePath = 'artifacts/saban-multiplier/kernel-proof-resume-state.json';
+saveWorkState(statePath, state);
+const resumedState = loadWorkState(statePath);
+assert.equal(Object.keys(resumedState.jobs).length, 64);
+fs.rmSync(statePath, { force: true });
+
 const mediaContract = resolveMultiplicationContract('media-pipeline', registry);
 const mediaItems = expandPartitionedWorkItems(mediaContract, [{
   kind: 'media_job',
@@ -94,6 +105,25 @@ assert.equal(mediaItems[0].raw.start_seconds, 0);
 assert.equal(mediaItems[0].raw.end_seconds, 300);
 assert.ok(mediaItems[1].raw.start_seconds < mediaItems[0].raw.end_seconds);
 
+const mediaFormation = recommendFormation({
+  contract: mediaContract,
+  workItemCount: mediaItems.length
+});
+assert.equal(mediaFormation.strategy, 'work_conserving');
+assert.ok(mediaFormation.logical_agents <= mediaItems.length * mediaContract.roles.length);
+
+const pressuredChumFormation = recommendFormation({
+  contract: chum,
+  workItemCount: syntheticItems.length,
+  telemetry: {
+    failure_rate: 0,
+    queue_pressure: 1,
+    latency_pressure: 0.8
+  }
+});
+assert.equal(pressuredChumFormation.strategy, 'coverage_amplification');
+assert.ok(pressuredChumFormation.logical_agents >= syntheticItems.length * chum.roles.length);
+
 console.log(JSON.stringify({
   schema: 'evercraft.saban.kernel-proof.v1',
   logical_plan_agents: plan.logical_agents,
@@ -101,5 +131,7 @@ console.log(JSON.stringify({
   recovery_jobs: receipt.summary.total,
   recovered_retries: receipt.summary.retried,
   media_shards: mediaItems.length,
+  media_auto_logical_agents: mediaFormation.logical_agents,
+  chum_auto_logical_agents: pressuredChumFormation.logical_agents,
   status: 'pass'
 }));
