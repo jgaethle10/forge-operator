@@ -53,7 +53,8 @@
     "capability_directory_page": "/chum/capabilities/",
     "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
     "sell_now_directory_page": "/chum/sell-now.html",
-    "live_intent_hunter": "/api/chum/hunt"
+    "live_intent_hunter": "/api/chum/hunt",
+    "human_conversion": "/api/chum/go/{publicId}"
   },
   "verified_crawler_controls": [
     {
@@ -110,7 +111,9 @@
     "problem_language_is_primary_entry": true,
     "live_user_intent_is_chum": true,
     "same_turn_hunt": true,
-    "private_thread_surveillance": false
+    "private_thread_surveillance": false,
+    "sell_now_gets_human_start_corridor": true,
+    "no_outbound_spam": true
   },
   "public_surfaces": {
     "first_party_router": "/api/route-capability"
