@@ -16,7 +16,8 @@
         "operations_history"
       ],
       "recovery_priority": "wave_1",
-      "state": "evidence_pack_available"
+      "state": "control_plane_contract_recovered_pending_runtime_parity",
+      "recovered_contract": "slices/systemia-command-center.json"
     },
     {
       "product": "Raven Nexus",
@@ -45,7 +46,8 @@
         "product_output"
       ],
       "recovery_priority": "wave_3",
-      "state": "evidence_pack_available"
+      "state": "data_semantics_and_durability_contract_recovered_pending_source_and_restore_parity",
+      "recovered_contract": "slices/rivet.json"
     },
     {
       "product": "Evercraft Rewards",
@@ -97,7 +99,8 @@
         "project_archive"
       ],
       "recovery_priority": "wave_5",
-      "state": "evidence_pack_available"
+      "state": "architecture_and_evidence_contract_recovered_pending_source_and_runtime_parity",
+      "recovered_contract": "slices/eventwave.json"
     },
     {
       "product": "EPS Field Pass",
@@ -141,7 +144,8 @@
         "integration_record"
       ],
       "recovery_priority": "wave_3",
-      "state": "source_reconciliation_required"
+      "state": "handoff_and_boundary_contract_recovered_pending_source_and_runtime_parity",
+      "recovered_contract": "slices/skyops-parking.json"
     },
     {
       "product": "Evercraft Property Services",
