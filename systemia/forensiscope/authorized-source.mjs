@@ -28,7 +28,7 @@ export function hashFile(file) {
   return `sha256:${hash.digest('hex')}`;
 }
 
-export function allowedMediaRoots(rootDir = process.cwd()) {
+export function allowedMediaRoots(rootDir = process.cwd(), additionalRoots = []) {
   const configured = String(process.env.FORENSISCOPE_MEDIA_ROOTS || '')
     .split(path.delimiter)
     .map((value) => value.trim())
@@ -40,12 +40,17 @@ export function allowedMediaRoots(rootDir = process.cwd()) {
     path.resolve(rootDir, 'artifacts/forensiscope-proof')
   ];
 
-  return [...new Set([...configured, ...builtIn])];
+  const trustedAdditional = (additionalRoots || [])
+    .map((value) => path.resolve(String(value)))
+    .filter(Boolean);
+
+  return [...new Set([...configured, ...builtIn, ...trustedAdditional])];
 }
 
 export function validateAuthorizedMediaSource(raw, {
   rootDir = process.cwd(),
-  requireExisting = true
+  requireExisting = true,
+  additionalRoots = []
 } = {}) {
   const source = raw?.source || raw?.authorized_source || {};
   const authorization = raw?.authorization || {};
@@ -56,7 +61,7 @@ export function validateAuthorizedMediaSource(raw, {
   if (!source.path) throw new Error('ForensiScope source.path is required.');
 
   const resolvedPath = path.resolve(String(source.path));
-  const roots = allowedMediaRoots(rootDir);
+  const roots = allowedMediaRoots(rootDir, additionalRoots);
   if (!roots.some((root) => isWithin(root, resolvedPath))) {
     throw new Error('ForensiScope source path is outside admitted media roots.');
   }
