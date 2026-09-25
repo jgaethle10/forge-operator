@@ -1,0 +1,31 @@
+name: Evercraft transport diversity
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/transport-router.mjs'
+      - 'systemia/network/file-courier.mjs'
+      - 'systemia/network/transport-diversity-proof.mjs'
+      - 'systemia/network/TRANSPORT-DIVERSITY.md'
+      - '.github/workflows/transport-diversity.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/network/transport-router.mjs'
+      - 'systemia/network/file-courier.mjs'
+      - 'systemia/network/transport-diversity-proof.mjs'
+      - 'systemia/network/TRANSPORT-DIVERSITY.md'
+      - '.github/workflows/transport-diversity.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove verified transport fallback and NO_ROUTE behavior
+        run: node systemia/network/transport-diversity-proof.mjs
