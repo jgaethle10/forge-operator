@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "systemia-core-supervisor",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "capacity_protocol": "evercraft.capacity.v1",
+  "workload_class": "systemia.core-supervisor.v1",
+  "service_type": "resident",
+  "provider_policy": {
+    "named_cloud_dependency": false,
+    "allocation": "legitimately_granted_runtime_capacity",
+    "silent_fallback": false
+  },
+  "state_boundary": {
+    "public_code_root": "forge-operator reviewed runtime",
+    "private_state_root": "Evercraft Compute admitted root",
+    "yard_state": "colocated private state for v1",
+    "source_tree_writable": false
+  },
+  "supervised_workflows": [
+    "legacy-rescue-opportunity-watch",
+    "node001-field-certification-watch",
+    "kaidance-mission-publisher"
+  ],
+  "security": {
+    "lease_required": true,
+    "workload_allowlist": true,
+    "private_paths_not_in_deployment_receipt": true,
+    "allocator_token_not_in_child_environment": true,
+    "child_stdout_stderr_not_persisted": true,
+    "filesystem_state_root_bounded": true
+  },
+  "acceptance": [
+    "capacity_offer_verified",
+    "lease_granted",
+    "core_supervisor_started",
+    "all_supervised_services_not_failed_or_held",
+    "yard_health_verified",
+    "deployment_receipt_bound",
+    "private_workspace_writable",
+    "source_tree_not_used_for_runtime_state",
+    "clean_stop_verified"
+  ]
+}
