@@ -332,10 +332,23 @@ async function main() {
     JSON.stringify(receipt, null, 2) + '\n'
   );
 
+  if (
+    execute &&
+    (
+      Number(receipt.summary?.failed || 0) > 0 ||
+      Number(receipt.summary?.failed_quality || 0) > 0 ||
+      Number(receipt.summary?.blocked || 0) > 0 ||
+      Number(receipt.summary?.completed_with_dead_letter || 0) > 0
+    )
+  ) {
+    process.exitCode = 2;
+  }
+
   console.log(JSON.stringify({
     formation_id: formation.formation_id,
     nodes: formation.nodes.length,
     mode: execute ? 'execute' : 'plan_only',
+    execution_waves: formation.execution_waves || null,
     summary: receipt.summary || null
   }));
 }
