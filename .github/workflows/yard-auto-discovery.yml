@@ -1,0 +1,29 @@
+name: Yard automatic capacity discovery
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/yard/**'
+      - 'systemia/compute/**'
+      - '.github/workflows/yard-auto-discovery.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/yard/**'
+      - 'systemia/compute/**'
+      - '.github/workflows/yard-auto-discovery.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Yard capacity resolver
+        run: node systemia/yard/capacity-resolver-proof.mjs
+      - name: Prove endpoint-free KAIDANCE deployment
+        run: node systemia/yard/auto-discovery-proof.mjs
