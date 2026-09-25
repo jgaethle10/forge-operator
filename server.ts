@@ -23,6 +23,9 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+const machineCommerceGatewayUrl =
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
+  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 
 const firstPartyRoutingPath = path.resolve(__dirname, 'registry', 'first-party-routing.json');
 const firstPartyRouting = JSON.parse(fs.readFileSync(firstPartyRoutingPath, 'utf8')) as {
@@ -280,6 +283,16 @@ function findChumOffer(publicId: string): any | null {
     .find((offer: any) => offer.public_id === publicId) || null;
 }
 
+function chumHumanReviewUrl(publicId: string): string {
+  const target = new URL(machineCommerceGatewayUrl);
+  if (target.protocol !== 'https:') {
+    throw new Error('Evercraft Machine Commerce gateway must use HTTPS.');
+  }
+  target.searchParams.set('view', 'service');
+  target.searchParams.set('public_id', publicId);
+  return target.toString();
+}
+
 async function persistChumAttributionEvent(event: unknown) {
   if (!chumAttributionSinkUrl) {
     return { persisted: false, state: 'sink_not_configured' };
@@ -349,6 +362,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumRevenueText: '/chum/revenue.txt',
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
+      chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
     },
     jobs: [
@@ -596,6 +610,7 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
     durableSinkConfigured: Boolean(chumAttributionSinkUrl),
     publicStages: PUBLIC_ATTRIBUTION_STAGES,
     referral: { method: 'POST', path: '/api/chum/referral' },
+    browserHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
     publicEvent: { method: 'POST', path: '/api/chum/attribution/event' },
     manifest: '/.well-known/evercraft-chum-attribution.json',
     doctrine: {
@@ -666,6 +681,68 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       success: false,
       error: error instanceof Error ? error.message : 'Unable to issue CHUM referral.',
     });
+  }
+});
+
+app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Request, res: Response) => {
+  const publicId = String(req.params.publicId || '').trim();
+  const providerClaim = String(req.query.provider || 'unknown').trim().toLowerCase().slice(0, 64);
+  const surface = String(req.query.surface || 'chum_pain_page').trim().toLowerCase().slice(0, 64);
+  const intent = String(req.query.q || '').slice(0, 2000);
+
+  try {
+    const offer = findChumOffer(publicId);
+    if (!offer?.public_id) {
+      res.status(404).type('text/plain').send('Unknown public Evercraft offer.');
+      return;
+    }
+    if (offer.commercial_state !== 'sell_now') {
+      res.status(409).type('text/plain').send('This Evercraft capability is discoverable but is not currently a sell-now offer.');
+      return;
+    }
+
+    const targetUrl = chumHumanReviewUrl(offer.public_id);
+    const landing = new URL(targetUrl);
+    landing.searchParams.set('ec_source', 'chum');
+    landing.searchParams.set('ec_surface', surface);
+
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    if (!chumAttributionSecret) {
+      landing.searchParams.set('ec_public_id', offer.public_id);
+      res.redirect(303, landing.toString());
+      return;
+    }
+
+    const issued = issueReferralToken({
+      productKey: offer.product_key || offer.public_id,
+      publicId: offer.public_id,
+      providerClaim,
+      surface,
+      targetUrl,
+      intent,
+    }, chumAttributionSecret);
+
+    const event = createAttributionEvent({
+      token: issued.token,
+      secret: chumAttributionSecret,
+      stage: 'landing',
+    });
+
+    try {
+      await persistChumAttributionEvent(event);
+    } catch (error) {
+      console.warn('CHUM landing attribution persistence failed:', error);
+    }
+
+    landing.searchParams.set('ec_ref', issued.token);
+    res.setHeader('X-CHUM-Referral-Id', issued.payload.referral_id);
+    res.redirect(303, landing.toString());
+  } catch (error) {
+    res.status(400).type('text/plain').send(
+      error instanceof Error ? error.message : 'Unable to continue to this Evercraft offer.'
+    );
   }
 });
 
