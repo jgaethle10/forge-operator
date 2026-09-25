@@ -7,6 +7,7 @@ import { admitMultiplicationRequest } from './admission.mjs';
 import { createWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
 import { recommendFormation } from './autoscaler.mjs';
+import { evaluateSwarmQuality } from './quality-gate.mjs';
 
 const DEFAULT_REGISTRY = 'systemia/saban/multiplication-registry.json';
 
@@ -364,6 +365,18 @@ export async function executeMultiplicationPlan({
     reconciliation = await adapter[exportName]({ plan, contract, rootDir, results });
   }
 
+  const quality = evaluateSwarmQuality({
+    contract,
+    plan,
+    results,
+    schedulerSummary: schedulerReceipt.summary,
+    reconciliation
+  });
+  const resultsDigest = 'sha256:' + crypto
+    .createHash('sha256')
+    .update(JSON.stringify(results))
+    .digest('hex');
+
   return {
     schema: 'evercraft.saban.multiplication-receipt.v1',
     generated_at: new Date().toISOString(),
@@ -372,10 +385,12 @@ export async function executeMultiplicationPlan({
     physical_workers: plan.physical_workers,
     work_item_count: plan.work_item_count,
     result_summary: summarizeResults(results),
+    results_digest: resultsDigest,
     scheduler_summary: schedulerReceipt.summary,
     state_path: statePath,
     sample_results: results.slice(0, 24),
-    reconciliation
+    reconciliation,
+    quality
   };
 }
 
@@ -479,6 +494,10 @@ async function main() {
   fs.mkdirSync(outDir, { recursive: true });
   const outFile = path.join(outDir, `${contract.software_id}-latest.json`);
   fs.writeFileSync(outFile, JSON.stringify(receipt, null, 2) + '\n');
+
+  if (receipt.quality?.status === 'fail' && receipt.quality?.enforcement === 'fail_execution') {
+    process.exitCode = 2;
+  }
 
   console.log(JSON.stringify({
     software: contract.software_id,
