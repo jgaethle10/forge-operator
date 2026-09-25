@@ -1,0 +1,37 @@
+name: Node 001 identity attestation
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/device-identity.mjs'
+      - 'systemia/compute/node-seed.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/field-attestation.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/field-attestation-proof.mjs'
+      - 'systemia/compute/FIELD_ATTESTATION.md'
+      - '.github/workflows/node001-field-attestation.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/compute/device-identity.mjs'
+      - 'systemia/compute/node-seed.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/field-attestation.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/field-attestation-proof.mjs'
+      - 'systemia/compute/FIELD_ATTESTATION.md'
+      - '.github/workflows/node001-field-attestation.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove device identity without self-awarding field status
+        run: node systemia/yard/field-attestation-proof.mjs
