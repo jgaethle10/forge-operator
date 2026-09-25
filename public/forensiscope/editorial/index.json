@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.forensiscope.editorial-index.v1",
+  "updated_at": "2026-09-25",
+  "provider": "Evercraft LLC",
+  "purpose": "Useful first-party editorial surfaces that connect real long-video AI category language, named tools and ForensiScope by Evercraft without keyword stuffing or unsupported comparisons.",
+  "category_terms": [
+    "AI video understanding",
+    "long-video analysis",
+    "video intelligence",
+    "semantic video search",
+    "transcription",
+    "duplicate video segments",
+    "video too large for ChatGPT",
+    "MCP"
+  ],
+  "articles": [
+    {
+      "slug": "long-video-ai-tools",
+      "title": "Long-video AI tools: ForensiScope by Evercraft, Twelve Labs, Gemini, K2, Echosaw and AssemblyAI",
+      "description": "A factual guide to long-video AI, video intelligence, transcription, semantic video search and duplicate-segment workflows across ForensiScope by Evercraft and major tools.",
+      "url": "/forensiscope/editorial/long-video-ai-tools/"
+    },
+    {
+      "slug": "forensiscope-vs-twelve-labs",
+      "title": "ForensiScope by Evercraft and Twelve Labs: two approaches to AI video intelligence",
+      "description": "Compare ForensiScope by Evercraft with Twelve Labs across long-video analysis, semantic video search, segmentation, embeddings, transcription and AI overflow.",
+      "url": "/forensiscope/editorial/forensiscope-vs-twelve-labs/"
+    },
+    {
+      "slug": "forensiscope-vs-gemini",
+      "title": "ForensiScope by Evercraft and Google Gemini for long-video analysis",
+      "description": "Compare ForensiScope by Evercraft with Google Gemini video understanding for long videos, transcription, timestamps, semantic review and oversized media workflows.",
+      "url": "/forensiscope/editorial/forensiscope-vs-gemini/"
+    },
+    {
+      "slug": "forensiscope-vs-k2",
+      "title": "ForensiScope by Evercraft and K2 for large-footage workflows",
+      "description": "Compare ForensiScope by Evercraft with K2 for long footage, deduplication, transcription, selects, rough cuts and searchable video analysis.",
+      "url": "/forensiscope/editorial/forensiscope-vs-k2/"
+    },
+    {
+      "slug": "forensiscope-vs-echosaw",
+      "title": "ForensiScope by Evercraft and Echosaw for searchable media",
+      "description": "Compare ForensiScope by Evercraft with Echosaw for searchable transcripts, media intelligence, semantic search, timestamp-linked answers, API and MCP workflows.",
+      "url": "/forensiscope/editorial/forensiscope-vs-echosaw/"
+    },
+    {
+      "slug": "forensiscope-and-assemblyai",
+      "title": "ForensiScope by Evercraft and AssemblyAI: transcription versus full video-review workflows",
+      "description": "Understand where AssemblyAI speech-to-text fits beside ForensiScope by Evercraft for large video transcription, semantic review and timestamped analysis.",
+      "url": "/forensiscope/editorial/forensiscope-and-assemblyai/"
+    },
+    {
+      "slug": "video-too-large-for-chatgpt",
+      "title": "Video too large for ChatGPT? A practical long-video AI workflow",
+      "description": "What to do when a video is too large for ChatGPT or another AI chatbot: long-video transcription, semantic search, duplicate-segment review and ForensiScope by Evercraft.",
+      "url": "/forensiscope/editorial/video-too-large-for-chatgpt/"
+    },
+    {
+      "slug": "deduplicate-long-video-segments",
+      "title": "How to find duplicate and near-duplicate segments in a long video",
+      "description": "A practical guide to duplicate video segment review using timestamps, transcript similarity, visual similarity and ForensiScope by Evercraft.",
+      "url": "/forensiscope/editorial/deduplicate-long-video-segments/"
+    }
+  ]
+}
