@@ -170,10 +170,21 @@ export function expandPartitionedWorkItems(contract, workItems) {
 export function assignmentForIndex(plan, workItems, index) {
   const logicalNumber = index + 1;
   const roles = plan.roles.length ? plan.roles : ['worker'];
-  const role = roles[index % roles.length];
-  const workIndex = workItems.length
+  let roleIndex = index % roles.length;
+  let workIndex = workItems.length
     ? hashInt(`${plan.software_id}:${logicalNumber}`) % workItems.length
     : -1;
+  let pass = 0;
+
+  if (plan.assignment_strategy === 'role_item_cartesian' && workItems.length) {
+    const blockSize = workItems.length * roles.length;
+    pass = Math.floor(index / blockSize);
+    const withinBlock = index % blockSize;
+    roleIndex = Math.floor(withinBlock / workItems.length);
+    workIndex = withinBlock % workItems.length;
+  }
+
+  const role = roles[roleIndex];
   const item = workIndex >= 0 ? workItems[workIndex] : {
     kind: 'portfolio',
     key: 'portfolio-wide',
@@ -184,6 +195,7 @@ export function assignmentForIndex(plan, workItems, index) {
   return {
     agent_id: `${plan.software_id}-${String(logicalNumber).padStart(5, '0')}`,
     logical_index: index,
+    pass,
     physical_worker: (index % plan.physical_workers) + 1,
     role,
     lease_seconds: plan.lease_seconds,
@@ -227,7 +239,7 @@ export function buildMultiplicationPlan({
     lease_seconds: Number(contract.lease_seconds || 300),
     roles,
     work_item_count: workItems.length,
-    assignment_strategy: 'deterministic_hash_shard',
+    assignment_strategy: contract.assignment_strategy || 'deterministic_hash_shard',
     execution_model: 'bounded_physical_pool_with_logical_agents',
     side_effects: contract.side_effects || { default: 'deny' },
     adapter: contract.adapter || null,
@@ -241,6 +253,7 @@ export function buildMultiplicationPlan({
       agent_id: assignment.agent_id,
       physical_worker: assignment.physical_worker,
       role: assignment.role,
+      pass: assignment.pass,
       work: assignment.work
     });
   }
