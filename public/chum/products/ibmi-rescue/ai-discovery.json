@@ -26,10 +26,11 @@
     "the public product-specific checkout route remains unverified until an external canary passes",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification",
-    "no production change or cutover is included in the public X-Ray or Proof Sprint"
+    "no production change or cutover is included in the public X-Ray or Proof Sprint",
+    "Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending"
   ],
   "commercial": {
-    "status": "sell_now_offers_active_checkout_route_canary_pending",
+    "status": "sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending",
     "offers": [
       {
         "name": "IBM i 7.4 Deadline X-Ray",
@@ -57,5 +58,14 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json",
     "page": "/chum/products/ibmi-rescue/"
+  },
+  "machine_commerce_handoff": {
+    "state": "live_verified",
+    "public_id": "ibmi-rescue-v1",
+    "mode": "fixed_price_human_handoff",
+    "tool": "prepare_quote_ready_service_handoff",
+    "checkout_created": false,
+    "payment_created": false,
+    "evidence": "GitHubActionsRun:36184321561"
   }
 }
