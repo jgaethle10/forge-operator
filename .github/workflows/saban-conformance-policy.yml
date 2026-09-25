@@ -1,0 +1,41 @@
+name: Saban discovery conformance policy
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/discovery-swarm.mjs'
+      - 'systemia/saban/conformance-policy.proof.mjs'
+      - 'public/.well-known/evercraft-products.json'
+      - 'conformance/products.json'
+      - 'registry/catalog.json'
+      - 'registry/public-products.json'
+      - 'registry/**/README.md'
+      - 'registry/**/llms.txt'
+      - '.github/workflows/saban-conformance-policy.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/saban/discovery-swarm.mjs'
+      - 'systemia/saban/conformance-policy.proof.mjs'
+      - 'public/.well-known/evercraft-products.json'
+      - 'conformance/products.json'
+      - 'registry/catalog.json'
+      - 'registry/public-products.json'
+      - 'registry/**/README.md'
+      - 'registry/**/llms.txt'
+      - '.github/workflows/saban-conformance-policy.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Emit current Saban public mirrors
+        run: node systemia/saban/discovery-swarm.mjs --emit
+      - name: Prove pending discovery-only conformance policy
+        run: node systemia/saban/conformance-policy.proof.mjs
