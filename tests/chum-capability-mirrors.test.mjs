@@ -56,7 +56,14 @@ test('SELL NOW directory count equals live catalog',()=>{
 
 test('SELL NOW mirrors expose one human Start corridor',()=>{
   for(const row of sellNow.offers){
-    assert.match(String(row.start_url||''),/^\/api\/chum\/go\//,row.public_id);
+    const start=new URL(String(row.start_url||''));
+    assert.equal(start.protocol,'https:',row.public_id);
+    assert.equal(start.hostname,'evercraft-ai-suite-08c4d2b8.base44.app',row.public_id);
+    assert.equal(start.pathname.endsWith('/functions/machineCommerceGateway'),true,row.public_id);
+    assert.equal(start.searchParams.get('view'),'service',row.public_id);
+    assert.equal(start.searchParams.get('public_id'),row.public_id,row.public_id);
+    assert.equal(start.searchParams.get('ec_source'),'chum',row.public_id);
+    assert.equal(start.searchParams.get('ec_surface'),'chum_capability_page',row.public_id);
     const source=(machine.offers||[]).find(x=>x.public_id===row.public_id);
     assert.ok(source,row.public_id);
     const hasPaid=(source.offers||[]).some((tier)=>{
