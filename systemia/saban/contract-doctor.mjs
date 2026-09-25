@@ -38,6 +38,15 @@ function inspectContract(contract, rootDir) {
     }
   }
 
+  if (contract.inventory_privacy) {
+    if (contract.inventory_privacy.redact_identifiers !== true) {
+      issues.push('inventory_privacy_must_redact_identifiers');
+    }
+    if (contract.inventory_privacy.expose_source_path === true) {
+      issues.push('private_inventory_source_path_must_stay_redacted');
+    }
+  }
+
   if (contract.resources) {
     for (const field of [
       'minimum_node_cpu_units',
