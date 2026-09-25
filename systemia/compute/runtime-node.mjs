@@ -283,15 +283,31 @@ export async function startEvercraftComputeNode({
         return send(res, 200, { ok: true, receipt });
       }
 
-      if (req.method === 'DELETE' && req.url?.startsWith('/v1/leases/')) {
-        const leaseId = req.url.split('/').pop();
+      const release = req.url?.match(/^\/v1\/leases\/([^/]+)\/release$/);
+      if (req.method === 'POST' && release) {
+        const leaseId = release[1];
+        const body = await readJson(req);
+        const lease = leases.get(leaseId);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
         for (const [serviceId, entry] of services.entries()) {
           if (entry.lease_id === leaseId) await stopService(serviceId, 'lease_released');
         }
         leases.delete(leaseId);
         return send(res, 200, {
           ok: true,
-          receipt: chain.issue('capacity.lease.released', { lease_id: leaseId }),
+          receipt: chain.issue('capacity.lease.released', {
+            lease_id: leaseId,
+            workload_class: lease.workload_class,
+          }),
+        });
+      }
+
+      if (req.method === 'DELETE' && req.url?.startsWith('/v1/leases/')) {
+        return send(res, 405, {
+          error: 'authenticated_release_required',
+          release_method: 'POST /v1/leases/:id/release',
         });
       }
 
