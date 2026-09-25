@@ -10,6 +10,7 @@ import {
   cycleDue,
   kaidanceHealth,
 } from './kernel.mjs';
+import { aggregateMissionSnapshotsFromConfig } from './mission-fabric.mjs';
 
 function stateHash(state) {
   return createHash('sha256').update(JSON.stringify(state)).digest('hex');
@@ -81,6 +82,8 @@ export class KaidanceRuntime {
     graceSeconds = 90,
     deploymentReceipt = '',
     snapshotPath,
+    missionFabricConfigPath = '',
+    missionFabricAllowedRoot = '',
     initialCheckpoint = null,
     clock = () => new Date(),
   } = {}) {
@@ -89,6 +92,13 @@ export class KaidanceRuntime {
     this.stateFile = path.join(this.root, 'state.json');
     this.receiptFile = path.join(this.root, 'receipts.jsonl');
     this.snapshotPath = path.resolve(snapshotPath || path.join(this.root, 'mission-snapshot.json'));
+    this.missionFabricConfigPath = missionFabricConfigPath
+      ? path.resolve(missionFabricConfigPath)
+      : '';
+    this.missionFabricAllowedRoot = missionFabricAllowedRoot
+      ? path.resolve(missionFabricAllowedRoot)
+      : (this.missionFabricConfigPath ? path.dirname(this.missionFabricConfigPath) : '');
+    this.lastMissionFabricReport = null;
     this.clock = clock;
     this.deploymentReceipt = String(
       deploymentReceipt ||
@@ -161,7 +171,13 @@ export class KaidanceRuntime {
       in_flight: this.inFlight,
       last_attempt_at: this.lastAttemptAt,
       last_error: this.lastError,
-      snapshot_ready: fs.existsSync(this.snapshotPath),
+      snapshot_ready: this.missionFabricConfigPath
+        ? fs.existsSync(this.missionFabricConfigPath)
+        : fs.existsSync(this.snapshotPath),
+      mission_fabric_enabled: Boolean(this.missionFabricConfigPath),
+      mission_fabric_report_receipt: this.lastMissionFabricReport?.receipt_hash || null,
+      mission_fabric_degraded_required_sources:
+        this.lastMissionFabricReport?.degraded_required_sources?.length ?? null,
     };
   }
 
@@ -175,7 +191,29 @@ export class KaidanceRuntime {
 
     this.inFlight = true;
     try {
-      const scan = readMissionSnapshot(this.snapshotPath);
+      let scan;
+      if (this.missionFabricConfigPath) {
+        const aggregated = aggregateMissionSnapshotsFromConfig({
+          configPath: this.missionFabricConfigPath,
+          allowedRoot: this.missionFabricAllowedRoot,
+          now,
+        });
+        this.lastMissionFabricReport = aggregated.report;
+        const snapshot = aggregated.snapshot;
+        scan = {
+          scanned: Number(snapshot.counts?.scanned || 0),
+          changed: Number(snapshot.counts?.changed || 0),
+          admitted: Number(snapshot.counts?.admitted || 0),
+          held: Number(snapshot.counts?.held || 0),
+          evidenceRefs: Array.isArray(snapshot.evidence_refs)
+            ? snapshot.evidence_refs.map(String).slice(0, 500)
+            : [],
+          snapshotRef: String(snapshot.snapshot_ref || ''),
+          observedAt: String(snapshot.observed_at || ''),
+        };
+      } else {
+        scan = readMissionSnapshot(this.snapshotPath);
+      }
       const wakeLease = createMachineWakeLease({
         leaseKey: `wake:${this.state.collider_key}:${now.getTime()}`,
         acquiredAt: now,
