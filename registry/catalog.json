@@ -324,6 +324,21 @@
         "professional website",
         "website launch"
       ]
+    },
+    {
+      "product_key": "systemia-field-library",
+      "name": "Systemia Field Library",
+      "canonical_url": "https://systemiafieldlibrary.com/",
+      "registry_name": "io.github.jgaethle10/systemia-field-library",
+      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "triggers": [
+        "contractor scope creep or change orders are costing money",
+        "contractor job costing or estimating is inconsistent",
+        "contractor cash flow payroll timing or receivables are causing stress",
+        "construction crews need better leadership accountability or scheduling",
+        "job documentation materials equipment safety or quality control need a system",
+        "contractor customer communication reviews or referrals need a repeatable process"
+      ]
     }
   ],
   "payment_boundary": {
