@@ -8,6 +8,7 @@ import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime
 import { createNodeAttestation } from './device-identity.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
+import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -141,6 +142,7 @@ export async function startEvercraftComputeNode({
     'systemia.private-core-origin.v1',
     'systemia.core-supervisor.v1',
     'systemia.kaidance-collider.v1',
+    'systemia.chum-public-origin.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -368,6 +370,69 @@ export async function startEvercraftComputeNode({
             lease_id: body.lease_id,
             workload_class: body.workload_class,
             result_schema: result.schema,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.chum-public-origin.v1') {
+          const defaultPublicRoot = path.join(CODE_ROOT, 'public');
+          const requestedPublicRoot = body.input?.public_root
+            ? path.resolve(String(body.input.public_root))
+            : defaultPublicRoot;
+          const admittedPublicRoot =
+            isWithin(allowedRoot, requestedPublicRoot) ||
+            isWithin(defaultPublicRoot, requestedPublicRoot);
+
+          if (!admittedPublicRoot) {
+            return send(res, 403, { error: 'chum_public_root_outside_admitted_roots' });
+          }
+
+          const serviceHost = String(body.input?.host || '127.0.0.1');
+          const loopbackService =
+            serviceHost === '127.0.0.1' ||
+            serviceHost === '::1' ||
+            serviceHost === 'localhost';
+          if (!loopbackService && body.input?.allow_public_bind !== true) {
+            return send(res, 403, { error: 'explicit_public_bind_authority_required' });
+          }
+
+          const runtime = await startChumPublicOrigin({
+            publicRoot: requestedPublicRoot,
+            host: serviceHost,
+            port: Number(body.input?.port || 0),
+            publicOrigin: String(body.input?.public_origin || ''),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_origin_candidate: runtime.publicOrigin || null,
+            instance_id: runtime.instanceId,
+            read_only_public_origin: true,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
           });
           return send(res, 200, {
             ok: true,
