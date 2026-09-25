@@ -34,9 +34,9 @@ Saban may fan out bounded logical workers for checksum verification, chunk trans
 
 BEAST MODE is deliberately transport-neutral. Source and destination adapters are responsible for authenticated reads/writes. The core never stores plaintext credentials or treats checkout creation as payment proof.
 
-## Current first-seven canary
+## Seven-artifact contract canary
 
-`fixtures/aliev-rivet-sites-1-7.json` records the seven AliEV site-plan artifacts currently present in the RIVET internal workspace. The fixture is a verification canary, not authorization for external customer delivery.
+`fixtures/aliev-rivet-sites-1-7.json` is a sanitized seven-artifact contract canary that mirrors the production Sites 1-7 transport shape without publishing live artifact ids, hashes, app ids, addresses or private topology. Live production verification belongs in destination receipts, not in the repository.
 
 Run:
 
