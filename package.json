@@ -92,8 +92,10 @@
     "proof:yard-chum-public-origin": "node systemia/yard/chum-public-origin-proof.mjs",
     "proof:aliev-spine": "node systemia/aliev/evidence-package.test.mjs",
     "proof:aliev-reconcile": "node systemia/aliev/legacy-reconciliation.test.mjs",
-    "proof:aliev-unification": "npm run proof:aliev-spine && npm run proof:aliev-reconcile && npm run proof:aliev-runtime && npm run proof:beast-mode",
-    "proof:aliev-runtime": "node systemia/aliev/runtime-certification.test.mjs"
+    "proof:aliev-unification": "npm run proof:aliev-spine && npm run proof:aliev-reconcile && npm run proof:aliev-runtime && npm run proof:aliev-ledger && npm run proof:beast-mode",
+    "proof:aliev-runtime": "node systemia/aliev/runtime-certification.test.mjs",
+    "proof:aliev-ledger": "node systemia/aliev/canary-ledger.test.mjs",
+    "aliev:runtime-status": "node systemia/aliev/canary-ledger.mjs systemia/aliev/fixtures/runtime-receipts.json"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
