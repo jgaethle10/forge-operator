@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T23:24:39.926Z",
+  "updated_at": "2026-09-25T23:24:44.679Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,27 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/answers/observed/index.json",
+      "last_changed": "2026-09-25T23:24:44.679Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T23:24:39.926Z",
+      "last_changed": "2026-09-25T23:24:44.679Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/answers/observed/index.json",
+      "url": "/chum/answers/observed/index.json",
+      "last_changed": "2026-09-25T23:24:44.679Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T23:24:39.926Z",
+      "last_changed": "2026-09-25T23:24:44.679Z",
       "priority": 80
     },
     {
@@ -1508,12 +1519,6 @@
     {
       "path": "/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json",
       "url": "/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
-      "url": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 100
     }

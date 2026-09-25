@@ -1,10 +1,14 @@
 {
   "schema": "evercraft.chum.observed-miss-index.v1",
   "provider": "Evercraft LLC",
-  "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed provider misses.",
+  "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.",
   "page_count": 1,
   "rules": {
-    "user_observed_receipts_only": true,
+    "receipt_backed_observations_only": true,
+    "accepted_observation_sources": [
+      "user_observed_result",
+      "authorized_provider_probe"
+    ],
     "dedupe_same_prompt_across_providers": true,
     "no_provider_endorsement_claim": true,
     "no_product_ranking_claim": true,

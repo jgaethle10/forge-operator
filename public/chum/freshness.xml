@@ -2,10 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T23:24:39.926Z</updated>
+<updated>2026-09-25T23:24:44.679Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T23:24:39.926Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:b9d12ce14a5a7cc6d6d3da20</id><title>/chum/answers/observed/index.json</title><updated>2026-09-25T23:24:44.679Z</updated><link href="/chum/answers/observed/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T23:24:44.679Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:07f632f2e0745c2b29ccde5a</id><title>/forensiscope/editorial/deduplicate-long-video-segments/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/deduplicate-long-video-segments/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:928aeff9cc1959dec5d5e8f7</id><title>/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:2b826aa10dbdf03896655b3f</id><title>/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt</title><updated>2026-09-25T23:17:57.077Z</updated><link href="/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt"/><category term="priority-86"/></entry>
@@ -104,5 +105,4 @@
 <entry><id>urn:evercraft:chum:cd341ac5a94256dea6edffbd</id><title>/chum/capabilities/ibmi-rescue-v1/capability.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/capabilities/ibmi-rescue-v1/capability.json"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:2157326b4e961ca4a9b6b279</id><title>/chum/capabilities/ibmi-rescue-v1/llms.txt</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/capabilities/ibmi-rescue-v1/llms.txt"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:a339d26cacbafb803ca06653</id><title>/chum/products/buildflow/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/buildflow/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:bcd1379f762c333bc62cfb59</id><title>/chum/products/buildflow/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/buildflow/ai-discovery.json"/><category term="priority-94"/></entry>
 </feed>

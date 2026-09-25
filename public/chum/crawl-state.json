@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T23:24:39.926Z",
+  "updated_at": "2026-09-25T23:24:44.679Z",
   "url_count": 1862,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -110,8 +110,8 @@
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "ca716cc8006a59393a893dd52e41a23363626194f73e1e8d9854478634156316",
-      "last_changed": "2026-09-25T15:37:23.452Z",
+      "content_sha256": "d39ff827b58805515be1dcecb941046d3b4b66490119b3dffc45f626c2e02fd3",
+      "last_changed": "2026-09-25T23:24:44.679Z",
       "priority": 80
     },
     "/chum/hot/": {
@@ -122,8 +122,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "3ea719f03498a8af11c07bdc3c16b6a2f03fcbb4645b5ec930a84e55017b3638",
-      "last_changed": "2026-09-25T23:24:39.926Z",
+      "content_sha256": "94e63c4cd40eae3e3f4530d01b6c1ba3f028ff333e979091796696c15889b8cd",
+      "last_changed": "2026-09-25T23:24:44.679Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
