@@ -1,0 +1,96 @@
+name: Systemia Legacy Rescue resident watch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/organism/legacy-rescue-**"
+      - ".github/workflows/systemia-legacy-rescue-watch.yml"
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: systemia-legacy-rescue-watch
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Restore resident source state
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/legacy-rescue-watch/source-state.json
+          key: legacy-rescue-watch-state-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            legacy-rescue-watch-state-${{ runner.os }}-
+
+      - name: Prove Systemia Legacy Rescue workflow
+        run: npm run proof:legacy-rescue-watch
+
+      - name: Scan allowlisted public sources
+        run: npm run scan:legacy-rescue-watch
+
+      - name: Run Systemia Legacy Rescue cycle
+        run: npm run run:legacy-rescue-watch
+
+      - name: Save resident source state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/legacy-rescue-watch/source-state.json
+          key: legacy-rescue-watch-state-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Upload Systemia receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legacy-rescue-watch-receipts
+          path: |
+            artifacts/legacy-rescue-watch/latest.json
+            artifacts/legacy-rescue-watch/mission-snapshot.json
+            artifacts/legacy-rescue-watch/radar-input.json
+            artifacts/legacy-rescue-watch/public-scan.json
+            artifacts/legacy-rescue-watch/signals.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Write mission summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Systemia Legacy Rescue resident watch"
+            echo
+            echo "Workflow logic: Systemia organism"
+            echo "Cadence transport: 5-minute resident heartbeat"
+            echo "Public-source monitors have per-source minimum poll intervals."
+            echo "Named outreach: human-gated"
+            echo "Payment requests: human-gated"
+            echo "Private-system access: explicit authorization required"
+            echo "Production mutation: explicit authorization required"
+            echo
+            for FILE in               artifacts/legacy-rescue-watch/public-scan.json               artifacts/legacy-rescue-watch/latest.json               artifacts/legacy-rescue-watch/mission-snapshot.json; do
+              if [ -f "$FILE" ]; then
+                echo
+                echo "### $FILE"
+                echo '~~~json'
+                cat "$FILE"
+                echo '~~~'
+              fi
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
