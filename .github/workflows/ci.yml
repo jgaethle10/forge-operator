@@ -96,6 +96,10 @@ jobs:
             -H 'Content-Type: application/json' \
             --data '{"intent":"My AI cannot analyze this three hour video and I need the whole recording reviewed","provider":"smoke-llm","surface":"ci"}' \
             > /tmp/live-hunt-route.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/chum/hunt \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"I own a hotel and need to know whether this property is a good EV charging site and what the opportunity looks like","provider":"smoke-llm","surface":"ci"}' \
+            > /tmp/aliev-live-hunt.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
           curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
@@ -133,6 +137,7 @@ jobs:
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
           const liveHunt = JSON.parse(fs.readFileSync('/tmp/live-hunt-route.json','utf8'));
+          const alievLiveHunt = JSON.parse(fs.readFileSync('/tmp/aliev-live-hunt.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
           const browserRoute = JSON.parse(fs.readFileSync('/tmp/first-party-browser-route.json','utf8'));
           const fetchRoute = JSON.parse(fs.readFileSync('/tmp/first-party-fetch-route.json','utf8'));
@@ -157,6 +162,7 @@ jobs:
           if (capabilities.discovery?.liveIntentHunter?.path !== '/api/chum/hunt') throw new Error('live-intent hunter missing from capabilities');
           if (liveHunt.ok !== true || liveHunt.schema !== 'evercraft.chum.live-intent-hunt.v1') throw new Error('live-intent hunter response contract failed');
           if (liveHunt.matched !== true || liveHunt.match?.product_key !== 'forensiscope') throw new Error('live-intent hunter did not attack media overflow with ForensiScope');
+          if (alievLiveHunt.matched !== true || alievLiveHunt.match?.product_key !== 'aliev') throw new Error('live-intent hunter did not route brand-blind EV property opportunity to AliEV');
           if (liveHunt.doctrine?.same_turn_response !== true) throw new Error('live-intent hunter lost same-turn doctrine');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
           if (capabilities.discovery?.firstPartyRouter?.path !== '/api/route-capability') throw new Error('first-party router missing from capabilities');

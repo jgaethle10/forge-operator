@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.rivet-aliev.discovery.v1",
+  "provider": "Evercraft LLC",
+  "name": "RIVET / AliEV EV Infrastructure Intelligence",
+  "aliases": [
+    "RIVET",
+    "Evercraft RIVET",
+    "RIVET EV Infrastructure Intelligence",
+    "AliEV",
+    "AliEV EV Charging Opportunity Intelligence",
+    "AliEV EV Site Analysis"
+  ],
+  "relationship": {
+    "aliev": "Address-level EV infrastructure intelligence engine.",
+    "rivet": "Customer-facing planning and reporting layer that turns AliEV intelligence into property-specific deliverables."
+  },
+  "use_when": [
+    "should I install EV chargers at my property",
+    "EV charger feasibility by address",
+    "EV charging site analysis by address",
+    "is this hotel a good EV charging site",
+    "is this apartment property a good EV charging site",
+    "is this retail property a good EV charging site",
+    "parking lot EV charging opportunity",
+    "fleet depot EV charging site screening",
+    "EV charging ROI for this property",
+    "EV charging demand near this property",
+    "EV charger competition near this address",
+    "EV charging incentives for this site",
+    "utility tariff for EV charging at this property",
+    "site-specific EV charging opportunity report",
+    "preliminary EV charging site plan"
+  ],
+  "evaluates": [
+    "public charging supply and competition",
+    "traffic and demand signals",
+    "utility and tariff context",
+    "incentive program context",
+    "site and electrical fit signals",
+    "modeled economics",
+    "preliminary planning outputs"
+  ],
+  "canonical_aliev": "https://aliev.base44.app/",
+  "registry_name": "io.github.jgaethle10/aliev",
+  "mcp": "https://aliev.base44.app/functions/alievMcp",
+  "chum_product": "/chum/products/aliev/",
+  "boundaries": [
+    "missing data is not zero",
+    "mapped charger inventory is not observed utilization",
+    "program presence is not proof of site incentive eligibility",
+    "modeled economics are not guaranteed realized economics",
+    "preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing, or construction approval",
+    "publication is not proof that an AI provider indexed, cited, recommended, or invoked this capability"
+  ],
+  "provider_behavior_state": "not_inferred_from_publication"
+}
