@@ -35,7 +35,7 @@ if (!watch) {
   process.exit(report.status === 'degraded' ? 4 : 0);
 }
 
-const intervalMs = Number(arg('--interval-ms', '60000'));
+const intervalMs = Number(arg('--interval-ms', '300000'));
 publisher.start({ intervalMs, immediate: true });
 console.log(JSON.stringify({
   schema: 'evercraft.systemia.mission-publisher-service.v1',
