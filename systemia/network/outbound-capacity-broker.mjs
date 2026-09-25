@@ -102,6 +102,9 @@ export async function startOutboundCapacityBroker({
   stateDir,
   authorizedDevices = {},
   challengeTtlMs = 60_000,
+  enrollmentRequestTtlMs = 24 * 60 * 60_000,
+  enrollmentChallengeCooldownMs = 30_000,
+  maxPendingEnrollmentRequests = 100,
   sessionTtlMs = 30 * 60_000,
   commandTimeoutMs = 15_000,
   pollWaitMs = 5_000,
@@ -113,6 +116,7 @@ export async function startOutboundCapacityBroker({
   const root = path.resolve(stateDir);
   const grantsFile = path.join(root, 'control-grants.json');
   const authorizationsFile = path.join(root, 'device-authorizations.json');
+  const pendingEnrollmentsFile = path.join(root, 'pending-enrollments.json');
   fs.mkdirSync(root, { recursive: true, mode: 0o700 });
 
   const authorizationState = fs.existsSync(authorizationsFile)
@@ -123,6 +127,16 @@ export async function startOutboundCapacityBroker({
       };
   if (authorizationState.schema !== 'evercraft.remote-capacity.device-authorizations.v1') {
     throw new Error('remote_device_authorizations_invalid');
+  }
+
+  const pendingEnrollmentState = fs.existsSync(pendingEnrollmentsFile)
+    ? JSON.parse(fs.readFileSync(pendingEnrollmentsFile, 'utf8'))
+    : {
+        schema: 'evercraft.remote-capacity.pending-enrollments.v1',
+        requests: {},
+      };
+  if (pendingEnrollmentState.schema !== 'evercraft.remote-capacity.pending-enrollments.v1') {
+    throw new Error('remote_pending_enrollments_invalid');
   }
 
   for (const decision of Object.values(authorizationState.decisions || {})) {
@@ -143,6 +157,7 @@ export async function startOutboundCapacityBroker({
   }
 
   const challenges = new Map();
+  const enrollmentChallengeRate = new Map();
   const nodes = new Map();
   let shuttingDown = false;
   const instanceId = `remote_broker_${randomBytes(12).toString('hex')}`;
@@ -160,9 +175,98 @@ export async function startOutboundCapacityBroker({
       deployment_receipt_ref: deploymentReceiptRef || null,
       registered_nodes: nodes.size,
       authorized_devices: authorized.size,
+      pending_enrollment_requests: pendingEnrollmentRequests().length,
       secure_envelope_schema: 'evercraft.secure-envelope.v1',
       recovered_command_policy: 'no_automatic_side_effect_replay',
     };
+  }
+
+  function persistPendingEnrollments() {
+    atomicJson(pendingEnrollmentsFile, pendingEnrollmentState);
+  }
+
+  function prunePendingEnrollments(now = Date.now()) {
+    let changed = false;
+    for (const [fingerprint, request] of Object.entries(
+      pendingEnrollmentState.requests || {}
+    )) {
+      const expiresAt = Date.parse(String(request.expires_at || ''));
+      if (!Number.isFinite(expiresAt) || expiresAt <= now) {
+        delete pendingEnrollmentState.requests[fingerprint];
+        changed = true;
+      }
+    }
+    if (changed) persistPendingEnrollments();
+  }
+
+  function pendingEnrollmentRequests() {
+    prunePendingEnrollments();
+    return Object.values(pendingEnrollmentState.requests || {})
+      .sort((a, b) => String(a.first_seen_at).localeCompare(String(b.first_seen_at)))
+      .map((request) => ({ ...request }));
+  }
+
+  function enrollmentRequestReceipt({
+    nodeId,
+    deviceFingerprint,
+    firstSeenAt,
+    lastSeenAt,
+  }) {
+    const body = {
+      schema: 'evercraft.remote-capacity.enrollment-request-receipt.v1',
+      node_id: nodeId,
+      device_fingerprint: deviceFingerprint,
+      first_seen_at: firstSeenAt,
+      last_seen_at: lastSeenAt,
+    };
+    return {
+      ...body,
+      receipt_hash: `sha256:${sha(JSON.stringify(body))}`,
+    };
+  }
+
+  function storePendingEnrollment({
+    nodeId,
+    deviceFingerprint,
+  }) {
+    prunePendingEnrollments();
+    const now = new Date();
+    const fingerprint = safeDeviceFingerprint(deviceFingerprint);
+    const id = safeNodeId(nodeId);
+    const current = pendingEnrollmentState.requests[fingerprint];
+    const existingEntries = Object.keys(pendingEnrollmentState.requests || {});
+    if (!current && existingEntries.length >= Math.max(1, Number(maxPendingEnrollmentRequests))) {
+      throw new Error('pending_enrollment_capacity_reached');
+    }
+    const firstSeenAt = current?.first_seen_at || now.toISOString();
+    const receipt = enrollmentRequestReceipt({
+      nodeId: id,
+      deviceFingerprint: fingerprint,
+      firstSeenAt,
+      lastSeenAt: now.toISOString(),
+    });
+    const request = {
+      schema: 'evercraft.remote-capacity.pending-enrollment.v1',
+      node_id: id,
+      device_fingerprint: fingerprint,
+      first_seen_at: firstSeenAt,
+      last_seen_at: now.toISOString(),
+      expires_at: new Date(now.getTime() + enrollmentRequestTtlMs).toISOString(),
+      identity_attested: true,
+      authority_granted: false,
+      request_receipt_hash: receipt.receipt_hash,
+    };
+    pendingEnrollmentState.requests[fingerprint] = request;
+    persistPendingEnrollments();
+    return request;
+  }
+
+  function clearPendingEnrollment(fingerprint) {
+    const key = safeDeviceFingerprint(fingerprint);
+    if (!pendingEnrollmentState.requests[key]) return false;
+    delete pendingEnrollmentState.requests[key];
+    persistPendingEnrollments();
+    return true;
   }
 
   function authorizedPair(fingerprint, nodeId) {
@@ -234,6 +338,7 @@ export async function startOutboundCapacityBroker({
     }
 
     authorized.set(fingerprint, id);
+    clearPendingEnrollment(fingerprint);
     const receipt = authorizationReceipt('authorize', {
       deviceFingerprint: fingerprint,
       nodeId: id,
@@ -434,6 +539,106 @@ export async function startOutboundCapacityBroker({
         return send(res, 503, { error: 'remote_broker_shutting_down' });
       }
 
+      if (
+        req.method === 'POST' &&
+        url.pathname === '/v1/remote/enrollment/challenge'
+      ) {
+        const body = await readJson(req);
+        const nodeId = safeNodeId(body.node_id);
+        const fingerprint = safeDeviceFingerprint(body.device_fingerprint);
+
+        if (authorizedPair(fingerprint, nodeId)) {
+          return send(res, 409, {
+            error: 'device_already_authorized',
+          });
+        }
+
+        const lastChallengeAt = Number(enrollmentChallengeRate.get(fingerprint) || 0);
+        if (Date.now() - lastChallengeAt < enrollmentChallengeCooldownMs) {
+          return send(res, 429, { error: 'enrollment_challenge_rate_limited' });
+        }
+        enrollmentChallengeRate.set(fingerprint, Date.now());
+
+        const challengeId = `enroll_${randomBytes(10).toString('hex')}`;
+        const nonce = randomBytes(24).toString('hex');
+        challenges.set(challengeId, {
+          purpose: 'enrollment',
+          node_id: nodeId,
+          device_fingerprint: fingerprint,
+          nonce,
+          expires_at: Date.now() + challengeTtlMs,
+        });
+        return send(res, 200, {
+          schema: 'evercraft.remote-capacity.enrollment-challenge.v1',
+          challenge_id: challengeId,
+          nonce,
+          expires_at: new Date(Date.now() + challengeTtlMs).toISOString(),
+          authority_granted: false,
+        });
+      }
+
+      if (
+        req.method === 'POST' &&
+        url.pathname === '/v1/remote/enrollment/request'
+      ) {
+        const body = await readJson(req);
+        const challengeId = String(body.challenge_id || '');
+        const challenge = challenges.get(challengeId);
+        if (
+          !challenge ||
+          challenge.purpose !== 'enrollment' ||
+          challenge.expires_at <= Date.now()
+        ) {
+          return send(res, 401, { error: 'enrollment_challenge_invalid_or_expired' });
+        }
+        challenges.delete(challengeId);
+
+        const verification = verifyNodeAttestation({
+          attestation: body.attestation,
+          expectedNonce: challenge.nonce,
+          expectedNodeId: challenge.node_id,
+          maxAgeMs: challengeTtlMs,
+        });
+        if (!verification.ok) {
+          return send(res, 401, {
+            error: 'enrollment_attestation_rejected',
+            reason: verification.reason,
+          });
+        }
+        if (
+          verification.device_fingerprint !== challenge.device_fingerprint
+        ) {
+          return send(res, 401, {
+            error: 'enrollment_identity_mismatch',
+          });
+        }
+        if (authorizedPair(verification.device_fingerprint, verification.node_id)) {
+          return send(res, 409, { error: 'device_already_authorized' });
+        }
+
+        let pending;
+        try {
+          pending = storePendingEnrollment({
+            nodeId: verification.node_id,
+            deviceFingerprint: verification.device_fingerprint,
+          });
+        } catch (error) {
+          return send(res, 429, {
+            error: String(error?.message || error),
+          });
+        }
+
+        return send(res, 202, {
+          schema: 'evercraft.remote-capacity.enrollment-request.v1',
+          node_id: pending.node_id,
+          device_fingerprint: pending.device_fingerprint,
+          request_receipt_hash: pending.request_receipt_hash,
+          expires_at: pending.expires_at,
+          authority_granted: false,
+          state: 'pending_explicit_authorization',
+        });
+      }
+
       if (req.method === 'POST' && url.pathname === '/v1/remote/challenge') {
         const body = await readJson(req);
         const nodeId = safeNodeId(body.node_id);
@@ -445,6 +650,7 @@ export async function startOutboundCapacityBroker({
         const challengeId = `challenge_${randomBytes(10).toString('hex')}`;
         const nonce = randomBytes(24).toString('hex');
         challenges.set(challengeId, {
+          purpose: 'register',
           node_id: nodeId,
           device_fingerprint: fingerprint,
           nonce,
@@ -461,7 +667,11 @@ export async function startOutboundCapacityBroker({
       if (req.method === 'POST' && url.pathname === '/v1/remote/register') {
         const body = await readJson(req);
         const challenge = challenges.get(String(body.challenge_id || ''));
-        if (!challenge || challenge.expires_at <= Date.now()) {
+        if (
+          !challenge ||
+          challenge.purpose !== 'register' ||
+          challenge.expires_at <= Date.now()
+        ) {
           return send(res, 401, { error: 'challenge_invalid_or_expired' });
         }
         challenges.delete(String(body.challenge_id || ''));
@@ -708,6 +918,7 @@ export async function startOutboundCapacityBroker({
     },
     authorizeDevice,
     revokeDevice,
+    pendingEnrollmentRequests,
     authorizedDevices() {
       return [...authorized.entries()].map(([device_fingerprint, node_id]) => ({
         device_fingerprint,
@@ -743,6 +954,7 @@ export async function startOutboundCapacityBroker({
       if (shuttingDown) return;
       shuttingDown = true;
       challenges.clear();
+      enrollmentChallengeRate.clear();
 
       for (const node of nodes.values()) {
         node.session_expires_at = 0;
