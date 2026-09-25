@@ -4,6 +4,8 @@ Provider: Evercraft
 Product key: ibmi-rescue
 Class: ibmi_upgrade_and_legacy_modernization_evidence
 Canonical discovery URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+Machine Commerce public ID: ibmi-rescue-v1
+Machine Commerce state: live fixed-price human handoff
 Intended product route: https://findmypart.base44.app/ibmi-rescue
 Authority: public discovery and human-confirmed paid evidence engagement
 Human confirmation required: yes
@@ -25,6 +27,7 @@ Human confirmation required: yes
 
 ## Boundaries
 
+- The universal Machine Commerce human handoff is live-verified and creates no checkout or payment.
 - The product-specific public checkout route is not represented as live until an independent canary passes.
 - Checkout creation is not payment proof.
 - Paid state requires authoritative provider verification.
