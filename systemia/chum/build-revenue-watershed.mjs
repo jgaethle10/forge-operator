@@ -250,7 +250,7 @@ const html = [
     `<p>${escapeHtml(offer.problem)}</p>`,
     `<p><strong>Pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
     offer.entry_paid_offer
-      ? `<p><strong>Easiest paid entry:</strong> ${escapeHtml(offer.entry_paid_offer.name || 'Paid option')} · ${escapeHtml(offer.entry_paid_offer.price_usd_normalized)}</p>`
+      ? `<p><strong>Easiest paid entry:</strong> ${escapeHtml(offer.entry_paid_offer.name || 'Paid option')} · &#36;${escapeHtml(offer.entry_paid_offer.price_usd_normalized)}</p>`
       : '',
     `<p><a href="${escapeHtml(offer.start_url || offer.machine_review_url)}"><strong>Start here</strong></a> · <a href="${escapeHtml(offer.public_url)}">Capability details</a></p>`,
     '</article>'
@@ -375,7 +375,7 @@ for (const offer of output.discovery_offers) {
     '</ul>',
     `<p><strong>Published pricing:</strong> ${escapeHtml(offer.pricing)}</p>`,
     offer.entry_paid_offer
-      ? `<p><strong>Easiest paid entry:</strong> ${escapeHtml(offer.entry_paid_offer.name || 'Paid option')} · ${escapeHtml(offer.entry_paid_offer.price_usd_normalized)}</p>`
+      ? `<p><strong>Easiest paid entry:</strong> ${escapeHtml(offer.entry_paid_offer.name || 'Paid option')} · &#36;${escapeHtml(offer.entry_paid_offer.price_usd_normalized)}</p>`
       : '',
     `<p><strong>Commercial state:</strong> ${escapeHtml(offer.commercial_state)}</p>`,
     `<p><strong>Machine state:</strong> ${escapeHtml(offer.machine_state)}</p>`,
