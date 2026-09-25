@@ -189,7 +189,10 @@
         "receipt_guard",
         "retry_planner",
         "quarantine_guard",
-        "customer_boundary_guard"
+        "customer_boundary_guard",
+        "football_packer",
+        "football_carrier_guard",
+        "football_catch_guard"
       ],
       "work_sources": [],
       "reconciler": {
