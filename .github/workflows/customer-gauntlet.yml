@@ -28,6 +28,8 @@ jobs:
           node-version: 22
       - name: Validate Lennox contracts
         run: node systemia/customer-gauntlet/runner.test.mjs
+      - name: Prove owned Lennox executor
+        run: node systemia/customer-gauntlet/lennox-engine.test.mjs
       - name: Run customer gauntlet
         env:
           RAVEN_NEXUS_CUSTOMER_BRIDGE_URL: ${{ secrets.RAVEN_NEXUS_CUSTOMER_BRIDGE_URL }}
