@@ -50,6 +50,16 @@ function inspectContract(contract, rootDir) {
         issues.push(`invalid_resource_profile_${field}`);
       }
     }
+    if (contract.resources.required_executables) {
+      if (
+        !Array.isArray(contract.resources.required_executables) ||
+        contract.resources.required_executables.some(
+          (value) => typeof value !== 'string' || !value.trim()
+        )
+      ) {
+        issues.push('invalid_required_executables');
+      }
+    }
   }
 
   if (contract.partitioner?.type === 'media_time_windows') {
