@@ -68,6 +68,7 @@ jobs:
           git add \
             registry \
             public/chum \
+            public/sitemap.xml \
             public/.well-known/evercraft-machine-catalog.json \
             public/.well-known/evercraft-pain-index.json \
             public/.well-known/evercraft-agent-directory.json \
