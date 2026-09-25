@@ -624,7 +624,7 @@ const legacyToolList = handleForensiScopeMcpRequest({
   method: 'tools/list',
   params: {}
 }, { rootDir });
-assert.equal(legacyToolList.result.tools.length, 4);
+assert.equal(legacyToolList.result.tools.length, 5);
 assert.equal(legacyToolList.result.resultType, undefined);
 
 const legacyToolCall = handleForensiScopeMcpRequest({
