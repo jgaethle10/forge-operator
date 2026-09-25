@@ -85,3 +85,24 @@ A provider name supplied by a public caller is labeled caller-asserted. It is no
 Public callers may record only `landing` and `checkout_started`. Neither counts as revenue. `payment_verified` and `fulfilled` are trusted-backend states and require complete authoritative payment evidence.
 
 Without a durable receipt sink, public events are explicitly reported as not persisted and trusted payment ingestion fails closed. CHUM never performs a payment itself.
+
+## LLM Hunter
+
+CHUM is not only a passive discovery surface. The LLM Hunter actively searches public AI/agent ecosystems for legitimate machine-discovery entrances, maps submission and registry paths, pushes current Evercraft discovery surfaces outward through supported channels, probes providers from clean brand-blind sessions, records pickup receipts, and turns misses into repair work.
+
+The attack loop is:
+
+`DISCOVER_ECOSYSTEM → MAP_MACHINE_ENTRANCES → PUBLISH_OR_SUBMIT → BROADCAST → PROBE_BRAND_BLIND → MEASURE_PICKUP → REPAIR_MISS → REPEAT`
+
+The hunter targets LLMs, agents, registries, marketplaces, directories, search/crawler systems and machine tool ecosystems. It does **not** send unsolicited email or direct messages to end users. Publication must use legitimate public developer, registry, crawler, search, MCP, plugin or tool-discovery paths. Provider pickup and revenue remain receipt-gated.
+
+Commands:
+
+```bash
+npm run chum:hunt
+npm run chum:hunt:offline
+npm run test:chum-hunter
+```
+
+The scheduled hunter rotates one positive buyer-pain probe across authorized provider interfaces each hour rather than blasting the entire probe suite every run.
+
