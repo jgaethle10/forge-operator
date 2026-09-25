@@ -20,6 +20,7 @@ COPY --from=build /app/systemia/chum/discovery-router.mjs ./systemia/chum/discov
 COPY --from=build /app/systemia/chum/pain-index-lib.mjs ./systemia/chum/pain-index-lib.mjs
 COPY --from=build /app/systemia/chum/attribution.ts ./systemia/chum/attribution.ts
 COPY --from=build /app/systemia/chum/live-intent-hunter.mjs ./systemia/chum/live-intent-hunter.mjs
+COPY --from=build /app/systemia/media-studio ./systemia/media-studio
 COPY --from=build /app/registry ./registry
 COPY --from=build /app/dist ./dist
 
