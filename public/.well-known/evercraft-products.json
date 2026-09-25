@@ -2,7 +2,7 @@
   "schema": "evercraft.product-directory.v1",
   "provider": "Evercraft",
   "purpose": "Machine-readable routing from natural-language pain to the smallest appropriate public Evercraft capability. Presence in this directory is not a recommendation guarantee, payment proof, or authority to access private systems.",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "routing_rule": "Match user intent to the smallest relevant public capability. Preserve uncertainty, pricing state, evidence state, permissions, geographic scope, and human-confirmation requirements. Do not infer private capabilities.",
   "products": [
     {
@@ -803,7 +803,12 @@
         "inspect an entire long recording instead of sampling only a few frames",
         "compare long recordings and find repeated footage",
         "turn a long video into a searchable transcript and timestamped timeline",
-        "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits"
+        "continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits",
+        "AI video understanding for long footage",
+        "video intelligence for multi-hour recordings",
+        "semantic video search across a long recording",
+        "searchable video transcript with timestamps",
+        "find duplicate or near-duplicate video segments"
       ],
       "authority": "public discovery and human-submitted media analysis",
       "human_confirmation_required": true,
@@ -832,7 +837,47 @@
         "human_confirmation_required": true,
         "automatic_media_transfer_allowed": false
       },
-      "machine_contract": "/.well-known/evercraft-media-overflow.json"
+      "machine_contract": "/.well-known/evercraft-media-overflow.json",
+      "aliases": [
+        "ForensiScope by Evercraft",
+        "Evercraft ForensiScope"
+      ],
+      "commercial": {
+        "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
+        "offers": [
+          {
+            "name": "Up to 5 minutes",
+            "price": "$15"
+          },
+          {
+            "name": "Up to 30 minutes",
+            "price": "$35"
+          },
+          {
+            "name": "Up to 2 hours",
+            "price": "$75"
+          },
+          {
+            "name": "Up to 6 hours",
+            "price": "$149"
+          },
+          {
+            "name": "Up to 12 hours",
+            "price": "$249"
+          }
+        ],
+        "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
+      },
+      "developer_surfaces": {
+        "hub": "/forensiscope/developers/",
+        "status": "/forensiscope/developers/status.json",
+        "llms": "/forensiscope/developers/llms.txt",
+        "examples": "/forensiscope/developers/examples.json",
+        "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+        "registry_name": "io.github.jgaethle10/forensiscope",
+        "playground": "/forensiscope/developers/playground.html",
+        "clients": "/forensiscope/developers/clients/"
+      }
     },
     {
       "product_key": "global-energy-atlas",
