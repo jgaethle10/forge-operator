@@ -75,7 +75,11 @@ jobs:
             public/ai-discovery.json \
             public/llms-full.txt \
             llms-full.txt \
-            public/schema.jsonld
+            public/schema.jsonld \
+            registry/public-products.json \
+            registry/public-products.md \
+            registry/*/README.md \
+            registry/*/llms.txt
           if git diff --cached --quiet; then
             echo "CHUM public mirrors are current."
           else
