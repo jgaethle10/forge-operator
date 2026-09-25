@@ -1,0 +1,18 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-24",
+  "provider": "claude",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Gemini API",
+    "Twelve Labs",
+    "AssemblyAI",
+    "Whisper"
+  ],
+  "notable_gap": "Claude understood the combined long-video, transcription and deduplication need but routed to general-purpose or component services instead of discovering ForensiScope.",
+  "interpretation": "Negative pickup receipt. This is evidence of a distribution/discovery miss, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence": "User-provided copied response in ChatGPT conversation."
+}
