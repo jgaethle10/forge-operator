@@ -53,6 +53,23 @@ export async function executeDistributedMultiplicationPlan({
     (_, index) => assignmentForIndex(plan, workItems, index)
   );
 
+  let prepareAssignment = null;
+  if (contract.transport?.adapter) {
+    const transportPath = path.resolve(rootDir, contract.transport.adapter);
+    const transport = await import(pathToFileURL(transportPath).href);
+    if (typeof transport.prepareRemoteAssignment !== 'function') {
+      throw new Error(
+        `Transport adapter ${contract.transport.adapter} must export prepareRemoteAssignment()`
+      );
+    }
+    prepareAssignment = (context) =>
+      transport.prepareRemoteAssignment({
+        ...context,
+        rootDir,
+        contract
+      });
+  }
+
   const poolReceipt = await runNodeSeedAssignmentPool({
     software: contract.software_id,
     assignments,
@@ -70,7 +87,10 @@ export async function executeDistributedMultiplicationPlan({
     assignmentTimeoutMs: Number(nodePool.assignmentTimeoutMs || 120000),
     requestedTtlMs: Number(nodePool.requestedTtlMs || Math.max(300000, plan.lease_seconds * 1000)),
     resourceProfile: contract.resources || null,
-    stageAuthorizedSources: contract.transport?.stage_authorized_sources === true,
+    stageAuthorizedSources:
+      !prepareAssignment &&
+      contract.transport?.stage_authorized_sources === true,
+    prepareAssignment,
     onEvent: nodePool.onEvent || null
   });
 
