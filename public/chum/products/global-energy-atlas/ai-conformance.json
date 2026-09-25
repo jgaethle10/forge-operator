@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Global Energy Atlas",
+  "product_key": "global-energy-atlas",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://energy-atlas.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public read-only energy-systems education and evidence exploration",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "educational comparisons are not operational grid instructions",
+    "do not present modeled or historical data as live grid state unless explicitly verified",
+    "source provenance and data limitations should remain visible",
+    "does not provide personalized investment advice"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

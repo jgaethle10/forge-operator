@@ -108,6 +108,44 @@
       }
     },
     {
+      "product_key": "coda-y-codigo",
+      "name": "Coda y Código",
+      "aliases": [],
+      "canonical_url": "https://codaycodigo.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-conformance.json",
+      "page_url": "/chum/products/coda-y-codigo/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "source_commerce_wired",
+        "offers": [
+          {
+            "name": "Single course",
+            "price": "From $19"
+          },
+          {
+            "name": "Role tracks",
+            "price": "From $79"
+          },
+          {
+            "name": "All-courses bundle",
+            "price": "$149"
+          },
+          {
+            "name": "Employer bundles",
+            "price": "From $399"
+          },
+          {
+            "name": "Seat capacity packages",
+            "price": "From $249"
+          }
+        ],
+        "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
+      }
+    },
+    {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
       "aliases": [],
@@ -149,6 +187,21 @@
       "page_url": "/chum/products/deck-capital-fit/",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "commercial": null
+    },
+    {
+      "product_key": "ecoledger",
+      "name": "EcoLedger",
+      "aliases": [
+        "EcoLedger AI"
+      ],
+      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-conformance.json",
+      "page_url": "/chum/products/ecoledger/",
+      "registry_name": null,
+      "mcp": null,
       "commercial": null
     },
     {
@@ -287,6 +340,19 @@
       "commercial": null
     },
     {
+      "product_key": "evercraft-wildlife-atlas",
+      "name": "Evercraft Wildlife Atlas",
+      "aliases": [],
+      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-wildlife-atlas/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null
+    },
+    {
       "product_key": "evermaps",
       "name": "EverMaps",
       "aliases": [
@@ -364,6 +430,19 @@
       "page_url": "/chum/products/forensiscope/",
       "registry_name": "io.github.jgaethle10/forensiscope",
       "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "commercial": null
+    },
+    {
+      "product_key": "global-energy-atlas",
+      "name": "Global Energy Atlas",
+      "aliases": [],
+      "canonical_url": "https://energy-atlas.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-conformance.json",
+      "page_url": "/chum/products/global-energy-atlas/",
+      "registry_name": null,
+      "mcp": null,
       "commercial": null
     },
     {
@@ -509,6 +588,32 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null
+    },
+    {
+      "product_key": "systemia-decision-lab",
+      "name": "Systemia Decision Lab",
+      "aliases": [],
+      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-conformance.json",
+      "page_url": "/chum/products/systemia-decision-lab/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "source_checkout_wired_live_verification_pending",
+        "offers": [
+          {
+            "name": "Decision Report",
+            "price": "Free"
+          },
+          {
+            "name": "Hiring Action Pack",
+            "price": "$49 one-time"
+          }
+        ],
+        "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
+      }
     },
     {
       "product_key": "systemia-field-library",

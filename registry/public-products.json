@@ -74,6 +74,19 @@
       }
     },
     {
+      "product_key": "coda-y-codigo",
+      "name": "Coda y Código",
+      "class": "multilingual_frontline_workforce_training",
+      "canonical_url": "https://codaycodigo.base44.app/",
+      "github_record": "./coda-y-codigo/README.md",
+      "llms": "./coda-y-codigo/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
       "class": "home_service_and_contractor_operations",
@@ -110,6 +123,19 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+      }
+    },
+    {
+      "product_key": "ecoledger",
+      "name": "EcoLedger",
+      "class": "ecological_restoration_evidence_ledger",
+      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "github_record": "./ecoledger/README.md",
+      "llms": "./ecoledger/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -217,6 +243,19 @@
       }
     },
     {
+      "product_key": "evercraft-wildlife-atlas",
+      "name": "Evercraft Wildlife Atlas",
+      "class": "evidence_first_wildlife_ecology_learning",
+      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "github_record": "./evercraft-wildlife-atlas/README.md",
+      "llms": "./evercraft-wildlife-atlas/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "evermaps",
       "name": "EverMaps",
       "class": "public_safe_geospatial_evidence_projection",
@@ -292,6 +331,19 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
+      }
+    },
+    {
+      "product_key": "global-energy-atlas",
+      "name": "Global Energy Atlas",
+      "class": "evidence_first_energy_systems_education",
+      "canonical_url": "https://energy-atlas.base44.app/",
+      "github_record": "./global-energy-atlas/README.md",
+      "llms": "./global-energy-atlas/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -405,6 +457,19 @@
       "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
       "github_record": "./systemia-atlas-freight/README.md",
       "llms": "./systemia-atlas-freight/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "systemia-decision-lab",
+      "name": "Systemia Decision Lab",
+      "class": "owner_workforce_decision_intelligence",
+      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "github_record": "./systemia-decision-lab/README.md",
+      "llms": "./systemia-decision-lab/llms.txt",
       "registry_name": null,
       "invocation": {
         "mode": "discovery_only",

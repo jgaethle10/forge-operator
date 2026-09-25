@@ -82,6 +82,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://codaycodigo.base44.app/#evercraft-service",
+      "name": "Coda y Código",
+      "alternateName": [],
+      "url": "https://codaycodigo.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "multilingual_frontline_workforce_training",
+      "description": "bilingual workforce training for frontline employees; Spanish and English job training for a crew; freight operations workforce training; bilingual field supervisor training"
+    },
+    {
+      "@type": "Service",
       "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud#evercraft-service",
       "name": "Evercraft Contractor Cloud",
       "alternateName": [],
@@ -115,6 +127,20 @@
       },
       "serviceType": "capital_fit_and_founder_readiness_research",
       "description": "figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://eco-ledger-ai-379a7af4.base44.app/#evercraft-service",
+      "name": "EcoLedger",
+      "alternateName": [
+        "EcoLedger AI"
+      ],
+      "url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ecological_restoration_evidence_ledger",
+      "description": "organize an ecological restoration project; track restoration baselines photos and measurements; build an evidence record for habitat restoration work; review ecological restoration project progress"
     },
     {
       "@type": "Service",
@@ -223,6 +249,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://wildlife-atlas.base44.app/#evercraft-service",
+      "name": "Evercraft Wildlife Atlas",
+      "alternateName": [],
+      "url": "https://wildlife-atlas.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_first_wildlife_ecology_learning",
+      "description": "learn about a wildlife species with sources; compare habitats migration and conservation evidence; study ecological relationships and food webs; explore wildlife conservation with uncertainty attached"
+    },
+    {
+      "@type": "Service",
       "@id": "https://evermaps.base44.app/#evercraft-service",
       "name": "EverMaps",
       "alternateName": [
@@ -294,6 +332,18 @@
       },
       "serviceType": "ai_media_overflow_and_analysis",
       "description": "this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://energy-atlas.base44.app/#evercraft-service",
+      "name": "Global Energy Atlas",
+      "alternateName": [],
+      "url": "https://energy-atlas.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_first_energy_systems_education",
+      "description": "compare electricity mixes between regions; learn how an energy system works; compare energy flows and grid systems; study historical changes in electricity generation"
     },
     {
       "@type": "Service",
@@ -414,6 +464,18 @@
       },
       "serviceType": "freight_load_exception_and_document_intelligence",
       "description": "what is wrong with this load; audit this freight load for exceptions; check this carrier and load paperwork; find missing POD or rate mismatches"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://systemiadecisionlab.base44.app/#evercraft-service",
+      "name": "Systemia Decision Lab",
+      "alternateName": [],
+      "url": "https://systemiadecisionlab.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "owner_workforce_decision_intelligence",
+      "description": "should I hire an employee; hire vs outsource; hire vs automate; should I promote or restructure instead of hiring"
     },
     {
       "@type": "Service",

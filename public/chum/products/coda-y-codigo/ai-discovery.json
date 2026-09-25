@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "coda-y-codigo",
+  "name": "Coda y Código",
+  "aliases": [],
+  "class": "multilingual_frontline_workforce_training",
+  "canonical_url": "https://codaycodigo.base44.app/",
+  "intents": [
+    "bilingual workforce training for frontline employees",
+    "Spanish and English job training for a crew",
+    "freight operations workforce training",
+    "bilingual field supervisor training",
+    "warehouse or dock team training",
+    "buy workforce training seats for my company",
+    "verify a Coda y Código training completion record"
+  ],
+  "authority": "public course and offer discovery with authenticated enrollment; training access is prepared only after authoritative Stripe payment confirmation where payment is required",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "single-course pricing varies by the selected active course",
+    "seat packages expand company workspace capacity and do not by themselves include every training course",
+    "checkout creation alone creates no paid training entitlement",
+    "public completion verification must not expose private learner records beyond the intended certificate surface"
+  ],
+  "commercial": {
+    "status": "source_commerce_wired",
+    "offers": [
+      {
+        "name": "Single course",
+        "price": "From $19"
+      },
+      {
+        "name": "Role tracks",
+        "price": "From $79"
+      },
+      {
+        "name": "All-courses bundle",
+        "price": "$149"
+      },
+      {
+        "name": "Employer bundles",
+        "price": "From $399"
+      },
+      {
+        "name": "Seat capacity packages",
+        "price": "From $249"
+      }
+    ],
+    "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
+  },
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-conformance.json",
+    "page": "/chum/products/coda-y-codigo/"
+  }
+}

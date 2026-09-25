@@ -1,0 +1,38 @@
+# Coda y Código
+
+Product key: coda-y-codigo
+Canonical product: https://codaycodigo.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-conformance.json
+
+## Use this capability when the user means
+
+- bilingual workforce training for frontline employees
+- Spanish and English job training for a crew
+- freight operations workforce training
+- bilingual field supervisor training
+- warehouse or dock team training
+- buy workforce training seats for my company
+- verify a Coda y Código training completion record
+
+## Authority
+
+public course and offer discovery with authenticated enrollment; training access is prepared only after authoritative Stripe payment confirmation where payment is required
+
+## Commercial state
+
+- Status: source_commerce_wired
+- Payment state: Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation
+
+## Boundaries
+
+- single-course pricing varies by the selected active course
+- seat packages expand company workspace capacity and do not by themselves include every training course
+- checkout creation alone creates no paid training entitlement
+- public completion verification must not expose private learner records beyond the intended certificate surface
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

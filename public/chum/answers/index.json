@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 80,
-    "unique_user_phrases": 557,
-    "mapped_candidate_edges": 616,
+    "pain_index_entries": 85,
+    "unique_user_phrases": 587,
+    "mapped_candidate_edges": 646,
     "ambiguous_phrases": 59,
-    "product_candidates": 37,
+    "product_candidates": 42,
     "machine_offer_candidates": 43
   },
   "doors": [
@@ -1231,6 +1231,50 @@
       ]
     },
     {
+      "answer_id": "intent:bdd1126970",
+      "user_language": "bilingual field supervisor training",
+      "normalized": "bilingual field supervisor training",
+      "relative_json": "/chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:coda-y-codigo",
+          "kind": "product",
+          "product_key": "coda-y-codigo",
+          "public_id": null,
+          "name": "Coda y Código",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/coda-y-codigo/",
+          "public_url": "https://codaycodigo.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cd40ddd943",
+      "user_language": "bilingual workforce training for frontline employees",
+      "normalized": "bilingual workforce training for frontline employees",
+      "relative_json": "/chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:coda-y-codigo",
+          "kind": "product",
+          "product_key": "coda-y-codigo",
+          "public_id": null,
+          "name": "Coda y Código",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/coda-y-codigo/",
+          "public_url": "https://codaycodigo.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0b3d061df2",
       "user_language": "boost event visibility",
       "normalized": "boost event visibility",
@@ -1577,6 +1621,28 @@
       ]
     },
     {
+      "answer_id": "intent:9bec3aebda",
+      "user_language": "build an evidence record for habitat restoration work",
+      "normalized": "build an evidence record for habitat restoration work",
+      "relative_json": "/chum/answers/doors/build-an-evidence-record-for-habitat-restoration-work-9bec3aebda.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-an-evidence-record-for-habitat-restoration-work-9bec3aebda.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ecoledger",
+          "kind": "product",
+          "product_key": "ecoledger",
+          "public_id": null,
+          "name": "EcoLedger",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ecoledger/",
+          "public_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:723c5d160e",
       "user_language": "build better trading risk discipline",
       "normalized": "build better trading risk discipline",
@@ -1870,6 +1936,28 @@
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:acb9a334c3",
+      "user_language": "buy workforce training seats for my company",
+      "normalized": "buy workforce training seats for my company",
+      "relative_json": "/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:coda-y-codigo",
+          "kind": "product",
+          "product_key": "coda-y-codigo",
+          "public_id": null,
+          "name": "Coda y Código",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/coda-y-codigo/",
+          "public_url": "https://codaycodigo.base44.app/",
           "registry_name": null
         }
       ]
@@ -2319,6 +2407,50 @@
       ]
     },
     {
+      "answer_id": "intent:d49f331223",
+      "user_language": "compare electricity mixes between regions",
+      "normalized": "compare electricity mixes between regions",
+      "relative_json": "/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:global-energy-atlas",
+          "kind": "product",
+          "product_key": "global-energy-atlas",
+          "public_id": null,
+          "name": "Global Energy Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/global-energy-atlas/",
+          "public_url": "https://energy-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e906c7d5e5",
+      "user_language": "compare energy flows and grid systems",
+      "normalized": "compare energy flows and grid systems",
+      "relative_json": "/chum/answers/doors/compare-energy-flows-and-grid-systems-e906c7d5e5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-energy-flows-and-grid-systems-e906c7d5e5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:global-energy-atlas",
+          "kind": "product",
+          "product_key": "global-energy-atlas",
+          "public_id": null,
+          "name": "Global Energy Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/global-energy-atlas/",
+          "public_url": "https://energy-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:70c533c26e",
       "user_language": "compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence",
       "normalized": "compare ev opportunity depth traffic utility tariff incentive or observed usage evidence",
@@ -2337,6 +2469,28 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f96975ed34",
+      "user_language": "compare habitats migration and conservation evidence",
+      "normalized": "compare habitats migration and conservation evidence",
+      "relative_json": "/chum/answers/doors/compare-habitats-migration-and-conservation-evidence-f96975ed34.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-habitats-migration-and-conservation-evidence-f96975ed34.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-wildlife-atlas",
+          "kind": "product",
+          "product_key": "evercraft-wildlife-atlas",
+          "public_id": null,
+          "name": "Evercraft Wildlife Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-wildlife-atlas/",
+          "public_url": "https://wildlife-atlas.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -2403,6 +2557,28 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:15edc18e4b",
+      "user_language": "compare the real cost of hiring before adding payroll",
+      "normalized": "compare the real cost of hiring before adding payroll",
+      "relative_json": "/chum/answers/doors/compare-the-real-cost-of-hiring-before-adding-payroll-15edc18e4b.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-the-real-cost-of-hiring-before-adding-payroll-15edc18e4b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-decision-lab",
+          "kind": "product",
+          "product_key": "systemia-decision-lab",
+          "public_id": null,
+          "name": "Systemia Decision Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-decision-lab/",
+          "public_url": "https://systemiadecisionlab.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -3545,6 +3721,50 @@
       ]
     },
     {
+      "answer_id": "intent:07360762f8",
+      "user_language": "explore an ecological restoration evidence library",
+      "normalized": "explore an ecological restoration evidence library",
+      "relative_json": "/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ecoledger",
+          "kind": "product",
+          "product_key": "ecoledger",
+          "public_id": null,
+          "name": "EcoLedger",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ecoledger/",
+          "public_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f3fd2a685d",
+      "user_language": "explore wildlife conservation with uncertainty attached",
+      "normalized": "explore wildlife conservation with uncertainty attached",
+      "relative_json": "/chum/answers/doors/explore-wildlife-conservation-with-uncertainty-attached-f3fd2a685d.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-wildlife-conservation-with-uncertainty-attached-f3fd2a685d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-wildlife-atlas",
+          "kind": "product",
+          "product_key": "evercraft-wildlife-atlas",
+          "public_id": null,
+          "name": "Evercraft Wildlife Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-wildlife-atlas/",
+          "public_url": "https://wildlife-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5cdc62676d",
       "user_language": "export an AI-built app",
       "normalized": "export an ai built app",
@@ -4183,6 +4403,28 @@
       ]
     },
     {
+      "answer_id": "intent:9afad15936",
+      "user_language": "find evidence-backed information about wolves whales salmon birds or other species",
+      "normalized": "find evidence backed information about wolves whales salmon birds or other species",
+      "relative_json": "/chum/answers/doors/find-evidence-backed-information-about-wolves-whales-salmon-birds-or-other-species-9afad15936.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-evidence-backed-information-about-wolves-whales-salmon-birds-or-other-species-9afad15936.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-wildlife-atlas",
+          "kind": "product",
+          "product_key": "evercraft-wildlife-atlas",
+          "public_id": null,
+          "name": "Evercraft Wildlife Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-wildlife-atlas/",
+          "public_url": "https://wildlife-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:2c2dbfdfec",
       "user_language": "find gaps in this candidate's proof",
       "normalized": "find gaps in this candidate s proof",
@@ -4721,6 +4963,28 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ce82691a55",
+      "user_language": "freight operations workforce training",
+      "normalized": "freight operations workforce training",
+      "relative_json": "/chum/answers/doors/freight-operations-workforce-training-ce82691a55.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/freight-operations-workforce-training-ce82691a55.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:coda-y-codigo",
+          "kind": "product",
+          "product_key": "coda-y-codigo",
+          "public_id": null,
+          "name": "Coda y Código",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/coda-y-codigo/",
+          "public_url": "https://codaycodigo.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -5628,6 +5892,50 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/raven-nexus/",
           "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e531082763",
+      "user_language": "hire vs automate",
+      "normalized": "hire vs automate",
+      "relative_json": "/chum/answers/doors/hire-vs-automate-e531082763.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hire-vs-automate-e531082763.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-decision-lab",
+          "kind": "product",
+          "product_key": "systemia-decision-lab",
+          "public_id": null,
+          "name": "Systemia Decision Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-decision-lab/",
+          "public_url": "https://systemiadecisionlab.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9124720330",
+      "user_language": "hire vs outsource",
+      "normalized": "hire vs outsource",
+      "relative_json": "/chum/answers/doors/hire-vs-outsource-9124720330.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hire-vs-outsource-9124720330.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-decision-lab",
+          "kind": "product",
+          "product_key": "systemia-decision-lab",
+          "public_id": null,
+          "name": "Systemia Decision Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-decision-lab/",
+          "public_url": "https://systemiadecisionlab.base44.app/",
           "registry_name": null
         }
       ]
@@ -6615,6 +6923,28 @@
       ]
     },
     {
+      "answer_id": "intent:b7e305d394",
+      "user_language": "keep restoration observations and review status together",
+      "normalized": "keep restoration observations and review status together",
+      "relative_json": "/chum/answers/doors/keep-restoration-observations-and-review-status-together-b7e305d394.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-restoration-observations-and-review-status-together-b7e305d394.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ecoledger",
+          "kind": "product",
+          "product_key": "ecoledger",
+          "public_id": null,
+          "name": "EcoLedger",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ecoledger/",
+          "public_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c2d0367006",
       "user_language": "keep this approved agent run going longer",
       "normalized": "keep this approved agent run going longer",
@@ -6786,6 +7116,50 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-property-services/",
           "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5b3aab32f1",
+      "user_language": "learn about a wildlife species with sources",
+      "normalized": "learn about a wildlife species with sources",
+      "relative_json": "/chum/answers/doors/learn-about-a-wildlife-species-with-sources-5b3aab32f1.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-about-a-wildlife-species-with-sources-5b3aab32f1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-wildlife-atlas",
+          "kind": "product",
+          "product_key": "evercraft-wildlife-atlas",
+          "public_id": null,
+          "name": "Evercraft Wildlife Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-wildlife-atlas/",
+          "public_url": "https://wildlife-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7ca5eb54c6",
+      "user_language": "learn how an energy system works",
+      "normalized": "learn how an energy system works",
+      "relative_json": "/chum/answers/doors/learn-how-an-energy-system-works-7ca5eb54c6.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-how-an-energy-system-works-7ca5eb54c6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:global-energy-atlas",
+          "kind": "product",
+          "product_key": "global-energy-atlas",
+          "public_id": null,
+          "name": "Global Energy Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/global-energy-atlas/",
+          "public_url": "https://energy-atlas.base44.app/",
           "registry_name": null
         }
       ]
@@ -7970,6 +8344,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/infinite-classroom/",
           "public_url": "https://infiniteclassroom.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7e020c92a1",
+      "user_language": "organize an ecological restoration project",
+      "normalized": "organize an ecological restoration project",
+      "relative_json": "/chum/answers/doors/organize-an-ecological-restoration-project-7e020c92a1.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-an-ecological-restoration-project-7e020c92a1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ecoledger",
+          "kind": "product",
+          "product_key": "ecoledger",
+          "public_id": null,
+          "name": "EcoLedger",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ecoledger/",
+          "public_url": "https://eco-ledger-ai-379a7af4.base44.app/",
           "registry_name": null
         }
       ]
@@ -10017,6 +10413,28 @@
       ]
     },
     {
+      "answer_id": "intent:e69c8ae0d2",
+      "user_language": "review ecological restoration project progress",
+      "normalized": "review ecological restoration project progress",
+      "relative_json": "/chum/answers/doors/review-ecological-restoration-project-progress-e69c8ae0d2.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-ecological-restoration-project-progress-e69c8ae0d2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ecoledger",
+          "kind": "product",
+          "product_key": "ecoledger",
+          "public_id": null,
+          "name": "EcoLedger",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ecoledger/",
+          "public_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:147ff48ad1",
       "user_language": "review hours of footage",
       "normalized": "review hours of footage",
@@ -10623,6 +11041,28 @@
       ]
     },
     {
+      "answer_id": "intent:df9727785c",
+      "user_language": "should I hire an employee",
+      "normalized": "should i hire an employee",
+      "relative_json": "/chum/answers/doors/should-i-hire-an-employee-df9727785c.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-hire-an-employee-df9727785c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-decision-lab",
+          "kind": "product",
+          "product_key": "systemia-decision-lab",
+          "public_id": null,
+          "name": "Systemia Decision Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-decision-lab/",
+          "public_url": "https://systemiadecisionlab.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:cccfe7bfe5",
       "user_language": "should I install EV chargers at this property",
       "normalized": "should i install ev chargers at this property",
@@ -10640,6 +11080,28 @@
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
           "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:bf95d88f2c",
+      "user_language": "should I promote or restructure instead of hiring",
+      "normalized": "should i promote or restructure instead of hiring",
+      "relative_json": "/chum/answers/doors/should-i-promote-or-restructure-instead-of-hiring-bf95d88f2c.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-promote-or-restructure-instead-of-hiring-bf95d88f2c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-decision-lab",
+          "kind": "product",
+          "product_key": "systemia-decision-lab",
+          "public_id": null,
+          "name": "Systemia Decision Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-decision-lab/",
+          "public_url": "https://systemiadecisionlab.base44.app/",
           "registry_name": null
         }
       ]
@@ -10742,6 +11204,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/globalstat/",
           "public_url": "https://global-stat-pulse.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cd19abcb4e",
+      "user_language": "show sourced energy data and provenance",
+      "normalized": "show sourced energy data and provenance",
+      "relative_json": "/chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:global-energy-atlas",
+          "kind": "product",
+          "product_key": "global-energy-atlas",
+          "public_id": null,
+          "name": "Global Energy Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/global-energy-atlas/",
+          "public_url": "https://energy-atlas.base44.app/",
           "registry_name": null
         }
       ]
@@ -10879,6 +11363,28 @@
       ]
     },
     {
+      "answer_id": "intent:46a8234171",
+      "user_language": "Spanish and English job training for a crew",
+      "normalized": "spanish and english job training for a crew",
+      "relative_json": "/chum/answers/doors/spanish-and-english-job-training-for-a-crew-46a8234171.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/spanish-and-english-job-training-for-a-crew-46a8234171.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:coda-y-codigo",
+          "kind": "product",
+          "product_key": "coda-y-codigo",
+          "public_id": null,
+          "name": "Coda y Código",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/coda-y-codigo/",
+          "public_url": "https://codaycodigo.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fe0a427606",
       "user_language": "Spanish-language family support resources",
       "normalized": "spanish language family support resources",
@@ -10962,6 +11468,50 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:18bb832ffc",
+      "user_language": "study ecological relationships and food webs",
+      "normalized": "study ecological relationships and food webs",
+      "relative_json": "/chum/answers/doors/study-ecological-relationships-and-food-webs-18bb832ffc.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-ecological-relationships-and-food-webs-18bb832ffc.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-wildlife-atlas",
+          "kind": "product",
+          "product_key": "evercraft-wildlife-atlas",
+          "public_id": null,
+          "name": "Evercraft Wildlife Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-wildlife-atlas/",
+          "public_url": "https://wildlife-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:bc1210834c",
+      "user_language": "study historical changes in electricity generation",
+      "normalized": "study historical changes in electricity generation",
+      "relative_json": "/chum/answers/doors/study-historical-changes-in-electricity-generation-bc1210834c.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-historical-changes-in-electricity-generation-bc1210834c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:global-energy-atlas",
+          "kind": "product",
+          "product_key": "global-energy-atlas",
+          "public_id": null,
+          "name": "Global Energy Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/global-energy-atlas/",
+          "public_url": "https://energy-atlas.base44.app/",
           "registry_name": null
         }
       ]
@@ -11062,6 +11612,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-proof-portal-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7d95517b71",
+      "user_language": "teach me about regional power systems",
+      "normalized": "teach me about regional power systems",
+      "relative_json": "/chum/answers/doors/teach-me-about-regional-power-systems-7d95517b71.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/teach-me-about-regional-power-systems-7d95517b71.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:global-energy-atlas",
+          "kind": "product",
+          "product_key": "global-energy-atlas",
+          "public_id": null,
+          "name": "Global Energy Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/global-energy-atlas/",
+          "public_url": "https://energy-atlas.base44.app/",
           "registry_name": null
         }
       ]
@@ -11404,6 +11976,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/callproof-vault/",
           "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a828a47252",
+      "user_language": "track restoration baselines photos and measurements",
+      "normalized": "track restoration baselines photos and measurements",
+      "relative_json": "/chum/answers/doors/track-restoration-baselines-photos-and-measurements-a828a47252.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-restoration-baselines-photos-and-measurements-a828a47252.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ecoledger",
+          "kind": "product",
+          "product_key": "ecoledger",
+          "public_id": null,
+          "name": "EcoLedger",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ecoledger/",
+          "public_url": "https://eco-ledger-ai-379a7af4.base44.app/",
           "registry_name": null
         }
       ]
@@ -11897,6 +12491,28 @@
       ]
     },
     {
+      "answer_id": "intent:6def03a40e",
+      "user_language": "verify a Coda y Código training completion record",
+      "normalized": "verify a coda y c digo training completion record",
+      "relative_json": "/chum/answers/doors/verify-a-coda-y-c-digo-training-completion-record-6def03a40e.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-a-coda-y-c-digo-training-completion-record-6def03a40e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:coda-y-codigo",
+          "kind": "product",
+          "product_key": "coda-y-codigo",
+          "public_id": null,
+          "name": "Coda y Código",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/coda-y-codigo/",
+          "public_url": "https://codaycodigo.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:b2a4a3b98e",
       "user_language": "verify candidate ability",
       "normalized": "verify candidate ability",
@@ -12002,6 +12618,28 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
           "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e2dcbbdfc2",
+      "user_language": "warehouse or dock team training",
+      "normalized": "warehouse or dock team training",
+      "relative_json": "/chum/answers/doors/warehouse-or-dock-team-training-e2dcbbdfc2.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/warehouse-or-dock-team-training-e2dcbbdfc2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:coda-y-codigo",
+          "kind": "product",
+          "product_key": "coda-y-codigo",
+          "public_id": null,
+          "name": "Coda y Código",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/coda-y-codigo/",
+          "public_url": "https://codaycodigo.base44.app/",
           "registry_name": null
         }
       ]
@@ -12554,6 +13192,28 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8789e809e5",
+      "user_language": "what role actually solves this business problem",
+      "normalized": "what role actually solves this business problem",
+      "relative_json": "/chum/answers/doors/what-role-actually-solves-this-business-problem-8789e809e5.json",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-role-actually-solves-this-business-problem-8789e809e5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-decision-lab",
+          "kind": "product",
+          "product_key": "systemia-decision-lab",
+          "public_id": null,
+          "name": "Systemia Decision Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-decision-lab/",
+          "public_url": "https://systemiadecisionlab.base44.app/",
           "registry_name": null
         }
       ]

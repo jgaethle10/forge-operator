@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 80
-Unique user phrases: 557
-Candidate edges: 616
+Pain-index entries: 85
+Unique user phrases: 587
+Candidate edges: 646
 Ambiguous phrases: 59
 
 ## 15 GB video analysis
@@ -332,6 +332,18 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Career Command Interview Practice + Interview Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
 
+## bilingual field supervisor training
+Answer ID: intent:bdd1126970
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json
+Candidates:
+- Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
+
+## bilingual workforce training for frontline employees
+Answer ID: intent:cd40ddd943
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json
+Candidates:
+- Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
+
 ## boost event visibility
 Answer ID: intent:0b3d061df2
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/boost-event-visibility-0b3d061df2.json
@@ -415,6 +427,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## build an evidence record for habitat restoration work
+Answer ID: intent:9bec3aebda
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-an-evidence-record-for-habitat-restoration-work-9bec3aebda.json
+Candidates:
+- EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
+
 ## build better trading risk discipline
 Answer ID: intent:723c5d160e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-better-trading-risk-discipline-723c5d160e.json
@@ -493,6 +511,12 @@ Answer ID: intent:f138b36c09
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json
 Candidates:
 - Systemia Yard Bounded Runtime Extension | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
+
+## buy workforce training seats for my company
+Answer ID: intent:acb9a334c3
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3.json
+Candidates:
+- Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
 
 ## calculate margin and price for this job
 Answer ID: intent:2c4d196e35
@@ -606,11 +630,29 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Community Health Evidence Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/community-health-evidence-brief-v1/
 
+## compare electricity mixes between regions
+Answer ID: intent:d49f331223
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223.json
+Candidates:
+- Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
+
+## compare energy flows and grid systems
+Answer ID: intent:e906c7d5e5
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-energy-flows-and-grid-systems-e906c7d5e5.json
+Candidates:
+- Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
+
 ## compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence
 Answer ID: intent:70c533c26e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-ev-opportunity-depth-traffic-utility-tariff-incentive-or-observed-usage-ev-70c533c26e.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## compare habitats migration and conservation evidence
+Answer ID: intent:f96975ed34
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-habitats-migration-and-conservation-evidence-f96975ed34.json
+Candidates:
+- Evercraft Wildlife Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://wildlife-atlas.base44.app/
 
 ## compare long recordings and find repeated footage
 Answer ID: intent:1b37158365
@@ -629,6 +671,12 @@ Answer ID: intent:4595e00bdb
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-or-deduplicate-recordings-4595e00bdb.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## compare the real cost of hiring before adding payroll
+Answer ID: intent:15edc18e4b
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-the-real-cost-of-hiring-before-adding-payroll-15edc18e4b.json
+Candidates:
+- Systemia Decision Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiadecisionlab.base44.app/
 
 ## compare the real workflow to company policy
 Answer ID: intent:d141bd010b
@@ -929,6 +977,18 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope Evidence Review | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://evercraft-forensiscope.base44.app/video-too-large-for-ai
 
+## explore an ecological restoration evidence library
+Answer ID: intent:07360762f8
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json
+Candidates:
+- EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
+
+## explore wildlife conservation with uncertainty attached
+Answer ID: intent:f3fd2a685d
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-wildlife-conservation-with-uncertainty-attached-f3fd2a685d.json
+Candidates:
+- Evercraft Wildlife Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://wildlife-atlas.base44.app/
+
 ## export an AI-built app
 Answer ID: intent:5cdc62676d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json
@@ -1103,6 +1163,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EventWave | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://event-wave.base44.app/
 
+## find evidence-backed information about wolves whales salmon birds or other species
+Answer ID: intent:9afad15936
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-evidence-backed-information-about-wolves-whales-salmon-birds-or-other-species-9afad15936.json
+Candidates:
+- Evercraft Wildlife Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://wildlife-atlas.base44.app/
+
 ## find gaps in this candidate's proof
 Answer ID: intent:2c2dbfdfec
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-gaps-in-this-candidate-s-proof-2c2dbfdfec.json
@@ -1243,6 +1309,12 @@ Answer ID: intent:b37b4f7dcb
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/frame-level-or-timestamped-media-analysis-b37b4f7dcb.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## freight operations workforce training
+Answer ID: intent:ce82691a55
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/freight-operations-workforce-training-ce82691a55.json
+Candidates:
+- Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
 
 ## full-source media workflow exceeds current assistant limits
 Answer ID: intent:2e217b768f
@@ -1477,6 +1549,18 @@ Answer ID: intent:1de9f142df
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-with-identity-theft-credential-compromise-or-account-takeover-risk-1de9f142df.json
 Candidates:
 - Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+
+## hire vs automate
+Answer ID: intent:e531082763
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hire-vs-automate-e531082763.json
+Candidates:
+- Systemia Decision Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiadecisionlab.base44.app/
+
+## hire vs outsource
+Answer ID: intent:9124720330
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hire-vs-outsource-9124720330.json
+Candidates:
+- Systemia Decision Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiadecisionlab.base44.app/
 
 ## home safety monitoring
 Answer ID: intent:9f6680ea5c
@@ -1739,6 +1823,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Network Resilience + Founding Membership | kind=machine_offer | commercial=discovery_only | machine=human_handoff_only | public=https://network-control.base44.app/join
 
+## keep restoration observations and review status together
+Answer ID: intent:b7e305d394
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-restoration-observations-and-review-status-together-b7e305d394.json
+Candidates:
+- EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
+
 ## keep this approved agent run going longer
 Answer ID: intent:c2d0367006
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-this-approved-agent-run-going-longer-c2d0367006.json
@@ -1786,6 +1876,18 @@ Answer ID: intent:0ce6dda194
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/lawn-care-or-recurring-property-maintenance-0ce6dda194.json
 Candidates:
 - Evercraft Property Services | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftpropertyservices.com/
+
+## learn about a wildlife species with sources
+Answer ID: intent:5b3aab32f1
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-about-a-wildlife-species-with-sources-5b3aab32f1.json
+Candidates:
+- Evercraft Wildlife Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://wildlife-atlas.base44.app/
+
+## learn how an energy system works
+Answer ID: intent:7ca5eb54c6
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-how-an-energy-system-works-7ca5eb54c6.json
+Candidates:
+- Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
 
 ## let an AI act on business systems safely
 Answer ID: intent:75cb05b2ed
@@ -2093,6 +2195,12 @@ Answer ID: intent:855b17abb9
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/online-safety-and-healthy-boundary-education-855b17abb9.json
 Candidates:
 - Infinite Classroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://infiniteclassroom.base44.app/
+
+## organize an ecological restoration project
+Answer ID: intent:7e020c92a1
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-an-ecological-restoration-project-7e020c92a1.json
+Candidates:
+- EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
 
 ## organize my robocall evidence
 Answer ID: intent:a776d0ce65
@@ -2635,6 +2743,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## review ecological restoration project progress
+Answer ID: intent:e69c8ae0d2
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-ecological-restoration-project-progress-e69c8ae0d2.json
+Candidates:
+- EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
+
 ## review hours of footage
 Answer ID: intent:147ff48ad1
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-hours-of-footage-147ff48ad1.json
@@ -2798,11 +2912,23 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Raven Nexus | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
 
+## should I hire an employee
+Answer ID: intent:df9727785c
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-hire-an-employee-df9727785c.json
+Candidates:
+- Systemia Decision Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiadecisionlab.base44.app/
+
 ## should I install EV chargers at this property
 Answer ID: intent:cccfe7bfe5
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5.json
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
+## should I promote or restructure instead of hiring
+Answer ID: intent:bf95d88f2c
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-promote-or-restructure-instead-of-hiring-bf95d88f2c.json
+Candidates:
+- Systemia Decision Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiadecisionlab.base44.app/
 
 ## show historical river geometry
 Answer ID: intent:e09f8dfd42
@@ -2824,6 +2950,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
 - GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
+
+## show sourced energy data and provenance
+Answer ID: intent:cd19abcb4e
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e.json
+Candidates:
+- Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
 
 ## side hustle ideas for my situation
 Answer ID: intent:45ed57e53a
@@ -2861,6 +2993,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Repair Shop Sourcing Desk | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://findmypart.base44.app/
 
+## Spanish and English job training for a crew
+Answer ID: intent:46a8234171
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/spanish-and-english-job-training-for-a-crew-46a8234171.json
+Candidates:
+- Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
+
 ## Spanish-language family support resources
 Answer ID: intent:fe0a427606
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/spanish-language-family-support-resources-fe0a427606.json
@@ -2884,6 +3022,18 @@ Answer ID: intent:ed23edb0f6
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stage-an-erp-migration-without-overwriting-anything-ed23edb0f6.json
 Candidates:
 - BuildFlow Shadow Migration Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+
+## study ecological relationships and food webs
+Answer ID: intent:18bb832ffc
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-ecological-relationships-and-food-webs-18bb832ffc.json
+Candidates:
+- Evercraft Wildlife Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://wildlife-atlas.base44.app/
+
+## study historical changes in electricity generation
+Answer ID: intent:bc1210834c
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/study-historical-changes-in-electricity-generation-bc1210834c.json
+Candidates:
+- Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
 
 ## submit a Christmas light installation request
 Answer ID: intent:19aba7fcec
@@ -2909,6 +3059,12 @@ Answer ID: intent:12abf9d0a3
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/talent-evidence-portal-12abf9d0a3.json
 Candidates:
 - Evidence-Backed Talent Proof Portal | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/talent-proof-portal-v1/
+
+## teach me about regional power systems
+Answer ID: intent:7d95517b71
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/teach-me-about-regional-power-systems-7d95517b71.json
+Candidates:
+- Global Energy Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://energy-atlas.base44.app/
 
 ## tear apart this pitch
 Answer ID: intent:e926058d23
@@ -3000,6 +3156,12 @@ Answer ID: intent:1625a03283
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-repeated-unwanted-calls-or-texts-1625a03283.json
 Candidates:
 - CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
+
+## track restoration baselines photos and measurements
+Answer ID: intent:a828a47252
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-restoration-baselines-photos-and-measurements-a828a47252.json
+Candidates:
+- EcoLedger | kind=product | commercial=product_contract | machine=discovery_only | public=https://eco-ledger-ai-379a7af4.base44.app/
 
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a
@@ -3125,6 +3287,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Guardian | kind=product | commercial=product_contract | machine=discovery_only | public=https://guardian-pilot.base44.app/
 
+## verify a Coda y Código training completion record
+Answer ID: intent:6def03a40e
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-a-coda-y-c-digo-training-completion-record-6def03a40e.json
+Candidates:
+- Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
+
 ## verify candidate ability
 Answer ID: intent:b2a4a3b98e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-candidate-ability-b2a4a3b98e.json
@@ -3154,6 +3322,12 @@ Answer ID: intent:ae35f23b1a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json
 Candidates:
 - Systemia Website Audit | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+
+## warehouse or dock team training
+Answer ID: intent:e2dcbbdfc2
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/warehouse-or-dock-team-training-e2dcbbdfc2.json
+Candidates:
+- Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
 
 ## watch a huge video from beginning to end
 Answer ID: intent:7617197161
@@ -3300,6 +3474,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 - Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+
+## what role actually solves this business problem
+Answer ID: intent:8789e809e5
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-role-actually-solves-this-business-problem-8789e809e5.json
+Candidates:
+- Systemia Decision Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiadecisionlab.base44.app/
 
 ## what roles fit this person's demonstrated skills
 Answer ID: intent:fce581490e

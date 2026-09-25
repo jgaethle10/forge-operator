@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 80,
-    "product_entries": 37,
+    "entries": 85,
+    "product_entries": 42,
     "machine_offer_entries": 43,
-    "entries_with_pain_language": 80,
+    "entries_with_pain_language": 85,
     "sell_now_machine_offers": 12,
     "entries_with_declared_mcp": 57,
     "callable_or_routable_entries": 36,
@@ -2247,6 +2247,77 @@
       ]
     },
     {
+      "capability_id": "product:coda-y-codigo",
+      "product_key": "coda-y-codigo",
+      "kind": "product",
+      "name": "Coda y Código",
+      "class": "multilingual_frontline_workforce_training",
+      "pain_phrases": [
+        "bilingual workforce training for frontline employees",
+        "Spanish and English job training for a crew",
+        "freight operations workforce training",
+        "bilingual field supervisor training",
+        "warehouse or dock team training",
+        "buy workforce training seats for my company",
+        "verify a Coda y Código training completion record"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://codaycodigo.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public course and offer discovery with authenticated enrollment; training access is prepared only after authoritative Stripe payment confirmation where payment is required",
+      "boundaries": [
+        "single-course pricing varies by the selected active course",
+        "seat packages expand company workspace capacity and do not by themselves include every training course",
+        "checkout creation alone creates no paid training entitlement",
+        "public completion verification must not expose private learner records beyond the intended certificate surface"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "source_commerce_wired",
+        "offers": [
+          {
+            "name": "Single course",
+            "price": "From $19"
+          },
+          {
+            "name": "Role tracks",
+            "price": "From $79"
+          },
+          {
+            "name": "All-courses bundle",
+            "price": "$149"
+          },
+          {
+            "name": "Employer bundles",
+            "price": "From $399"
+          },
+          {
+            "name": "Seat capacity packages",
+            "price": "From $249"
+          }
+        ],
+        "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:contractor-cloud",
       "product_key": "contractor-cloud",
       "kind": "product",
@@ -2393,6 +2464,51 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:ecoledger",
+      "product_key": "ecoledger",
+      "kind": "product",
+      "name": "EcoLedger",
+      "class": "ecological_restoration_evidence_ledger",
+      "pain_phrases": [
+        "organize an ecological restoration project",
+        "track restoration baselines photos and measurements",
+        "build an evidence record for habitat restoration work",
+        "review ecological restoration project progress",
+        "keep restoration observations and review status together",
+        "explore an ecological restoration evidence library"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery and restoration-library access with authenticated workspace or pilot handoff for nonpublic project records",
+      "boundaries": [
+        "do not treat an uploaded photo or measurement as independently verified without supporting evidence",
+        "private property records, project media and account data remain outside public discovery",
+        "EcoLedger does not automatically create regulatory certification or compliance approval",
+        "pilot or contact intake creates no payment obligation unless separate verified terms are accepted"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {
@@ -2816,6 +2932,50 @@
       ]
     },
     {
+      "capability_id": "product:evercraft-wildlife-atlas",
+      "product_key": "evercraft-wildlife-atlas",
+      "kind": "product",
+      "name": "Evercraft Wildlife Atlas",
+      "class": "evidence_first_wildlife_ecology_learning",
+      "pain_phrases": [
+        "learn about a wildlife species with sources",
+        "compare habitats migration and conservation evidence",
+        "study ecological relationships and food webs",
+        "explore wildlife conservation with uncertainty attached",
+        "find evidence-backed information about wolves whales salmon birds or other species"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public read-only wildlife, ecology and conservation learning with source provenance and uncertainty attached",
+      "boundaries": [
+        "do not turn incomplete evidence into certainty about a species population or conservation outcome",
+        "educational content is not an emergency wildlife-response service",
+        "source provenance and uncertainty should remain attached to scientific claims",
+        "private learner or account data is outside public discovery"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": false,
+      "confirmation": "No payment obligation is created by discovery.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:evermaps",
       "product_key": "evermaps",
       "kind": "product",
@@ -3125,6 +3285,51 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:global-energy-atlas",
+      "product_key": "global-energy-atlas",
+      "kind": "product",
+      "name": "Global Energy Atlas",
+      "class": "evidence_first_energy_systems_education",
+      "pain_phrases": [
+        "compare electricity mixes between regions",
+        "learn how an energy system works",
+        "compare energy flows and grid systems",
+        "study historical changes in electricity generation",
+        "show sourced energy data and provenance",
+        "teach me about regional power systems"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://energy-atlas.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public read-only energy-systems education and evidence exploration",
+      "boundaries": [
+        "educational comparisons are not operational grid instructions",
+        "do not present modeled or historical data as live grid state unless explicitly verified",
+        "source provenance and data limitations should remain visible",
+        "does not provide personalized investment advice"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": false,
+      "confirmation": "No payment obligation is created by discovery.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {
@@ -3554,6 +3759,64 @@
       "pricing": null,
       "offers": [],
       "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:systemia-decision-lab",
+      "product_key": "systemia-decision-lab",
+      "kind": "product",
+      "name": "Systemia Decision Lab",
+      "class": "owner_workforce_decision_intelligence",
+      "pain_phrases": [
+        "should I hire an employee",
+        "hire vs outsource",
+        "hire vs automate",
+        "should I promote or restructure instead of hiring",
+        "what role actually solves this business problem",
+        "compare the real cost of hiring before adding payroll"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public owner-side workforce decision analysis; the free decision report structures alternatives while human judgment remains final",
+      "boundaries": [
+        "does not rank job candidates or make employment decisions",
+        "does not replace lawful human review of applicants or employees",
+        "a decision report is planning support rather than a legal or HR determination",
+        "paid fulfillment requires provider-verified payment; checkout creation alone is not payment proof"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "source_checkout_wired_live_verification_pending",
+        "offers": [
+          {
+            "name": "Decision Report",
+            "price": "Free"
+          },
+          {
+            "name": "Hiring Action Pack",
+            "price": "$49 one-time"
+          }
+        ],
+        "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,

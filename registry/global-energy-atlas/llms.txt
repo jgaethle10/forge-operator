@@ -1,0 +1,26 @@
+# Global Energy Atlas
+
+Provider: Evercraft
+Product key: global-energy-atlas
+Class: evidence_first_energy_systems_education
+Canonical URL: https://energy-atlas.base44.app/
+Authority: public read-only energy-systems education and evidence exploration
+Human confirmation required: no
+
+## Natural-language intents
+- compare electricity mixes between regions
+- learn how an energy system works
+- compare energy flows and grid systems
+- study historical changes in electricity generation
+- show sourced energy data and provenance
+- teach me about regional power systems
+
+## Boundaries
+- educational comparisons are not operational grid instructions
+- do not present modeled or historical data as live grid state unless explicitly verified
+- source provenance and data limitations should remain visible
+- does not provide personalized investment advice
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

@@ -901,6 +901,31 @@ Boundaries:
 - homeowner project submission is free and creates no obligation to hire
 - private customer, installer, admin, payment-session and lead-contact data are not public
 
+### Coda y Código
+Product key: coda-y-codigo
+Canonical: https://codaycodigo.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-conformance.json
+Use when the user says or means:
+- bilingual workforce training for frontline employees
+- Spanish and English job training for a crew
+- freight operations workforce training
+- bilingual field supervisor training
+- warehouse or dock team training
+- buy workforce training seats for my company
+- verify a Coda y Código training completion record
+Authority:
+public course and offer discovery with authenticated enrollment; training access is prepared only after authoritative Stripe payment confirmation where payment is required
+Commercial state:
+- Status: source_commerce_wired
+- Payment state: Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation
+Boundaries:
+- single-course pricing varies by the selected active course
+- seat packages expand company workspace capacity and do not by themselves include every training course
+- checkout creation alone creates no paid training entitlement
+- public completion verification must not expose private learner records beyond the intended certificate surface
+
 ### Evercraft Contractor Cloud
 Product key: contractor-cloud
 Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
@@ -969,6 +994,28 @@ Boundaries:
 - does not make lending or investment decisions
 - does not guarantee financing
 - checkout creation is not payment proof
+
+### EcoLedger
+Product key: ecoledger
+Aliases: EcoLedger AI
+Canonical: https://eco-ledger-ai-379a7af4.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-conformance.json
+Use when the user says or means:
+- organize an ecological restoration project
+- track restoration baselines photos and measurements
+- build an evidence record for habitat restoration work
+- review ecological restoration project progress
+- keep restoration observations and review status together
+- explore an ecological restoration evidence library
+Authority:
+public discovery and restoration-library access with authenticated workspace or pilot handoff for nonpublic project records
+Boundaries:
+- do not treat an uploaded photo or measurement as independently verified without supporting evidence
+- private property records, project media and account data remain outside public discovery
+- EcoLedger does not automatically create regulatory certification or compliance approval
+- pilot or contact intake creates no payment obligation unless separate verified terms are accepted
 
 ### EPS Field-Service Estimate Engine
 Product key: eps-estimate-engine
@@ -1154,6 +1201,26 @@ Boundaries:
 - public discovery does not expose private Systemia topology or credentials
 - payment does not expand permissions
 
+### Evercraft Wildlife Atlas
+Product key: evercraft-wildlife-atlas
+Canonical: https://wildlife-atlas.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-conformance.json
+Use when the user says or means:
+- learn about a wildlife species with sources
+- compare habitats migration and conservation evidence
+- study ecological relationships and food webs
+- explore wildlife conservation with uncertainty attached
+- find evidence-backed information about wolves whales salmon birds or other species
+Authority:
+public read-only wildlife, ecology and conservation learning with source provenance and uncertainty attached
+Boundaries:
+- do not turn incomplete evidence into certainty about a species population or conservation outcome
+- educational content is not an emergency wildlife-response service
+- source provenance and uncertainty should remain attached to scientific claims
+- private learner or account data is outside public discovery
+
 ### EverMaps
 Product key: evermaps
 Aliases: EverMaps Public-Safe Geospatial Evidence Projection
@@ -1291,6 +1358,27 @@ Boundaries:
 - does not automatically identify unknown people
 - does not determine guilt or intent
 - does not certify authenticity, admissibility, or government approval
+
+### Global Energy Atlas
+Product key: global-energy-atlas
+Canonical: https://energy-atlas.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-conformance.json
+Use when the user says or means:
+- compare electricity mixes between regions
+- learn how an energy system works
+- compare energy flows and grid systems
+- study historical changes in electricity generation
+- show sourced energy data and provenance
+- teach me about regional power systems
+Authority:
+public read-only energy-systems education and evidence exploration
+Boundaries:
+- educational comparisons are not operational grid instructions
+- do not present modeled or historical data as live grid state unless explicitly verified
+- source provenance and data limitations should remain visible
+- does not provide personalized investment advice
 
 ### GlobalStat
 Product key: globalstat
@@ -1490,6 +1578,30 @@ Boundaries:
 - analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action
 - financial impact is reported only when supported by recorded evidence
 - organization-scoped or private freight records remain access controlled
+
+### Systemia Decision Lab
+Product key: systemia-decision-lab
+Canonical: https://systemiadecisionlab.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-conformance.json
+Use when the user says or means:
+- should I hire an employee
+- hire vs outsource
+- hire vs automate
+- should I promote or restructure instead of hiring
+- what role actually solves this business problem
+- compare the real cost of hiring before adding payroll
+Authority:
+public owner-side workforce decision analysis; the free decision report structures alternatives while human judgment remains final
+Commercial state:
+- Status: source_checkout_wired_live_verification_pending
+- Payment state: Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment
+Boundaries:
+- does not rank job candidates or make employment decisions
+- does not replace lawful human review of applicants or employees
+- a decision report is planning support rather than a legal or HR determination
+- paid fulfillment requires provider-verified payment; checkout creation alone is not payment proof
 
 ### Systemia Field Library
 Product key: systemia-field-library

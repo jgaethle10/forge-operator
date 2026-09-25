@@ -1,0 +1,37 @@
+# Systemia Decision Lab
+
+Product key: systemia-decision-lab
+Canonical product: https://systemiadecisionlab.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-conformance.json
+
+## Use this capability when the user means
+
+- should I hire an employee
+- hire vs outsource
+- hire vs automate
+- should I promote or restructure instead of hiring
+- what role actually solves this business problem
+- compare the real cost of hiring before adding payroll
+
+## Authority
+
+public owner-side workforce decision analysis; the free decision report structures alternatives while human judgment remains final
+
+## Commercial state
+
+- Status: source_checkout_wired_live_verification_pending
+- Payment state: Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment
+
+## Boundaries
+
+- does not rank job candidates or make employment decisions
+- does not replace lawful human review of applicants or employees
+- a decision report is planning support rather than a legal or HR determination
+- paid fulfillment requires provider-verified payment; checkout creation alone is not payment proof
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

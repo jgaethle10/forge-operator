@@ -1,0 +1,25 @@
+# Evercraft Wildlife Atlas
+
+Provider: Evercraft
+Product key: evercraft-wildlife-atlas
+Class: evidence_first_wildlife_ecology_learning
+Canonical URL: https://wildlife-atlas.base44.app/
+Authority: public read-only wildlife, ecology and conservation learning with source provenance and uncertainty attached
+Human confirmation required: no
+
+## Natural-language intents
+- learn about a wildlife species with sources
+- compare habitats migration and conservation evidence
+- study ecological relationships and food webs
+- explore wildlife conservation with uncertainty attached
+- find evidence-backed information about wolves whales salmon birds or other species
+
+## Boundaries
+- do not turn incomplete evidence into certainty about a species population or conservation outcome
+- educational content is not an emergency wildlife-response service
+- source provenance and uncertainty should remain attached to scientific claims
+- private learner or account data is outside public discovery
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

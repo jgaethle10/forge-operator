@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-25T05:45:00.000Z",
+  "answer_id": "intent:15edc18e4b",
+  "user_language": "compare the real cost of hiring before adding payroll",
+  "normalized": "compare the real cost of hiring before adding payroll",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:systemia-decision-lab",
+      "kind": "product",
+      "product_key": "systemia-decision-lab",
+      "public_id": null,
+      "name": "Systemia Decision Lab",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://systemiadecisionlab.base44.app/",
+      "pain_page": "/chum/products/systemia-decision-lab/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public owner-side workforce decision analysis; the free decision report structures alternatives while human judgment remains final",
+      "boundaries": [
+        "does not rank job candidates or make employment decisions",
+        "does not replace lawful human review of applicants or employees",
+        "a decision report is planning support rather than a legal or HR determination",
+        "paid fulfillment requires provider-verified payment; checkout creation alone is not payment proof"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

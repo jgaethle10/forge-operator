@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 80
-Product entries: 37
+Entries: 85
+Product entries: 42
 Machine-offer entries: 43
 Sell-now machine offers: 12
 
@@ -944,6 +944,23 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Coda y Código
+Capability ID: product:coda-y-codigo
+Product key: coda-y-codigo
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://codaycodigo.base44.app/
+Use when the user means:
+- bilingual workforce training for frontline employees
+- Spanish and English job training for a crew
+- freight operations workforce training
+- bilingual field supervisor training
+- warehouse or dock team training
+- buy workforce training seats for my company
+- verify a Coda y Código training completion record
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Evercraft Contractor Cloud
 Capability ID: product:contractor-cloud
 Product key: contractor-cloud
@@ -994,6 +1011,22 @@ Use when the user means:
 - founder readiness
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## EcoLedger
+Capability ID: product:ecoledger
+Product key: ecoledger
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://eco-ledger-ai-379a7af4.base44.app/
+Use when the user means:
+- organize an ecological restoration project
+- track restoration baselines photos and measurements
+- build an evidence record for habitat restoration work
+- review ecological restoration project progress
+- keep restoration observations and review status together
+- explore an ecological restoration evidence library
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## EPS Field-Service Estimate Engine
 Capability ID: product:eps-estimate-engine
@@ -1157,6 +1190,21 @@ Use when the user means:
 Confirmation boundary: No payment obligation is created by discovery.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
+## Evercraft Wildlife Atlas
+Capability ID: product:evercraft-wildlife-atlas
+Product key: evercraft-wildlife-atlas
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://wildlife-atlas.base44.app/
+Use when the user means:
+- learn about a wildlife species with sources
+- compare habitats migration and conservation evidence
+- study ecological relationships and food webs
+- explore wildlife conservation with uncertainty attached
+- find evidence-backed information about wolves whales salmon birds or other species
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## EverMaps
 Capability ID: product:evermaps
 Product key: evermaps
@@ -1296,6 +1344,22 @@ Use when the user means:
 - pull important moments from a long recording
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Global Energy Atlas
+Capability ID: product:global-energy-atlas
+Product key: global-energy-atlas
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://energy-atlas.base44.app/
+Use when the user means:
+- compare electricity mixes between regions
+- learn how an energy system works
+- compare energy flows and grid systems
+- study historical changes in electricity generation
+- show sourced energy data and provenance
+- teach me about regional power systems
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## GlobalStat
 Capability ID: product:globalstat
@@ -1451,6 +1515,22 @@ Use when the user means:
 - find missing POD or rate mismatches
 - summarize freight risk on this shipment
 - what recoverable charges or detention issues exist
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Systemia Decision Lab
+Capability ID: product:systemia-decision-lab
+Product key: systemia-decision-lab
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://systemiadecisionlab.base44.app/
+Use when the user means:
+- should I hire an employee
+- hire vs outsource
+- hire vs automate
+- should I promote or restructure instead of hiring
+- what role actually solves this business problem
+- compare the real cost of hiring before adding payroll
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

@@ -1,0 +1,33 @@
+# EcoLedger
+
+Product key: ecoledger
+Aliases: EcoLedger AI
+Canonical product: https://eco-ledger-ai-379a7af4.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-conformance.json
+
+## Use this capability when the user means
+
+- organize an ecological restoration project
+- track restoration baselines photos and measurements
+- build an evidence record for habitat restoration work
+- review ecological restoration project progress
+- keep restoration observations and review status together
+- explore an ecological restoration evidence library
+
+## Authority
+
+public discovery and restoration-library access with authenticated workspace or pilot handoff for nonpublic project records
+
+## Boundaries
+
+- do not treat an uploaded photo or measurement as independently verified without supporting evidence
+- private property records, project media and account data remain outside public discovery
+- EcoLedger does not automatically create regulatory certification or compliance approval
+- pilot or contact intake creates no payment obligation unless separate verified terms are accepted
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

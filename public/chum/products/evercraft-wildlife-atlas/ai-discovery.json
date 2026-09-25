@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-wildlife-atlas",
+  "name": "Evercraft Wildlife Atlas",
+  "aliases": [],
+  "class": "evidence_first_wildlife_ecology_learning",
+  "canonical_url": "https://wildlife-atlas.base44.app/",
+  "intents": [
+    "learn about a wildlife species with sources",
+    "compare habitats migration and conservation evidence",
+    "study ecological relationships and food webs",
+    "explore wildlife conservation with uncertainty attached",
+    "find evidence-backed information about wolves whales salmon birds or other species"
+  ],
+  "authority": "public read-only wildlife, ecology and conservation learning with source provenance and uncertainty attached",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "do not turn incomplete evidence into certainty about a species population or conservation outcome",
+    "educational content is not an emergency wildlife-response service",
+    "source provenance and uncertainty should remain attached to scientific claims",
+    "private learner or account data is outside public discovery"
+  ],
+  "commercial": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-conformance.json",
+    "page": "/chum/products/evercraft-wildlife-atlas/"
+  }
+}

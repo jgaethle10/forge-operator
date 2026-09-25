@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Wildlife Atlas",
+  "product_key": "evercraft-wildlife-atlas",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://wildlife-atlas.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public read-only wildlife, ecology and conservation learning with source provenance and uncertainty attached",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "do not turn incomplete evidence into certainty about a species population or conservation outcome",
+    "educational content is not an emergency wildlife-response service",
+    "source provenance and uncertainty should remain attached to scientific claims",
+    "private learner or account data is outside public discovery"
+  ],
+  "commercial": null,
+  "provider_behavior_state": "not_inferred_from_publication"
+}

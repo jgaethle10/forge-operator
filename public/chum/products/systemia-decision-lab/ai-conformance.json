@@ -1,0 +1,43 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Decision Lab",
+  "product_key": "systemia-decision-lab",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://systemiadecisionlab.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public owner-side workforce decision analysis; the free decision report structures alternatives while human judgment remains final",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "does not rank job candidates or make employment decisions",
+    "does not replace lawful human review of applicants or employees",
+    "a decision report is planning support rather than a legal or HR determination",
+    "paid fulfillment requires provider-verified payment; checkout creation alone is not payment proof"
+  ],
+  "commercial": {
+    "status": "source_checkout_wired_live_verification_pending",
+    "offers": [
+      {
+        "name": "Decision Report",
+        "price": "Free"
+      },
+      {
+        "name": "Hiring Action Pack",
+        "price": "$49 one-time"
+      }
+    ],
+    "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
+  },
+  "provider_behavior_state": "not_inferred_from_publication"
+}

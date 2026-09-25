@@ -1,0 +1,32 @@
+# Global Energy Atlas
+
+Product key: global-energy-atlas
+Canonical product: https://energy-atlas.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-conformance.json
+
+## Use this capability when the user means
+
+- compare electricity mixes between regions
+- learn how an energy system works
+- compare energy flows and grid systems
+- study historical changes in electricity generation
+- show sourced energy data and provenance
+- teach me about regional power systems
+
+## Authority
+
+public read-only energy-systems education and evidence exploration
+
+## Boundaries
+
+- educational comparisons are not operational grid instructions
+- do not present modeled or historical data as live grid state unless explicitly verified
+- source provenance and data limitations should remain visible
+- does not provide personalized investment advice
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
