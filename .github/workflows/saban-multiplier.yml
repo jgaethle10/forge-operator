@@ -61,6 +61,9 @@ jobs:
       - name: Execute mixed software formation
         run: npm run proof:saban-formation
 
+      - name: Prove concurrent formation waves
+        run: npm run proof:saban-formation-waves
+
       - name: Execute registered Saban assignment on NodeSeed
         run: npm run proof:saban-nodeseed-multiplier
 
