@@ -1,0 +1,40 @@
+{
+  "name": "evercraft-ai-suite",
+  "version": "0.1.0",
+  "description": "Discover the smallest truthful Evercraft capability for a user problem, invoke public tools where appropriate, and continue into human-confirmed commerce.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft",
+    "mcp",
+    "ai-suite",
+    "business-automation",
+    "forensiscope",
+    "aliev",
+    "findmypart",
+    "eventwave",
+    "career-command",
+    "website-audit"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Evercraft AI Suite",
+    "shortDescription": "Match a real problem to an Evercraft capability",
+    "longDescription": "Use Evercraft AI Suite as a pain-first front door to discover the smallest relevant Evercraft capability, inspect truthful public offers, invoke bounded tools, and prepare human-confirmed paid continuations without exposing private topology or silently creating payment obligations.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://github.com/jgaethle10/forge-operator",
+    "defaultPrompt": [
+      "I have a problem and do not know which Evercraft capability fits. Find the smallest useful option, explain why it fits, and only show a paid continuation if I ask to proceed."
+    ]
+  }
+}
