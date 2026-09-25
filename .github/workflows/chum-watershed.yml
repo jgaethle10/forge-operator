@@ -67,29 +67,56 @@ jobs:
           set -euo pipefail
           git config user.name "Evercraft CHUM"
           git config user.email "chum@users.noreply.github.com"
-          git fetch origin main --quiet
-          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
-            echo "A newer main commit exists. This run is stale; the newer CHUM run will publish mirrors."
-            exit 0
-          fi
-          git add \
-            registry \
-            public/chum \
-            public/sitemap.xml \
-            public/.well-known/evercraft-machine-catalog.json \
-            public/.well-known/evercraft-pain-index.json \
-            public/.well-known/evercraft-agent-directory.json \
-            public/.well-known/evercraft-discovery.json \
-            public/ai-discovery.json \
-            public/llms-full.txt \
-            llms-full.txt \
-            public/schema.jsonld
-          if git diff --cached --quiet; then
-            echo "CHUM public mirrors are current."
-          else
+
+          regenerate() {
+            npm run chum:sync
+            npm run chum:revenue
+            npm run chum:index
+            npm run chum:answers
+            npm run chum:capabilities
+            npm run chum:mirror
+            npm run chum:crawl-pressure
+            npm run saban:discovery
+          }
+
+          stage_mirrors() {
+            git add \
+              registry \
+              public/chum \
+              public/sitemap.xml \
+              public/.well-known/evercraft-machine-catalog.json \
+              public/.well-known/evercraft-pain-index.json \
+              public/.well-known/evercraft-agent-directory.json \
+              public/.well-known/evercraft-discovery.json \
+              public/ai-discovery.json \
+              public/llms-full.txt \
+              llms-full.txt \
+              public/schema.jsonld
+          }
+
+          for ATTEMPT in 1 2 3; do
+            echo "CHUM publish attempt ${ATTEMPT}/3"
+            git fetch origin main --quiet
+            git reset --hard origin/main
+            regenerate
+            stage_mirrors
+
+            if git diff --cached --quiet; then
+              echo "CHUM public mirrors are current."
+              exit 0
+            fi
+
             git commit -m "CHUM refresh public discovery mirrors [skip ci]"
-            git push origin HEAD:main
-          fi
+            if git push origin HEAD:main; then
+              echo "CHUM public mirrors published."
+              exit 0
+            fi
+
+            echo "Main advanced during publish attempt ${ATTEMPT}; regenerating from the new tip."
+          done
+
+          echo "CHUM mirror publication lost three consecutive main-branch races." >&2
+          exit 1
 
       - name: Validate machine-discovery contracts
         run: |
