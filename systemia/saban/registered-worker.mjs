@@ -50,6 +50,7 @@ export async function runRegisteredAssignment({
     software_id: contract.software_id,
     adapter: contract.adapter,
     agent_id: assignment.agent_id,
+    idempotency_key: assignment.idempotency_key || null,
     role: assignment.role,
     work: assignment.work,
     result
