@@ -13,6 +13,7 @@ import {
 } from './multiplier.mjs';
 import { recommendFormation } from './autoscaler.mjs';
 import { admitMultiplicationRequest } from './admission.mjs';
+import { executeDistributedMultiplicationPlan } from './distributed-executor.mjs';
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -74,6 +75,33 @@ export function topologicalOrder(nodes) {
   return ordered;
 }
 
+export function topologicalWaves(nodes) {
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const remaining = new Set(nodes.map((node) => node.id));
+  const completed = new Set();
+  const waves = [];
+
+  while (remaining.size) {
+    const wave = [...remaining]
+      .filter((id) =>
+        (byId.get(id)?.depends_on || []).every((dependency) => completed.has(dependency))
+      )
+      .sort();
+
+    if (!wave.length) {
+      throw new Error('Formation dependency graph contains a cycle or unresolved dependency.');
+    }
+
+    waves.push(wave);
+    for (const id of wave) {
+      remaining.delete(id);
+      completed.add(id);
+    }
+  }
+
+  return waves;
+}
+
 export function planFormation({ request, rootDir = process.cwd() }) {
   if (!request || !Array.isArray(request.nodes) || request.nodes.length === 0) {
     throw new Error('Formation request must contain nodes.');
@@ -86,18 +114,20 @@ export function planFormation({ request, rootDir = process.cwd() }) {
 
   const registry = loadMultiplicationRegistry();
   const order = topologicalOrder(request.nodes);
+  const waves = topologicalWaves(request.nodes);
   const nodesById = new Map(request.nodes.map((node) => [node.id, node]));
 
   const planned = order.map((nodeId) => {
     const node = nodesById.get(nodeId);
     const contract = resolveMultiplicationContract(node.software, registry);
-    const extra = node.inventory ? loadPrivateInventory(path.resolve(rootDir, node.inventory)) : [];
+    const extra = node.inventory ? loadPrivateInventory(path.resolve(rootDir, node.inventory), { privacy: contract.inventory_privacy || null }) : [];
     const workItems = expandPartitionedWorkItems(
       contract,
       loadWorkItems(contract, rootDir, extra)
     );
 
-    const recommendation = node.auto === true
+    const shouldAuto = node.auto === true || (node.auto !== false && node.logical_agents == null);
+    const recommendation = shouldAuto
       ? recommendFormation({
           contract,
           workItemCount: workItems.length,
@@ -134,6 +164,7 @@ export function planFormation({ request, rootDir = process.cwd() }) {
       software: node.software,
       depends_on: node.depends_on || [],
       reconcile: node.reconcile === true,
+      execution: node.execution || { mode: 'local' },
       work_items: workItems,
       contract,
       plan
@@ -145,26 +176,35 @@ export function planFormation({ request, rootDir = process.cwd() }) {
     formation_id: safeId(request.formation_id || `formation-${Date.now()}`),
     generated_at: new Date().toISOString(),
     execution_order: order,
+    execution_waves: waves,
     nodes: planned
   };
 }
 
 export async function executeFormation({ formation, rootDir = process.cwd() }) {
   const receipts = [];
+  const receiptByNode = new Map();
   const byNode = new Map(formation.nodes.map((node) => [node.node_id, node]));
+  const waves = formation.execution_waves || topologicalWaves(
+    formation.nodes.map((node) => ({
+      id: node.node_id,
+      depends_on: node.depends_on || []
+    }))
+  );
 
-  for (const nodeId of formation.execution_order) {
+  async function executeNode(nodeId) {
     const node = byNode.get(nodeId);
-    const dependencyReceipts = receipts.filter((receipt) => node.depends_on.includes(receipt.node_id));
+    const dependencyReceipts = (node.depends_on || [])
+      .map((dependency) => receiptByNode.get(dependency))
+      .filter(Boolean);
     const blocked = dependencyReceipts.some((receipt) => receipt.status !== 'completed');
 
     if (blocked) {
-      receipts.push({
+      return {
         node_id: nodeId,
         software_id: node.plan.software_id,
         status: 'blocked_by_dependency'
-      });
-      continue;
+      };
     }
 
     const statePath = path.join(
@@ -176,28 +216,64 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
     );
 
     try {
-      const receipt = await executeMultiplicationPlan({
-        contract: node.contract,
-        plan: node.plan,
-        workItems: node.work_items,
-        rootDir,
-        reconcile: node.reconcile,
-        statePath,
-        resume: false
-      });
-      receipts.push({
+      const distributed = node.execution?.mode === 'nodeseed_pool';
+      const receipt = distributed
+        ? await executeDistributedMultiplicationPlan({
+            contract: node.contract,
+            plan: node.plan,
+            workItems: node.work_items,
+            rootDir,
+            reconcile: node.reconcile,
+            nodePool: {
+              endpoints: node.execution?.endpoints || [],
+              discover: node.execution?.discover === true,
+              discoveryOptions: node.execution?.discovery_options || {},
+              allocatorToken: process.env.EVERCRAFT_ALLOCATOR_TOKEN || '',
+              maxAttempts: node.execution?.max_attempts,
+              maxConcurrencyPerNode: node.execution?.max_concurrency_per_node,
+              timeoutMs: node.execution?.timeout_ms,
+              assignmentTimeoutMs: node.execution?.assignment_timeout_ms,
+              requestedTtlMs: node.execution?.requested_ttl_ms
+            }
+          })
+        : await executeMultiplicationPlan({
+            contract: node.contract,
+            plan: node.plan,
+            workItems: node.work_items,
+            rootDir,
+            reconcile: node.reconcile,
+            statePath,
+            resume: false
+          });
+
+      const status = receipt.quality?.status === 'fail'
+        ? 'failed_quality'
+        : receipt.scheduler_summary?.counts?.dead_letter
+          ? 'completed_with_dead_letter'
+          : 'completed';
+
+      return {
         node_id: nodeId,
         software_id: node.plan.software_id,
-        status: receipt.scheduler_summary?.counts?.dead_letter ? 'completed_with_dead_letter' : 'completed',
+        execution_mode: distributed ? 'nodeseed_pool' : 'local',
+        status,
         receipt
-      });
+      };
     } catch (error) {
-      receipts.push({
+      return {
         node_id: nodeId,
         software_id: node.plan.software_id,
         status: 'failed',
         error: error instanceof Error ? error.message : String(error)
-      });
+      };
+    }
+  }
+
+  for (const wave of waves) {
+    const waveReceipts = await Promise.all(wave.map((nodeId) => executeNode(nodeId)));
+    for (const receipt of waveReceipts) {
+      receipts.push(receipt);
+      receiptByNode.set(receipt.node_id, receipt);
     }
   }
 
@@ -206,12 +282,14 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
     formation_id: formation.formation_id,
     generated_at: new Date().toISOString(),
     execution_order: formation.execution_order,
+    execution_waves: waves,
     nodes: receipts,
     summary: {
       total: receipts.length,
       completed: receipts.filter((row) => row.status === 'completed').length,
       completed_with_dead_letter: receipts.filter((row) => row.status === 'completed_with_dead_letter').length,
       blocked: receipts.filter((row) => row.status === 'blocked_by_dependency').length,
+      failed_quality: receipts.filter((row) => row.status === 'failed_quality').length,
       failed: receipts.filter((row) => row.status === 'failed').length
     }
   };
@@ -235,13 +313,15 @@ async function main() {
         generated_at: new Date().toISOString(),
         mode: 'plan_only',
         execution_order: formation.execution_order,
+        execution_waves: formation.execution_waves,
         nodes: formation.nodes.map((node) => ({
           node_id: node.node_id,
           software_id: node.plan.software_id,
           logical_agents: node.plan.logical_agents,
           physical_workers: node.plan.physical_workers,
           work_item_count: node.plan.work_item_count,
-          depends_on: node.depends_on
+          depends_on: node.depends_on,
+          execution_mode: node.execution?.mode || 'local'
         }))
       };
 
@@ -252,10 +332,23 @@ async function main() {
     JSON.stringify(receipt, null, 2) + '\n'
   );
 
+  if (
+    execute &&
+    (
+      Number(receipt.summary?.failed || 0) > 0 ||
+      Number(receipt.summary?.failed_quality || 0) > 0 ||
+      Number(receipt.summary?.blocked || 0) > 0 ||
+      Number(receipt.summary?.completed_with_dead_letter || 0) > 0
+    )
+  ) {
+    process.exitCode = 2;
+  }
+
   console.log(JSON.stringify({
     formation_id: formation.formation_id,
     nodes: formation.nodes.length,
     mode: execute ? 'execute' : 'plan_only',
+    execution_waves: formation.execution_waves || null,
     summary: receipt.summary || null
   }));
 }

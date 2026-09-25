@@ -81,6 +81,20 @@
         "strategy": "coverage_amplification",
         "target_logical_per_physical_worker": 250,
         "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": false,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
       }
     },
     {
@@ -138,6 +152,20 @@
         "max_agents_per_item": 7,
         "target_logical_per_physical_worker": 4,
         "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": false,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 256,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 256,
+        "require_capacity_hint": false
       }
     },
     {
@@ -194,6 +222,166 @@
         "max_agents_per_item": 7,
         "target_logical_per_physical_worker": 8,
         "minimum_role_item_passes": 1
+      }
+    },
+    {
+      "software_id": "forensiscope",
+      "name": "ForensiScope",
+      "aliases": [
+        "evercraft-forensiscope",
+        "forensic-media",
+        "long-media-evidence"
+      ],
+      "adapter": "systemia/forensiscope/saban-adapter.mjs",
+      "default_logical_agents": 25,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 8,
+      "max_physical_workers": 128,
+      "lease_seconds": 1800,
+      "roles": [
+        "media_probe_worker",
+        "timeline_worker",
+        "frame_hash_worker",
+        "audio_extract_worker",
+        "transcription_worker",
+        "provenance_guard"
+      ],
+      "work_sources": [],
+      "partitioner": {
+        "type": "media_time_windows",
+        "window_seconds": 300,
+        "overlap_seconds": 5
+      },
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "source_media_write": false,
+        "external_network": false,
+        "public_machine_intake": false,
+        "automatic_checkout": false,
+        "payment_obligation": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 128,
+        "max_work_items": 50000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 6,
+        "target_logical_per_physical_worker": 4,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "require_source_integrity": true,
+        "enforcement": "fail_execution",
+        "require_transcription": true
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 512,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 512,
+        "require_capacity_hint": true,
+        "required_executables": [
+          "ffmpeg",
+          "ffprobe"
+        ],
+        "required_services": [
+          "forensiscope_transcription"
+        ]
+      },
+      "transport": {
+        "type": "nodeseed_content_addressed_shard",
+        "adapter": "systemia/forensiscope/nodeseed-transport.mjs",
+        "stage_authorized_sources": false,
+        "lease_scoped": true,
+        "hash_algorithm": "sha256",
+        "derivative": "lossless_time_shard",
+        "source_path_forwarding": false,
+        "cleanup_on_lease_end": true
+      }
+    },
+    {
+      "software_id": "portfolio-archaeology",
+      "name": "Evercraft Portfolio Archaeology",
+      "aliases": [
+        "portfolio archaeology",
+        "portfolio miner",
+        "private inventory archaeology"
+      ],
+      "adapter": "systemia/saban/portfolio-archaeology-adapter.mjs",
+      "default_logical_agents": 64,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 8,
+      "max_physical_workers": 64,
+      "lease_seconds": 300,
+      "roles": [
+        "identity_matcher",
+        "alias_scout",
+        "boundary_guard",
+        "commercialization_scout"
+      ],
+      "work_sources": [],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "inventory_privacy": {
+        "redact_identifiers": true,
+        "expose_source_path": false
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "public_discovery_file_updates": false,
+        "external_network": false,
+        "unsolicited_human_outreach": false,
+        "automatic_publication": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "private_topology_publication": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 64,
+        "max_work_items": 100000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 4,
+        "target_logical_per_physical_worker": 8,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
       }
     }
   ]

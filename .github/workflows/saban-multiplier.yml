@@ -5,15 +5,22 @@ on:
     paths:
       - "systemia/saban/**"
       - "systemia/chum/saban-adapter.mjs"
+      - "systemia/forensiscope/**"
+      - "systemia/compute/**"
+      - "systemia/network/saban-**"
       - "package.json"
       - ".github/workflows/saban-multiplier.yml"
   push:
     branches:
       - "main"
       - "systemia/saban-software-multiplier-v1"
+      - "systemia/saban-forensiscope-v2"
     paths:
       - "systemia/saban/**"
       - "systemia/chum/saban-adapter.mjs"
+      - "systemia/forensiscope/**"
+      - "systemia/compute/**"
+      - "systemia/network/saban-**"
       - "package.json"
       - ".github/workflows/saban-multiplier.yml"
 
@@ -31,6 +38,15 @@ jobs:
         with:
           node-version: 22
 
+      - name: Ensure ForensiScope media runtime
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+
       - name: Validate multiplication contracts
         run: npm run check:saban-contracts
 
@@ -46,8 +62,20 @@ jobs:
       - name: Execute mixed software formation
         run: npm run proof:saban-formation
 
+      - name: Prove concurrent formation waves
+        run: npm run proof:saban-formation-waves
+
       - name: Execute registered Saban assignment on NodeSeed
         run: npm run proof:saban-nodeseed-multiplier
+
+      - name: Prove active NodeSeed pool failover
+        run: npm run proof:saban-nodeseed-pool
+
+      - name: Prove privacy-safe portfolio archaeology
+        run: npm run proof:saban-portfolio-archaeology
+
+      - name: Prove distributed ForensiScope media execution
+        run: npm run proof:forensiscope-distributed
 
       - name: Plan full CHUM formation
         run: npm run saban:chum:10000

@@ -25,6 +25,62 @@ function inspectContract(contract, rootDir) {
     issues.push('missing_reconciler_export');
   }
 
+  if (contract.quality) {
+    const ratio = Number(contract.quality.minimum_completion_ratio ?? 1);
+    if (!Number.isFinite(ratio) || ratio < 0 || ratio > 1) {
+      issues.push('invalid_quality_completion_ratio');
+    }
+    if (!['receipt_only', 'fail_execution'].includes(contract.quality.enforcement || 'receipt_only')) {
+      issues.push('invalid_quality_enforcement');
+    }
+    if (contract.quality.require_source_integrity === true && contract.quality.require_reconciliation !== true) {
+      issues.push('source_integrity_requires_reconciliation');
+    }
+  }
+
+  if (contract.inventory_privacy) {
+    if (contract.inventory_privacy.redact_identifiers !== true) {
+      issues.push('inventory_privacy_must_redact_identifiers');
+    }
+    if (contract.inventory_privacy.expose_source_path === true) {
+      issues.push('private_inventory_source_path_must_stay_redacted');
+    }
+  }
+
+  if (contract.resources) {
+    for (const field of [
+      'minimum_node_cpu_units',
+      'minimum_node_memory_mb',
+      'cpu_units_per_worker',
+      'memory_mb_per_worker'
+    ]) {
+      const value = Number(contract.resources[field] || 0);
+      if (!Number.isFinite(value) || value <= 0) {
+        issues.push(`invalid_resource_profile_${field}`);
+      }
+    }
+    if (contract.resources.required_executables) {
+      if (
+        !Array.isArray(contract.resources.required_executables) ||
+        contract.resources.required_executables.some(
+          (value) => typeof value !== 'string' || !value.trim()
+        )
+      ) {
+        issues.push('invalid_required_executables');
+      }
+    }
+    if (contract.resources.required_services) {
+      if (
+        !Array.isArray(contract.resources.required_services) ||
+        contract.resources.required_services.some(
+          (value) => typeof value !== 'string' || !value.trim()
+        )
+      ) {
+        issues.push('invalid_required_services');
+      }
+    }
+  }
+
   if (contract.partitioner?.type === 'media_time_windows') {
     const windowSeconds = Number(contract.partitioner.window_seconds);
     const overlapSeconds = Number(contract.partitioner.overlap_seconds);

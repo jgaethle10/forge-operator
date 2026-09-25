@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.saban.private-inventory-fixture.v1",
+  "apps": [
+    {
+      "name": "ForensiScope",
+      "id": "private-source-id-1"
+    },
+    {
+      "name": "Find My Part",
+      "id": "private-source-id-2"
+    },
+    {
+      "name": "Untitled",
+      "id": "private-source-id-3"
+    },
+    {
+      "name": "Nova Ledger",
+      "id": "private-source-id-4",
+      "commercial_candidate": true
+    },
+    {
+      "name": "Nova Ledger",
+      "id": "private-source-id-5",
+      "commercial_candidate": true
+    },
+    {
+      "name": "Internal Ops Console",
+      "id": "private-source-id-6",
+      "visibility": "internal_only"
+    }
+  ]
+}

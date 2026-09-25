@@ -7,6 +7,8 @@ import { admitMultiplicationRequest } from './admission.mjs';
 import { createWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
 import { recommendFormation } from './autoscaler.mjs';
+import { evaluateSwarmQuality } from './quality-gate.mjs';
+import { sanitizePrivateInventoryRows } from './private-inventory.mjs';
 
 const DEFAULT_REGISTRY = 'systemia/saban/multiplication-registry.json';
 
@@ -151,6 +153,7 @@ export function expandPartitionedWorkItems(contract, workItems) {
         key: `${item.key}:t${Math.floor(start)}-${Math.floor(end)}`,
         source_file: item.source_file,
         raw: {
+          ...(item.raw || {}),
           parent_key: item.key,
           media_ref: item.raw?.media_ref || null,
           start_seconds: start,
@@ -181,8 +184,8 @@ export function assignmentForIndex(plan, workItems, index) {
     const blockSize = workItems.length * roles.length;
     pass = Math.floor(index / blockSize);
     const withinBlock = index % blockSize;
-    roleIndex = Math.floor(withinBlock / workItems.length);
-    workIndex = withinBlock % workItems.length;
+    workIndex = Math.floor(withinBlock / roles.length);
+    roleIndex = withinBlock % roles.length;
   }
 
   const role = roles[roleIndex];
@@ -193,8 +196,21 @@ export function assignmentForIndex(plan, workItems, index) {
     raw: null
   };
 
+  const agentId = `${plan.software_id}-${String(logicalNumber).padStart(5, '0')}`;
+  const idempotencyKey = 'sha256:' + crypto
+    .createHash('sha256')
+    .update([
+      plan.software_id,
+      agentId,
+      role,
+      item.kind,
+      item.key
+    ].join(':'))
+    .digest('hex');
+
   return {
-    agent_id: `${plan.software_id}-${String(logicalNumber).padStart(5, '0')}`,
+    agent_id: agentId,
+    idempotency_key: idempotencyKey,
     logical_index: index,
     pass,
     physical_worker: (index % plan.physical_workers) + 1,
@@ -363,6 +379,18 @@ export async function executeMultiplicationPlan({
     reconciliation = await adapter[exportName]({ plan, contract, rootDir, results });
   }
 
+  const quality = evaluateSwarmQuality({
+    contract,
+    plan,
+    results,
+    schedulerSummary: schedulerReceipt.summary,
+    reconciliation
+  });
+  const resultsDigest = 'sha256:' + crypto
+    .createHash('sha256')
+    .update(JSON.stringify(results))
+    .digest('hex');
+
   return {
     schema: 'evercraft.saban.multiplication-receipt.v1',
     generated_at: new Date().toISOString(),
@@ -371,18 +399,28 @@ export async function executeMultiplicationPlan({
     physical_workers: plan.physical_workers,
     work_item_count: plan.work_item_count,
     result_summary: summarizeResults(results),
+    results_digest: resultsDigest,
     scheduler_summary: schedulerReceipt.summary,
     state_path: statePath,
     sample_results: results.slice(0, 24),
-    reconciliation
+    reconciliation,
+    quality
   };
 }
 
-export function loadPrivateInventory(inventoryPath) {
+export function loadPrivateInventory(inventoryPath, { privacy = null } = {}) {
   if (!inventoryPath) return [];
   const payload = readJson(inventoryPath, null);
   if (!payload) throw new Error(`Could not read inventory: ${inventoryPath}`);
   const rows = Array.isArray(payload) ? payload : payload.apps || payload.products || payload.items || payload.jobs || [];
+
+  if (privacy?.redact_identifiers === true) {
+    return sanitizePrivateInventoryRows(rows, {
+      ...privacy,
+      source_file: inventoryPath
+    });
+  }
+
   return rows
     .filter(Boolean)
     .map((row, index) => ({
@@ -401,12 +439,12 @@ async function main() {
   const execute = hasFlag(argv, '--execute');
   const reconcile = hasFlag(argv, '--reconcile');
   const resume = hasFlag(argv, '--resume');
-  const auto = hasFlag(argv, '--auto');
+  const auto = hasFlag(argv, '--auto') || (!hasFlag(argv, '--fixed') && !argv.includes('--agents'));
   const rootDir = process.cwd();
 
   const registry = loadMultiplicationRegistry(registryPath);
   const contract = resolveMultiplicationContract(software, registry);
-  const extraItems = loadPrivateInventory(inventoryPath);
+  const extraItems = loadPrivateInventory(inventoryPath, { privacy: contract.inventory_privacy || null });
   const workItems = expandPartitionedWorkItems(
     contract,
     loadWorkItems(contract, rootDir, extraItems)
@@ -478,6 +516,10 @@ async function main() {
   fs.mkdirSync(outDir, { recursive: true });
   const outFile = path.join(outDir, `${contract.software_id}-latest.json`);
   fs.writeFileSync(outFile, JSON.stringify(receipt, null, 2) + '\n');
+
+  if (receipt.quality?.status === 'fail' && receipt.quality?.enforcement === 'fail_execution') {
+    process.exitCode = 2;
+  }
 
   console.log(JSON.stringify({
     software: contract.software_id,
