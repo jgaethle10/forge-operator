@@ -84,5 +84,15 @@
     "payment_authority": "Evercraft Payments",
     "checkout_is_payment_proof": false,
     "paid_state_requires_authoritative_verification": true
+  },
+  "developer": {
+    "hub": "/forensiscope/developers/",
+    "quickstart": "/forensiscope/developers/quickstart.html",
+    "mcp": "/forensiscope/developers/mcp.html",
+    "workflows": "/forensiscope/developers/workflows.html",
+    "integrations": "/forensiscope/developers/integrations.html",
+    "status": "/forensiscope/developers/status.json",
+    "examples": "/forensiscope/developers/examples.json",
+    "llms": "/forensiscope/developers/llms.txt"
   }
 }
