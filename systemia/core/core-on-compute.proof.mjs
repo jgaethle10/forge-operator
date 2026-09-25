@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import dgram from 'node:dgram';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -6,12 +7,33 @@ import { startNodeSeed } from '../compute/node-seed.mjs';
 import { YardOperator } from '../yard/operator.mjs';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function freeUdpPort() {
+  const socket = dgram.createSocket('udp4');
+  await new Promise((resolve, reject) => {
+    socket.once('error', reject);
+    socket.bind(0, '127.0.0.1', resolve);
+  });
+  const address = socket.address();
+  const port = typeof address === 'object' ? address.port : 0;
+  await new Promise((resolve) => socket.close(resolve));
+  return port;
+}
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'systemia-core-compute-proof-'));
 const computeRoot = path.join(root, 'compute');
 const yardState = path.join(computeRoot, 'control', 'yard');
 const kaidanceRoot = path.join(computeRoot, 'services', 'kaidance');
 const coreRoot = path.join(computeRoot, 'services', 'systemia-core');
 const allocatorToken = 'core-compute-proof-token';
+const announcePort = await freeUdpPort();
+const discovery = {
+  bindAddress: '127.0.0.1',
+  multicastAddress: '127.0.0.1',
+  port: announcePort,
+  timeoutMs: 350,
+  joinMulticast: false,
+};
 
 const seed = await startNodeSeed({
   root: computeRoot,
@@ -20,18 +42,23 @@ const seed = await startNodeSeed({
   port: 0,
   advertiseHost: '127.0.0.1',
   allocatorToken,
-  announce: false,
+  announce: true,
+  announceAddress: '127.0.0.1',
+  announcePort,
+  announceIntervalMs: 100,
 });
 
 const yard = new YardOperator({ stateDir: yardState });
 
 try {
-  const kaidance = await yard.deployRelease({
+  const kaidance = await yard.deployDiscoveredRelease({
     deploymentId: 'kaidance-for-core-proof',
     releaseRef: 'e101fa959836ae9c26b52c0ebf6185a1f9957e92',
     workloadClass: 'systemia.kaidance-collider.v1',
-    capacityEndpoint: seed.endpoint,
-    allocatorToken,
+    allocatorTokens: {
+      'core-compute-proof-node': allocatorToken,
+    },
+    discovery,
     input: {
       state_root: kaidanceRoot,
       mission_source_policies: [
@@ -54,12 +81,14 @@ try {
   });
   assert.equal(kaidance.state, 'ready');
 
-  const core = await yard.deployRelease({
+  const core = await yard.deployDiscoveredRelease({
     deploymentId: 'systemia-core-supervisor-proof',
     releaseRef: 'e101fa959836ae9c26b52c0ebf6185a1f9957e92',
     workloadClass: 'systemia.core-supervisor.v1',
-    capacityEndpoint: seed.endpoint,
-    allocatorToken,
+    allocatorTokens: {
+      'core-compute-proof-node': allocatorToken,
+    },
+    discovery,
     input: {
       state_root: coreRoot,
       yard_state_dir: yardState,
@@ -76,6 +105,8 @@ try {
   assert.equal(core.receipt.route_verification, 'private_core_health_verified');
   assert.equal(core.result.supervised_service_count, 3);
   assert.ok(core.management.receipt_binding_hash);
+  assert.equal(core.discovery.selected_node_id, 'core-compute-proof-node');
+  assert.ok(core.discovery.receipt_hash);
 
   await sleep(800);
 
@@ -125,6 +156,8 @@ try {
     deployment_surface: 'Yard Operator',
     core_supervised_services: 3,
     private_workspace_verified: true,
+    capacity_endpoint_supplied_manually: false,
+    automatic_capacity_discovery_verified: true,
     yard_health_verified: true,
     deployment_receipt_bound: true,
     private_paths_redacted_from_health: true,
