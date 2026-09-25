@@ -31,3 +31,11 @@ The runtime desired state is declared in `evercraft.compute.json`.
 ## Runtime handoff
 
 The release artifact is published to GHCR only as a durable transport artifact. Yard Operator should hand the immutable image digest to Evercraft Compute, which allocates authorized Linux capacity through the internal compute fabric and binds the public route after verification.
+
+## Executable operator
+
+The deployment boundary is implemented in `systemia/yard/operator.mjs`.
+
+The operator consumes immutable release references, negotiates an `evercraft.capacity.v1` lease, invokes only an admitted workload, persists deployment state, verifies receipt completeness, and records rollback handoff authority.
+
+The first executable private workload is `systemia.private-core-origin.v1`, implemented by Evercraft Compute without any named cloud-provider dependency.
