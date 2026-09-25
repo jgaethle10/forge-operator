@@ -159,7 +159,13 @@ for (const product of directory.products || []) {
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
     distribution_surfaces: product.distribution_surfaces || null,
-    provider_behavior_state: 'not_inferred_from_publication'
+    provider_behavior_state: 'not_inferred_from_publication',
+    ...(conf?.machine_commerce_handoff_state ? {
+      machine_commerce_handoff_state: conf.machine_commerce_handoff_state,
+      machine_commerce_public_id: conf.machine_commerce_public_id || null,
+      machine_commerce_tool: conf.machine_commerce_tool || null,
+      live_canary_evidence: conf.live_canary_evidence || null
+    } : {})
   };
 
   const llms = [
