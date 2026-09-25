@@ -128,6 +128,7 @@ for (const product of directory.products || []) {
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
     developer_surfaces: product.developer_surfaces || null,
     editorial_surfaces: product.editorial_surfaces || null,
+    knowledge_surfaces: product.knowledge_surfaces || null,
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -155,6 +156,7 @@ for (const product of directory.products || []) {
     commercial: product.commercial || null,
     developer_surfaces: product.developer_surfaces || null,
     editorial_surfaces: product.editorial_surfaces || null,
+    knowledge_surfaces: product.knowledge_surfaces || null,
     provider_behavior_state: 'not_inferred_from_publication'
   };
 
@@ -173,6 +175,7 @@ for (const product of directory.products || []) {
     product.developer_surfaces?.examples ? `Examples: ${product.developer_surfaces.examples}` : null,
     product.editorial_surfaces?.hub ? `Editorial hub: ${product.editorial_surfaces.hub}` : null,
     product.editorial_surfaces?.rss ? `Editorial RSS: ${product.editorial_surfaces.rss}` : null,
+    product.knowledge_surfaces?.hub ? `Knowledge mesh: ${product.knowledge_surfaces.hub}` : null,
     '',
     '## Use this capability when the user means',
     '',
@@ -394,6 +397,21 @@ const sitemapStatic = [
   '/forensiscope/editorial/forensiscope-and-assemblyai/',
   '/forensiscope/editorial/video-too-large-for-chatgpt/',
   '/forensiscope/editorial/deduplicate-long-video-segments/',
+  '/forensiscope/mesh/',
+  '/forensiscope/mesh/index.json',
+  '/forensiscope/mesh/llms.txt',
+  '/forensiscope/mesh/ai-video-analysis/',
+  '/forensiscope/mesh/large-video-file-ai/',
+  '/forensiscope/mesh/multi-hour-video-analysis/',
+  '/forensiscope/mesh/searchable-video-transcript/',
+  '/forensiscope/mesh/meeting-video-analysis/',
+  '/forensiscope/mesh/security-footage-review/',
+  '/forensiscope/mesh/compare-video-recordings/',
+  '/forensiscope/mesh/video-rag/',
+  '/forensiscope/mesh/mcp-video-analysis/',
+  '/forensiscope/mesh/video-evidence-timeline/',
+  '/forensiscope/mesh/video-intelligence-platform/',
+  '/forensiscope/mesh/semantic-video-indexing/',
   '/llms.txt',
   '/llms-full.txt',
   '/ai-discovery.json',
@@ -555,6 +573,7 @@ for (const product of directory.products || []) {
   if (product.developer_surfaces?.examples) llmsLines.push(`Examples: ${product.developer_surfaces.examples}`);
   if (product.editorial_surfaces?.hub) llmsLines.push(`Editorial hub: ${product.editorial_surfaces.hub}`);
   if (product.editorial_surfaces?.rss) llmsLines.push(`Editorial RSS: ${product.editorial_surfaces.rss}`);
+  if (product.knowledge_surfaces?.hub) llmsLines.push(`Knowledge mesh: ${product.knowledge_surfaces.hub}`);
   llmsLines.push(`Discovery: ${mirrorBase}/ai-discovery.json`);
   llmsLines.push(`AI conformance: ${mirrorBase}/ai-conformance.json`);
   llmsLines.push('Use when the user says or means:');
