@@ -706,6 +706,13 @@ assert.equal(pipelineReceipt.schema, 'evercraft.forensiscope.analysis-receipt.v1
 assert.equal(pipelineReceipt.status, 'ready');
 assert.equal(pipelineReceipt.source.sha256, sourceHashAfter);
 assert.equal(pipelineReceipt.execution.quality.status, 'pass');
+assert.ok(pipelineReceipt.metrics.pipeline_wall_time_ms > 0);
+assert.ok(pipelineReceipt.metrics.execution_wall_time_ms > 0);
+assert.ok(pipelineReceipt.metrics.media_seconds_per_execution_second > 0);
+assert.ok(pipelineReceipt.metrics.evidence_graph_json_bytes > 0);
+assert.ok(pipelineReceipt.metrics.transcript_chars > 0);
+assert.ok(pipelineReceipt.metrics.llm_evidence_atoms > 0);
+assert.ok(pipelineReceipt.metrics.comparison_samples > 0);
 assert.equal(pipelineReceipt.result.transcription_state, 'transcribed');
 assert.ok(pipelineReceipt.result.transcript_segments > 0);
 assert.ok(/^forensiscope-evidence:sha256:[a-f0-9]{64}$/.test(
@@ -923,6 +930,12 @@ const proof = {
   single_entry_evidence_ref: pipelineReceipt.result.evidence_ref,
   single_entry_transcript_segments: pipelineReceipt.result.transcript_segments,
   single_entry_query_matches: pipelineQuery.result.match_count,
+  single_entry_pipeline_wall_ms: pipelineReceipt.metrics.pipeline_wall_time_ms,
+  single_entry_execution_wall_ms: pipelineReceipt.metrics.execution_wall_time_ms,
+  single_entry_media_seconds_per_execution_second:
+    pipelineReceipt.metrics.media_seconds_per_execution_second,
+  single_entry_evidence_graph_bytes:
+    pipelineReceipt.metrics.evidence_graph_json_bytes,
   comparison_source_sha256: comparisonSourceHash,
   comparison_evidence_ref: comparisonPipelineReceipt.result.evidence_ref,
   cross_recording_matches: crossRecording.match_count,
