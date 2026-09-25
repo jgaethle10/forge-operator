@@ -179,6 +179,7 @@ export interface SeriesEpisodePlan {
   filmPlan: FilmPlan;
   dialogue: DialogueCue[];
   continuity: ContinuityReport;
+  proposedCanon: CanonFact[];
   canonReceipt: string;
   createdAt: string;
 }
