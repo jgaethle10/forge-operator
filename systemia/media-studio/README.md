@@ -25,6 +25,9 @@ The durable product boundary lives above any single foundation model. Fallen own
 - Continuity contracts automatically injected into synthetic coverage requests.
 - Bible digests and episode canon receipts for reproducible continuity auditing.
 - Proposed-canon output for human review rather than silently rewriting the show's history.
+- Provider-neutral production work graph for generated shots and voice-locked dialogue.
+- Verified creative-department router that refuses declared-but-unverified providers.
+- Capability routing for reference identity, voice locks, timing, rights and provenance requirements.
 - Deterministic tests for the core director and Series Mode continuity gate.
 
 ## Commands
@@ -70,7 +73,7 @@ This is the foundation for recurring cartoons, serialized films, recurring comme
 1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
 2. **Remember**: maintain persistent series/brand bibles, identity fingerprints, canon and approved evolution.
 3. **Direct**: turn intent into a storyboard, camera language, dialogue, performance direction and coverage plan.
-4. **Generate**: route image, image-to-video, video, speech, music and SFX work through replaceable provider adapters.
+4. **Generate**: compile provider-neutral production needs, then route only to verified departments that satisfy continuity, rights, provenance, timing and media-shape requirements.
 5. **Reconcile**: compare generated assets against identity, canon, provenance and quality requirements before accepting them.
 6. **Edit**: preserve scene-level regeneration and non-destructive versions instead of flattening the project too early.
 7. **Render**: assemble deterministic platform-ready outputs with audio mixing, captions and delivery variants.
