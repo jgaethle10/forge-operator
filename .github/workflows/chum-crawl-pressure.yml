@@ -41,10 +41,18 @@ jobs:
         if: github.event_name == 'push'
         run: npm run chum:crawl-pressure
 
+      - name: Pull CHUM Sonar observations
+        env:
+          CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
+          CHUM_CRAWL_OBSERVATORY_URL: ${{ vars.CHUM_CRAWL_OBSERVATORY_URL }}
+          CHUM_CRAWL_OBSERVATORY_TOKEN: ${{ secrets.CHUM_CRAWL_OBSERVATORY_TOKEN }}
+        run: node systemia/chum/crawl-sonar-pull.mjs
+
       - name: Verify live release and request recrawl
         env:
           CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
           CHUM_CRAWL_MAX_URLS: "1000"
+          CHUM_CRAWL_OBSERVATION_STATE: artifacts/chum/crawl-observation-live.json
         run: npm run chum:crawl-pressure:broadcast
 
       - name: Persist crawl-pressure state
@@ -89,5 +97,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chum-crawl-pressure-receipt
-          path: artifacts/chum/crawl-pressure-latest.*
+          path: |
+            artifacts/chum/crawl-pressure-latest.*
+            artifacts/chum/crawl-offense-plan-latest.json
+            artifacts/chum/crawl-sonar-pull-latest.json
+            artifacts/chum/crawl-observation-live.json
           if-no-files-found: warn
