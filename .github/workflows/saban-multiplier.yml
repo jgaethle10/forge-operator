@@ -9,6 +9,7 @@ on:
       - ".github/workflows/saban-multiplier.yml"
   push:
     branches:
+      - "main"
       - "systemia/saban-software-multiplier-v1"
     paths:
       - "systemia/saban/**"
