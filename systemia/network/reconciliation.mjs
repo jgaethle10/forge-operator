@@ -88,7 +88,24 @@ export function reconcileCheckpoints(replicas) {
     });
   }
 
-  const byHash = new Map(valid.map((row) => [row.checkpoint.checkpoint_hash, row.checkpoint]));
+  const historyValid = [];
+  const historyInvalid = [];
+  for (const replica of replicas || []) {
+    for (const checkpoint of replica.history || []) {
+      const check = validateCheckpoint(checkpoint);
+      if (check.valid) historyValid.push(checkpoint);
+      else historyInvalid.push({
+        node_id: replica.node_id,
+        reason: `history_${check.reason}`,
+        checkpoint_hash: checkpoint?.checkpoint_hash || null
+      });
+    }
+  }
+
+  const byHash = new Map();
+  for (const checkpoint of historyValid) byHash.set(checkpoint.checkpoint_hash, checkpoint);
+  for (const row of valid) byHash.set(row.checkpoint.checkpoint_hash, row.checkpoint);
+
   const lineageValid = [];
   const lineageInvalid = [];
 
@@ -129,7 +146,7 @@ export function reconcileCheckpoints(replicas) {
       status: 'HOLD_CONFLICT',
       canonical: null,
       forks,
-      invalid: [...invalid, ...lineageInvalid],
+      invalid: [...invalid, ...historyInvalid, ...lineageInvalid],
       refill_nodes: [],
       auto_resume_allowed: false
     };
@@ -141,7 +158,7 @@ export function reconcileCheckpoints(replicas) {
       status: 'NO_VALID_CHECKPOINT',
       canonical: null,
       forks: [],
-      invalid: [...invalid, ...lineageInvalid],
+      invalid: [...invalid, ...historyInvalid, ...lineageInvalid],
       refill_nodes: [],
       auto_resume_allowed: false
     };
@@ -165,7 +182,7 @@ export function reconcileCheckpoints(replicas) {
       checkpoint: canonical.checkpoint
     },
     forks: [],
-    invalid: [...invalid, ...lineageInvalid],
+    invalid: [...invalid, ...historyInvalid, ...lineageInvalid],
     stale: sorted.slice(1).map((row) => ({
       node_id: row.node_id,
       generation: row.checkpoint.generation,
