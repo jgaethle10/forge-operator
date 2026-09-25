@@ -14,6 +14,7 @@ const FORMAT_BEATS: Record<ProjectFormat, StoryBeat[]> = {
   commercial: ['hook', 'setup', 'proof', 'development', 'cta'],
   social_short: ['hook', 'proof', 'turn', 'cta'],
   short_film: ['hook', 'setup', 'development', 'turn', 'climax', 'resolution'],
+  episode: ['hook', 'setup', 'development', 'turn', 'climax', 'resolution'],
 };
 
 const BEAT_INTENT: Record<StoryBeat, string> = {
@@ -44,6 +45,7 @@ function clamp(n: number, min: number, max: number) {
 
 function defaultDuration(format: ProjectFormat) {
   if (format === 'social_short') return 20;
+  if (format === 'episode') return 600;
   if (format === 'short_film') return 90;
   return 30;
 }
@@ -109,7 +111,7 @@ function generationRequestsFor(project: MediaProject, aspectRatio: AspectRatio):
       id: safeId('gen'),
       reason: 'coverage_gap',
       prompt: `Create one or more original establishing/detail shots that support this brief without inventing factual claims: ${project.brief.prompt}`,
-      durationSec: format === 'short_film' ? 6 : 3,
+      durationSec: format === 'short_film' || format === 'episode' ? 6 : 3,
       aspectRatio,
       status: 'requested',
     });
@@ -132,7 +134,8 @@ function generationRequestsFor(project: MediaProject, aspectRatio: AspectRatio):
 export function compileFilmPlan(project: MediaProject): FilmPlan {
   const format = project.brief.format ?? 'commercial';
   const aspectRatio = project.brief.aspectRatio ?? (format === 'social_short' ? '9:16' : '16:9');
-  const durationSec = clamp(project.brief.durationSec ?? defaultDuration(format), 6, 300);
+  const maxDurationSec = format === 'episode' ? 3600 : 300;
+  const durationSec = clamp(project.brief.durationSec ?? defaultDuration(format), 6, maxDurationSec);
   const visuals = chooseVisuals(project.assets);
 
   if (!project.brief.prompt?.trim()) throw new Error('brief.prompt is required.');
