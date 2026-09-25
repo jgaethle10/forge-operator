@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "node001-field-certification-watch",
+  "mission_key": "node001-megatron-field-certification",
+  "runtime": "systemia-organism+collider",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "issue_ref": "github:issue:175",
+  "candidate_key": "megatron-node001-candidate",
+  "entrypoint": "systemia/organism/node001-field-certification-runner.mjs",
+  "proof": "systemia/organism/node001-field-certification.proof.mjs",
+  "authority": {
+    "observe_receipts": "autonomous",
+    "evaluate_progress": "autonomous",
+    "yard_enrollment_after_valid_evidence": "authorized_workflow",
+    "physical_host_access": "explicit_field_authorization_required",
+    "reboot_machine": "human_or_authorized_device_operator",
+    "offline_network_isolation": "human_or_authorized_device_operator",
+    "publish_secrets": false
+  },
+  "collider": {
+    "heartbeat_seconds": 300,
+    "mission_snapshot_schema": "evercraft.kaidance.mission-snapshot.v1",
+    "material_change_only": true
+  }
+}

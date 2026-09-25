@@ -1,0 +1,25 @@
+name: Node 001 field mission tracker
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/node001-field-certification*'
+      - '.github/workflows/node001-field-mission.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/organism/node001-field-certification*'
+      - '.github/workflows/node001-field-mission.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Node 001 field mission progression
+        run: node systemia/organism/node001-field-certification.proof.mjs
