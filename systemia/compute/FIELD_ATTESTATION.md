@@ -56,3 +56,24 @@ field_attestation.state = "not_verified"
 ```
 
 That status may only become `verified` after a real field enrollment exists for the exact device fingerprint and node ID.
+
+
+## Direct Yard intake
+
+A completed field evidence candidate can be consumed without hand-transcribing its fields:
+
+```bash
+node systemia/yard/enroll-field-device.mjs \
+  --state-dir /private/yard \
+  --evidence /private/field-evidence-candidate.json
+```
+
+After the exact device identity is enrolled and KAIDANCE is deployed through Yard, query the safe operational answer directly:
+
+```bash
+node systemia/yard/kaidance-pulse.mjs \
+  --state-dir /private/yard \
+  --deployment-id <kaidance-deployment-id>
+```
+
+The pulse command reads Yard's private deployment/lease state, challenges the live NodeSeed identity, evaluates field enrollment, and returns only the privacy-safe KAIDANCE pulse.
