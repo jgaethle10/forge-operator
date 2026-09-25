@@ -1,4 +1,5 @@
 import { queryEvidenceGraph } from './evidence-query.mjs';
+import { buildContextPacket } from './context-packet.mjs';
 
 export const FORENSISCOPE_AGENT_TOOLS = Object.freeze([
   {
@@ -11,6 +12,21 @@ export const FORENSISCOPE_AGENT_TOOLS = Object.freeze([
       properties: {
         query: { type: 'string', minLength: 1, maxLength: 4000 },
         top_k: { type: 'integer', minimum: 1, maximum: 20, default: 5 },
+        context_radius_seconds: { type: 'number', minimum: 0, maximum: 300, default: 10 }
+      }
+    }
+  },
+  {
+    name: 'forensiscope_build_context_packet',
+    description: 'Compress relevant evidence for a question into a source-linked packet bounded for a downstream model context window.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['query'],
+      properties: {
+        query: { type: 'string', minLength: 1, maxLength: 4000 },
+        max_chars: { type: 'integer', minimum: 1000, maximum: 200000, default: 12000 },
+        top_k: { type: 'integer', minimum: 1, maximum: 20, default: 8 },
         context_radius_seconds: { type: 'number', minimum: 0, maximum: 300, default: 10 }
       }
     }
@@ -131,6 +147,14 @@ export function invokeForensiScopeAgentTool({
     case 'forensiscope_query_evidence':
       return queryEvidenceGraph(graph, {
         query: args.query,
+        topK: args.top_k,
+        contextRadiusSeconds: args.context_radius_seconds
+      });
+
+    case 'forensiscope_build_context_packet':
+      return buildContextPacket(graph, {
+        query: args.query,
+        maxChars: args.max_chars,
         topK: args.top_k,
         contextRadiusSeconds: args.context_radius_seconds
       });
