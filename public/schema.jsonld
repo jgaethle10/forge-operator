@@ -26,7 +26,11 @@
       "name": "AliEV",
       "alternateName": [
         "AliEV EV Charging Opportunity Intelligence",
-        "AliEV EV Site Analysis"
+        "AliEV EV Site Analysis",
+        "RIVET",
+        "RIVET EV Infrastructure Intelligence",
+        "Evercraft RIVET",
+        "RIVET / AliEV"
       ],
       "url": "https://aliev.base44.app/",
       "provider": {

@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 93
-Unique user phrases: 648
-Candidate edges: 707
+Unique user phrases: 667
+Candidate edges: 726
 Ambiguous phrases: 59
 
 ## 15 GB video analysis
@@ -234,6 +234,13 @@ Human-readable match: /chum/answers/doors/analyze-video-from-a-cloud-storage-url
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## apartment EV charging site analysis
+Answer ID: intent:a4fc7910cc
+Human-readable match: /chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## application network continuity
 Answer ID: intent:3ac8582e22
@@ -1133,6 +1140,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
 
+## EV charger competition near this address
+Answer ID: intent:aa69cb1075
+Human-readable match: /chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## EV charger feasibility by address
+Answer ID: intent:8a81d21c84
+Human-readable match: /chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
 ## EV charger investment report
 Answer ID: intent:ed6fd3f23a
 Human-readable match: /chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/
@@ -1147,6 +1168,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
 
+## EV charging demand near this property
+Answer ID: intent:76a21ea75b
+Human-readable match: /chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
 ## EV charging diligence
 Answer ID: intent:91e2eec236
 Human-readable match: /chum/answers/doors/ev-charging-diligence-91e2eec236/
@@ -1160,6 +1188,13 @@ Human-readable match: /chum/answers/doors/ev-charging-feasibility-by-address-734
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
+## EV charging incentives for this site
+Answer ID: intent:76fa0b5a6c
+Human-readable match: /chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## EV charging opportunity report
 Answer ID: intent:43ed1d1e31
@@ -1182,10 +1217,31 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
+## EV charging ROI for this property
+Answer ID: intent:23181c0dbc
+Human-readable match: /chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
 ## EV charging site
 Answer ID: intent:ce5de7047c
 Human-readable match: /chum/answers/doors/ev-charging-site-ce5de7047c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-site-ce5de7047c.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## EV charging site analysis by address
+Answer ID: intent:1e6ee8e9ee
+Human-readable match: /chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## EV infrastructure intelligence for a specific address
+Answer ID: intent:f9a1407d7b
+Human-readable match: /chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
@@ -1691,6 +1747,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/containment
 
+## fleet depot EV charging site screening
+Answer ID: intent:8e120b3526
+Human-readable match: /chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
 ## founder readiness
 Answer ID: intent:41eaa40577
 Human-readable match: /chum/answers/doors/founder-readiness-41eaa40577/
@@ -2011,6 +2074,13 @@ Human-readable match: /chum/answers/doors/home-stability-help-b3ad9f869f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/home-stability-help-b3ad9f869f.json
 Candidates:
 - Raven Nexus Modular Safety & Stability | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+
+## hotel EV charging site analysis
+Answer ID: intent:7464f372e9
+Human-readable match: /chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## household connectivity resilience
 Answer ID: intent:846c28a64f
@@ -2877,6 +2947,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - SkyOps Parking | kind=product | commercial=product_contract | machine=discovery_only | public=https://skyopsparking.base44.app/
 
+## parking lot EV charging opportunity
+Answer ID: intent:34e75d677f
+Human-readable match: /chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
 ## parking owner dashboard
 Answer ID: intent:c9ad13bd21
 Human-readable match: /chum/answers/doors/parking-owner-dashboard-c9ad13bd21/
@@ -2968,6 +3045,20 @@ Human-readable match: /chum/answers/doors/practice-position-sizing-and-setup-qua
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-position-sizing-and-setup-quality-8ac43cbf04.json
 Candidates:
 - DayTrade Lens | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
+
+## preliminary EV charger layout for a property
+Answer ID: intent:3f96a044d6
+Human-readable match: /chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## preliminary EV charging site plan
+Answer ID: intent:4551e88b1c
+Human-readable match: /chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## prepare a bounded capital-fit brief
 Answer ID: intent:e2ae96e78b
@@ -3421,6 +3512,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Career Command Resume + Job Fit Audit | kind=machine_offer | commercial=verify | machine=discovery_only | public=https://evercraft-career-command.base44.app/
 
+## retail EV charging site analysis
+Answer ID: intent:49b6979e0f
+Human-readable match: /chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
 ## return public-safe geospatial evidence
 Answer ID: intent:a12af72d59
 Human-readable match: /chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59/
@@ -3519,6 +3617,20 @@ Human-readable match: /chum/answers/doors/review-whether-i-am-revenge-trading-or
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/review-whether-i-am-revenge-trading-or-tilting-58782bffc6.json
 Candidates:
 - DayTrade Lens | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
+
+## RIVET EV charging report
+Answer ID: intent:09f613a2a6
+Human-readable match: /chum/answers/doors/rivet-ev-charging-report-09f613a2a6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rivet-ev-charging-report-09f613a2a6.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## RIVET EV infrastructure analysis
+Answer ID: intent:ea6b87f30e
+Human-readable match: /chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## roast my bio
 Answer ID: intent:49d4d55cb1
@@ -3710,6 +3822,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Decision Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemiadecisionlab.base44.app/
 
+## should I install EV chargers at my property
+Answer ID: intent:8391032a42
+Human-readable match: /chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
 ## should I install EV chargers at this property
 Answer ID: intent:cccfe7bfe5
 Human-readable match: /chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5/
@@ -3775,6 +3894,13 @@ Human-readable match: /chum/answers/doors/site-resilience-audit-64b6ec62c2/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-resilience-audit-64b6ec62c2.json
 Candidates:
 - Site-Survive Rapid Audit | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+
+## site-specific EV charging opportunity report
+Answer ID: intent:6ff61b4426
+Human-readable match: /chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## skills based hiring
 Answer ID: intent:b6991ed7ee
@@ -4185,6 +4311,13 @@ Human-readable match: /chum/answers/doors/unsupported-media-codec-or-format-6a67
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/unsupported-media-codec-or-format-6a67a41c3e.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## utility tariff for EV charging at this property
+Answer ID: intent:affaf0c924
+Human-readable match: /chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json
+Candidates:
+- AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## valet-style vehicle staging and retrieval
 Answer ID: intent:5298036cb9

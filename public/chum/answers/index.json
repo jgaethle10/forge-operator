@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 93,
-    "unique_user_phrases": 648,
-    "mapped_candidate_edges": 707,
+    "unique_user_phrases": 667,
+    "mapped_candidate_edges": 726,
     "ambiguous_phrases": 59,
     "product_candidates": 50,
     "machine_offer_candidates": 43
@@ -761,6 +761,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a4fc7910cc",
+      "user_language": "apartment EV charging site analysis",
+      "normalized": "apartment ev charging site analysis",
+      "relative_json": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "relative_page": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
         }
       ]
     },
@@ -3855,6 +3878,52 @@
       ]
     },
     {
+      "answer_id": "intent:aa69cb1075",
+      "user_language": "EV charger competition near this address",
+      "normalized": "ev charger competition near this address",
+      "relative_json": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
+      "relative_page": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8a81d21c84",
+      "user_language": "EV charger feasibility by address",
+      "normalized": "ev charger feasibility by address",
+      "relative_json": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
+      "relative_page": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ed6fd3f23a",
       "user_language": "EV charger investment report",
       "normalized": "ev charger investment report",
@@ -3901,6 +3970,29 @@
       ]
     },
     {
+      "answer_id": "intent:76a21ea75b",
+      "user_language": "EV charging demand near this property",
+      "normalized": "ev charging demand near this property",
+      "relative_json": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
+      "relative_page": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:91e2eec236",
       "user_language": "EV charging diligence",
       "normalized": "ev charging diligence",
@@ -3943,6 +4035,29 @@
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
           "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:76fa0b5a6c",
+      "user_language": "EV charging incentives for this site",
+      "normalized": "ev charging incentives for this site",
+      "relative_json": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
+      "relative_page": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
         }
       ]
     },
@@ -4016,12 +4131,81 @@
       ]
     },
     {
+      "answer_id": "intent:23181c0dbc",
+      "user_language": "EV charging ROI for this property",
+      "normalized": "ev charging roi for this property",
+      "relative_json": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
+      "relative_page": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ce5de7047c",
       "user_language": "EV charging site",
       "normalized": "ev charging site",
       "relative_json": "/chum/answers/doors/ev-charging-site-ce5de7047c.json",
       "relative_page": "/chum/answers/doors/ev-charging-site-ce5de7047c/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-site-ce5de7047c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1e6ee8e9ee",
+      "user_language": "EV charging site analysis by address",
+      "normalized": "ev charging site analysis by address",
+      "relative_json": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
+      "relative_page": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f9a1407d7b",
+      "user_language": "EV infrastructure intelligence for a specific address",
+      "normalized": "ev infrastructure intelligence for a specific address",
+      "relative_json": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
+      "relative_page": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -5732,6 +5916,29 @@
       ]
     },
     {
+      "answer_id": "intent:8e120b3526",
+      "user_language": "fleet depot EV charging site screening",
+      "normalized": "fleet depot ev charging site screening",
+      "relative_json": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
+      "relative_page": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:41eaa40577",
       "user_language": "founder readiness",
       "normalized": "founder readiness",
@@ -6835,6 +7042,29 @@
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
           "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7464f372e9",
+      "user_language": "hotel EV charging site analysis",
+      "normalized": "hotel ev charging site analysis",
+      "relative_json": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
+      "relative_page": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
         }
       ]
     },
@@ -9777,6 +10007,29 @@
       ]
     },
     {
+      "answer_id": "intent:34e75d677f",
+      "user_language": "parking lot EV charging opportunity",
+      "normalized": "parking lot ev charging opportunity",
+      "relative_json": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
+      "relative_page": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c9ad13bd21",
       "user_language": "parking owner dashboard",
       "normalized": "parking owner dashboard",
@@ -10084,6 +10337,52 @@
           "pain_page": "/chum/products/daytrade-lens/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3f96a044d6",
+      "user_language": "preliminary EV charger layout for a property",
+      "normalized": "preliminary ev charger layout for a property",
+      "relative_json": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6.json",
+      "relative_page": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:4551e88b1c",
+      "user_language": "preliminary EV charging site plan",
+      "normalized": "preliminary ev charging site plan",
+      "relative_json": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
+      "relative_page": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
         }
       ]
     },
@@ -11608,6 +11907,29 @@
       ]
     },
     {
+      "answer_id": "intent:49b6979e0f",
+      "user_language": "retail EV charging site analysis",
+      "normalized": "retail ev charging site analysis",
+      "relative_json": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
+      "relative_page": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:a12af72d59",
       "user_language": "return public-safe geospatial evidence",
       "normalized": "return public safe geospatial evidence",
@@ -11938,6 +12260,52 @@
           "pain_page": "/chum/products/daytrade-lens/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:09f613a2a6",
+      "user_language": "RIVET EV charging report",
+      "normalized": "rivet ev charging report",
+      "relative_json": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6.json",
+      "relative_page": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rivet-ev-charging-report-09f613a2a6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ea6b87f30e",
+      "user_language": "RIVET EV infrastructure analysis",
+      "normalized": "rivet ev infrastructure analysis",
+      "relative_json": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e.json",
+      "relative_page": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
         }
       ]
     },
@@ -12575,6 +12943,29 @@
       ]
     },
     {
+      "answer_id": "intent:8391032a42",
+      "user_language": "should I install EV chargers at my property",
+      "normalized": "should i install ev chargers at my property",
+      "relative_json": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
+      "relative_page": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:cccfe7bfe5",
       "user_language": "should I install EV chargers at this property",
       "normalized": "should i install ev chargers at this property",
@@ -12814,6 +13205,29 @@
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6ff61b4426",
+      "user_language": "site-specific EV charging opportunity report",
+      "normalized": "site specific ev charging opportunity report",
+      "relative_json": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
+      "relative_page": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
         }
       ]
     },
@@ -14196,6 +14610,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:affaf0c924",
+      "user_language": "utility tariff for EV charging at this property",
+      "normalized": "utility tariff for ev charging at this property",
+      "relative_json": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
+      "relative_page": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:aliev",
+          "kind": "product",
+          "product_key": "aliev",
+          "public_id": null,
+          "name": "AliEV",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/aliev/",
+          "public_url": "https://aliev.base44.app/",
+          "registry_name": "io.github.jgaethle10/aliev"
         }
       ]
     },

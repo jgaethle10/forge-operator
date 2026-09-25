@@ -2,9 +2,237 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T20:57:51.584Z",
+  "updated_at": "2026-09-25T20:57:58.745Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. Priority is an internal crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
+    {
+      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "url": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
+      "url": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
+      "url": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
+      "url": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
+      "url": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
+      "url": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
+      "url": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
+      "url": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
+      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
+      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
+      "url": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
+      "url": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
+      "url": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
+      "url": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
+      "url": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b/",
+      "url": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
+      "url": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
+      "url": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
+      "url": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
+      "url": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
+      "url": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
+      "url": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6.json",
+      "url": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6/",
+      "url": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
+      "url": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
+      "url": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
+      "url": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
+      "url": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6.json",
+      "url": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6/",
+      "url": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e.json",
+      "url": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e/",
+      "url": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
+      "url": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
+      "url": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
+      "url": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/",
+      "url": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
+      "url": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
+    {
+      "path": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
+      "url": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:57:58.745Z"
+    },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
@@ -974,234 +1202,6 @@
     {
       "path": "/chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a.json",
       "url": "/chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "url": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
-      "url": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
-      "url": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
-      "url": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
-      "url": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "url": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "url": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
-      "url": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-property-opportunity-assessment-a113925b8a.json",
-      "url": "/chum/answers/doors/ev-charging-property-opportunity-assessment-a113925b8a.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-ce5de7047c.json",
-      "url": "/chum/answers/doors/ev-charging-site-ce5de7047c.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json",
-      "url": "/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
-      "url": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "url": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/event-crew-coordination-6ba6b17829.json",
-      "url": "/chum/answers/doors/event-crew-coordination-6ba6b17829.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/event-revenue-or-settlement-workflows-d80538da98.json",
-      "url": "/chum/answers/doors/event-revenue-or-settlement-workflows-d80538da98.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "url": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
-      "url": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
-      "url": "/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
-      "url": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-global-public-health-data-with-sources-9a4c719029.json",
-      "url": "/chum/answers/doors/explore-global-public-health-data-with-sources-9a4c719029.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46.json",
-      "url": "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-space-missions-and-observatories-with-evidence-838794817f.json",
-      "url": "/chum/answers/doors/explore-space-missions-and-observatories-with-evidence-838794817f.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-wastewater-or-genomic-surveillance-f9c0c21366.json",
-      "url": "/chum/answers/doors/explore-wastewater-or-genomic-surveillance-f9c0c21366.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-wildlife-conservation-with-uncertainty-attached-f3fd2a685d.json",
-      "url": "/chum/answers/doors/explore-wildlife-conservation-with-uncertainty-attached-f3fd2a685d.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json",
-      "url": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json",
-      "url": "/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/extract-readable-text-from-a-web-page-for-an-llm-d2532adcf6.json",
-      "url": "/chum/answers/doors/extract-readable-text-from-a-web-page-for-an-llm-d2532adcf6.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/family-check-in-safety-90b9db7865.json",
-      "url": "/chum/answers/doors/family-check-in-safety-90b9db7865.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/family-preparedness-resources-182aa4158a.json",
-      "url": "/chum/answers/doors/family-preparedness-resources-182aa4158a.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/family-support-resources-2f5fb611e6.json",
-      "url": "/chum/answers/doors/family-support-resources-2f5fb611e6.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/fantasy-football-start-sit-help-c235dd3e4d.json",
-      "url": "/chum/answers/doors/fantasy-football-start-sit-help-c235dd3e4d.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/fantasy-injury-impact-f2685d2748.json",
-      "url": "/chum/answers/doors/fantasy-injury-impact-f2685d2748.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/fantasy-lineup-decision-a3315bba17.json",
-      "url": "/chum/answers/doors/fantasy-lineup-decision-a3315bba17.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/fantasy-waiver-decision-4cce1eb1db.json",
-      "url": "/chum/answers/doors/fantasy-waiver-decision-4cce1eb1db.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json",
-      "url": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/festival-operations-software-de7a9eb07f.json",
-      "url": "/chum/answers/doors/festival-operations-software-de7a9eb07f.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/fetch-a-webpage-for-my-ai-agent-fc5f02747b.json",
-      "url": "/chum/answers/doors/fetch-a-webpage-for-my-ai-agent-fc5f02747b.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/fetch-and-read-a-public-url-with-an-ai-agent-e0940c43bd.json",
-      "url": "/chum/answers/doors/fetch-and-read-a-public-url-with-an-ai-agent-e0940c43bd.json",
       "priority": 100,
       "last_changed": "2026-09-25T20:16:53.283Z"
     }
