@@ -242,6 +242,9 @@
         "required_executables": [
           "ffmpeg",
           "ffprobe"
+        ],
+        "required_services": [
+          "forensiscope_transcription"
         ]
       },
       "transport": {
