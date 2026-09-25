@@ -6,12 +6,34 @@ import { fileURLToPath } from 'node:url';
 import { startEvercraftComputeNode } from './runtime-node.mjs';
 import { startCapacityBeacon } from './capacity-beacon.mjs';
 import { loadOrCreateDeviceIdentity } from './device-identity.mjs';
+import { verifyFieldRelease } from './field-release.mjs';
 
 function arg(name, fallback = null) {
   const i = process.argv.indexOf(name);
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 }
 function has(name) { return process.argv.includes(name); }
+
+function loadRuntimeRelease() {
+  const self = fileURLToPath(import.meta.url);
+  const codeRoot = path.resolve(path.dirname(self), '../..');
+  const manifestFile = path.join(codeRoot, 'FIELD_RELEASE.json');
+  if (!fs.existsSync(manifestFile)) return null;
+
+  const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8'));
+  const verified = verifyFieldRelease({
+    root: codeRoot,
+    manifest,
+  });
+  if (!verified.ok) {
+    throw new Error(`field_release_verification_failed:${verified.reason}`);
+  }
+  return {
+    source_commit: verified.source_commit,
+    payload_digest: verified.payload_digest,
+    source_repository: verified.source_repository,
+  };
+}
 
 function firstLanIpv4() {
   for (const rows of Object.values(os.networkInterfaces())) {
@@ -41,6 +63,7 @@ export async function startNodeSeed({
     root: resolvedRoot,
     nodeId,
   });
+  const runtimeRelease = loadRuntimeRelease();
 
   const compute = await startEvercraftComputeNode({
     nodeId,
@@ -49,6 +72,7 @@ export async function startNodeSeed({
     port,
     allocatorToken,
     deviceIdentity,
+    runtimeRelease,
   });
 
   const actualPort = Number(new URL(compute.endpoint).port);
@@ -79,6 +103,8 @@ export async function startNodeSeed({
     root: resolvedRoot,
     allocation_auth: allocatorToken ? 'bearer' : 'loopback_only',
     device_fingerprint: deviceIdentity.fingerprint,
+    runtime_release_ref: runtimeRelease?.source_commit || null,
+    runtime_payload_digest: runtimeRelease?.payload_digest || null,
     beacon: announce ? {
       schema: 'evercraft.capacity.beacon.v1',
       address: announceAddress,
@@ -137,6 +163,8 @@ if (isCli) {
     endpoint: seed.endpoint,
     allocation_auth: seed.allocation_auth,
     device_fingerprint: seed.device_fingerprint,
+    runtime_release_ref: seed.runtime_release_ref,
+    runtime_payload_digest: seed.runtime_payload_digest,
     beacon: seed.beacon ? { address: seed.beacon.address, port: seed.beacon.port } : null,
     named_cloud_required: false,
   }, null, 2));
