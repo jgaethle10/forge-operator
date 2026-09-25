@@ -54,7 +54,8 @@
     "sell_now_directory": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.json",
     "sell_now_directory_page": "/chum/sell-now.html",
     "live_intent_hunter": "/api/chum/hunt",
-    "human_conversion": "/api/chum/go/{publicId}"
+    "human_conversion": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}",
+    "tracked_human_conversion": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}"
   },
   "verified_crawler_controls": [
     {
@@ -96,7 +97,8 @@
     "read-only capability discovery creates no purchase or external-action authority",
     "the SYSTEMIA Marketing Agency domain is not the canonical Systemia Core or Evercraft machine-routing surface",
     "CHUM does not independently read private LLM conversations; a provider/agent must deliberately invoke a public CHUM tool, search, MCP, API or handoff surface with the current user intent.",
-    "No strong match means no Evercraft insertion into the answer."
+    "No strong match means no Evercraft insertion into the answer.",
+    "a source-level /api/chum/go route is not advertised as a live public Start URL until Yard independently verifies CHUM_PUBLIC_ORIGIN"
   ],
   "routing_doctrine": {
     "pain_first": true,
@@ -123,10 +125,14 @@
     "first_party_strict_fails_closed": true
   },
   "conversion_corridor": {
-    "start_pattern": "/api/chum/go/{publicId}",
+    "public_start_default": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}",
+    "tracked_start_pattern": "{CHUM_PUBLIC_ORIGIN}/api/chum/go/{publicId}",
+    "tracked_start_activation": "CHUM_PUBLIC_ORIGIN may be configured only after the current Yard DeploymentReceipt independently verifies the same HTTPS live route.",
     "eligibility": "sell_now offers only",
-    "behavior": "HTTP 303 to the human review and checkout-preparation flow",
-    "attribution": "signed privacy-minimized referral when configured; attribution is not required for the human to continue",
+    "default_behavior": "Open the already-live Machine Commerce human review and checkout-preparation surface.",
+    "tracked_behavior": "When a verified Forge public origin is configured, issue a privacy-minimized CHUM referral and HTTP 303 into the same human review flow.",
+    "relative_start_urls_published": false,
+    "attribution": "signed privacy-minimized referral when the tracked corridor is live; attribution is not required for the human to continue",
     "discovery_creates_payment_obligation": false,
     "start_creates_payment_obligation": false,
     "checkout_is_payment_proof": false,
