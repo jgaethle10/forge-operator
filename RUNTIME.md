@@ -51,3 +51,10 @@ If the attribution secret/sink is absent, public discovery may continue, but sig
 - `POST /api/forge/deep-dive` - implementation blueprint
 
 Public AI endpoints are rate-limited in-process to reduce accidental or abusive model spend. A shared fabric-level limiter should replace the in-process limiter when Forge scales across multiple Evercraft Compute leases.
+
+
+## Self-hosted discovery origin
+
+The lightweight public discovery lane can run as `systemia.chum-public-origin.v1` on Evercraft Compute. This resident service is intentionally read-only and serves the public CHUM/LLM/crawler surfaces without exposing private Systemia topology.
+
+A local healthy service does not become `CHUM_PUBLIC_ORIGIN` by inference. Yard must independently verify a public HTTPS route against both the resident instance ID and the bound deployment receipt. The resulting sanitized runtime-origin receipt can then activate Crawl Pressure's live-byte verification and IndexNow broadcast path.
