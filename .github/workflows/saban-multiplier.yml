@@ -67,6 +67,9 @@ jobs:
       - name: Prove active NodeSeed pool failover
         run: npm run proof:saban-nodeseed-pool
 
+      - name: Prove privacy-safe portfolio archaeology
+        run: npm run proof:saban-portfolio-archaeology
+
       - name: Prove distributed ForensiScope media execution
         run: npm run proof:forensiscope-distributed
 
