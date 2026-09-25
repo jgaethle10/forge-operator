@@ -385,6 +385,7 @@ for (const offer of output.discovery_offers) {
     ]
   };
 
+  const isRivet=offer.public_id==='rivet-site-underwriting-v1';
   const page = [
     '<!doctype html>',
     '<html lang="en"><head><meta charset="utf-8">',
@@ -392,6 +393,7 @@ for (const offer of output.discovery_offers) {
     `<title>${escapeHtml(offer.name)} | Evercraft</title>`,
     `<meta name="description" content="${escapeHtml(offer.problem)}">`,
     `<script type="application/ld+json">${JSON.stringify(serviceJsonLd).replace(/<\//g,'<\\/')}</script>`,
+    isRivet ? '<link rel="stylesheet" href="/rivet/brand.css"><style>main{width:min(920px,calc(100% - 36px));margin:56px auto}li+li{margin-top:.42rem}</style>' : '',
     '</head><body><main>',
     `<h1>${escapeHtml(offer.name)}</h1>`,
     `<p>${escapeHtml(offer.problem)}</p>`,
