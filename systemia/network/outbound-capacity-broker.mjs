@@ -3,6 +3,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { verifyNodeAttestation } from '../compute/device-identity.mjs';
+import { ReplayGuard, openEnvelope, sealEnvelope } from './secure-envelope.mjs';
 
 const sha = (value) => createHash('sha256').update(String(value)).digest('hex');
 
@@ -55,6 +56,18 @@ function atomicJson(file, value) {
   const tmp = `${file}.${process.pid}.tmp`;
   fs.writeFileSync(tmp, JSON.stringify(value, null, 2) + '\n', { mode: 0o600 });
   fs.renameSync(tmp, file);
+}
+
+function commandIrreversible(method, route) {
+  const verb = String(method || 'GET').toUpperCase();
+  const path = String(route || '');
+  if (verb === 'GET') return false;
+  if (path === '/v1/attest') return false;
+  if (/^\/v1\/leases\/[^/]+\/renew$/.test(path)) return false;
+  if (/^\/v1\/services\/[^/]+\/checkpoint$/.test(path)) return false;
+  if (/^\/v1\/services\/[^/]+\/deployment-receipt$/.test(path)) return false;
+  if (/^\/v1\/services\/[^/]+\/missions\/[^/]+$/.test(path)) return false;
+  return true;
 }
 
 function validCapacity(capacity, nodeId, fingerprint) {
@@ -143,6 +156,10 @@ export async function startOutboundCapacityBroker({
       } : null,
       queued_commands: node.queue.length,
       pending_commands: node.pending.size,
+      secure_envelope_schema: 'evercraft.secure-envelope.v1',
+      command_envelopes_issued: node.command_envelopes_issued,
+      result_envelopes_accepted: node.result_envelopes_accepted,
+      duplicate_results_acknowledged: node.duplicate_results_acknowledged,
     };
   }
 
@@ -206,6 +223,7 @@ export async function startOutboundCapacityBroker({
       route,
       body: body ?? null,
       inject_allocator_auth: Boolean(injectAllocatorAuth),
+      irreversible: commandIrreversible(method, route),
       issued_at: new Date().toISOString(),
     };
 
@@ -230,6 +248,8 @@ export async function startOutboundCapacityBroker({
           schema: 'evercraft.remote-capacity.broker-health.v1',
           registered_nodes: nodes.size,
           authorized_devices: authorized.size,
+          secure_envelope_schema: 'evercraft.secure-envelope.v1',
+          recovered_command_policy: 'no_automatic_side_effect_replay',
         });
       }
 
@@ -319,11 +339,14 @@ export async function startOutboundCapacityBroker({
         }
 
         const sessionToken = randomBytes(32).toString('hex');
+        const transportKey = randomBytes(32).toString('hex');
         const node = {
           node_id: verification.node_id,
           device_fingerprint: verification.device_fingerprint,
           session_token_hash: sha(sessionToken),
           session_expires_at: Date.now() + sessionTtlMs,
+          transport_key: transportKey,
+          result_replay_guard: new ReplayGuard(),
           control_token: controlToken,
           control_token_hash: sha(controlToken),
           control_token_created_at: controlTokenCreatedAt,
@@ -332,6 +355,9 @@ export async function startOutboundCapacityBroker({
           queue: [],
           waiters: [],
           pending: new Map(),
+          command_envelopes_issued: 0,
+          result_envelopes_accepted: 0,
+          duplicate_results_acknowledged: 0,
         };
         nodes.set(node.node_id, node);
         persistGrant(node);
@@ -341,6 +367,7 @@ export async function startOutboundCapacityBroker({
           node_id: node.node_id,
           device_fingerprint: node.device_fingerprint,
           session_token: sessionToken,
+          transport_key: transportKey,
           session_expires_at: new Date(node.session_expires_at).toISOString(),
           virtual_capacity_endpoint: `${endpoint}/nodes/${encodeURIComponent(node.node_id)}`,
           control_token_exposed_to_agent: false,
@@ -361,23 +388,72 @@ export async function startOutboundCapacityBroker({
         node.session_expires_at = Date.now() + sessionTtlMs;
         const command = await nextCommand(node);
         if (!command) return send(res, 204);
-        return send(res, 200, command);
+        const envelope = sealEnvelope({
+          key: node.transport_key,
+          key_id: 'remote-capacity-session',
+          source: 'systemia-remote-capacity-broker',
+          destination: node.node_id,
+          kind: 'remote.capacity.command',
+          message_id: command.command_id,
+          expires_at: new Date(
+            Date.now() + Math.max(30_000, commandTimeoutMs * 2)
+          ).toISOString(),
+          irreversible: command.irreversible === true,
+          payload: command,
+        });
+        node.command_envelopes_issued += 1;
+        return send(res, 200, {
+          schema: 'evercraft.remote-capacity.delivery.v1',
+          envelope,
+        });
       }
 
       if (req.method === 'POST' && url.pathname === '/v1/remote/agent/result') {
         const node = findSession(bearer(req));
         if (!node) return send(res, 401, { error: 'remote_session_invalid' });
         const body = await readJson(req);
-        const pending = node.pending.get(String(body.command_id || ''));
+        let opened;
+        try {
+          opened = openEnvelope({
+            envelope: body.envelope,
+            key: node.transport_key,
+            expected_destination: 'systemia-remote-capacity-broker',
+          });
+        } catch (error) {
+          return send(res, 401, {
+            error: 'result_envelope_rejected',
+            reason: String(error?.code || error?.message || error),
+          });
+        }
+        if (
+          opened.header.source !== node.node_id ||
+          opened.header.kind !== 'remote.capacity.result'
+        ) {
+          return send(res, 401, { error: 'result_envelope_identity_mismatch' });
+        }
+
+        const messageId = String(opened.header.message_id || '');
+        if (node.result_replay_guard.has(messageId)) {
+          node.duplicate_results_acknowledged += 1;
+          node.last_seen_at = Date.now();
+          return send(res, 200, { ok: true, duplicate: true });
+        }
+
+        const result = opened.payload || {};
+        const commandId = String(result.command_id || '');
+        const pending = node.pending.get(commandId);
         if (!pending) return send(res, 404, { error: 'remote_command_not_pending' });
-        node.pending.delete(String(body.command_id || ''));
+
+        node.result_replay_guard.mark(messageId);
+        node.pending.delete(commandId);
         clearTimeout(pending.timer);
         node.last_seen_at = Date.now();
+        node.result_envelopes_accepted += 1;
         pending.resolve({
-          status: Number(body.status || 500),
-          body: body.body ?? {},
+          status: Number(result.status || 500),
+          body: result.body ?? {},
         });
-        return send(res, 200, { ok: true });
+        return send(res, 200, { ok: true, duplicate: false });
       }
 
       const remote = url.pathname.match(/^\/nodes\/([^/]+)(\/v1\/.*)$/);
