@@ -46,6 +46,47 @@
       ]
     },
     {
+      "product_key": "callproof-vault",
+      "name": "CallProof Vault",
+      "class": "unwanted_call_and_text_evidence_organization",
+      "canonical_url": "https://call-proof-vault.base44.app/",
+      "intents": [
+        "organize my robocall evidence",
+        "make an FCC complaint packet",
+        "help me document spam calls",
+        "prepare my FTC call evidence",
+        "track repeated unwanted calls or texts",
+        "build a factual unwanted-call incident timeline"
+      ],
+      "authority": "public product and offer discovery with authenticated handoff for private evidence and checkout",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "CallProof is an evidence-organization tool, not a law firm and not legal advice",
+        "it does not determine that a caller violated the TCPA or another law",
+        "it does not automatically file an FCC or FTC complaint",
+        "private call logs, phone numbers, notes, screenshots, voicemails and billing records are never public discovery data",
+        "the live Stripe price attached to the selected plan is authoritative at checkout"
+      ],
+      "commercial": {
+        "status": "authenticated_handoff_required",
+        "offers": [
+          {
+            "name": "Stop-The-Calls Packet",
+            "price": "$19 one-time"
+          },
+          {
+            "name": "Vault",
+            "price": "$7.99/month"
+          },
+          {
+            "name": "Pro",
+            "price": "$29/month"
+          }
+        ],
+        "payment_state": "Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified"
+      }
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "class": "interview_practice_and_career_preparation",
@@ -63,6 +104,47 @@
         "checkout creation is not payment proof",
         "paid access requires provider verification"
       ]
+    },
+    {
+      "product_key": "christmas-lights-usa",
+      "name": "Christmas Lights USA",
+      "class": "holiday_lighting_marketplace_and_project_planning",
+      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "intents": [
+        "estimate a professional Christmas light project",
+        "find holiday light installers near me",
+        "submit a Christmas light installation request",
+        "join a holiday lighting installer marketplace",
+        "buy a Christmas light installation lead",
+        "plan professional holiday lighting for my property"
+      ],
+      "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "Christmas Lights USA is a marketplace and project-intake platform, not the contractor performing installation",
+        "planning estimates are guidance rather than contractor bids or guaranteed final prices",
+        "installer availability varies by market and season",
+        "homeowner project submission is free and creates no obligation to hire",
+        "private customer, installer, admin, payment-session and lead-contact data are not public"
+      ],
+      "commercial": {
+        "status": "public_marketplace_offer",
+        "offers": [
+          {
+            "name": "Homeowner planning estimator",
+            "price": "Free"
+          },
+          {
+            "name": "Homeowner project request",
+            "price": "Free"
+          },
+          {
+            "name": "Installer lead unlock",
+            "price": "$50 per selected lead when available"
+          }
+        ],
+        "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
+      }
     },
     {
       "product_key": "contractor-cloud",
@@ -137,6 +219,30 @@
       ]
     },
     {
+      "product_key": "eps-estimate-engine",
+      "name": "EPS Field-Service Estimate Engine",
+      "aliases": [
+        "EPS Precise Estimator"
+      ],
+      "class": "contractor_estimate_and_margin_modeling",
+      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "intents": [
+        "estimate this service job",
+        "build a contractor estimate from this scope",
+        "what should this job cost",
+        "turn these measurements into an estimate",
+        "give me a rough customer range",
+        "calculate margin and price for this job"
+      ],
+      "authority": "public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "internal service-template prices and cost assumptions are estimation inputs, not a public machine-access price",
+        "no approved external machine price or payment path is verified",
+        "site verification, proposal issuance, acceptance and payment retain separate authority gates"
+      ]
+    },
+    {
       "product_key": "eventwave",
       "name": "EventWave",
       "class": "event_discovery_and_labeled_promotion",
@@ -181,6 +287,48 @@
         "remediation that can interrupt production requires separate explicit scope and authorization",
         "checkout is not payment proof and paid state requires authoritative verification"
       ]
+    },
+    {
+      "product_key": "evercraft-fantasy-intelligence",
+      "name": "Evercraft Fantasy Intelligence",
+      "aliases": [
+        "Evercraft Journal Fantasy Intelligence"
+      ],
+      "class": "fantasy_football_decision_intelligence",
+      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "intents": [
+        "fantasy football start sit help",
+        "fantasy waiver decision",
+        "fantasy lineup decision",
+        "fantasy injury impact",
+        "game-day fantasy brief"
+      ],
+      "authority": "public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "one purchased run entitlement is created per completed payment",
+        "an unpaid checkout creates no entitlement",
+        "fantasy recommendations can change as current NFL context changes",
+        "referral attribution identifies acquisition source only and never proves checkout or payment"
+      ],
+      "commercial": {
+        "status": "payment_runtime_verified",
+        "offers": [
+          {
+            "name": "Quick Decision",
+            "price": "$0.99 one-time"
+          },
+          {
+            "name": "Full Optimization",
+            "price": "$2.99 one-time"
+          },
+          {
+            "name": "Game-Day Command Brief",
+            "price": "$4.99 one-time"
+          }
+        ],
+        "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
+      }
     },
     {
       "product_key": "evercraft-network",
@@ -282,6 +430,31 @@
       ],
       "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
       "runtime_state": "public_fetch_live_verified_search_and_browser_held"
+    },
+    {
+      "product_key": "evermaps",
+      "name": "EverMaps",
+      "aliases": [
+        "EverMaps Public-Safe Geospatial Evidence Projection"
+      ],
+      "class": "public_safe_geospatial_evidence_projection",
+      "canonical_url": "https://evermaps.base44.app/",
+      "intents": [
+        "map this evidence for me",
+        "show lifeline coverage for this place",
+        "give me map-ready heat or smoke action sites",
+        "show historical river geometry",
+        "return public-safe geospatial evidence",
+        "plot verified infrastructure coverage"
+      ],
+      "authority": "public-safe evidence-labeled geospatial discovery and read-only projection within access rules",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "coverage gaps must not be overstated as proof of resilience or risk",
+        "no approved machine price is verified",
+        "paid packaging requires explicit terms and confirmation",
+        "private or restricted geospatial evidence remains outside public discovery"
+      ]
     },
     {
       "product_key": "evernest",
@@ -418,6 +591,31 @@
       "machine_contract": "/.well-known/evercraft-media-overflow.json"
     },
     {
+      "product_key": "globalstat",
+      "name": "GlobalStat",
+      "aliases": [
+        "GlobalStat Country / Domain Intelligence Slice"
+      ],
+      "class": "country_comparison_and_evidence_intelligence",
+      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "intents": [
+        "compare these countries on this metric",
+        "give me sourced country intelligence",
+        "which countries lead on this domain and why",
+        "show me the evidence behind this country score",
+        "reconcile conflicting country data",
+        "country benchmark with sources"
+      ],
+      "authority": "public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "opaque rankings are not treated as evidence",
+        "a country-brief price range has been discussed but no approved fixed machine price or payment path is verified",
+        "read-only sourced data may be returned within approved access",
+        "paid work requires explicit confirmation and verified terms"
+      ]
+    },
+    {
       "product_key": "guardian",
       "name": "Guardian",
       "aliases": [
@@ -511,6 +709,29 @@
       ]
     },
     {
+      "product_key": "little-red-book-export-qa",
+      "name": "Little Red Studio Book Export QA",
+      "aliases": [
+        "Little Red Studio"
+      ],
+      "class": "book_export_preflight_and_cover_geometry_qa",
+      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "intents": [
+        "check if my book is ready for KDP",
+        "validate my cover dimensions",
+        "audit this paperback export",
+        "is my book file ready to publish",
+        "check page count and cover DPI"
+      ],
+      "authority": "public discovery of bounded book-export QA with no publishing or distribution side effects",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "no approved external machine price or payment path is verified",
+        "QA readiness does not authorize publishing, uploading or distributing a book",
+        "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
+      ]
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "class": "pain_first_modular_safety_and_stability",
@@ -577,6 +798,31 @@
       ]
     },
     {
+      "product_key": "systemia-atlas-freight",
+      "name": "Systemia Atlas Freight Load Exception Intelligence",
+      "aliases": [
+        "Systemia Atlas"
+      ],
+      "class": "freight_load_exception_and_document_intelligence",
+      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "intents": [
+        "what is wrong with this load",
+        "audit this freight load for exceptions",
+        "check this carrier and load paperwork",
+        "find missing POD or rate mismatches",
+        "summarize freight risk on this shipment",
+        "what recoverable charges or detention issues exist"
+      ],
+      "authority": "public discovery of read-only freight exception intelligence within authorized organization scope",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "no approved machine price or payment path is verified",
+        "analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment or invoice action",
+        "financial impact is reported only when supported by recorded evidence",
+        "organization-scoped or private freight records remain access controlled"
+      ]
+    },
+    {
       "product_key": "systemia-field-library",
       "name": "Systemia Field Library",
       "class": "contractor_operating_playbook_library",
@@ -617,6 +863,57 @@
         "audit findings do not guarantee revenue or rankings",
         "checkout creation is not payment proof",
         "paid state requires provider verification"
+      ]
+    },
+    {
+      "product_key": "talent-atlas",
+      "name": "Talent Atlas",
+      "aliases": [
+        "Talent Atlas Evidence-Backed Talent Profile"
+      ],
+      "class": "evidence_backed_talent_profile_and_opportunity_mapping",
+      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "intents": [
+        "evaluate this candidate from the evidence",
+        "build a talent profile from this portfolio",
+        "what roles fit this person's demonstrated skills",
+        "find gaps in this candidate's proof",
+        "turn this athlete or creator evidence into an opportunity dossier",
+        "map this person's capabilities to opportunities"
+      ],
+      "authority": "public discovery of evidence-backed talent analysis using supplied or authorized evidence",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "no contact, representation, application or third-party sharing without explicit authority or consent",
+        "do not infer protected traits or use gated sensitive data for scoring",
+        "no approved machine price or payment path is verified",
+        "opportunity classes are evidence-linked possibilities, not guaranteed placement"
+      ]
+    },
+    {
+      "product_key": "towi-research",
+      "name": "TOWI Evidence-Controlled Research Brief",
+      "aliases": [
+        "TOWI",
+        "TOWI AI"
+      ],
+      "class": "evidence_controlled_research_and_validation",
+      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "intents": [
+        "research this question with sources",
+        "build me an evidence brief",
+        "validate this claim independently",
+        "make me a decision grade research report",
+        "map the evidence for this issue",
+        "give me a sourced validation memo"
+      ],
+      "authority": "public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "no approved fixed machine price is verified",
+        "research scoping creates no payment obligation",
+        "consequential-domain deliverables retain existing human review gates",
+        "provenance, contradictions and uncertainty must remain visible"
       ]
     },
     {
