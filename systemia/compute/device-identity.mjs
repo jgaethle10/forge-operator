@@ -77,6 +77,8 @@ export function createNodeAttestation({
   observedAt = new Date(),
   processStartedAt,
   bootIdHash = null,
+  runtimeReleaseRef = null,
+  runtimePayloadDigest = null,
 } = {}) {
   if (!identity?.private_key_pem || !identity?.public_key_pem) {
     throw new Error('device identity is required');
@@ -97,6 +99,8 @@ export function createNodeAttestation({
     )}`,
     process_started_at: String(processStartedAt || ''),
     boot_id_hash: bootIdHash ? String(bootIdHash) : null,
+    runtime_release_ref: runtimeReleaseRef ? String(runtimeReleaseRef) : null,
+    runtime_payload_digest: runtimePayloadDigest ? String(runtimePayloadDigest) : null,
     observed_at: observedAt.toISOString(),
     field_claim: false,
   };
@@ -162,5 +166,7 @@ export function verifyNodeAttestation({
     observed_at: statement.observed_at,
     boot_id_hash: statement.boot_id_hash,
     process_started_at: statement.process_started_at,
+    runtime_release_ref: statement.runtime_release_ref || null,
+    runtime_payload_digest: statement.runtime_payload_digest || null,
   };
 }
