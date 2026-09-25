@@ -86,7 +86,7 @@ function timeRange(graph, args = {}) {
   }
   const limit = Math.max(1, Math.min(500, Number(args.limit) || 100));
   const nodes = (graph.nodes || [])
-    .filter((node) => ['transcript_segment', 'keyframe', 'visual_moment'].includes(node.kind))
+    .filter((node) => ['transcript_segment', 'keyframe', 'scene_boundary', 'visual_moment'].includes(node.kind))
     .filter((node) => {
       const t = timestampFor(node);
       if (t === null) return false;
