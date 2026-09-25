@@ -9,9 +9,14 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
   'www.systemiacommandcenters.com'
 ]);
 
-function humanStartUrl(offer) {
+function humanStartUrl(offer, surface = 'chum_pain_page') {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
-  return '/api/chum/go/' + encodeURIComponent(String(offer.public_id)) + '?surface=chum_pain_page';
+  const target = new URL(MACHINE_COMMERCE_GATEWAY);
+  target.searchParams.set('view', 'service');
+  target.searchParams.set('public_id', String(offer.public_id));
+  target.searchParams.set('ec_source', 'chum');
+  target.searchParams.set('ec_surface', surface);
+  return target.toString();
 }
 
 function safeOfferUrl(offer) {
