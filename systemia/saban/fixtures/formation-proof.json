@@ -10,11 +10,21 @@
       "reconcile": false
     },
     {
+      "id": "archaeology-pass",
+      "software": "portfolio-archaeology",
+      "inventory": "systemia/saban/fixtures/private-portfolio.json",
+      "auto": true,
+      "reconcile": true
+    },
+    {
       "id": "media-pass",
       "software": "media-pipeline",
       "inventory": "systemia/saban/fixtures/media-job.json",
       "auto": true,
-      "depends_on": ["discovery-pass"],
+      "depends_on": [
+        "discovery-pass",
+        "archaeology-pass"
+      ],
       "reconcile": true
     }
   ]
