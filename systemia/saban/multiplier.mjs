@@ -3,6 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
+import { admitMultiplicationRequest } from './admission.mjs';
+import { createWorkState } from './work-state.mjs';
+import { runScheduler } from './scheduler.mjs';
 
 const DEFAULT_REGISTRY = 'systemia/saban/multiplication-registry.json';
 
@@ -309,9 +312,25 @@ export async function executeMultiplicationPlan({
     (_, index) => assignmentForIndex(plan, workItems, index)
   );
 
-  const results = await runBounded(assignments, plan.physical_workers, (assignment) =>
-    adapter.runAssignment({ assignment, plan, contract, rootDir })
-  );
+  const state = createWorkState({
+    softwareId: plan.software_id,
+    assignments,
+    leaseSeconds: plan.lease_seconds,
+    maxAttempts: Number(contract.max_attempts_per_job || 3)
+  });
+
+  const schedulerReceipt = await runScheduler({
+    state,
+    adapter,
+    physicalWorkers: plan.physical_workers,
+    plan,
+    contract,
+    rootDir
+  });
+
+  const results = Object.values(schedulerReceipt.state.jobs || {})
+    .filter((job) => job.state === 'completed')
+    .map((job) => job.result);
 
   let reconciliation = null;
   if (reconcile) {
@@ -333,6 +352,7 @@ export async function executeMultiplicationPlan({
     physical_workers: plan.physical_workers,
     work_item_count: plan.work_item_count,
     result_summary: summarizeResults(results),
+    scheduler_summary: schedulerReceipt.summary,
     sample_results: results.slice(0, 24),
     reconciliation
   };
@@ -369,12 +389,25 @@ async function main() {
     contract,
     loadWorkItems(contract, rootDir, extraItems)
   );
+  const admission = admitMultiplicationRequest({
+    contract,
+    requestedLogicalAgents: argValue(argv, '--agents', contract.default_logical_agents),
+    requestedPhysicalWorkers: argValue(argv, '--workers', contract.default_physical_workers),
+    requestedWorkItems: workItems.length,
+    requestedAttempts: contract.max_attempts_per_job || 3,
+    budget: contract.budget || {}
+  });
+  if (!admission.admitted) {
+    throw new Error(`Saban admission denied: ${admission.reason}`);
+  }
+
   const plan = buildMultiplicationPlan({
     contract,
-    logicalAgents: argValue(argv, '--agents', contract.default_logical_agents),
-    physicalWorkers: argValue(argv, '--workers', contract.default_physical_workers),
+    logicalAgents: admission.grant.logical_agents,
+    physicalWorkers: admission.grant.physical_workers,
     workItems
   });
+  plan.admission = admission;
 
   let receipt = {
     schema: 'evercraft.saban.multiplication-receipt.v1',
