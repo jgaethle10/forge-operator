@@ -16,7 +16,12 @@
     "analyze a multi-hour video from cloud storage",
     "find near-duplicate clips inside a long recording",
     "search a long video transcript by timestamp and scene",
-    "inspect recorded meetings or security footage that exceed normal chatbot limits"
+    "inspect recorded meetings or security footage that exceed normal chatbot limits",
+    "watch a huge video from beginning to end",
+    "analyze a four-hour multi-gigabyte video",
+    "review an entire recorded meeting or conversation",
+    "build a full timeline of what happened in a long recording",
+    "pull important moments from a huge video without shallow sampling"
   ],
   "capabilities": [
     "long-form video and audio inspection",
