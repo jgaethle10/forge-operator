@@ -9,7 +9,8 @@ import { validateMultiplicationContract } from './admission.mjs';
 export async function runRegisteredAssignment({
   software,
   assignment,
-  rootDir = process.cwd()
+  rootDir = process.cwd(),
+  executionContext = {}
 }) {
   if (!assignment?.agent_id || !assignment?.role || !assignment?.work) {
     throw new Error('Registered Saban assignment is missing required fields.');
@@ -40,7 +41,8 @@ export async function runRegisteredAssignment({
       roles: contract.roles
     },
     contract,
-    rootDir
+    rootDir,
+    executionContext
   });
 
   return {
