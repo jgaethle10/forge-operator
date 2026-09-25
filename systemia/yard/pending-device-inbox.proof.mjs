@@ -146,7 +146,7 @@ try {
   });
   assert.equal(decision.action, 'authorize');
   assert.equal(decision.device_fingerprint, candidate.device_fingerprint);
-  assert.ok(decision.receipt_hash.startsWith('sha256:'));
+  assert.match(decision.receipt_hash, /^[a-f0-9]{64}$/);
 
   const empty = await yard.listPendingRemoteDevices('pending-inbox-broker');
   assert.equal(empty.count, 0);
