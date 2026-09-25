@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { startEvercraftComputeNode } from './runtime-node.mjs';
 import { startCapacityBeacon } from './capacity-beacon.mjs';
+import { loadOrCreateDeviceIdentity } from './device-identity.mjs';
 
 function arg(name, fallback = null) {
   const i = process.argv.indexOf(name);
@@ -36,6 +37,10 @@ export async function startNodeSeed({
   if (!root) throw new Error('root is required');
   const resolvedRoot = path.resolve(root);
   fs.mkdirSync(resolvedRoot, { recursive: true, mode: 0o750 });
+  const deviceIdentity = loadOrCreateDeviceIdentity({
+    root: resolvedRoot,
+    nodeId,
+  });
 
   const compute = await startEvercraftComputeNode({
     nodeId,
@@ -43,6 +48,7 @@ export async function startNodeSeed({
     host,
     port,
     allocatorToken,
+    deviceIdentity,
   });
 
   const actualPort = Number(new URL(compute.endpoint).port);
@@ -72,6 +78,7 @@ export async function startNodeSeed({
     endpoint,
     root: resolvedRoot,
     allocation_auth: allocatorToken ? 'bearer' : 'loopback_only',
+    device_fingerprint: deviceIdentity.fingerprint,
     beacon: announce ? {
       schema: 'evercraft.capacity.beacon.v1',
       address: announceAddress,
@@ -129,6 +136,7 @@ if (isCli) {
     node_id: seed.node_id,
     endpoint: seed.endpoint,
     allocation_auth: seed.allocation_auth,
+    device_fingerprint: seed.device_fingerprint,
     beacon: seed.beacon ? { address: seed.beacon.address, port: seed.beacon.port } : null,
     named_cloud_required: false,
   }, null, 2));

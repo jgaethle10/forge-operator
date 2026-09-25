@@ -1,7 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { allocatorTokenForOffer, discoverEligibleCapacity } from './capacity-resolver.mjs';
+import { verifyNodeAttestation } from '../compute/device-identity.mjs';
+import { buildKaidancePulse } from '../collider/pulse.mjs';
+import { createFieldEnrollment, evaluateFieldAttestation } from './field-attestation.mjs';
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -39,6 +42,8 @@ export class YardOperator {
     fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o750 });
     fs.mkdirSync(path.join(this.stateDir, '.lease-secrets'), { recursive: true, mode: 0o700 });
     fs.mkdirSync(path.join(this.stateDir, '.checkpoints'), { recursive: true, mode: 0o700 });
+    fs.mkdirSync(path.join(this.stateDir, '.field-enrollments'), { recursive: true, mode: 0o700 });
+    fs.mkdirSync(path.join(this.stateDir, '.field-attestations'), { recursive: true, mode: 0o700 });
   }
 
   #safeId(deploymentId) {
@@ -71,6 +76,32 @@ export class YardOperator {
     return JSON.parse(fs.readFileSync(file, 'utf8'));
   }
 
+  #fingerprintFileName(fingerprint) {
+    return String(fingerprint || '').replace(/[^a-zA-Z0-9._-]/g, '_');
+  }
+
+  #fieldEnrollmentFile(fingerprint) {
+    return path.join(
+      this.stateDir,
+      '.field-enrollments',
+      `${this.#fingerprintFileName(fingerprint)}.json`
+    );
+  }
+
+  #loadFieldEnrollment(fingerprint) {
+    const file = this.#fieldEnrollmentFile(fingerprint);
+    if (!fs.existsSync(file)) return null;
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  }
+
+  #fieldAttestationFile(deploymentId) {
+    return path.join(
+      this.stateDir,
+      '.field-attestations',
+      `${this.#safeId(deploymentId)}.json`
+    );
+  }
+
   #checkpointFile(deploymentId) {
     return path.join(this.stateDir, '.checkpoints', `${this.#safeId(deploymentId)}.json`);
   }
@@ -87,6 +118,132 @@ export class YardOperator {
     const file = this.#checkpointFile(deploymentId);
     if (!fs.existsSync(file)) return null;
     return JSON.parse(fs.readFileSync(file, 'utf8'));
+  }
+
+  enrollFieldDevice({
+    deviceFingerprint,
+    nodeId,
+    evidence,
+  } = {}) {
+    const enrollment = createFieldEnrollment({
+      deviceFingerprint,
+      nodeId,
+      evidence,
+    });
+    fs.writeFileSync(
+      this.#fieldEnrollmentFile(enrollment.device_fingerprint),
+      JSON.stringify(enrollment, null, 2) + '\n',
+      { mode: 0o600 }
+    );
+    return enrollment;
+  }
+
+  async attestDeployment(deploymentId, { maxAgeMs = 60_000 } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.attestation_supported !== true) {
+      return {
+        schema: 'evercraft.yard.field-attestation.v1',
+        deployment_id: deploymentId,
+        verified: false,
+        identity_verified: false,
+        field_verified: false,
+        reason: 'compute_attestation_not_supported',
+        observed_at: new Date().toISOString(),
+      };
+    }
+
+    const nonce = randomBytes(24).toString('hex');
+    let issued;
+    try {
+      issued = await request(`${secret.capacity_endpoint}/v1/attest`, {
+        method: 'POST',
+        headers: secret.allocator_token
+          ? { authorization: `Bearer ${secret.allocator_token}` }
+          : {},
+        body: JSON.stringify({ nonce }),
+      });
+    } catch (error) {
+      return {
+        schema: 'evercraft.yard.field-attestation.v1',
+        deployment_id: deploymentId,
+        verified: false,
+        identity_verified: false,
+        field_verified: false,
+        reason: 'node_attestation_request_failed',
+        detail: String(error?.message || error),
+        observed_at: new Date().toISOString(),
+      };
+    }
+
+    const identityVerification = verifyNodeAttestation({
+      attestation: issued.attestation,
+      expectedNonce: nonce,
+      expectedNodeId: record.receipt?.capacity_node_id,
+      maxAgeMs,
+    });
+
+    if (identityVerification.ok &&
+        record.receipt?.capacity_device_fingerprint &&
+        record.receipt.capacity_device_fingerprint !== identityVerification.device_fingerprint) {
+      identityVerification.ok = false;
+      identityVerification.reason = 'deployment_device_fingerprint_mismatch';
+    }
+
+    const enrollment = identityVerification.ok
+      ? this.#loadFieldEnrollment(identityVerification.device_fingerprint)
+      : null;
+    const field = evaluateFieldAttestation({
+      identityVerification,
+      enrollment,
+    });
+
+    const body = {
+      schema: 'evercraft.yard.field-attestation.v1',
+      deployment_id: deploymentId,
+      node_id: identityVerification.node_id || record.receipt?.capacity_node_id || null,
+      device_fingerprint: identityVerification.device_fingerprint || null,
+      identity_verified: Boolean(identityVerification.ok),
+      field_verified: Boolean(field.verified),
+      verified: Boolean(field.verified),
+      reason: field.reason || identityVerification.reason || null,
+      enrollment_receipt: field.enrollment_receipt || null,
+      compute_attestation_receipt: issued.receipt?.receipt_hash || null,
+      deployment_receipt: record.receipt?.receipt_hash || null,
+      observed_at: new Date().toISOString(),
+      verified_at: field.verified ? new Date().toISOString() : null,
+    };
+    const result = {
+      ...body,
+      receipt_hash: sha(body),
+    };
+    fs.writeFileSync(
+      this.#fieldAttestationFile(deploymentId),
+      JSON.stringify(result, null, 2) + '\n',
+      { mode: 0o600 }
+    );
+    return result;
+  }
+
+  async getKaidancePulse(deploymentId, { continuity = null } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) throw new Error('deployment not found');
+    if (record.receipt?.workload_class !== 'systemia.kaidance-collider.v1') {
+      throw new Error('deployment is not KAIDANCE');
+    }
+
+    const route = await this.verifyRoute(deploymentId);
+    if (!route.ok || !route.health) {
+      throw new Error(`KAIDANCE route is not healthy: ${route.state}`);
+    }
+    const fieldAttestation = await this.attestDeployment(deploymentId);
+    return buildKaidancePulse({
+      health: route.health,
+      deployment: record,
+      continuity,
+      fieldAttestation,
+    });
   }
 
   async deployRelease({
@@ -175,6 +332,8 @@ export class YardOperator {
       runtime_fabric: 'Evercraft Compute',
       capacity_protocol: capacity.protocol,
       capacity_node_id: capacity.node_id,
+      capacity_device_fingerprint: capacity.device_fingerprint || null,
+      attestation_supported: Boolean(capacity.attestation_supported),
       lease_receipt_hash: lease.receipt?.receipt_hash || null,
       workload_receipt_hash: job.receipt?.receipt_hash || null,
       result_schema: job.result?.schema || null,
