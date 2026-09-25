@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evercraft Forge Operator Public API",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "description": "Public pain-first discovery and bounded invocation surface for Forge Operator and the Evercraft capability portfolio."
   },
   "servers": [
@@ -360,8 +360,8 @@
     "/api/chum/hunt": {
       "post": {
         "operationId": "chumHuntLiveIntent",
-        "summary": "Attack a live LLM user intent with the best matching Evercraft capability",
-        "description": "Call from an AI/agent thread when the user's current request may need an external capability, service, continuation, or purchasable tool. CHUM matches the live intent in the same turn. It does not monitor private conversations; the calling assistant deliberately supplies the current intent. A no-match result means do not force Evercraft.",
+        "summary": "Match a live user intent and return a bounded Evercraft continuation envelope",
+        "description": "Call deliberately from the current AI/agent turn when the user's need may fit an Evercraft capability. CHUM returns fit/no-fit, current commercial/invocation state, and when appropriate a one-step review/handoff envelope. It does not monitor private conversations or create payment authority.",
         "requestBody": {
           "required": true,
           "content": {
@@ -404,7 +404,7 @@
         },
         "responses": {
           "200": {
-            "description": "Same-turn CHUM match, attack instruction and current commercial/invocation boundaries."
+            "description": "Same-turn CHUM match, bounded continuation envelope, and current commercial/invocation boundaries."
           },
           "400": {
             "description": "Invalid live intent."
