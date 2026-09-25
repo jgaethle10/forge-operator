@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "kaidance-collider",
+  "workload_class": "systemia.kaidance-collider.v1",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "runtime_fabric": "Evercraft Compute",
+  "service_type": "resident",
+  "heartbeat_target_seconds": 300,
+  "source_boundary": {
+    "public_runtime_kernel": "forge-operator",
+    "private_mission_state": "external_bounded_snapshot_only"
+  },
+  "input_contract": {
+    "mission_snapshot_schema": "evercraft.kaidance.mission-snapshot.v1",
+    "private_content_exposed_in_health": false
+  },
+  "lifecycle": [
+    "lease",
+    "start_service",
+    "immediate_cycle",
+    "heartbeat",
+    "persist_state",
+    "persist_receipts",
+    "restart_recover",
+    "verify_health",
+    "stop_or_rebind"
+  ],
+  "fail_closed_on": [
+    "missing_mission_snapshot",
+    "invalid_snapshot_schema",
+    "invalid_count_invariants",
+    "expired_or_missing_compute_lease"
+  ]
+}
