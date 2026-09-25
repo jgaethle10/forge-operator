@@ -8,6 +8,7 @@ import {
 import { createWorkState, saveWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
 import { recommendFormation } from './autoscaler.mjs';
+import { createSpawnLedger, admitSpawnRequest } from './spawn-broker.mjs';
 import fs from 'node:fs';
 
 const registry = loadMultiplicationRegistry();
@@ -124,6 +125,56 @@ const pressuredChumFormation = recommendFormation({
 assert.equal(pressuredChumFormation.strategy, 'coverage_amplification');
 assert.ok(pressuredChumFormation.logical_agents >= syntheticItems.length * chum.roles.length);
 
+const spawnLedger = createSpawnLedger({
+  maxDepth: 3,
+  maxChildren: 4,
+  maxTotalLogicalAgents: 12000,
+  maxLogicalAgentsPerChild: 10000
+});
+
+const childChum = admitSpawnRequest({
+  ledger: spawnLedger,
+  registry,
+  request: {
+    parent_node_id: 'proof-root',
+    software: 'chum',
+    logical_agents: 10000,
+    physical_workers: 32,
+    depth: 1,
+    reason: 'proof-discovery-expansion',
+    scope_key: 'portfolio'
+  }
+});
+assert.equal(childChum.admitted, true);
+
+const duplicateChild = admitSpawnRequest({
+  ledger: spawnLedger,
+  registry,
+  request: {
+    parent_node_id: 'proof-root',
+    software: 'chum',
+    logical_agents: 10000,
+    physical_workers: 32,
+    depth: 1,
+    reason: 'proof-discovery-expansion',
+    scope_key: 'portfolio'
+  }
+});
+assert.equal(duplicateChild.admitted, false);
+assert.equal(duplicateChild.reason, 'duplicate_spawn_request');
+
+const unknownChild = admitSpawnRequest({
+  ledger: spawnLedger,
+  registry,
+  request: {
+    parent_node_id: 'proof-root',
+    software: 'unknown-software',
+    logical_agents: 10,
+    depth: 1
+  }
+});
+assert.equal(unknownChild.admitted, false);
+
 console.log(JSON.stringify({
   schema: 'evercraft.saban.kernel-proof.v1',
   logical_plan_agents: plan.logical_agents,
@@ -133,5 +184,7 @@ console.log(JSON.stringify({
   media_shards: mediaItems.length,
   media_auto_logical_agents: mediaFormation.logical_agents,
   chum_auto_logical_agents: pressuredChumFormation.logical_agents,
+  governed_spawn_children: spawnLedger.children.length,
+  governed_spawn_logical_agents: spawnLedger.total_logical_agents,
   status: 'pass'
 }));
