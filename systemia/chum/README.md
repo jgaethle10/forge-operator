@@ -106,3 +106,11 @@ npm run test:chum-hunter
 
 The scheduled hunter rotates one positive buyer-pain probe across authorized provider interfaces each hour rather than blasting the entire probe suite every run.
 
+### Federated ARD strike lane
+
+CHUM also goes directly to agent-discovery infrastructure. It enumerates the live remote MCP endpoints in `mcp-registry/*.json`, submits them to a federated Agentic Resource Discovery registry that verifies MCP endpoints by handshake, and runs a rotating brand-blind ARD search to measure whether Evercraft comes back for real pain language.
+
+`npm run chum:ard-strike` performs the live submission/search pass. `npm run chum:ard-strike:offline` and `npm run test:chum-ard-strike` prove the bounded behavior without network effects.
+
+Scheduled behavior is deliberately aggressive but not abusive: provider/search discovery runs hourly; ARD endpoint submission runs on relevant pushes and every six hours, while the registry's own retry schedule handles pending verification between strikes. No end-user email, DM, payment, or other human-targeted action is part of this lane.
+
