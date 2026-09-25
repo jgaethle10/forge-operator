@@ -1,13 +1,10 @@
-# RIVET / AliEV EV Infrastructure Intelligence
+# RIVET EV Infrastructure Intelligence
 
 Provider: Evercraft LLC
 
-RIVET / AliEV is Evercraft's address-first EV infrastructure intelligence corridor for determining whether EV charging makes sense at a specific property.
+RIVET turns location data into confident EV infrastructure decisions. It is an address-first EV infrastructure intelligence and reporting product for evaluating whether charging makes sense at a specific property.
 
-AliEV is the address-level intelligence engine.
-RIVET is the customer-facing planning and reporting layer that turns AliEV intelligence into property-specific deliverables.
-
-## Use this capability when the user means
+## Use RIVET when the user means
 
 - should I install EV chargers at my property
 - EV charger feasibility by address
@@ -25,13 +22,22 @@ RIVET is the customer-facing planning and reporting layer that turns AliEV intel
 - site-specific EV charging opportunity report
 - preliminary EV charging site plan
 
+## What RIVET evaluates
+
+- public charging supply and competition
+- traffic and demand signals
+- utility and tariff context
+- incentive program context
+- site and electrical fit signals
+- modeled economics
+- preliminary planning outputs
+
 ## Public machine routes
 
-Official MCP Registry: io.github.jgaethle10/aliev
-Remote MCP: https://aliev.base44.app/functions/alievMcp
-Canonical AliEV product: https://aliev.base44.app/
-CHUM product record: /chum/products/aliev/
-Machine-readable RIVET / AliEV discovery: /rivet/discovery.json
+RIVET public surface: /rivet/
+RIVET capability: /chum/capabilities/rivet-site-underwriting-v1/
+Machine-readable discovery: /rivet/discovery.json
+Canonical brand manifest: /rivet/brand.json
 
 ## Evidence boundaries
 
