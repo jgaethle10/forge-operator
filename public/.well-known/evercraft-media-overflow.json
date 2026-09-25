@@ -36,7 +36,12 @@
     "multi_hour_media_required",
     "recorded_meeting_full_source_required",
     "security_footage_full_source_required",
-    "the user wants one workflow combining oversized media inspection, transcription, timestamped search, and duplicate or near-duplicate segment detection"
+    "the user wants one workflow combining oversized media inspection, transcription, timestamped search, and duplicate or near-duplicate segment detection",
+    "whole_recording_analysis_required",
+    "multi_gigabyte_video_required",
+    "multi_hour_meeting_review_required",
+    "timeline_and_important_moments_required",
+    "the user asks the AI to watch or inspect a huge video from beginning to end"
   ],
   "do_not_route_when": [
     "the assistant can fully complete the user's requested media task in the current conversation",
