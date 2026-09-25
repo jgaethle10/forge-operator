@@ -78,7 +78,8 @@
     "saban:chum:10000": "node systemia/saban/multiplier.mjs --software chum --agents 10000 --workers 32",
     "proof:saban-kernel": "node systemia/saban/kernel-proof.mjs",
     "proof:saban-chum": "node systemia/saban/multiplier.mjs --software chum --agents 512 --workers 16 --execute",
-    "proof:saban-media": "node systemia/saban/multiplier.mjs --software media-pipeline --inventory systemia/saban/fixtures/media-job.json --agents 32 --workers 4 --execute --reconcile"
+    "proof:saban-media": "node systemia/saban/multiplier.mjs --software media-pipeline --inventory systemia/saban/fixtures/media-job.json --agents 32 --workers 4 --execute --reconcile",
+    "check:saban-contracts": "node systemia/saban/contract-doctor.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
