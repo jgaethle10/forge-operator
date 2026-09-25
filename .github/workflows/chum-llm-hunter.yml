@@ -46,9 +46,17 @@ jobs:
         run: |
           npm run test:chum-hunter
           npm run test:chum-live-intent
+          npm run test:saban-revenue
 
       - name: Prove federated ARD strike contracts
         run: npm run test:chum-ard-strike
+
+      - name: Verify sell-now commerce doors
+        continue-on-error: true
+        run: npm run chum:commerce-canary
+
+      - name: Build Saban revenue formation
+        run: npm run saban:revenue
 
       - name: Hunt public LLM and agent ecosystems
         env:
@@ -77,10 +85,6 @@ jobs:
         continue-on-error: true
         run: npm run chum:mcp
 
-      - name: Verify sell-now commerce doors
-        continue-on-error: true
-        run: npm run chum:commerce-canary
-
       - name: Rotate one brand-blind pain attack across authorized providers
         continue-on-error: true
         env:
@@ -92,9 +96,13 @@ jobs:
         run: |
           set -euo pipefail
           if { [ -n "${CHUM_PROBE_BRIDGE_URL:-}" ] && [ -n "${CHUM_PROBE_BRIDGE_TOKEN:-}" ]; } || { [ -n "${NEXUS_PROBE_BRIDGE_URL:-}" ] && [ -n "${NEXUS_PROBE_BRIDGE_TOKEN:-}" ]; }; then
-            CASE_ID="$(node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('chum-probes/probe-suite.json'));const c=s.cases.filter(x=>x.enabled&&x.expected_fit);const i=Math.floor(Date.now()/3600000)%c.length;process.stdout.write(c[i].case_id)")"
-            echo "Attacking provider discovery with case: $CASE_ID"
-            CHUM_PROBE_CASES="$CASE_ID" npm run chum:providers
+            CASE_ID="$(node -e "const fs=require('fs');let ids=[];try{const f=JSON.parse(fs.readFileSync('artifacts/saban-revenue/latest.json'));ids=[...new Set((f.focus_rotation||[]).flatMap(x=>x.probe_case_ids||[]))]}catch{};if(!ids.length){const s=JSON.parse(fs.readFileSync('chum-probes/probe-suite.json'));ids=s.cases.filter(x=>x.enabled&&x.expected_fit).map(x=>x.case_id)};const i=Math.floor(Date.now()/3600000)%ids.length;process.stdout.write(ids[i]||'')")"
+            if [ -z "$CASE_ID" ]; then
+              echo "No eligible brand-blind probe case is available."
+            else
+              echo "Attacking provider discovery with Saban-focused case: $CASE_ID"
+              CHUM_PROBE_CASES="$CASE_ID" npm run chum:providers
+            fi
           else
             echo "Authorized provider bridge is not configured; direct provider attack is blocked, not faked."
           fi
@@ -111,4 +119,5 @@ jobs:
             artifacts/chum/commerce-canary-latest.*
             artifacts/chum/provider-probe-latest.*
             artifacts/chum/ard-strike-latest.*
+            artifacts/saban-revenue/latest.*
           if-no-files-found: warn
