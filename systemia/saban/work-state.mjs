@@ -1,4 +1,6 @@
 import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
 
 function nowIso(now = Date.now()) {
   return new Date(now).toISOString();
@@ -167,4 +169,23 @@ export function summarizeWorkState(state, now = Date.now()) {
     checkpointed: Object.values(state.jobs || {}).filter((job) => job.checkpoint).length,
     retried: Object.values(state.jobs || {}).filter((job) => job.attempts > 1).length
   };
+}
+
+
+export function saveWorkState(file, state) {
+  const target = path.resolve(file);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  const temp = `${target}.tmp`;
+  fs.writeFileSync(temp, JSON.stringify(state, null, 2) + '\n');
+  fs.renameSync(temp, target);
+  return target;
+}
+
+export function loadWorkState(file) {
+  const target = path.resolve(file);
+  const state = JSON.parse(fs.readFileSync(target, 'utf8'));
+  if (state?.schema !== 'evercraft.saban.work-state.v1' || !state?.jobs) {
+    throw new Error(`Invalid Saban work state: ${file}`);
+  }
+  return state;
 }
