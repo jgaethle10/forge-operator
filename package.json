@@ -81,7 +81,8 @@
     "proof:saban-media": "node systemia/saban/multiplier.mjs --software media-pipeline --inventory systemia/saban/fixtures/media-job.json --agents 32 --workers 4 --execute --reconcile",
     "check:saban-contracts": "node systemia/saban/contract-doctor.mjs",
     "saban:formation": "node systemia/saban/formation.mjs",
-    "proof:saban-formation": "node systemia/saban/formation.mjs --request systemia/saban/fixtures/formation-proof.json --execute"
+    "proof:saban-formation": "node systemia/saban/formation.mjs --request systemia/saban/fixtures/formation-proof.json --execute",
+    "proof:saban-nodeseed-multiplier": "node systemia/network/saban-multiplier-nodeseed-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
