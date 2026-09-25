@@ -9,6 +9,8 @@ on:
       - main
     paths:
       - "systemia/chum/llm-hunter.mjs"
+      - "systemia/saban/revenue-pressure.mjs"
+      - "tests/saban-revenue-pressure.test.mjs"
       - "systemia/chum/live-intent-hunter.mjs"
       - "tests/chum-live-intent-hunter.test.mjs"
       - "server.ts"
@@ -49,6 +51,9 @@ jobs:
 
       - name: Prove federated ARD strike contracts
         run: npm run test:chum-ard-strike
+
+      - name: Build Saban revenue pressure plan
+        run: npm run test:saban-revenue
 
       - name: Hunt public LLM and agent ecosystems
         env:
@@ -92,8 +97,14 @@ jobs:
         run: |
           set -euo pipefail
           if { [ -n "${CHUM_PROBE_BRIDGE_URL:-}" ] && [ -n "${CHUM_PROBE_BRIDGE_TOKEN:-}" ]; } || { [ -n "${NEXUS_PROBE_BRIDGE_URL:-}" ] && [ -n "${NEXUS_PROBE_BRIDGE_TOKEN:-}" ]; }; then
-            CASE_ID="$(node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('chum-probes/probe-suite.json'));const c=s.cases.filter(x=>x.enabled&&x.expected_fit);const i=Math.floor(Date.now()/3600000)%c.length;process.stdout.write(c[i].case_id)")"
-            echo "Attacking provider discovery with case: $CASE_ID"
+            CASE_ID="$(node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('artifacts/saban-revenue/latest.json'));process.stdout.write(p.rotation?.case?.case_id||'')")"
+            LANE="$(node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('artifacts/saban-revenue/latest.json'));process.stdout.write(p.rotation?.lane||'unknown')")"
+            SCORE="$(node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('artifacts/saban-revenue/latest.json'));process.stdout.write(String(p.rotation?.score||0))")"
+            if [ -z "$CASE_ID" ]; then
+              echo "Saban produced no eligible revenue-pressure probe; holding provider attack."
+              exit 0
+            fi
+            echo "Attacking provider discovery with Saban-ranked case: $CASE_ID lane=$LANE score=$SCORE"
             CHUM_PROBE_CASES="$CASE_ID" npm run chum:providers
           else
             echo "Authorized provider bridge is not configured; direct provider attack is blocked, not faked."
@@ -111,4 +122,5 @@ jobs:
             artifacts/chum/commerce-canary-latest.*
             artifacts/chum/provider-probe-latest.*
             artifacts/chum/ard-strike-latest.*
+            artifacts/saban-revenue/latest.*
           if-no-files-found: warn
