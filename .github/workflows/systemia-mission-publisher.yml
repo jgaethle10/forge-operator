@@ -1,0 +1,31 @@
+name: Systemia mission publisher
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/mission-publisher.mjs'
+      - 'systemia/organism/mission-publisher-runner.mjs'
+      - 'systemia/organism/mission-publisher.workflow.json'
+      - 'systemia/organism/mission-publisher.proof.mjs'
+      - '.github/workflows/systemia-mission-publisher.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/organism/mission-publisher.mjs'
+      - 'systemia/organism/mission-publisher-runner.mjs'
+      - 'systemia/organism/mission-publisher.workflow.json'
+      - 'systemia/organism/mission-publisher.proof.mjs'
+      - '.github/workflows/systemia-mission-publisher.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove receipt-driven mission publication into KAIDANCE
+        run: node systemia/organism/mission-publisher.proof.mjs

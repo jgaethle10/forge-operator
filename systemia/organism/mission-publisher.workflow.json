@@ -1,0 +1,22 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "kaidance-mission-publisher",
+  "runtime": "systemia-core-resident",
+  "purpose": "Publish changed Systemia mission snapshots into the active KAIDANCE resident service through Yard.",
+  "cadence_seconds": 300,
+  "entrypoint": "systemia/organism/mission-publisher-runner.mjs",
+  "config": "systemia/collider/mission-sources.json",
+  "material_change_only": true,
+  "authority": {
+    "read_local_mission_snapshots": "autonomous",
+    "push_declared_snapshots_to_existing_kaidance_deployment": "autonomous",
+    "create_new_mission_sources": false,
+    "expand_workload_authority": false,
+    "publish_secrets": false
+  },
+  "failure_semantics": {
+    "missing_required_source": "push a synthetic hold snapshot on each 300-second publisher cycle; never replay old mission data",
+    "invalid_source": "do_not_push; report degraded",
+    "undeclared_remote_source": "fail_closed_at_yard_compute_ingress"
+  }
+}
