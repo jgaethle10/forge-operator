@@ -32,7 +32,9 @@
   "payment_authority": "Raven Nexus / Evercraft Payments where a specific matched offer is verified; the pain router has no silent payment authority.",
   "invocation_status": "LIVE: public Raven Nexus pain router accepts plain-language pain and returns the smallest appropriate modular capability with evidence-state and checkout boundaries.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=raven-nexus-pain-router-v1",
   "start_url": null,
+  "start_url_state": "not_sell_now",
   "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/raven-nexus-pain-router-v1/",

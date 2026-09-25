@@ -31,7 +31,9 @@
   "payment_authority": "No public machine checkout is advertised for Evercraft Web yet.",
   "invocation_status": "LIVE specialist discovery through the central MCP tool discover_web_capability. Evercraft Fetch is implemented and build-passed but remains external-canary gated; web search and owned browser execution remain held pending runtime activation, pairing/isolation and production receipts.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-web-browser-agent-v1",
   "start_url": null,
+  "start_url_state": "not_sell_now",
   "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/evercraft-web-browser-agent-v1/",

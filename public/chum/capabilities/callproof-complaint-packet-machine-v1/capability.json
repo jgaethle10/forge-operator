@@ -43,7 +43,9 @@
   "payment_authority": "CallProof Vault / Stripe",
   "invocation_status": "discoverable_authenticated_checkout_required",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=callproof-complaint-packet-machine-v1",
   "start_url": null,
+  "start_url_state": "not_sell_now",
   "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/callproof-complaint-packet-machine-v1/",

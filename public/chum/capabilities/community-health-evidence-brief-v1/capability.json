@@ -23,7 +23,9 @@
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Discoverable capability; brief-specific source verification required before fulfillment.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=community-health-evidence-brief-v1",
   "start_url": null,
+  "start_url_state": "not_sell_now",
   "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/community-health-evidence-brief-v1/",

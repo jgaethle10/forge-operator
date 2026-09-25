@@ -26,7 +26,9 @@
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-process-audit-machine-v1",
   "start_url": null,
+  "start_url_state": "not_sell_now",
   "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/buildflow-process-audit-machine-v1/",
