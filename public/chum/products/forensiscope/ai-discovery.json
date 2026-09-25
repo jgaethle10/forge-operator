@@ -67,6 +67,7 @@
     ],
     "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
   },
+  "machine_commerce_handoff": null,
   "registry_name": "io.github.jgaethle10/forensiscope",
   "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

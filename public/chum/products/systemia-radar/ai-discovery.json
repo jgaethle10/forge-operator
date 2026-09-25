@@ -39,6 +39,7 @@
     ],
     "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
   },
+  "machine_commerce_handoff": null,
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

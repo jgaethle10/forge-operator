@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-25T20:16:52.083Z",
+  "updated_at": "2026-09-25T20:22:16.711Z",
   "source_schema_version": "2026-09-25.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.7.0",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
@@ -374,7 +374,7 @@
       "human_ui_required": false,
       "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.",
-      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, and zero checkout/payment creation. Product-specific direct checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
+      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
       "catalog_version": "2026-09-25.1",
       "agent_handoff": {
         "fit_gate": "Only continue when the current user problem genuinely matches this capability.",
@@ -1626,7 +1626,7 @@
       "human_ui_required": false,
       "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.",
-      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, and zero checkout/payment creation. Product-specific direct checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
+      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
       "catalog_version": "2026-09-25.1",
       "agent_handoff": {
         "fit_gate": "Only continue when the current user problem genuinely matches this capability.",

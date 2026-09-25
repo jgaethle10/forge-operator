@@ -6,7 +6,7 @@
   "source_schema_version": "2026-09-25.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.7.0",
   "source_generated_at": "2026-09-25T20:12:17.000Z",
-  "generated_at": "2026-09-25T20:16:52.083Z",
+  "generated_at": "2026-09-25T20:22:16.711Z",
   "offer_count": 43,
   "sell_now_count": 12,
   "discovery_count": 31,
@@ -1018,7 +1018,7 @@
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.",
-      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, and zero checkout/payment creation. Product-specific direct checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
+      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
       "catalog_version": "2026-09-25.1"
     },
     {

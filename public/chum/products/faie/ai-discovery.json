@@ -19,6 +19,7 @@
     "checkout creation is not payment proof"
   ],
   "commercial": null,
+  "machine_commerce_handoff": null,
   "registry_name": "io.github.jgaethle10/faie",
   "mcp": "https://faie.base44.app/functions/faieMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

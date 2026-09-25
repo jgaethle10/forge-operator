@@ -35,6 +35,7 @@
     ],
     "payment_state": "Explicit user confirmation and authoritative completed-payment verification required before reveal"
   },
+  "machine_commerce_handoff": null,
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

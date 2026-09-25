@@ -61,5 +61,9 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "provider_behavior_state": "not_inferred_from_publication"
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": "live_verified",
+  "machine_commerce_public_id": "ibmi-rescue-v1",
+  "machine_commerce_tool": "prepare_quote_ready_service_handoff",
+  "live_canary_evidence": "GitHubActionsRun:36184321561"
 }

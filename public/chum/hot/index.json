@@ -2,9 +2,63 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T20:22:13.940Z",
+  "updated_at": "2026-09-25T20:22:17.737Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. Priority is an internal crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
+      "url": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
+      "url": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
+      "url": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
+      "url": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
+      "url": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
+    {
+      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
+      "url": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
+      "priority": 100,
+      "last_changed": "2026-09-25T20:22:17.737Z"
+    },
     {
       "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
       "url": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
@@ -216,20 +270,8 @@
       "last_changed": "2026-09-25T20:16:53.283Z"
     },
     {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
       "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
       "url": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
       "priority": 100,
       "last_changed": "2026-09-25T20:16:53.283Z"
     },
@@ -416,12 +458,6 @@
     {
       "path": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
       "url": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
       "priority": 100,
       "last_changed": "2026-09-25T20:16:53.283Z"
     },
@@ -1166,42 +1202,6 @@
     {
       "path": "/chum/answers/doors/fetch-and-read-a-public-url-with-an-ai-agent-e0940c43bd.json",
       "url": "/chum/answers/doors/fetch-and-read-a-public-url-with-an-ai-agent-e0940c43bd.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/fetch-url-for-ai-8bb5a892cb.json",
-      "url": "/chum/answers/doors/fetch-url-for-ai-8bb5a892cb.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b.json",
-      "url": "/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/find-a-discontinued-part-5646da09bb.json",
-      "url": "/chum/answers/doors/find-a-discontinued-part-5646da09bb.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json",
-      "url": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json",
-      "url": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json",
-      "priority": 100,
-      "last_changed": "2026-09-25T20:16:53.283Z"
-    },
-    {
-      "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
-      "url": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
       "priority": 100,
       "last_changed": "2026-09-25T20:16:53.283Z"
     }

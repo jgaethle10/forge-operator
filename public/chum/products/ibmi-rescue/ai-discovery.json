@@ -54,6 +54,15 @@
       "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
     }
   },
+  "machine_commerce_handoff": {
+    "state": "live_verified",
+    "public_id": "ibmi-rescue-v1",
+    "mode": "fixed_price_human_handoff",
+    "tool": "prepare_quote_ready_service_handoff",
+    "checkout_created": false,
+    "payment_created": false,
+    "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
+  },
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

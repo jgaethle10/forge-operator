@@ -26,6 +26,7 @@ public discovery and human-confirmed paid evidence engagement; production access
 - Offer: IBM i 7.4 Deadline X-Ray · $250 one-time · offer_key: ibmi_74_deadline_xray_250
 - Offer: IBM i Upgrade Proof Sprint · $1,500 one-time · offer_key: ibmi_upgrade_proof_sprint_1500
 - Checkout route remains canary-pending.
+- Product-specific public checkout route is not represented as live until its independent canary passes.
 - Payment state: Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live
 
 ## Boundaries

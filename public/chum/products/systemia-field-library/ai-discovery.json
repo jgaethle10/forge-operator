@@ -24,6 +24,7 @@
     "the matcher presents relevant playbooks as options rather than mandatory professional advice"
   ],
   "commercial": null,
+  "machine_commerce_handoff": null,
   "registry_name": "io.github.jgaethle10/systemia-field-library",
   "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
