@@ -69,6 +69,26 @@ if (!(target.candidates || []).some((candidate) => candidate.product_key === 'al
   fail('brand-blind answer door does not route to AliEV');
 }
 
+
+for (const pathname of [
+  'public/rivet/index.html',
+  'public/rivet/llms.txt',
+  'public/rivet/discovery.json'
+]) {
+  if (!fs.existsSync(pathname)) fail('dedicated RIVET surface missing: ' + pathname);
+}
+const rivetHtml = fs.readFileSync('public/rivet/index.html','utf8');
+if (!rivetHtml.includes('RIVET / AliEV') || !rivetHtml.includes('EV charging')) fail('RIVET landing lost entity or category anchor');
+const rivetDiscovery = JSON.parse(fs.readFileSync('public/rivet/discovery.json','utf8'));
+if (rivetDiscovery.registry_name !== 'io.github.jgaethle10/aliev') fail('RIVET landing registry identity drifted');
+if (rivetDiscovery.relationship?.aliev !== 'Address-level EV infrastructure intelligence engine.') fail('AliEV role missing');
+if (!(rivetDiscovery.aliases || []).includes('RIVET')) fail('RIVET machine alias missing');
+
+const sitemap = fs.readFileSync('public/sitemap.xml','utf8');
+for (const route of ['/rivet/','/rivet/llms.txt','/rivet/discovery.json']) {
+  if (!sitemap.includes(route)) fail('sitemap missing dedicated RIVET route: ' + route);
+}
+
 console.log('ALIEV_DISCOVERY_PASS', JSON.stringify({
   aliases: product.aliases.length,
   intents: product.intents.length,
