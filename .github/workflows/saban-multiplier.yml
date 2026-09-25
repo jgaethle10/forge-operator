@@ -74,6 +74,9 @@ jobs:
       - name: Prove privacy-safe portfolio archaeology
         run: npm run proof:saban-portfolio-archaeology
 
+      - name: Prove ForensiScope source admission security
+        run: npm run proof:forensiscope-security
+
       - name: Prove distributed ForensiScope media execution
         run: npm run proof:forensiscope-distributed
 
