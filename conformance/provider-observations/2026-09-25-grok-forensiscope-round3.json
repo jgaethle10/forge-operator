@@ -1,0 +1,11 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-25T08:05:00-07:00",
+  "provider": "grok",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": ["K2", "Twelve Labs", "Echosaw"],
+  "interpretation": "Fresh negative pickup receipt from a user-provided response."
+}
