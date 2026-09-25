@@ -125,6 +125,14 @@ export class DurableReplayLedger {
     return this.executed.has(String(messageId));
   }
 
+  has(messageId) {
+    return this.hasExecuted(messageId);
+  }
+
+  mark(messageId) {
+    return this.markExecuted({ message_id: String(messageId) });
+  }
+
   markExecuted({
     message_id,
     mission_id = null,
