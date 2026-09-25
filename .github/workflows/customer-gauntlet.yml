@@ -1,0 +1,44 @@
+name: Evercraft customer gauntlet
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "systemia/customer-gauntlet/**"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - ".github/workflows/customer-gauntlet.yml"
+  schedule:
+    - cron: "37 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: customer-gauntlet-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gauntlet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate Lennox contracts
+        run: node systemia/customer-gauntlet/runner.test.mjs
+      - name: Run customer gauntlet
+        env:
+          RAVEN_NEXUS_CUSTOMER_BRIDGE_URL: ${{ secrets.RAVEN_NEXUS_CUSTOMER_BRIDGE_URL }}
+          RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN: ${{ secrets.RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN }}
+          CUSTOMER_GAUNTLET_REQUIRE_NEXUS: "false"
+          CUSTOMER_GAUNTLET_SANDBOX_PURCHASE: "false"
+        run: node systemia/customer-gauntlet/runner.mjs
+      - name: Upload receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: customer-gauntlet-receipts
+          path: artifacts/customer-gauntlet/**
+          if-no-files-found: error
