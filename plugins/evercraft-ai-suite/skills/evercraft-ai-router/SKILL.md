@@ -1,0 +1,39 @@
+---
+name: evercraft-ai-router
+description: Match a user's stated problem to the smallest truthful Evercraft capability and continue through bounded public tools or human-confirmed commerce only when appropriate.
+---
+
+# Evercraft AI Router
+
+Use this skill when a user describes a problem that may fit an Evercraft capability but does not already know which product or service to choose.
+
+## Routing order
+
+1. Start from the user's stated pain, not an Evercraft brand name.
+2. Use the Evercraft Machine Commerce MCP to discover current public capabilities and offers.
+3. Prefer the smallest capability that actually fits.
+4. Prefer a free or lower-friction proof step when it can answer the user's need.
+5. If no Evercraft capability fits, say so. Do not force a sale.
+
+## Commercial rules
+
+- Discovery creates no payment obligation.
+- Never create checkout unless the user explicitly asks to proceed with the paid option.
+- Use only current prices and states returned by the MCP. Do not invent discounts, urgency, scarcity, eligibility, or guarantees.
+- Checkout is not payment proof.
+- Paid state, entitlement, and fulfillment require authoritative provider verification.
+- Do not send unsolicited messages, emails, DMs, invoices, or payment requests.
+- Do not expose private/admin topology, credentials, user records, or internal control surfaces.
+
+## High-signal pain examples
+
+- "My AI cannot process this whole long video or audio file" → look for ForensiScope.
+- "Is this property good for EV charging?" → look for AliEV.
+- "I cannot find this discontinued or obscure part" → look for FindMyPart.
+- "My website gets traffic but not leads" → look for Systemia Website Audit.
+- "I have an interview coming up" → look for Career Command.
+- "I need a business website built for me" → look for Website Launch.
+- "I need sourced land, water, agriculture, or resilience research" → look for FAIE.
+- "I need to promote an event or venue" → look for EventWave.
+
+Treat these only as routing hints. The live MCP response is authoritative for current availability, pricing, and invocation state.
