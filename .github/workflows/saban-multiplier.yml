@@ -1,0 +1,51 @@
+name: Saban multiplier proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/saban/**"
+      - "systemia/chum/saban-adapter.mjs"
+      - "package.json"
+      - ".github/workflows/saban-multiplier.yml"
+  push:
+    branches:
+      - "systemia/saban-software-multiplier-v1"
+    paths:
+      - "systemia/saban/**"
+      - "systemia/chum/saban-adapter.mjs"
+      - "package.json"
+      - ".github/workflows/saban-multiplier.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove kernel recovery and sharding
+        run: npm run proof:saban-kernel
+
+      - name: Execute bounded CHUM swarm
+        run: npm run proof:saban-chum
+
+      - name: Execute synthetic media fanout
+        run: npm run proof:saban-media
+
+      - name: Plan full CHUM formation
+        run: npm run saban:chum:10000
+
+      - name: Upload Saban proof receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: saban-multiplier-proof
+          path: artifacts/saban-multiplier/**
+          if-no-files-found: warn
