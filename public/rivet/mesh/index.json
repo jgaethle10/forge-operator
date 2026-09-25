@@ -1,10 +1,8 @@
 {
-  "schema": "evercraft.rivet-aliev.semantic-mesh.v1",
+  "schema": "evercraft.rivet.semantic-mesh.v2",
   "updated_at": "2026-09-25",
   "provider": "Evercraft LLC",
-  "canonical_service": "RIVET / AliEV EV Infrastructure Intelligence",
-  "registry_name": "io.github.jgaethle10/aliev",
-  "canonical_product": "https://aliev.base44.app/",
+  "canonical_service": "RIVET EV Infrastructure Intelligence",
   "rules": {
     "distinct_user_intent": true,
     "single_canonical_capability": true,
@@ -112,5 +110,8 @@
       ],
       "url": "/rivet/ev-charging-utility-incentive-screening/"
     }
-  ]
+  ],
+  "canonical_surface": "/rivet/",
+  "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
+  "brand_manifest": "/rivet/brand.json"
 }

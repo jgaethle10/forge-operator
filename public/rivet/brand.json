@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.rivet.brand.v1",
+  "canonical_name": "RIVET",
+  "source_of_truth": {
+    "document": "RIVET Brand Kit",
+    "version": "Vol.1",
+    "last_updated": "2026-09-24"
+  },
+  "public_identity_rule": "Customer-facing RIVET surfaces use the RIVET identity only. Legacy product names or marks must not appear as visible RIVET branding.",
+  "logo": {
+    "composition": "map pin with lightning bolt and navigation arrow",
+    "meaning": [
+      "location and geography",
+      "electric vehicles and charging power",
+      "direction and navigation"
+    ],
+    "asset_rule": "Use approved RIVET logo assets only. Do not substitute legacy marks."
+  },
+  "palette": {
+    "midnight": "#0B1424",
+    "neon": "#62D134",
+    "deep_cobalt": "#1F4AAB",
+    "bone": "#F5F2EA",
+    "slate": "#64748B"
+  },
+  "typography": {
+    "headings": "Open Sauce, Medium or bolder",
+    "body": "Public Sans"
+  },
+  "theme": {
+    "default": "light",
+    "light_surface": "Bone",
+    "dark_mode": "Midnight",
+    "neon_usage": "live or locatable",
+    "cobalt_usage": "single most important action on a screen",
+    "accents": [
+      "Bone",
+      "Slate"
+    ]
+  },
+  "iconography": [
+    "Pin",
+    "Lightning Bolt",
+    "Analytics Bar"
+  ],
+  "process": [
+    "locate",
+    "assess",
+    "decide"
+  ]
+}
