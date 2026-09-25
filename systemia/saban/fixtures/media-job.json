@@ -1,0 +1,14 @@
+{
+  "jobs": [
+    {
+      "kind": "media_job",
+      "key": "proof-video-001",
+      "duration_seconds": 1800,
+      "media_ref": "synthetic-proof-media",
+      "requested_outputs": ["transcript", "timeline", "duplicate_segments"],
+      "provenance": {
+        "mode": "synthetic-proof"
+      }
+    }
+  ]
+}

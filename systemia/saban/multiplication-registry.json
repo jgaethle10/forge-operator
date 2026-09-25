@@ -1,0 +1,144 @@
+{
+  "schema": "evercraft.saban.multiplication-registry.v1",
+  "purpose": "Describe how Saban may safely fan out bounded logical workers around Evercraft software without blindly duplicating side effects.",
+  "defaults": {
+    "default_logical_agents": 10,
+    "max_logical_agents": 10000,
+    "default_physical_workers": 8,
+    "max_physical_workers": 64,
+    "lease_seconds": 300,
+    "side_effect_policy": "deny_unless_declared"
+  },
+  "software": [
+    {
+      "software_id": "chum",
+      "name": "CHUM",
+      "expansion": "Capability Handoff & Utility Mesh",
+      "aliases": [
+        "capability-handoff-utility-mesh",
+        "capability handoff utility mesh"
+      ],
+      "adapter": "systemia/chum/saban-adapter.mjs",
+      "default_logical_agents": 10000,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 32,
+      "max_physical_workers": 64,
+      "lease_seconds": 300,
+      "roles": [
+        "portfolio_archaeologist",
+        "surface_auditor",
+        "intent_cartographer",
+        "answer_door_planner",
+        "commerce_path_auditor",
+        "crawl_pressure_planner",
+        "conformance_guard",
+        "reconciliation_scout"
+      ],
+      "work_sources": [
+        {
+          "file": "public/.well-known/evercraft-products.json",
+          "field": "products",
+          "kind": "product",
+          "key_field": "product_key"
+        },
+        {
+          "file": "public/.well-known/evercraft-machine-catalog.json",
+          "field": "offers",
+          "kind": "offer",
+          "key_field": "public_id"
+        },
+        {
+          "file": "public/.well-known/evercraft-pain-index.json",
+          "field": "entries",
+          "kind": "pain",
+          "key_field": "public_id"
+        }
+      ],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "public_discovery_file_updates": true,
+        "external_network": "adapter_gated",
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "private_topology_publication": false
+      },
+      "max_attempts_per_job": 4,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 64,
+        "max_work_items": 250000,
+        "max_attempts_per_job": 4
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "coverage_amplification",
+        "target_logical_per_physical_worker": 250,
+        "minimum_role_item_passes": 1
+      }
+    },
+    {
+      "software_id": "media-pipeline",
+      "name": "Evercraft Media Pipeline",
+      "aliases": [
+        "media",
+        "long-media",
+        "video-pipeline"
+      ],
+      "adapter": "systemia/saban/chunk-adapter.mjs",
+      "default_logical_agents": 256,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 16,
+      "max_physical_workers": 128,
+      "lease_seconds": 900,
+      "roles": [
+        "media_shard_worker",
+        "transcription_worker",
+        "timeline_worker",
+        "duplicate_segment_worker",
+        "frame_review_worker",
+        "provenance_guard",
+        "cross_shard_reconciler"
+      ],
+      "work_sources": [],
+      "partitioner": {
+        "type": "media_time_windows",
+        "window_seconds": 300,
+        "overlap_seconds": 5
+      },
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "source_media_write": false,
+        "external_network": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 128,
+        "max_work_items": 50000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 7,
+        "target_logical_per_physical_worker": 4,
+        "minimum_role_item_passes": 1
+      }
+    }
+  ]
+}

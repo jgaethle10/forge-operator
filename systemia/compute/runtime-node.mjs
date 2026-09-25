@@ -2,9 +2,13 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
+import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
+
+const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -97,6 +101,7 @@ export async function startEvercraftComputeNode({
     'systemia.private-core-origin.v1',
     'systemia.kaidance-collider.v1',
     'saban.logical-agent',
+    'saban.multiplier-assignment.v1',
   ]);
 
   async function stopService(serviceId, reason = 'operator_requested') {
@@ -266,6 +271,44 @@ export async function startEvercraftComputeNode({
           return send(res, 200, {
             ok: true,
             node_id: nodeId,
+            checkpoint,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'saban.multiplier-assignment.v1') {
+          const software = String(body.input?.software || '');
+          const assignment = body.input?.assignment;
+          if (!software || !assignment) {
+            return send(res, 422, { error: 'registered_assignment_required' });
+          }
+
+          const workerResult = await runRegisteredAssignment({
+            software,
+            assignment,
+            rootDir: CODE_ROOT,
+          });
+          const checkpoint = {
+            step: Number(body.checkpoint?.step || 0) + 1,
+            state: {
+              software_id: workerResult.software_id,
+              agent_id: workerResult.agent_id,
+              work: workerResult.work,
+              result: workerResult.result,
+            },
+            last_node: nodeId,
+          };
+          const receipt = chain.issue('saban.assignment.executed', {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            software_id: workerResult.software_id,
+            agent_id: workerResult.agent_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result: workerResult,
             checkpoint,
             receipt,
           });

@@ -1,0 +1,21 @@
+{
+  "schema": "evercraft.saban.formation-request.v1",
+  "formation_id": "proof-mixed-formation",
+  "nodes": [
+    {
+      "id": "discovery-pass",
+      "software": "chum",
+      "logical_agents": 128,
+      "physical_workers": 8,
+      "reconcile": false
+    },
+    {
+      "id": "media-pass",
+      "software": "media-pipeline",
+      "inventory": "systemia/saban/fixtures/media-job.json",
+      "auto": true,
+      "depends_on": ["discovery-pass"],
+      "reconcile": true
+    }
+  ]
+}

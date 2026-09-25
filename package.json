@@ -20,7 +20,7 @@
     "chum:providers": "node systemia/chum/provider-probes.mjs",
     "chum:announce": "node systemia/chum/indexnow.mjs",
     "chum:all": "npm run chum:sync && npm run chum:revenue && npm run test:chum-revenue && npm run chum:index && npm run chum:answers && npm run chum:capabilities && npm run chum:mirror && npm run chum:crawl-pressure && npm run test:chum-surfaces && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run test:chum-crawl-pressure && npm run chum && npm run chum:crawlers && npm run chum:mcp",
-    "check": "npm run test:signal-fabric-engine && npm run test:signal-fabric && npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run proof:offline-continuity && npm run test:media-studio && npm run chum:mirror && npm run chum:crawl-pressure && npm run test:ibmi-rescue-discovery && npm run check:ai && npm run test:openai-plugin-submission && npm run test:chum-crawler-policy && npm run test:chum-capabilities && npm run test:chum-hunter && npm run test:chum-ard-strike && npm run test:chum-live-intent && npm run saban:discovery && npm run saban:discovery:check && npm run test:saban-revenue && npm run test:chum-revenue && npm run test:chum-surfaces && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run test:chum-crawl-pressure && npm run check:probes && npm run lint && npm run build",
+    "check": "npm run test:signal-fabric-engine && npm run test:signal-fabric && npm run check:workflow-noise && npm run test:release-policy && npm run proof:systemia && npm run proof:offline-continuity && npm run test:media-studio && npm run chum:mirror && npm run chum:crawl-pressure && npm run test:ibmi-rescue-discovery && npm run check:ai && npm run test:openai-plugin-submission && npm run test:chum-crawler-policy && npm run test:chum-capabilities && npm run test:chum-hunter && npm run test:chum-ard-strike && npm run test:chum-live-intent && npm run check:saban-contracts && npm run proof:saban-kernel && npm run saban:discovery && npm run saban:discovery:check && npm run test:saban-revenue && npm run test:chum-revenue && npm run test:chum-surfaces && npm run test:chum-router && npm run test:chum-index && npm run test:chum-answers && npm run test:chum-crawl-pressure && npm run check:probes && npm run lint && npm run build",
     "proof:saban-network": "node systemia/network/saban-network-proof.mjs --agents 10000 --out ./saban-proof-output",
     "test:release-policy": "node systemia/release/release-policy.test.mjs",
     "media:studio": "tsx systemia/media-studio/cli.ts",
@@ -73,7 +73,16 @@
     "proof:legacy-rescue-link-discovery": "node systemia/organism/legacy-rescue-link-discovery.proof.mjs",
     "chum:crawl-pressure": "node systemia/chum/crawl-accelerator.mjs",
     "chum:crawl-pressure:broadcast": "node systemia/chum/crawl-accelerator.mjs --broadcast",
-    "test:chum-crawl-pressure": "node tests/chum-crawl-accelerator.test.mjs"
+    "test:chum-crawl-pressure": "node tests/chum-crawl-accelerator.test.mjs",
+    "saban:multiply": "node systemia/saban/multiplier.mjs",
+    "saban:chum:10000": "node systemia/saban/multiplier.mjs --software chum --agents 10000 --workers 32",
+    "proof:saban-kernel": "node systemia/saban/kernel-proof.mjs",
+    "proof:saban-chum": "node systemia/saban/multiplier.mjs --software chum --agents 512 --workers 16 --execute",
+    "proof:saban-media": "node systemia/saban/multiplier.mjs --software media-pipeline --inventory systemia/saban/fixtures/media-job.json --agents 32 --workers 4 --execute --reconcile",
+    "check:saban-contracts": "node systemia/saban/contract-doctor.mjs",
+    "saban:formation": "node systemia/saban/formation.mjs",
+    "proof:saban-formation": "node systemia/saban/formation.mjs --request systemia/saban/fixtures/formation-proof.json --execute",
+    "proof:saban-nodeseed-multiplier": "node systemia/network/saban-multiplier-nodeseed-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
