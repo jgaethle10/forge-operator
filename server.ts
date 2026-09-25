@@ -9,6 +9,7 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 
 dotenv.config();
 
@@ -1214,6 +1215,14 @@ async function generateContentWithFallback(params: {
 
   throw lastError || new Error('All model candidates failed to generate content.');
 }
+
+registerFallenFamilyRoutes(app, {
+  ai,
+  Type,
+  generateContentWithFallback,
+  parseGeminiError,
+  rateLimit,
+});
 
 // Main Analysis Endpoint
 app.post('/api/forge', rateLimit(12, 60 * 60 * 1000), async (req: Request, res: Response) => {
