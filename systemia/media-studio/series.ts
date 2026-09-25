@@ -254,10 +254,16 @@ function proposedCanonFor(
 }
 
 function productionNeedsFor(
+  project: MediaProject,
   filmPlan: SeriesEpisodePlan['filmPlan'],
   dialogue: SeriesEpisodePlan['dialogue'],
   continuityDigest: string,
 ): ProductionNeed[] {
+  const activeEntityIds = [...new Set([
+    ...project.assets.flatMap((asset) => asset.entityRefs ?? []),
+    ...(project.brief.continuityClaims ?? []).map((claim) => claim.subjectId),
+    ...dialogue.map((cue) => cue.speakerId),
+  ])].sort();
   const visualNeeds: ProductionNeed[] = filmPlan.generationRequests.map((request) => ({
     id: `need-${request.id}`,
     kind: 'video',
@@ -265,6 +271,7 @@ function productionNeedsFor(
     durationSec: request.durationSec,
     aspectRatio: request.aspectRatio,
     sourceRequestId: request.id,
+    continuityEntityIds: activeEntityIds,
     continuityDigest,
     requires: [
       'reference_identity',
@@ -282,6 +289,7 @@ function productionNeedsFor(
     speakerId: cue.speakerId,
     voiceProfileId: cue.voiceProfileId,
     language: cue.language,
+    continuityEntityIds: [cue.speakerId],
     continuityDigest,
     requires: [
       'voice_profile',
@@ -340,6 +348,7 @@ export function compileSeriesEpisode(
   );
 
   const productionNeeds = productionNeedsFor(
+    normalizedProject,
     filmPlan,
     dialogue,
     continuity.bibleDigest,
