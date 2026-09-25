@@ -121,5 +121,15 @@
   "routing_policy": {
     "owned_capability_first": true,
     "first_party_strict_fails_closed": true
+  },
+  "conversion_corridor": {
+    "start_pattern": "/api/chum/go/{publicId}",
+    "eligibility": "sell_now offers only",
+    "behavior": "HTTP 303 to the human review and checkout-preparation flow",
+    "attribution": "signed privacy-minimized referral when configured; attribution is not required for the human to continue",
+    "discovery_creates_payment_obligation": false,
+    "start_creates_payment_obligation": false,
+    "checkout_is_payment_proof": false,
+    "verified_revenue_requires_authoritative_payment_evidence": true
   }
 }
