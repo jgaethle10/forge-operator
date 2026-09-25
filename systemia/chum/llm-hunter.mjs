@@ -14,6 +14,7 @@ const readJson = (path, fallback = {}) => {
 const providerMatrix = readJson('chum-probes/provider-matrix.json', { providers: [] });
 const probeSuite = readJson('chum-probes/probe-suite.json', { cases: [] });
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json', { offers: [] });
+const revenueFormation = readJson('artifacts/saban-revenue/latest.json', null);
 
 const positiveCases = (probeSuite.cases || []).filter((x) => x.enabled && x.expected_fit);
 const sellNowOffers = (machineCatalog.offers || []).filter((x) => x.commercial_state === 'sell_now');
@@ -148,7 +149,15 @@ const knownProviders = (providerMatrix.providers || []).map((provider) => ({
 }));
 
 const hourIndex = Math.floor(now.getTime() / 3600000);
-const rotationCase = positiveCases.length ? positiveCases[hourIndex % positiveCases.length] : null;
+const caseById = new Map(positiveCases.map((c) => [c.case_id, c]));
+const prioritizedCaseIds = [...new Set(
+  (revenueFormation?.focus_rotation || [])
+    .flatMap((row) => Array.isArray(row?.probe_case_ids) ? row.probe_case_ids : [])
+    .filter(Boolean)
+)];
+const prioritizedCases = prioritizedCaseIds.map((id) => caseById.get(id)).filter(Boolean);
+const rotationPool = prioritizedCases.length ? prioritizedCases : positiveCases;
+const rotationCase = rotationPool.length ? rotationPool[hourIndex % rotationPool.length] : null;
 
 const receipt = {
   schema: 'evercraft.chum.llm-hunter.receipt.v1',
@@ -162,7 +171,8 @@ const receipt = {
     no_captcha_or_access_control_bypass: true,
     no_fake_provider_pickup: true,
     no_silent_payment: true,
-    explicit_human_confirmation_for_payment: true
+    explicit_human_confirmation_for_payment: true,
+    internal_revenue_priorities_not_published_as_external_recommendation_bias: true
   },
   attack_loop: [
     'DISCOVER_ECOSYSTEM',
@@ -177,7 +187,12 @@ const receipt = {
   commercial_payload: {
     sell_now_offers: sellNowOffers.length,
     sell_now_ids: sellNowOffers.map((x) => x.public_id),
-    positive_probe_cases: positiveCases.length
+    positive_probe_cases: positiveCases.length,
+    saban_revenue_formation_applied: Boolean(revenueFormation?.schema === 'evercraft.saban.revenue-formation.v1'),
+    first_dollar_focus: (revenueFormation?.lanes?.first_dollar_velocity || []).slice(0, 5).map((x) => x.public_id),
+    high_value_focus: (revenueFormation?.lanes?.high_value_cash || []).slice(0, 5).map((x) => x.public_id),
+    repair_before_distribution: (revenueFormation?.lanes?.repair_before_distribution || []).map((x) => x.public_id),
+    prioritized_probe_cases: prioritizedCaseIds
   },
   rotation: rotationCase ? {
     case_id: rotationCase.case_id,
@@ -209,6 +224,7 @@ const md = [
   `Recon next: ${receipt.summary.recon_next}`,
   `Errors: ${receipt.summary.errors}`,
   rotationCase ? `Rotating attack probe: ${rotationCase.case_id} → ${rotationCase.product_key}` : 'Rotating attack probe: none',
+  `Saban revenue formation: ${revenueFormation?.schema === 'evercraft.saban.revenue-formation.v1' ? 'applied' : 'not present; using neutral rotation'}`,
   '',
   '## Doctrine',
   '',
@@ -237,7 +253,8 @@ const publicSummary = {
     no_human_spam: true,
     legitimate_public_machine_entrances_only: true,
     provider_pickup_requires_receipt: true,
-    payment_requires_human_confirmation: true
+    payment_requires_human_confirmation: true,
+    internal_revenue_priorities_are_not_external_recommendations: true
   }
 };
 fs.mkdirSync('public/chum', { recursive: true });
