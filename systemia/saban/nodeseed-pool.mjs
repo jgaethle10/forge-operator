@@ -151,6 +151,7 @@ async function inspectNode(endpoint, options = {}) {
     node_id: capacity.node_id,
     capacity_hint: capacity.capacity_hint || null,
     allocation_auth: capacity.allocation_auth || null,
+    lease_renewal_supported: capacity.lease_renewal_supported === true,
     supported_workloads: capacity.supported_workloads
   };
 }
@@ -178,6 +179,25 @@ async function leaseNode(node, options = {}) {
     expires_at: lease.expires_at,
     staged_digests: new Set()
   };
+}
+
+async function renewNode(node, options = {}) {
+  if (!node.lease_id || !node.lease_token || node.lease_renewal_supported !== true) {
+    return null;
+  }
+  const renewed = await requestJson(
+    `${node.endpoint}/v1/leases/${node.lease_id}/renew`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        token: node.lease_token,
+        requested_ttl_ms: Number(options.requestedTtlMs || 300000)
+      })
+    },
+    options.timeoutMs || 3000
+  );
+  node.expires_at = renewed.expires_at;
+  return renewed;
 }
 
 async function releaseNode(node, options = {}) {
@@ -325,6 +345,7 @@ export async function runNodeSeedAssignmentPool({
   timeoutMs = 3000,
   assignmentTimeoutMs = 120000,
   requestedTtlMs = 300000,
+  leaseRenewalIntervalMs = null,
   resourceProfile = null,
   stageAuthorizedSources = false,
   prepareAssignment = null,
@@ -370,7 +391,8 @@ export async function runNodeSeedAssignmentPool({
     allocatorTokens,
     timeoutMs,
     assignmentTimeoutMs,
-    requestedTtlMs
+    requestedTtlMs,
+    leaseRenewalIntervalMs
   };
 
   const leased = [];
@@ -388,6 +410,58 @@ export async function runNodeSeedAssignmentPool({
   }
 
   if (!leased.length) throw new Error('no_nodeseed_leases_granted');
+
+  const renewalEvents = [];
+  const renewalTimers = [];
+  let renewalsStopped = false;
+
+  async function renewLeaseWithReceipt(node, phase = 'heartbeat') {
+    if (node.lease_renewal_supported !== true || renewalsStopped) return;
+    try {
+      const renewed = await renewNode(node, leaseOptions);
+      if (renewed) {
+        renewalEvents.push({
+          type: 'lease.renewed',
+          phase,
+          node_id: node.node_id,
+          endpoint: node.endpoint,
+          expires_at: node.expires_at
+        });
+      }
+    } catch (error) {
+      renewalEvents.push({
+        type: 'lease.renewal.failed',
+        phase,
+        node_id: node.node_id,
+        endpoint: node.endpoint,
+        reason: error instanceof Error ? error.message : String(error)
+      });
+      if (Date.parse(node.expires_at || 0) <= Date.now()) {
+        node.healthy = false;
+      }
+    }
+  }
+
+  for (const node of leased) {
+    if (node.lease_renewal_supported !== true) continue;
+    await renewLeaseWithReceipt(node, 'initial');
+    const remaining = Math.max(
+      30_000,
+      Date.parse(node.expires_at || 0) - Date.now()
+    );
+    const intervalMs = Math.max(
+      5_000,
+      Math.min(
+        60_000,
+        Number(leaseOptions.leaseRenewalIntervalMs || Math.floor(remaining / 3))
+      )
+    );
+    const timer = setInterval(() => {
+      renewLeaseWithReceipt(node, 'heartbeat').catch(() => {});
+    }, intervalMs);
+    timer.unref?.();
+    renewalTimers.push(timer);
+  }
 
   const queue = assignments.map((assignment, index) => ({
     assignment,
@@ -407,12 +481,12 @@ export async function runNodeSeedAssignmentPool({
   };
   let cursor = 0;
 
-  async function worker(workerIndex) {
+  async function worker(workerIndex, pickExecutionNode) {
     while (true) {
       const job = queue.shift();
       if (!job) return;
 
-      const node = pickNode(leased, cursor++);
+      const node = pickExecutionNode(cursor++);
       if (!node) {
         queue.unshift(job);
         return;
@@ -520,13 +594,15 @@ export async function runNodeSeedAssignmentPool({
     Math.min(assignments.length, placementRing.length)
   );
 
-  const originalLeased = leased.splice(0, leased.length, ...placementRing);
+  const executionNodes = placementRing;
+  const pickExecutionNode = (cursorValue) => pickNode(executionNodes, cursorValue);
 
   await Promise.all(
-    Array.from({ length: workerCount }, (_, index) => worker(index))
+    Array.from({ length: workerCount }, (_, index) => worker(index, pickExecutionNode))
   );
 
-  leased.splice(0, leased.length, ...[...new Map(originalLeased.map((node) => [node.endpoint, node])).values()]);
+  renewalsStopped = true;
+  for (const timer of renewalTimers) clearInterval(timer);
 
   await Promise.allSettled(
     leased.map((node) => releaseNode(node, leaseOptions))
@@ -551,7 +627,12 @@ export async function runNodeSeedAssignmentPool({
     })),
     rejected_nodes: [...resolved.rejected, ...resourceRejected],
     lease_failures: leaseFailures,
-    events,
+    events: [...renewalEvents, ...events],
+    lease_renewals: {
+      supported_nodes: leased.filter((node) => node.lease_renewal_supported === true).length,
+      renewed: renewalEvents.filter((event) => event.type === 'lease.renewed').length,
+      failed: renewalEvents.filter((event) => event.type === 'lease.renewal.failed').length
+    },
     results,
     failures
   };
