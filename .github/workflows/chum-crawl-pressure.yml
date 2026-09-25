@@ -13,7 +13,7 @@ on:
       - "package.json"
       - ".github/workflows/chum-crawl-pressure.yml"
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
@@ -42,7 +42,6 @@ jobs:
         run: npm run chum:crawl-pressure
 
       - name: Verify live release and request recrawl
-        if: github.event_name != 'push'
         env:
           CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
           CHUM_CRAWL_MAX_URLS: "1000"
@@ -66,6 +65,8 @@ jobs:
             public/chum/crawl-state.json \
             public/chum/freshness.json \
             public/chum/freshness.xml \
+            public/chum/hot/index.html \
+            public/chum/hot/index.json \
             public/8aef5f814d0b9c2896c1bc753c65c9bc.txt
 
           if git diff --cached --quiet; then

@@ -45,6 +45,82 @@ function normalizeOrigin(value) {
   }
 }
 
+function resolveVerifiedOrigin(root, explicitOrigin) {
+  const explicit = normalizeOrigin(explicitOrigin);
+  if (explicit) return { origin: explicit, source: 'environment' };
+
+  const receiptPath = path.join(root, 'public', '.well-known', 'evercraft-runtime-origin.json');
+  const receipt = readJsonIfExists(receiptPath, null);
+  const receiptOrigin = normalizeOrigin(receipt?.origin);
+  if (
+    receipt?.schema === 'evercraft.runtime-origin.v1' &&
+    receipt?.runtime === 'forge-operator' &&
+    receipt?.verified === true &&
+    receiptOrigin
+  ) {
+    return {
+      origin: receiptOrigin,
+      source: 'verified_runtime_origin_receipt',
+      receipt_hash: receipt.deployment_receipt_hash || null,
+      verified_at: receipt.verified_at || null
+    };
+  }
+
+  return { origin: null, source: 'not_configured' };
+}
+
+function writeHotDiscoveryHub({ publicRoot, state, origin }) {
+  const dir = path.join(publicRoot, 'chum', 'hot');
+  fs.mkdirSync(dir, { recursive: true });
+
+  const hot = Object.values(state.entries)
+    .slice()
+    .sort((a, b) => {
+      const byPriority = Number(b.priority || 0) - Number(a.priority || 0);
+      if (byPriority) return byPriority;
+      const byTime = String(b.last_changed).localeCompare(String(a.last_changed));
+      return byTime || String(a.path).localeCompare(String(b.path));
+    })
+    .slice(0, 200);
+
+  const json = {
+    schema: 'evercraft.chum.hot-discovery.v1',
+    provider: 'Evercraft LLC',
+    coordinator: 'CHUM',
+    updated_at: state.updated_at,
+    purpose: 'High-priority public discovery surfaces for crawler fan-out. Priority is an internal crawl-order hint, not a ranking or recommendation claim.',
+    surfaces: hot.map((entry) => ({
+      path: entry.path,
+      url: origin ? origin + entry.path : entry.path,
+      priority: entry.priority,
+      last_changed: entry.last_changed
+    }))
+  };
+  fs.writeFileSync(path.join(dir, 'index.json'), JSON.stringify(json, null, 2) + '\n');
+
+  const rows = hot.map((entry) =>
+    `<li data-priority="${Number(entry.priority || 0)}"><a href="${escapeXml(entry.path)}">${escapeXml(entry.path)}</a> <small>priority ${Number(entry.priority || 0)} · changed ${escapeXml(entry.last_changed)}</small></li>`
+  );
+  const html = [
+    '<!doctype html>',
+    '<html lang="en"><head><meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    '<title>Evercraft CHUM Hot Discovery Queue</title>',
+    '<meta name="description" content="High-priority, recently changed public Evercraft discovery surfaces for crawler fan-out.">',
+    '<meta name="robots" content="index,follow,max-snippet:-1">',
+    '<link rel="alternate" type="application/json" href="./index.json">',
+    '</head><body><main>',
+    '<h1>Evercraft CHUM Hot Discovery Queue</h1>',
+    '<p>Public discovery surfaces ordered for crawl fan-out. This page requests attention only and does not claim indexing, ranking, citation, recommendation, or conversion.</p>',
+    '<ol>',
+    ...rows,
+    '</ol>',
+    '</main></body></html>',
+    ''
+  ].join('\n');
+  fs.writeFileSync(path.join(dir, 'index.html'), html);
+}
+
 function sitemapPaths(xml) {
   return [...String(xml || '').matchAll(/<loc>([^<]+)<\/loc>/g)]
     .map((match) => match[1].trim())
@@ -238,7 +314,9 @@ async function remoteMatches({ origin, entry, publicRoot, timeoutMs = 10000 }) {
 
 async function broadcastIndexNow({ origin, state, publicRoot, maxUrls = 1000 }) {
   if (!origin) {
-    return { status: 'skipped_no_verified_origin', submitted: 0, pending: 0, stale: [] };
+    const pending = Object.values(state.entries)
+      .filter((entry) => entry.content_sha256 !== entry.last_indexnow_sha256).length;
+    return { status: 'skipped_no_verified_origin', submitted: 0, pending, stale: [] };
   }
 
   const keyLocation = origin + '/' + INDEXNOW_KEY_FILE;
@@ -373,7 +451,8 @@ export async function buildCrawlPressure({
     if (changed) changedEntries.push(entry);
   }
 
-  const normalizedOrigin = normalizeOrigin(origin);
+  const originResolution = resolveVerifiedOrigin(root, origin);
+  const normalizedOrigin = originResolution.origin;
   const state = {
     schema: 'evercraft.chum.crawl-state.v1',
     provider: 'Evercraft LLC',
@@ -392,16 +471,19 @@ export async function buildCrawlPressure({
 
   rewriteSitemap({ sitemapPath, paths, entries });
 
-  if (changedEntries.length || !fs.existsSync(path.join(publicRoot, 'chum', 'freshness.json'))) {
-    writeFreshnessFeed({
-      publicRoot,
-      state,
-      changedEntries: changedEntries
-        .slice()
-        .sort((a, b) => Number(b.priority || 0) - Number(a.priority || 0) || a.path.localeCompare(b.path)),
-      origin: normalizedOrigin
-    });
-  }
+  writeFreshnessFeed({
+    publicRoot,
+    state,
+    changedEntries: changedEntries
+      .slice()
+      .sort((a, b) => Number(b.priority || 0) - Number(a.priority || 0) || a.path.localeCompare(b.path)),
+    origin: normalizedOrigin
+  });
+  writeHotDiscoveryHub({
+    publicRoot,
+    state,
+    origin: normalizedOrigin
+  });
 
   const broadcastResult = broadcast
     ? await broadcastIndexNow({
@@ -424,6 +506,8 @@ export async function buildCrawlPressure({
     schema: 'evercraft.chum.crawl-pressure.receipt.v1',
     generated_at: now,
     origin: normalizedOrigin,
+    origin_source: originResolution.source,
+    origin_receipt_hash: originResolution.receipt_hash || null,
     indexed_surfaces: state.url_count,
     changed_surfaces: changedEntries.length,
     broadcast: broadcastResult,
@@ -431,6 +515,8 @@ export async function buildCrawlPressure({
       state: 'public/chum/crawl-state.json',
       freshness_json: 'public/chum/freshness.json',
       freshness_atom: 'public/chum/freshness.xml',
+      hot_discovery_html: 'public/chum/hot/index.html',
+      hot_discovery_json: 'public/chum/hot/index.json',
       sitemap: 'public/sitemap.xml',
       indexnow_key: 'public/' + INDEXNOW_KEY_FILE
     },
@@ -443,6 +529,7 @@ export async function buildCrawlPressure({
     '',
     'Generated: ' + receipt.generated_at,
     'Verified origin: ' + (receipt.origin || 'not configured'),
+    'Origin source: ' + receipt.origin_source,
     'Tracked public surfaces: ' + receipt.indexed_surfaces,
     'Content changes detected: ' + receipt.changed_surfaces,
     'IndexNow state: ' + receipt.broadcast.status,
