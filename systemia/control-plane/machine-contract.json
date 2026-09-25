@@ -1,0 +1,143 @@
+{
+  "schema": "evercraft.systemia.machine-contract.v1",
+  "version": "1.0.0",
+  "purpose": "Bind Evercraft-owned orchestration, compute, discovery, continuity, logistics, and product execution into one fail-closed operating spine.",
+  "authority": {
+    "mission_authority": "systemia-organism",
+    "specialist_direct_dispatch": false,
+    "emergency_direct_dispatch": true,
+    "scale_authority": "systemia-organism",
+    "deployment_authority": "yard-operator",
+    "completion_requires_receipts": true,
+    "human_gates_survive_orchestration": true
+  },
+  "components": [
+    {
+      "component_key": "systemia-organism",
+      "role": "mission_authority",
+      "source_refs": [
+        "systemia/organism/kernel.mjs",
+        "systemia/organism/goal-runtime.mjs",
+        "systemia/organism/capability-runtime.mjs"
+      ]
+    },
+    {
+      "component_key": "signal-fabric",
+      "role": "telemetry_and_escalation",
+      "source_refs": [
+        "systemia/signal-fabric/engine.mjs",
+        "systemia/signal-fabric/router.mjs",
+        "systemia/signal-fabric/policy.json"
+      ]
+    },
+    {
+      "component_key": "saban",
+      "role": "elastic_execution",
+      "source_refs": [
+        "systemia/saban/formation.mjs",
+        "systemia/saban/multiplier.mjs",
+        "systemia/saban/multiplication-registry.json"
+      ]
+    },
+    {
+      "component_key": "yard-operator",
+      "role": "deployment_and_runtime_handoff",
+      "source_refs": [
+        "systemia/yard/operator.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-compute",
+      "role": "owned_compute_capacity",
+      "source_refs": [
+        "systemia/compute"
+      ]
+    },
+    {
+      "component_key": "evercraft-network",
+      "role": "transport_and_resilience",
+      "source_refs": [
+        "systemia/network"
+      ]
+    },
+    {
+      "component_key": "chum",
+      "role": "public_discovery_and_distribution",
+      "source_refs": [
+        "systemia/chum"
+      ]
+    },
+    {
+      "component_key": "kaidance-collider",
+      "role": "continuity_and_collision",
+      "source_refs": [
+        "systemia/collider"
+      ]
+    },
+    {
+      "component_key": "beast-mode",
+      "role": "artifact_logistics",
+      "source_refs": [
+        "systemia/beast-mode"
+      ]
+    },
+    {
+      "component_key": "media-studio",
+      "role": "media_production",
+      "source_refs": [
+        "systemia/media-studio"
+      ]
+    }
+  ],
+  "routing": {
+    "incident": "signal-fabric",
+    "signal": "signal-fabric",
+    "deploy": "yard-operator",
+    "release": "yard-operator",
+    "capacity": "evercraft-compute",
+    "network": "evercraft-network",
+    "discovery": "chum",
+    "publish": "chum",
+    "commerce_discovery": "chum",
+    "continuity": "kaidance-collider",
+    "collision": "kaidance-collider",
+    "artifact_transport": "beast-mode",
+    "artifact_delivery": "beast-mode",
+    "media": "media-studio",
+    "video": "media-studio",
+    "audio": "media-studio",
+    "research": "systemia-organism",
+    "analyze": "systemia-organism",
+    "commercial": "systemia-organism",
+    "qa": "systemia-organism",
+    "security": "systemia-organism",
+    "execute": "systemia-organism"
+  },
+  "parallelism": {
+    "provider": "saban",
+    "allowed_software_ids": [
+      "chum",
+      "media-pipeline",
+      "beast-mode"
+    ],
+    "never_becomes_mission_authority": true
+  },
+  "consequential_impacts": [
+    "payment",
+    "financial_obligation",
+    "contract",
+    "legal",
+    "employment",
+    "safety",
+    "trust_boundary",
+    "destructive_release",
+    "external_message",
+    "external_purchase"
+  ],
+  "evidence": {
+    "source_presence_is_not_runtime_readiness": true,
+    "build_green_is_not_live_verified": true,
+    "checkout_url_is_not_payment": true,
+    "completion_without_receipt_or_evidence": false
+  }
+}
