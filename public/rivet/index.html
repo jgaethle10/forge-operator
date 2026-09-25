@@ -3,46 +3,76 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RIVET / AliEV | EV charging site intelligence by address</title>
-<meta name="description" content="Evaluate a specific property for EV charging opportunity using competition, demand, utility and tariff context, incentives, site fit, economics, and preliminary planning.">
+<title>RIVET | EV infrastructure intelligence by address</title>
+<meta name="description" content="RIVET turns property and location data into confident EV infrastructure decisions using competition, demand, power, tariff, incentive, site-fit and economics context.">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta name="theme-color" content="#F5F2EA">
 <link rel="alternate" type="text/plain" href="./llms.txt">
 <link rel="alternate" type="application/json" href="./discovery.json">
+<link rel="alternate" type="application/json" href="./brand.json">
+<link rel="stylesheet" href="./brand.css">
 <link rel="canonical" href="/rivet/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"RIVET / AliEV EV Infrastructure Intelligence","alternateName":["RIVET","Evercraft RIVET","RIVET EV Infrastructure Intelligence","AliEV","AliEV EV Charging Opportunity Intelligence","AliEV EV Site Analysis"],"serviceType":"EV charging site intelligence and property opportunity screening","provider":{"@type":"Organization","name":"Evercraft LLC","url":"https://github.com/jgaethle10/forge-operator"},"identifier":"io.github.jgaethle10/aliev","description":"Address-level EV charging site intelligence for competition, demand, utility and tariff context, incentives, site fit, economics, and preliminary planning.","sameAs":["https://aliev.base44.app/","https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/aliev"]}</script>
-<style>
-body{font-family:system-ui,sans-serif;max-width:940px;margin:56px auto;padding:0 24px;line-height:1.65;background:#09090b;color:#fafafa}
-a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:18px;padding:22px;margin:20px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}
-</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"RIVET","alternateName":["Evercraft RIVET","RIVET EV Infrastructure Intelligence"],"serviceType":"EV charging site intelligence and property opportunity screening","provider":{"@type":"Organization","name":"Evercraft LLC","url":"https://github.com/jgaethle10/forge-operator"},"identifier":"evercraft.rivet","description":"Address-level EV charging site intelligence for competition, demand, utility and tariff context, incentives, site fit, economics and preliminary planning.","url":"/rivet/","sameAs":["https://github.com/jgaethle10/forge-operator/tree/main/public/rivet"]}</script>
+<script>
+(function(){
+  var saved=localStorage.getItem('rivet-theme');
+  if(saved==='dark') document.documentElement.dataset.theme='dark';
+})();
+function toggleRivetTheme(){
+  var root=document.documentElement;
+  var next=root.dataset.theme==='dark'?'light':'dark';
+  root.dataset.theme=next==='dark'?'dark':'';
+  localStorage.setItem('rivet-theme',next);
+  document.querySelector('[data-theme-label]').textContent=next==='dark'?'Light mode':'Dark mode';
+}
+</script>
 </head>
-<body><main>
-<p class="muted">EVERCRAFT · EV INFRASTRUCTURE INTELLIGENCE</p>
-<h1>RIVET / AliEV</h1>
-<p><strong>RIVET / AliEV helps evaluate whether EV charging makes sense at a specific property or address.</strong> AliEV is the address-level intelligence engine. RIVET is the customer-facing planning and reporting layer that turns that intelligence into property-specific deliverables.</p>
-<section class="card"><h2>What it evaluates</h2><ul>
-<li>Public charging supply and nearby competition</li>
-<li>Traffic and demand signals</li>
-<li>Utility and tariff context</li>
-<li>Incentive program context</li>
-<li>Site and electrical-fit signals</li>
-<li>Modeled economics</li>
-<li>Preliminary planning outputs</li>
-</ul></section>
-<section class="card"><h2>Questions this is built for</h2><ul>
-<li>Should I install EV chargers at my property?</li>
-<li>Is this hotel, apartment property, retail site, parking lot, or fleet depot a good EV charging location?</li>
-<li>What EV chargers and competitors are near this address?</li>
-<li>What traffic or demand signals matter for this property?</li>
-<li>What utility, tariff, and incentive context applies to this site?</li>
-<li>What might the EV charging economics look like here?</li>
-<li>Can I get a site-specific EV charging opportunity report or preliminary site plan?</li>
-</ul></section>
-<section class="card"><h2>Open the capability</h2>
-<p><a href="https://aliev.base44.app/"><strong>Open AliEV</strong></a></p>
-<p>Official MCP Registry: <code>io.github.jgaethle10/aliev</code></p>
-<p>Remote MCP: <a href="https://aliev.base44.app/functions/alievMcp">https://aliev.base44.app/functions/alievMcp</a></p>
-<p><a href="/chum/products/aliev/">CHUM product record</a> · <a href="./discovery.json">Machine-readable discovery</a> · <a href="./llms.txt">LLM guide</a></p>
+<body>
+<header class="shell site-header">
+  <a class="wordmark" href="/rivet/" aria-label="RIVET home"><span class="brand-signal" aria-hidden="true"></span>RIVET</a>
+  <button class="theme-toggle" type="button" onclick="toggleRivetTheme()" data-theme-label>Dark mode</button>
+</header>
+<main>
+<section class="shell hero">
+  <div class="eyebrow">EV infrastructure intelligence</div>
+  <h1>Locate. Assess. Decide.</h1>
+  <p class="lede"><strong>RIVET turns location data into confident EV infrastructure decisions.</strong> Start with a real property or address and evaluate the signals that determine whether charging belongs there.</p>
 </section>
-<section class="card"><h2>Evidence boundaries</h2><p>Missing data is not zero. Mapped charger inventory is not observed utilization. Program presence is not proof of incentive eligibility. Modeled economics are not guaranteed realized economics. Preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing, or construction approval.</p></section>
-<p class="muted">This public page is a discovery surface. Its publication does not prove that an AI provider has indexed, cited, recommended, or invoked RIVET / AliEV.</p>
-</main></body></html>
+<section class="shell grid">
+  <article class="card"><h2>What RIVET evaluates</h2><ul>
+    <li>Public charging supply and nearby competition</li>
+    <li>Traffic and demand signals</li>
+    <li>Utility and tariff context</li>
+    <li>Incentive program context</li>
+    <li>Site and electrical-fit signals</li>
+    <li>Modeled economics</li>
+    <li>Preliminary planning outputs</li>
+  </ul></article>
+  <article class="card"><h2>Questions RIVET is built for</h2><ul>
+    <li>Should I install EV chargers at this property?</li>
+    <li>Is this hotel, apartment, retail site, parking lot or fleet depot a strong charging location?</li>
+    <li>What charging supply and competition exist near this address?</li>
+    <li>What traffic, tariff, incentive and power context matters here?</li>
+    <li>What might the economics look like?</li>
+    <li>Can I get a site-specific opportunity report or preliminary site plan?</li>
+  </ul></article>
+  <article class="card card--wide"><h2>Machine discovery</h2>
+    <p class="live">RIVET publishes machine-readable discovery surfaces for assistants, agents and crawlers.</p>
+    <p><a class="cta" href="/chum/capabilities/rivet-site-underwriting-v1/">Open RIVET capability</a></p>
+    <p><a href="./discovery.json">Discovery JSON</a> · <a href="./llms.txt">LLM guide</a> · <a href="./brand.json">Brand manifest</a></p>
+  </article>
+  <article class="card card--wide"><h2>Evidence boundaries</h2>
+    <p>Missing data is not zero. Mapped charger inventory is not observed utilization. Program presence is not proof of incentive eligibility. Modeled economics are not guaranteed realized economics. Preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing or construction approval.</p>
+  </article>
+</section>
+</main>
+<footer class="shell footer">RIVET by Evercraft · Brand system Vol.1 · Light by default, Midnight dark mode available.</footer>
+<script>
+(function(){
+  var dark=document.documentElement.dataset.theme==='dark';
+  var label=document.querySelector('[data-theme-label]');
+  if(label) label.textContent=dark?'Light mode':'Dark mode';
+})();
+</script>
+</body>
+</html>
