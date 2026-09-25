@@ -14,6 +14,7 @@ ENV_DIR="/etc/evercraft"
 ENV_FILE="${ENV_DIR}/nodeseed.env"
 UNIT_FILE="/etc/systemd/system/evercraft-nodeseed.service"
 NODE_BIN="$(command -v node || true)"
+RELEASE_MANIFEST="${SOURCE_ROOT}/FIELD_RELEASE.json"
 
 if [[ -z "${NODE_BIN}" ]]; then
   echo "Node.js is required." >&2
@@ -25,6 +26,22 @@ if [[ "${NODE_MAJOR}" -lt 22 ]]; then
   echo "Node.js 22+ is required." >&2
   exit 3
 fi
+
+if [[ ! -f "${RELEASE_MANIFEST}" ]]; then
+  echo "FIELD_RELEASE.json is required. Install from a reviewed Node 001 field-kit artifact." >&2
+  exit 3
+fi
+
+RELEASE_VERIFY_TMP="$(mktemp)"
+if ! "${NODE_BIN}" "${SOURCE_ROOT}/systemia/compute/field-release.mjs" verify   --root "${SOURCE_ROOT}"   --manifest "${RELEASE_MANIFEST}" > "${RELEASE_VERIFY_TMP}"; then
+  cat "${RELEASE_VERIFY_TMP}" >&2
+  rm -f "${RELEASE_VERIFY_TMP}"
+  exit 3
+fi
+
+RELEASE_SOURCE_COMMIT="$("${NODE_BIN}" -e "const m=require(process.argv[1]); process.stdout.write(String(m.source_commit||''))" "${RELEASE_MANIFEST}")"
+RELEASE_PAYLOAD_DIGEST="$("${NODE_BIN}" -e "const m=require(process.argv[1]); process.stdout.write(String(m.payload_digest||''))" "${RELEASE_MANIFEST}")"
+rm -f "${RELEASE_VERIFY_TMP}"
 
 PREFLIGHT_TMP="$(mktemp)"
 if ! "${NODE_BIN}" "${SOURCE_ROOT}/systemia/compute/field-preflight.mjs" --root "${STATE_ROOT}" > "${PREFLIGHT_TMP}"; then
@@ -44,7 +61,7 @@ chown -R evercraft:evercraft "${STATE_ROOT}"
 rm -rf "${INSTALL_ROOT:?}/"*
 mkdir -p   "${INSTALL_ROOT}/systemia/compute"   "${INSTALL_ROOT}/systemia/collider"   "${INSTALL_ROOT}/systemia/core/bootstrap"
 
-for file in node-seed.mjs runtime-node.mjs capacity-beacon.mjs device-identity.mjs field-preflight.mjs field-certify.mjs field-offline-check.mjs; do
+for file in node-seed.mjs runtime-node.mjs capacity-beacon.mjs device-identity.mjs field-preflight.mjs field-certify.mjs field-offline-check.mjs field-release.mjs; do
   install -m 0644 "${SOURCE_ROOT}/systemia/compute/${file}"     "${INSTALL_ROOT}/systemia/compute/${file}"
 done
 
@@ -53,6 +70,7 @@ for file in kernel.mjs runtime.mjs; do
 done
 
 install -m 0644   "${SOURCE_ROOT}/systemia/core/bootstrap/private-origin.mjs"   "${INSTALL_ROOT}/systemia/core/bootstrap/private-origin.mjs"
+install -m 0644 "${RELEASE_MANIFEST}" "${INSTALL_ROOT}/FIELD_RELEASE.json"
 
 ALLOCATOR_TOKEN="${EVERCRAFT_ALLOCATOR_TOKEN:-}"
 if [[ -z "${ALLOCATOR_TOKEN}" ]]; then
@@ -119,6 +137,8 @@ cat > "${STATE_ROOT}/install-receipt.json" <<EOF
 {
   "schema": "evercraft.node001.install-receipt.v1",
   "node_id": "${NODE_ID}",
+  "source_commit": "${RELEASE_SOURCE_COMMIT}",
+  "runtime_payload_digest": "${RELEASE_PAYLOAD_DIGEST}",
   "install_boot_id_hash": "${INSTALL_BOOT_HASH}",
   "installed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "service": "evercraft-nodeseed.service",
