@@ -6,6 +6,9 @@ const directory = readJson('public/.well-known/evercraft-products.json');
 const conformance = readJson('conformance/products.json');
 const catalog = readJson('registry/catalog.json');
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json');
+const answerGraph = fs.existsSync('public/chum/answers/index.json')
+  ? readJson('public/chum/answers/index.json')
+  : { doors: [] };
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
@@ -68,6 +71,15 @@ function pageDescription(product) {
   return lead
     ? `${product.name} is an Evercraft public capability for: ${lead}.`
     : `${product.name} is an Evercraft public capability in ${product.class || 'software'}.`;
+}
+
+function pageTitle(product) {
+  const firstIntent = Array.isArray(product.intents)
+    ? product.intents.map(String).find(Boolean)
+    : null;
+  if (!firstIntent) return `${product.name} | Evercraft public capability`;
+  const intent = firstIntent.length > 68 ? firstIntent.slice(0, 65).trimEnd() + '...' : firstIntent;
+  return `${product.name} | ${intent}`;
 }
 
 fs.rmSync(root, { recursive: true, force: true });
@@ -204,7 +216,7 @@ for (const product of directory.products || []) {
       },
       {
         '@type': 'WebPage',
-        name: `${product.name} | Evercraft public capability`,
+        name: pageTitle(product),
         description: pageDescription(product),
         about: { '@id': `${canonicalUrl}#evercraft-capability` }
       }
@@ -215,7 +227,7 @@ for (const product of directory.products || []) {
     '<!doctype html>',
     '<html lang="en"><head><meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width,initial-scale=1">',
-    `<title>${escapeHtml(product.name)} | Evercraft public capability</title>`,
+    `<title>${escapeHtml(pageTitle(product))}</title>`,
     `<meta name="description" content="${escapeHtml(pageDescription(product))}">`,
     '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
     '<link rel="alternate" type="text/plain" href="./llms.txt">',
@@ -354,7 +366,11 @@ const sitemapUrls = Array.from(new Set([
     `/chum/products/${product.product_key}/llms.txt`,
     `/chum/products/${product.product_key}/ai-discovery.json`,
     `/chum/products/${product.product_key}/ai-conformance.json`
-  ])
+  ]),
+  ...(answerGraph.doors || []).flatMap((door) => [
+    door.relative_page,
+    door.relative_json
+  ].filter(Boolean))
 ]));
 const sitemap = [
   '<?xml version="1.0" encoding="UTF-8"?>',
