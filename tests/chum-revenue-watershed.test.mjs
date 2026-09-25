@@ -42,9 +42,20 @@ for (const offer of canonicalSellNow) {
   if (canonicalPaidTiers.length && !compact.entry_paid_offer) {
     fail(`sell-now offer missing entry_paid_offer: ${offer.public_id}`);
   }
-  if (!String(compact.start_url || '').startsWith('/api/chum/go/')) {
-    fail(`sell-now offer missing Start URL: ${offer.public_id}`);
+  let start;
+  try { start = new URL(String(compact.start_url || '')); }
+  catch { fail(`sell-now offer missing public Start URL: ${offer.public_id}`); }
+  if (start.protocol !== 'https:') fail(`sell-now Start URL must use HTTPS: ${offer.public_id}`);
+  if (start.hostname !== 'evercraft-ai-suite-08c4d2b8.base44.app') {
+    fail(`sell-now Start URL must use the live Machine Commerce host: ${offer.public_id}`);
   }
+  if (!start.pathname.endsWith('/functions/machineCommerceGateway')) {
+    fail(`sell-now Start URL must use Machine Commerce gateway: ${offer.public_id}`);
+  }
+  if (start.searchParams.get('view') !== 'service') fail(`sell-now Start URL missing service view: ${offer.public_id}`);
+  if (start.searchParams.get('public_id') !== offer.public_id) fail(`sell-now Start URL public_id mismatch: ${offer.public_id}`);
+  if (start.searchParams.get('ec_source') !== 'chum') fail(`sell-now Start URL missing CHUM source: ${offer.public_id}`);
+  if (start.searchParams.get('ec_surface') !== 'chum_pain_page') fail(`sell-now Start URL missing pain-page surface: ${offer.public_id}`);
 
   const slug = String(offer.public_id || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 120);
   const painPagePath = `public/chum/intents/${slug}/index.html`;
