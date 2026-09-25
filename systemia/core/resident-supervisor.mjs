@@ -112,6 +112,10 @@ export class SystemiaCoreResidentSupervisor {
     this.restartHistory = new Map();
     this.receiptFile = path.join(this.stateDir, 'receipts.jsonl');
     this.healthFile = path.join(this.stateDir, 'health.json');
+    this.deploymentReceiptFile = path.join(this.stateDir, 'deployment-receipt.json');
+    this.deploymentReceipt = fs.existsSync(this.deploymentReceiptFile)
+      ? readJson(this.deploymentReceiptFile)?.receipt_ref || null
+      : null;
 
     if (!inside(this.repoRoot, this.configPath)) {
       throw new Error('resident_supervisor_config_outside_repo');
@@ -185,8 +189,25 @@ export class SystemiaCoreResidentSupervisor {
       healthy_count: rows.filter((x) => ['running', 'healthy', 'idle'].includes(x.status)).length,
       held_count: rows.filter((x) => x.status === 'held').length,
       failed_count: rows.filter((x) => x.status === 'failed').length,
+      deployment_receipt: this.deploymentReceipt,
       services: rows,
     };
+  }
+
+  setDeploymentReceipt(receiptRef) {
+    const value = String(receiptRef || '').trim();
+    if (!value) throw new Error('deployment receipt is required');
+    this.deploymentReceipt = value;
+    atomicJson(this.deploymentReceiptFile, {
+      schema: 'evercraft.systemia.core-deployment-binding.v1',
+      receipt_ref: value,
+      bound_at: this.clock().toISOString(),
+    });
+    const receipt = this.#receipt('deployment.receipt.bound', {
+      deployment_receipt: value,
+    });
+    this.#persistHealth();
+    return { ...this.health(), binding_receipt_hash: receipt.receipt_hash };
   }
 
   async #runCycle(entry) {
