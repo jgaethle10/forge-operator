@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:09:39.241Z",
+  "updated_at": "2026-09-25T21:21:04.218Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,134 +11,107 @@
   },
   "latest_change_batch": [
     {
-      "path": "/rivet/mesh/llms.txt",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 86
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:04.218Z",
       "priority": 80
-    },
-    {
-      "path": "/rivet/ev-charging-property-feasibility/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/ev-charging-roi-by-property/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/ev-charging-site-analysis-by-address/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/ev-charging-utility-incentive-screening/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/hotel-ev-charging-site-analysis/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/mesh/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/mesh/index.json",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/multifamily-ev-charging-site-analysis/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/rivet/mesh/llms.txt",
-      "url": "/rivet/mesh/llms.txt",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-25T21:21:04.218Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/intents/rivet-site-underwriting-v1/",
+      "url": "/chum/intents/rivet-site-underwriting-v1/",
+      "last_changed": "2026-09-25T21:21:03.904Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "url": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "last_changed": "2026-09-25T21:21:03.904Z",
+      "priority": 96
+    },
+    {
+      "path": "/rivet/llms.txt",
+      "url": "/rivet/llms.txt",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 86
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-25T21:09:39.241Z",
-      "priority": 80
+      "path": "/rivet/mesh/llms.txt",
+      "url": "/rivet/mesh/llms.txt",
+      "last_changed": "2026-09-25T21:21:03.904Z",
+      "priority": 86
+    },
+    {
+      "path": "/rivet/",
+      "url": "/rivet/",
+      "last_changed": "2026-09-25T21:21:03.904Z",
+      "priority": 60
+    },
+    {
+      "path": "/rivet/discovery.json",
+      "url": "/rivet/discovery.json",
+      "last_changed": "2026-09-25T21:21:03.904Z",
+      "priority": 60
     },
     {
       "path": "/rivet/ev-charging-property-feasibility/",
       "url": "/rivet/ev-charging-property-feasibility/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     {
       "path": "/rivet/ev-charging-roi-by-property/",
       "url": "/rivet/ev-charging-roi-by-property/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     {
       "path": "/rivet/ev-charging-site-analysis-by-address/",
       "url": "/rivet/ev-charging-site-analysis-by-address/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     {
       "path": "/rivet/ev-charging-utility-incentive-screening/",
       "url": "/rivet/ev-charging-utility-incentive-screening/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     {
       "path": "/rivet/hotel-ev-charging-site-analysis/",
       "url": "/rivet/hotel-ev-charging-site-analysis/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     {
       "path": "/rivet/mesh/",
       "url": "/rivet/mesh/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     {
       "path": "/rivet/mesh/index.json",
       "url": "/rivet/mesh/index.json",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     {
       "path": "/rivet/multifamily-ev-charging-site-analysis/",
       "url": "/rivet/multifamily-ev-charging-site-analysis/",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
-    },
-    {
-      "path": "/rivet/llms.txt",
-      "url": "/rivet/llms.txt",
-      "last_changed": "2026-09-25T21:09:32.168Z",
-      "priority": 86
     },
     {
       "path": "/chum/hot/",
       "url": "/chum/hot/",
       "last_changed": "2026-09-25T21:09:32.168Z",
       "priority": 80
-    },
-    {
-      "path": "/rivet/",
-      "url": "/rivet/",
-      "last_changed": "2026-09-25T21:09:32.168Z",
-      "priority": 60
     },
     {
       "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
@@ -445,12 +418,6 @@
       "url": "/chum/pain-index.txt",
       "last_changed": "2026-09-25T20:57:58.745Z",
       "priority": 80
-    },
-    {
-      "path": "/rivet/discovery.json",
-      "url": "/rivet/discovery.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 60
     },
     {
       "path": "/schema.jsonld",
@@ -1547,18 +1514,6 @@
     {
       "path": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
       "url": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
-      "url": "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
-      "url": "/chum/answers/doors/build-a-talent-profile-from-this-portfolio-613dec5ab1.json",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 100
     }

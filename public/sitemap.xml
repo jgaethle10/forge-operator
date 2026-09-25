@@ -19,24 +19,24 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-25T15:37:23.452Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-25T21:09:32.168Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-25T21:21:04.218Z</lastmod></url>
   <url><loc>/chum/freshness.xml</loc></url>
   <url><loc>/chum/freshness.json</loc></url>
   <url><loc>/chum/crawl-state.json</loc></url>
   <url><loc>/chum/sitemap.xml</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-25T20:57:58.745Z</lastmod></url>
-  <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-25T20:57:58.745Z</lastmod></url>
-  <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-25T21:09:32.168Z</lastmod></url>
-  <url><loc>/rivet/</loc><lastmod>2026-09-25T21:09:32.168Z</lastmod></url>
-  <url><loc>/rivet/ev-charging-utility-incentive-screening/</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/multifamily-ev-charging-site-analysis/</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/hotel-ev-charging-site-analysis/</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/ev-charging-roi-by-property/</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/ev-charging-property-feasibility/</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/ev-charging-site-analysis-by-address/</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/mesh/llms.txt</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/mesh/index.json</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
-  <url><loc>/rivet/mesh/</loc><lastmod>2026-09-25T21:09:39.241Z</lastmod></url>
+  <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/ev-charging-utility-incentive-screening/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/multifamily-ev-charging-site-analysis/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/hotel-ev-charging-site-analysis/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/ev-charging-roi-by-property/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/ev-charging-property-feasibility/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/ev-charging-site-analysis-by-address/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/mesh/llms.txt</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/mesh/index.json</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/mesh/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/forensiscope/</loc><lastmod>2026-09-25T19:09:03.844Z</lastmod></url>
   <url><loc>/forensiscope/developers/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/forensiscope/developers/quickstart.html</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
@@ -275,8 +275,8 @@
   <url><loc>/chum/capabilities/raven-nexus-pain-router-v1/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/raven-nexus-pain-router-v1/capability.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/raven-nexus-pain-router-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/rivet-site-underwriting-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
+  <url><loc>/chum/intents/rivet-site-underwriting-v1/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/chum/capabilities/rivet-site-underwriting-v1/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/rivet-site-underwriting-v1/capability.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>

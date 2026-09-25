@@ -2,22 +2,25 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T21:09:39.241Z</updated>
+<updated>2026-09-25T21:21:04.218Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:83390e6fbb6ba43609b73040</id><title>/rivet/mesh/llms.txt</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/mesh/llms.txt"/><category term="priority-86"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:fb97ae67ef2278610b32df02</id><title>/rivet/ev-charging-property-feasibility/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-property-feasibility/"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:0fe56e3ec6e8752d9556574d</id><title>/rivet/ev-charging-roi-by-property/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-roi-by-property/"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:471e0e555ffd56ac7a7b2ce4</id><title>/rivet/ev-charging-site-analysis-by-address/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-site-analysis-by-address/"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:4541193ea0b3d44e0c04a5ff</id><title>/rivet/ev-charging-utility-incentive-screening/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/ev-charging-utility-incentive-screening/"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:9fe2048a2214ac796d709a4c</id><title>/rivet/hotel-ev-charging-site-analysis/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/hotel-ev-charging-site-analysis/"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:744b7f7739c080ff3f310ebd</id><title>/rivet/mesh/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/mesh/"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:c54dc2086fa4b9d200ee2008</id><title>/rivet/mesh/index.json</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/mesh/index.json"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:9ea5fac9de035a703d73fd26</id><title>/rivet/multifamily-ev-charging-site-analysis/</title><updated>2026-09-25T21:09:39.241Z</updated><link href="/rivet/multifamily-ev-charging-site-analysis/"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:a3e8c77f221fee705d18c291</id><title>/rivet/llms.txt</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/rivet/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T21:21:04.218Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:fb6f83ffc3317a9996b347e0</id><title>/chum/intents/rivet-site-underwriting-v1/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/chum/intents/rivet-site-underwriting-v1/"/><category term="priority-98"/></entry>
+<entry><id>urn:evercraft:chum:eb83745119ec6477154d52eb</id><title>/chum/capabilities/rivet-site-underwriting-v1/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/chum/capabilities/rivet-site-underwriting-v1/"/><category term="priority-96"/></entry>
+<entry><id>urn:evercraft:chum:a3e8c77f221fee705d18c291</id><title>/rivet/llms.txt</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:83390e6fbb6ba43609b73040</id><title>/rivet/mesh/llms.txt</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/mesh/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:c5fe63433c60ffd9fb3bb01b</id><title>/rivet/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:2576ed5e803c8026a98fb469</id><title>/rivet/discovery.json</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/discovery.json"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:fb97ae67ef2278610b32df02</id><title>/rivet/ev-charging-property-feasibility/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/ev-charging-property-feasibility/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:0fe56e3ec6e8752d9556574d</id><title>/rivet/ev-charging-roi-by-property/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/ev-charging-roi-by-property/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:471e0e555ffd56ac7a7b2ce4</id><title>/rivet/ev-charging-site-analysis-by-address/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/ev-charging-site-analysis-by-address/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:4541193ea0b3d44e0c04a5ff</id><title>/rivet/ev-charging-utility-incentive-screening/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/ev-charging-utility-incentive-screening/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:9fe2048a2214ac796d709a4c</id><title>/rivet/hotel-ev-charging-site-analysis/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/hotel-ev-charging-site-analysis/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:744b7f7739c080ff3f310ebd</id><title>/rivet/mesh/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/mesh/"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:c54dc2086fa4b9d200ee2008</id><title>/rivet/mesh/index.json</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/mesh/index.json"/><category term="priority-60"/></entry>
+<entry><id>urn:evercraft:chum:9ea5fac9de035a703d73fd26</id><title>/rivet/multifamily-ev-charging-site-analysis/</title><updated>2026-09-25T21:21:03.904Z</updated><link href="/rivet/multifamily-ev-charging-site-analysis/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:c5fe63433c60ffd9fb3bb01b</id><title>/rivet/</title><updated>2026-09-25T21:09:32.168Z</updated><link href="/rivet/"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:c594ca901ae0bade4383f6b3</id><title>/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:bf39b024c0eae8e35e505e63</id><title>/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:646e32b3f779d3a69241e11c</id><title>/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json"/><category term="priority-100"/></entry>
@@ -69,7 +72,6 @@
 <entry><id>urn:evercraft:chum:6d9c0abbf1642687807b64f6</id><title>/chum/index.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:54c615f3a47d6649bffba47c</id><title>/chum/pain-index.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/pain-index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:dd55382bdac459cac744435b</id><title>/chum/pain-index.txt</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/chum/pain-index.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:2576ed5e803c8026a98fb469</id><title>/rivet/discovery.json</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/rivet/discovery.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:63b39bc20528f53ce2aa50b9</id><title>/schema.jsonld</title><updated>2026-09-25T20:57:58.745Z</updated><link href="/schema.jsonld"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:85b28624a8b31b9bd8767fd1</id><title>/.well-known/evercraft-products.json</title><updated>2026-09-25T20:57:51.133Z</updated><link href="/.well-known/evercraft-products.json"/><category term="priority-88"/></entry>
 <entry><id>urn:evercraft:chum:a6d006e91962383a5b586a82</id><title>/chum/answers/doors/as-400-modernization-assessment-49430f448e.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/answers/doors/as-400-modernization-assessment-49430f448e.json"/><category term="priority-100"/></entry>
@@ -103,6 +105,4 @@
 <entry><id>urn:evercraft:chum:632a0322a4aba5313c5103f4</id><title>/chum/products/deck-capital-fit/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/deck-capital-fit/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:5251e5abee9c27c2717aaab1</id><title>/chum/products/ecoledger/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/ecoledger/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:f37feedbe339cba1b98573ca</id><title>/chum/products/ecoledger/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/ecoledger/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:8d9f99e41e628206a58da3cd</id><title>/chum/products/eps-estimate-engine/ai-conformance.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/eps-estimate-engine/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:fa8083c0055e733b55269072</id><title>/chum/products/eps-estimate-engine/ai-discovery.json</title><updated>2026-09-25T20:22:17.737Z</updated><link href="/chum/products/eps-estimate-engine/ai-discovery.json"/><category term="priority-94"/></entry>
 </feed>

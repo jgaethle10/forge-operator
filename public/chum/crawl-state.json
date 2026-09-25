@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T21:09:39.241Z",
+  "updated_at": "2026-09-25T21:21:04.218Z",
   "url_count": 1848,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -122,8 +122,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "8bba2d859f2e05e8ebaad38119896d5933aac438bae65cdfb7faa7f349f6e1ec",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "8c4d6420376e381ef111b37469248d2087d236291517d86fc94eabebc5c92c71",
+      "last_changed": "2026-09-25T21:21:04.218Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
@@ -140,74 +140,74 @@
     },
     "/rivet/discovery.json": {
       "path": "/rivet/discovery.json",
-      "content_sha256": "1c0e78d2826800f251407b24ffc8032e72728a6c0ac7124578bfff11d2256640",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "eef9270139ca540b4d11aa14af9afd47ff79b0febc3600840e2a3008eb5e4fc3",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/llms.txt": {
       "path": "/rivet/llms.txt",
-      "content_sha256": "133eb9e293ed00d4bcb3a517f5b2b2e2c4d8b30c2c6cc5ff53f431b87e69dd74",
-      "last_changed": "2026-09-25T21:09:32.168Z",
+      "content_sha256": "ab8e54e3b3cf801cea123428aca87b4cda1e781d6e70d24b05ea3196e8bca4c4",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 86
     },
     "/rivet/": {
       "path": "/rivet/",
-      "content_sha256": "7bf18022439770efa9cb3dc0b55bad9c7384902d2c333c6848dad5da1e44829b",
-      "last_changed": "2026-09-25T21:09:32.168Z",
+      "content_sha256": "d261411c4f3eeadf88ca1d5cc1b40784f79897eebd9e54bfb09304a6125450f9",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/ev-charging-utility-incentive-screening/": {
       "path": "/rivet/ev-charging-utility-incentive-screening/",
-      "content_sha256": "364e22a64b582b186fe52e11aab6fb952a3fbc29832ad8d61f1041b4be507a36",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "aa7f63bc77194f0a9a88381a683d1d5a6d3e3700aa63a032fc65c35a43cfc3de",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/multifamily-ev-charging-site-analysis/": {
       "path": "/rivet/multifamily-ev-charging-site-analysis/",
-      "content_sha256": "51d6d803f9954a548d56218381c2737d434438e9412161a5e2e8f7dc35f3da21",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "018f924564377ee182df86adf8f34d776c9ca381c57ed72a3b4a41108fac734a",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/hotel-ev-charging-site-analysis/": {
       "path": "/rivet/hotel-ev-charging-site-analysis/",
-      "content_sha256": "47cba8b3a1ffae06ea077fac1e249086816e8eea83e58112cc41f3f7b3f915a8",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "f868bfd9be860dee4dce3ced140177eb8563ff7f843d87ce61f189e35c435b66",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/ev-charging-roi-by-property/": {
       "path": "/rivet/ev-charging-roi-by-property/",
-      "content_sha256": "b65e5b57c9549de5021bf7fc9283e359d94ab01339d00ed1f7892c7e9135730f",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "13c0855348611b114ae5966319353016260ed7140e52eb71692b5e30cc4dda2f",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/ev-charging-property-feasibility/": {
       "path": "/rivet/ev-charging-property-feasibility/",
-      "content_sha256": "10fcc9d3893ed5c55d50b532c6479b58ceb5a730f9823aebf96dbe588e6b0c7b",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "e8a1eeb3e5ce9c591bac5b317e16801905cb167897d015b4a6f3a18f12c0e3fe",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/ev-charging-site-analysis-by-address/": {
       "path": "/rivet/ev-charging-site-analysis-by-address/",
-      "content_sha256": "db05e38f3772d5e1602f1465b083ee5affa907819b7d9632ea155a74b34b6c2a",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "d404584bc9b2937cb8eb6b8885ec4fc293b931313f8c388dde379a0ec80263ee",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/mesh/llms.txt": {
       "path": "/rivet/mesh/llms.txt",
-      "content_sha256": "63d50aa8a18271f27fcbc427833b9f74ee3afceb4915c3f0a910f6576569a15d",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "0eb4178833d03b2114eb409b37afec6eeddb2bd83f3f28e120311eb849676e37",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 86
     },
     "/rivet/mesh/index.json": {
       "path": "/rivet/mesh/index.json",
-      "content_sha256": "39ad7c85eb6b0249209884accd7b13529e99322fe3cbed56a5a9917ff208d3b4",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "5897dbf4cc9356d0f56af0f5c0093969ef86ae5355304898f7bb0de8d08ab183",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/rivet/mesh/": {
       "path": "/rivet/mesh/",
-      "content_sha256": "5fb48b43a8ff257b28adcbfffaa5a576298cdb40b3206a17adb4a01352b36236",
-      "last_changed": "2026-09-25T21:09:39.241Z",
+      "content_sha256": "36778fa4bbc3e2db590f5f79604080855c3457361e4cd9965e81049c9fdb7856",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 60
     },
     "/forensiscope/": {
@@ -1640,14 +1640,14 @@
     },
     "/chum/intents/rivet-site-underwriting-v1/": {
       "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "content_sha256": "636e98b802a40b94aa022c441e462dfd7c9f7ee4db683d16bbcf30626cf0992e",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "c175ecd28a8239075d261b72bf9bab9756f83cba0b28002f5686f1776ecf62e7",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 98
     },
     "/chum/capabilities/rivet-site-underwriting-v1/": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/",
-      "content_sha256": "5355d9f24101d1974b5afcb30ef0ff016cb5e1c88f691a53a548d5d2dc86ea0b",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "b0b8eaaae863f70f12360ba788b53a8b15f433e3b17b94c1b0f99a09d41cff08",
+      "last_changed": "2026-09-25T21:21:03.904Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/llms.txt": {
