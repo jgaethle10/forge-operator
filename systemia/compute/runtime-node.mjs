@@ -64,8 +64,10 @@ export async function startEvercraftComputeNode({
   port = 0,
   leaseTtlMs = 30_000,
   allocatorToken = '',
+  nodeIdentity = null,
 } = {}) {
   if (!root) throw new Error('root is required');
+  if (nodeIdentity && nodeIdentity.node_id !== nodeId) throw new Error('node identity mismatch');
   const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
   const allocatorTokenHash = allocatorToken ? sha(String(allocatorToken)) : null;
   if (!loopbackHost && !allocatorTokenHash) {
@@ -112,6 +114,7 @@ export async function startEvercraftComputeNode({
           ok: true,
           node_id: nodeId,
           runtime: 'Evercraft Compute',
+          node_identity: nodeIdentity,
           supported_workloads: [...supported],
           resident_services: services.size,
         });
@@ -122,6 +125,7 @@ export async function startEvercraftComputeNode({
           protocol: 'evercraft.capacity.v1',
           node_id: nodeId,
           runtime: 'Evercraft Compute',
+          node_identity: nodeIdentity,
           platform: `${process.platform}/${process.arch}`,
           supported_workloads: [...supported],
           allocation: 'explicit_lease',
