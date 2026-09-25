@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import {
   loadMultiplicationRegistry,
   resolveMultiplicationContract,
@@ -259,7 +260,7 @@ async function main() {
   }));
 }
 
-if (import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
   main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
