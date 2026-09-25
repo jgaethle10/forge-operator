@@ -32,8 +32,12 @@ if (!fs.existsSync(marker)) {
   fs.writeFileSync(marker, 'crashed-once');
   process.exit(7);
 }
+const keepAlive = setInterval(() => {}, 1000);
 await new Promise((resolve) => {
-  const close = () => resolve();
+  const close = () => {
+    clearInterval(keepAlive);
+    resolve();
+  };
   process.once('SIGTERM', close);
   process.once('SIGINT', close);
 });
