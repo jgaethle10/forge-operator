@@ -2,9 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-25T20:16:53.283Z</updated>
+<updated>2026-09-25T20:22:13.940Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-25T20:22:13.940Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-25T20:22:13.736Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:a62f1d5d931a4d69ebe32bdc</id><title>/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:468b942d87576d83646646d7</id><title>/chum/answers/doors/4-hour-video-analysis-b25c640591.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/4-hour-video-analysis-b25c640591.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:6773c307c0c5ac36f90410ea</id><title>/chum/answers/doors/account-takeover-protection-6a5072fc31.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/account-takeover-protection-6a5072fc31.json"/><category term="priority-100"/></entry>
@@ -103,6 +105,4 @@
 <entry><id>urn:evercraft:chum:16c6392f6d3e7f1d43202438</id><title>/chum/answers/doors/charger-opportunity-608479187a.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/charger-opportunity-608479187a.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:ba100e672e28d3578edaf073</id><title>/chum/answers/doors/charging-site-economics-6092dd77f1.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/charging-site-economics-6092dd77f1.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:c287088e5d5e14402c558311</id><title>/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:edc588739b83380aacf071d8</id><title>/chum/answers/doors/check-my-local-seo-e8e838ec7c.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/check-my-local-seo-e8e838ec7c.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:40a99bf172d41ad4cb9dc25e</id><title>/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json</title><updated>2026-09-25T20:16:53.283Z</updated><link href="/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json"/><category term="priority-100"/></entry>
 </feed>
