@@ -15,6 +15,7 @@ import { startNodeSeed } from '../compute/node-seed.mjs';
 import { hashFile } from './authorized-source.mjs';
 import { queryEvidenceGraph } from './evidence-query.mjs';
 import { listForensiScopeAgentTools, invokeForensiScopeAgentTool } from './agent-tools.mjs';
+import { persistEvidenceGraph, loadEvidenceGraph, verifyEvidenceRef } from './evidence-store.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -333,6 +334,36 @@ assert.equal(
   true
 );
 
+const storedEvidence = persistEvidenceGraph(
+  receipt.reconciliation.evidence_graph,
+  { rootDir }
+);
+assert.ok(/^forensiscope-evidence:sha256:[a-f0-9]{64}$/.test(storedEvidence.evidence_ref));
+assert.equal(storedEvidence.source_sha256, sourceHashAfter);
+
+const loadedEvidence = loadEvidenceGraph(storedEvidence.evidence_ref, { rootDir });
+assert.equal(loadedEvidence.graph.source_sha256, sourceHashAfter);
+assert.equal(
+  loadedEvidence.graph.node_count,
+  receipt.reconciliation.evidence_graph.node_count
+);
+
+const verifiedEvidence = verifyEvidenceRef(storedEvidence.evidence_ref, { rootDir });
+assert.equal(verifiedEvidence.verified, true);
+assert.equal(verifiedEvidence.graph_digest, storedEvidence.graph_digest);
+
+const persistedEvidenceQuery = invokeForensiScopeAgentTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  graph: loadedEvidence.graph
+});
+assert.ok(persistedEvidenceQuery.match_count > 0);
+assert.equal(persistedEvidenceQuery.hits[0].source_sha256, sourceHashAfter);
+
 const proof = {
   schema: 'evercraft.forensiscope.distributed-execution-proof.v1',
   status: 'pass',
@@ -369,6 +400,10 @@ const proof = {
   context_packet_atoms: contextPacket.atoms.length,
   context_packet_digest: contextPacket.packet_digest,
   context_packet_budget_chars: contextPacket.budget_chars,
+  evidence_ref: storedEvidence.evidence_ref,
+  evidence_graph_digest: storedEvidence.graph_digest,
+  evidence_ref_verified: verifiedEvidence.verified,
+  persisted_evidence_query_matches: persistedEvidenceQuery.match_count,
   public_machine_intake_enabled: false
 };
 
