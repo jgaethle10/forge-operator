@@ -52,7 +52,25 @@
       "buyer_access": 68,
       "proofability": 97,
       "evidence_quality": 98,
-      "days_to_cash": 58
+      "days_to_cash": 58,
+      "discover_links": true,
+      "emit_body_change_signal": false,
+      "emit_links_on_first_seen": false,
+      "allowed_link_hosts": [
+        "www.drs.wa.gov"
+      ],
+      "link_match_terms": [
+        "rfp",
+        "rfi",
+        "solicitation",
+        "vendor",
+        "modernization",
+        "legacy",
+        "system",
+        "software",
+        "contract"
+      ],
+      "max_discovered_links": 100
     },
     {
       "key": "ca-eprocure-supplier",
@@ -69,7 +87,26 @@
       "buyer_access": 74,
       "proofability": 99,
       "evidence_quality": 99,
-      "days_to_cash": 61
+      "days_to_cash": 61,
+      "discover_links": true,
+      "emit_body_change_signal": false,
+      "emit_links_on_first_seen": false,
+      "allowed_link_hosts": [
+        "suppliers.fiscal.ca.gov"
+      ],
+      "link_match_terms": [
+        "bid",
+        "event",
+        "rfp",
+        "rfi",
+        "solicitation",
+        "modernization",
+        "legacy",
+        "mainframe",
+        "software",
+        "system"
+      ],
+      "max_discovered_links": 100
     }
   ]
 }
