@@ -147,6 +147,26 @@
       "proofability": 94,
       "evidence_quality": 100,
       "days_to_cash": 68
+    },
+    {
+      "key": "crown-holdings-ibmi-career",
+      "name": "Crown Holdings IBM i career evidence",
+      "company": "Crown Holdings, Inc.",
+      "url": "https://crownholdings.wd501.myworkdayjobs.com/en-US/CrownHoldings/job/Senior-IBM-i-Developer_JR103745",
+      "allowed_hosts": [
+        "crownholdings.wd501.myworkdayjobs.com"
+      ],
+      "enabled": true,
+      "min_poll_minutes": 360,
+      "emit_on_first_seen": false,
+      "emit_body_change_signal": false,
+      "buyer_signal": true,
+      "source_type": "official_company",
+      "urgency": 84,
+      "buyer_access": 58,
+      "proofability": 98,
+      "evidence_quality": 100,
+      "days_to_cash": 70
     }
   ]
 }
