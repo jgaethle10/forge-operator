@@ -726,6 +726,7 @@ export async function startEvercraftComputeNode({
 
           const workspaceRoot = path.join(stateRoot, 'workspace');
           const legacyOut = path.join(workspaceRoot, 'legacy-rescue-watch');
+          const portfolioSentinelOut = path.join(workspaceRoot, 'portfolio-sentinel');
           const node001Field = path.join(workspaceRoot, 'node001-field', 'megatron');
           const node001Status = path.join(workspaceRoot, 'node001-field', 'megatron-status');
           const remoteDeviceTrustWatchOut = path.join(
@@ -741,6 +742,12 @@ export async function startEvercraftComputeNode({
               {
                 source_key: 'legacy-rescue-opportunity-watch',
                 path: 'legacy-rescue-watch/mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
+              {
+                source_key: 'portfolio-sentinel',
+                path: 'portfolio-sentinel/mission-snapshot.json',
                 required: false,
                 stale_after_seconds: 900,
               },
@@ -770,6 +777,7 @@ export async function startEvercraftComputeNode({
               'signals.json'
             ),
             SYSTEMIA_LEGACY_RESCUE_OUT_DIR: legacyOut,
+            SYSTEMIA_PORTFOLIO_SENTINEL_OUT_DIR: portfolioSentinelOut,
             SYSTEMIA_NODE001_FIELD_DIR: node001Field,
             SYSTEMIA_NODE001_STATUS_DIR: node001Status,
             SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID: String(
