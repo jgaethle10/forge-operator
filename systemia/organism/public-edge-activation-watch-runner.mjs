@@ -77,6 +77,64 @@ function allocatorAuthority(){
   };
 }
 
+async function delegatedCapacityGrant({
+  requiredWorkloads=[],
+  requiredPlacementLabels=[],
+}={}){
+  const brokerDeploymentId=String(
+    process.env.SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID||''
+  ).trim();
+  const yardState=String(process.env.SYSTEMIA_YARD_STATE_DIR||'').trim();
+  if(!brokerDeploymentId||!yardState) return null;
+
+  const yard=new YardOperator({stateDir:path.resolve(yardState)});
+  const inventory=await yard.listRemoteCapacityNodes(brokerDeploymentId);
+  const requiredWork=new Set(requiredWorkloads.map(String));
+  const requiredLabels=new Set(requiredPlacementLabels.map(String));
+
+  const eligible=(inventory.nodes||[]).filter((node)=>{
+    if(node.connected!==true) return false;
+    const capacity=node.capacity||{};
+    const workloads=new Set(capacity.supported_workloads||[]);
+    const labels=new Set(capacity.placement_labels||[]);
+    const edge=capacity.public_edge||{};
+    return (
+      capacity.protocol==='evercraft.capacity.v1' &&
+      capacity.runtime==='Evercraft Compute' &&
+      capacity.attestation_supported===true &&
+      capacity.device_fingerprint===node.device_fingerprint &&
+      [...requiredWork].every((key)=>workloads.has(key)) &&
+      [...requiredLabels].every((key)=>labels.has(key)) &&
+      edge.ready===true &&
+      edge.public_https===true
+    );
+  }).sort((a,b)=>
+    String(b.last_seen_at||'').localeCompare(String(a.last_seen_at||''))
+  );
+
+  if(!eligible.length) return null;
+  const selected=eligible[0];
+  const grant=await yard.remoteCapacityGrant(
+    brokerDeploymentId,
+    selected.node_id
+  );
+  if(
+    grant.node_id!==selected.node_id ||
+    grant.device_fingerprint!==selected.device_fingerprint
+  ){
+    throw new Error('delegated_capacity_grant_identity_mismatch');
+  }
+
+  return {
+    capacityEndpoint:grant.capacity_endpoint,
+    allocatorToken:grant.allocator_token,
+    nodeId:grant.node_id,
+    deviceFingerprint:grant.device_fingerprint,
+    receiptHash:grant.control_grant_receipt_hash||null,
+    brokerRouteReceipt:grant.public_route_receipt_hash||null,
+  };
+}
+
 function discoveryConfig(){
   return {
     bindAddress:String(process.env.EVERCRAFT_DISCOVERY_BIND_ADDRESS||'0.0.0.0'),
@@ -157,6 +215,7 @@ const watcher=new PublicEdgeActivationWatcher({
   releaseRef:releaseRef(),
   discovery:discoveryConfig(),
   allocatorTokenProvider:async()=>allocatorAuthority(),
+  capacityGrantProvider:delegatedCapacityGrant,
   edge:{
     mode:'wildcard_https',
     public_host:String(process.env.EVERCRAFT_PUBLIC_EDGE_HOST||'0.0.0.0'),
