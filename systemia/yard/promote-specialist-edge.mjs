@@ -43,7 +43,8 @@ export function validateExternalCanary(receipt){
     receipt.mcp_tools_list_verified!==true ||
     receipt.read_only_authority_verified!==true ||
     receipt.identity_attestation_verified!==true ||
-    receipt.same_device_binding!==true
+    receipt.same_device_binding!==true ||
+    receipt.field_enrollment_verified!==true
   ){
     throw new Error('external_canary_not_verified');
   }
@@ -65,6 +66,8 @@ export function validateExternalCanary(receipt){
   const deviceFingerprint=String(receipt.device_fingerprint||'').trim();
   const edgeAttestationReceipt=String(receipt.edge_attestation_receipt_ref||'').trim();
   const specialistAttestationReceipt=String(receipt.specialist_attestation_receipt_ref||'').trim();
+  const fieldEnrollmentReceipt=String(receipt.field_enrollment_receipt_ref||'').trim();
+  const publicEdgeAdmissionReceipt=String(receipt.public_edge_admission_receipt_ref||'').trim();
   if(!instanceId) throw new Error('external_canary_instance_id_missing');
   if(!/^sha256:[a-f0-9]{64}$/i.test(deploymentReceipt)){
     throw new Error('external_canary_deployment_receipt_invalid');
@@ -78,6 +81,12 @@ export function validateExternalCanary(receipt){
   if(!/^([a-f0-9]{64}|sha256:[a-f0-9]{64})$/i.test(specialistAttestationReceipt)){
     throw new Error('external_canary_specialist_attestation_receipt_invalid');
   }
+  if(!/^sha256:[a-f0-9]{64}$/i.test(fieldEnrollmentReceipt)){
+    throw new Error('external_canary_field_enrollment_receipt_invalid');
+  }
+  if(!/^sha256:[a-f0-9]{64}$/i.test(publicEdgeAdmissionReceipt)){
+    throw new Error('external_canary_public_edge_admission_receipt_invalid');
+  }
   return {
     origin,
     instance_id:instanceId,
@@ -85,6 +94,8 @@ export function validateExternalCanary(receipt){
     device_fingerprint:deviceFingerprint,
     edge_attestation_receipt_ref:edgeAttestationReceipt,
     specialist_attestation_receipt_ref:specialistAttestationReceipt,
+    field_enrollment_receipt_ref:fieldEnrollmentReceipt,
+    public_edge_admission_receipt_ref:publicEdgeAdmissionReceipt,
     observed_at:String(receipt.observed_at||new Date().toISOString()),
   };
 }
@@ -140,6 +151,9 @@ export function promoteSpecialistSpecs(specs,receipt){
       specialist_attestation_receipt_ref:verified.specialist_attestation_receipt_ref,
       identity_attestation_verified:true,
       same_device_binding:true,
+      field_enrollment_verified:true,
+      field_enrollment_receipt_ref:verified.field_enrollment_receipt_ref,
+      public_edge_admission_receipt_ref:verified.public_edge_admission_receipt_ref,
       observed_at:verified.observed_at,
       promotion_scope:'public_execution_only',
       registry_publication_proven:false,
