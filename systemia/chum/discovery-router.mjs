@@ -159,24 +159,39 @@ export function rankDiscoveryCandidates(machineCatalog, productDirectory, query,
     }))
     .filter((row) => row.score >= minimumScore);
 
-  const combined = [...commercial, ...directory]
+  // Collapse each product family before global ranking. A declared machine-catalog
+  // offer is the more specific continuation contract and therefore takes precedence
+  // over that same product's generic directory record. Between offers from the same
+  // source class, keep the strongest semantic match.
+  const byIdentity = new Map();
+  for (const row of [...commercial, ...directory]) {
+    const identity = row.product_key
+      ? `product:${row.product_key}`
+      : `offer:${row.public_id}`;
+    const prior = byIdentity.get(identity);
+    if (!prior) {
+      byIdentity.set(identity, row);
+      continue;
+    }
+    const rowIsMachine = row.source === 'machine_catalog';
+    const priorIsMachine = prior.source === 'machine_catalog';
+    if (
+      (rowIsMachine && !priorIsMachine) ||
+      (rowIsMachine === priorIsMachine && (
+        row.score > prior.score ||
+        (row.score === prior.score && row.support > prior.support)
+      ))
+    ) {
+      byIdentity.set(identity, row);
+    }
+  }
+
+  return [...byIdentity.values()]
     .sort((a,b) =>
       b.score - a.score ||
       b.support - a.support ||
       Number(a.source !== 'machine_catalog') - Number(b.source !== 'machine_catalog') ||
       String(a.name || '').localeCompare(String(b.name || ''))
-    );
-
-  const seen = new Set();
-  const result = [];
-  for (const row of combined) {
-    const identity = row.product_key
-      ? `product:${row.product_key}`
-      : `offer:${row.public_id}`;
-    if (seen.has(identity)) continue;
-    seen.add(identity);
-    result.push(row);
-    if (result.length >= limit) break;
-  }
-  return result;
+    )
+    .slice(0, limit);
 }
