@@ -29,7 +29,7 @@ assert.equal(offer.machine_state, 'human_handoff_ready');
 assert.equal(offer.commercial_state, 'commercial_pilot');
 assert.ok(offer.intent_terms.includes('our company has too many apps and we do not know what is broken'));
 assert.match(offer.invocation_status, /public machine discovery/i);
-assert.match(offer.invocation_status, /customer monitoring begins only after scoped onboarding/i);
+assert.match(offer.invocation_status, /customer monitoring begins only after separate scoped onboarding and authorization/i);
 assert.equal(machine.offer_count, machine.offers.length);
 assert.equal(machine.sell_now_count, machine.offers.filter((row) => row.commercial_state === 'sell_now').length);
 assert.equal(machine.discovery_count, machine.offer_count - machine.sell_now_count);
