@@ -87,19 +87,21 @@ const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine
 const everySellNow = (catalog.offers || []).filter((row) => row?.commercial_state === 'sell_now');
 assert.equal(everySellNow.length, 13);
 for (const row of everySellNow) {
-  const url = humanStartUrl(row, { surface: 'catalog_regression' });
-  assert.match(
-    url,
-    new RegExp('^https://evercraft-ai-suite-08c4d2b8\\.base44\\.app/buy/' + row.public_id.replace(/[.*+?^$()|[\\]{}]/g, '\\assert.equal(
+  const raw = humanStartUrl(row, { surface: 'catalog_regression' });
+  const url = new URL(raw);
+  assert.equal(url.origin, 'https://evercraft-ai-suite-08c4d2b8.base44.app', row.public_id + ' must use the Evercraft buyer frontage origin');
+  assert.equal(url.pathname, '/buy/' + row.public_id, row.public_id + ' must enter through its universal buyer page');
+  assert.equal(url.searchParams.get('src'), 'chum');
+  assert.equal(url.searchParams.get('campaign'), 'buyer-frontage');
+  assert.equal(url.searchParams.get('ec_surface'), 'catalog_regression');
+  assert.equal(url.searchParams.get('ec_public_id'), row.public_id);
+  assert.equal(humanStartState(row), 'universal_buyer_frontage');
+}
+
+assert.equal(
   humanStartUrl({ ...offer, commercial_state: 'discovery_only' }),
   null
 );
-
-') + '\\?'),
-    row.public_id + ' must enter through the universal buyer frontage'
-  );
-  assert.equal(humanStartState(row), 'universal_buyer_frontage');
-}
 
 console.log(JSON.stringify({
   ok: true,
