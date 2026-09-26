@@ -12,6 +12,14 @@ on:
       - 'systemia/yard/public-edge-controller.mjs'
       - 'systemia/organism/public-edge-controller.workflow.json'
       - 'systemia/organism/public-edge-controller-runner.mjs'
+      - 'systemia/core/public-edge-resident-wiring.proof.mjs'
+      - 'systemia/yard/public-edge-activation-watch.mjs'
+      - 'systemia/organism/public-edge-activation-watch.workflow.json'
+      - 'systemia/organism/public-edge-activation-watch-runner.mjs'
+      - 'systemia/organism/public-edge-field-mission.mjs'
+      - 'systemia/organism/public-edge-field-mission.proof.mjs'
+      - 'systemia/organism/public-edge-controller-runner.proof.mjs'
+      - 'systemia/collider/mission-sources.json'
       - '.github/workflows/systemia-core-resident-supervisor.yml'
   push:
     branches:
@@ -22,6 +30,14 @@ on:
       - 'systemia/core/resident-supervisor-runner.mjs'
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/RESIDENT_SUPERVISOR.md'
+      - 'systemia/core/public-edge-resident-wiring.proof.mjs'
+      - 'systemia/yard/public-edge-activation-watch.mjs'
+      - 'systemia/organism/public-edge-activation-watch.workflow.json'
+      - 'systemia/organism/public-edge-activation-watch-runner.mjs'
+      - 'systemia/organism/public-edge-field-mission.mjs'
+      - 'systemia/organism/public-edge-field-mission.proof.mjs'
+      - 'systemia/organism/public-edge-controller-runner.proof.mjs'
+      - 'systemia/collider/mission-sources.json'
       - '.github/workflows/systemia-core-resident-supervisor.yml'
 
 jobs:
@@ -35,3 +51,5 @@ jobs:
           node-version: '22'
       - name: Prove mixed cycle/resident supervision
         run: node systemia/core/resident-supervisor.proof.mjs
+      - name: Prove public edge supervisor topology
+        run: node systemia/core/public-edge-resident-wiring.proof.mjs
