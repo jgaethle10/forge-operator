@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-26T00:43:21.970Z",
+  "generated_at": "2026-09-26T00:51:07.168Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -160,7 +160,7 @@
       "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -227,7 +227,7 @@
       "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
