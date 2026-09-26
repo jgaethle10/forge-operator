@@ -8,6 +8,20 @@ import {
 
 const baseSpecs=JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.json','utf8'));
 
+function pendingFixture(){
+  const specs=pendingFixture();
+  for(const product of specs.products){
+    if(!['ibmi-rescue','foundry-app-escape','site-survive'].includes(product.slug)) continue;
+    product.state='yard_runtime_proven_public_route_pending';
+    product.registry_name=null;
+    product.mcp_url=null;
+    product.public_origin_state='https_route_unbound';
+    delete product.public_edge_canary;
+    delete product.registry_publication_receipt;
+  }
+  return specs;
+}
+
 function verifiedReceipt(overrides={}){
   return {
     schema:'evercraft.public-edge.external-canary.v1',
@@ -64,14 +78,14 @@ test('verified external canary promotes exactly the three Yard specialists witho
 });
 
 test('promotion is idempotent for the same canary receipt',()=>{
-  const first=promoteSpecialistSpecs(structuredClone(baseSpecs),verifiedReceipt());
+  const first=promoteSpecialistSpecs(pendingFixture(),verifiedReceipt());
   const second=promoteSpecialistSpecs(first.specs,verifiedReceipt());
   assert.equal(second.receipt.changed,0);
 });
 
 test('held canary cannot promote direct doors',()=>{
   assert.throws(
-    ()=>promoteSpecialistSpecs(structuredClone(baseSpecs),verifiedReceipt({
+    ()=>promoteSpecialistSpecs(pendingFixture(),verifiedReceipt({
       verified:false,
       state:'held_no_public_origin_configured',
       public_https_verified:false,
@@ -90,10 +104,43 @@ test('Base44 can never satisfy the Evercraft public-edge promotion gate',()=>{
 });
 
 test('registry publication cannot be inferred from a public execution canary',()=>{
-  const result=promoteSpecialistSpecs(structuredClone(baseSpecs),verifiedReceipt());
+  const result=promoteSpecialistSpecs(pendingFixture(),verifiedReceipt());
   for(const slug of ['ibmi-rescue','foundry-app-escape','site-survive']){
     const product=result.specs.products.find(p=>p.slug===slug);
     assert.equal(product.registry_name,null);
     assert.notEqual(product.state,'registry_published_direct_mcp_existing');
   }
+});
+
+
+test('already-published specialist remains idempotent on the same verified origin',()=>{
+  const specs=pendingFixture();
+  const first=promoteSpecialistSpecs(specs,verifiedReceipt());
+  for(const product of first.specs.products){
+    if(!['ibmi-rescue','foundry-app-escape','site-survive'].includes(product.slug)) continue;
+    product.state='registry_published_direct_mcp_existing';
+    product.registry_name='io.github.jgaethle10/'+product.slug;
+    product.public_edge_canary.registry_publication_proven=true;
+  }
+  const second=promoteSpecialistSpecs(first.specs,verifiedReceipt());
+  assert.equal(second.receipt.changed,0);
+  assert.equal(second.receipt.promoted.length,3);
+  assert.ok(second.receipt.promoted.every(row=>row.state==='already_registry_published'));
+});
+
+test('published registry remote cannot silently move to a different public edge',()=>{
+  const specs=pendingFixture();
+  const first=promoteSpecialistSpecs(specs,verifiedReceipt());
+  for(const product of first.specs.products){
+    if(!['ibmi-rescue','foundry-app-escape','site-survive'].includes(product.slug)) continue;
+    product.state='registry_published_direct_mcp_existing';
+    product.registry_name='io.github.jgaethle10/'+product.slug;
+    product.public_edge_canary.registry_publication_proven=true;
+  }
+  assert.throws(
+    ()=>promoteSpecialistSpecs(first.specs,verifiedReceipt({
+      origin:'https://replacement.evercraft.example',
+    })),
+    /published_registry_remote_change_requires_versioned_republication/
+  );
 });
