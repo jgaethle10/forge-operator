@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T09:48:13.367Z",
+  "updated_at": "2026-09-26T11:08:35.098Z",
   "url_count": 2150,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,26 +39,26 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "40bfcde517c892d92393b42c5401aeeeb357e96be1af32c29eebe6423a68015c",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "9351c8167edd4aec5e2f596813bb7f1909ce30f0b80f65629cb447719992497f",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
       "path": "/chum/sell-now.html",
-      "content_sha256": "d3a78a7607cfefd9331296b036410be8883f1e496d89c972b628934fa014b05e",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "73553c8131998c7abb0778c65ae428488c2cd1ae8fb1261bff5a9a550323b3a0",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 92
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "654a7df724c02624815a6fbec8747c574e7e967fdc67642b8caf3a565d3ce729",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "67360c204ba37e6adc3b85a5289f325ad8efcaebbb46f92ccc49e9812de0babe",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "73727a0e40aa24862a215fa1261c623ba22c8f00f10a0e33420ee1ac8e6f919d",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "f0fd7e8a878438bb6bcebb2e0e70ead1c65eaf7463e9299f88188e07209ac8b0",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "94c4d9864b04d238bf30322f28adaecf2b69f2167050769300c0317134772849",
-      "last_changed": "2026-09-26T09:48:13.367Z",
+      "content_sha256": "421812a5567759f6cad305467cb115544883f1eabd18297e9f4583d44cd48b67",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -1887,20 +1887,20 @@
     },
     "/chum/capabilities/rivet-site-underwriting-v1/": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/",
-      "content_sha256": "6022d89eb9918c4ae9409443d98b92737869e19e256e7f13a9854580c2615351",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "2629a91c1a4c0e68c0bab37a39bdb45c35e0fd02949f762dee969b9262b9c908",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/llms.txt": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
-      "content_sha256": "bdba476d705b872628f86c84a314dd492fbe936b0eb5176c7bcc73b69bc1ccf6",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "a9b35b1121624e07b5eaeb24249f7bb89da8155fecb5fdeec197deeb24c3b21d",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/capability.json": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "content_sha256": "6ab9d849eec2600e7645dfc74a7fc7cc129f04b41436003b87929a02934e7a1d",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "b890e1861353f9dc80be59dffff53f50fd21b463b6e683e86fb24f39bb4f76f0",
+      "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld": {

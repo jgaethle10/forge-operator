@@ -186,7 +186,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: rivet-site-underwriting-v1
 Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
-Preferred agent route: universal fallback
+Preferred agent route: direct specialist
+Direct MCP: https://aliev.base44.app/functions/alievMcp
+Official MCP Registry name: io.github.jgaethle10/aliev
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 Machine state: payment_ready_human_confirmation
 Use this when:
