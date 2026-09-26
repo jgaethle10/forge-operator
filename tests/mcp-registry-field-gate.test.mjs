@@ -37,6 +37,7 @@ function rootWithCanary({fieldVerified}){
     public_edge_canary:{
       verified:true,
       field_enrollment_verified:fieldVerified,
+      mcp_tool_calls_verified:fieldVerified,
       device_fingerprint:'sha256:'+'a'.repeat(64),
       field_enrollment_receipt_ref:fieldVerified?'sha256:'+'b'.repeat(64):null,
       public_edge_admission_receipt_ref:fieldVerified?'sha256:'+'c'.repeat(64):null,
@@ -89,6 +90,30 @@ test('field-backed public canary makes all four specialist candidates publicatio
         'https://specialists.evercraft.example'+
           targets.find(([s])=>s===slug)[2]
       );
+    }
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+
+test('field-backed canary without executed tools remains held',()=>{
+  const root=rootWithCanary({fieldVerified:true});
+  try{
+    const specsPath=path.join(root,'distribution/direct-plugin-specs.json');
+    const specs=JSON.parse(fs.readFileSync(specsPath,'utf8'));
+    for(const product of specs.products){
+      product.public_edge_canary.mcp_tool_calls_verified=false;
+    }
+    fs.writeFileSync(specsPath,JSON.stringify(specs,null,2)+'\n');
+    execFileSync(process.execPath,[script],{cwd:root,stdio:'pipe'});
+    for(const [slug] of targets){
+      const candidate=JSON.parse(fs.readFileSync(
+        path.join(root,'distribution/mcp-registry-candidates',slug+'.json'),
+        'utf8'
+      ));
+      assert.equal(candidate.public_execution_verified,false);
+      assert.equal(candidate.manifest,null);
     }
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
