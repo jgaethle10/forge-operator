@@ -178,7 +178,7 @@ export async function generateYardReport({
     }]
   },{now:now()});
 
-  const sealed=sealFootball({manifest,artifacts:new Map([[artifactId,snapshotBytes]])});
+  const sealed=sealFootball(manifest,new Map([[artifactId,snapshotBytes]]));
   const opened=openFootball(sealed.buffer);
   const caught=opened.artifacts.get(artifactId);
   if(!caught) throw new Error('football_snapshot_missing');
