@@ -44,6 +44,7 @@ function verifiedReceipt(overrides={}){
     certificate_validation:'system_default_trust_store',
     mcp_initialize_verified:true,
     mcp_tools_list_verified:true,
+    mcp_tool_calls_verified:true,
     read_only_authority_verified:true,
     founder_login_required:false,
     external_saas_route_provider_required:false,
@@ -192,5 +193,15 @@ test('malformed field enrollment receipt cannot promote direct doors',()=>{
       field_enrollment_receipt_ref:'not-a-receipt',
     })),
     /external_canary_field_enrollment_receipt_invalid/
+  );
+});
+
+
+test('missing executed tool-call proof cannot promote direct doors',()=>{
+  assert.throws(
+    ()=>promoteSpecialistSpecs(pendingFixture(),verifiedReceipt({
+      mcp_tool_calls_verified:false,
+    })),
+    /external_canary_not_verified/
   );
 });
