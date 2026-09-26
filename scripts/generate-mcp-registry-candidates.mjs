@@ -33,7 +33,7 @@ const TARGETS=new Map([
   ['systemia-remote-ops',{
     registry_name:'io.github.jgaethle10/systemia-remote-ops',
     title:'Systemia Remote Ops',
-    description:'Read-only business decision simulation and routing, with live modeled pricing analysis and clearly held boundaries for hiring, expansion, and strategic transactions.',
+    description:'Read-only business decision simulation and routing for pricing, staffing, product or service changes, expansion, capital purchases, partnerships, acquisitions, business transactions, startup scenarios, and other consequential moves using transparent models and explicit caller-supplied assumptions.',
     version:'1.0.0',
   }],
 ]);
@@ -54,14 +54,21 @@ for(const [slug,meta] of TARGETS){
   const product=(specs.products||[]).find(p=>p.slug===slug);
   if(!product) throw new Error('missing_direct_product:'+slug);
 
+  const fieldBackedCanary=
+    product.public_edge_canary?.verified===true &&
+    product.public_edge_canary?.field_enrollment_verified===true &&
+    /^sha256:[a-f0-9]{64}$/i.test(String(product.public_edge_canary?.device_fingerprint||'')) &&
+    /^sha256:[a-f0-9]{64}$/i.test(String(product.public_edge_canary?.field_enrollment_receipt_ref||'')) &&
+    /^sha256:[a-f0-9]{64}$/i.test(String(product.public_edge_canary?.public_edge_admission_receipt_ref||''));
   const registryPublished=
     product.state==='registry_published_direct_mcp_existing' &&
-    product.registry_name===meta.registry_name;
+    product.registry_name===meta.registry_name &&
+    fieldBackedCanary;
   const executionVerified=
     (product.state==='public_https_verified_registry_pending' || registryPublished) &&
     product.public_origin_state==='external_canary_verified' &&
     cleanHttps(product.mcp_url) &&
-    product.public_edge_canary?.verified===true;
+    fieldBackedCanary;
 
   const candidate={
     schema:'evercraft.mcp-registry-candidate.v1',
