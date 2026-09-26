@@ -4,9 +4,11 @@ on:
   pull_request:
     paths:
       - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/remote-capacity-broker-proof.mjs'
+      - 'systemia/yard/remote-edge-delegation.proof.mjs'
       - 'systemia/network/remote-broker.evercraft.compute.json'
       - 'systemia/network/REMOTE_BROKER_WORKLOAD.md'
       - '.github/workflows/remote-capacity-broker-workload.yml'
@@ -15,9 +17,11 @@ on:
       - main
     paths:
       - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/remote-capacity-broker-proof.mjs'
+      - 'systemia/yard/remote-edge-delegation.proof.mjs'
       - 'systemia/network/remote-broker.evercraft.compute.json'
       - 'systemia/network/REMOTE_BROKER_WORKLOAD.md'
       - '.github/workflows/remote-capacity-broker-workload.yml'
@@ -33,3 +37,5 @@ jobs:
           node-version: '22'
       - name: Prove broker as receipt-bound Evercraft Compute workload
         run: node systemia/yard/remote-capacity-broker-proof.mjs
+      - name: Prove field edge delegation through outbound broker
+        run: node systemia/yard/remote-edge-delegation.proof.mjs
