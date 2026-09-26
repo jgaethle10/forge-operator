@@ -48,27 +48,31 @@ for(const [slug,meta] of TARGETS){
   const product=(specs.products||[]).find(p=>p.slug===slug);
   if(!product) throw new Error('missing_direct_product:'+slug);
 
+  const registryPublished=
+    product.state==='registry_published_direct_mcp_existing' &&
+    product.registry_name===meta.registry_name;
   const executionVerified=
-    product.state==='public_https_verified_registry_pending' &&
+    (product.state==='public_https_verified_registry_pending' || registryPublished) &&
     product.public_origin_state==='external_canary_verified' &&
     cleanHttps(product.mcp_url) &&
-    product.public_edge_canary?.verified===true &&
-    product.public_edge_canary?.registry_publication_proven===false;
+    product.public_edge_canary?.verified===true;
 
   const candidate={
     schema:'evercraft.mcp-registry-candidate.v1',
     product:product.name,
     slug,
-    publication_state:executionVerified
-      ? 'ready_for_authorized_publication'
-      : 'waiting_public_https_verification',
+    publication_state:registryPublished
+      ? 'publication_proven'
+      : executionVerified
+        ? 'ready_for_authorized_publication'
+        : 'waiting_public_https_verification',
     desired_registry_name:meta.registry_name,
-    registry_publication_proven:false,
+    registry_publication_proven:registryPublished,
     public_execution_verified:executionVerified,
     source_state:product.state,
     source_public_origin_state:product.public_origin_state||null,
     source_canary:product.public_edge_canary||null,
-    manifest:executionVerified ? {
+    manifest:(executionVerified || registryPublished) ? {
       '$schema':'https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json',
       name:meta.registry_name,
       title:meta.title,
