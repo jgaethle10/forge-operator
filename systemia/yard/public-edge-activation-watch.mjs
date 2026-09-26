@@ -164,12 +164,41 @@ export class PublicEdgeActivationWatcher {
         const noCapacity=/no_edge_ready_evercraft_capacity_discovered/.test(
           String(error?.message||'')
         );
+        const reasonCounts={};
+        for(const candidate of resolution?.candidates||[]){
+          const key=String(candidate?.reason||'unknown');
+          reasonCounts[key]=(reasonCounts[key]||0)+1;
+        }
+        let holdReason='activation_failed';
+        if(noCapacity){
+          if(Number(resolution?.discovered_count||0)===0){
+            holdReason='no_compute_capacity_discovered';
+          }else if(
+            reasonCounts.attestation_not_supported ||
+            reasonCounts.device_fingerprint_missing
+          ){
+            holdReason='compute_identity_not_ready';
+          }else if(
+            reasonCounts.placement_label_missing ||
+            reasonCounts.service_capability_not_ready
+          ){
+            holdReason='field_or_tls_admission_pending';
+          }else if(reasonCounts.workload_unsupported){
+            holdReason='edge_workloads_not_installed';
+          }else if(
+            reasonCounts.capacity_endpoint_timeout ||
+            reasonCounts.capacity_endpoint_unreachable
+          ){
+            holdReason='edge_capacity_unreachable';
+          }else{
+            holdReason='no_edge_ready_compute_node';
+          }
+        }
         return this.#result('hold',{
-          reason:noCapacity
-            ? 'no_edge_ready_compute_node'
-            : 'activation_failed',
+          reason:holdReason,
           discovered_count:resolution?.discovered_count??null,
           eligible_count:resolution?.eligible_count??null,
+          candidate_reason_counts:reasonCounts,
           resolver_receipt:resolution?.receipt_hash||null,
           detail:String(error?.message||error).slice(0,500),
         });
