@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T00:53:20.232Z",
-  "url_count": 1886,
+  "updated_at": "2026-09-26T00:54:25.375Z",
+  "url_count": 1894,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "84e26a1f8f11926d4e9f585eb4b0550ddcfaff15e8c8e5b12dfe7ae981796bf5",
-      "last_changed": "2026-09-26T00:53:20.232Z",
+      "content_sha256": "ebe1fc67005d2a90520fa9ff76ec85e06aff90dbd334a2a387ad52957b717a0d",
+      "last_changed": "2026-09-26T00:54:25.375Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -161,6 +161,54 @@
       "path": "/network/",
       "content_sha256": "89a4e810171b2c470ddea8612299872937890abbb954831bde21e56613db0993",
       "last_changed": "2026-09-26T00:53:19.713Z",
+      "priority": 60
+    },
+    "/network/mesh/": {
+      "path": "/network/mesh/",
+      "content_sha256": "7c1e00ba981ebee35bc658583e211469fa2f7a465a31b47f4c85c16f0898f4a0",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    "/network/mesh/index.json": {
+      "path": "/network/mesh/index.json",
+      "content_sha256": "0bdb073f2773eccd8f8789e58fe58e075daaed8e233ebe02b44a1f914666fe35",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    "/network/mesh/llms.txt": {
+      "path": "/network/mesh/llms.txt",
+      "content_sha256": "bdee9eefc81c35e4f50e8561b9b998cde6c5ce6b1c317c8c7824e82cb6a865d4",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 86
+    },
+    "/network/mesh/application-continuity/": {
+      "path": "/network/mesh/application-continuity/",
+      "content_sha256": "5322ec22b60354996282058b50afa0466148ae08a9bcd7305cf1eb3520022899",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    "/network/mesh/wifi-cellular-transition/": {
+      "path": "/network/mesh/wifi-cellular-transition/",
+      "content_sha256": "9aad61b46600eba3c739fddaf3a30f2790c0170e411b417c226bf491460e1542",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    "/network/mesh/device-reconnect-visibility/": {
+      "path": "/network/mesh/device-reconnect-visibility/",
+      "content_sha256": "1b0da8e9678be87e68eb851a1a2ca99852986ebb7d54ddb09885851f1d230eab",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    "/network/mesh/business-connectivity-resilience/": {
+      "path": "/network/mesh/business-connectivity-resilience/",
+      "content_sha256": "675d2f86175909e4db28e1e6b7921231f6df4d4853f90c50b6c737f05ae1299e",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    "/network/mesh/household-connectivity-resilience/": {
+      "path": "/network/mesh/household-connectivity-resilience/",
+      "content_sha256": "38e01756589384c812a8d3cfab8359ce3b4c83ff95ccb5e8e19a8cfe733d3403",
+      "last_changed": "2026-09-26T00:54:25.375Z",
       "priority": 60
     },
     "/network/llms.txt": {

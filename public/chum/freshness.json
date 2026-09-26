@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T00:53:20.232Z",
+  "updated_at": "2026-09-26T00:54:25.375Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,106 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T00:53:20.232Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T00:53:20.232Z",
-      "priority": 80
+      "path": "/network/mesh/llms.txt",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 86
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T00:53:20.232Z",
+      "last_changed": "2026-09-26T00:54:25.375Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T00:53:20.232Z",
-      "priority": 80
+      "path": "/network/mesh/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/application-continuity/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/business-connectivity-resilience/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/device-reconnect-visibility/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/household-connectivity-resilience/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/index.json",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/wifi-cellular-transition/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/network/mesh/llms.txt",
+      "url": "/network/mesh/llms.txt",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 80
+    },
+    {
+      "path": "/network/mesh/",
+      "url": "/network/mesh/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/application-continuity/",
+      "url": "/network/mesh/application-continuity/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/business-connectivity-resilience/",
+      "url": "/network/mesh/business-connectivity-resilience/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/device-reconnect-visibility/",
+      "url": "/network/mesh/device-reconnect-visibility/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/household-connectivity-resilience/",
+      "url": "/network/mesh/household-connectivity-resilience/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/index.json",
+      "url": "/network/mesh/index.json",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/wifi-cellular-transition/",
+      "url": "/network/mesh/wifi-cellular-transition/",
+      "last_changed": "2026-09-26T00:54:25.375Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +120,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T00:53:20.232Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T00:53:20.232Z",
       "priority": 80
     },
@@ -1481,54 +1554,6 @@
     {
       "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
       "url": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-agents-still-running-6bf3174230.json",
-      "url": "/chum/answers/doors/ai-agents-still-running-6bf3174230.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1.json",
-      "url": "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
-      "url": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
-      "url": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
-      "url": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20.json",
-      "url": "/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e.json",
-      "url": "/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
-      "url": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 160
     }
