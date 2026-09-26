@@ -11,6 +11,10 @@ import {
   inspectLocalPortfolio,
   makeFinding
 } from './portfolio-sentinel.mjs';
+import {
+  loadRepairRecipeRegistry,
+  resolveRepairRecipe
+} from '../sentinel/architectural-invariants.mjs';
 
 function clean(value) {
   return String(value ?? '').trim();
@@ -304,8 +308,28 @@ async function main() {
     network.github = githubScan.inventory;
   }
 
+  const recipeRegistryResult = loadRepairRecipeRegistry(rootDir);
+  if (!recipeRegistryResult.ok) {
+    findings.push(makeFinding({
+      code: 'repair_recipe_registry_invalid',
+      severity: 'critical',
+      subject: 'systemia/sentinel/repair-recipes.json',
+      detail: recipeRegistryResult.reason,
+      evidence_refs: ['repo:systemia/sentinel/repair-recipes.json'],
+      repair_mode: 'systemia_repair',
+      human_gate_required: true
+    }));
+  }
+
+  const enrichedFindings = findings.map((finding) => {
+    const recipe = recipeRegistryResult.ok
+      ? resolveRepairRecipe(finding, recipeRegistryResult.registry)
+      : null;
+    return recipe ? { ...finding, repair_recipe: recipe } : finding;
+  });
+
   const byKey = new Map();
-  for (const row of findings) byKey.set(row.finding_key, row);
+  for (const row of enrichedFindings) byKey.set(row.finding_key, row);
   const activeFindings = [...byKey.values()].sort((a, b) =>
     ['critical', 'high', 'medium', 'low', 'info'].indexOf(a.severity) -
     ['critical', 'high', 'medium', 'low', 'info'].indexOf(b.severity) ||
@@ -354,7 +378,8 @@ async function main() {
       persistent: delta.persistent.length,
       resolved: delta.resolved.length,
       repair_queue: repairQueue.length,
-      blocking_findings: activeFindings.filter((row) => ['critical', 'high'].includes(row.severity)).length
+      blocking_findings: activeFindings.filter((row) => ['critical', 'high'].includes(row.severity)).length,
+      matched_repair_recipes: activeFindings.filter((row) => row.repair_recipe?.recipe_id).length
     },
     inventory: {
       ...local.inventory,
@@ -374,6 +399,8 @@ async function main() {
       material_change_only: true,
       safe_internal_repairs_only: true,
       bounded_failed_workflow_retry: args.autoHeal ? 'autonomous' : 'disabled',
+      architectural_invariants: 'enforced_before_green',
+      repair_recipe_memory: recipeRegistryResult.ok ? 'loaded' : 'invalid',
       production_mutation_requires_human_gate: true,
       payment_mutation_requires_human_gate: true,
       external_outreach_requires_human_gate: true
@@ -384,6 +411,20 @@ async function main() {
   atomicJson(path.join(outDir, 'mission-snapshot.json'), snapshot);
   atomicJson(path.join(outDir, 'repair-queue.json'), { schema: 'evercraft.portfolio-sentinel.repair-queue.v1', observed_at: report.observed_at, items: repairQueue });
   atomicJson(path.join(outDir, 'inventory.json'), { schema: 'evercraft.portfolio-sentinel.inventory.v1', observed_at: report.observed_at, ...report.inventory });
+  atomicJson(path.join(outDir, 'repair-memory.json'), {
+    schema: 'evercraft.portfolio-sentinel.repair-memory.v1',
+    observed_at: report.observed_at,
+    registry_version: recipeRegistryResult.ok ? recipeRegistryResult.registry?.version || null : null,
+    registry_state: recipeRegistryResult.ok ? 'loaded' : 'invalid',
+    matched: activeFindings
+      .filter((row) => row.repair_recipe?.recipe_id)
+      .map((row) => ({
+        finding_key: row.finding_key,
+        code: row.code,
+        subject: row.subject,
+        recipe: row.repair_recipe
+      }))
+  });
   atomicJson(path.join(outDir, 'admission.json'), admission || { schema: 'evercraft.portfolio-sentinel.admission.v1', admitted: false, reason: 'no_active_material_repairs', observed_at: report.observed_at });
   atomicJson(stateFile, buildSentinelState({ findings: activeFindings, observedAt }));
 
@@ -400,6 +441,7 @@ async function main() {
     repair_queue: repairQueue.length,
     blocking_findings: blockingFindings.length,
     auto_heal_reruns: autoHeal.workflow_reruns.length,
+    matched_repair_recipes: activeFindings.filter((row) => row.repair_recipe?.recipe_id).length,
     mission_snapshot: path.join(outDir, 'mission-snapshot.json')
   }));
 
