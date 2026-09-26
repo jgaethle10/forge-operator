@@ -1,7 +1,7 @@
 {
   "schema_version": "evercraft.agent.registry.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "registry_namespace": "io.github.jgaethle10",
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -116,6 +116,26 @@
         "boost event visibility",
         "venue promotion"
       ]
+    },
+    {
+      "product_key": "evercraft-clip",
+      "name": "Evercraft Clip",
+      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "mode": "bounded_read_only_mcp",
+      "triggers": [
+        "turn this video into social clips",
+        "make short vertical clips from a long video",
+        "find the best moments in this video for social media",
+        "create vertical clips from an interview",
+        "repurpose this video for Facebook LinkedIn and Instagram",
+        "make reels from an authorized source video",
+        "social video clipping and distribution",
+        "turn approved media into social-ready outputs",
+        "plan a social video clipping job",
+        "AI tool to select moments from a video and render social clips"
+      ],
+      "route_note": "Public agent surface is read-only discovery and planning. Actual media submission, paid processing and publishing remain authenticated and human-authorized. Current customer server renderer is bounded to 35 MiB, up to 3 clips, 8-45 seconds each. TikTok publishing is not currently verified."
     },
     {
       "product_key": "evercraft-containment",
