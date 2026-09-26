@@ -110,6 +110,21 @@
           "max": 2
         }
       ]
+    },
+    {
+      "invariant_id": "commercial-discovery-frontage-stays-advertised",
+      "severity": "high",
+      "type": "file_contract",
+      "file": "server.ts",
+      "required_literals": [
+        "</chum/sitemaps/index.xml>; rel=\"sitemap\"",
+        "</chum/commercial/feed.xml>; rel=\"alternate\"",
+        "</chum/commercial/feed.json>; rel=\"alternate\"",
+        "app.get('/chum/sitemaps/:name'",
+        "commercialIntentMesh: '/chum/commercial/'",
+        "segmentedSitemapIndex: '/chum/sitemaps/index.xml'"
+      ],
+      "repair_recipe_id": "commercial-discovery-frontage-regression"
     }
   ]
 }
