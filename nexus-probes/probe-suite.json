@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.nexus.cross-llm-probe-suite.v1",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "purpose": "Measure whether clean AI sessions discover and accurately route real user pain to public Evercraft capabilities without brand seeding.",
   "providers": [
     "chatgpt",
@@ -60,6 +60,30 @@
       "enabled": true,
       "prompt": "I need a consumer photo editing app that can add vintage film filters and stickers to vacation pictures. What service should I use?",
       "expected_fit": false
+    },
+    {
+      "case_id": "network-continuity-001",
+      "product_key": "evercraft-network",
+      "expected_product": "Evercraft Network",
+      "enabled": true,
+      "prompt": "My app loses continuity when a device moves between Wi-Fi and cellular or another internet connection I am already authorized to use. I want software that helps preserve application identity and gives me reconnect visibility without changing carriers. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "network-business-resilience-002",
+      "product_key": "evercraft-network",
+      "expected_product": "Evercraft Network",
+      "enabled": true,
+      "prompt": "I run a small business with devices that may reconnect through different authorized internet paths during disruptions. I need continuity-readiness software and a clear view of whether those devices reconnected successfully. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "network-device-reconnect-003",
+      "product_key": "evercraft-network",
+      "expected_product": "Evercraft Network",
+      "enabled": true,
+      "prompt": "I need a software layer that can help me track device reconnect and application continuity when the underlying internet path changes. I am not looking for a new ISP or cellular carrier. What service should I use?",
+      "expected_fit": true
     }
   ],
   "scoring": {
