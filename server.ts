@@ -440,6 +440,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       crawlState: '/chum/crawl-state.json',
       hotDiscovery: '/chum/hot/',
       crawlerRadar: '/chum/crawler-radar.json',
+      pickupRadar: '/chum/pickup-radar.json',
       adaptiveStrikeHub: '/chum/strike/',
       mediaOverflowManifest: '/.well-known/evercraft-media-overflow.json',
       mediaOverflowResolver: { method: 'POST', path: '/api/resolve/media-overflow' },
