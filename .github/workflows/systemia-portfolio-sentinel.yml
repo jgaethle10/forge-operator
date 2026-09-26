@@ -44,7 +44,9 @@ permissions:
   actions: write
 
 concurrency:
-  group: systemia-portfolio-sentinel
+  # Keep the five-minute main/scheduled lane singleton, but never let it cancel
+  # a pull-request proof that is validating a candidate quality-gate change.
+  group: systemia-portfolio-sentinel-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
   cancel-in-progress: true
 
 jobs:
