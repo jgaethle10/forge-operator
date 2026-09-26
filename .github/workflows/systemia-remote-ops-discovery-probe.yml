@@ -75,7 +75,11 @@ jobs:
             echo "Consumer bridge not configured; measuring Systemia case $CASE_ID with generic-agent machine client."
           fi
 
-          CHUM_PROBE_PROVIDERS="$PROVIDER"           CHUM_PROBE_CASES="$CASE_ID"           CHUM_REQUIRE_PROBE_BRIDGE=false           npm run chum:providers
+          export CASE_ID PROVIDER
+          CHUM_PROBE_PROVIDERS="$PROVIDER" \
+          CHUM_PROBE_CASES="$CASE_ID" \
+          CHUM_REQUIRE_PROBE_BRIDGE=false \
+          npm run chum:providers
 
           node <<'NODE'
           const fs=require('fs');
@@ -83,6 +87,7 @@ jobs:
           const summary={
             schema:'evercraft.systemia-remote-ops.focused-probe-summary.v1',
             case_id:process.env.CASE_ID || null,
+            provider:process.env.PROVIDER || null,
             measurement_state:r.measurement_state || 'unknown',
             bridge_configured:Boolean(r.bridge_configured),
             completed:r.summary?.completed || 0,
