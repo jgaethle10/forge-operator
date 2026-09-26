@@ -26,10 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: systemia/evercraft-web/browser-worker/package-lock.json
       - name: Install
-        run: npm install --no-audit --no-fund
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
       - name: Policy tests
         run: npm test
       - name: Build worker image
