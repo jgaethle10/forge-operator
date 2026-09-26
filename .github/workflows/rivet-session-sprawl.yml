@@ -1,0 +1,50 @@
+name: RIVET session sprawl
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/rivet/**"
+      - "systemia/saban/multiplication-registry.json"
+      - "package.json"
+      - ".github/workflows/rivet-session-sprawl.yml"
+  schedule:
+    - cron: "17 4 * * *"
+  pull_request:
+    paths:
+      - "systemia/rivet/**"
+      - "systemia/saban/multiplication-registry.json"
+      - "package.json"
+      - ".github/workflows/rivet-session-sprawl.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rivet-session-sprawl
+  cancel-in-progress: true
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove acquisition boundaries
+        run: npm run proof:rivet-session-sprawl && npm run proof:rivet-session-harvester && npm run proof:rivet-session-saban-coverage
+      - name: Execute complete role x work Saban coverage pass
+        run: npm run rivet:sessions:saban
+      - name: Harvest admitted public session feeds
+        run: npm run rivet:sessions:harvest -- --max-pages 500
+      - name: Upload receipts and normalized aggregates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rivet-session-sprawl
+          path: artifacts/rivet-session-sprawl/**
+          if-no-files-found: warn

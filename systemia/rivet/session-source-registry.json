@@ -1,44 +1,281 @@
 {
-  "schema": "evercraft.rivet.session-source-registry.v1",
+  "schema": "evercraft.rivet.session-source-registry.v2",
   "mission_id": "rivet-us-session-sprawl-001",
-  "purpose": "Seed registry for nationwide observed EV charging-session acquisition. Candidate status does not imply licensing, access, or site-level session availability.",
+  "purpose": "Nationwide and research-grade observed EV charging-session acquisition. Candidate status never implies licensing, access, or site-level session availability.",
   "canonical_entity": "EVObservedUsageAggregate",
   "existing_domestic_ingestors": [
-    {"jurisdiction":"NY","adapter":"ingestNYCPlugNYCObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"NC","adapter":"ingestCaryObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"CO","adapter":"ingestBoulderObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"CA","adapter":"ingestPaloAltoObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"}
+    {
+      "jurisdiction": "NY",
+      "adapter": "ingestNYCPlugNYCObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "NC",
+      "adapter": "ingestCaryObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "CO",
+      "adapter": "ingestBoulderObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "CA",
+      "adapter": "ingestPaloAltoObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    }
   ],
   "national_candidates": [
     {
-      "name":"Joint Office EV-ChART",
-      "lane":"federal-funded-publication",
-      "status":"restricted_raw_public_aggregates_available",
-      "notes":"Quarterly charging-session data are collected for federally funded infrastructure. Raw portal access is limited to funding recipients/authorized parties; public outputs are aggregated/anonymized. Hunt state recipient publications and public reports, not restricted raw records."
+      "name": "Joint Office EV-ChART",
+      "lane": "federal-funded-publication",
+      "status": "restricted_raw_public_aggregates_available",
+      "notes": "Quarterly charging-session data are collected for federally funded infrastructure. Raw portal access is limited to funding recipients/authorized parties; public outputs are aggregated/anonymized. Hunt state recipient publications and public reports, not restricted raw records."
     },
     {
-      "name":"DOE Livewire / EV WATTS",
-      "lane":"federal-funded-publication",
-      "status":"candidate",
-      "notes":"Nationwide real-world EVSE dataset and analytics include sessions, utilization and energy. Verify current downloadable geographic resolution and reuse terms before ingest."
+      "name": "DOE Livewire / EV WATTS",
+      "lane": "federal-funded-publication",
+      "status": "candidate",
+      "notes": "Nationwide real-world EVSE dataset and analytics include sessions, utilization and energy. Verify current downloadable geographic resolution and reuse terms before ingest."
     },
     {
-      "name":"California Energy Commission funded-project reporting",
-      "lane":"grant-project-reports",
-      "status":"candidate_with_confidentiality_boundary",
-      "notes":"CEC-funded projects submit detailed utilization/session data. Individual-charger utilization may be confidential, but public grant/project reports can contain publishable site/project aggregates."
+      "name": "California Energy Commission funded-project reporting",
+      "lane": "grant-project-reports",
+      "status": "candidate_with_confidentiality_boundary",
+      "notes": "CEC-funded projects submit detailed utilization/session data. Individual-charger utilization may be confidential, but public grant/project reports can contain publishable site/project aggregates."
     },
     {
-      "name":"Stable Auto",
-      "lane":"licensed-utilization-provider",
-      "status":"commercial_candidate",
-      "notes":"Markets nationwide utilization intelligence based on real charging operating data. Requires commercial evaluation and explicit purchasing authority before any paid integration."
+      "name": "Stable Auto",
+      "lane": "licensed-utilization-provider",
+      "status": "commercial_candidate",
+      "notes": "Markets nationwide utilization intelligence based on real charging operating data. Requires commercial evaluation and explicit purchasing authority before any paid integration."
     },
     {
-      "name":"AFDC charging-network directory",
-      "lane":"operator-utility-public",
-      "status":"lead_generator_only",
-      "notes":"Strong national inventory/network directory for identifying operators and station IDs. Inventory is not session telemetry and must never be promoted to observed usage."
+      "name": "AFDC charging-network directory",
+      "lane": "operator-utility-public",
+      "status": "lead_generator_only",
+      "notes": "Strong national inventory/network directory for identifying operators and station IDs. Inventory is not session telemetry and must never be promoted to observed usage."
+    }
+  ],
+  "privacy_rule": "Aggregate at ingest; do not persist driver IDs, user IDs, ID tags, payment identifiers, or other direct session-user identifiers in RIVET harvest artifacts.",
+  "sources": [
+    {
+      "source_id": "nyc-plugnyc",
+      "name": "NYC PlugNYC municipal charging sessions",
+      "jurisdiction": "NY",
+      "country": "US",
+      "authority": "public",
+      "status": "wired",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": true,
+      "transport": "socrata",
+      "endpoint": "https://data.cityofnewyork.us/resource/kj7g-u4gp.json",
+      "landing_url": "https://data.cityofnewyork.us/Transportation/Electric-Vehicle-EV-Charging-Data-Municipal-Lots-a/kj7g-u4gp",
+      "freshness_note": "NYC Open Data reported an update on 2026-09-08.",
+      "period_date_field": "date",
+      "reject_if_invalidity_present": true,
+      "session_fields_note": "Public transaction date, station/location IDs, connected/disconnected times, durations, energy and status; invalidity-marked rows are excluded before aggregation."
+    },
+    {
+      "source_id": "cary-nc",
+      "name": "Town of Cary EV charging sessions",
+      "jurisdiction": "NC",
+      "country": "US",
+      "authority": "public",
+      "status": "wired",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": true,
+      "transport": "opendatasoft_export_json",
+      "endpoint": "https://data.townofcary.org/api/explore/v2.1/catalog/datasets/electric-vehicle-charging-stations/exports/json",
+      "landing_url": "https://data.townofcary.org/explore/dataset/electric-vehicle-charging-stations/",
+      "session_fields_note": "Public Town-owned charging-session dataset; full-result export endpoint is used."
+    },
+    {
+      "source_id": "boulder-co",
+      "name": "City of Boulder EV charging station energy consumption",
+      "jurisdiction": "CO",
+      "country": "US",
+      "authority": "public",
+      "status": "wired",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": true,
+      "transport": "arcgis",
+      "arcgis_item_id": "95992b3938be4622b07f0b05eba95d4c",
+      "arcgis_item_ids": [
+        "95992b3938be4622b07f0b05eba95d4c",
+        "2d8bad4baf274407a674d2ed3c657951",
+        "39288b03f8d54b39848a2df9f1c5fca2"
+      ],
+      "arcgis_layer": 0,
+      "landing_url": "https://open-data.bouldercolorado.gov/",
+      "license": "CC0-1.0",
+      "session_fields_note": "Public session records; resolver follows current or historical ArcGIS wrappers to the public FeatureServer."
+    },
+    {
+      "source_id": "palo-alto-ca",
+      "name": "City of Palo Alto EV charging station usage",
+      "jurisdiction": "CA",
+      "country": "US",
+      "authority": "public",
+      "status": "wired_manual_public_download",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": false,
+      "transport": "manual_public_download",
+      "landing_url": "https://data.paloalto.gov/dataviews/257812/electric-vehicle-charging-station-usage-july-2011-dec-2020/",
+      "session_fields_note": "Public CSV covers July 2011-Dec 2020. Portal API requires a key, so no automated bypass is attempted."
+    },
+    {
+      "source_id": "doe-evwatts",
+      "name": "DOE Livewire EV WATTS Public Database",
+      "jurisdiction": "US",
+      "country": "US",
+      "authority": "public",
+      "status": "public_dataset_adapter_pending",
+      "evidence_class": "public_observed_research_dataset",
+      "auto_harvest": false,
+      "transport": "livewire_public_dataset",
+      "landing_url": "https://livewire.energy.gov/",
+      "session_fields_note": "National real-world EV/EVSE dataset; verify file-level geography and session schema before site-resolved promotion."
+    },
+    {
+      "source_id": "caltech-acndata",
+      "name": "ACN-Data Caltech/JPL/Office charging sessions",
+      "jurisdiction": "CA",
+      "country": "US",
+      "authority": "token_required",
+      "status": "registration_required_public_research_api",
+      "evidence_class": "observed_research_sessions",
+      "auto_harvest": false,
+      "transport": "acndata_api",
+      "landing_url": "https://ev.caltech.edu/dataset",
+      "session_fields_note": "Session-level observed data; API registration token required, no bypass permitted."
+    },
+    {
+      "source_id": "penndot-nevi",
+      "name": "PennDOT NEVI charging station usage",
+      "jurisdiction": "PA",
+      "country": "US",
+      "authority": "public",
+      "status": "public_aggregate_supporting_only",
+      "evidence_class": "public_observed_statewide_aggregate",
+      "auto_harvest": false,
+      "transport": "html_publication",
+      "landing_url": "https://www.pa.gov/agencies/penndot/research-planning-and-innovation/electric-vehicles-and-alternative-fuels/national-electric-vehicle-infrastructure-nevi-formula-program",
+      "session_fields_note": "Observed quarterly/cumulative sessions and kWh are public, but statewide aggregates do not satisfy site-resolved coverage."
+    },
+    {
+      "source_id": "ottawa-on",
+      "name": "City of Ottawa public EV charging station usage",
+      "jurisdiction": "ON",
+      "country": "CA",
+      "authority": "public",
+      "status": "wired",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": true,
+      "transport": "arcgis",
+      "endpoint": "https://services.arcgis.com/G6F8XLCl5KtAlZ2G/ArcGIS/rest/services/Electric_Vehicle_Charging_Stations_Usage_Data/FeatureServer/0",
+      "landing_url": "https://ottawa.ca/en/living-ottawa/environment-conservation-and-climate/reducing-greenhouse-gas-emissions/transportation/electric-vehicles/how-city-supporting-electric-vehicles",
+      "session_fields_note": "Official public City feed with session/transaction IDs, dates, site/address/station and kWh; direct identifiers are never persisted."
+    },
+    {
+      "source_id": "evanston-il-historical",
+      "name": "City of Evanston city-owned EV charging station usage",
+      "jurisdiction": "IL",
+      "country": "US",
+      "authority": "public",
+      "status": "historical_public_endpoint_revalidation_needed",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": false,
+      "transport": "socrata_historical_candidate",
+      "landing_url": "https://data.cityofevanston.org/dataset/City-owned-Electric-Vehicle-Charging-Station-Usage/nx7w-jb8v/data",
+      "session_fields_note": "Historical city-owned charging usage Jan 2016-Aug 2017; revalidate current Socrata endpoint before automatic harvesting."
+    },
+    {
+      "source_id": "dundee-city-series",
+      "name": "Dundee City Council public EV charge point usage series",
+      "jurisdiction": "SCT",
+      "country": "GB",
+      "authority": "public",
+      "status": "public_series_adapter_pending",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": false,
+      "transport": "arcgis_series_candidate",
+      "landing_url": "https://opendata.scot/datasets/",
+      "session_fields_note": "DCC publishes completed public-chargepoint sessions for 2021, 2022, 2023, 2024 and 2025 periods. Preserve per-dataset licensing before automated reuse."
+    },
+    {
+      "source_id": "perth-kinross-series",
+      "name": "Perth & Kinross Council EV charge station usage series",
+      "jurisdiction": "SCT",
+      "country": "GB",
+      "authority": "public",
+      "status": "public_series_adapter_pending",
+      "evidence_class": "public_observed_session_rows",
+      "auto_harvest": false,
+      "transport": "arcgis_series_candidate",
+      "arcgis_item_ids": [
+        "ca6cae3df2624832a2eaf678f2eabee8"
+      ],
+      "landing_url": "https://opendata.scot/datasets/perth%2B%2526%2Bkinross%2Bcouncil-ev%2Bcharge%2Bstation%2Buse%2Bsept%2B2018%2Bto%2Baug%2B2019/",
+      "license": "UK Open Government Licence v3.0",
+      "session_fields_note": "Anonymous individual charging sessions published by Perth & Kinross Council under ChargePlace Scotland."
+    },
+    {
+      "source_id": "georgia-tech-workplace",
+      "name": "Georgia Tech high-resolution workplace EV charging sessions",
+      "jurisdiction": "US",
+      "country": "US",
+      "authority": "public",
+      "status": "behavioral_research_candidate",
+      "evidence_class": "public_observed_research_sessions",
+      "auto_harvest": false,
+      "transport": "harvard_dataverse",
+      "landing_url": "https://doi.org/10.7910/DVN/QF1PMO",
+      "session_fields_note": "3,395 anonymized workplace sessions across 105 stations and 25 sites; useful for behavioral priors, not automatically local observed evidence."
+    },
+    {
+      "source_id": "sfu-evp",
+      "name": "Simon Fraser University EV Parking Dataset",
+      "jurisdiction": "BC",
+      "country": "CA",
+      "authority": "public",
+      "status": "behavioral_research_candidate",
+      "evidence_class": "public_observed_research_sessions",
+      "auto_harvest": false,
+      "transport": "research_dataset",
+      "landing_url": "https://doi.org/10.1109/IEEEDATA.2024.3471469",
+      "license": "CC BY 4.0",
+      "session_fields_note": "EV charging sessions since 2019; keep separate from site-local observations outside SFU."
+    },
+    {
+      "source_id": "norway-residential-35k",
+      "name": "Norway residential EV charging dataset 35k sessions",
+      "jurisdiction": "NO",
+      "country": "NO",
+      "authority": "public",
+      "status": "behavioral_research_candidate",
+      "evidence_class": "public_observed_research_sessions",
+      "auto_harvest": false,
+      "transport": "zenodo",
+      "landing_url": "https://zenodo.org/records/13896176",
+      "session_fields_note": "More than 35,000 residential sessions across 12 locations, including plug-in/out and energy; behavioral prior lane."
+    }
+  ],
+  "catalog_hunters": [
+    {
+      "catalog_id": "data-gov",
+      "authority": "public",
+      "endpoint": "https://catalog.data.gov/api/3/action/package_search",
+      "queries": [
+        "electric vehicle charging station usage sessions",
+        "EV charging session data",
+        "charging station utilization electric vehicle"
+      ],
+      "purpose": "Discover official public datasets. Candidate discovery is not session acceptance."
     }
   ]
 }
