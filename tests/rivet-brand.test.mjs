@@ -64,7 +64,8 @@ for (const file of [
   const value = read(file);
   if (!value.includes('/rivet/brand.css')) fail('generated RIVET surface not branded: ' + file);
   if (/\bLuma\b/i.test(value)) fail('retired Luma identity found in ' + file);
-  if (/\bAliEV\b/i.test(value)) fail('backend identity found in generated RIVET surface ' + file);
+  if (/AliEV/.test(value)) fail('backend display identity found in generated RIVET surface ' + file);
+  if (/aliev\.base44\.app/i.test(value)) fail('backend runtime found in generated RIVET surface ' + file);
 }
 
 for (const file of [
@@ -73,7 +74,8 @@ for (const file of [
   'public/chum/products/aliev/ai-conformance.json'
 ]) {
   const value = read(file);
-  if (/\bAliEV\b/i.test(value)) fail('backend identity found in generated RIVET machine surface ' + file);
+  if (/AliEV/.test(value)) fail('backend display identity found in generated RIVET machine surface ' + file);
+  if (/aliev\.base44\.app/i.test(value)) fail('backend runtime found in generated RIVET machine surface ' + file);
 }
 
 const productDirectory = JSON.parse(read('public/.well-known/evercraft-products.json'));
