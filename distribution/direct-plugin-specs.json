@@ -274,12 +274,12 @@
       "slug": "systemia-remote-ops",
       "name": "Systemia Remote Ops",
       "short_description": "Simulate business decisions before acting",
-      "long_description": "Use Systemia Remote Ops directly when a founder or operator wants to simulate a consequential business decision before changing the real business. Pricing simulation is currently the first public executable lane; other lanes must remain clearly labeled until independently verified.",
+      "long_description": "Use Systemia Remote Ops when a founder or operator wants to simulate a consequential business decision before changing the real business. The native Yard runtime can route decisions, run a transparent pricing heuristic, and compare general business scenarios using only explicit user-supplied assumptions.",
       "category": "Business",
       "website_url": "https://systemia-remote-ops.base44.app/",
       "registry_name": null,
       "mcp_url": null,
-      "state": "source_ready_deployment_unverified",
+      "state": "yard_runtime_proven_public_route_pending",
       "default_prompt": "I am considering a business decision and want to simulate the likely tradeoffs before I act.",
       "keywords": [
         "systemia",
@@ -289,11 +289,13 @@
         "decision-lab",
         "mcp"
       ],
-      "intent": "Business decision simulation before acting, beginning with pricing changes.",
-      "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt.",
+      "intent": "Business decision simulation before acting, including pricing, staffing, product/service changes, expansion, capital purchases, partnerships, acquisitions, buying or selling a business, and startup scenarios.",
+      "truth_boundary": "The native Yard runtime is read-only and performs transparent scenario math. General scenario outputs use only user-supplied assumptions; pricing uses a labeled low-confidence heuristic. No remote MCP is advertised until an independent public HTTPS route is verified, and no simulation authorizes real-world business action.",
       "capability_public_ids": [],
-      "candidate_mcp_url": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
-      "public_origin_state": "deployment_unverified"
+      "candidate_mcp_url": null,
+      "public_origin_state": "https_route_unbound",
+      "runtime_workload_class": "systemia.remote-ops-mcp.v1",
+      "runtime_path": "/mcp/systemia-remote-ops"
     },
     {
       "slug": "deck-capital-fit",
