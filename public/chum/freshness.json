@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T16:21:20.165Z",
+  "updated_at": "2026-09-26T16:23:42.566Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,62 +11,18 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/products/forensiscope/ai-conformance.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 154
-    },
-    {
-      "path": "/chum/products/forensiscope/ai-discovery.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 154
-    },
-    {
-      "path": "/forensiscope/long-video-deduplication-transcription/llms.txt",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
+      "last_changed": "2026-09-26T16:23:42.566Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 60
-    },
-    {
-      "path": "/forensiscope/long-video-deduplication-transcription/",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T16:23:42.566Z",
+      "priority": 80
+    },
     {
       "path": "/chum/products/forensiscope/ai-conformance.json",
       "url": "/chum/products/forensiscope/ai-conformance.json",
@@ -94,12 +50,6 @@
     {
       "path": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
       "url": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T16:21:20.165Z",
       "priority": 80
     },
