@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { PublicEdgeActivationWatcher } from '../yard/public-edge-activation-watch.mjs';
+import { evaluatePublicEdgeFieldMission } from './public-edge-field-mission.mjs';
 
 function arg(name,fallback=null){
   const i=process.argv.indexOf(name);
@@ -14,6 +15,14 @@ function atomicJson(file,value){
   const tmp=file+'.'+process.pid+'.tmp';
   fs.writeFileSync(tmp,JSON.stringify(value,null,2)+'\n');
   fs.renameSync(tmp,file);
+}
+
+function readJsonIfExists(file){
+  try{
+    return fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):null;
+  }catch{
+    return null;
+  }
 }
 
 function releaseRef(){
@@ -105,6 +114,18 @@ const stateDir=path.resolve(arg(
   process.env.EVERCRAFT_PUBLIC_EDGE_STATE_DIR||
   path.join(outDir,'runtime')
 ));
+const node001MissionFile=path.resolve(
+  process.env.EVERCRAFT_NODE001_FIELD_MISSION_STATE||
+  'artifacts/node001-field/megatron-status/latest.json'
+);
+const externalCanaryFile=path.resolve(
+  process.env.EVERCRAFT_PUBLIC_EDGE_CANARY_STATE||
+  path.join(outDir,'external-canary.json')
+);
+const directSpecsFile=path.resolve(
+  process.env.EVERCRAFT_DIRECT_PLUGIN_SPECS||
+  'distribution/direct-plugin-specs.json'
+);
 
 const latestFile=path.join(outDir,'latest.json');
 let previous=null;
@@ -149,8 +170,19 @@ try{
 }
 
 const snapshot=missionSnapshot(result,previous);
+const fieldMission=evaluatePublicEdgeFieldMission({
+  node001Mission:readJsonIfExists(node001MissionFile),
+  edgeWatch:result,
+  externalCanary:readJsonIfExists(externalCanaryFile),
+  directPluginSpecs:readJsonIfExists(directSpecsFile),
+  issueRef:'github:issue:403',
+  dependencyIssueRef:'github:issue:175',
+});
+
 atomicJson(latestFile,result);
 atomicJson(path.join(outDir,'mission-snapshot.json'),snapshot);
+atomicJson(path.join(outDir,'field-mission.json'),fieldMission.mission);
+atomicJson(path.join(outDir,'field-mission-snapshot.json'),fieldMission.mission_snapshot);
 
 console.log(JSON.stringify({
   ok:true,
@@ -162,4 +194,8 @@ console.log(JSON.stringify({
   material_change:snapshot.material_change,
   receipt:result.receipt_hash,
   mission_snapshot:path.join(outDir,'mission-snapshot.json'),
+  field_mission_status:fieldMission.mission.status,
+  field_mission_receipt:fieldMission.mission.receipt_hash,
+  field_mission:path.join(outDir,'field-mission.json'),
+  field_mission_snapshot:path.join(outDir,'field-mission-snapshot.json'),
 },null,2));
