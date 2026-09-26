@@ -39,7 +39,15 @@ for(const [slug,desiredName] of targets){
     assert.ok(candidate.manifest);
     assert.equal(candidate.manifest.name,desiredName);
     assert.equal(candidate.manifest.remotes[0].url,product.mcp_url);
-    assert.equal(fs.existsSync('mcp-registry/'+slug+'.json'),false,slug+': registry-pending candidate must not masquerade as published');
+    const requestPath='mcp-registry/'+slug+'.json';
+    if(fs.existsSync(requestPath)){
+      const publicationRequest=JSON.parse(fs.readFileSync(requestPath,'utf8'));
+      assert.deepEqual(
+        publicationRequest,
+        candidate.manifest,
+        slug+': staged registry publication request must exactly match the verified candidate manifest'
+      );
+    }
   }
 
   if(product.state==='registry_published_direct_mcp_existing'){
