@@ -1,0 +1,58 @@
+name: Evercraft Network MCP Canary
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/network-mcp-canary.yml"
+      - "systemia/network/public-mcp-canary.mjs"
+      - "registry/catalog.json"
+      - "conformance/products.json"
+      - "conformance/runtime-observations/**"
+      - "public/network/**"
+      - "public/.well-known/evercraft-network.json"
+      - "public/.well-known/evercraft-products.json"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - "tests/network-discovery.test.mjs"
+      - "tests/network-semantic-mesh.test.mjs"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/network-mcp-canary.yml"
+      - "systemia/network/public-mcp-canary.mjs"
+      - "registry/catalog.json"
+      - "conformance/products.json"
+      - "conformance/runtime-observations/**"
+      - "public/network/**"
+      - "public/.well-known/evercraft-network.json"
+      - "public/.well-known/evercraft-products.json"
+      - "public/.well-known/evercraft-machine-catalog.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-network-mcp-canary-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  network-canary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Evercraft Network live MCP contract
+        run: node systemia/network/public-mcp-canary.mjs
+
+      - name: Upload Evercraft Network MCP receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-network-public-mcp-canary
+          path: artifacts/network/public-mcp-canary-latest.json
+          if-no-files-found: warn
