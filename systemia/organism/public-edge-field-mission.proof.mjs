@@ -1,6 +1,25 @@
 import assert from 'node:assert/strict';
 import { evaluatePublicEdgeFieldMission } from './public-edge-field-mission.mjs';
 
+const completeNode001Mission={
+  status:'complete',
+  completed_steps:[
+    'field_kit_ready',
+    'preflight_passed',
+    'nodeseed_installed',
+    'reboot_persistence_verified',
+    'offline_operation_verified',
+    'telemetry_verified',
+    'field_evidence_candidate_ready',
+    'yard_enrollment_verified',
+    'live_identity_attested',
+    'kaidance_deployed',
+    'kaidance_field_pulse_verified',
+    'continuity_receipt_verified',
+  ],
+  human_field_action_required:false,
+};
+
 const pendingSpecs={
   products:[
     {slug:'ibmi-rescue',state:'yard_runtime_proven_public_route_pending'},
@@ -23,21 +42,7 @@ assert.equal(waiting.mission.systemia_autonomy_ready,false);
 assert.equal(waiting.mission.founder_login_required,false);
 
 const fieldReady=evaluatePublicEdgeFieldMission({
-  node001Mission:{
-    status:'ready_for_systemia',
-    completed_steps:[
-      'field_kit_ready',
-      'preflight_passed',
-      'nodeseed_installed',
-      'reboot_persistence_verified',
-      'offline_operation_verified',
-      'telemetry_verified',
-      'field_evidence_candidate_ready',
-      'yard_enrollment_verified',
-      'live_identity_attested',
-    ],
-    human_field_action_required:false,
-  },
+  node001Mission:completeNode001Mission,
   directPluginSpecs:pendingSpecs,
 });
 assert.equal(fieldReady.mission.status,'ready_for_systemia');
@@ -45,10 +50,7 @@ assert.equal(fieldReady.mission.field_verified,true);
 assert.equal(fieldReady.mission.systemia_autonomy_ready,true);
 
 const edgeActive=evaluatePublicEdgeFieldMission({
-  node001Mission:fieldReady.mission.field_verified?{
-    completed_steps:['field_evidence_candidate_ready','yard_enrollment_verified','live_identity_attested'],
-    human_field_action_required:false,
-  }:null,
+  node001Mission:fieldReady.mission.field_verified?completeNode001Mission:null,
   edgeWatch:{
     action:'healthy',
     field_verified:true,
@@ -73,10 +75,7 @@ const verifiedCanary={
 };
 
 const promotionPending=evaluatePublicEdgeFieldMission({
-  node001Mission:{
-    completed_steps:['field_evidence_candidate_ready','yard_enrollment_verified','live_identity_attested'],
-    human_field_action_required:false,
-  },
+  node001Mission:completeNode001Mission,
   edgeWatch:{
     action:'healthy',
     field_verified:true,
@@ -96,10 +95,7 @@ const registryPendingSpecs={
   })),
 };
 const registryPending=evaluatePublicEdgeFieldMission({
-  node001Mission:{
-    completed_steps:['field_evidence_candidate_ready','yard_enrollment_verified','live_identity_attested'],
-    human_field_action_required:false,
-  },
+  node001Mission:completeNode001Mission,
   edgeWatch:{action:'healthy',field_verified:true,route_verified:true},
   externalCanary:verifiedCanary,
   directPluginSpecs:registryPendingSpecs,
@@ -113,10 +109,7 @@ const publishedSpecs={
   })),
 };
 const complete=evaluatePublicEdgeFieldMission({
-  node001Mission:{
-    completed_steps:['field_evidence_candidate_ready','yard_enrollment_verified','live_identity_attested'],
-    human_field_action_required:false,
-  },
+  node001Mission:completeNode001Mission,
   edgeWatch:{action:'healthy',field_verified:true,route_verified:true},
   externalCanary:verifiedCanary,
   directPluginSpecs:publishedSpecs,
