@@ -16,6 +16,7 @@ import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
+import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -242,11 +243,54 @@ export async function startEvercraftComputeNode({
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
   };
+  const publicEdgeCapability = (() => {
+    const baseDomain = String(process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || '').trim();
+    const tlsKeyPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || '').trim();
+    const tlsCertPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH || '').trim();
+    const publicPort = Number(process.env.EVERCRAFT_PUBLIC_EDGE_PORT || 443);
+    const configured = Boolean(baseDomain && tlsKeyPath && tlsCertPath);
+    if (!configured) {
+      return {
+        configured: false,
+        ready: false,
+        public_https: false,
+        reason: 'tls_environment_not_configured'
+      };
+    }
+    try {
+      const admission = validatePublicEdgeAdmission({
+        mode: 'wildcard_https',
+        baseDomain,
+        tlsKeyPath,
+        tlsCertPath,
+        publicPort
+      });
+      return {
+        configured: true,
+        ready: admission.ready === true,
+        public_https: admission.public_https === true,
+        base_domain: admission.tls?.base_domain || baseDomain,
+        public_port: admission.public_port || publicPort,
+        certificate_fingerprint256: admission.tls?.certificate_fingerprint256 || null,
+        certificate_valid_to: admission.tls?.certificate_valid_to || null,
+        founder_login_required: false
+      };
+    } catch (error) {
+      return {
+        configured: true,
+        ready: false,
+        public_https: false,
+        reason: error instanceof Error ? error.message : String(error)
+      };
+    }
+  })();
+
   const serviceCapabilities = {
     forensiscope_transcription: configuredExecutableAvailable({
       enabled: process.env.FORENSISCOPE_TRANSCRIBE_ENABLED,
       executable: process.env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE
-    })
+    }),
+    public_edge: publicEdgeCapability
   };
   const leases = new Map();
   const services = new Map();
@@ -973,7 +1017,7 @@ export async function startEvercraftComputeNode({
             controlToken: String(body.input?.control_token || process.env.EVERCRAFT_PUBLIC_EDGE_CONTROL_TOKEN || ''),
             mode,
             publicHost: String(body.input?.public_host || '0.0.0.0'),
-            publicPort: Number(body.input?.public_port || 443),
+            publicPort: Number(body.input?.public_port || process.env.EVERCRAFT_PUBLIC_EDGE_PORT || 443),
             baseDomain: String(body.input?.base_domain || process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || ''),
             tlsKeyPath: String(body.input?.tls_key_path || process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || ''),
             tlsCertPath: String(body.input?.tls_cert_path || process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH || ''),
