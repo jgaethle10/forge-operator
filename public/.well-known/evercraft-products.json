@@ -150,7 +150,7 @@
       "product_key": "christmas-lights-usa",
       "name": "Christmas Lights USA",
       "class": "holiday_lighting_marketplace_and_project_planning",
-      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "canonical_url": "https://christmas-lights-usa.base44.app/",
       "intents": [
         "estimate a professional Christmas light project",
         "find holiday light installers near me",
@@ -185,7 +185,9 @@
           }
         ],
         "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
-      }
+      },
+      "public_door_verified_at": "2026-09-26T22:15:00Z",
+      "public_door_evidence": "live HTTP 200 and rendered public metadata verified before registry repair"
     },
     {
       "product_key": "chronosport",
@@ -1327,7 +1329,7 @@
       "product_key": "space-dudz",
       "name": "Space Dudz",
       "class": "retro_space_streetwear_storefront",
-      "canonical_url": "https://space-dudz.base44.app/",
+      "canonical_url": "https://spacedudz.base44.app/",
       "intents": [
         "shop retro space streetwear",
         "find psychedelic space graphic tees",
@@ -1349,7 +1351,9 @@
         "offer": "Live storefront catalog",
         "pricing": "Varies by current product and variant",
         "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
-      }
+      },
+      "public_door_verified_at": "2026-09-26T22:15:00Z",
+      "public_door_evidence": "live HTTP 200 and rendered public metadata verified before registry repair"
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -1505,7 +1509,7 @@
       "product_key": "systemia-radar",
       "name": "Systemia Radar",
       "class": "website_scan_competitor_monitoring_and_reporting",
-      "canonical_url": "https://systemia-radar.base44.app/",
+      "canonical_url": "https://systemia-scan-pro.base44.app/",
       "intents": [
         "scan my website for problems",
         "compare my website against competitors",
@@ -1539,7 +1543,9 @@
           }
         ],
         "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
-      }
+      },
+      "public_door_verified_at": "2026-09-26T22:15:00Z",
+      "public_door_evidence": "live HTTP 200 and rendered public metadata verified before registry repair"
     },
     {
       "product_key": "systemia-website-audit",
