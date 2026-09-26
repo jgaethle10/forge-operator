@@ -18,6 +18,7 @@ on:
       - "public/ai-discovery.json"
       - "public/openapi.json"
       - "public/.well-known/**"
+      - "public/forensiscope/**"
       - "scripts/check-ai-doorways.mjs"
       - "scripts/validate-chum-probes.mjs"
       - ".github/workflows/chum-watershed.yml"
@@ -238,6 +239,34 @@ jobs:
           npm run chum:mirror
           npm run chum:crawl-pressure
 
+      - name: Measure provider pickup consistency
+        id: pickup_consistency
+        if: always()
+        shell: bash
+        env:
+          CHUM_PICKUP_PRODUCT: forensiscope
+          CHUM_PICKUP_PROMPT: >-
+            I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.
+        run: |
+          set -euo pipefail
+          npm run chum:pickup-consistency
+          node <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync('artifacts/chum/provider-pickup-consistency-latest.json','utf8'));
+          const row = (receipt.measurements || []).find((m) =>
+            m.provider === 'chatgpt' &&
+            m.product_key === 'forensiscope' &&
+            m.surface_class === 'consumer_chat_observed'
+          );
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, [
+            `state=${row?.state || 'no_samples'}`,
+            `samples=${row?.samples || 0}`,
+            `pickups=${row?.pickups || 0}`,
+            `misses=${row?.misses || 0}`,
+            `pickup_rate=${row?.pickup_rate ?? 0}`
+          ].join('\n') + '\n');
+          NODE
+
       - name: Persist receipt-backed provider discovery repairs
         id: persist_repairs
         if: ${{ always() && steps.provider_repairs.outcome == 'success' && github.ref == 'refs/heads/main' }}
@@ -387,6 +416,11 @@ jobs:
             echo "Provider probes blocked: ${{ steps.providers.outputs.blocked }}"
             echo "Provider pickup observations: ${{ steps.providers.outputs.pickup_observed }}"
             echo "Provider miss ingestion: ${{ steps.provider_repairs.outcome }}"
+            echo "ChatGPT ForensiScope pickup consistency: ${{ steps.pickup_consistency.outputs.state }}"
+            echo "ChatGPT ForensiScope independent receipts: ${{ steps.pickup_consistency.outputs.samples }}"
+            echo "ChatGPT ForensiScope pickups: ${{ steps.pickup_consistency.outputs.pickups }}"
+            echo "ChatGPT ForensiScope misses: ${{ steps.pickup_consistency.outputs.misses }}"
+            echo "ChatGPT ForensiScope pickup rate: ${{ steps.pickup_consistency.outputs.pickup_rate }}"
             echo "Provider repairs created: ${{ steps.provider_repairs.outputs.created }}"
             echo "Provider repair persistence: ${{ steps.persist_repairs.outcome }}"
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
@@ -395,7 +429,7 @@ jobs:
             echo "Discovery-to-revenue Fire Control: ${{ steps.fire_control.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/chum/money-radar-latest.md artifacts/chum/fire-control-latest.md artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/customer-gauntlet/latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/provider-miss-ingest-latest.json artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/provider-pickup-consistency-latest.md artifacts/chum/money-radar-latest.md artifacts/chum/fire-control-latest.md artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/customer-gauntlet/latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/provider-miss-ingest-latest.json artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -421,7 +455,7 @@ jobs:
         run: |
           set -euo pipefail
           FAILED=0
-          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "gauntlet:${{ steps.gauntlet.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "provider_repairs:${{ steps.provider_repairs.outcome }}"             "persist_repairs:${{ steps.persist_repairs.outcome }}"             "mesh:${{ steps.mesh.outcome }}"             "fire_radar:${{ steps.fire_radar.outcome }}"             "money_radar:${{ steps.money_radar.outcome }}"             "fire_control:${{ steps.fire_control.outcome }}"; do
+          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "gauntlet:${{ steps.gauntlet.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "provider_repairs:${{ steps.provider_repairs.outcome }}"             "pickup_consistency:${{ steps.pickup_consistency.outcome }}"             "persist_repairs:${{ steps.persist_repairs.outcome }}"             "mesh:${{ steps.mesh.outcome }}"             "fire_radar:${{ steps.fire_radar.outcome }}"             "money_radar:${{ steps.money_radar.outcome }}"             "fire_control:${{ steps.fire_control.outcome }}"; do
             NAME="${PAIR%%:*}"
             STATE="${PAIR#*:}"
             echo "${NAME}: ${STATE}"
@@ -435,6 +469,19 @@ jobs:
               FAILED=1
             fi
           fi
+          PICKUP_STATE="${{ steps.pickup_consistency.outputs.state }}"
+          echo "forensiscope_chatgpt_pickup_consistency: ${PICKUP_STATE:-unknown}"
+          case "$PICKUP_STATE" in
+            healthy)
+              echo "::notice::ForensiScope has met the current ChatGPT pickup consistency threshold."
+              ;;
+            intermittent|insufficient_samples|zero_pickup_observed|failing|no_samples|"")
+              echo "::warning::ForensiScope consumer-chat discovery is not yet consistently green. State=${PICKUP_STATE:-unknown}; this is discovery-quality debt, not a founder action gate."
+              ;;
+            *)
+              echo "::warning::Unknown ForensiScope pickup consistency state: $PICKUP_STATE"
+              ;;
+          esac
           PROVIDER_STATE="${{ steps.providers.outputs.measurement_state }}"
           echo "provider_measurement: ${PROVIDER_STATE:-unknown}"
           case "$PROVIDER_STATE" in
