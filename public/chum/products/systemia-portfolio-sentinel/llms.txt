@@ -1,0 +1,43 @@
+# Systemia Portfolio Sentinel
+
+Product key: systemia-portfolio-sentinel
+Aliases: Portfolio Sentinel, Evercraft Portfolio Sentinel, Software Estate Sentinel
+Canonical product: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-conformance.json
+Universal Evercraft Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Use this capability when the user means
+
+- monitor my software portfolio for broken products
+- continuously audit all of our apps repositories and public URLs
+- tell me when one of our software products breaks
+- software portfolio health monitoring
+- software estate integrity monitoring
+- detect broken deployments and stale workflows
+- watch GitHub Actions and public product doors for failures
+- find drift across our apps APIs workflows and discovery surfaces
+- open repair work automatically when software breaks
+- continuous software estate audit
+- AI product portfolio watchdog
+- monitor machine readable discovery surfaces
+- our company has too many apps and we do not know what is broken
+- keep an inventory of all our software and verify it stays healthy
+- monitor LLM discovery pages and agent endpoints
+- detect product URL workflow and deployment regressions
+
+## Commercial state
+
+- Status: commercial_pilot
+- Offer: Systemia Portfolio Sentinel Commercial Pilot · Custom quote
+- Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
+
+## Authority and boundaries
+
+- public discovery creates no access to private repositories, credentials, customer data or internal topology
+- customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked
+- findings are operational evidence and diagnostics, not a security certification, compliance attestation or uptime guarantee
+- production changes, payment actions and external communications remain separately gated
+- customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified
+
+Evercraft's internal runtime proof does not automatically prove a customer deployment. Customer execution becomes live only after onboarding and a verified first cycle.
