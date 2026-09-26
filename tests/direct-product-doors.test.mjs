@@ -21,7 +21,11 @@ for(const [name,p] of specByName){
   assert.ok(door,'missing direct door: '+name);
   assert.equal(door.intent,p.intent,name+': intent drift');
   assert.equal(door.registry_name,p.registry_name,name+': registry drift');
-  assert.equal(door.remote_mcp,p.mcp_url,name+': MCP URL drift');
+  const expectedMcp=p.state==='registry_published_direct_mcp_existing'?p.mcp_url:null;
+  assert.equal(door.remote_mcp,expectedMcp,name+': MCP URL drift');
+  assert.equal(door.runtime_path||null,p.runtime_path||null,name+': runtime path drift');
+  assert.equal(door.runtime_workload_class||null,p.runtime_workload_class||null,name+': runtime workload drift');
+  assert.equal(door.public_origin_state||null,p.public_origin_state||null,name+': public origin state drift');
   assert.equal(door.plugin_package,'plugins/'+p.slug,name+': plugin package drift');
   assert.equal(door.state,p.state,name+': state drift');
   assert.equal(door.truth_boundary,p.truth_boundary,name+': truth-boundary drift');
@@ -40,9 +44,14 @@ for(const [name,p] of specByName){
   assert.equal(plugin.name,p.slug,name+': plugin name drift');
 
   const mcp=readJson('plugins/'+p.slug+'/mcp.json');
-  const server=Object.values(mcp.mcpServers||{})[0];
-  assert.ok(server,name+': missing MCP server config');
-  assert.equal(server.url,p.mcp_url,name+': plugin MCP URL drift');
+  const servers=Object.values(mcp.mcpServers||{});
+  if(p.state==='registry_published_direct_mcp_existing'){
+    const server=servers[0];
+    assert.ok(server,name+': missing MCP server config');
+    assert.equal(server.url,p.mcp_url,name+': plugin MCP URL drift');
+  }else{
+    assert.equal(servers.length,0,name+': held package must not expose an MCP server');
+  }
 
   const codex=readJson('plugins/'+p.slug+'/.codex-plugin/plugin.json');
   assert.equal(codex.interface?.displayName,p.name,name+': display name drift');
@@ -54,6 +63,14 @@ for(const [name,p] of specByName){
     assert.equal(p.registry_name,null,name+': held product must not claim registry publication');
     assert.ok(plugin.releaseState,name+': held product must expose releaseState');
     assert.ok(codex.releaseState,name+': held Codex plugin must expose releaseState');
+    if(p.runtime_path){
+      assert.equal(plugin.pendingRuntimePath,p.runtime_path,name+': plugin pending runtime path drift');
+      assert.equal(codex.pendingRuntimePath,p.runtime_path,name+': Codex pending runtime path drift');
+    }
+    if(p.public_origin_state){
+      assert.equal(plugin.publicOriginState,p.public_origin_state,name+': plugin public origin state drift');
+      assert.equal(codex.publicOriginState,p.public_origin_state,name+': Codex public origin state drift');
+    }
   }
 }
 
