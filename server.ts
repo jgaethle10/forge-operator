@@ -9,6 +9,7 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { negotiateDeal } from './systemia/chum/deal-desk.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
@@ -27,6 +28,7 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+const chumDealAuthoritySecret = process.env.CHUM_DEAL_AUTHORITY_SECRET?.trim() || '';
 const machineCommerceGatewayUrl =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
@@ -490,6 +492,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
       chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
+      dealDesk: { method: 'POST', path: '/api/chum/negotiate', mode: 'nonbinding_agent_to_agent_counterproposal' },
       specialistMcps: [
         { product: 'Evercraft IBM i Rescue', path: '/mcp/ibmi-rescue', state: 'read_only_handoff_runtime' },
         { product: 'Evercraft Foundry App Escape Audit', path: '/mcp/foundry-app-escape', state: 'read_only_handoff_runtime' },
@@ -613,6 +616,41 @@ app.post('/api/chum/hunt', rateLimit(240, 60 * 60 * 1000), (req: Request, res: R
     res.status(503).json({
       ok: false,
       error: 'CHUM live-intent routing unavailable.',
+      detail: error?.message || String(error)
+    });
+  }
+});
+
+
+app.post('/api/chum/negotiate', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const intent = String(body.intent || '').trim();
+
+  if (intent.length < 3 || intent.length > 5000) {
+    res.status(400).json({ ok: false, error: 'intent must be between 3 and 5000 characters.' });
+    return;
+  }
+
+  try {
+    const result = negotiateDeal({
+      catalog: loadPublicMachineCatalog(),
+      directory: loadPublicProductDirectory(),
+      painIndex: loadPublicPainIndex(),
+      request: body,
+      authoritySecret: chumDealAuthoritySecret
+    });
+
+    res.json({
+      ok: true,
+      ...result,
+      caller_instruction: result.matched
+        ? 'Treat this as a non-binding machine counterproposal. Do not claim a contract, payment, discount authority, or fulfillment commitment beyond the returned authority receipt.'
+        : 'No strong Evercraft fit exists. Do not force a negotiation.'
+    });
+  } catch (error: any) {
+    res.status(503).json({
+      ok: false,
+      error: 'CHUM Deal Desk unavailable.',
       detail: error?.message || String(error)
     });
   }
