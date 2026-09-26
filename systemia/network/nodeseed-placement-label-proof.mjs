@@ -97,6 +97,8 @@ try {
   assert.equal(airOnly.nodes.length, 1);
   assert.equal(airOnly.nodes[0].node_id, 'placement-air');
   assert.deepEqual(airOnly.nodes[0].placement_labels, ['air_relay', 'temporary']);
+  assert.equal(airOnly.nodes[0].node_attestation_verified, true);
+  assert.equal(airOnly.nodes[0].field_claim, false);
   assert.ok(
     airOnly.rejected_nodes.some(
       (row) =>
@@ -122,6 +124,8 @@ try {
   assert.equal(groundOnly.failed_assignments, 0);
   assert.equal(groundOnly.nodes.length, 1);
   assert.equal(groundOnly.nodes[0].node_id, 'placement-ground');
+  assert.equal(groundOnly.nodes[0].node_attestation_verified, true);
+  assert.equal(groundOnly.nodes[0].field_claim, false);
   assert.ok(
     groundOnly.rejected_nodes.some(
       (row) =>
@@ -139,6 +143,8 @@ try {
       forbidden_label_filters_capacity: true,
       placement_receipts_preserve_labels: true,
       placement_labels_bound_to_signed_node_attestation: true,
+      placement_sensitive_scheduling_requires_attestation: true,
+      capacity_and_attestation_labels_must_match: true,
       placement_labels_do_not_self_certify_field_status: true,
       generic_scheduler_not_drone_specific: true
     },
