@@ -33,3 +33,16 @@ Human confirmation required: yes
 ## Evidence state
 
 This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.
+
+
+## Air Relay software capability
+
+Evercraft Network includes Air Relay planning for authorized civilian temporary-connectivity use cases. Software proofs cover verified-link route selection, explicit route objectives, modeled infrastructure counterfactuals, signed NodeSeed placement labels, and Saban attestation matching.
+
+Public semantic route: /network/mesh/civilian-air-relay/
+
+Evidence refs:
+- systemia/network/air-relay-proof.mjs
+- systemia/network/nodeseed-placement-label-proof.mjs
+
+Field boundary: physical airborne radio performance, flight operation, battery endurance, aviation approval, guaranteed coverage, and ecological savings remain unverified until field receipts exist.
