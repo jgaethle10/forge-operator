@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import https from 'node:https';
 import { randomBytes, createHash } from 'node:crypto';
+import { validatePublicEdgeAdmission } from './public-edge-tls.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -95,12 +96,15 @@ export async function startPublicEdgeRuntime({
   const leases=new Map();
   let deploymentReceiptRef='';
 
-  if(!isLoopback(controlHost) && !String(controlToken||'')){
-    throw new Error('public_edge_control_token_required_for_nonloopback_control');
-  }
-  if(!['proof_loopback','wildcard_https'].includes(mode)){
-    throw new Error('public_edge_mode_invalid');
-  }
+  const admission=validatePublicEdgeAdmission({
+    mode,
+    baseDomain,
+    tlsKeyPath,
+    tlsCertPath,
+    controlHost,
+    controlToken,
+    publicPort,
+  });
 
   let tlsServer=null;
   const normalizedDomain=String(baseDomain||'').trim().toLowerCase().replace(/^\.+|\.+$/g,'');
@@ -152,6 +156,7 @@ export async function startPublicEdgeRuntime({
           active_routes:leases.size,
           public_https:mode==='wildcard_https',
           base_domain:mode==='wildcard_https'?normalizedDomain:null,
+          tls_admission:mode==='wildcard_https'?admission.tls:null,
         });
       }
 
@@ -260,6 +265,7 @@ export async function startPublicEdgeRuntime({
     active_routes:leases.size,
     public_https:mode==='wildcard_https',
     base_domain:mode==='wildcard_https'?normalizedDomain:null,
+    tls_admission:mode==='wildcard_https'?admission.tls:null,
   });
 
   return {
