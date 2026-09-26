@@ -1,0 +1,58 @@
+{
+  "schema": "systemia.sentinel.policy.v1",
+  "version": "1.0.0",
+  "purpose": "Life-safety cross-domain anomaly detection, corroboration, uncertainty preservation, operator warning, and authorized handoff.",
+  "correlation": {
+    "window_seconds": 600,
+    "minimum_independent_families_for_corroborating": 2,
+    "minimum_independent_families_for_elevated": 3,
+    "minimum_independent_families_for_urgent": 4,
+    "minimum_domains_for_elevated": 2,
+    "minimum_domains_for_urgent": 3,
+    "urgent_requires_verified_observation": true
+  },
+  "evidence_weights": {
+    "modeled": 0.35,
+    "reported": 0.5,
+    "observed": 0.8,
+    "verified": 1
+  },
+  "levels": [
+    "watch",
+    "corroborating",
+    "elevated",
+    "urgent"
+  ],
+  "principles": [
+    "An anomaly is not an attribution.",
+    "Repeated copies from one source family do not count as independent corroboration.",
+    "Modeled evidence alone cannot create an urgent event.",
+    "Hostile intent, actor identity, and nationality remain unknown unless established by an authorized trusted source.",
+    "External life-safety escalation preserves human or authorized-official gates.",
+    "Collect and retain the minimum data needed for correlation and provenance."
+  ],
+  "allowed_actions": [
+    "observe",
+    "request_corroboration",
+    "alert_operator",
+    "recommend_passive_protection",
+    "prepare_authorized_handoff",
+    "record_recovery"
+  ],
+  "prohibited_actions": [
+    "autonomous_target_selection",
+    "weapons_control",
+    "autonomous_interception",
+    "jamming",
+    "spoofing",
+    "aircraft_interference",
+    "automatic_hostile_attribution"
+  ],
+  "signal_fabric": {
+    "watch": "receipt",
+    "corroborating": "notice",
+    "elevated": "warning",
+    "urgent": "warning",
+    "confirmed_hazard_urgent": "critical"
+  }
+}
