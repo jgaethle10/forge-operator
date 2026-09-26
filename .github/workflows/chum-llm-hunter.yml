@@ -34,6 +34,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: chum-llm-hunter
@@ -146,10 +147,27 @@ jobs:
         if: always()
         continue-on-error: true
         env:
-          CHUM_ATTRIBUTION_EXPORT_URL: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_URL }}
-          CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_TOKEN }}
+          CUSTOM_CHUM_ATTRIBUTION_EXPORT_URL: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_URL }}
+          CUSTOM_CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_TOKEN }}
           CHUM_MONEY_RADAR_STRICT: "false"
-        run: npm run chum:money-radar
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEFAULT_PAYMENT_EXPORT="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport"
+          if [ -n "${CUSTOM_CHUM_ATTRIBUTION_EXPORT_URL:-}" ]; then
+            export CHUM_ATTRIBUTION_EXPORT_URL="$CUSTOM_CHUM_ATTRIBUTION_EXPORT_URL"
+            export CHUM_ATTRIBUTION_EXPORT_TOKEN="${CUSTOM_CHUM_ATTRIBUTION_EXPORT_TOKEN:-}"
+          else
+            export CHUM_ATTRIBUTION_EXPORT_URL="$DEFAULT_PAYMENT_EXPORT"
+            if [ "${GITHUB_REF:-}" = "refs/heads/main" ] && [ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] && [ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]; then
+              OIDC_RESPONSE="$(curl --fail --silent --show-error -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=evercraft-chum-payment-export")"
+              export OIDC_RESPONSE
+              export CHUM_ATTRIBUTION_EXPORT_TOKEN="$(node -e "const j=JSON.parse(process.env.OIDC_RESPONSE||'{}'); if(!j.value) process.exit(2); process.stdout.write(j.value)")"
+            else
+              export CHUM_ATTRIBUTION_EXPORT_TOKEN=""
+            fi
+          fi
+          npm run chum:money-radar
 
       - name: Run discovery-to-revenue Fire Control
         id: fire_control

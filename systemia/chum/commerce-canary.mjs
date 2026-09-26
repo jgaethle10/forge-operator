@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const catalog=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const gateway='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const paymentExport='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport';
 const timeoutMs=15000;
 
 function containsId(value,expected,depth=0){
@@ -70,6 +71,23 @@ for(const offer of offers){
   const review_door_valid=review.ok&&review.nonempty&&!review_explicit_error;
 
   const continuation=probe.json?.continuation||null;
+  const frontage_url=typeof continuation?.buyer_frontage_url==='string'
+    ? continuation.buyer_frontage_url.trim()
+    : typeof probe.json?.offer?.buyer_frontage_url==='string'
+      ? probe.json.offer.buyer_frontage_url.trim()
+      : '';
+  const frontage=frontage_url
+    ? await getResponse(frontage_url)
+    : {ok:false,status:0,final_url:null,content_type:'',bytes:0,json:null,parse_error:null,nonempty:false};
+  const frontage_explicit_error=Boolean(frontage.json&&typeof frontage.json==='object'&&(frontage.json.ok===false||frontage.json.error));
+  const frontage_valid=Boolean(
+    frontage_url &&
+    frontage_url.startsWith('https://evercraft-ai-suite-08c4d2b8.base44.app/buy/') &&
+    frontage.ok &&
+    frontage.nonempty &&
+    !frontage_explicit_error
+  );
+
   const buyer_required=continuation?.mode==='direct_checkout_capable';
   const buyer_url=typeof continuation?.buyer_url==='string'?continuation.buyer_url.trim():'';
   const buyer=buyer_required&&buyer_url
@@ -77,7 +95,7 @@ for(const offer of offers){
     : {ok:!buyer_required,status:buyer_required?0:null,final_url:buyer_url||null,content_type:'',bytes:0,json:null,parse_error:null,nonempty:!buyer_required};
   const buyer_explicit_error=Boolean(buyer.json&&typeof buyer.json==='object'&&(buyer.json.ok===false||buyer.json.error));
   const buyer_door_valid=!buyer_required||Boolean(buyer_url&&buyer.ok&&buyer.nonempty&&!buyer_explicit_error);
-  const valid=offer_door_valid&&review_door_valid&&buyer_door_valid;
+  const valid=offer_door_valid&&review_door_valid&&frontage_valid&&buyer_door_valid;
 
   results.push({
     public_id:offer.public_id,
@@ -101,6 +119,11 @@ for(const offer of offers){
     review_explicit_error,
     review_door_valid,
     continuation_mode:continuation?.mode||null,
+    buyer_frontage_url:frontage_url||null,
+    buyer_frontage_status:frontage.status,
+    buyer_frontage_final_url:frontage.final_url,
+    buyer_frontage_bytes:frontage.bytes,
+    buyer_frontage_valid:frontage_valid,
     buyer_required,
     buyer_url:buyer_url||null,
     buyer_status:buyer.status,
@@ -116,6 +139,8 @@ for(const offer of offers){
         ?(!probe.ok?`offer_http_${probe.status}`:probe.parse_error?'offer_invalid_json':!id_present?'offer_public_id_missing':'offer_error_payload')
         :!review_door_valid
           ?(!review.ok?`review_http_${review.status}`:!review.nonempty?'review_empty':'review_error_payload')
+          :!frontage_valid
+            ?(!frontage_url?'buyer_frontage_url_missing':!frontage.ok?`buyer_frontage_http_${frontage.status}`:!frontage.nonempty?'buyer_frontage_empty':'buyer_frontage_invalid')
           :buyer_required&&!buyer_url
             ?'buyer_url_missing'
             :buyer_required&&!buyer.ok
@@ -126,9 +151,13 @@ for(const offer of offers){
   });
 }
 
+const paymentExportProbe=await getResponse(paymentExport,{requireJson:true});
+const paymentExportFailClosed=paymentExportProbe.status===401&&paymentExportProbe.json?.error==='bearer_required';
+
 const failures=results.filter(r=>!r.valid);
 const offerFailures=results.filter(r=>!r.offer_door_valid);
 const reviewFailures=results.filter(r=>!r.review_door_valid);
+const frontageFailures=results.filter(r=>!r.buyer_frontage_valid);
 const buyerRequired=results.filter(r=>r.buyer_required);
 const buyerFailures=buyerRequired.filter(r=>!r.buyer_door_valid);
 const receipt={
@@ -152,11 +181,15 @@ const receipt={
     failed_offer_doors:offerFailures.length,
     readable_review_doors:results.length-reviewFailures.length,
     failed_review_doors:reviewFailures.length,
+    required_buyer_frontage_doors:results.length,
+    readable_buyer_frontage_doors:results.length-frontageFailures.length,
+    failed_buyer_frontage_doors:frontageFailures.length,
     required_human_buyer_doors:buyerRequired.length,
     readable_human_buyer_doors:buyerRequired.length-buyerFailures.length,
     failed_human_buyer_doors:buyerFailures.length,
     healthy_money_paths:results.length-failures.length,
-    failed_money_paths:failures.length
+    failed_money_paths:failures.length,
+    private_payment_export_fail_closed:paymentExportFailClosed
   },
   results
 };
@@ -169,13 +202,16 @@ const md=[
   `Sell-now offers: ${receipt.summary.sell_now_offers}`,
   `Readable machine-offer doors: ${receipt.summary.readable_offer_doors}`,
   `Readable human-review doors: ${receipt.summary.readable_review_doors}`,
-  `Required direct-sale buyer doors: ${receipt.summary.required_human_buyer_doors}`,
+  `Required branded buyer-frontage doors: ${receipt.summary.required_buyer_frontage_doors}`,
+  `Readable branded buyer-frontage doors: ${receipt.summary.readable_buyer_frontage_doors}`,
+  `Required direct-sale downstream buyer doors: ${receipt.summary.required_human_buyer_doors}`,
   `Readable direct-sale buyer doors: ${receipt.summary.readable_human_buyer_doors}`,
   `Healthy money paths: ${receipt.summary.healthy_money_paths}`,
-  `Failed money paths: ${receipt.summary.failed_money_paths}`,'',
-  '> This is a read-only money-path canary. It verifies offer discovery, the human review door, and the actual buyer destination for direct-checkout offers. It never creates checkout, attempts payment, or treats a reachable URL as payment proof.','',
-  '| Offer | Public ID | State | Offer HTTP | Review HTTP | Buyer HTTP | Result |','|---|---|---|---:|---:|---:|---|',
-  ...results.map(r=>`| ${r.name} | ${r.public_id} | ${r.machine_state||''} | ${r.status} | ${r.review_status} | ${r.buyer_required?r.buyer_status:'n/a'} | ${r.valid?'money path readable':r.reason} |`),
+  `Failed money paths: ${receipt.summary.failed_money_paths}`,
+  `Private payment export fail-closed without GitHub OIDC: ${receipt.summary.private_payment_export_fail_closed}`,'',
+  '> This is a read-only money-path canary. It verifies offer discovery, the machine review door, the branded buyer frontage for every sell-now offer, and the downstream buyer destination for direct-checkout offers. It never creates checkout, attempts payment, or treats a reachable URL as payment proof.','',
+  '| Offer | Public ID | State | Offer HTTP | Review HTTP | Frontage HTTP | Downstream HTTP | Result |','|---|---|---|---:|---:|---:|---:|---|',
+  ...results.map(r=>`| ${r.name} | ${r.public_id} | ${r.machine_state||''} | ${r.status} | ${r.review_status} | ${r.buyer_frontage_status} | ${r.buyer_required?r.buyer_status:'n/a'} | ${r.valid?'money path readable':r.reason} |`),
   '','## Repair queue','',
   ...(failures.length?failures.map(r=>`- ${r.public_id}: ${r.reason} (offer HTTP ${r.status}; review HTTP ${r.review_status})`):['- All current sell-now offer and human-review doors are readable.']),
   ''
@@ -184,3 +220,4 @@ fs.writeFileSync('artifacts/chum/commerce-canary-latest.md',md.join('\n'));
 console.log(JSON.stringify(receipt.summary));
 
 if(failures.length) throw new Error(`CHUM commerce canary found ${failures.length} broken sell-now money path(s)`);
+if(!paymentExportFailClosed) throw new Error(`CHUM private payment export did not fail closed as expected (HTTP ${paymentExportProbe.status})`);

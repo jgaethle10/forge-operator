@@ -5,6 +5,17 @@ import path from 'node:path';
 import test from 'node:test';
 import { buildMoneyRadar } from '../systemia/chum/money-radar.mjs';
 
+test('payment adapter registry matches the 13 sell-now offers', () => {
+  const registry = JSON.parse(fs.readFileSync('systemia/chum/payment-adapter-registry.json', 'utf8'));
+  const offers = Array.isArray(registry.offers) ? registry.offers : [];
+  assert.equal(offers.length, 13);
+  assert.equal(offers.filter((row) => row.mode === 'direct_checkout').length, 10);
+  assert.equal(offers.filter((row) => row.provider_status_verification === 'available').length, 10);
+  assert.equal(offers.filter((row) => row.central_machine_commerce_checkout_watch === true).length, 10);
+  assert.equal(offers.filter((row) => row.mode === 'human_handoff').length, 3);
+  assert.equal(offers.filter((row) => row.native_web_checkout_forwarding === 'verified').length, 0);
+});
+
 function trusted(overrides = {}) {
   return {
     schema: 'evercraft.chum.attribution-event.v1',

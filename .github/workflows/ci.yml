@@ -141,6 +141,7 @@ jobs:
             --data '{"problem":"we need an ERP but cannot survive a huge implementation and want to modernize without replacing everything","limit":3}' \
             http://127.0.0.1:3000/api/discover > /tmp/buildflow-route.json
           curl --fail --silent -D /tmp/chum-headers.txt -o /dev/null http://127.0.0.1:3000/chum/
+          curl --silent -D /tmp/chum-buyer-handoff-headers.txt -o /dev/null "http://127.0.0.1:3000/api/chum/go/findmypart-paid-hunt-v1?surface=ci_buyer_handoff&provider=smoke-llm"
           curl --fail --silent -A 'OAI-SearchBot/1.0' http://127.0.0.1:3000/forensiscope/ > /dev/null
           curl --fail --silent http://127.0.0.1:3000/api/chum/crawler-radar > /tmp/crawler-radar-runtime.json
 
@@ -170,6 +171,7 @@ jobs:
           const forensiscopeLlms = fs.readFileSync('/tmp/forensiscope-llms.txt','utf8');
           const buildflowRoute = JSON.parse(fs.readFileSync('/tmp/buildflow-route.json','utf8'));
           const chumHeaders = fs.readFileSync('/tmp/chum-headers.txt','utf8');
+          const chumBuyerHandoffHeaders = fs.readFileSync('/tmp/chum-buyer-handoff-headers.txt','utf8');
           const crawlerRadar = JSON.parse(fs.readFileSync('/tmp/crawler-radar-runtime.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
@@ -236,6 +238,9 @@ jobs:
           if (!/^link:.*chum\/sitemaps\/index\.xml/im.test(chumHeaders)) throw new Error('CHUM response missing segmented sitemap Link header');
           if (!/^link:.*chum\/commercial\/feed\.json/im.test(chumHeaders)) throw new Error('CHUM response missing commercial intent feed Link header');
           if (!/^access-control-allow-origin:\s*\*/im.test(chumHeaders)) throw new Error('CHUM public discovery CORS missing');
+          const location = chumBuyerHandoffHeaders.match(/^location:\s*(.+)$/im)?.[1]?.trim() || '';
+          if (!location.startsWith('https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?')) throw new Error('CHUM buyer handoff bypassed universal buyer frontage: '+location);
+          if (!location.includes('ec_surface=ci_buyer_handoff')) throw new Error('CHUM buyer handoff lost surface attribution');
           NODE
 
       - name: Show container logs on failure

@@ -1,4 +1,5 @@
 const DEFAULT_MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const DEFAULT_BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
@@ -54,18 +55,37 @@ export function directHumanBuyerUrl(offer, { surface = 'chum_public_surface' } =
   }
 }
 
+
+export function buyerFrontageUrl(offer, {
+  surface = 'chum_public_surface',
+  source = 'chum',
+  campaign = 'buyer-frontage',
+  frontageOrigin = DEFAULT_BUYER_FRONTAGE_ORIGIN
+} = {}) {
+  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
+  try {
+    const origin = new URL(String(frontageOrigin || DEFAULT_BUYER_FRONTAGE_ORIGIN));
+    if (origin.protocol !== 'https:') return null;
+    const url = new URL('/buy/' + encodeURIComponent(String(offer.public_id)), origin.origin);
+    url.searchParams.set('src', String(source || 'chum'));
+    url.searchParams.set('campaign', String(campaign || 'buyer-frontage'));
+    url.searchParams.set('ec_surface', String(surface || 'chum_public_surface'));
+    url.searchParams.set('ec_public_id', String(offer.public_id));
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function humanStartUrl(offer, {
   surface = 'chum_public_surface',
-  publicOrigin = process.env.CHUM_PUBLIC_ORIGIN,
+  frontageOrigin = DEFAULT_BUYER_FRONTAGE_ORIGIN,
   gateway = DEFAULT_MACHINE_COMMERCE_GATEWAY
 } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
 
-  const origin = configuredChumPublicOrigin(publicOrigin);
-  if (origin) {
-    return origin + '/api/chum/go/' + encodeURIComponent(String(offer.public_id))
-      + '?surface=' + encodeURIComponent(String(surface || 'chum_public_surface'));
-  }
+  const frontage = buyerFrontageUrl(offer, { surface, frontageOrigin });
+  if (frontage) return frontage;
 
   const direct = directHumanBuyerUrl(offer, { surface });
   if (direct) return direct;
@@ -74,10 +94,10 @@ export function humanStartUrl(offer, {
 }
 
 export function humanStartState(offer, {
-  publicOrigin = process.env.CHUM_PUBLIC_ORIGIN
+  frontageOrigin = DEFAULT_BUYER_FRONTAGE_ORIGIN
 } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return 'not_sell_now';
-  if (configuredChumPublicOrigin(publicOrigin)) return 'tracked_chum_handoff_configured_origin';
+  if (buyerFrontageUrl(offer, { frontageOrigin })) return 'universal_buyer_frontage';
   if (DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)]) return 'direct_human_buyer_destination';
   return 'machine_commerce_review_fallback';
 }
