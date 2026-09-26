@@ -1,12 +1,6 @@
 export const RIVET_PUBLIC_ID = 'rivet-site-underwriting-v1';
-export const RIVET_COMMERCE_TARGET_ID = 'aliev-site-opportunity-snapshot-v1';
+export const RIVET_COMMERCE_TARGET_ID = RIVET_PUBLIC_ID;
 export const RIVET_REPORT_OFFER_KEYS = ['site_report_299', 'site_report_750'];
-
-export function resolveRivetCommercePublicId(publicId = '') {
-  return String(publicId).trim() === RIVET_PUBLIC_ID
-    ? RIVET_COMMERCE_TARGET_ID
-    : String(publicId).trim();
-}
 
 export function projectRivetReportOffer(offer = {}) {
   const key = String(offer.offer_key || '');
