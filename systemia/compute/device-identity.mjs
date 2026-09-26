@@ -9,6 +9,14 @@ import {
 
 const sha = (value) => createHash('sha256').update(value).digest('hex');
 
+function normalizePlacementLabels(values = []) {
+  const input = Array.isArray(values) ? values : [];
+  return [...new Set(input
+    .map((value) => String(value || '').trim().toLowerCase())
+    .filter((value) => /^[a-z0-9][a-z0-9._-]{0,63}$/.test(value))
+  )].sort().slice(0, 32);
+}
+
 function identityPaths(root) {
   const dir = path.join(path.resolve(root), '.identity');
   return {
@@ -96,9 +104,7 @@ export function createNodeAttestation({
     supported_workloads_hash: `sha256:${sha(
       JSON.stringify([...supportedWorkloads].map(String).sort())
     )}`,
-    placement_labels: [...new Set(
-      [...placementLabels].map((value) => String(value || '').trim().toLowerCase()).filter(Boolean)
-    )].sort(),
+    placement_labels: normalizePlacementLabels(placementLabels),
     process_started_at: String(processStartedAt || ''),
     boot_id_hash: bootIdHash ? String(bootIdHash) : null,
     observed_at: observedAt.toISOString(),
@@ -140,6 +146,14 @@ export function verifyNodeAttestation({
     return { ok: false, reason: 'node_may_not_self_claim_field_status' };
   }
 
+  const rawPlacementLabels = Array.isArray(statement.placement_labels)
+    ? statement.placement_labels.map(String)
+    : [];
+  const placementLabels = normalizePlacementLabels(rawPlacementLabels);
+  if (JSON.stringify(rawPlacementLabels) !== JSON.stringify(placementLabels)) {
+    return { ok: false, reason: 'attestation_placement_labels_invalid' };
+  }
+
   const fingerprint = fingerprintPublicKey(attestation.public_key_pem);
   if (fingerprint !== statement.device_fingerprint) {
     return { ok: false, reason: 'attestation_fingerprint_mismatch' };
@@ -166,9 +180,7 @@ export function verifyNodeAttestation({
     observed_at: statement.observed_at,
     boot_id_hash: statement.boot_id_hash,
     process_started_at: statement.process_started_at,
-    placement_labels: Array.isArray(statement.placement_labels)
-      ? statement.placement_labels.map(String)
-      : [],
+    placement_labels: placementLabels,
     field_claim: statement.field_claim,
   };
 }
