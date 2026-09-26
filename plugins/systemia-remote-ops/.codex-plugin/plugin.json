@@ -1,7 +1,7 @@
 {
   "name": "systemia-remote-ops",
   "version": "0.1.0",
-  "description": "Direct business decision simulation with modeled outcomes kept separate from reality.",
+  "description": "Use Systemia Remote Ops directly when a founder or operator wants to simulate a consequential business decision before changing the real business. Pricing simulation is currently the first public executable lane; other lanes must remain clearly labeled until independently verified.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
@@ -11,9 +11,10 @@
   "license": "UNLICENSED",
   "keywords": [
     "systemia",
+    "remote-ops",
     "business-simulation",
-    "decision-lab",
     "pricing",
+    "decision-lab",
     "mcp"
   ],
   "skills": "./skills/",
@@ -32,5 +33,6 @@
       "I am considering a business decision and want to simulate the likely tradeoffs before I act."
     ]
   },
-  "releaseState": "SOURCE_READY_DEPLOYMENT_UNVERIFIED"
+  "releaseState": "SOURCE_READY_DEPLOYMENT_UNVERIFIED",
+  "publicOriginState": "deployment_unverified"
 }
