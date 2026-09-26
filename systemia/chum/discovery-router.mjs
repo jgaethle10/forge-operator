@@ -180,11 +180,24 @@ export function rankDiscoveryCandidates(machineCatalog, productDirectory, query,
       .map(productAsDiscoveryOffer)
   };
   const directory = rankOffers(directoryCatalog, query, { limit: expandedLimit, minimumScore })
-    .map((row) => ({
-      ...row,
-      raw_score: row.score,
-      score: Math.max(1, Math.round(row.score * 0.4))
-    }))
+    .map((row) => {
+      // Directory records are intentionally downweighted versus declared machine
+      // offers, but a strong semantic match should still beat an unrelated callable
+      // offer. Multiple supporting phrases plus a matched concept is evidence that
+      // the user is describing this product's actual job rather than sharing one
+      // incidental token such as "interview".
+      const strongSemanticMatch =
+        Array.isArray(row.matched_concepts) &&
+        row.matched_concepts.length > 0 &&
+        Number(row.support || 0) >= 3;
+      const scale = strongSemanticMatch ? 0.5 : 0.4;
+      return {
+        ...row,
+        raw_score: row.score,
+        directory_scale: scale,
+        score: Math.max(1, Math.round(row.score * scale))
+      };
+    })
     .filter((row) => row.score >= minimumScore);
 
   // Collapse each product family before global ranking. A declared machine-catalog
