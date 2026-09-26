@@ -52,6 +52,28 @@ function evaluateFileContract(rootDir, invariant) {
       out.push(violation(invariant, `Retired or forbidden contract text reappeared: ${literal}`, evidence, { forbidden_literal: literal }));
     }
   }
+  for (const limit of invariant.occurrence_limits || []) {
+    const literal = String(limit?.literal || '');
+    if (!literal) continue;
+    let count = 0;
+    let offset = 0;
+    while (true) {
+      const index = raw.text.indexOf(literal, offset);
+      if (index < 0) break;
+      count += 1;
+      offset = index + Math.max(1, literal.length);
+    }
+    const min = Number.isFinite(Number(limit?.min)) ? Number(limit.min) : 0;
+    const max = Number.isFinite(Number(limit?.max)) ? Number(limit.max) : Number.POSITIVE_INFINITY;
+    if (count < min || count > max) {
+      out.push(violation(
+        invariant,
+        `Contract text occurrence count for ${literal} is ${count}; expected ${min}..${Number.isFinite(max) ? max : 'unbounded'}.`,
+        evidence,
+        { occurrence_literal: literal, count, min, max: Number.isFinite(max) ? max : null }
+      ));
+    }
+  }
   for (const pattern of invariant.required_patterns || []) {
     let re;
     try { re = new RegExp(pattern, 'm'); } catch {
