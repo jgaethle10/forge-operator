@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-26T19:42:38.231Z",
+  "generated_at": "2026-09-26T20:07:32.316Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
@@ -18,17 +18,6 @@
     },
     {
       "path": "/chum/products/forensiscope/ai-discovery.json",
-      "score": 246,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/forensiscope/llms.txt",
       "score": 246,
       "urgency": "strike_now",
       "reasons": [
@@ -61,12 +50,12 @@
       ]
     },
     {
-      "path": "/forensiscope/distribution/llms.txt",
-      "score": 238,
+      "path": "/chum/products/forensiscope/llms.txt",
+      "score": 239,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
@@ -193,18 +182,29 @@
       ]
     },
     {
-      "path": "/forensiscope/mesh/llms.txt",
-      "score": 238,
+      "path": "/forensiscope/developers/llms.txt",
+      "score": 231,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
+        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
     },
     {
-      "path": "/forensiscope/developers/llms.txt",
+      "path": "/forensiscope/distribution/llms.txt",
+      "score": 231,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/forensiscope/mesh/llms.txt",
       "score": 231,
       "urgency": "strike_now",
       "reasons": [
