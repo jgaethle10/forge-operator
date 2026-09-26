@@ -23,14 +23,14 @@ Evercraft Web is an approved public Evercraft discovery record. This GitHub mirr
 
 ## Authority
 
-public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held
+public discovery plus receipt-backed Official MCP Registry publication; single-URL Fetch is externally canary-verified production-live; the v0.3 batch-fetch candidate is build-verified but not production-promoted until a fresh external canary passes; Search and Browser remain held
 
 Human confirmation required: no
 
 ## Boundaries
 
-- registry publication is not proof that the remote MCP successfully executes Fetch
-- Evercraft Fetch must not be described as production-live until its external canary succeeds
+- registry publication alone is not proof that a remote MCP tool executes successfully
+- single-URL Evercraft Fetch is production-live based on its recorded external canary; new v0.3 primitives require their own fresh canaries before promotion
 - Evercraft Search remains held until independently verified
 - Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass
 - public discovery does not expose private Systemia topology or credentials
