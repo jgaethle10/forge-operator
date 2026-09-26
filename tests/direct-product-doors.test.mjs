@@ -105,3 +105,22 @@ console.log('DIRECT_PRODUCT_DOORS_PASS',JSON.stringify({
   registry_pending_specialists:specs.products.filter(p=>isDirectLive(p)&&!isRegistryPublished(p)).map(p=>p.slug),
   held:specs.products.filter(p=>!isDirectLive(p)).map(p=>p.slug)
 }));
+
+const workflow=fs.readFileSync('.github/workflows/direct-product-doors.yml','utf8');
+for(const dependency of [
+  '.github/workflows/direct-product-doors.yml',
+  'distribution/direct-plugin-specs.json',
+  'scripts/generate-mcp-registry-candidates.mjs',
+  'tests/mcp-registry-field-gate.test.mjs',
+  'scripts/materialize-mcp-registry-candidates.mjs',
+  'tests/materialize-mcp-registry-candidates.test.mjs',
+  'scripts/record-mcp-registry-publication.mjs',
+  'tests/record-mcp-registry-publication.test.mjs',
+  'distribution/mcp-registry-publication-receipts/**',
+  'package.json'
+]){
+  const occurrences=workflow.split(dependency).length-1;
+  assert.ok(occurrences>=2,'Direct Product Doors must watch '+dependency+' on both push and pull_request');
+}
+assert.match(workflow,/node-version:\\s*22/,'Direct Product Doors must use the repository Node 22 baseline');
+console.log('DIRECT_PRODUCT_DOORS_WORKFLOW_COVERAGE_PASS');
