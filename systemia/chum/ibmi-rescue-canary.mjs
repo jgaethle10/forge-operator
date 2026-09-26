@@ -3,16 +3,20 @@
 const GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const PUBLIC_ID = 'ibmi-rescue-v1';
 const PRODUCT_ROUTE = 'https://findmypart.base44.app/ibmi-rescue';
+const PAYMENTS_ENDPOINT = 'https://findmypart.base44.app/api/apps/692536fdd7bfe083fc4086fa/functions/evercraftPaymentsOps';
 
-async function get(url) {
+async function request(url, init = {}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), 20000);
   try {
     const response = await fetch(url, {
+      ...init,
       headers: {
         accept: 'application/json,text/html;q=0.9,*/*;q=0.5',
+        'content-type': init.body ? 'application/json' : undefined,
         'user-agent': 'Evercraft-Systemia-IBMi-Rescue-Canary/1.0',
         'x-evercraft-source': 'synthetic_qa',
+        ...(init.headers || {}),
       },
       signal: controller.signal,
       redirect: 'follow',
@@ -24,9 +28,48 @@ async function get(url) {
   }
 }
 
+const get = (url) => request(url);
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
+
+const quoteResponse = await request(PAYMENTS_ENDPOINT, {
+  method: 'POST',
+  body: JSON.stringify({
+    action: 'quote',
+    offer_key: 'ibmi_74_deadline_xray_250',
+  }),
+});
+assert(quoteResponse.response.ok, `payments_quote_http_${quoteResponse.response.status}`);
+const quotePayload = JSON.parse(quoteResponse.text);
+assert(quotePayload.ok === true, 'payments_quote_not_ok');
+assert(quotePayload.offer?.amount_cents === 25000, 'payments_quote_amount_wrong');
+assert(quotePayload.offer?.product_key === 'ibmi-rescue', 'payments_quote_product_wrong');
+
+const qaOrderKey = `qa-ibmi-rescue-canary-${Date.now()}`;
+const checkoutResponse = await request(PAYMENTS_ENDPOINT, {
+  method: 'POST',
+  body: JSON.stringify({
+    action: 'create_checkout',
+    offer_key: 'ibmi_74_deadline_xray_250',
+    order_key: qaOrderKey,
+    customer_email: 'qa-ibmi-rescue-canary@example.com',
+    business_name: 'Systemia Synthetic QA',
+    prospect_key: 'qa-ibmi-rescue-canary',
+    source_ref: 'systemia:ibmi-rescue-canary',
+    return_origin: 'https://findmypart.base44.app',
+    success_path: '/ibmi-rescue?payment=ibmi_processing',
+    cancel_path: '/ibmi-rescue?payment=ibmi_cancelled',
+  }),
+});
+assert(checkoutResponse.response.ok, `payments_checkout_http_${checkoutResponse.response.status}`);
+const checkoutPayload = JSON.parse(checkoutResponse.text);
+assert(checkoutPayload.ok === true, 'payments_checkout_not_ok');
+assert(checkoutPayload.amount_cents === 25000, 'payments_checkout_amount_wrong');
+assert(checkoutPayload.offer_key === 'ibmi_74_deadline_xray_250', 'payments_checkout_offer_wrong');
+assert(typeof checkoutPayload.session_id === 'string' && checkoutPayload.session_id.startsWith('cs_'), 'payments_checkout_session_missing');
+assert(typeof checkoutPayload.checkout_url === 'string' && /^https:\/\/checkout\.stripe\.com\//.test(checkoutPayload.checkout_url), 'payments_checkout_url_invalid');
 
 const offerUrl = new URL(GATEWAY);
 offerUrl.searchParams.set('action', 'offer');
@@ -75,6 +118,9 @@ console.log(JSON.stringify({
   offer_count: offerPayload.offer.offers.length,
   service_handoff_verified: true,
   product_route_http_verified: true,
-  product_specific_direct_checkout_verified: false,
+  product_specific_direct_checkout_backend_verified: true,
+  product_route_http_verified: true,
+  provider_checkout_session_created: true,
+  synthetic_order_key: qaOrderKey,
   payment_created: false,
 }));
