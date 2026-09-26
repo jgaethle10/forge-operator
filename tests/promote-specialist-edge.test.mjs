@@ -32,6 +32,11 @@ function verifiedReceipt(overrides={}){
     service:'specialist-handoff-mcp',
     instance_id:'specialist_handoff_test_instance',
     deployment_receipt_ref:'sha256:'+'a'.repeat(64),
+    identity_attestation_verified:true,
+    same_device_binding:true,
+    device_fingerprint:'sha256:'+'b'.repeat(64),
+    edge_attestation_receipt_ref:'c'.repeat(64),
+    specialist_attestation_receipt_ref:'d'.repeat(64),
     public_https_verified:true,
     certificate_validation:'system_default_trust_store',
     mcp_initialize_verified:true,
@@ -66,6 +71,11 @@ test('verified external canary promotes exactly the three Yard specialists witho
     assert.equal(product.public_edge_canary.verified,true);
     assert.equal(product.public_edge_canary.registry_publication_proven,false);
     assert.equal(product.public_edge_canary.deployment_receipt_ref,'sha256:'+'a'.repeat(64));
+    assert.equal(product.public_edge_canary.identity_attestation_verified,true);
+    assert.equal(product.public_edge_canary.same_device_binding,true);
+    assert.equal(product.public_edge_canary.device_fingerprint,'sha256:'+'b'.repeat(64));
+    assert.equal(product.public_edge_canary.edge_attestation_receipt_ref,'c'.repeat(64));
+    assert.equal(product.public_edge_canary.specialist_attestation_receipt_ref,'d'.repeat(64));
   }
 
   for(const [slug,before] of nonTargetsBefore){
@@ -142,5 +152,18 @@ test('published registry remote cannot silently move to a different public edge'
       origin:'https://replacement.evercraft.example',
     })),
     /published_registry_remote_change_requires_versioned_republication/
+  );
+});
+
+test('HTTPS without NodeSeed attestation cannot promote direct doors',()=>{
+  assert.throws(
+    ()=>promoteSpecialistSpecs(pendingFixture(),verifiedReceipt({
+      identity_attestation_verified:false,
+      same_device_binding:false,
+      device_fingerprint:null,
+      edge_attestation_receipt_ref:null,
+      specialist_attestation_receipt_ref:null,
+    })),
+    /external_canary_not_verified/
   );
 });
