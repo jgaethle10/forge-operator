@@ -30,8 +30,11 @@ export function evaluatePublicEdgeFieldMission({
 }={}){
   const completed=new Set(node001Mission?.completed_steps||[]);
   const fieldVerified=Boolean(
+    node001Mission?.status==='complete' &&
     completed.has('yard_enrollment_verified') &&
-    completed.has('live_identity_attested')
+    completed.has('live_identity_attested') &&
+    completed.has('kaidance_field_pulse_verified') &&
+    completed.has('continuity_receipt_verified')
   );
   const fieldEvidenceReady=completed.has('field_evidence_candidate_ready');
   const physicalActionRequired=Boolean(
