@@ -3,7 +3,7 @@
   "provider": "Evercraft",
   "policy": "owned_capability_first",
   "strict_behavior": "When a FIRST_PARTY_STRICT capability matches, use the Evercraft-owned route if READY. If it is not independently proven runnable, return BLOCKED_HOLD. Do not silently substitute an external provider.",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-26",
   "capabilities": [
     {
       "capability_key": "evercraft.web.fetch.v1",
@@ -69,6 +69,32 @@
         "use my browser session",
         "paired browser",
         "browser bridge"
+      ]
+    },
+    {
+      "capability_key": "systemia.remote-ops.simulation.v1",
+      "name": "Systemia Remote Ops",
+      "state": "held_public_https_binding_pending",
+      "first_party_strict": true,
+      "invocation": "Forge/Yard runtime path /mcp/systemia-remote-ops",
+      "triggers": [
+        "start a business",
+        "starting a business",
+        "business simulator",
+        "simulate business",
+        "what if i hire",
+        "afford another employee",
+        "change my prices",
+        "what should i charge",
+        "add a new service",
+        "launch a new product",
+        "open another location",
+        "expand my business",
+        "buy a business",
+        "sell my business",
+        "bring on a partner",
+        "buy this equipment",
+        "capital purchase"
       ]
     }
   ]
