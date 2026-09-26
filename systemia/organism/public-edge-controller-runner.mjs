@@ -8,14 +8,12 @@ function arg(name,fallback=null){
   return i>=0&&process.argv[i+1]?process.argv[i+1]:fallback;
 }
 
-function required(name){
-  const value=String(arg(name,'')||'').trim();
-  if(!value) throw new Error(name+' is required');
-  return value;
-}
-
-const yardState=path.resolve(required('--yard-state'));
-const controllerState=path.resolve(required('--controller-state'));
+const sharedStateRoot=path.resolve(
+  process.env.EVERCRAFT_PUBLIC_EDGE_STATE_DIR||
+  'artifacts/public-edge-activation-watch/runtime'
+);
+const yardState=path.resolve(arg('--yard-state',path.join(sharedStateRoot,'yard')));
+const controllerState=path.resolve(arg('--controller-state',path.join(sharedStateRoot,'controller')));
 const leaseTtlMs=Number(arg('--lease-ttl-ms','3600000'));
 const renewEveryMs=Number(arg('--renew-every-ms','1800000'));
 const intervalMs=Number(arg('--interval-ms','60000'));
