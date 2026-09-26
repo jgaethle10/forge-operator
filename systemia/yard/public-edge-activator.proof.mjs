@@ -110,6 +110,14 @@ try{
   assert.equal(activation.receipt.selected_endpoint_exposed,false);
   assert.equal(activation.receipt.allocator_token_exposed,false);
 
+  const publicHealth=await fetch(activation.controller.binding.origin+'/health').then(r=>r.json());
+  assert.equal(publicHealth.ok,true);
+  assert.equal(publicHealth.identity_attestation_bound,true);
+  assert.equal(publicHealth.same_device_binding,true);
+  assert.equal(publicHealth.device_fingerprint,activation.receipt.device_fingerprint);
+  assert.equal(publicHealth.edge_attestation_receipt_ref,activation.receipt.edge_attestation_receipt);
+  assert.equal(publicHealth.specialist_attestation_receipt_ref,activation.receipt.specialist_attestation_receipt);
+
   const tick=await activation.controller.tick();
   assert.equal(tick.action,'healthy');
   assert.equal(tick.specialist_health_state,'loopback_proof_healthy');
@@ -132,6 +140,7 @@ try{
     controller_health_verified:true,
     device_identity_attested:true,
     same_device_binding:true,
+    public_health_attestation_bound:true,
     allocator_secret_exposed:false,
     selected_endpoint_exposed:false,
     founder_login_required:false,
