@@ -4,9 +4,21 @@ import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corrid
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const directPluginSpecs = JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.json','utf8'));
+const LIVE_DIRECT_STATES=new Set([
+  'registry_published_direct_mcp_existing',
+  'public_https_verified_registry_pending',
+]);
+const isDirectLive=(product)=>
+  LIVE_DIRECT_STATES.has(product.state) &&
+  typeof product.mcp_url==='string' &&
+  product.mcp_url.startsWith('https://');
+const isRegistryPublished=(product)=>
+  product.state==='registry_published_direct_mcp_existing' &&
+  typeof product.registry_name==='string' &&
+  product.registry_name.startsWith('io.github.jgaethle10/');
 const directByCapabilityId = new Map();
 for (const product of directPluginSpecs.products || []) {
-  if (product.state !== 'registry_published_direct_mcp_existing') continue;
+  if (!isDirectLive(product)) continue;
   for (const publicId of product.capability_public_ids || []) {
     if (directByCapabilityId.has(publicId)) throw new Error('duplicate direct specialist capability mapping: '+publicId);
     directByCapabilityId.set(publicId, product);
@@ -66,7 +78,8 @@ for(const offer of catalog.offers||[]){
   const directSpecialist=directProduct ? {
     product:directProduct.name,
     plugin_package:'plugins/'+directProduct.slug,
-    registry_name:directProduct.registry_name,
+    registry_name:isRegistryPublished(directProduct)?directProduct.registry_name:null,
+    registry_state:isRegistryPublished(directProduct)?'published':'pending',
     mcp:directProduct.mcp_url,
     route_state:'preferred_when_available',
     fallback_mcp:universalMcp
@@ -115,7 +128,15 @@ for(const offer of catalog.offers||[]){
     'Commercial state: '+offer.commercial_state,
     'Machine state: '+offer.machine_state,
     'Public URL: '+canonicalUrl,
-    ...(directSpecialist ? ['Preferred agent route: direct specialist','Direct specialist: '+directSpecialist.product,'Direct MCP: '+directSpecialist.mcp,'Official MCP Registry name: '+directSpecialist.registry_name,'Universal Evercraft fallback MCP: '+universalMcp] : ['Preferred agent route: universal fallback','Universal Evercraft MCP: '+universalMcp]),
+    ...(directSpecialist ? [
+      'Preferred agent route: direct specialist',
+      'Direct specialist: '+directSpecialist.product,
+      'Direct MCP: '+directSpecialist.mcp,
+      ...(directSpecialist.registry_name
+        ? ['Official MCP Registry name: '+directSpecialist.registry_name]
+        : ['MCP Registry state: pending; public HTTPS execution is independently verified']),
+      'Universal Evercraft fallback MCP: '+universalMcp
+    ] : ['Preferred agent route: universal fallback','Universal Evercraft MCP: '+universalMcp]),
     'Start here: '+(humanStartUrl(offer,{surface:'chum_capability_page'})||'Not a current sell-now route'),
     '',
     '## Use this when',
@@ -193,7 +214,7 @@ for(const offer of catalog.offers||[]){
     '</ul></div>',
     '<div class="card"><h2>Inputs and outputs</h2>'+(offer.inputs?'<p><strong>Inputs:</strong> '+escapeHtml(offer.inputs)+'</p>':'')+(offer.outputs?'<p><strong>Outputs:</strong> '+escapeHtml(offer.outputs)+'</p>':'')+'</div>',
     '<div class="card"><h2>Agent route</h2>'+
-      (directSpecialist?'<p><strong>Preferred:</strong> direct specialist</p><p><strong>Specialist MCP:</strong> <code>'+escapeHtml(directSpecialist.mcp)+'</code></p><p><strong>Registry:</strong> <code>'+escapeHtml(directSpecialist.registry_name)+'</code></p><p class="muted">Use Evercraft Machine Commerce only when this specialist is unavailable or the user intent is ambiguous.</p>':'<p><strong>Preferred:</strong> Evercraft Machine Commerce fallback</p>')+
+      (directSpecialist?'<p><strong>Preferred:</strong> direct specialist</p><p><strong>Specialist MCP:</strong> <code>'+escapeHtml(directSpecialist.mcp)+'</code></p>'+(directSpecialist.registry_name?'<p><strong>Registry:</strong> <code>'+escapeHtml(directSpecialist.registry_name)+'</code></p>':'<p><strong>Registry state:</strong> pending</p>')+'<p class="muted">Use Evercraft Machine Commerce only when this specialist is unavailable or the user intent is ambiguous.</p>':'<p><strong>Preferred:</strong> Evercraft Machine Commerce fallback</p>')+
       '</div>',
     '<div class="card"><h2>Open capability</h2>'+
       (humanStartUrl(offer,{surface:'chum_capability_page'})?'<p><a href="'+escapeHtml(humanStartUrl(offer,{surface:'chum_capability_page'}))+'"><strong>Start here</strong></a></p>':'')+
@@ -267,7 +288,11 @@ for(const x of sellNow){
   if(x.direct_specialist){
     sellLines.push('Preferred agent route: direct specialist');
     sellLines.push('Direct MCP: '+x.direct_specialist.mcp);
-    sellLines.push('Official MCP Registry name: '+x.direct_specialist.registry_name);
+    if(x.direct_specialist.registry_name){
+      sellLines.push('Official MCP Registry name: '+x.direct_specialist.registry_name);
+    }else{
+      sellLines.push('MCP Registry state: pending; public HTTPS execution is independently verified');
+    }
   } else {
     sellLines.push('Preferred agent route: universal fallback');
   }
