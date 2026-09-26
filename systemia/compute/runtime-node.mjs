@@ -549,6 +549,80 @@ export async function startEvercraftComputeNode({
         });
       }
 
+      if (req.method === 'POST' && req.url === '/v1/field-enrollment-packet') {
+        if (allocatorTokenHash) {
+          const authorization = String(req.headers.authorization || '');
+          const presented = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+          if (!presented || sha(presented) !== allocatorTokenHash) {
+            return send(res, 401, { error: 'allocator_auth_required' });
+          }
+        } else if (!loopbackHost) {
+          return send(res, 401, { error: 'allocator_auth_required' });
+        }
+
+        if (!deviceIdentity) {
+          return send(res, 422, { error: 'device_identity_unavailable' });
+        }
+
+        const fieldFile = path.join(allowedRoot, 'field-evidence-candidate.json');
+        const edgeFile = path.join(allowedRoot, 'public-edge-admission-receipt.json');
+        if (!fs.existsSync(fieldFile)) {
+          return send(res, 404, { error: 'field_evidence_candidate_missing' });
+        }
+        if (!fs.existsSync(edgeFile)) {
+          return send(res, 404, { error: 'public_edge_admission_receipt_missing' });
+        }
+
+        let fieldCandidate;
+        let edgeAdmission;
+        try {
+          fieldCandidate = JSON.parse(fs.readFileSync(fieldFile, 'utf8'));
+          edgeAdmission = JSON.parse(fs.readFileSync(edgeFile, 'utf8'));
+        } catch {
+          return send(res, 422, { error: 'field_enrollment_packet_unreadable' });
+        }
+
+        const fingerprint = String(deviceIdentity.fingerprint || '');
+        const packetValid = Boolean(
+          fieldCandidate?.schema === 'evercraft.node001.field-evidence-candidate.v1' &&
+          fieldCandidate?.ready_for_yard_enrollment === true &&
+          fieldCandidate?.evidence?.node_id === nodeId &&
+          fieldCandidate?.evidence?.device_fingerprint === fingerprint &&
+          edgeAdmission?.schema === 'evercraft.node001.public-edge-field-candidate.v1' &&
+          edgeAdmission?.applied === true &&
+          edgeAdmission?.runtime_advertisement_verified === true &&
+          edgeAdmission?.ready_for_public_edge_enrollment === true &&
+          edgeAdmission?.node_id === nodeId &&
+          edgeAdmission?.device_fingerprint === fingerprint &&
+          edgeAdmission?.private_key_exposed === false &&
+          edgeAdmission?.certificate_bytes_exposed === false
+        );
+        if (!packetValid) {
+          return send(res, 422, { error: 'field_enrollment_packet_not_ready' });
+        }
+
+        const packet = {
+          schema: 'evercraft.compute.field-enrollment-packet.v1',
+          node_id: nodeId,
+          device_fingerprint: fingerprint,
+          field_candidate: fieldCandidate,
+          public_edge_admission: edgeAdmission,
+          tls_private_key_included: false,
+          tls_certificate_bytes_included: false,
+          allocator_authority_included: false,
+          generated_at: new Date().toISOString(),
+        };
+        return send(res, 200, {
+          ok: true,
+          packet,
+          receipt: chain.issue('field-enrollment.packet-issued', {
+            device_fingerprint: fingerprint,
+            field_evidence_digest: fieldCandidate.evidence_digest || null,
+            public_edge_admission_receipt: edgeAdmission.receipt_hash || null,
+          }),
+        });
+      }
+
       if (req.method === 'GET' && req.url === '/v1/capacity') {
         return send(res, 200, {
           protocol: 'evercraft.capacity.v1',
