@@ -34,10 +34,13 @@ Declared read-only tools:
 - prepare_network_handoff
 
 Invocation state:
-source-wired pending independent production verification
+production MCP verified for initialize + tools/list; get_network_capabilities also passed a live read-only tools/call
 
 Machine-readable Network manifest:
 /network/discovery.json
+
+Live MCP evidence:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
 
 Semantic problem mesh:
 /network/mesh/
@@ -47,6 +50,11 @@ Semantic mesh LLM guide:
 
 Well-known Network manifest:
 /.well-known/evercraft-network.json
+
+Verification boundary:
+- get_network_capabilities: observed in tools/list and executed successfully as a read-only call.
+- get_network_presence and prepare_network_handoff: observed in production tools/list; execution not yet canaried.
+- No device enrollment, payment, connectivity control, carrier control, private telemetry access, emergency routing, or coverage guarantee was verified.
 
 ## Truth boundary
 
