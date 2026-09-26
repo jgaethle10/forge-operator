@@ -1,4 +1,5 @@
 const DEFAULT_MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const DEFAULT_BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
@@ -17,6 +18,22 @@ const DIRECT_HUMAN_BUYER_DESTINATIONS = Object.freeze({
   'roasted-text-pressure-test-machine-v1': 'https://get-roasted-hub.base44.app/',
   'ibmi-rescue-v1': 'https://findmypart.base44.app/ibmi-rescue'
 });
+
+export function buyerFrontageUrl(offer, { surface = 'chum_public_surface', origin = DEFAULT_BUYER_FRONTAGE_ORIGIN } = {}) {
+  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
+  try {
+    const base = new URL(String(origin || DEFAULT_BUYER_FRONTAGE_ORIGIN));
+    if (base.protocol !== 'https:') return null;
+    const target = new URL('/buy/' + encodeURIComponent(String(offer.public_id)), base.origin);
+    target.searchParams.set('src', 'chum');
+    target.searchParams.set('campaign', 'buyer-frontage');
+    target.searchParams.set('ec_surface', String(surface || 'chum_public_surface'));
+    target.searchParams.set('ec_public_id', String(offer.public_id));
+    return target.toString();
+  } catch {
+    return null;
+  }
+}
 
 export function machineReviewUrl(publicId, gateway = DEFAULT_MACHINE_COMMERCE_GATEWAY) {
   const id = String(publicId || '').trim();
@@ -67,6 +84,9 @@ export function humanStartUrl(offer, {
       + '?surface=' + encodeURIComponent(String(surface || 'chum_public_surface'));
   }
 
+  const frontage = buyerFrontageUrl(offer, { surface });
+  if (frontage) return frontage;
+
   const direct = directHumanBuyerUrl(offer, { surface });
   if (direct) return direct;
 
@@ -78,6 +98,7 @@ export function humanStartState(offer, {
 } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return 'not_sell_now';
   if (configuredChumPublicOrigin(publicOrigin)) return 'tracked_chum_handoff_configured_origin';
+  if (buyerFrontageUrl(offer)) return 'central_buyer_frontage';
   if (DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)]) return 'direct_human_buyer_destination';
   return 'machine_commerce_review_fallback';
 }
