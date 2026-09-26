@@ -14,28 +14,32 @@
   "products": [
     {
       "product_key": "aliev",
-      "name": "AliEV",
+      "name": "RIVET",
       "class": "evidence_aware_agent_commerce",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://rivet.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live_receipt_backed",
+      "doorway_state": "universal_machine_commerce_source_verified",
+      "conformance_state": "rivet_public_identity_source_verified_build_green",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://aliev.base44.app/llms.txt",
-      "origin_conformance_url": "https://aliev.base44.app/ai-conformance.json",
-      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
+      "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/rivet/llms.txt",
+      "origin_conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/rivet/discovery.json",
       "chum_mirror_state": "generated_public_fallback",
-      "openapi_state": "not_declared_until_independently_live_verified",
-      "openapi_note": "The previously declared root /openapi.json returned HTML rather than a verified OpenAPI document on the 2026-09-24 CHUM canary. AliEV discovery and invocation remain available through CHUM mirrors and the verified MCP.",
+      "openapi_state": "universal_machine_commerce",
+      "openapi_note": "RIVET public commerce is routed through the universal Evercraft Machine Commerce gateway. Product-specific public branding must remain RIVET; backend implementation identity is not a customer-facing dependency.",
       "mcp_registry": {
-        "name": "io.github.jgaethle10/aliev",
-        "version": "1.0.5",
-        "publication_state": "published_receipt_backed",
-        "receipt": "conformance/registry-publications/2026-09-26-aliev-1.0.5.json",
-        "published_at_utc": "2026-09-26T00:47:31Z"
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.3.0",
+        "publication_state": "manifest_prepared_main_publish_pending",
+        "receipt": null,
+        "published_at_utc": null
       },
-      "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified"
+      "public_web_discovery_state": "rivet_public_surfaces_source_verified_general_web_pickup_not_yet_verified",
+      "machine_commerce_handoff_state": "source_verified_build_green_live_canary_pending",
+      "machine_commerce_public_id": "rivet-site-underwriting-v1",
+      "machine_commerce_tool": "prepare_verified_checkout",
+      "live_canary_evidence": null
     },
     {
       "product_key": "buildflow",
