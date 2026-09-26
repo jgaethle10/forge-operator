@@ -8,6 +8,8 @@ on:
     paths:
       - "systemia/organism/portfolio-sentinel**"
       - "systemia/sentinel/**"
+      - "systemia/experience/**"
+      - "systemia/saban/multiplication-registry.json"
       - "systemia/core/resident-services.json"
       - "systemia/collider/mission-sources.json"
       - "public/.well-known/evercraft-products.json"
@@ -23,6 +25,8 @@ on:
     paths:
       - "systemia/organism/portfolio-sentinel**"
       - "systemia/sentinel/**"
+      - "systemia/experience/**"
+      - "systemia/saban/multiplication-registry.json"
       - "systemia/core/resident-services.json"
       - "systemia/collider/mission-sources.json"
       - "package.json"
@@ -40,7 +44,9 @@ permissions:
   actions: write
 
 concurrency:
-  group: systemia-portfolio-sentinel
+  # Keep the five-minute main/scheduled lane singleton, but never let it cancel
+  # a pull-request proof that is validating a candidate quality-gate change.
+  group: systemia-portfolio-sentinel-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
   cancel-in-progress: true
 
 jobs:
@@ -70,6 +76,13 @@ jobs:
       - name: Prove architectural invariants and trigger modes
         run: npm run test:sentinel-invariants
 
+      - name: Prove human experience contracts
+        run: node --test systemia/experience/human-experience-adapter.test.mjs
+
+      - name: Run Saban human experience swarm
+        if: always()
+        run: node systemia/saban/multiplier.mjs --software human-experience --auto --execute --reconcile --state artifacts/saban-multiplier/human-experience-state.json
+
       - name: Run live portfolio integrity cycle
         if: always()
         env:
@@ -98,6 +111,8 @@ jobs:
             artifacts/portfolio-sentinel/inventory.json
             artifacts/portfolio-sentinel/admission.json
             artifacts/portfolio-sentinel/repair-memory.json
+            artifacts/human-experience/latest.json
+            artifacts/saban-multiplier/human-experience-latest.json
           if-no-files-found: error
           retention-days: 14
 
@@ -112,12 +127,13 @@ jobs:
             echo "Coverage: products + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery"
             echo "Bounded failed-workflow retry: autonomous for newly observed failures"
             echo "Architectural invariants: enforced before green"
+            echo "Human experience gate: Saban fan-out + owned browser visual receipts; BLOCKED never equals PASS"
             echo "Trigger modes: push + schedule + manual simulated from one shared policy"
             echo "Repair memory: learned failure fingerprints mapped to bounded recipes"
             echo "Health gate: critical/high findings fail closed until cleared"
             echo "Production mutation: human-gated"
             echo
-            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json; do
+            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json; do
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'

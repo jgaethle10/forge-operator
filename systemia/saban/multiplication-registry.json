@@ -463,6 +463,82 @@
         "memory_mb_per_worker": 256,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "human-experience",
+      "name": "Evercraft Human Experience Sentinel",
+      "aliases": [
+        "human experience",
+        "human experience sentinel",
+        "visual qa",
+        "experience qa"
+      ],
+      "adapter": "systemia/experience/human-experience-adapter.mjs",
+      "default_logical_agents": 512,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 32,
+      "max_physical_workers": 64,
+      "lease_seconds": 120,
+      "roles": [
+        "availability_guard",
+        "clarity_guard",
+        "brand_guard",
+        "mobile_guard",
+        "accessibility_guard",
+        "interaction_guard",
+        "beauty_guard"
+      ],
+      "work_sources": [
+        {
+          "file": "public/.well-known/evercraft-products.json",
+          "field": "products",
+          "kind": "product",
+          "key_field": "product_key"
+        }
+      ],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": "read_only",
+        "public_discovery_file_updates": false,
+        "automatic_publication": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "production_mutation": false
+      },
+      "max_attempts_per_job": 2,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 64,
+        "max_work_items": 100000,
+        "max_attempts_per_job": 2
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "coverage_amplification",
+        "target_logical_per_physical_worker": 16,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
