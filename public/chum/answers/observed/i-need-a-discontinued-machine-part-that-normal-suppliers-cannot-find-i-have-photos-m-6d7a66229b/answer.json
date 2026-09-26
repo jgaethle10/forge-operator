@@ -34,6 +34,7 @@
     "checkout_is_payment_proof": false
   },
   "source_refs": [
+    "conformance/provider-observations/auto-generic_agent-hard-part-001-080208c25280b48e.json",
     "conformance/provider-observations/auto-generic_agent-hard-part-001-251d48b6000ad488.json",
     "conformance/provider-observations/auto-generic_agent-hard-part-001-e7847b0134854b12.json"
   ]
