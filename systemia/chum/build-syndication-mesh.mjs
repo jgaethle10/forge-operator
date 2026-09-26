@@ -164,7 +164,31 @@ export function buildSyndicationMesh({
   const publicRoot = path.join(root, 'public');
   const syndicationRoot = path.join(publicRoot, 'chum', 'syndication');
   const updatedAt = isoFromDate(catalog.updated_at, now);
-  const products = catalog.products
+  const productSources = new Map(
+    catalog.products
+      .filter((product) => String(product?.product_key || '').trim())
+      .map((product) => [String(product.product_key).trim(), product])
+  );
+  const mirrorRoot = path.join(publicRoot, 'chum', 'products');
+  if (fs.existsSync(mirrorRoot)) {
+    for (const entry of fs.readdirSync(mirrorRoot, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const key = entry.name;
+      if (productSources.has(key)) continue;
+      const discovery = readJson(path.join(mirrorRoot, key, 'ai-discovery.json'), null);
+      if (!discovery || typeof discovery !== 'object') continue;
+      productSources.set(key, {
+        product_key: key,
+        name: discovery.name || key,
+        canonical_url: discovery.canonical_url || '',
+        registry_name: discovery.registry_name || '',
+        mcp: discovery.mcp || '',
+        triggers: array(discovery.intents)
+      });
+    }
+  }
+
+  const products = [...productSources.values()]
     .map((product) => productRecord(root, product, updatedAt))
     .filter((product) => product.product_key)
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -173,7 +197,8 @@ export function buildSyndicationMesh({
   const previous = readJson(previousStateFile, null);
   const previousHashes = previous?.product_hashes || {};
   const bootstrap = !previous || previous.schema !== 'evercraft.syndication-state.v1';
-  const changedProducts = bootstrap
+  const baselineExpansion = bootstrap || previous?.complete_mirror !== true;
+  const changedProducts = baselineExpansion
     ? []
     : products.filter((product) => previousHashes[product.product_key] !== product.content_sha256);
 
@@ -295,11 +320,11 @@ export function buildSyndicationMesh({
   for (const item of newQueueItems) queueByKey.set(item.dedupe_key, item);
   const socialQueue = {
     schema: 'evercraft.syndication-social-queue.v1',
-    generated_at: bootstrap || newQueueItems.length
+    generated_at: baselineExpansion || newQueueItems.length
       ? now
       : (previousQueue?.generated_at || previous?.updated_at || now),
-    bootstrap,
-    policy: bootstrap
+    bootstrap: baselineExpansion,
+    policy: baselineExpansion
       ? 'Baseline inventory recorded without blasting every existing product. Future material product changes enter this queue once per content hash.'
       : 'Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.',
     items: [...queueByKey.values()].sort((a, b) => String(a.product_key).localeCompare(String(b.product_key)))
@@ -351,7 +376,8 @@ export function buildSyndicationMesh({
 
   const state = {
     schema: 'evercraft.syndication-state.v1',
-    updated_at: bootstrap || changedProducts.length ? now : (previous?.updated_at || now),
+    updated_at: baselineExpansion || changedProducts.length ? now : (previous?.updated_at || now),
+    complete_mirror: true,
     product_hashes: Object.fromEntries(products.map((product) => [product.product_key, product.content_sha256]))
   };
   writeJson(previousStateFile, state);
@@ -374,7 +400,7 @@ export function buildSyndicationMesh({
     schema: 'evercraft.syndication-build-receipt.v1',
     generated_at: now,
     product_count: products.length,
-    bootstrap,
+    bootstrap: baselineExpansion,
     queued_social_changes: changedProducts.length,
     outputs: [
       'public/feed.xml',
