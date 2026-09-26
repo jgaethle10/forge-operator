@@ -433,6 +433,25 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_rivet_report_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
+        const specialistHealthy =
+          health.ok === true &&
+          health.service === 'specialist-handoff-mcp' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === job.result?.instance_id &&
+          health.checkout_enabled === false &&
+          health.payment_enabled === false;
+        if (!specialistHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('specialist-handoff-mcp failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_specialist_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
         const brokerHealthy =
           health.ok === true &&
@@ -847,6 +866,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
       service = 'rivet-yard-report-runtime';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
+      service = 'specialist-handoff-mcp';
+      healthPath = '/health';
     } else {
       throw new Error('deployment does not support a public route');
     }
@@ -1121,6 +1143,33 @@ export class YardOperator {
     };
   }
 
+  specialistHandoffRuntimeReceipt(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) throw new Error('deployment not found');
+    if (record.receipt?.workload_class !== 'systemia.specialist-handoff-mcp.v1') {
+      throw new Error('deployment is not a specialist handoff MCP runtime');
+    }
+    if (record.public_route?.verified !== true || record.public_route?.scope !== 'public_https') {
+      throw new Error('verified public HTTPS route is required');
+    }
+
+    return {
+      schema: 'evercraft.specialist-handoff.runtime-origin.v1',
+      runtime: 'Evercraft Compute',
+      verified: true,
+      origin: record.public_route.origin,
+      health_path: '/health',
+      mcp_paths: Array.isArray(record.result?.specialist_paths)
+        ? record.result.specialist_paths
+        : [],
+      deployment_receipt_hash: record.receipt.receipt_hash,
+      public_route_receipt_hash: record.public_route.receipt_hash,
+      instance_id: record.result?.instance_id || null,
+      verified_at: record.public_route.verified_at,
+      source: 'Systemia Yard Operator',
+    };
+  }
+
   runtimeOriginReceipt(deploymentId) {
     const record = this.deploymentStatus(deploymentId);
     if (!record) throw new Error('deployment not found');
@@ -1151,20 +1200,25 @@ export class YardOperator {
     if (
       record.receipt?.workload_class === 'systemia.chum-public-origin.v1' ||
       record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1' ||
-      record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1'
+      record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1' ||
+      record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1'
     ) {
       const broker =
         record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1';
       const rivet =
         record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1';
+      const specialist =
+        record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1';
       const service = broker
         ? 'remote-capacity-broker'
         : rivet
           ? 'rivet-yard-report-runtime'
-          : 'chum-public-origin';
+          : specialist
+            ? 'specialist-handoff-mcp'
+            : 'chum-public-origin';
       const healthPath = broker
         ? '/v1/remote/health'
-        : rivet
+        : rivet || specialist
           ? '/health'
           : '/api/health';
 
