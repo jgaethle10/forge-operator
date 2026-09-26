@@ -15,10 +15,10 @@
   "authority": {
     "discover_authorized_capacity": "autonomous",
     "allocate_bounded_compute_lease": "autonomous_with_existing_allocator_authority",
-    "deploy_read_only_specialist_runtime": "autonomous",
-    "deploy_public_edge": "autonomous_after_node_tls_admission",
-    "bind_public_route": "autonomous_after_receipt_and_instance_match",
-    "renew_leases": "autonomous",
+    "initial_deploy_read_only_specialist_runtime": "autonomous",
+    "initial_deploy_public_edge": "autonomous_after_node_tls_admission",
+    "initial_bind_public_route": "autonomous_after_receipt_and_instance_match",
+    "post_activation_continuity_owner": "public-edge-controller",
     "external_https_promotion": "external_canary_required",
     "registry_publication": "systemia_release_policy",
     "founder_login_required": false,
@@ -45,5 +45,13 @@
     "official_registry_publication_requires_release_policy": true,
     "no_base44_public_edge": true,
     "no_founder_auth_loop": true
+  },
+  "role": "discovery_and_initial_activation_owner",
+  "activation_owner": "public-edge-activation-watch",
+  "maintenance_owner": "public-edge-controller",
+  "handoff_policy": {
+    "after_successful_activation": "public-edge-controller owns 60-second continuity and lease maintenance",
+    "on_hold": "activation watch retries on Collider heartbeat only when state may have changed",
+    "duplicate_provisioning": false
   }
 }
