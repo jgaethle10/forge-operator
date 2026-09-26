@@ -138,7 +138,9 @@
     "chum:money-radar": "node systemia/chum/money-radar.mjs",
     "test:chum-money-radar": "node tests/chum-money-radar.test.mjs",
     "test:rivet-yard-gateway": "node tests/rivet-yard-gateway.test.mjs",
-    "test:direct-product-doors": "node tests/direct-product-doors.test.mjs"
+    "test:direct-product-doors": "npm run direct:check",
+    "direct:generate": "node scripts/generate-direct-plugin-packages.mjs",
+    "direct:check": "node scripts/generate-direct-plugin-packages.mjs --check && node tests/direct-product-doors.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
