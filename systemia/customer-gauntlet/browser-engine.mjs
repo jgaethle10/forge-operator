@@ -215,7 +215,9 @@ export async function runOwnedBrowserLennox({
       const images = [...document.images].filter(visible);
       const clipped = interactive.filter(element => {
         const rect = element.getBoundingClientRect();
-        return rect.left < -2 || rect.top < -2 || rect.right > innerWidth + 2 || rect.bottom > innerHeight + 2;
+        // Vertical position is normal page scrolling, not clipping. Only count
+        // controls that escape the horizontal customer viewport.
+        return rect.left < -2 || rect.right > innerWidth + 2;
       });
       const docWidth = Math.max(
         document.documentElement?.scrollWidth || 0,
@@ -264,6 +266,10 @@ export async function runOwnedBrowserLennox({
   let screenshotRef = null;
   let screenshotError = null;
   try {
+    // Keyboard traversal can legitimately scroll the document. Visual receipts
+    // should start from the customer's initial viewport, not the last focused control.
+    await page.evaluate(() => window.scrollTo(0,0)).catch(() => {});
+    await page.waitForTimeout(80).catch(() => {});
     await page.screenshot({ path: screenshotPath, type: 'jpeg', quality: 68, fullPage: false });
     screenshotRef = path.relative(rootDir, screenshotPath).replaceAll('\\','/');
   } catch (error) {
