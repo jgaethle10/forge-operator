@@ -23,6 +23,7 @@ export async function discoverEligibleCapacity({
   requiredWorkloads = [],
   requiredPlacementLabels = [],
   requiredServiceCapabilities = [],
+  requireAttestation = false,
   discovery = {},
   endpointTimeoutMs = 750,
   excludeNodeIds = [],
@@ -54,6 +55,8 @@ export async function discoverEligibleCapacity({
       runtime: null,
       placement_labels: [],
       service_capabilities: {},
+      attestation_supported: null,
+      device_fingerprint_present: null,
     };
 
     try {
@@ -91,6 +94,10 @@ export async function discoverEligibleCapacity({
                    return value === true || value?.ready === true;
                  })) {
         candidate.reason = 'service_capability_not_ready';
+      } else if (requireAttestation === true && capacity.attestation_supported !== true) {
+        candidate.reason = 'attestation_not_supported';
+      } else if (requireAttestation === true && !String(capacity.device_fingerprint || '').trim()) {
+        candidate.reason = 'device_fingerprint_missing';
       } else if (capacity.expires_at &&
                  Number.isFinite(Date.parse(capacity.expires_at)) &&
                  Date.parse(capacity.expires_at) < Date.now()) {
@@ -108,6 +115,10 @@ export async function discoverEligibleCapacity({
             key,
             capacity.capacity_hint?.services?.[key] ?? null
           ])
+        );
+        candidate.attestation_supported = capacity.attestation_supported === true;
+        candidate.device_fingerprint_present = Boolean(
+          String(capacity.device_fingerprint || '').trim()
         );
       }
     } catch (error) {
@@ -133,6 +144,7 @@ export async function discoverEligibleCapacity({
       workloads: workloadRequirements,
       placement_labels: labelRequirements,
       service_capabilities: serviceRequirements,
+      attestation_required: requireAttestation === true,
     },
     observed_at: observedAt,
     discovered_count: beacons.length,
