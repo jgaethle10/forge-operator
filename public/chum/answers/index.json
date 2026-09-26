@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:40:00.000Z",
+  "updated_at": "2026-09-26T04:35:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -21,9 +21,9 @@
   },
   "summary": {
     "pain_index_entries": 98,
-    "unique_user_phrases": 755,
-    "mapped_candidate_edges": 833,
-    "ambiguous_phrases": 78,
+    "unique_user_phrases": 758,
+    "mapped_candidate_edges": 851,
+    "ambiguous_phrases": 93,
     "product_candidates": 53,
     "machine_offer_candidates": 45
   },
@@ -910,8 +910,20 @@
       "relative_json": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
       "relative_page": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -1013,6 +1025,29 @@
           "commercial_state": "product_contract",
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5e73e54575",
+      "user_language": "AS/400 estate assessment before upgrading or modernizing",
+      "normalized": "as 400 estate assessment before upgrading or modernizing",
+      "relative_json": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
+      "relative_page": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
@@ -2703,11 +2738,11 @@
           "kind": "machine_offer",
           "product_key": null,
           "public_id": "rivet-site-underwriting-v1",
-          "name": "RIVET EV Charging Site Underwriting Package",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -4564,8 +4599,20 @@
       "relative_json": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
       "relative_page": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -4587,8 +4634,20 @@
       "relative_json": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
       "relative_page": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -4617,11 +4676,11 @@
           "kind": "machine_offer",
           "product_key": null,
           "public_id": "rivet-site-underwriting-v1",
-          "name": "RIVET EV Charging Site Underwriting Package",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -4656,8 +4715,20 @@
       "relative_json": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
       "relative_page": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -4686,11 +4757,11 @@
           "kind": "machine_offer",
           "product_key": null,
           "public_id": "rivet-site-underwriting-v1",
-          "name": "RIVET EV Charging Site Underwriting Package",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -4725,8 +4796,20 @@
       "relative_json": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
       "relative_page": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -4817,8 +4900,20 @@
       "relative_json": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
       "relative_page": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -4863,8 +4958,20 @@
       "relative_json": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
       "relative_page": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -4939,11 +5046,11 @@
           "kind": "machine_offer",
           "product_key": null,
           "public_id": "rivet-site-underwriting-v1",
-          "name": "RIVET EV Charging Site Underwriting Package",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -6689,6 +6796,29 @@
       ]
     },
     {
+      "answer_id": "intent:e0c0c7b3bf",
+      "user_language": "find undocumented IBM i dependencies before a maintenance window",
+      "normalized": "find undocumented ibm i dependencies before a maintenance window",
+      "relative_json": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json",
+      "relative_page": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:229db803d4",
       "user_language": "find verified help for housing shelter food benefits transportation childcare income or legal aid",
       "normalized": "find verified help for housing shelter food benefits transportation childcare income or legal aid",
@@ -6764,8 +6894,20 @@
       "relative_json": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
       "relative_page": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -7905,8 +8047,20 @@
       "relative_json": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
       "relative_page": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -8308,6 +8462,29 @@
           "commercial_state": "product_contract",
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dab81f4a0a",
+      "user_language": "IBM i estate assessment before changing production",
+      "normalized": "ibm i estate assessment before changing production",
+      "relative_json": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json",
+      "relative_page": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:ibmi-rescue-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "ibmi-rescue-v1",
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "sell_now",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
@@ -11514,8 +11691,20 @@
       "relative_json": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
       "relative_page": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -11906,8 +12095,20 @@
       "relative_json": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
       "relative_page": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -13668,8 +13869,20 @@
       "relative_json": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
       "relative_page": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -14773,8 +14986,20 @@
       "relative_json": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
       "relative_page": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -15039,8 +15264,20 @@
       "relative_json": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
       "relative_page": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",
@@ -16695,11 +16932,11 @@
           "kind": "machine_offer",
           "product_key": null,
           "public_id": "rivet-site-underwriting-v1",
-          "name": "RIVET EV Charging Site Underwriting Package",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": null,
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
           "registry_name": null
         }
       ]
@@ -16780,8 +17017,20 @@
       "relative_json": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
       "relative_page": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:rivet-site-underwriting-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "rivet-site-underwriting-v1",
+          "name": "RIVET EV Infrastructure Intelligence",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready_human_confirmation",
+          "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "registry_name": null
+        },
         {
           "capability_id": "product:aliev",
           "kind": "product",

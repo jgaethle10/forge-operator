@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html#evercraft-capability",
-      "name": "RIVET EV Charging Site Underwriting Package",
-      "description": "A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.",
-      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html",
+      "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1#evercraft-capability",
+      "name": "RIVET EV Infrastructure Intelligence",
+      "description": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -17,10 +17,10 @@
     },
     {
       "@type": "WebPage",
-      "name": "RIVET EV Charging Site Underwriting Package | Evercraft capability",
-      "description": "A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.",
+      "name": "RIVET EV Infrastructure Intelligence | Evercraft capability",
+      "description": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
       "about": {
-        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html#evercraft-capability"
+        "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1#evercraft-capability"
       }
     }
   ]

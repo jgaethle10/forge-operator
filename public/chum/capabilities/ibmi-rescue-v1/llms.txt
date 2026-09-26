@@ -9,6 +9,9 @@ Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919a
 
 ## Use this when
 
+- IBM i estate assessment before changing production
+- AS/400 estate assessment before upgrading or modernizing
+- find undocumented IBM i dependencies before a maintenance window
 - IBM i 7.4 support is ending and I need an upgrade plan
 - assess an IBM i or AS/400 estate before upgrading
 - map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
@@ -47,6 +50,6 @@ LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce
 
 Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
 
-Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.
+Payment authority: Evercraft Payments; the human buyer route and backend checkout-session creation are live-verified. Direct machine checkout remains intentionally unexposed, and paid state still requires authoritative provider verification.
 
 Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

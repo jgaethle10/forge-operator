@@ -11,6 +11,9 @@ Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Use when the user says or means:
+- IBM i estate assessment before changing production
+- AS/400 estate assessment before upgrading or modernizing
+- find undocumented IBM i dependencies before a maintenance window
 - IBM i 7.4 support is ending and I need an upgrade plan
 - assess an IBM i or AS/400 estate before upgrading
 - map RPG CL COBOL DB2 jobs and integrations before IBM i modernization

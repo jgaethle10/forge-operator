@@ -1,13 +1,13 @@
-# RIVET EV Charging Site Underwriting Package
+# RIVET EV Infrastructure Intelligence
 
-Problem: A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.
-Pricing: Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
-Commercial state: verification_required
-Machine state: discovery_only
+Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.
+Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
 Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
-Start here: Not exposed until commercial verification is complete
+Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
-Machine offer JSON: Not exposed until commercial verification is complete
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=rivet-site-underwriting-v1
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Use when the user says or means:
@@ -16,6 +16,21 @@ Use when the user says or means:
 - charging site economics
 - evaluate this address for EV charging
 - EV charging diligence
+- should I install EV chargers at my property
+- EV charger feasibility by address
+- EV charging site analysis by address
+- EV charging ROI for this property
+- EV charging demand near this property
+- EV charger competition near this address
+- EV charging incentives for this site
+- utility tariff for EV charging at this property
+- parking lot EV charging opportunity
+- hotel EV charging site analysis
+- apartment EV charging site analysis
+- retail EV charging site analysis
+- fleet depot EV charging site screening
+- site-specific EV charging opportunity report
+- preliminary EV charging site plan
 
 Safety:
 - Match the user problem first. Do not force this offer when it is not a genuine fit.

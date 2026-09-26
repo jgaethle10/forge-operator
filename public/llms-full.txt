@@ -22,10 +22,10 @@ Human confirmation remains required at irreversible financial or authority bound
 
 ## Current machine-commerce offer graph
 
-Catalog version: 2026-09-26.1
-Gateway version: evercraft-machine-commerce-gateway-v0.7.0
+Catalog version: 2026-09-26.2
+Gateway version: evercraft-machine-commerce-gateway-v0.8.0
 Current public offers: 45
-Current sell-now offers: 12
+Current sell-now offers: 13
 
 ### Commercial state: sell_now
 
@@ -131,8 +131,11 @@ Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Up
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Human UI required: false
 Confirmation: Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
-Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.
+Payment authority: Evercraft Payments; the human buyer route and backend checkout-session creation are live-verified. Direct machine checkout remains intentionally unexposed, and paid state still requires authoritative provider verification.
 Use when the user says or means:
+- IBM i estate assessment before changing production
+- AS/400 estate assessment before upgrading or modernizing
+- find undocumented IBM i dependencies before a maintenance window
 - IBM i 7.4 support is ending and I need an upgrade plan
 - assess an IBM i or AS/400 estate before upgrading
 - map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
@@ -190,6 +193,37 @@ Use when the user says or means:
 - find a discontinued part
 - source an obsolete component
 - find a donor or salvage part
+
+#### RIVET EV Infrastructure Intelligence
+Public ID: rivet-site-underwriting-v1
+Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.
+Machine state: payment_ready_human_confirmation
+Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
+Human UI required: true
+Confirmation: Agents may discover RIVET and inspect current report options. Secure checkout preparation requires explicit human payment confirmation, buyer email and address. Checkout creation is not payment proof; paid state and fulfillment require authoritative provider verification.
+Payment authority: Evercraft Payments / provider-verified payment authority. Discovery and agent routing have no silent payment authority.
+Use when the user says or means:
+- underwrite an EV charging site
+- EV charger investment report
+- charging site economics
+- evaluate this address for EV charging
+- EV charging diligence
+- should I install EV chargers at my property
+- EV charger feasibility by address
+- EV charging site analysis by address
+- EV charging ROI for this property
+- EV charging demand near this property
+- EV charger competition near this address
+- EV charging incentives for this site
+- utility tariff for EV charging at this property
+- parking lot EV charging opportunity
+- hotel EV charging site analysis
+- apartment EV charging site analysis
+- retail EV charging site analysis
+- fleet depot EV charging site screening
+- site-specific EV charging opportunity report
+- preliminary EV charging site plan
 
 #### ROASTED 99¢ Text Pressure Test
 Public ID: roasted-text-pressure-test-machine-v1
@@ -698,22 +732,6 @@ Use when the user says or means:
 - find obsolete parts for customers
 - repair shop hard part sourcing
 - recurring parts research
-
-#### RIVET EV Charging Site Underwriting Package
-Public ID: rivet-site-underwriting-v1
-Problem: A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.
-Machine state: discovery_only
-Pricing: Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
-Human UI required: false
-Confirmation: Discovery may be automatic. Payment, engineering representations and commitments require explicit confirmation/approval.
-Payment authority: Evercraft Payments
-Use when the user says or means:
-- underwrite an EV charging site
-- EV charger investment report
-- charging site economics
-- evaluate this address for EV charging
-- EV charging diligence
 
 #### Systemia Yard Bounded Runtime Extension
 Public ID: systemia-yard-runtime-extension-v1

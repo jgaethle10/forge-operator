@@ -819,6 +819,17 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator#offer-rivet-site-underwriting-v1",
+      "name": "RIVET EV Infrastructure Intelligence",
+      "description": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "Evercraft machine-commerce offer"
+    },
+    {
+      "@type": "Service",
       "@id": "https://github.com/jgaethle10/forge-operator#offer-roasted-text-pressure-test-machine-v1",
       "name": "ROASTED 99¢ Text Pressure Test",
       "description": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",

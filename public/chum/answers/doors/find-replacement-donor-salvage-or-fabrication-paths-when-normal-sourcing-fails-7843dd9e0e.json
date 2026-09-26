@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-26T03:40:00.000Z",
+  "updated_at": "2026-09-26T04:35:00.000Z",
   "answer_id": "intent:7843dd9e0e",
   "user_language": "find replacement, donor, salvage, or fabrication paths when normal sourcing fails",
   "normalized": "find replacement donor salvage or fabrication paths when normal sourcing fails",

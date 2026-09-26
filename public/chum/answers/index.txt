@@ -7,9 +7,9 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 98
-Unique user phrases: 755
-Candidate edges: 833
-Ambiguous phrases: 78
+Unique user phrases: 758
+Candidate edges: 851
+Ambiguous phrases: 93
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -277,6 +277,7 @@ Answer ID: intent:a4fc7910cc
 Human-readable match: /chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## application continuity across changing internet connections
@@ -306,6 +307,13 @@ Human-readable match: /chum/answers/doors/as-400-estate-assessment-d3adc3c2a5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json
 Candidates:
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## AS/400 estate assessment before upgrading or modernizing
+Answer ID: intent:5e73e54575
+Human-readable match: /chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## AS/400 modernization
 Answer ID: intent:11f60c6d3a
@@ -802,7 +810,7 @@ Answer ID: intent:6092dd77f1
 Human-readable match: /chum/answers/doors/charging-site-economics-6092dd77f1/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/charging-site-economics-6092dd77f1.json
 Candidates:
-- RIVET EV Charging Site Underwriting Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/rivet-site-underwriting-v1/
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 
 ## check if my book is ready for KDP
 Answer ID: intent:465dd47ba7
@@ -1344,6 +1352,7 @@ Answer ID: intent:aa69cb1075
 Human-readable match: /chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## EV charger feasibility by address
@@ -1351,6 +1360,7 @@ Answer ID: intent:8a81d21c84
 Human-readable match: /chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## EV charger investment report
@@ -1358,7 +1368,7 @@ Answer ID: intent:ed6fd3f23a
 Human-readable match: /chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json
 Candidates:
-- RIVET EV Charging Site Underwriting Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/rivet-site-underwriting-v1/
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 
 ## EV charger site analysis
 Answer ID: intent:fc320bee89
@@ -1372,6 +1382,7 @@ Answer ID: intent:76a21ea75b
 Human-readable match: /chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## EV charging diligence
@@ -1379,7 +1390,7 @@ Answer ID: intent:91e2eec236
 Human-readable match: /chum/answers/doors/ev-charging-diligence-91e2eec236/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-diligence-91e2eec236.json
 Candidates:
-- RIVET EV Charging Site Underwriting Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/rivet-site-underwriting-v1/
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 
 ## EV charging feasibility by address
 Answer ID: intent:734eac6eee
@@ -1393,6 +1404,7 @@ Answer ID: intent:76fa0b5a6c
 Human-readable match: /chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## EV charging opportunity report
@@ -1421,6 +1433,7 @@ Answer ID: intent:23181c0dbc
 Human-readable match: /chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## EV charging site
@@ -1435,6 +1448,7 @@ Answer ID: intent:1e6ee8e9ee
 Human-readable match: /chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## EV infrastructure intelligence for a specific address
@@ -1456,7 +1470,7 @@ Answer ID: intent:c676bc6509
 Human-readable match: /chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json
 Candidates:
-- RIVET EV Charging Site Underwriting Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/rivet-site-underwriting-v1/
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 
 ## evaluate this candidate from the evidence
 Answer ID: intent:1a2808f3be
@@ -1969,6 +1983,13 @@ Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
+## find undocumented IBM i dependencies before a maintenance window
+Answer ID: intent:e0c0c7b3bf
+Human-readable match: /chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## find verified help for housing shelter food benefits transportation childcare income or legal aid
 Answer ID: intent:229db803d4
 Human-readable match: /chum/answers/doors/find-verified-help-for-housing-shelter-food-benefits-transportation-childcare-inco-229db803d4/
@@ -1995,6 +2016,7 @@ Answer ID: intent:8e120b3526
 Human-readable match: /chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## founder readiness
@@ -2329,6 +2351,7 @@ Answer ID: intent:7464f372e9
 Human-readable match: /chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## household connectivity resilience
@@ -2444,6 +2467,13 @@ Human-readable match: /chum/answers/doors/ibm-i-estate-assessment-3470d7bb49/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json
 Candidates:
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## IBM i estate assessment before changing production
+Answer ID: intent:dab81f4a0a
+Human-readable match: /chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json
+Candidates:
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i integration and maintenance-window risk assessment
 Answer ID: intent:fd1039dba4
@@ -3377,6 +3407,7 @@ Answer ID: intent:34e75d677f
 Human-readable match: /chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## parking owner dashboard
@@ -3491,6 +3522,7 @@ Answer ID: intent:4551e88b1c
 Human-readable match: /chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## prepare a bounded capital-fit brief
@@ -4014,6 +4046,7 @@ Answer ID: intent:49b6979e0f
 Human-readable match: /chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## retrieve several web pages with provenance hashes
@@ -4345,6 +4378,7 @@ Answer ID: intent:8391032a42
 Human-readable match: /chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## should I install EV chargers at this property
@@ -4418,6 +4452,7 @@ Answer ID: intent:6ff61b4426
 Human-readable match: /chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## skills based hiring
@@ -4896,7 +4931,7 @@ Answer ID: intent:c05a16b3c1
 Human-readable match: /chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1.json
 Candidates:
-- RIVET EV Charging Site Underwriting Package | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/rivet-site-underwriting-v1/
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 
 ## undocumented IBM i integrations
 Answer ID: intent:9a48a464ea
@@ -4924,6 +4959,7 @@ Answer ID: intent:affaf0c924
 Human-readable match: /chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json
 Candidates:
+- RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
 ## valet-style vehicle staging and retrieval

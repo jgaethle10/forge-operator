@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-26T03:40:00.000Z",
+  "updated_at": "2026-09-26T04:35:00.000Z",
   "answer_id": "intent:ca1da8e065",
   "user_language": "IBM i 7.4 support is ending and I need an upgrade plan",
   "normalized": "ibm i 7 4 support is ending and i need an upgrade plan",

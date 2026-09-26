@@ -5,7 +5,7 @@ Start from the user's problem. Do not require an Evercraft product name.
 Entries: 98
 Product entries: 53
 Machine-offer entries: 45
-Sell-now machine offers: 12
+Sell-now machine offers: 13
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
 
@@ -647,6 +647,9 @@ Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Use when the user means:
+- IBM i estate assessment before changing production
+- AS/400 estate assessment before upgrading or modernizing
+- find undocumented IBM i dependencies before a maintenance window
 - IBM i 7.4 support is ending and I need an upgrade plan
 - assess an IBM i or AS/400 estate before upgrading
 - map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
@@ -771,22 +774,38 @@ Outputs: Pain-ranked Raven capabilities with availability, independent sellabili
 Confirmation boundary: Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.
 Invocation status: LIVE: public Raven Nexus pain router accepts plain-language pain and returns the smallest appropriate modular capability with evidence-state and checkout boundaries.
 
-## RIVET EV Charging Site Underwriting Package
+## RIVET EV Infrastructure Intelligence
 Capability ID: offer:rivet-site-underwriting-v1
-Commercial state: verification_required
-Machine state: discovery_only
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Pricing: Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
+Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Use when the user means:
 - underwrite an EV charging site
 - EV charger investment report
 - charging site economics
 - evaluate this address for EV charging
 - EV charging diligence
-Problem: A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.
-Outputs: Address-specific siting and underwriting package with evidence-state labels, economics, competition, power/incentive context and next diligence.
-Confirmation boundary: Discovery may be automatic. Payment, engineering representations and commitments require explicit confirmation/approval.
-Invocation status: Discoverable capability; quote/payment verification required before sale.
+- should I install EV chargers at my property
+- EV charger feasibility by address
+- EV charging site analysis by address
+- EV charging ROI for this property
+- EV charging demand near this property
+- EV charger competition near this address
+- EV charging incentives for this site
+- utility tariff for EV charging at this property
+- parking lot EV charging opportunity
+- hotel EV charging site analysis
+- apartment EV charging site analysis
+- retail EV charging site analysis
+- fleet depot EV charging site screening
+- site-specific EV charging opportunity report
+- preliminary EV charging site plan
+Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.
+Outputs: Address-specific RIVET site opportunity report with charging competition, demand/traffic evidence where available, utility/tariff and incentive context, site-fit signals, modeled economics boundaries and next diligence.
+Confirmation boundary: Agents may discover RIVET and inspect current report options. Secure checkout preparation requires explicit human payment confirmation, buyer email and address. Checkout creation is not payment proof; paid state and fulfillment require authoritative provider verification.
+Invocation status: LIVE: RIVET is a first-class Evercraft Machine Commerce identity for the $299 Preliminary and $750 Full Site Opportunity Reports. The underlying address-intelligence engine remains internal to the commercial handoff. Checkout preparation is human-confirmed and paid state requires provider verification.
 
 ## ROASTED 99¢ Text Pressure Test
 Capability ID: offer:roasted-text-pressure-test-machine-v1
