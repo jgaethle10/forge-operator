@@ -164,6 +164,7 @@ export async function startSpecialistHandoffRuntime({
 } = {}) {
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
+  let identityAttestation = null;
   const callGateway = gatewayFetch || ((action, publicId) =>
     defaultGatewayFetch(gatewayUrl, action, publicId));
 
@@ -175,6 +176,11 @@ export async function startSpecialistHandoffRuntime({
     version: '0.1.0',
     deployment_receipt_bound: Boolean(deploymentReceiptRef),
     deployment_receipt_ref: deploymentReceiptRef || null,
+    identity_attestation_bound: Boolean(identityAttestation),
+    same_device_binding: Boolean(identityAttestation?.same_device_binding),
+    device_fingerprint: identityAttestation?.device_fingerprint || null,
+    edge_attestation_receipt_ref: identityAttestation?.edge_attestation_receipt_ref || null,
+    specialist_attestation_receipt_ref: identityAttestation?.specialist_attestation_receipt_ref || null,
     checkout_enabled: false,
     payment_enabled: false,
     legacy_adapter: 'evercraft_machine_commerce_gateway',
@@ -220,6 +226,11 @@ export async function startSpecialistHandoffRuntime({
           runtime: 'Evercraft Compute',
           instance_id: instanceId,
           deployment_receipt_bound: Boolean(deploymentReceiptRef),
+          identity_attestation_bound: Boolean(identityAttestation),
+          same_device_binding: Boolean(identityAttestation?.same_device_binding),
+          device_fingerprint: identityAttestation?.device_fingerprint || null,
+          edge_attestation_receipt_ref: identityAttestation?.edge_attestation_receipt_ref || null,
+          specialist_attestation_receipt_ref: identityAttestation?.specialist_attestation_receipt_ref || null,
           truth_boundary: def.truth_boundary,
         });
       }
@@ -264,6 +275,36 @@ export async function startSpecialistHandoffRuntime({
         throw new Error('deployment_receipt_ref_invalid');
       }
       deploymentReceiptRef = value;
+      return health();
+    },
+    setIdentityAttestation({
+      deviceFingerprint,
+      edgeAttestationReceipt,
+      specialistAttestationReceipt,
+      sameDeviceBinding = false,
+    } = {}) {
+      const fingerprint = String(deviceFingerprint || '').trim();
+      const edgeReceipt = String(edgeAttestationReceipt || '').trim();
+      const specialistReceipt = String(specialistAttestationReceipt || '').trim();
+      if (!/^sha256:[a-f0-9]{64}$/i.test(fingerprint)) {
+        throw new Error('device_fingerprint_invalid');
+      }
+      if (!/^([a-f0-9]{64}|sha256:[a-f0-9]{64})$/i.test(edgeReceipt)) {
+        throw new Error('edge_attestation_receipt_invalid');
+      }
+      if (!/^([a-f0-9]{64}|sha256:[a-f0-9]{64})$/i.test(specialistReceipt)) {
+        throw new Error('specialist_attestation_receipt_invalid');
+      }
+      if (sameDeviceBinding !== true) {
+        throw new Error('same_device_binding_required');
+      }
+      identityAttestation = {
+        device_fingerprint: fingerprint,
+        edge_attestation_receipt_ref: edgeReceipt,
+        specialist_attestation_receipt_ref: specialistReceipt,
+        same_device_binding: true,
+        bound_at: new Date().toISOString(),
+      };
       return health();
     },
     close: () => new Promise((resolve, reject) =>
