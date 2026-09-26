@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "career_command": {
+      "type": "http",
+      "url": "https://evercraft-career-command.base44.app/functions/careerMcp"
+    }
+  }
+}
