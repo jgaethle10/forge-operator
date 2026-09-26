@@ -115,7 +115,41 @@ jobs:
           check_mcp "/mcp/foundry-app-escape" "evercraft-foundry-app-escape"             "get_foundry_app_escape_offer" "prepare_foundry_app_escape_handoff"
           check_mcp "/mcp/site-survive" "evercraft-site-survive"             "get_site_survive_offer" "prepare_site_survive_handoff"
           check_mcp "/mcp/systemia-remote-ops" "systemia-remote-ops" \
-            "route_business_decision" "simulate_pricing_change" "get_decision_lab_capabilities"
+            "route_business_decision" "simulate_pricing_change" "simulate_business_scenario" "get_decision_lab_capabilities"
+
+          call_mcp_tool() {
+            local path="$1"
+            local tool="$2"
+            local args_json="$3"
+            local kind="$4"
+            payload="$(jq -cn --arg tool "$tool" --argjson args "$args_json"               '{jsonrpc:"2.0",id:3,method:"tools/call",params:{name:$tool,arguments:$args}}')"
+            result="$(curl --fail --silent --show-error --max-time 25               -H 'content-type: application/json'               --data "$payload"               "${SPECIALIST_ORIGIN%/}$path")"
+            if [ "$kind" = "service" ]; then
+              printf '%s' "$result" | jq -e '
+                .result.isError == false and
+                .result.structuredContent.direct_specialist == true and
+                .result.structuredContent.payment_created == false and
+                .result.structuredContent.payment_obligation_created == false
+              ' >/dev/null
+            elif [ "$kind" = "remote_ops" ]; then
+              printf '%s' "$result" | jq -e '
+                .result.isError == false and
+                .result.structuredContent.external_action_taken == false
+              ' >/dev/null
+            else
+              echo "Unknown canary tool-call kind: $kind" >&2
+              return 1
+            fi
+          }
+
+          call_mcp_tool "/mcp/ibmi-rescue" "get_ibmi_rescue_offer" '{}' "service"
+          call_mcp_tool "/mcp/ibmi-rescue" "prepare_ibmi_rescue_handoff" '{}' "service"
+          call_mcp_tool "/mcp/foundry-app-escape" "get_foundry_app_escape_offer" '{}' "service"
+          call_mcp_tool "/mcp/foundry-app-escape" "prepare_foundry_app_escape_handoff" '{}' "service"
+          call_mcp_tool "/mcp/site-survive" "get_site_survive_offer" '{}' "service"
+          call_mcp_tool "/mcp/site-survive" "prepare_site_survive_handoff" '{}' "service"
+          call_mcp_tool "/mcp/systemia-remote-ops" "route_business_decision"             '{"intent":"Should I add a new service to this business?"}' "remote_ops"
+          call_mcp_tool "/mcp/systemia-remote-ops" "simulate_business_scenario"             '{"scenario_label":"external-canary","decision_intent":"add a new service","baseline":{"monthly_revenue":10000,"gross_margin_percent":40,"fixed_costs_monthly":2000,"payroll_monthly":1000,"other_monthly_costs":500,"cash_on_hand":10000},"adjustments":{"revenue_change_percent":10,"other_cost_delta_monthly":250,"one_time_cash_outlay":500}}' "remote_ops"
 
           instance_id="$(printf '%s' "$health" | jq -r '.instance_id')"
           deployment_receipt="$(printf '%s' "$health" | jq -r '.deployment_receipt_ref')"
@@ -147,6 +181,7 @@ jobs:
               certificate_validation:"system_default_trust_store",
               mcp_initialize_verified:true,
               mcp_tools_list_verified:true,
+              mcp_tool_calls_verified:true,
               read_only_authority_verified:true,
               founder_login_required:false,
               external_saas_route_provider_required:false,
