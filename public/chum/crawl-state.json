@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T04:58:13.847Z",
-  "url_count": 2099,
+  "updated_at": "2026-09-26T05:00:53.896Z",
+  "url_count": 2150,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -105,26 +105,26 @@
     },
     "/chum/answers/observed/": {
       "path": "/chum/answers/observed/",
-      "content_sha256": "166a7fc6e1994b48d1956e21d6dc454ee122709e7d3ecc00ef291b8684be4834",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "31a6d23967bc8879ad1a494a902df9db48a595b2bd63bd7c089079b691f3efa9",
+      "last_changed": "2026-09-26T05:00:53.896Z",
       "priority": 80
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "d39ff827b58805515be1dcecb941046d3b4b66490119b3dffc45f626c2e02fd3",
-      "last_changed": "2026-09-25T23:24:44.679Z",
+      "content_sha256": "f50c6dcb7f2e3909de71b32e0eb54dfaf5a8f5ad2fc12b2c23f58f324a0a8d90",
+      "last_changed": "2026-09-26T05:00:53.896Z",
       "priority": 80
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "5a8d53a96adcae257083b1ad544ae0a7f35e64274b1624c9e4732379fbc50b66",
-      "last_changed": "2026-09-26T04:46:40.905Z",
+      "content_sha256": "5778820a899faa1a77093438c7f48474e34caef405b93015efd2dcaddbe63d0d",
+      "last_changed": "2026-09-26T05:00:53.896Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "10a82d9eff132d6885837c8daf6d95f32f2b707e5c29c893822bf7168123e87d",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "718a5fc160fc7f10e2dafef53d15f67a8be2f967281fe630fb603cae5c29d46f",
+      "last_changed": "2026-09-26T05:00:53.896Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -3457,6 +3457,150 @@
       "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
+    "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/": {
+      "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/",
+      "content_sha256": "ca2986ca61a763c9b371999855bcde00cb2669736687db4705383e67dc58be15",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json": {
+      "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json",
+      "content_sha256": "5d57c8cafd1d29e77a10eec5b47c0abb999588cd1406ed9d7d566d38d1a51a5f",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/llms.txt": {
+      "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/llms.txt",
+      "content_sha256": "14c0941cadd42efdd97dee478a5d3fa5cb2766d3ab8b1fd98e5c9669a3724c06",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/": {
+      "path": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/",
+      "content_sha256": "906a92895b3b67647a8cc5163263e1619edbd59cf21424f88d86ec85ee2cbfcd",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/answer.json": {
+      "path": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/answer.json",
+      "content_sha256": "c1612ce816f06ee0cae39790f2be1e9e742aef5f06631f7e1521fb29ae737cf2",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/llms.txt": {
+      "path": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/llms.txt",
+      "content_sha256": "b8420e148b3b38c7759c5827c5391b90fc4d6544da31b04c8f277ce881f18da9",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/": {
+      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/",
+      "content_sha256": "4dab6338f66e2f72d6bf135dd168a2dbbe87ec3b78016e47709f42ac5e830778",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json": {
+      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
+      "content_sha256": "0d8fcd499bb269ddf2ad1a9ccb9ee9f8f2ae09a7e25b1a8cb11c4e62883dfc3a",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/llms.txt": {
+      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/llms.txt",
+      "content_sha256": "c2d0ad52d557d8bb0d171d74c21b7e68f95e148138325735b8ff73999d09ab74",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/": {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
+      "content_sha256": "241ddb437bd71d11be23d99be09f2d6d0ae06e743b279705178dc76c28eb1960",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json": {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
+      "content_sha256": "b181ea46c2e915203cb01484ff43031dc8685fde9e2a4cc48b235fb91e19617f",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt": {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
+      "content_sha256": "5d9d39a381ea0d65d9a6963226f8f340eee75586616b59d1d91a3f949e7806d9",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/": {
+      "path": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/",
+      "content_sha256": "1f7c1c3466275afc8cf5fa3e1ad0f823b00441c2551db6d10f0acb3f70184884",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/answer.json": {
+      "path": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/answer.json",
+      "content_sha256": "60ecc4b84fe5b2fee92e419acc3c78e5c2a8a88f732387cceb9bfc7b70c61d67",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/llms.txt": {
+      "path": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/llms.txt",
+      "content_sha256": "744c2476fac985edd1f26a6eeb68d02522742e09ecf39dfd946ee153929175b5",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/": {
+      "path": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/",
+      "content_sha256": "6348af1e4c92e908f09b6e1733bcc5e62d14e5d193bea7606a3e13da582b416c",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/answer.json": {
+      "path": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/answer.json",
+      "content_sha256": "7db05a4156a0e14898958c227523ed5d9bbe28953ac922f43ee64bfad2d2cd0b",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/llms.txt": {
+      "path": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/llms.txt",
+      "content_sha256": "7688641cc10fbfca30997f63b15fd6abce3f7291f00f0c2d8d65af2aba5d8e94",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/": {
+      "path": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/",
+      "content_sha256": "3ba3a6c1ee47d551d1905fe34ac2dc26baecee395b89e9790fc305c9b43df897",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/answer.json": {
+      "path": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/answer.json",
+      "content_sha256": "a267855bdd8f1b36203fc634bb689f540d2aba2b662fd47410df5ef1b9569666",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/llms.txt": {
+      "path": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/llms.txt",
+      "content_sha256": "6f637206afd30c73eb602f9a60235c5997157273d9c048f2db2c2ae7d8890b96",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/": {
+      "path": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/",
+      "content_sha256": "5d6650ddd1903fe5ad341575627772d5a98776f32fb3608652053b0dd5b149bd",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/answer.json": {
+      "path": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/answer.json",
+      "content_sha256": "dee5307d99d36c15e9ec46d0c1dd6012032efe73895176517f3086c303ab09de",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/llms.txt": {
+      "path": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/llms.txt",
+      "content_sha256": "52b145929ff108ec7710d0c283ed7f4c031dd174be7417015f7cde0a02cba2ee",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
     "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/": {
       "path": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/",
       "content_sha256": "f3dcef8cb148fe907f107ec881dde7c4d9935b579ae4b5f835850e35dfc0a9ee",
@@ -3473,6 +3617,168 @@
       "path": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/llms.txt",
       "content_sha256": "164f2389affecd4e14263ac9cf49f83f83eed529b3aca762acb647afa6494d74",
       "last_changed": "2026-09-25T06:50:26.447Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/": {
+      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/",
+      "content_sha256": "2252b8cac94b57256b89efa8fed88137fab28743225ae68a4d90f94e15fdd23b",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json": {
+      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
+      "content_sha256": "35710dda24a30c59e72ecaa48ba07546c0e91daf0c81e4ff30356ba4137db657",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/llms.txt": {
+      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/llms.txt",
+      "content_sha256": "cfb6a851cffb39f5b921039e276276f2ad6eb97b3b948fcaee078a583eb86e27",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/": {
+      "path": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/",
+      "content_sha256": "b297238bd84df54924716ce4bd89720c3d6d3508b1a33b86eb63077be24b2a70",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/answer.json": {
+      "path": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/answer.json",
+      "content_sha256": "5218a64714400301e8a11ecdf8b6a1c808ab85ddd9fd3c7ad3d60e2632326aa8",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/llms.txt": {
+      "path": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/llms.txt",
+      "content_sha256": "35662fb24659fd4c1cc6e25361f448fe689b1394a4dd175f8156c1b6fac8d31d",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/": {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
+      "content_sha256": "7a4e7bf1a19b85f42ead9908553d90ad1d944b72ede68bfd3d5586ad3568a438",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json": {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
+      "content_sha256": "7657bdb9eb3cace7551a843bb4d9c50d4f161e11293d8de8e7d443a52459ed34",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt": {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt",
+      "content_sha256": "05ad7b41d6855e6bb42265d9c5939388d8d8b61f2cbf3ffa0ee1d55f7b434fda",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/": {
+      "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/",
+      "content_sha256": "92fe144bc2917d40957cda5e911c7a690b7c1b0a828595232ddb3a557e894740",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/answer.json": {
+      "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/answer.json",
+      "content_sha256": "99de6e144912a6a93d9da68afc1f45cce7ea375f0efbb55145ed8cf7d5a57c49",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/llms.txt": {
+      "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/llms.txt",
+      "content_sha256": "a27ad8dc6face0f41b1ba90f842cd5dfbb1117666ce4c5532cc074d771d547bd",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/": {
+      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/",
+      "content_sha256": "385d55b5ce002553b0fdf731c2ed8ad344bef322073adde8ab4746b678d63193",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json": {
+      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
+      "content_sha256": "bc47eec54a7effc8a6c2cc00a98e28408eb814cb6c0fb8eb9a1aca21cc693879",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/llms.txt": {
+      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/llms.txt",
+      "content_sha256": "2fc44fd19b628d288f95d64ddc3ba52f80274d9399fae8083bd2ff7adbc56c8e",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/": {
+      "path": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/",
+      "content_sha256": "a6db5bd58243765ab0852be478b1c68b1c0697f885cac170656a263b7ebb5c8d",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/answer.json": {
+      "path": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/answer.json",
+      "content_sha256": "050da1bf7fb209642278081bb82d75d3493f2daa400c21c67a26c4e9499cb114",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/llms.txt": {
+      "path": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/llms.txt",
+      "content_sha256": "4c5f1843ef780313f188b13b14934e4820bb589ef0524457ecccf74ddfd783bb",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/": {
+      "path": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/",
+      "content_sha256": "1651617be187d2afaec423570d8878a31eb451aa22857fc9b60858a9c7064296",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/answer.json": {
+      "path": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/answer.json",
+      "content_sha256": "ba222a3739fdb2746605fbacde03f4ca2f37c4b5403bde5bb27a710705e060f2",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/llms.txt": {
+      "path": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/llms.txt",
+      "content_sha256": "49b74229a99458f01ad9d7fc8ad44a4aca957a9cf6643952e1677dfbd4a87340",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/": {
+      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/",
+      "content_sha256": "26ffb1312b7f223f669802ecb4a7037b462056b752ec039d2bf5c0bd6453423b",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json": {
+      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
+      "content_sha256": "1254c0225f4963cc23962021c0ee8495b134ac99b3e2b98c102345f5bd57605f",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/llms.txt": {
+      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/llms.txt",
+      "content_sha256": "e8e117f9bcd7b74701877d58564bb02b338191d81f722cc6ab7c025b5f63445c",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/": {
+      "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/",
+      "content_sha256": "67387c896cb3093ceee6264d0a7bfaa9657eae9ec39b37bda1ebf6e9078b54b0",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json": {
+      "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json",
+      "content_sha256": "a713e5664e3e4e000efb0dc9cb2434146385e551c4eef02eac18fc86aa8c7f9b",
+      "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/llms.txt": {
+      "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/llms.txt",
+      "content_sha256": "4857194794e66a65d73c643d13103da1110b37a2642805a065d3f3724589e907",
+      "last_changed": "2026-09-26T05:00:53.896Z",
       "priority": 86
     },
     "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90/": {

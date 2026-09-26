@@ -1,0 +1,79 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T05:00:25.403Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "forensiscope",
+  "source": "authorized_provider_probe",
+  "case_id": "media-evidence-timeline-008",
+  "prompt": "I have authorized site footage and need a factual timestamped evidence timeline with searchable transcript context and source-linked findings across a long recording. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_forensiscope": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected ForensiScope capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "d3e24b86208ace44d58f9a801246d440fb4263889a1032c49da6189d9e233205",
+  "response_sha256": "5ae2af5ff52bb805337881737166ecbdd959550873f4386346f57b9129af96a9",
+  "probe_id": "media-evidence-timeline-008:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
+    "tokens": [
+      "authoriz",
+      "site",
+      "footage",
+      "factual",
+      "timestamp",
+      "evidence",
+      "timeline",
+      "searchable",
+      "transcript",
+      "context",
+      "source",
+      "link",
+      "finding",
+      "acros",
+      "long",
+      "record",
+      "service"
+    ],
+    "concepts": [
+      "media",
+      "transcript",
+      "timeline",
+      "evidence",
+      "property",
+      "website"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "media",
+        "evidence": "recording"
+      },
+      {
+        "concept": "transcript",
+        "evidence": "transcript"
+      },
+      {
+        "concept": "timeline",
+        "evidence": "timeline"
+      },
+      {
+        "concept": "evidence",
+        "evidence": "source linked"
+      },
+      {
+        "concept": "property",
+        "evidence": "site"
+      },
+      {
+        "concept": "website",
+        "evidence": "site"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}
