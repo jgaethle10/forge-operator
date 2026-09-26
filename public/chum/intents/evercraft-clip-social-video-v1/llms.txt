@@ -1,0 +1,29 @@
+# Evercraft Clip Social Video Production
+
+Problem: An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.
+Pricing: The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.
+Commercial state: verification_required
+Machine state: invocation_ready
+Public capability: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+Start here: Not exposed until commercial verification is complete
+Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- turn this video into social clips
+- make short vertical clips from a long video
+- find the best moments in this video for social media
+- create vertical clips from an interview
+- repurpose this video for Facebook LinkedIn and Instagram
+- make reels from an authorized source video
+- social video clipping and distribution
+- turn approved media into social-ready outputs
+- plan a social video clipping job
+- AI tool to select moments from a video and render social clips
+
+Safety:
+- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Discovery creates no payment obligation.
+- Checkout creation is not proof of payment.
+- Paid state requires authoritative payment verification.

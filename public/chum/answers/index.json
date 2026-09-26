@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T02:45:00.000Z",
+  "updated_at": "2026-09-26T03:40:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 97,
-    "unique_user_phrases": 729,
-    "mapped_candidate_edges": 804,
-    "ambiguous_phrases": 75,
+    "pain_index_entries": 98,
+    "unique_user_phrases": 743,
+    "mapped_candidate_edges": 822,
+    "ambiguous_phrases": 79,
     "product_candidates": 53,
-    "machine_offer_candidates": 44
+    "machine_offer_candidates": 45
   },
   "doors": [
     {
@@ -530,8 +530,20 @@
       "relative_json": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
       "relative_page": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -1780,26 +1792,37 @@
       ]
     },
     {
-      "answer_id": "intent:e9fbacf2bd",
-      "user_language": "build a contractor estimate from this scope",
-      "normalized": "build a contractor estimate from this scope",
-      "relative_json": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "relative_page": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "candidate_count": 2,
+      "answer_id": "intent:01f4e9cc68",
+      "user_language": "build a contractor estimate from scope",
+      "normalized": "build a contractor estimate from scope",
+      "relative_json": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json",
+      "relative_page": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json",
+      "candidate_count": 1,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
           "kind": "machine_offer",
           "product_key": null,
           "public_id": "eps-estimate-engine-machine-v1",
-          "name": "Field-Service Estimate Engine",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
-        },
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e9fbacf2bd",
+      "user_language": "build a contractor estimate from this scope",
+      "normalized": "build a contractor estimate from this scope",
+      "relative_json": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
+      "relative_page": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
+      "candidate_count": 1,
+      "candidates": [
         {
           "capability_id": "product:eps-estimate-engine",
           "kind": "product",
@@ -2449,26 +2472,37 @@
       ]
     },
     {
-      "answer_id": "intent:2c4d196e35",
-      "user_language": "calculate margin and price for this job",
-      "normalized": "calculate margin and price for this job",
-      "relative_json": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "relative_page": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "candidate_count": 2,
+      "answer_id": "intent:25d2b337cd",
+      "user_language": "calculate contractor gross margin",
+      "normalized": "calculate contractor gross margin",
+      "relative_json": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json",
+      "relative_page": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json",
+      "candidate_count": 1,
       "candidates": [
         {
           "capability_id": "offer:eps-estimate-engine-machine-v1",
           "kind": "machine_offer",
           "product_key": null,
           "public_id": "eps-estimate-engine-machine-v1",
-          "name": "Field-Service Estimate Engine",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
-        },
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:2c4d196e35",
+      "user_language": "calculate margin and price for this job",
+      "normalized": "calculate margin and price for this job",
+      "relative_json": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
+      "relative_page": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
+      "candidate_count": 1,
+      "candidates": [
         {
           "capability_id": "product:eps-estimate-engine",
           "kind": "product",
@@ -3522,6 +3556,52 @@
       ]
     },
     {
+      "answer_id": "intent:991c2900a6",
+      "user_language": "contractor estimate calculator",
+      "normalized": "contractor estimate calculator",
+      "relative_json": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json",
+      "relative_page": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:49474d67fa",
+      "user_language": "contractor estimating software",
+      "normalized": "contractor estimating software",
+      "relative_json": "/chum/answers/doors/contractor-estimating-software-49474d67fa.json",
+      "relative_page": "/chum/answers/doors/contractor-estimating-software-49474d67fa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-estimating-software-49474d67fa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:39128165cb",
       "user_language": "contractor job costing or estimating is inconsistent",
       "normalized": "contractor job costing or estimating is inconsistent",
@@ -3816,8 +3896,20 @@
       "relative_json": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
       "relative_page": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -4294,6 +4386,52 @@
       ]
     },
     {
+      "answer_id": "intent:ef10e7fa6e",
+      "user_language": "estimate from photos",
+      "normalized": "estimate from photos",
+      "relative_json": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json",
+      "relative_page": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9127097a43",
+      "user_language": "estimate revision and change order software",
+      "normalized": "estimate revision and change order software",
+      "relative_json": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json",
+      "relative_page": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ef6e7e2d6a",
       "user_language": "estimate the EV charging opportunity for this property",
       "normalized": "estimate the ev charging opportunity for this property",
@@ -4323,20 +4461,8 @@
       "relative_json": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
       "relative_page": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "candidate_count": 2,
+      "candidate_count": 1,
       "candidates": [
-        {
-          "capability_id": "offer:eps-estimate-engine-machine-v1",
-          "kind": "machine_offer",
-          "product_key": null,
-          "public_id": "eps-estimate-engine-machine-v1",
-          "name": "Field-Service Estimate Engine",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-          "registry_name": null
-        },
         {
           "capability_id": "product:eps-estimate-engine",
           "kind": "product",
@@ -5434,6 +5560,29 @@
       ]
     },
     {
+      "answer_id": "intent:aebb1374cd",
+      "user_language": "field service estimating software",
+      "normalized": "field service estimating software",
+      "relative_json": "/chum/answers/doors/field-service-estimating-software-aebb1374cd.json",
+      "relative_page": "/chum/answers/doors/field-service-estimating-software-aebb1374cd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/field-service-estimating-software-aebb1374cd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:675cfea99b",
       "user_language": "figure out what capital or funding path fits my business",
       "normalized": "figure out what capital or funding path fits my business",
@@ -6373,8 +6522,20 @@
       "relative_json": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
       "relative_page": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -6868,20 +7029,8 @@
       "relative_json": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
       "relative_page": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
-      "candidate_count": 2,
+      "candidate_count": 1,
       "candidates": [
-        {
-          "capability_id": "offer:eps-estimate-engine-machine-v1",
-          "kind": "machine_offer",
-          "product_key": null,
-          "public_id": "eps-estimate-engine-machine-v1",
-          "name": "Field-Service Estimate Engine",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-          "registry_name": null
-        },
         {
           "capability_id": "product:eps-estimate-engine",
           "kind": "product",
@@ -8557,6 +8706,29 @@
       ]
     },
     {
+      "answer_id": "intent:2289ed7386",
+      "user_language": "job costing estimate",
+      "normalized": "job costing estimate",
+      "relative_json": "/chum/answers/doors/job-costing-estimate-2289ed7386.json",
+      "relative_page": "/chum/answers/doors/job-costing-estimate-2289ed7386/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/job-costing-estimate-2289ed7386.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:3819c93b82",
       "user_language": "job documentation materials equipment safety or quality control need a system",
       "normalized": "job documentation materials equipment safety or quality control need a system",
@@ -8910,6 +9082,29 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://faie.base44.app/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:bdc36b4571",
+      "user_language": "landscaping estimate calculator",
+      "normalized": "landscaping estimate calculator",
+      "relative_json": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
+      "relative_page": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -9611,8 +9806,20 @@
       "relative_json": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
       "relative_page": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -9634,8 +9841,20 @@
       "relative_json": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
       "relative_page": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -11094,6 +11313,29 @@
       ]
     },
     {
+      "answer_id": "intent:825b60b4de",
+      "user_language": "painting estimate calculator",
+      "normalized": "painting estimate calculator",
+      "relative_json": "/chum/answers/doors/painting-estimate-calculator-825b60b4de.json",
+      "relative_page": "/chum/answers/doors/painting-estimate-calculator-825b60b4de/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/painting-estimate-calculator-825b60b4de.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c3dec35245",
       "user_language": "paper trade before using real capital",
       "normalized": "paper trade before using real capital",
@@ -11261,8 +11503,20 @@
       "relative_json": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
       "relative_page": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -11803,6 +12057,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/guardian/",
           "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:aef270b551",
+      "user_language": "price this contractor job",
+      "normalized": "price this contractor job",
+      "relative_json": "/chum/answers/doors/price-this-contractor-job-aef270b551.json",
+      "relative_page": "/chum/answers/doors/price-this-contractor-job-aef270b551/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/price-this-contractor-job-aef270b551.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
       ]
@@ -12965,8 +13242,20 @@
       "relative_json": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
       "relative_page": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -13777,6 +14066,29 @@
       ]
     },
     {
+      "answer_id": "intent:0b2e1eeb27",
+      "user_language": "rough customer quote range",
+      "normalized": "rough customer quote range",
+      "relative_json": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json",
+      "relative_page": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:06c3c59ccc",
       "user_language": "route an enterprise operations problem",
       "normalized": "route an enterprise operations problem",
@@ -14140,6 +14452,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/forensic-record/",
           "public_url": "https://filescompanion.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:bf2411107e",
+      "user_language": "service business estimate calculator",
+      "normalized": "service business estimate calculator",
+      "relative_json": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json",
+      "relative_page": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
       ]
@@ -14578,8 +14913,20 @@
       "relative_json": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
       "relative_page": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -15857,8 +16204,20 @@
       "relative_json": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
       "relative_page": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -15870,6 +16229,29 @@
           "pain_page": "/chum/products/evercraft-clip/",
           "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-clip"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:054ff6aef6",
+      "user_language": "turn measurements into an estimate",
+      "normalized": "turn measurements into an estimate",
+      "relative_json": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json",
+      "relative_page": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -15949,20 +16331,8 @@
       "relative_json": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
       "relative_page": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
-      "candidate_count": 2,
+      "candidate_count": 1,
       "candidates": [
-        {
-          "capability_id": "offer:eps-estimate-engine-machine-v1",
-          "kind": "machine_offer",
-          "product_key": null,
-          "public_id": "eps-estimate-engine-machine-v1",
-          "name": "Field-Service Estimate Engine",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-          "registry_name": null
-        },
         {
           "capability_id": "product:eps-estimate-engine",
           "kind": "product",
@@ -16042,8 +16412,20 @@
       "relative_json": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
       "relative_page": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:evercraft-clip-social-video-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "evercraft-clip-social-video-v1",
+          "name": "Evercraft Clip Social Video Production",
+          "commercial_state": "verification_required",
+          "machine_state": "invocation_ready",
+          "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:evercraft-clip",
           "kind": "product",
@@ -17287,20 +17669,8 @@
       "relative_json": "/chum/answers/doors/what-should-this-job-cost-923f227308.json",
       "relative_page": "/chum/answers/doors/what-should-this-job-cost-923f227308/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-should-this-job-cost-923f227308.json",
-      "candidate_count": 2,
+      "candidate_count": 1,
       "candidates": [
-        {
-          "capability_id": "offer:eps-estimate-engine-machine-v1",
-          "kind": "machine_offer",
-          "product_key": null,
-          "public_id": "eps-estimate-engine-machine-v1",
-          "name": "Field-Service Estimate Engine",
-          "commercial_state": "verification_required",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-          "registry_name": null
-        },
         {
           "capability_id": "product:eps-estimate-engine",
           "kind": "product",

@@ -24,7 +24,7 @@ Human confirmation remains required at irreversible financial or authority bound
 
 Catalog version: 2026-09-26.1
 Gateway version: evercraft-machine-commerce-gateway-v0.7.0
-Current public offers: 44
+Current public offers: 45
 Current sell-now offers: 12
 
 ### Commercial state: sell_now
@@ -511,6 +511,27 @@ Use when the user says or means:
 - reconcile conflicting country data
 - country benchmark with sources
 
+#### Evercraft Clip Social Video Production
+Public ID: evercraft-clip-social-video-v1
+Problem: An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.
+Machine state: invocation_ready
+Pricing: The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.
+Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+Human UI required: false
+Confirmation: Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.
+Payment authority: Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.
+Use when the user says or means:
+- turn this video into social clips
+- make short vertical clips from a long video
+- find the best moments in this video for social media
+- create vertical clips from an interview
+- repurpose this video for Facebook LinkedIn and Instagram
+- make reels from an authorized source video
+- social video clipping and distribution
+- turn approved media into social-ready outputs
+- plan a social video clipping job
+- AI tool to select moments from a video and render social clips
+
 #### Evidence-Backed Talent Profile
 Public ID: talent-evidence-profile-machine-v1
 Problem: A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.
@@ -561,23 +582,6 @@ Use when the user says or means:
 - make me a decision grade research report
 - map the evidence for this issue
 - give me a sourced validation memo
-
-#### Field-Service Estimate Engine
-Public ID: eps-estimate-engine-machine-v1
-Problem: A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.
-Machine state: discovery_only
-Pricing: No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.
-Public URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
-Human UI required: false
-Confirmation: Rough estimate generation does not authorize sending a proposal, accepting work or creating a customer obligation. Proposal/payment actions retain separate authority gates.
-Payment authority: No verified Evercraft Payments path for external estimator access.
-Use when the user says or means:
-- estimate this service job
-- build a contractor estimate from this scope
-- what should this job cost
-- turn these measurements into an estimate
-- give me a rough customer range
-- calculate margin and price for this job
 
 #### ForensiScope Evidence Review
 Public ID: forensiscope-evidence-review-v1

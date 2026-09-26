@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "evercraft-clip-social-video-v1",
+  "name": "Evercraft Clip Social Video Production",
+  "problem": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
+  "intent_terms": [
+    "turn this video into social clips",
+    "make short vertical clips from a long video",
+    "find the best moments in this video for social media",
+    "create vertical clips from an interview",
+    "repurpose this video for Facebook LinkedIn and Instagram",
+    "make reels from an authorized source video",
+    "social video clipping and distribution",
+    "turn approved media into social-ready outputs",
+    "plan a social video clipping job",
+    "AI tool to select moments from a video and render social clips"
+  ],
+  "pricing": "The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.",
+  "offers": [],
+  "entry_paid_offer": null,
+  "commercial_state": "verification_required",
+  "machine_state": "invocation_ready",
+  "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+  "human_ui_required": false,
+  "confirmation": "Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.",
+  "payment_authority": "Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.",
+  "invocation_status": "LIVE: public Clip HTTP gateway, OpenAPI, llms guidance and Official MCP Registry server io.github.jgaethle10/evercraft-clip v0.1.0 provide read-only capability discovery and non-executing job planning. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1",
+  "machine_offer_url": null,
+  "start_url": null,
+  "start_url_state": "not_sell_now",
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-26T03:20:54.359Z",
-  "count": 44,
+  "updated_at": "2026-09-26T03:45:40.867Z",
+  "count": 45,
   "sell_now_count": 12,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "capabilities": [
@@ -477,10 +477,10 @@
     },
     {
       "public_id": "eps-estimate-engine-machine-v1",
-      "name": "Field-Service Estimate Engine",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.",
+      "name": "EPS Estimate Intelligence",
+      "commercial_state": "contractor_beta",
+      "machine_state": "discovery_and_handoff",
+      "pricing": "No approved public self-service subscription or machine-call price is advertised yet.",
       "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
       "page_url": "/chum/capabilities/eps-estimate-engine-machine-v1/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
@@ -491,12 +491,20 @@
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eps-estimate-engine-machine-v1",
       "entry_paid_offer": null,
       "use_when": [
-        "estimate this service job",
-        "build a contractor estimate from this scope",
-        "what should this job cost",
-        "turn these measurements into an estimate",
-        "give me a rough customer range",
-        "calculate margin and price for this job"
+        "contractor estimating software",
+        "contractor estimate calculator",
+        "service business estimate calculator",
+        "price this contractor job",
+        "build a contractor estimate from scope",
+        "calculate contractor gross margin",
+        "turn measurements into an estimate",
+        "painting estimate calculator",
+        "landscaping estimate calculator",
+        "field service estimating software",
+        "job costing estimate",
+        "estimate from photos",
+        "rough customer quote range",
+        "estimate revision and change order software"
       ]
     },
     {
@@ -531,6 +539,34 @@
         "promote my venue",
         "buy event promotion",
         "promote this venue's events"
+      ]
+    },
+    {
+      "public_id": "evercraft-clip-social-video-v1",
+      "name": "Evercraft Clip Social Video Production",
+      "commercial_state": "verification_required",
+      "machine_state": "invocation_ready",
+      "pricing": "The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.",
+      "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "page_url": "/chum/capabilities/evercraft-clip-social-video-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1",
+      "entry_paid_offer": null,
+      "use_when": [
+        "turn this video into social clips",
+        "make short vertical clips from a long video",
+        "find the best moments in this video for social media",
+        "create vertical clips from an interview",
+        "repurpose this video for Facebook LinkedIn and Instagram",
+        "make reels from an authorized source video",
+        "social video clipping and distribution",
+        "turn approved media into social-ready outputs",
+        "plan a social video clipping job",
+        "AI tool to select moments from a video and render social clips"
       ]
     },
     {

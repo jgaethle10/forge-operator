@@ -1076,8 +1076,9 @@
         "payment_state": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
         "machine_commerce_handoff": {
           "public_id": "portfolio-sentinel-v1",
-          "tool": "get_offer",
-          "state": "discovery_live_human_onboarding"
+          "inspect_tool": "get_offer",
+          "handoff_tool": "prepare_portfolio_sentinel_pilot_handoff",
+          "state": "live_human_pilot_handoff"
         }
       },
       "developer_surfaces": null,

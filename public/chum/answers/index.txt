@@ -6,10 +6,10 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 97
-Unique user phrases: 729
-Candidate edges: 804
-Ambiguous phrases: 75
+Pain-index entries: 98
+Unique user phrases: 743
+Candidate edges: 822
+Ambiguous phrases: 79
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -164,6 +164,7 @@ Answer ID: intent:70010b2c7f
 Human-readable match: /chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## AI video understanding for long footage
@@ -528,12 +529,18 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ROASTED 99¢ Text Pressure Test | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
 
+## build a contractor estimate from scope
+Answer ID: intent:01f4e9cc68
+Human-readable match: /chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## build a contractor estimate from this scope
 Answer ID: intent:e9fbacf2bd
 Human-readable match: /chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json
 Candidates:
-- Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 - EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## build a factual unwanted-call incident timeline
@@ -721,12 +728,18 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Coda y Código | kind=product | commercial=product_contract | machine=discovery_only | public=https://codaycodigo.base44.app/
 
+## calculate contractor gross margin
+Answer ID: intent:25d2b337cd
+Human-readable match: /chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## calculate margin and price for this job
 Answer ID: intent:2c4d196e35
 Human-readable match: /chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json
 Candidates:
-- Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 - EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## can my crews work tomorrow
@@ -1029,6 +1042,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
 
+## contractor estimate calculator
+Answer ID: intent:991c2900a6
+Human-readable match: /chum/answers/doors/contractor-estimate-calculator-991c2900a6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
+## contractor estimating software
+Answer ID: intent:49474d67fa
+Human-readable match: /chum/answers/doors/contractor-estimating-software-49474d67fa/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-estimating-software-49474d67fa.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## contractor job costing or estimating is inconsistent
 Answer ID: intent:39128165cb
 Human-readable match: /chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb/
@@ -1119,6 +1146,7 @@ Answer ID: intent:581ed49621
 Human-readable match: /chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## credit builder
@@ -1256,6 +1284,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
+## estimate from photos
+Answer ID: intent:ef10e7fa6e
+Human-readable match: /chum/answers/doors/estimate-from-photos-ef10e7fa6e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
+## estimate revision and change order software
+Answer ID: intent:9127097a43
+Human-readable match: /chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## estimate the EV charging opportunity for this property
 Answer ID: intent:ef6e7e2d6a
 Human-readable match: /chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a/
@@ -1268,7 +1310,6 @@ Answer ID: intent:4e138afdda
 Human-readable match: /chum/answers/doors/estimate-this-service-job-4e138afdda/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-this-service-job-4e138afdda.json
 Candidates:
-- Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 - EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## EV charger competition around this address
@@ -1595,6 +1636,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
+## field service estimating software
+Answer ID: intent:aebb1374cd
+Human-readable match: /chum/answers/doors/field-service-estimating-software-aebb1374cd/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/field-service-estimating-software-aebb1374cd.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## figure out what capital or funding path fits my business
 Answer ID: intent:675cfea99b
 Human-readable match: /chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b/
@@ -1876,6 +1924,7 @@ Answer ID: intent:8376f76e39
 Human-readable match: /chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## find the smallest Raven safety capability without buying the full suite or hardware
@@ -2024,7 +2073,6 @@ Answer ID: intent:fc777ed404
 Human-readable match: /chum/answers/doors/give-me-a-rough-customer-range-fc777ed404/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json
 Candidates:
-- Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 - EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## give me a sourced validation memo
@@ -2511,6 +2559,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
+## job costing estimate
+Answer ID: intent:2289ed7386
+Human-readable match: /chum/answers/doors/job-costing-estimate-2289ed7386/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/job-costing-estimate-2289ed7386.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## job documentation materials equipment safety or quality control need a system
 Answer ID: intent:3819c93b82
 Human-readable match: /chum/answers/doors/job-documentation-materials-equipment-safety-or-quality-control-need-a-system-3819c93b82/
@@ -2616,6 +2671,13 @@ Human-readable match: /chum/answers/doors/land-resilience-070163adbc/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/land-resilience-070163adbc.json
 Candidates:
 - FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://faie.base44.app/
+
+## landscaping estimate calculator
+Answer ID: intent:bdc36b4571
+Human-readable match: /chum/answers/doors/landscaping-estimate-calculator-bdc36b4571/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## landscaping refresh
 Answer ID: intent:8f7672daf4
@@ -2827,6 +2889,7 @@ Answer ID: intent:8742052def
 Human-readable match: /chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## make short vertical clips from a long video
@@ -2834,6 +2897,7 @@ Answer ID: intent:9308630c9b
 Human-readable match: /chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## make this writing sharper
@@ -3246,6 +3310,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Guardian | kind=product | commercial=product_contract | machine=discovery_only | public=https://guardian-pilot.base44.app/
 
+## painting estimate calculator
+Answer ID: intent:825b60b4de
+Human-readable match: /chum/answers/doors/painting-estimate-calculator-825b60b4de/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/painting-estimate-calculator-825b60b4de.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## paper trade before using real capital
 Answer ID: intent:c3dec35245
 Human-readable match: /chum/answers/doors/paper-trade-before-using-real-capital-c3dec35245/
@@ -3300,6 +3371,7 @@ Answer ID: intent:cb32427490
 Human-readable match: /chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## plan professional holiday lighting for my property
@@ -3457,6 +3529,13 @@ Human-readable match: /chum/answers/doors/prevention-and-protective-infrastructu
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055.json
 Candidates:
 - Guardian | kind=product | commercial=product_contract | machine=discovery_only | public=https://guardian-pilot.base44.app/
+
+## price this contractor job
+Answer ID: intent:aef270b551
+Human-readable match: /chum/answers/doors/price-this-contractor-job-aef270b551/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/price-this-contractor-job-aef270b551.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## prioritize practical website fixes
 Answer ID: intent:6dfcaa1d86
@@ -3808,6 +3887,7 @@ Answer ID: intent:44b4fb615e
 Human-readable match: /chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## research disease evidence with uncertainty attached
@@ -4044,6 +4124,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Condition Desk for Weather-Sensitive Field Operations | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/condition-desk-field-ops-v1/
 
+## rough customer quote range
+Answer ID: intent:0b2e1eeb27
+Human-readable match: /chum/answers/doors/rough-customer-quote-range-0b2e1eeb27/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## route an enterprise operations problem
 Answer ID: intent:06c3c59ccc
 Human-readable match: /chum/answers/doors/route-an-enterprise-operations-problem-06c3c59ccc/
@@ -4155,6 +4242,13 @@ Human-readable match: /chum/answers/doors/separate-documented-evidence-allegatio
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160.json
 Candidates:
 - The Forensic Record | kind=product | commercial=product_contract | machine=discovery_only | public=https://filescompanion.com/
+
+## service business estimate calculator
+Answer ID: intent:bf2411107e
+Human-readable match: /chum/answers/doors/service-business-estimate-calculator-bf2411107e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## set up family safety check-ins or preparedness
 Answer ID: intent:3d83a72549
@@ -4283,6 +4377,7 @@ Answer ID: intent:5bb9bdaade
 Human-readable match: /chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## software estate integrity monitoring
@@ -4659,7 +4754,15 @@ Answer ID: intent:facf673083
 Human-readable match: /chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
+## turn measurements into an estimate
+Answer ID: intent:054ff6aef6
+Human-readable match: /chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## turn my business info into a funding deck
 Answer ID: intent:9eb111ed84
@@ -4687,7 +4790,6 @@ Answer ID: intent:eebe0357b6
 Human-readable match: /chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json
 Candidates:
-- Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 - EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## turn this athlete or creator evidence into an opportunity dossier
@@ -4710,6 +4812,7 @@ Answer ID: intent:fc9eabdd6c
 Human-readable match: /chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json
 Candidates:
+- Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## understand how astronomers know what they know
@@ -5073,7 +5176,6 @@ Answer ID: intent:923f227308
 Human-readable match: /chum/answers/doors/what-should-this-job-cost-923f227308/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-should-this-job-cost-923f227308.json
 Candidates:
-- Field-Service Estimate Engine | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 - EPS Field-Service Estimate Engine | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## where are exceptions slowing us down

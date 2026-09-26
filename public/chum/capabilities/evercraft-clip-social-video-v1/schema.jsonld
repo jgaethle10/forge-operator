@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs#evercraft-capability",
+      "name": "Evercraft Clip Social Video Production",
+      "description": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
+      "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "evercraft-clip-social-video-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Evercraft Clip Social Video Production | Evercraft capability",
+      "description": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
+      "about": {
+        "@id": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs#evercraft-capability"
+      }
+    }
+  ]
+}

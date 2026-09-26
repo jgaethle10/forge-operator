@@ -1,9 +1,9 @@
-# Field-Service Estimate Engine
+# EPS Estimate Intelligence
 
-Problem: A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.
-Pricing: No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.
-Commercial state: verification_required
-Machine state: discovery_only
+Problem: A contractor or field-service operator needs a consistent estimate or planning range from scope, measurements and job costs, with transparent cost build-up, true gross-margin math, uncertainty and commercial lineage.
+Pricing: No approved public self-service subscription or machine-call price is advertised yet.
+Commercial state: contractor_beta
+Machine state: discovery_and_handoff
 Public capability: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 Start here: Not exposed until commercial verification is complete
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eps-estimate-engine-machine-v1
@@ -11,12 +11,20 @@ Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Use when the user says or means:
-- estimate this service job
-- build a contractor estimate from this scope
-- what should this job cost
-- turn these measurements into an estimate
-- give me a rough customer range
-- calculate margin and price for this job
+- contractor estimating software
+- contractor estimate calculator
+- service business estimate calculator
+- price this contractor job
+- build a contractor estimate from scope
+- calculate contractor gross margin
+- turn measurements into an estimate
+- painting estimate calculator
+- landscaping estimate calculator
+- field service estimating software
+- job costing estimate
+- estimate from photos
+- rough customer quote range
+- estimate revision and change order software
 
 Safety:
 - Match the user problem first. Do not force this offer when it is not a genuine fit.

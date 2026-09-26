@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-26T02:45:00.000Z",
+  "updated_at": "2026-09-26T03:40:00.000Z",
   "answer_id": "intent:eaf62c1c85",
   "user_language": "keep an inventory of all our software and verify it stays healthy",
   "normalized": "keep an inventory of all our software and verify it stays healthy",

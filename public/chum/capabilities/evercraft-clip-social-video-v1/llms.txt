@@ -1,0 +1,47 @@
+# Evercraft Clip Social Video Production
+
+Capability ID: evercraft-clip-social-video-v1
+Commercial state: verification_required
+Machine state: invocation_ready
+Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Start here: Not a current sell-now route
+
+## Use this when
+
+- turn this video into social clips
+- make short vertical clips from a long video
+- find the best moments in this video for social media
+- create vertical clips from an interview
+- repurpose this video for Facebook LinkedIn and Instagram
+- make reels from an authorized source video
+- social video clipping and distribution
+- turn approved media into social-ready outputs
+- plan a social video clipping job
+- AI tool to select moments from a video and render social clips
+
+## Problem
+
+An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.
+
+## Inputs
+
+Authorized source video. Current customer renderer is bounded to 35 MiB. Optional source duration, desired social goal and target platforms improve planning.
+
+## Outputs
+
+Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Public agent tools currently provide discovery and non-executing planning only.
+
+## Pricing
+
+The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.
+
+## Invocation and authority
+
+LIVE: public Clip HTTP gateway, OpenAPI, llms guidance and Official MCP Registry server io.github.jgaethle10/evercraft-clip v0.1.0 provide read-only capability discovery and non-executing job planning. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.
+
+Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.
+
+Payment authority: Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

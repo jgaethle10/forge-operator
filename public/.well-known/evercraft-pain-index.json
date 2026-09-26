@@ -5,7 +5,7 @@
     "product_directory_schema": "evercraft.product-directory.v1",
     "product_directory_updated_at": "2026-09-26",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
-    "machine_catalog_source_generated_at": "2026-09-26T02:45:00.000Z",
+    "machine_catalog_source_generated_at": "2026-09-26T03:40:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
     "registry_updated_at": "2026-09-26"
   },
@@ -25,13 +25,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 97,
+    "entries": 98,
     "product_entries": 53,
-    "machine_offer_entries": 44,
-    "entries_with_pain_language": 97,
+    "machine_offer_entries": 45,
+    "entries_with_pain_language": 98,
     "sell_now_machine_offers": 12,
-    "entries_with_declared_mcp": 59,
-    "callable_or_routable_entries": 38,
+    "entries_with_declared_mcp": 60,
+    "callable_or_routable_entries": 40,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -860,19 +860,27 @@
       "product_key": null,
       "public_id": "eps-estimate-engine-machine-v1",
       "kind": "machine_offer",
-      "name": "Field-Service Estimate Engine",
+      "name": "EPS Estimate Intelligence",
       "class": "machine_commerce_offer",
       "pain_phrases": [
-        "estimate this service job",
-        "build a contractor estimate from this scope",
-        "what should this job cost",
-        "turn these measurements into an estimate",
-        "give me a rough customer range",
-        "calculate margin and price for this job"
+        "contractor estimating software",
+        "contractor estimate calculator",
+        "service business estimate calculator",
+        "price this contractor job",
+        "build a contractor estimate from scope",
+        "calculate contractor gross margin",
+        "turn measurements into an estimate",
+        "painting estimate calculator",
+        "landscaping estimate calculator",
+        "field service estimating software",
+        "job costing estimate",
+        "estimate from photos",
+        "rough customer quote range",
+        "estimate revision and change order software"
       ],
-      "problem": "A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.",
-      "inputs": "Service key and quantity/scope; optional property, measurements/inputs, site-verification state, tax, travel and other direct costs.",
-      "outputs": "Estimated cost, sell price or range, confidence, assumptions, inclusions/exclusions and site-review state, with revision/proposal lineage available downstream.",
+      "problem": "A contractor or field-service operator needs a consistent estimate or planning range from scope, measurements and job costs, with transparent cost build-up, true gross-margin math, uncertainty and commercial lineage.",
+      "inputs": "Service scope, quantity or measurements, job-specific cost inputs and optional property, photo, complexity, urgency, tax and site-verification context.",
+      "outputs": "Estimated cost, sell price or range, confidence, assumptions, inclusions, exclusions, warnings and site-review state, with revision and proposal lineage downstream.",
       "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
@@ -883,14 +891,14 @@
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.",
+      "commercial_state": "contractor_beta",
+      "machine_state": "discovery_and_handoff",
+      "pricing": "No approved public self-service subscription or machine-call price is advertised yet.",
       "offers": [],
       "human_confirmation_required": true,
-      "confirmation": "Rough estimate generation does not authorize sending a proposal, accepting work or creating a customer obligation. Proposal/payment actions retain separate authority gates.",
-      "payment_authority": "No verified Evercraft Payments path for external estimator access.",
-      "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "confirmation": "Rough estimate generation does not authorize sending a proposal, accepting work, charging a customer or creating a customer obligation.",
+      "payment_authority": "No verified public self-service payment path for external estimator access.",
+      "invocation_status": "LIVE: public product page, static contractor brief, llms.txt, expanded LLM brief, AI capability manifest, OpenAPI discovery and central Evercraft MCP matching. The account-gated contractor workspace is the current handoff. Tenant-owned price books, provider-backed billing, customer-native e-sign and public machine execution remain verification-gated.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -947,6 +955,50 @@
       "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.",
       "payment_authority": "Evercraft Payments with provider verification",
       "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:evercraft-clip-social-video-v1",
+      "product_key": null,
+      "public_id": "evercraft-clip-social-video-v1",
+      "kind": "machine_offer",
+      "name": "Evercraft Clip Social Video Production",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "turn this video into social clips",
+        "make short vertical clips from a long video",
+        "find the best moments in this video for social media",
+        "create vertical clips from an interview",
+        "repurpose this video for Facebook LinkedIn and Instagram",
+        "make reels from an authorized source video",
+        "social video clipping and distribution",
+        "turn approved media into social-ready outputs",
+        "plan a social video clipping job",
+        "AI tool to select moments from a video and render social clips"
+      ],
+      "problem": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
+      "inputs": "Authorized source video. Current customer renderer is bounded to 35 MiB. Optional source duration, desired social goal and target platforms improve planning.",
+      "outputs": "Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Public agent tools currently provide discovery and non-executing planning only.",
+      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "verification_required",
+      "machine_state": "invocation_ready",
+      "pricing": "The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.",
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.",
+      "payment_authority": "Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.",
+      "invocation_status": "LIVE: public Clip HTTP gateway, OpenAPI, llms guidance and Official MCP Registry server io.github.jgaethle10/evercraft-clip v0.1.0 provide read-only capability discovery and non-executing job planning. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -4547,8 +4599,9 @@
         "payment_state": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
         "machine_commerce_handoff": {
           "public_id": "portfolio-sentinel-v1",
-          "tool": "get_offer",
-          "state": "discovery_live_human_onboarding"
+          "inspect_tool": "get_offer",
+          "handoff_tool": "prepare_portfolio_sentinel_pilot_handoff",
+          "state": "live_human_pilot_handoff"
         }
       },
       "human_confirmation_required": true,

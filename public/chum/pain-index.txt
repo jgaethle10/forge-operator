@@ -2,9 +2,9 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 97
+Entries: 98
 Product entries: 53
-Machine-offer entries: 44
+Machine-offer entries: 45
 Sell-now machine offers: 12
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
@@ -359,24 +359,32 @@ Outputs: Research summary, capital-readiness notes, 3-6 public-source provider/p
 Confirmation boundary: The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.
 Invocation status: LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.
 
-## Field-Service Estimate Engine
+## EPS Estimate Intelligence
 Capability ID: offer:eps-estimate-engine-machine-v1
-Commercial state: verification_required
-Machine state: discovery_only
+Commercial state: contractor_beta
+Machine state: discovery_and_handoff
 Public URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Pricing: No approved external machine price/payment path was found. Internal service-template prices/cost assumptions are estimation inputs, not the price of this machine capability.
+Pricing: No approved public self-service subscription or machine-call price is advertised yet.
 Use when the user means:
-- estimate this service job
-- build a contractor estimate from this scope
-- what should this job cost
-- turn these measurements into an estimate
-- give me a rough customer range
-- calculate margin and price for this job
-Problem: A contractor or service operator needs a consistent estimate/range from scope and measurements, with transparent cost build-up, margin assumptions and uncertainty rather than a hand-waved price.
-Outputs: Estimated cost, sell price or range, confidence, assumptions, inclusions/exclusions and site-review state, with revision/proposal lineage available downstream.
-Confirmation boundary: Rough estimate generation does not authorize sending a proposal, accepting work or creating a customer obligation. Proposal/payment actions retain separate authority gates.
-Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+- contractor estimating software
+- contractor estimate calculator
+- service business estimate calculator
+- price this contractor job
+- build a contractor estimate from scope
+- calculate contractor gross margin
+- turn measurements into an estimate
+- painting estimate calculator
+- landscaping estimate calculator
+- field service estimating software
+- job costing estimate
+- estimate from photos
+- rough customer quote range
+- estimate revision and change order software
+Problem: A contractor or field-service operator needs a consistent estimate or planning range from scope, measurements and job costs, with transparent cost build-up, true gross-margin math, uncertainty and commercial lineage.
+Outputs: Estimated cost, sell price or range, confidence, assumptions, inclusions, exclusions, warnings and site-review state, with revision and proposal lineage downstream.
+Confirmation boundary: Rough estimate generation does not authorize sending a proposal, accepting work, charging a customer or creating a customer obligation.
+Invocation status: LIVE: public product page, static contractor brief, llms.txt, expanded LLM brief, AI capability manifest, OpenAPI discovery and central Evercraft MCP matching. The account-gated contractor workspace is the current handoff. Tenant-owned price books, provider-backed billing, customer-native e-sign and public machine execution remain verification-gated.
 
 ## EventWave Event / Venue Promotion
 Capability ID: offer:eventwave-paid-promotion-v1
@@ -401,6 +409,29 @@ Problem: An organizer or venue wants a bounded paid EventWave placement with ver
 Outputs: Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.
 Confirmation boundary: Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
 Invocation status: LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.
+
+## Evercraft Clip Social Video Production
+Capability ID: offer:evercraft-clip-social-video-v1
+Commercial state: verification_required
+Machine state: invocation_ready
+Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.
+Use when the user means:
+- turn this video into social clips
+- make short vertical clips from a long video
+- find the best moments in this video for social media
+- create vertical clips from an interview
+- repurpose this video for Facebook LinkedIn and Instagram
+- make reels from an authorized source video
+- social video clipping and distribution
+- turn approved media into social-ready outputs
+- plan a social video clipping job
+- AI tool to select moments from a video and render social clips
+Problem: An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.
+Outputs: Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Public agent tools currently provide discovery and non-executing planning only.
+Confirmation boundary: Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.
+Invocation status: LIVE: public Clip HTTP gateway, OpenAPI, llms guidance and Official MCP Registry server io.github.jgaethle10/evercraft-clip v0.1.0 provide read-only capability discovery and non-executing job planning. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.
 
 ## Evercraft Network Resilience + Founding Membership
 Capability ID: offer:evercraft-network-resilience-membership-v1

@@ -38,7 +38,7 @@ public discovery and commercial-pilot handoff; customer monitoring is restricted
 - Status: commercial_pilot
 - Offer: Systemia Portfolio Sentinel Commercial Pilot · Custom quote · offer_key: portfolio_sentinel_commercial_pilot
 - Pricing: Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.
-- Machine Commerce human handoff state: discovery_live_human_onboarding.
+- Machine Commerce human handoff state: live_human_pilot_handoff.
 - Payment state: No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.
 
 ## Boundaries

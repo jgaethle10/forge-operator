@@ -24,8 +24,10 @@
   <url><loc>/chum/intents/community-health-evidence-brief-v1/</loc></url>
   <url><loc>/chum/intents/condition-desk-field-ops-v1/</loc></url>
   <url><loc>/chum/intents/globalstat-country-intelligence-machine-v1/</loc></url>
+  <url><loc>/chum/intents/eps-estimate-engine-machine-v1/</loc></url>
   <url><loc>/chum/intents/eventwave-paid-promotion-v1/</loc></url>
   <url><loc>/chum/intents/capability-concierge-v1/</loc></url>
+  <url><loc>/chum/intents/evercraft-clip-social-video-v1/</loc></url>
   <url><loc>/chum/intents/deck-capital-fit-sprint-machine-v1/</loc></url>
   <url><loc>/chum/intents/foundry-app-escape-audit-v1/</loc></url>
   <url><loc>/chum/intents/ibmi-rescue-v1/</loc></url>
@@ -36,7 +38,6 @@
   <url><loc>/chum/intents/talent-proof-portal-v1/</loc></url>
   <url><loc>/chum/intents/towi-evidence-research-machine-v1/</loc></url>
   <url><loc>/chum/intents/faie-signal-brief-v1/</loc></url>
-  <url><loc>/chum/intents/eps-estimate-engine-machine-v1/</loc></url>
   <url><loc>/chum/intents/findmypart-paid-hunt-v1/</loc></url>
   <url><loc>/chum/intents/forensiscope-evidence-review-v1/</loc></url>
   <url><loc>/chum/intents/freight-load-exception-intelligence-machine-v1/</loc></url>
