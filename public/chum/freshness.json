@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:22:32.339Z",
+  "updated_at": "2026-09-26T03:22:54.562Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,54 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-26T03:22:32.339Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T03:22:54.562Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T03:22:54.562Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T03:22:32.339Z",
+      "last_changed": "2026-09-26T03:22:54.562Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T03:22:54.562Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-26T03:22:32.339Z",
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T03:22:54.562Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T03:22:54.562Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T03:22:54.562Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T03:22:54.562Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-09-26T03:22:32.339Z",
       "priority": 80
     },
@@ -1501,24 +1529,6 @@
     {
       "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
       "url": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
-      "url": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "url": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
-      "url": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
       "last_changed": "2026-09-26T03:20:55.613Z",
       "priority": 100
     }
