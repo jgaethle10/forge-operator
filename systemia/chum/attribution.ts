@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-export const PUBLIC_ATTRIBUTION_STAGES = ['landing', 'checkout_started'] as const;
+export const PUBLIC_ATTRIBUTION_STAGES = ['landing', 'offer_view', 'continue_clicked', 'checkout_started'] as const;
 export const TRUSTED_ATTRIBUTION_STAGES = ['payment_verified', 'fulfilled'] as const;
 export type AttributionStage =
   | (typeof PUBLIC_ATTRIBUTION_STAGES)[number]
@@ -203,6 +203,8 @@ export function summarizeAttribution(events: Array<ReturnType<typeof createAttri
   const summary = {
     events: events.length,
     landings: 0,
+    offer_views: 0,
+    continue_clicks: 0,
     checkout_starts: 0,
     verified_payments: 0,
     fulfilled: 0,
@@ -219,6 +221,8 @@ export function summarizeAttribution(events: Array<ReturnType<typeof createAttri
 
   for (const event of events) {
     if (event.stage === 'landing') summary.landings += 1;
+    if (event.stage === 'offer_view') summary.offer_views += 1;
+    if (event.stage === 'continue_clicked') summary.continue_clicks += 1;
     if (event.stage === 'checkout_started') summary.checkout_starts += 1;
     if (event.stage === 'payment_verified') summary.verified_payments += 1;
     if (event.stage === 'fulfilled') summary.fulfilled += 1;

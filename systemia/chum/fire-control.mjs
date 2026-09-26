@@ -117,6 +117,7 @@ function firstBrokenStage(stages, commercialState) {
   if (!stages.crawler_observed) return 'crawler_observed';
   if (!stages.provider_pickup) return 'provider_pickup';
   if (commercialState === 'sell_now' && !stages.money_path_readable) return 'money_path_readable';
+  if (commercialState === 'sell_now' && !stages.acquisition_measurement_ready) return 'acquisition_measurement_ready';
   if (commercialState === 'sell_now' && !stages.payment_measurement_ready) return 'payment_measurement_ready';
   if (commercialState === 'sell_now' && !stages.provider_verified_payment) return 'provider_verified_payment';
   return null;
@@ -153,10 +154,17 @@ function repairFor({ broken, providerRows, radarRows, commerce, commercialState,
       owner: 'MONEY_RADAR'
     };
   }
+  if (broken === 'acquisition_measurement_ready') {
+    return {
+      priority: 'P0',
+      action: 'restore_owned_acquisition_funnel_feed',
+      owner: 'MONEY_RADAR'
+    };
+  }
   if (broken === 'payment_measurement_ready') {
     return {
       priority: 'P0',
-      action: 'restore_authoritative_payment_receipt_feed',
+      action: 'connect_authoritative_payment_receipt_feed_without_treating_acquisition_as_revenue',
       owner: 'MONEY_RADAR'
     };
   }
@@ -165,8 +173,14 @@ function repairFor({ broken, providerRows, radarRows, commerce, commercialState,
     if (funnel === 'checkout_started_no_verified_payment') {
       return { priority: 'P1', action: 'inspect_checkout_to_payment_dropoff_with_authoritative_receipts', owner: 'MONEY_RADAR' };
     }
-    if (funnel === 'landing_no_checkout') {
-      return { priority: 'P1', action: 'inspect_landing_to_checkout_dropoff', owner: 'MONEY_RADAR' };
+    if (funnel === 'continue_clicked_no_checkout') {
+      return { priority: 'P1', action: 'inspect_buyer_handoff_and_checkout_friction', owner: 'MONEY_RADAR' };
+    }
+    if (funnel === 'offer_view_no_continue') {
+      return { priority: 'P1', action: 'repair_offer_trust_value_or_primary_cta', owner: 'MONEY_RADAR+PRODUCT' };
+    }
+    if (funnel === 'landing_no_offer_view') {
+      return { priority: 'P1', action: 'inspect_discovery_to_offer_frontage_dropoff', owner: 'CHUM+MONEY_RADAR' };
     }
     return {
       priority: commercialState === 'sell_now' ? 'P2' : 'P3',
@@ -224,7 +238,8 @@ export function buildFireControl({
       crawler_observed: radarRows.some((row) => Boolean(row.last_observed_crawler_fetch)),
       provider_pickup: providerRows.some((row) => row.status === 'completed' && row.evaluation?.pickup_observed === true),
       money_path_readable: offer.commercial_state !== 'sell_now' ? true : commerceRow?.valid === true,
-      payment_measurement_ready: offer.commercial_state !== 'sell_now' ? true : money?.measurement_state === 'measured',
+      acquisition_measurement_ready: offer.commercial_state !== 'sell_now' ? true : money?.acquisition_measurement_state === 'measured',
+      payment_measurement_ready: offer.commercial_state !== 'sell_now' ? true : money?.payment_measurement_state === 'measured',
       provider_verified_payment: paidEvents.length > 0,
     };
 
@@ -265,7 +280,11 @@ export function buildFireControl({
         commerce_canary_present: Boolean(commerceRow),
         commerce_canary_valid: commerceRow?.valid === true,
         money_radar_state: money?.measurement_state || 'unknown',
+        acquisition_measurement_state: money?.acquisition_measurement_state || 'unknown',
+        payment_measurement_state: money?.payment_measurement_state || 'unknown',
         attributed_landings: moneyRow?.landings || 0,
+        attributed_offer_views: moneyRow?.offer_views || 0,
+        attributed_continue_clicks: moneyRow?.continue_clicks || 0,
         attributed_checkout_starts: moneyRow?.checkout_starts || 0,
         money_funnel_state: moneyRow?.funnel_state || 'no_attributed_traffic',
         revenue_event_count: offerEvents.length,
@@ -317,6 +336,8 @@ export function buildFireControl({
       commerce_canary_present: commerce?.schema === 'evercraft.chum.commerce-canary.v1',
       money_radar_present: money?.schema === 'evercraft.chum.money-radar.v1',
       money_radar_measurement_state: money?.measurement_state || 'unknown',
+      acquisition_measurement_state: money?.acquisition_measurement_state || 'unknown',
+      payment_measurement_state: money?.payment_measurement_state || 'unknown',
       revenue_events: events.length,
       provider_verified_payment_events: verifiedPayments.length,
     },
@@ -335,6 +356,7 @@ export function buildFireControl({
         crawler_observed: stageCount(sellNowRows, 'crawler_observed'),
         provider_pickup: stageCount(sellNowRows, 'provider_pickup'),
         money_path_readable: stageCount(sellNowRows, 'money_path_readable'),
+        acquisition_measurement_ready: stageCount(sellNowRows, 'acquisition_measurement_ready'),
         payment_measurement_ready: stageCount(sellNowRows, 'payment_measurement_ready'),
         provider_verified_payment: stageCount(sellNowRows, 'provider_verified_payment'),
       },
@@ -355,6 +377,7 @@ export function buildFireControl({
     `Sell-now crawler observed: ${receipt.funnel.sell_now.crawler_observed}`,
     `Sell-now provider pickup: ${receipt.funnel.sell_now.provider_pickup}`,
     `Sell-now healthy money paths: ${receipt.funnel.sell_now.money_path_readable}`,
+    `Sell-now acquisition measurement ready: ${receipt.funnel.sell_now.acquisition_measurement_ready}`,
     `Sell-now payment measurement ready: ${receipt.funnel.sell_now.payment_measurement_ready}`,
     `Sell-now provider-verified payments: ${receipt.funnel.sell_now.provider_verified_payment}`,
     '',

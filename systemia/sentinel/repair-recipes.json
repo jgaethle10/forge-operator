@@ -200,6 +200,55 @@
       ],
       "rollback": "Restore the last known-green commercial crawl frontage if discovery runtime behavior regresses.",
       "learned_from": "Commercial discovery expansion Sep 26 2026"
+    },
+    {
+      "recipe_id": "human-buyer-frontage-regression",
+      "match": {
+        "invariant_ids": [
+          "human-buyer-frontage-stays-clean"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "systemia/chum/start-corridor.mjs",
+          "tests/chum-start-corridor.test.mjs"
+        ],
+        "instructions": "Restore verified clean product buyer destinations before exposing Machine Commerce plumbing. Preserve tracked Forge handoff when a verified CHUM public origin exists and retain Machine Commerce only as last fallback."
+      },
+      "verification": [
+        "npm run test:chum-start-corridor",
+        "npm run test:chum-revenue",
+        "customer gauntlet remains open"
+      ],
+      "rollback": "Restore the last known-green buyer destination map if a product-domain destination fails live verification.",
+      "learned_from": "Zero-sale conversion audit Sep 26 2026"
+    },
+    {
+      "recipe_id": "money-radar-funnel-trust-regression",
+      "match": {
+        "invariant_ids": [
+          "money-radar-separates-acquisition-from-payment-proof"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "systemia/chum/money-radar.mjs",
+          "systemia/chum/fire-control.mjs",
+          "systemia/chum/attribution.ts"
+        ],
+        "instructions": "Keep public acquisition events usable for landing/offer/continue/checkout measurement while prohibiting that public feed from asserting payment or fulfillment. Payment remains a separate trusted receipt lane."
+      },
+      "verification": [
+        "npm run test:chum-money-radar",
+        "npm run test:chum-fire-control",
+        "CHUM watershed reports acquisition and payment measurement states separately"
+      ],
+      "rollback": "Revert any change that allows public acquisition telemetry to create revenue events.",
+      "learned_from": "Zero-sale funnel blindness Sep 26 2026"
     }
   ]
 }

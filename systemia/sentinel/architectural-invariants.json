@@ -125,6 +125,35 @@
         "segmentedSitemapIndex: '/chum/sitemaps/index.xml'"
       ],
       "repair_recipe_id": "commercial-discovery-frontage-regression"
+    },
+    {
+      "invariant_id": "human-buyer-frontage-stays-clean",
+      "severity": "high",
+      "type": "file_contract",
+      "file": "systemia/chum/start-corridor.mjs",
+      "required_literals": [
+        "DIRECT_HUMAN_BUYER_DESTINATIONS",
+        "'rivet-site-underwriting-v1': 'https://rivet.base44.app/'",
+        "campaign', 'buyer-frontage'",
+        "'direct_human_buyer_destination'",
+        "return machineReviewUrl(offer.public_id, gateway);"
+      ],
+      "repair_recipe_id": "human-buyer-frontage-regression"
+    },
+    {
+      "invariant_id": "money-radar-separates-acquisition-from-payment-proof",
+      "severity": "critical",
+      "type": "file_contract",
+      "file": "systemia/chum/money-radar.mjs",
+      "required_literals": [
+        "DEFAULT_PUBLIC_ACQUISITION_EXPORT_URL",
+        "public_source_cannot_assert_trusted_stage",
+        "acquisition_measurement_state",
+        "payment_measurement_state",
+        "public_acquisition_source_cannot_assert_payment",
+        "measured_acquisition_only"
+      ],
+      "repair_recipe_id": "money-radar-funnel-trust-regression"
     }
   ]
 }
