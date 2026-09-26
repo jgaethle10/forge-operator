@@ -294,6 +294,8 @@ for (const product of directory.products || []) {
         '@type': 'WebPage',
         name: pageTitle(product),
         description: pageDescription(product),
+        url: `/chum/products/${key}/`,
+        isPartOf: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft-discovery-site' },
         about: { '@id': `${canonicalUrl}#evercraft-capability` }
       }
     ]
@@ -306,7 +308,11 @@ for (const product of directory.products || []) {
     `<title>${escapeHtml(pageTitle(product))}</title>`,
     `<meta name="description" content="${escapeHtml(pageDescription(product))}">`,
     '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+    `<link rel="canonical" href="/chum/products/${key}/">`,
     '<link rel="alternate" type="text/plain" href="./llms.txt">',
+    '<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Evercraft Product Discovery RSS">',
+    '<link rel="alternate" type="application/feed+json" href="/feed.json" title="Evercraft Product Discovery JSON Feed">',
+    '<link rel="service-desc" type="application/json" href="/.well-known/agent-card.json" title="Evercraft A2A Agent Card">',
     '<link rel="alternate" type="application/json" href="./ai-discovery.json">',
     `<script type="application/ld+json">${JSON.stringify(productPageJsonLd).replace(/</g, '\\u003c')}</script>`,
     '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
