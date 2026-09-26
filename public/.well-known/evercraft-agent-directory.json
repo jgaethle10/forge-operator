@@ -1898,7 +1898,21 @@
           "public_id": "portfolio-sentinel-v1",
           "inspect_tool": "get_offer",
           "handoff_tool": "prepare_portfolio_sentinel_pilot_handoff",
-          "state": "live_human_pilot_handoff"
+          "request_tool": "submit_portfolio_sentinel_pilot_request",
+          "state": "live_human_confirmed_pilot_request"
+        },
+        "pilot_request": {
+          "state": "live_verified",
+          "required_human_confirmation": true,
+          "stored_scope": "contact details plus rough portfolio counts and problem statement only",
+          "explicitly_not_created": [
+            "repository access",
+            "monitoring execution",
+            "checkout",
+            "payment obligation",
+            "production authority",
+            "external communications"
+          ]
         }
       },
       "developer_surfaces": null
