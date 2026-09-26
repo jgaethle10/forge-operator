@@ -7,6 +7,7 @@ const PROMOTABLE_SLUGS=new Set([
   'ibmi-rescue',
   'foundry-app-escape',
   'site-survive',
+  'systemia-remote-ops',
 ]);
 
 function arg(name,fallback=null){
@@ -158,8 +159,8 @@ export function promoteSpecialistSpecs(specs,receipt){
     });
   }
 
-  if(promoted.length!==3){
-    throw new Error('expected_three_promotable_specialists');
+  if(promoted.length!==4){
+    throw new Error('expected_four_promotable_specialists');
   }
 
   return {
