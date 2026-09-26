@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { extractCandidateLinks, newCandidateLinks } from './legacy-rescue-link-discovery.mjs';
+import { classifyIBMiDirectBuyerEvidence } from './ibmi-direct-buyer-signal.mjs';
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -78,6 +79,7 @@ export async function scanLegacyRescuePublicSources({
   const nowMs = Date.parse(observedAt);
   const nextState = { schema: 'evercraft.legacy-rescue-public-source-state.v1', updated_at: observedAt, sources: {} };
   const signals = [];
+  const buyerSignals = [];
   const receipts = [];
 
   for (const raw of sources) {
@@ -136,6 +138,25 @@ export async function scanLegacyRescuePublicSources({
     const linkBaselineMissing = source.discover_links === true && !Array.isArray(previous?.known_links);
     const newLinks = source.discover_links === true ? newCandidateLinks(previous?.known_links || [], discoveredLinks) : [];
 
+    const buyerSignal = source.buyer_signal === true
+      ? classifyIBMiDirectBuyerEvidence({
+          company: source.company || source.name || source.key,
+          url: source.url,
+          text: body,
+          source_type: source.source_type || 'public',
+          observed_at: observedAt,
+        })
+      : null;
+
+    if (buyerSignal && buyerSignal.outreach_state !== 'hold') {
+      buyerSignals.push({
+        ...buyerSignal,
+        source_key: source.key,
+        source_name: source.name || source.key,
+        source_ref: source.url,
+      });
+    }
+
     nextState.sources[source.key] = {
       url: source.url,
       fingerprint,
@@ -145,6 +166,7 @@ export async function scanLegacyRescuePublicSources({
       last_http_status: Number(response.status || 200),
       last_error: null,
       known_links: discoveredLinks,
+      buyer_signal: buyerSignal,
     };
 
     if ((firstSeen && source.emit_on_first_seen === true) || (changed && source.emit_body_change_signal !== false)) {
@@ -176,6 +198,9 @@ export async function scanLegacyRescuePublicSources({
       new_links: newLinks.length,
       link_baseline_missing: linkBaselineMissing,
       emitted_link_signals: linksToEmit.length,
+      buyer_signal_state: buyerSignal?.outreach_state || null,
+      buyer_signal_score: buyerSignal?.score ?? null,
+      buyer_observed_release: buyerSignal?.observed_release || null,
     });
   }
 
@@ -184,6 +209,7 @@ export async function scanLegacyRescuePublicSources({
     workflow_key: 'legacy-rescue-opportunity-watch',
     observed_at: observedAt,
     signals,
+    buyer_signals: buyerSignals,
     state: nextState,
     receipts,
   };
@@ -210,6 +236,7 @@ async function main() {
   const stateFile = value('--state', 'artifacts/legacy-rescue-watch/source-state.json');
   const signalsFile = value('--signals', 'artifacts/legacy-rescue-watch/signals.json');
   const receiptFile = value('--receipt', 'artifacts/legacy-rescue-watch/public-scan.json');
+  const buyerFile = value('--buyers', 'artifacts/legacy-rescue-watch/buyer-signals.json');
 
   const config = readJson(configFile, null);
   if (!config || !Array.isArray(config.sources)) throw new Error('public source config with sources[] is required');
@@ -222,13 +249,20 @@ async function main() {
 
   atomicJson(stateFile, result.state);
   atomicJson(signalsFile, { schema: 'evercraft.legacy-rescue-signal-feed.v1', generated_at: result.observed_at, signals: result.signals });
+  atomicJson(buyerFile, {
+    schema: 'evercraft.ibmi.direct-buyer-feed.v1',
+    generated_at: result.observed_at,
+    buyers: result.buyer_signals,
+  });
   atomicJson(receiptFile, result);
 
   console.log(JSON.stringify({
     ok: true,
     sources: result.receipts.length,
     changed: result.signals.length,
+    buyer_signals: result.buyer_signals.length,
     signals_file: signalsFile,
+    buyer_file: buyerFile,
     state_file: stateFile,
   }));
 }
