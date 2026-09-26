@@ -133,6 +133,7 @@ for (const product of directory.products || []) {
   if (!key) continue;
   const registry = catalogByKey.get(key) || null;
   const conf = conformanceByKey.get(key) || null;
+  const isRivetProduct = key === 'aliev' && String(product.name || '').toUpperCase() === 'RIVET';
   const base = `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/${key}`;
   const dir = path.join(root, key);
   fs.mkdirSync(dir, { recursive: true });
@@ -306,7 +307,9 @@ for (const product of directory.products || []) {
     '<link rel="alternate" type="text/plain" href="./llms.txt">',
     '<link rel="alternate" type="application/json" href="./ai-discovery.json">',
     `<script type="application/ld+json">${JSON.stringify(productPageJsonLd).replace(/</g, '\\u003c')}</script>`,
-    '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
+    isRivetProduct
+      ? '<link rel="stylesheet" href="/rivet/brand.css"><link rel="alternate" type="application/json" href="/rivet/brand.json">'
+      : '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
     '</head><body><main>',
     '<p class="muted">EVERCRAFT · PUBLIC CAPABILITY</p>',
     `<h1>${escapeHtml(product.name)}</h1>`,
