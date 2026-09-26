@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "site-survive-rapid-audit-v1",
+  "name": "Site-Survive Rapid Audit",
+  "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+  "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
+  "commercial_state": "sell_now",
+  "machine_state": "human_handoff_ready",
+  "canonical_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "intent_terms": [
+    "business outage plan",
+    "internet outage continuity",
+    "site resilience audit",
+    "offline operations plan"
+  ],
+  "discovered_user_language": [
+    "business outage plan",
+    "internet outage continuity",
+    "site resilience audit",
+    "offline operations plan"
+  ],
+  "answer_door_count": 4,
+  "answer_doors": [
+    {
+      "answer_id": "intent:bd1f9b74ee",
+      "phrase": "business outage plan",
+      "html": "/chum/answers/doors/business-outage-plan-bd1f9b74ee/",
+      "json": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json"
+    },
+    {
+      "answer_id": "intent:264505af3f",
+      "phrase": "internet outage continuity",
+      "html": "/chum/answers/doors/internet-outage-continuity-264505af3f/",
+      "json": "/chum/answers/doors/internet-outage-continuity-264505af3f.json"
+    },
+    {
+      "answer_id": "intent:e683e6994b",
+      "phrase": "offline operations plan",
+      "html": "/chum/answers/doors/offline-operations-plan-e683e6994b/",
+      "json": "/chum/answers/doors/offline-operations-plan-e683e6994b.json"
+    },
+    {
+      "answer_id": "intent:64b6ec62c2",
+      "phrase": "site resilience audit",
+      "html": "/chum/answers/doors/site-resilience-audit-64b6ec62c2/",
+      "json": "/chum/answers/doors/site-resilience-audit-64b6ec62c2.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/site-survive-rapid-audit-v1/",
+    "intent": "/chum/intents/site-survive-rapid-audit-v1/",
+    "capability": "/chum/capabilities/site-survive-rapid-audit-v1/",
+    "capability_llms": "/chum/capabilities/site-survive-rapid-audit-v1/llms.txt",
+    "capability_json": "/chum/capabilities/site-survive-rapid-audit-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

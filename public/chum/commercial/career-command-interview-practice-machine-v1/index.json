@@ -1,0 +1,89 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "career-command-interview-practice-machine-v1",
+  "name": "Career Command Interview Practice + Interview Sprint",
+  "problem": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
+  "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "canonical_offer_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1",
+  "intent_terms": [
+    "help me prepare for this interview",
+    "mock interview me for this job",
+    "practice interview questions",
+    "score my interview answer",
+    "I have an interview tomorrow",
+    "prepare me for a recruiter screen",
+    "behavioral interview practice"
+  ],
+  "discovered_user_language": [
+    "help me prepare for this interview",
+    "mock interview me for this job",
+    "practice interview questions",
+    "score my interview answer",
+    "I have an interview tomorrow",
+    "prepare me for a recruiter screen",
+    "behavioral interview practice"
+  ],
+  "answer_door_count": 7,
+  "answer_doors": [
+    {
+      "answer_id": "intent:8dfc51b114",
+      "phrase": "behavioral interview practice",
+      "html": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114/",
+      "json": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json"
+    },
+    {
+      "answer_id": "intent:770b1355ac",
+      "phrase": "help me prepare for this interview",
+      "html": "/chum/answers/doors/help-me-prepare-for-this-interview-770b1355ac/",
+      "json": "/chum/answers/doors/help-me-prepare-for-this-interview-770b1355ac.json"
+    },
+    {
+      "answer_id": "intent:0fe9809d38",
+      "phrase": "I have an interview tomorrow",
+      "html": "/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38/",
+      "json": "/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json"
+    },
+    {
+      "answer_id": "intent:4e6bf5b695",
+      "phrase": "mock interview me for this job",
+      "html": "/chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695/",
+      "json": "/chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695.json"
+    },
+    {
+      "answer_id": "intent:9e971de76a",
+      "phrase": "practice interview questions",
+      "html": "/chum/answers/doors/practice-interview-questions-9e971de76a/",
+      "json": "/chum/answers/doors/practice-interview-questions-9e971de76a.json"
+    },
+    {
+      "answer_id": "intent:6cd9e7277e",
+      "phrase": "prepare me for a recruiter screen",
+      "html": "/chum/answers/doors/prepare-me-for-a-recruiter-screen-6cd9e7277e/",
+      "json": "/chum/answers/doors/prepare-me-for-a-recruiter-screen-6cd9e7277e.json"
+    },
+    {
+      "answer_id": "intent:5e08f2c4f0",
+      "phrase": "score my interview answer",
+      "html": "/chum/answers/doors/score-my-interview-answer-5e08f2c4f0/",
+      "json": "/chum/answers/doors/score-my-interview-answer-5e08f2c4f0.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/career-command-interview-practice-machine-v1/",
+    "intent": "/chum/intents/career-command-interview-practice-machine-v1/",
+    "capability": "/chum/capabilities/career-command-interview-practice-machine-v1/",
+    "capability_llms": "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
+    "capability_json": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

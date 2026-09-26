@@ -1,0 +1,73 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "faie-signal-brief-v1",
+  "name": "FAIE Evidence-First Signal Brief",
+  "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+  "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "canonical_offer_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1",
+  "intent_terms": [
+    "research this land or water question",
+    "investigate this agriculture signal",
+    "give me an evidence brief on this region",
+    "validate this environmental signal",
+    "do a resilience investigation"
+  ],
+  "discovered_user_language": [
+    "research this land or water question",
+    "investigate this agriculture signal",
+    "give me an evidence brief on this region",
+    "validate this environmental signal",
+    "do a resilience investigation"
+  ],
+  "answer_door_count": 5,
+  "answer_doors": [
+    {
+      "answer_id": "intent:227f8bd16b",
+      "phrase": "do a resilience investigation",
+      "html": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
+      "json": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json"
+    },
+    {
+      "answer_id": "intent:6033eecd70",
+      "phrase": "give me an evidence brief on this region",
+      "html": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70/",
+      "json": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json"
+    },
+    {
+      "answer_id": "intent:76deb8c556",
+      "phrase": "investigate this agriculture signal",
+      "html": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556/",
+      "json": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json"
+    },
+    {
+      "answer_id": "intent:db58edbbad",
+      "phrase": "research this land or water question",
+      "html": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad/",
+      "json": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json"
+    },
+    {
+      "answer_id": "intent:bffe897b1e",
+      "phrase": "validate this environmental signal",
+      "html": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e/",
+      "json": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/faie-signal-brief-v1/",
+    "intent": "/chum/intents/faie-signal-brief-v1/",
+    "capability": "/chum/capabilities/faie-signal-brief-v1/",
+    "capability_llms": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
+    "capability_json": "/chum/capabilities/faie-signal-brief-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

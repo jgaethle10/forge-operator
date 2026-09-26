@@ -1,0 +1,105 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "aliev-site-opportunity-snapshot-v1",
+  "name": "AliEV EV Site Opportunity Intelligence",
+  "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
+  "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready_human_confirmation",
+  "canonical_offer_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1",
+  "intent_terms": [
+    "is this site good for EV charging",
+    "EV charger site analysis",
+    "EV charging feasibility by address",
+    "what EV chargers are near this property",
+    "EV charger competition around this address",
+    "EV charging opportunity report",
+    "should I install EV chargers at this property",
+    "find EV charging opportunities in this market",
+    "commercial EV site report"
+  ],
+  "discovered_user_language": [
+    "is this site good for EV charging",
+    "EV charger site analysis",
+    "EV charging feasibility by address",
+    "what EV chargers are near this property",
+    "EV charger competition around this address",
+    "EV charging opportunity report",
+    "should I install EV chargers at this property",
+    "find EV charging opportunities in this market",
+    "commercial EV site report"
+  ],
+  "answer_door_count": 9,
+  "answer_doors": [
+    {
+      "answer_id": "intent:f593e514df",
+      "phrase": "commercial EV site report",
+      "html": "/chum/answers/doors/commercial-ev-site-report-f593e514df/",
+      "json": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json"
+    },
+    {
+      "answer_id": "intent:33f3c50a03",
+      "phrase": "EV charger competition around this address",
+      "html": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03/",
+      "json": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json"
+    },
+    {
+      "answer_id": "intent:fc320bee89",
+      "phrase": "EV charger site analysis",
+      "html": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89/",
+      "json": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json"
+    },
+    {
+      "answer_id": "intent:734eac6eee",
+      "phrase": "EV charging feasibility by address",
+      "html": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee/",
+      "json": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json"
+    },
+    {
+      "answer_id": "intent:43ed1d1e31",
+      "phrase": "EV charging opportunity report",
+      "html": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31/",
+      "json": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json"
+    },
+    {
+      "answer_id": "intent:c01f603871",
+      "phrase": "find EV charging opportunities in this market",
+      "html": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/",
+      "json": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json"
+    },
+    {
+      "answer_id": "intent:ea2b7ebe4d",
+      "phrase": "is this site good for EV charging",
+      "html": "/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d/",
+      "json": "/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d.json"
+    },
+    {
+      "answer_id": "intent:cccfe7bfe5",
+      "phrase": "should I install EV chargers at this property",
+      "html": "/chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5/",
+      "json": "/chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5.json"
+    },
+    {
+      "answer_id": "intent:e8a3eda0e4",
+      "phrase": "what EV chargers are near this property",
+      "html": "/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4/",
+      "json": "/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
+    "intent": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
+    "capability": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
+    "capability_llms": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
+    "capability_json": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

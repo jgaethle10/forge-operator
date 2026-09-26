@@ -1,0 +1,32 @@
+# FAIE Evidence-First Signal Brief commercial intent cluster
+
+Public ID: faie-signal-brief-v1
+Problem: A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
+Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
+Commercial state: sell_now
+Machine state: payment_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
+Capability contract: /chum/capabilities/faie-signal-brief-v1/
+
+## Brand-blind user language
+
+- research this land or water question
+- investigate this agriculture signal
+- give me an evidence brief on this region
+- validate this environmental signal
+- do a resilience investigation
+
+## Crawlable answer doors
+
+- do a resilience investigation | /chum/answers/doors/do-a-resilience-investigation-227f8bd16b/ | /chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json
+- give me an evidence brief on this region | /chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70/ | /chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json
+- investigate this agriculture signal | /chum/answers/doors/investigate-this-agriculture-signal-76deb8c556/ | /chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json
+- research this land or water question | /chum/answers/doors/research-this-land-or-water-question-db58edbbad/ | /chum/answers/doors/research-this-land-or-water-question-db58edbbad.json
+- validate this environmental signal | /chum/answers/doors/validate-this-environmental-signal-bffe897b1e/ | /chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

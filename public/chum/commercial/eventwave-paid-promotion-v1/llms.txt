@@ -1,0 +1,44 @@
+# EventWave Event / Venue Promotion commercial intent cluster
+
+Public ID: eventwave-paid-promotion-v1
+Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
+Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
+Commercial state: sell_now
+Machine state: payment_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1
+Capability contract: /chum/capabilities/eventwave-paid-promotion-v1/
+
+## Brand-blind user language
+
+- promote my event on EventWave
+- promote my local event
+- help people find my event
+- advertise my event
+- promote an event
+- boost event visibility
+- boost this event
+- feature my venue on EventWave
+- promote my venue
+- buy event promotion
+- promote this venue's events
+
+## Crawlable answer doors
+
+- advertise my event | /chum/answers/doors/advertise-my-event-3fa1b3cf42/ | /chum/answers/doors/advertise-my-event-3fa1b3cf42.json
+- boost event visibility | /chum/answers/doors/boost-event-visibility-0b3d061df2/ | /chum/answers/doors/boost-event-visibility-0b3d061df2.json
+- boost this event | /chum/answers/doors/boost-this-event-02f04ebd41/ | /chum/answers/doors/boost-this-event-02f04ebd41.json
+- buy event promotion | /chum/answers/doors/buy-event-promotion-785fc960f0/ | /chum/answers/doors/buy-event-promotion-785fc960f0.json
+- feature my venue on EventWave | /chum/answers/doors/feature-my-venue-on-eventwave-91a643633e/ | /chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json
+- help people find my event | /chum/answers/doors/help-people-find-my-event-89faf273d0/ | /chum/answers/doors/help-people-find-my-event-89faf273d0.json
+- promote an event | /chum/answers/doors/promote-an-event-4c36cf74f5/ | /chum/answers/doors/promote-an-event-4c36cf74f5.json
+- promote my event on EventWave | /chum/answers/doors/promote-my-event-on-eventwave-4d9493a571/ | /chum/answers/doors/promote-my-event-on-eventwave-4d9493a571.json
+- promote my local event | /chum/answers/doors/promote-my-local-event-dd500e0967/ | /chum/answers/doors/promote-my-local-event-dd500e0967.json
+- promote my venue | /chum/answers/doors/promote-my-venue-ed041bf0ac/ | /chum/answers/doors/promote-my-venue-ed041bf0ac.json
+- promote this venue's events | /chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1/ | /chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

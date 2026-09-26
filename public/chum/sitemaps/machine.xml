@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>/.well-known/evercraft-agent-directory.json</loc></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc></url>
+  <url><loc>/.well-known/evercraft-pain-index.json</loc></url>
+  <url><loc>/.well-known/evercraft-products.json</loc></url>
+  <url><loc>/ai-discovery.json</loc></url>
+  <url><loc>/chum/capabilities.json</loc></url>
+  <url><loc>/chum/commercial/</loc></url>
+  <url><loc>/chum/commercial/feed.json</loc></url>
+  <url><loc>/chum/commercial/feed.xml</loc></url>
+  <url><loc>/chum/commercial/index.json</loc></url>
+  <url><loc>/chum/commercial/llms.txt</loc></url>
+  <url><loc>/chum/revenue.json</loc></url>
+  <url><loc>/chum/sell-now.json</loc></url>
+  <url><loc>/llms-full.txt</loc></url>
+  <url><loc>/llms.txt</loc></url>
+  <url><loc>/openapi.json</loc></url>
+</urlset>

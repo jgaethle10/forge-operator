@@ -13,8 +13,11 @@
   "feeds": {
     "rss": "/feed.xml",
     "json_feed": "/feed.json",
+    "commercial_intent_rss": "/chum/commercial/feed.xml",
+    "commercial_intent_json": "/chum/commercial/feed.json",
     "freshness_atom": "/chum/freshness.xml",
     "sitemap": "/sitemap.xml",
+    "segmented_sitemap_index": "/chum/sitemaps/index.xml",
     "opensearch": "/opensearch.xml"
   },
   "raw_github_mirrors": {

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T19:35:53.411Z",
+  "updated_at": "2026-09-26T19:35:58.578Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,634 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T19:35:53.411Z",
-      "priority": 80
+      "path": "/chum/commercial/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T19:35:53.411Z",
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/index.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/machine.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/sell-now.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T19:35:53.411Z",
+      "last_changed": "2026-09-26T19:35:58.578Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T19:35:53.411Z",
+      "path": "/chum/syndication/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/commercial/",
+      "url": "/chum/commercial/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
+      "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
+      "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
+      "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/",
+      "url": "/chum/commercial/audit-center-website-audit-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/index.json",
+      "url": "/chum/commercial/audit-center-website-audit-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/llms.txt",
+      "url": "/chum/commercial/audit-center-website-audit-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/",
+      "url": "/chum/commercial/career-command-interview-practice-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/index.json",
+      "url": "/chum/commercial/career-command-interview-practice-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/llms.txt",
+      "url": "/chum/commercial/career-command-interview-practice-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/",
+      "url": "/chum/commercial/deck-capital-fit-sprint-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/index.json",
+      "url": "/chum/commercial/deck-capital-fit-sprint-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/llms.txt",
+      "url": "/chum/commercial/deck-capital-fit-sprint-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/",
+      "url": "/chum/commercial/eventwave-paid-promotion-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
+      "url": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
+      "url": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/",
+      "url": "/chum/commercial/faie-signal-brief-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "url": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.json",
+      "url": "/chum/commercial/feed.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/feed.xml",
+      "url": "/chum/commercial/feed.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/",
+      "url": "/chum/commercial/findmypart-paid-hunt-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/index.json",
+      "url": "/chum/commercial/findmypart-paid-hunt-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
+      "url": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/",
+      "url": "/chum/commercial/foundry-app-escape-audit-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/index.json",
+      "url": "/chum/commercial/foundry-app-escape-audit-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/llms.txt",
+      "url": "/chum/commercial/foundry-app-escape-audit-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/",
+      "url": "/chum/commercial/ibmi-rescue-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "url": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "url": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/index.json",
+      "url": "/chum/commercial/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/llms.txt",
+      "url": "/chum/commercial/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/",
+      "url": "/chum/commercial/rivet-site-underwriting-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/index.json",
+      "url": "/chum/commercial/rivet-site-underwriting-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/llms.txt",
+      "url": "/chum/commercial/rivet-site-underwriting-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/",
+      "url": "/chum/commercial/roasted-text-pressure-test-machine-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/index.json",
+      "url": "/chum/commercial/roasted-text-pressure-test-machine-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/llms.txt",
+      "url": "/chum/commercial/roasted-text-pressure-test-machine-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/",
+      "url": "/chum/commercial/site-survive-rapid-audit-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/index.json",
+      "url": "/chum/commercial/site-survive-rapid-audit-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/llms.txt",
+      "url": "/chum/commercial/site-survive-rapid-audit-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/",
+      "url": "/chum/commercial/website-launch-service-v1/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/index.json",
+      "url": "/chum/commercial/website-launch-service-v1/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/llms.txt",
+      "url": "/chum/commercial/website-launch-service-v1/llms.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/index.xml",
+      "url": "/chum/sitemaps/index.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/machine.xml",
+      "url": "/chum/sitemaps/machine.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "url": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/sell-now.xml",
+      "url": "/chum/sitemaps/sell-now.xml",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 108
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "url": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "url": "/ai-discovery.json",
+      "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +648,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T19:35:53.411Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T19:35:53.411Z",
       "priority": 80
     },
@@ -183,12 +784,6 @@
       "priority": 86
     },
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
       "url": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
       "last_changed": "2026-09-26T16:21:20.165Z",
@@ -197,12 +792,6 @@
     {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
       "last_changed": "2026-09-26T16:21:20.165Z",
       "priority": 80
     },
@@ -463,12 +1052,6 @@
       "url": "/chum/revenue.txt",
       "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 86
     },
     {
       "path": "/.well-known/evercraft-machine-catalog.json",
@@ -1213,324 +1796,6 @@
       "url": "/chum/capabilities/systemia-yard-runtime-extension-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/talent-evidence-profile-machine-v1/",
-      "url": "/chum/capabilities/talent-evidence-profile-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/talent-evidence-profile-machine-v1/capability.json",
-      "url": "/chum/capabilities/talent-evidence-profile-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/talent-evidence-profile-machine-v1/llms.txt",
-      "url": "/chum/capabilities/talent-evidence-profile-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/talent-proof-portal-v1/",
-      "url": "/chum/capabilities/talent-proof-portal-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/talent-proof-portal-v1/capability.json",
-      "url": "/chum/capabilities/talent-proof-portal-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/talent-proof-portal-v1/llms.txt",
-      "url": "/chum/capabilities/talent-proof-portal-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/towi-evidence-research-machine-v1/",
-      "url": "/chum/capabilities/towi-evidence-research-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/towi-evidence-research-machine-v1/capability.json",
-      "url": "/chum/capabilities/towi-evidence-research-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/towi-evidence-research-machine-v1/llms.txt",
-      "url": "/chum/capabilities/towi-evidence-research-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/",
-      "url": "/chum/capabilities/website-launch-service-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "url": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/llms.txt",
-      "url": "/chum/capabilities/website-launch-service-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/llms.txt",
-      "url": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/llms.txt",
-      "url": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/llms.txt",
-      "url": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
-      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/llms.txt",
-      "url": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/llms.txt",
-      "url": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/llms.txt",
-      "url": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/llms.txt",
-      "url": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/llms.txt",
-      "url": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/llms.txt",
-      "url": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt",
-      "url": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/llms.txt",
-      "url": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/llms.txt",
-      "url": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/llms.txt",
-      "url": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/llms.txt",
-      "url": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/llms.txt",
-      "url": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/llms.txt",
-      "url": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/llms.txt",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 86
-    },
-    {
-      "path": "/chum/answers/observed/",
-      "url": "/chum/answers/observed/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/",
-      "url": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/",
-      "url": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/",
-      "url": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
-      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/",
-      "url": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/",
-      "url": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/",
-      "url": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/",
-      "url": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/",
-      "url": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/",
-      "url": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
-      "url": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/",
-      "url": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/",
-      "url": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/",
-      "url": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/",
-      "url": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/index.json",
-      "url": "/chum/answers/observed/index.json",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/",
-      "url": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/",
-      "url": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
-      "url": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
-      "url": "/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "url": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json",
-      "url": "/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json",
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c.json",
-      "url": "/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c.json",
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "priority": 160
     }
   ]
 }

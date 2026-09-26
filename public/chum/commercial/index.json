@@ -1,0 +1,870 @@
+{
+  "schema": "evercraft.chum.commercial-intent-mesh.v1",
+  "provider": "Evercraft LLC",
+  "coordinator": "CHUM",
+  "purpose": "High-intent crawl neighborhoods around current sell-now offers. This mesh organizes existing canonical pain and capability surfaces instead of manufacturing duplicate doorway copy.",
+  "sell_now_count": 13,
+  "answer_door_edges": 113,
+  "clusters": [
+    {
+      "public_id": "aliev-site-opportunity-snapshot-v1",
+      "name": "AliEV EV Site Opportunity Intelligence",
+      "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
+      "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
+      "cluster": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
+      "cluster_json": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
+      "cluster_llms": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
+      "intent": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
+      "capability": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
+      "answer_door_count": 9,
+      "answer_doors": [
+        {
+          "answer_id": "intent:f593e514df",
+          "phrase": "commercial EV site report",
+          "html": "/chum/answers/doors/commercial-ev-site-report-f593e514df/",
+          "json": "/chum/answers/doors/commercial-ev-site-report-f593e514df.json"
+        },
+        {
+          "answer_id": "intent:33f3c50a03",
+          "phrase": "EV charger competition around this address",
+          "html": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03/",
+          "json": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json"
+        },
+        {
+          "answer_id": "intent:fc320bee89",
+          "phrase": "EV charger site analysis",
+          "html": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89/",
+          "json": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json"
+        },
+        {
+          "answer_id": "intent:734eac6eee",
+          "phrase": "EV charging feasibility by address",
+          "html": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee/",
+          "json": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json"
+        },
+        {
+          "answer_id": "intent:43ed1d1e31",
+          "phrase": "EV charging opportunity report",
+          "html": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31/",
+          "json": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json"
+        },
+        {
+          "answer_id": "intent:c01f603871",
+          "phrase": "find EV charging opportunities in this market",
+          "html": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/",
+          "json": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json"
+        },
+        {
+          "answer_id": "intent:ea2b7ebe4d",
+          "phrase": "is this site good for EV charging",
+          "html": "/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d/",
+          "json": "/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d.json"
+        },
+        {
+          "answer_id": "intent:cccfe7bfe5",
+          "phrase": "should I install EV chargers at this property",
+          "html": "/chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5/",
+          "json": "/chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5.json"
+        },
+        {
+          "answer_id": "intent:e8a3eda0e4",
+          "phrase": "what EV chargers are near this property",
+          "html": "/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4/",
+          "json": "/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4.json"
+        }
+      ]
+    },
+    {
+      "public_id": "career-command-interview-practice-machine-v1",
+      "name": "Career Command Interview Practice + Interview Sprint",
+      "problem": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
+      "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
+      "cluster": "/chum/commercial/career-command-interview-practice-machine-v1/",
+      "cluster_json": "/chum/commercial/career-command-interview-practice-machine-v1/index.json",
+      "cluster_llms": "/chum/commercial/career-command-interview-practice-machine-v1/llms.txt",
+      "intent": "/chum/intents/career-command-interview-practice-machine-v1/",
+      "capability": "/chum/capabilities/career-command-interview-practice-machine-v1/",
+      "answer_door_count": 7,
+      "answer_doors": [
+        {
+          "answer_id": "intent:8dfc51b114",
+          "phrase": "behavioral interview practice",
+          "html": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114/",
+          "json": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json"
+        },
+        {
+          "answer_id": "intent:770b1355ac",
+          "phrase": "help me prepare for this interview",
+          "html": "/chum/answers/doors/help-me-prepare-for-this-interview-770b1355ac/",
+          "json": "/chum/answers/doors/help-me-prepare-for-this-interview-770b1355ac.json"
+        },
+        {
+          "answer_id": "intent:0fe9809d38",
+          "phrase": "I have an interview tomorrow",
+          "html": "/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38/",
+          "json": "/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json"
+        },
+        {
+          "answer_id": "intent:4e6bf5b695",
+          "phrase": "mock interview me for this job",
+          "html": "/chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695/",
+          "json": "/chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695.json"
+        },
+        {
+          "answer_id": "intent:9e971de76a",
+          "phrase": "practice interview questions",
+          "html": "/chum/answers/doors/practice-interview-questions-9e971de76a/",
+          "json": "/chum/answers/doors/practice-interview-questions-9e971de76a.json"
+        },
+        {
+          "answer_id": "intent:6cd9e7277e",
+          "phrase": "prepare me for a recruiter screen",
+          "html": "/chum/answers/doors/prepare-me-for-a-recruiter-screen-6cd9e7277e/",
+          "json": "/chum/answers/doors/prepare-me-for-a-recruiter-screen-6cd9e7277e.json"
+        },
+        {
+          "answer_id": "intent:5e08f2c4f0",
+          "phrase": "score my interview answer",
+          "html": "/chum/answers/doors/score-my-interview-answer-5e08f2c4f0/",
+          "json": "/chum/answers/doors/score-my-interview-answer-5e08f2c4f0.json"
+        }
+      ]
+    },
+    {
+      "public_id": "eventwave-paid-promotion-v1",
+      "name": "EventWave Event / Venue Promotion",
+      "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+      "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
+      "cluster": "/chum/commercial/eventwave-paid-promotion-v1/",
+      "cluster_json": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
+      "cluster_llms": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
+      "intent": "/chum/intents/eventwave-paid-promotion-v1/",
+      "capability": "/chum/capabilities/eventwave-paid-promotion-v1/",
+      "answer_door_count": 11,
+      "answer_doors": [
+        {
+          "answer_id": "intent:3fa1b3cf42",
+          "phrase": "advertise my event",
+          "html": "/chum/answers/doors/advertise-my-event-3fa1b3cf42/",
+          "json": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json"
+        },
+        {
+          "answer_id": "intent:0b3d061df2",
+          "phrase": "boost event visibility",
+          "html": "/chum/answers/doors/boost-event-visibility-0b3d061df2/",
+          "json": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json"
+        },
+        {
+          "answer_id": "intent:02f04ebd41",
+          "phrase": "boost this event",
+          "html": "/chum/answers/doors/boost-this-event-02f04ebd41/",
+          "json": "/chum/answers/doors/boost-this-event-02f04ebd41.json"
+        },
+        {
+          "answer_id": "intent:785fc960f0",
+          "phrase": "buy event promotion",
+          "html": "/chum/answers/doors/buy-event-promotion-785fc960f0/",
+          "json": "/chum/answers/doors/buy-event-promotion-785fc960f0.json"
+        },
+        {
+          "answer_id": "intent:91a643633e",
+          "phrase": "feature my venue on EventWave",
+          "html": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e/",
+          "json": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json"
+        },
+        {
+          "answer_id": "intent:89faf273d0",
+          "phrase": "help people find my event",
+          "html": "/chum/answers/doors/help-people-find-my-event-89faf273d0/",
+          "json": "/chum/answers/doors/help-people-find-my-event-89faf273d0.json"
+        },
+        {
+          "answer_id": "intent:4c36cf74f5",
+          "phrase": "promote an event",
+          "html": "/chum/answers/doors/promote-an-event-4c36cf74f5/",
+          "json": "/chum/answers/doors/promote-an-event-4c36cf74f5.json"
+        },
+        {
+          "answer_id": "intent:4d9493a571",
+          "phrase": "promote my event on EventWave",
+          "html": "/chum/answers/doors/promote-my-event-on-eventwave-4d9493a571/",
+          "json": "/chum/answers/doors/promote-my-event-on-eventwave-4d9493a571.json"
+        },
+        {
+          "answer_id": "intent:dd500e0967",
+          "phrase": "promote my local event",
+          "html": "/chum/answers/doors/promote-my-local-event-dd500e0967/",
+          "json": "/chum/answers/doors/promote-my-local-event-dd500e0967.json"
+        },
+        {
+          "answer_id": "intent:ed041bf0ac",
+          "phrase": "promote my venue",
+          "html": "/chum/answers/doors/promote-my-venue-ed041bf0ac/",
+          "json": "/chum/answers/doors/promote-my-venue-ed041bf0ac.json"
+        },
+        {
+          "answer_id": "intent:4c6b8a43d1",
+          "phrase": "promote this venue's events",
+          "html": "/chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1/",
+          "json": "/chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1.json"
+        }
+      ]
+    },
+    {
+      "public_id": "deck-capital-fit-sprint-machine-v1",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+      "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
+      "cluster": "/chum/commercial/deck-capital-fit-sprint-machine-v1/",
+      "cluster_json": "/chum/commercial/deck-capital-fit-sprint-machine-v1/index.json",
+      "cluster_llms": "/chum/commercial/deck-capital-fit-sprint-machine-v1/llms.txt",
+      "intent": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
+      "capability": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
+      "answer_door_count": 8,
+      "answer_doors": [
+        {
+          "answer_id": "intent:592e365c97",
+          "phrase": "build a lender ready deck",
+          "html": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97/",
+          "json": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json"
+        },
+        {
+          "answer_id": "intent:9a78204138",
+          "phrase": "find capital options for this project",
+          "html": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138/",
+          "json": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json"
+        },
+        {
+          "answer_id": "intent:395c92114e",
+          "phrase": "help me find funding for my business",
+          "html": "/chum/answers/doors/help-me-find-funding-for-my-business-395c92114e/",
+          "json": "/chum/answers/doors/help-me-find-funding-for-my-business-395c92114e.json"
+        },
+        {
+          "answer_id": "intent:3cd8855170",
+          "phrase": "help me prepare for SBA financing",
+          "html": "/chum/answers/doors/help-me-prepare-for-sba-financing-3cd8855170/",
+          "json": "/chum/answers/doors/help-me-prepare-for-sba-financing-3cd8855170.json"
+        },
+        {
+          "answer_id": "intent:93d8c535f5",
+          "phrase": "review my funding pitch",
+          "html": "/chum/answers/doors/review-my-funding-pitch-93d8c535f5/",
+          "json": "/chum/answers/doors/review-my-funding-pitch-93d8c535f5.json"
+        },
+        {
+          "answer_id": "intent:9eb111ed84",
+          "phrase": "turn my business info into a funding deck",
+          "html": "/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84/",
+          "json": "/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84.json"
+        },
+        {
+          "answer_id": "intent:ee5dbd15c2",
+          "phrase": "what am I missing before I seek funding",
+          "html": "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2/",
+          "json": "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2.json"
+        },
+        {
+          "answer_id": "intent:cd052bad8e",
+          "phrase": "which lenders or programs fit my business",
+          "html": "/chum/answers/doors/which-lenders-or-programs-fit-my-business-cd052bad8e/",
+          "json": "/chum/answers/doors/which-lenders-or-programs-fit-my-business-cd052bad8e.json"
+        }
+      ]
+    },
+    {
+      "public_id": "foundry-app-escape-audit-v1",
+      "name": "Evercraft Foundry App Escape Audit",
+      "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "pricing": "$500 one-time.",
+      "cluster": "/chum/commercial/foundry-app-escape-audit-v1/",
+      "cluster_json": "/chum/commercial/foundry-app-escape-audit-v1/index.json",
+      "cluster_llms": "/chum/commercial/foundry-app-escape-audit-v1/llms.txt",
+      "intent": "/chum/intents/foundry-app-escape-audit-v1/",
+      "capability": "/chum/capabilities/foundry-app-escape-audit-v1/",
+      "answer_door_count": 4,
+      "answer_doors": [
+        {
+          "answer_id": "intent:72cf49e062",
+          "phrase": "audit app portability",
+          "html": "/chum/answers/doors/audit-app-portability-72cf49e062/",
+          "json": "/chum/answers/doors/audit-app-portability-72cf49e062.json"
+        },
+        {
+          "answer_id": "intent:9bf9834ecc",
+          "phrase": "escape vendor lock-in",
+          "html": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc/",
+          "json": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json"
+        },
+        {
+          "answer_id": "intent:5cdc62676d",
+          "phrase": "export an AI-built app",
+          "html": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d/",
+          "json": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json"
+        },
+        {
+          "answer_id": "intent:cd304f5aeb",
+          "phrase": "migrate from no-code",
+          "html": "/chum/answers/doors/migrate-from-no-code-cd304f5aeb/",
+          "json": "/chum/answers/doors/migrate-from-no-code-cd304f5aeb.json"
+        }
+      ]
+    },
+    {
+      "public_id": "ibmi-rescue-v1",
+      "name": "Evercraft IBM i Rescue",
+      "problem": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
+      "pricing": "$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.",
+      "cluster": "/chum/commercial/ibmi-rescue-v1/",
+      "cluster_json": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "cluster_llms": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "intent": "/chum/intents/ibmi-rescue-v1/",
+      "capability": "/chum/capabilities/ibmi-rescue-v1/",
+      "answer_door_count": 12,
+      "answer_doors": [
+        {
+          "answer_id": "intent:5e73e54575",
+          "phrase": "AS/400 estate assessment before upgrading or modernizing",
+          "html": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575/",
+          "json": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json"
+        },
+        {
+          "answer_id": "intent:49430f448e",
+          "phrase": "AS/400 modernization assessment",
+          "html": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+          "json": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json"
+        },
+        {
+          "answer_id": "intent:70ac865541",
+          "phrase": "assess an IBM i or AS/400 estate before upgrading",
+          "html": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
+          "json": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json"
+        },
+        {
+          "answer_id": "intent:030d199287",
+          "phrase": "build a rollback test and evidence plan before changing an IBM i production system",
+          "html": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
+          "json": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json"
+        },
+        {
+          "answer_id": "intent:5d2d519d2f",
+          "phrase": "find undocumented dependencies in an IBM i workload",
+          "html": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/",
+          "json": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json"
+        },
+        {
+          "answer_id": "intent:e0c0c7b3bf",
+          "phrase": "find undocumented IBM i dependencies before a maintenance window",
+          "html": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf/",
+          "json": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json"
+        },
+        {
+          "answer_id": "intent:f9c27a8bcc",
+          "phrase": "help modernize JDE World or a custom IBM i workload without losing business behavior",
+          "html": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/",
+          "json": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json"
+        },
+        {
+          "answer_id": "intent:a25b87dd23",
+          "phrase": "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+          "html": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
+          "json": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json"
+        },
+        {
+          "answer_id": "intent:ca1da8e065",
+          "phrase": "IBM i 7.4 support is ending and I need an upgrade plan",
+          "html": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
+          "json": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json"
+        },
+        {
+          "answer_id": "intent:dab81f4a0a",
+          "phrase": "IBM i estate assessment before changing production",
+          "html": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a/",
+          "json": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json"
+        },
+        {
+          "answer_id": "intent:240178e2de",
+          "phrase": "IBM i upgrade proof",
+          "html": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/",
+          "json": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json"
+        },
+        {
+          "answer_id": "intent:aa38657636",
+          "phrase": "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+          "html": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/",
+          "json": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json"
+        }
+      ]
+    },
+    {
+      "public_id": "website-launch-service-v1",
+      "name": "Evercraft Website Launch Service",
+      "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+      "cluster": "/chum/commercial/website-launch-service-v1/",
+      "cluster_json": "/chum/commercial/website-launch-service-v1/index.json",
+      "cluster_llms": "/chum/commercial/website-launch-service-v1/llms.txt",
+      "intent": "/chum/intents/website-launch-service-v1/",
+      "capability": "/chum/capabilities/website-launch-service-v1/",
+      "answer_door_count": 5,
+      "answer_doors": [
+        {
+          "answer_id": "intent:47014a0bbb",
+          "phrase": "build me a business website",
+          "html": "/chum/answers/doors/build-me-a-business-website-47014a0bbb/",
+          "json": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json"
+        },
+        {
+          "answer_id": "intent:53ad580370",
+          "phrase": "handle my website for me",
+          "html": "/chum/answers/doors/handle-my-website-for-me-53ad580370/",
+          "json": "/chum/answers/doors/handle-my-website-for-me-53ad580370.json"
+        },
+        {
+          "answer_id": "intent:0a8c7a11d2",
+          "phrase": "launch a website for my company",
+          "html": "/chum/answers/doors/launch-a-website-for-my-company-0a8c7a11d2/",
+          "json": "/chum/answers/doors/launch-a-website-for-my-company-0a8c7a11d2.json"
+        },
+        {
+          "answer_id": "intent:6eeab93ed2",
+          "phrase": "make me a professional business site",
+          "html": "/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2/",
+          "json": "/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2.json"
+        },
+        {
+          "answer_id": "intent:b7db22c7e5",
+          "phrase": "replace my bad website",
+          "html": "/chum/answers/doors/replace-my-bad-website-b7db22c7e5/",
+          "json": "/chum/answers/doors/replace-my-bad-website-b7db22c7e5.json"
+        }
+      ]
+    },
+    {
+      "public_id": "faie-signal-brief-v1",
+      "name": "FAIE Evidence-First Signal Brief",
+      "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
+      "cluster": "/chum/commercial/faie-signal-brief-v1/",
+      "cluster_json": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "cluster_llms": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "intent": "/chum/intents/faie-signal-brief-v1/",
+      "capability": "/chum/capabilities/faie-signal-brief-v1/",
+      "answer_door_count": 5,
+      "answer_doors": [
+        {
+          "answer_id": "intent:227f8bd16b",
+          "phrase": "do a resilience investigation",
+          "html": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/",
+          "json": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json"
+        },
+        {
+          "answer_id": "intent:6033eecd70",
+          "phrase": "give me an evidence brief on this region",
+          "html": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70/",
+          "json": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json"
+        },
+        {
+          "answer_id": "intent:76deb8c556",
+          "phrase": "investigate this agriculture signal",
+          "html": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556/",
+          "json": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json"
+        },
+        {
+          "answer_id": "intent:db58edbbad",
+          "phrase": "research this land or water question",
+          "html": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad/",
+          "json": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json"
+        },
+        {
+          "answer_id": "intent:bffe897b1e",
+          "phrase": "validate this environmental signal",
+          "html": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e/",
+          "json": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json"
+        }
+      ]
+    },
+    {
+      "public_id": "findmypart-paid-hunt-v1",
+      "name": "FindMyPart Paid Part Hunt",
+      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+      "cluster": "/chum/commercial/findmypart-paid-hunt-v1/",
+      "cluster_json": "/chum/commercial/findmypart-paid-hunt-v1/index.json",
+      "cluster_llms": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
+      "intent": "/chum/intents/findmypart-paid-hunt-v1/",
+      "capability": "/chum/capabilities/findmypart-paid-hunt-v1/",
+      "answer_door_count": 5,
+      "answer_doors": [
+        {
+          "answer_id": "intent:5646da09bb",
+          "phrase": "find a discontinued part",
+          "html": "/chum/answers/doors/find-a-discontinued-part-5646da09bb/",
+          "json": "/chum/answers/doors/find-a-discontinued-part-5646da09bb.json"
+        },
+        {
+          "answer_id": "intent:310843faf9",
+          "phrase": "find a donor or salvage part",
+          "html": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/",
+          "json": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json"
+        },
+        {
+          "answer_id": "intent:78dcd37ecc",
+          "phrase": "find a hard-to-source part",
+          "html": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/",
+          "json": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json"
+        },
+        {
+          "answer_id": "intent:870c0fa937",
+          "phrase": "identify this part",
+          "html": "/chum/answers/doors/identify-this-part-870c0fa937/",
+          "json": "/chum/answers/doors/identify-this-part-870c0fa937.json"
+        },
+        {
+          "answer_id": "intent:61fb541501",
+          "phrase": "source an obsolete component",
+          "html": "/chum/answers/doors/source-an-obsolete-component-61fb541501/",
+          "json": "/chum/answers/doors/source-an-obsolete-component-61fb541501.json"
+        }
+      ]
+    },
+    {
+      "public_id": "rivet-site-underwriting-v1",
+      "name": "RIVET EV Infrastructure Intelligence",
+      "problem": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
+      "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.",
+      "cluster": "/chum/commercial/rivet-site-underwriting-v1/",
+      "cluster_json": "/chum/commercial/rivet-site-underwriting-v1/index.json",
+      "cluster_llms": "/chum/commercial/rivet-site-underwriting-v1/llms.txt",
+      "intent": "/chum/intents/rivet-site-underwriting-v1/",
+      "capability": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "answer_door_count": 20,
+      "answer_doors": [
+        {
+          "answer_id": "intent:a4fc7910cc",
+          "phrase": "apartment EV charging site analysis",
+          "html": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
+          "json": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json"
+        },
+        {
+          "answer_id": "intent:6092dd77f1",
+          "phrase": "charging site economics",
+          "html": "/chum/answers/doors/charging-site-economics-6092dd77f1/",
+          "json": "/chum/answers/doors/charging-site-economics-6092dd77f1.json"
+        },
+        {
+          "answer_id": "intent:aa69cb1075",
+          "phrase": "EV charger competition near this address",
+          "html": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
+          "json": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json"
+        },
+        {
+          "answer_id": "intent:8a81d21c84",
+          "phrase": "EV charger feasibility by address",
+          "html": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
+          "json": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json"
+        },
+        {
+          "answer_id": "intent:ed6fd3f23a",
+          "phrase": "EV charger investment report",
+          "html": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/",
+          "json": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json"
+        },
+        {
+          "answer_id": "intent:76a21ea75b",
+          "phrase": "EV charging demand near this property",
+          "html": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
+          "json": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json"
+        },
+        {
+          "answer_id": "intent:91e2eec236",
+          "phrase": "EV charging diligence",
+          "html": "/chum/answers/doors/ev-charging-diligence-91e2eec236/",
+          "json": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json"
+        },
+        {
+          "answer_id": "intent:76fa0b5a6c",
+          "phrase": "EV charging incentives for this site",
+          "html": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
+          "json": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json"
+        },
+        {
+          "answer_id": "intent:23181c0dbc",
+          "phrase": "EV charging ROI for this property",
+          "html": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
+          "json": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json"
+        },
+        {
+          "answer_id": "intent:1e6ee8e9ee",
+          "phrase": "EV charging site analysis by address",
+          "html": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
+          "json": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json"
+        },
+        {
+          "answer_id": "intent:c676bc6509",
+          "phrase": "evaluate this address for EV charging",
+          "html": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/",
+          "json": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json"
+        },
+        {
+          "answer_id": "intent:8e120b3526",
+          "phrase": "fleet depot EV charging site screening",
+          "html": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
+          "json": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json"
+        },
+        {
+          "answer_id": "intent:7464f372e9",
+          "phrase": "hotel EV charging site analysis",
+          "html": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
+          "json": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json"
+        },
+        {
+          "answer_id": "intent:34e75d677f",
+          "phrase": "parking lot EV charging opportunity",
+          "html": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
+          "json": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json"
+        },
+        {
+          "answer_id": "intent:4551e88b1c",
+          "phrase": "preliminary EV charging site plan",
+          "html": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
+          "json": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json"
+        },
+        {
+          "answer_id": "intent:49b6979e0f",
+          "phrase": "retail EV charging site analysis",
+          "html": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
+          "json": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json"
+        },
+        {
+          "answer_id": "intent:8391032a42",
+          "phrase": "should I install EV chargers at my property",
+          "html": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
+          "json": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json"
+        },
+        {
+          "answer_id": "intent:6ff61b4426",
+          "phrase": "site-specific EV charging opportunity report",
+          "html": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/",
+          "json": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json"
+        },
+        {
+          "answer_id": "intent:c05a16b3c1",
+          "phrase": "underwrite an EV charging site",
+          "html": "/chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1/",
+          "json": "/chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1.json"
+        },
+        {
+          "answer_id": "intent:affaf0c924",
+          "phrase": "utility tariff for EV charging at this property",
+          "html": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
+          "json": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json"
+        }
+      ]
+    },
+    {
+      "public_id": "roasted-text-pressure-test-machine-v1",
+      "name": "ROASTED 99¢ Text Pressure Test",
+      "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+      "pricing": "$0.99 USD one-time per roast.",
+      "cluster": "/chum/commercial/roasted-text-pressure-test-machine-v1/",
+      "cluster_json": "/chum/commercial/roasted-text-pressure-test-machine-v1/index.json",
+      "cluster_llms": "/chum/commercial/roasted-text-pressure-test-machine-v1/llms.txt",
+      "intent": "/chum/intents/roasted-text-pressure-test-machine-v1/",
+      "capability": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
+      "answer_door_count": 10,
+      "answer_doors": [
+        {
+          "answer_id": "intent:32a18cde5f",
+          "phrase": "be brutally honest about this copy",
+          "html": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f/",
+          "json": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json"
+        },
+        {
+          "answer_id": "intent:d550264762",
+          "phrase": "brutally critique this message",
+          "html": "/chum/answers/doors/brutally-critique-this-message-d550264762/",
+          "json": "/chum/answers/doors/brutally-critique-this-message-d550264762.json"
+        },
+        {
+          "answer_id": "intent:54816ae317",
+          "phrase": "pressure test my writing",
+          "html": "/chum/answers/doors/pressure-test-my-writing-54816ae317/",
+          "json": "/chum/answers/doors/pressure-test-my-writing-54816ae317.json"
+        },
+        {
+          "answer_id": "intent:d8d2f695ba",
+          "phrase": "pressure test this copy",
+          "html": "/chum/answers/doors/pressure-test-this-copy-d8d2f695ba/",
+          "json": "/chum/answers/doors/pressure-test-this-copy-d8d2f695ba.json"
+        },
+        {
+          "answer_id": "intent:49d4d55cb1",
+          "phrase": "roast my bio",
+          "html": "/chum/answers/doors/roast-my-bio-49d4d55cb1/",
+          "json": "/chum/answers/doors/roast-my-bio-49d4d55cb1.json"
+        },
+        {
+          "answer_id": "intent:becf323358",
+          "phrase": "roast my linkedin headline",
+          "html": "/chum/answers/doors/roast-my-linkedin-headline-becf323358/",
+          "json": "/chum/answers/doors/roast-my-linkedin-headline-becf323358.json"
+        },
+        {
+          "answer_id": "intent:e37bed1eb7",
+          "phrase": "roast my resume",
+          "html": "/chum/answers/doors/roast-my-resume-e37bed1eb7/",
+          "json": "/chum/answers/doors/roast-my-resume-e37bed1eb7.json"
+        },
+        {
+          "answer_id": "intent:078e06dff6",
+          "phrase": "roast this post",
+          "html": "/chum/answers/doors/roast-this-post-078e06dff6/",
+          "json": "/chum/answers/doors/roast-this-post-078e06dff6.json"
+        },
+        {
+          "answer_id": "intent:2bc1522bb2",
+          "phrase": "roast this text",
+          "html": "/chum/answers/doors/roast-this-text-2bc1522bb2/",
+          "json": "/chum/answers/doors/roast-this-text-2bc1522bb2.json"
+        },
+        {
+          "answer_id": "intent:e926058d23",
+          "phrase": "tear apart this pitch",
+          "html": "/chum/answers/doors/tear-apart-this-pitch-e926058d23/",
+          "json": "/chum/answers/doors/tear-apart-this-pitch-e926058d23.json"
+        }
+      ]
+    },
+    {
+      "public_id": "site-survive-rapid-audit-v1",
+      "name": "Site-Survive Rapid Audit",
+      "problem": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+      "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
+      "cluster": "/chum/commercial/site-survive-rapid-audit-v1/",
+      "cluster_json": "/chum/commercial/site-survive-rapid-audit-v1/index.json",
+      "cluster_llms": "/chum/commercial/site-survive-rapid-audit-v1/llms.txt",
+      "intent": "/chum/intents/site-survive-rapid-audit-v1/",
+      "capability": "/chum/capabilities/site-survive-rapid-audit-v1/",
+      "answer_door_count": 4,
+      "answer_doors": [
+        {
+          "answer_id": "intent:bd1f9b74ee",
+          "phrase": "business outage plan",
+          "html": "/chum/answers/doors/business-outage-plan-bd1f9b74ee/",
+          "json": "/chum/answers/doors/business-outage-plan-bd1f9b74ee.json"
+        },
+        {
+          "answer_id": "intent:264505af3f",
+          "phrase": "internet outage continuity",
+          "html": "/chum/answers/doors/internet-outage-continuity-264505af3f/",
+          "json": "/chum/answers/doors/internet-outage-continuity-264505af3f.json"
+        },
+        {
+          "answer_id": "intent:e683e6994b",
+          "phrase": "offline operations plan",
+          "html": "/chum/answers/doors/offline-operations-plan-e683e6994b/",
+          "json": "/chum/answers/doors/offline-operations-plan-e683e6994b.json"
+        },
+        {
+          "answer_id": "intent:64b6ec62c2",
+          "phrase": "site resilience audit",
+          "html": "/chum/answers/doors/site-resilience-audit-64b6ec62c2/",
+          "json": "/chum/answers/doors/site-resilience-audit-64b6ec62c2.json"
+        }
+      ]
+    },
+    {
+      "public_id": "audit-center-website-audit-machine-v1",
+      "name": "Systemia Website Audit",
+      "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "cluster": "/chum/commercial/audit-center-website-audit-machine-v1/",
+      "cluster_json": "/chum/commercial/audit-center-website-audit-machine-v1/index.json",
+      "cluster_llms": "/chum/commercial/audit-center-website-audit-machine-v1/llms.txt",
+      "intent": "/chum/intents/audit-center-website-audit-machine-v1/",
+      "capability": "/chum/capabilities/audit-center-website-audit-machine-v1/",
+      "answer_door_count": 13,
+      "answer_doors": [
+        {
+          "answer_id": "intent:30703ed3ed",
+          "phrase": "audit my website",
+          "html": "/chum/answers/doors/audit-my-website-30703ed3ed/",
+          "json": "/chum/answers/doors/audit-my-website-30703ed3ed.json"
+        },
+        {
+          "answer_id": "intent:e8e838ec7c",
+          "phrase": "check my local SEO",
+          "html": "/chum/answers/doors/check-my-local-seo-e8e838ec7c/",
+          "json": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json"
+        },
+        {
+          "answer_id": "intent:071e47ffaf",
+          "phrase": "find conversion problems on my website",
+          "html": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf/",
+          "json": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json"
+        },
+        {
+          "answer_id": "intent:1ef7122cd7",
+          "phrase": "my website gets traffic but nobody contacts us",
+          "html": "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7/",
+          "json": "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7.json"
+        },
+        {
+          "answer_id": "intent:76a2e42c52",
+          "phrase": "people visit my site but do not contact me",
+          "html": "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52/",
+          "json": "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52.json"
+        },
+        {
+          "answer_id": "intent:65884ba156",
+          "phrase": "review my website SEO",
+          "html": "/chum/answers/doors/review-my-website-seo-65884ba156/",
+          "json": "/chum/answers/doors/review-my-website-seo-65884ba156.json"
+        },
+        {
+          "answer_id": "intent:de24de764f",
+          "phrase": "tell me what is wrong with my business website",
+          "html": "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/",
+          "json": "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json"
+        },
+        {
+          "answer_id": "intent:ae35f23b1a",
+          "phrase": "visitors are not turning into leads",
+          "html": "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a/",
+          "json": "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json"
+        },
+        {
+          "answer_id": "intent:17912f57da",
+          "phrase": "website traffic but no leads",
+          "html": "/chum/answers/doors/website-traffic-but-no-leads-17912f57da/",
+          "json": "/chum/answers/doors/website-traffic-but-no-leads-17912f57da.json"
+        },
+        {
+          "answer_id": "intent:e3ae48a812",
+          "phrase": "why is my contractor website not ranking",
+          "html": "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812/",
+          "json": "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812.json"
+        },
+        {
+          "answer_id": "intent:b12495f37f",
+          "phrase": "why is my site slow on mobile",
+          "html": "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f/",
+          "json": "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f.json"
+        },
+        {
+          "answer_id": "intent:aa7c4f61cf",
+          "phrase": "why is my website not converting",
+          "html": "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf/",
+          "json": "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf.json"
+        },
+        {
+          "answer_id": "intent:20aee4bfe3",
+          "phrase": "why is my website not getting leads",
+          "html": "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3/",
+          "json": "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+# Site-Survive Rapid Audit commercial intent cluster
+
+Public ID: site-survive-rapid-audit-v1
+Problem: A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.
+Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+Capability contract: /chum/capabilities/site-survive-rapid-audit-v1/
+
+## Brand-blind user language
+
+- business outage plan
+- internet outage continuity
+- site resilience audit
+- offline operations plan
+
+## Crawlable answer doors
+
+- business outage plan | /chum/answers/doors/business-outage-plan-bd1f9b74ee/ | /chum/answers/doors/business-outage-plan-bd1f9b74ee.json
+- internet outage continuity | /chum/answers/doors/internet-outage-continuity-264505af3f/ | /chum/answers/doors/internet-outage-continuity-264505af3f.json
+- offline operations plan | /chum/answers/doors/offline-operations-plan-e683e6994b/ | /chum/answers/doors/offline-operations-plan-e683e6994b.json
+- site resilience audit | /chum/answers/doors/site-resilience-audit-64b6ec62c2/ | /chum/answers/doors/site-resilience-audit-64b6ec62c2.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

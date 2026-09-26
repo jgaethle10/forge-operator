@@ -1,0 +1,121 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "eventwave-paid-promotion-v1",
+  "name": "EventWave Event / Venue Promotion",
+  "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+  "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "canonical_offer_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1",
+  "intent_terms": [
+    "promote my event on EventWave",
+    "promote my local event",
+    "help people find my event",
+    "advertise my event",
+    "promote an event",
+    "boost event visibility",
+    "boost this event",
+    "feature my venue on EventWave",
+    "promote my venue",
+    "buy event promotion",
+    "promote this venue's events"
+  ],
+  "discovered_user_language": [
+    "promote my event on EventWave",
+    "promote my local event",
+    "help people find my event",
+    "advertise my event",
+    "promote an event",
+    "boost event visibility",
+    "boost this event",
+    "feature my venue on EventWave",
+    "promote my venue",
+    "buy event promotion",
+    "promote this venue's events"
+  ],
+  "answer_door_count": 11,
+  "answer_doors": [
+    {
+      "answer_id": "intent:3fa1b3cf42",
+      "phrase": "advertise my event",
+      "html": "/chum/answers/doors/advertise-my-event-3fa1b3cf42/",
+      "json": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json"
+    },
+    {
+      "answer_id": "intent:0b3d061df2",
+      "phrase": "boost event visibility",
+      "html": "/chum/answers/doors/boost-event-visibility-0b3d061df2/",
+      "json": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json"
+    },
+    {
+      "answer_id": "intent:02f04ebd41",
+      "phrase": "boost this event",
+      "html": "/chum/answers/doors/boost-this-event-02f04ebd41/",
+      "json": "/chum/answers/doors/boost-this-event-02f04ebd41.json"
+    },
+    {
+      "answer_id": "intent:785fc960f0",
+      "phrase": "buy event promotion",
+      "html": "/chum/answers/doors/buy-event-promotion-785fc960f0/",
+      "json": "/chum/answers/doors/buy-event-promotion-785fc960f0.json"
+    },
+    {
+      "answer_id": "intent:91a643633e",
+      "phrase": "feature my venue on EventWave",
+      "html": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e/",
+      "json": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json"
+    },
+    {
+      "answer_id": "intent:89faf273d0",
+      "phrase": "help people find my event",
+      "html": "/chum/answers/doors/help-people-find-my-event-89faf273d0/",
+      "json": "/chum/answers/doors/help-people-find-my-event-89faf273d0.json"
+    },
+    {
+      "answer_id": "intent:4c36cf74f5",
+      "phrase": "promote an event",
+      "html": "/chum/answers/doors/promote-an-event-4c36cf74f5/",
+      "json": "/chum/answers/doors/promote-an-event-4c36cf74f5.json"
+    },
+    {
+      "answer_id": "intent:4d9493a571",
+      "phrase": "promote my event on EventWave",
+      "html": "/chum/answers/doors/promote-my-event-on-eventwave-4d9493a571/",
+      "json": "/chum/answers/doors/promote-my-event-on-eventwave-4d9493a571.json"
+    },
+    {
+      "answer_id": "intent:dd500e0967",
+      "phrase": "promote my local event",
+      "html": "/chum/answers/doors/promote-my-local-event-dd500e0967/",
+      "json": "/chum/answers/doors/promote-my-local-event-dd500e0967.json"
+    },
+    {
+      "answer_id": "intent:ed041bf0ac",
+      "phrase": "promote my venue",
+      "html": "/chum/answers/doors/promote-my-venue-ed041bf0ac/",
+      "json": "/chum/answers/doors/promote-my-venue-ed041bf0ac.json"
+    },
+    {
+      "answer_id": "intent:4c6b8a43d1",
+      "phrase": "promote this venue's events",
+      "html": "/chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1/",
+      "json": "/chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/eventwave-paid-promotion-v1/",
+    "intent": "/chum/intents/eventwave-paid-promotion-v1/",
+    "capability": "/chum/capabilities/eventwave-paid-promotion-v1/",
+    "capability_llms": "/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
+    "capability_json": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

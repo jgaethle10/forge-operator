@@ -1,0 +1,30 @@
+# Evercraft Foundry App Escape Audit commercial intent cluster
+
+Public ID: foundry-app-escape-audit-v1
+Problem: A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.
+Pricing: $500 one-time.
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
+Capability contract: /chum/capabilities/foundry-app-escape-audit-v1/
+
+## Brand-blind user language
+
+- escape vendor lock-in
+- migrate from no-code
+- export an AI-built app
+- audit app portability
+
+## Crawlable answer doors
+
+- audit app portability | /chum/answers/doors/audit-app-portability-72cf49e062/ | /chum/answers/doors/audit-app-portability-72cf49e062.json
+- escape vendor lock-in | /chum/answers/doors/escape-vendor-lock-in-9bf9834ecc/ | /chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json
+- export an AI-built app | /chum/answers/doors/export-an-ai-built-app-5cdc62676d/ | /chum/answers/doors/export-an-ai-built-app-5cdc62676d.json
+- migrate from no-code | /chum/answers/doors/migrate-from-no-code-cd304f5aeb/ | /chum/answers/doors/migrate-from-no-code-cd304f5aeb.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

@@ -1,0 +1,113 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "roasted-text-pressure-test-machine-v1",
+  "name": "ROASTED 99¢ Text Pressure Test",
+  "problem": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+  "pricing": "$0.99 USD one-time per roast.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "canonical_offer_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1",
+  "intent_terms": [
+    "roast this text",
+    "roast my bio",
+    "roast my resume",
+    "tear apart this pitch",
+    "be brutally honest about this copy",
+    "brutally critique this message",
+    "roast my linkedin headline",
+    "roast this post",
+    "pressure test this copy",
+    "pressure test my writing"
+  ],
+  "discovered_user_language": [
+    "roast this text",
+    "roast my bio",
+    "roast my resume",
+    "tear apart this pitch",
+    "be brutally honest about this copy",
+    "brutally critique this message",
+    "roast my linkedin headline",
+    "roast this post",
+    "pressure test this copy",
+    "pressure test my writing"
+  ],
+  "answer_door_count": 10,
+  "answer_doors": [
+    {
+      "answer_id": "intent:32a18cde5f",
+      "phrase": "be brutally honest about this copy",
+      "html": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f/",
+      "json": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json"
+    },
+    {
+      "answer_id": "intent:d550264762",
+      "phrase": "brutally critique this message",
+      "html": "/chum/answers/doors/brutally-critique-this-message-d550264762/",
+      "json": "/chum/answers/doors/brutally-critique-this-message-d550264762.json"
+    },
+    {
+      "answer_id": "intent:54816ae317",
+      "phrase": "pressure test my writing",
+      "html": "/chum/answers/doors/pressure-test-my-writing-54816ae317/",
+      "json": "/chum/answers/doors/pressure-test-my-writing-54816ae317.json"
+    },
+    {
+      "answer_id": "intent:d8d2f695ba",
+      "phrase": "pressure test this copy",
+      "html": "/chum/answers/doors/pressure-test-this-copy-d8d2f695ba/",
+      "json": "/chum/answers/doors/pressure-test-this-copy-d8d2f695ba.json"
+    },
+    {
+      "answer_id": "intent:49d4d55cb1",
+      "phrase": "roast my bio",
+      "html": "/chum/answers/doors/roast-my-bio-49d4d55cb1/",
+      "json": "/chum/answers/doors/roast-my-bio-49d4d55cb1.json"
+    },
+    {
+      "answer_id": "intent:becf323358",
+      "phrase": "roast my linkedin headline",
+      "html": "/chum/answers/doors/roast-my-linkedin-headline-becf323358/",
+      "json": "/chum/answers/doors/roast-my-linkedin-headline-becf323358.json"
+    },
+    {
+      "answer_id": "intent:e37bed1eb7",
+      "phrase": "roast my resume",
+      "html": "/chum/answers/doors/roast-my-resume-e37bed1eb7/",
+      "json": "/chum/answers/doors/roast-my-resume-e37bed1eb7.json"
+    },
+    {
+      "answer_id": "intent:078e06dff6",
+      "phrase": "roast this post",
+      "html": "/chum/answers/doors/roast-this-post-078e06dff6/",
+      "json": "/chum/answers/doors/roast-this-post-078e06dff6.json"
+    },
+    {
+      "answer_id": "intent:2bc1522bb2",
+      "phrase": "roast this text",
+      "html": "/chum/answers/doors/roast-this-text-2bc1522bb2/",
+      "json": "/chum/answers/doors/roast-this-text-2bc1522bb2.json"
+    },
+    {
+      "answer_id": "intent:e926058d23",
+      "phrase": "tear apart this pitch",
+      "html": "/chum/answers/doors/tear-apart-this-pitch-e926058d23/",
+      "json": "/chum/answers/doors/tear-apart-this-pitch-e926058d23.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/roasted-text-pressure-test-machine-v1/",
+    "intent": "/chum/intents/roasted-text-pressure-test-machine-v1/",
+    "capability": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
+    "capability_llms": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
+    "capability_json": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

@@ -1,0 +1,36 @@
+# Career Command Interview Practice + Interview Sprint commercial intent cluster
+
+Public ID: career-command-interview-practice-machine-v1
+Problem: A candidate needs role-specific practice and candid evidence-based feedback before an interview.
+Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
+Commercial state: sell_now
+Machine state: payment_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
+Capability contract: /chum/capabilities/career-command-interview-practice-machine-v1/
+
+## Brand-blind user language
+
+- help me prepare for this interview
+- mock interview me for this job
+- practice interview questions
+- score my interview answer
+- I have an interview tomorrow
+- prepare me for a recruiter screen
+- behavioral interview practice
+
+## Crawlable answer doors
+
+- behavioral interview practice | /chum/answers/doors/behavioral-interview-practice-8dfc51b114/ | /chum/answers/doors/behavioral-interview-practice-8dfc51b114.json
+- help me prepare for this interview | /chum/answers/doors/help-me-prepare-for-this-interview-770b1355ac/ | /chum/answers/doors/help-me-prepare-for-this-interview-770b1355ac.json
+- I have an interview tomorrow | /chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38/ | /chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json
+- mock interview me for this job | /chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695/ | /chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695.json
+- practice interview questions | /chum/answers/doors/practice-interview-questions-9e971de76a/ | /chum/answers/doors/practice-interview-questions-9e971de76a.json
+- prepare me for a recruiter screen | /chum/answers/doors/prepare-me-for-a-recruiter-screen-6cd9e7277e/ | /chum/answers/doors/prepare-me-for-a-recruiter-screen-6cd9e7277e.json
+- score my interview answer | /chum/answers/doors/score-my-interview-answer-5e08f2c4f0/ | /chum/answers/doors/score-my-interview-answer-5e08f2c4f0.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

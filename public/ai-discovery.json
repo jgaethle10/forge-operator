@@ -13,6 +13,9 @@
     "answer_graph": "/chum/answers/index.json",
     "answer_graph_text": "/chum/answers/index.txt",
     "observed_miss_answers": "/chum/answers/observed/index.json",
+    "commercial_intent_mesh": "/chum/commercial/index.json",
+    "commercial_intent_feed": "/chum/commercial/feed.json",
+    "segmented_sitemap_index": "/chum/sitemaps/index.xml",
     "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "products": "/.well-known/evercraft-products.json",
     "agents": "/.well-known/evercraft-agent-directory.json",
@@ -31,6 +34,8 @@
     "syndication": "/.well-known/evercraft-syndication.json",
     "rss": "/feed.xml",
     "json_feed": "/feed.json",
+    "commercial_intent_rss": "/chum/commercial/feed.xml",
+    "commercial_intent_json": "/chum/commercial/feed.json",
     "opensearch": "/opensearch.xml",
     "syndication_hub": "/chum/syndication/"
   },
@@ -58,6 +63,9 @@
     "policy": "One truthful canonical product record is fanned out into standard discovery formats. Material changes may be queued for authorized social publishing, with dedupe by content hash.",
     "rss": "/feed.xml",
     "json_feed": "/feed.json",
+    "commercial_intent_rss": "/chum/commercial/feed.xml",
+    "commercial_intent_json": "/chum/commercial/feed.json",
+    "segmented_sitemap_index": "/chum/sitemaps/index.xml",
     "hub": "/chum/syndication/",
     "manifest": "/.well-known/evercraft-syndication.json"
   }

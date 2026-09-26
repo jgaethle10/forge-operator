@@ -1,0 +1,242 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Evercraft Commercial Intent Discovery",
+  "home_page_url": "https://github.com/jgaethle10/forge-operator",
+  "feed_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/commercial/feed.json",
+  "items": [
+    {
+      "id": "urn:evercraft:commercial-intent:aliev-site-opportunity-snapshot-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1",
+      "title": "AliEV EV Site Opportunity Intelligence",
+      "summary": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
+      "tags": [
+        "sell_now",
+        "aliev-site-opportunity-snapshot-v1",
+        "commercial EV site report",
+        "EV charger competition around this address",
+        "EV charger site analysis",
+        "EV charging feasibility by address",
+        "EV charging opportunity report",
+        "find EV charging opportunities in this market",
+        "is this site good for EV charging",
+        "should I install EV chargers at this property",
+        "what EV chargers are near this property"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:career-command-interview-practice-machine-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1",
+      "title": "Career Command Interview Practice + Interview Sprint",
+      "summary": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
+      "tags": [
+        "sell_now",
+        "career-command-interview-practice-machine-v1",
+        "behavioral interview practice",
+        "help me prepare for this interview",
+        "I have an interview tomorrow",
+        "mock interview me for this job",
+        "practice interview questions",
+        "prepare me for a recruiter screen",
+        "score my interview answer"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:eventwave-paid-promotion-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1",
+      "title": "EventWave Event / Venue Promotion",
+      "summary": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
+      "tags": [
+        "sell_now",
+        "eventwave-paid-promotion-v1",
+        "advertise my event",
+        "boost event visibility",
+        "boost this event",
+        "buy event promotion",
+        "feature my venue on EventWave",
+        "help people find my event",
+        "promote an event",
+        "promote my event on EventWave",
+        "promote my local event",
+        "promote my venue",
+        "promote this venue's events"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:deck-capital-fit-sprint-machine-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1",
+      "title": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "summary": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+      "tags": [
+        "sell_now",
+        "deck-capital-fit-sprint-machine-v1",
+        "build a lender ready deck",
+        "find capital options for this project",
+        "help me find funding for my business",
+        "help me prepare for SBA financing",
+        "review my funding pitch",
+        "turn my business info into a funding deck",
+        "what am I missing before I seek funding",
+        "which lenders or programs fit my business"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:foundry-app-escape-audit-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "title": "Evercraft Foundry App Escape Audit",
+      "summary": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+      "tags": [
+        "sell_now",
+        "foundry-app-escape-audit-v1",
+        "audit app portability",
+        "escape vendor lock-in",
+        "export an AI-built app",
+        "migrate from no-code"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:ibmi-rescue-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1",
+      "title": "Evercraft IBM i Rescue",
+      "summary": "An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.",
+      "tags": [
+        "sell_now",
+        "ibmi-rescue-v1",
+        "AS/400 estate assessment before upgrading or modernizing",
+        "AS/400 modernization assessment",
+        "assess an IBM i or AS/400 estate before upgrading",
+        "build a rollback test and evidence plan before changing an IBM i production system",
+        "find undocumented dependencies in an IBM i workload",
+        "find undocumented IBM i dependencies before a maintenance window",
+        "help modernize JDE World or a custom IBM i workload without losing business behavior",
+        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+        "IBM i 7.4 support is ending and I need an upgrade plan",
+        "IBM i estate assessment before changing production",
+        "IBM i upgrade proof",
+        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:website-launch-service-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
+      "title": "Evercraft Website Launch Service",
+      "summary": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+      "tags": [
+        "sell_now",
+        "website-launch-service-v1",
+        "build me a business website",
+        "handle my website for me",
+        "launch a website for my company",
+        "make me a professional business site",
+        "replace my bad website"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:faie-signal-brief-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1",
+      "title": "FAIE Evidence-First Signal Brief",
+      "summary": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
+      "tags": [
+        "sell_now",
+        "faie-signal-brief-v1",
+        "do a resilience investigation",
+        "give me an evidence brief on this region",
+        "investigate this agriculture signal",
+        "research this land or water question",
+        "validate this environmental signal"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:findmypart-paid-hunt-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
+      "title": "FindMyPart Paid Part Hunt",
+      "summary": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "tags": [
+        "sell_now",
+        "findmypart-paid-hunt-v1",
+        "find a discontinued part",
+        "find a donor or salvage part",
+        "find a hard-to-source part",
+        "identify this part",
+        "source an obsolete component"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:rivet-site-underwriting-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+      "title": "RIVET EV Infrastructure Intelligence",
+      "summary": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
+      "tags": [
+        "sell_now",
+        "rivet-site-underwriting-v1",
+        "apartment EV charging site analysis",
+        "charging site economics",
+        "EV charger competition near this address",
+        "EV charger feasibility by address",
+        "EV charger investment report",
+        "EV charging demand near this property",
+        "EV charging diligence",
+        "EV charging incentives for this site",
+        "EV charging ROI for this property",
+        "EV charging site analysis by address",
+        "evaluate this address for EV charging",
+        "fleet depot EV charging site screening"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:roasted-text-pressure-test-machine-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1",
+      "title": "ROASTED 99¢ Text Pressure Test",
+      "summary": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
+      "tags": [
+        "sell_now",
+        "roasted-text-pressure-test-machine-v1",
+        "be brutally honest about this copy",
+        "brutally critique this message",
+        "pressure test my writing",
+        "pressure test this copy",
+        "roast my bio",
+        "roast my linkedin headline",
+        "roast my resume",
+        "roast this post",
+        "roast this text",
+        "tear apart this pitch"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:site-survive-rapid-audit-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+      "title": "Site-Survive Rapid Audit",
+      "summary": "A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.",
+      "tags": [
+        "sell_now",
+        "site-survive-rapid-audit-v1",
+        "business outage plan",
+        "internet outage continuity",
+        "offline operations plan",
+        "site resilience audit"
+      ]
+    },
+    {
+      "id": "urn:evercraft:commercial-intent:audit-center-website-audit-machine-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
+      "title": "Systemia Website Audit",
+      "summary": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
+      "tags": [
+        "sell_now",
+        "audit-center-website-audit-machine-v1",
+        "audit my website",
+        "check my local SEO",
+        "find conversion problems on my website",
+        "my website gets traffic but nobody contacts us",
+        "people visit my site but do not contact me",
+        "review my website SEO",
+        "tell me what is wrong with my business website",
+        "visitors are not turning into leads",
+        "website traffic but no leads",
+        "why is my contractor website not ranking",
+        "why is my site slow on mobile",
+        "why is my website not converting"
+      ]
+    }
+  ]
+}

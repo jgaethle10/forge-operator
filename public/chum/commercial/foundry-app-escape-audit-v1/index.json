@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "foundry-app-escape-audit-v1",
+  "name": "Evercraft Foundry App Escape Audit",
+  "problem": "A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.",
+  "pricing": "$500 one-time.",
+  "commercial_state": "sell_now",
+  "machine_state": "human_handoff_ready",
+  "canonical_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+  "intent_terms": [
+    "escape vendor lock-in",
+    "migrate from no-code",
+    "export an AI-built app",
+    "audit app portability"
+  ],
+  "discovered_user_language": [
+    "escape vendor lock-in",
+    "migrate from no-code",
+    "export an AI-built app",
+    "audit app portability"
+  ],
+  "answer_door_count": 4,
+  "answer_doors": [
+    {
+      "answer_id": "intent:72cf49e062",
+      "phrase": "audit app portability",
+      "html": "/chum/answers/doors/audit-app-portability-72cf49e062/",
+      "json": "/chum/answers/doors/audit-app-portability-72cf49e062.json"
+    },
+    {
+      "answer_id": "intent:9bf9834ecc",
+      "phrase": "escape vendor lock-in",
+      "html": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc/",
+      "json": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json"
+    },
+    {
+      "answer_id": "intent:5cdc62676d",
+      "phrase": "export an AI-built app",
+      "html": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d/",
+      "json": "/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json"
+    },
+    {
+      "answer_id": "intent:cd304f5aeb",
+      "phrase": "migrate from no-code",
+      "html": "/chum/answers/doors/migrate-from-no-code-cd304f5aeb/",
+      "json": "/chum/answers/doors/migrate-from-no-code-cd304f5aeb.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/foundry-app-escape-audit-v1/",
+    "intent": "/chum/intents/foundry-app-escape-audit-v1/",
+    "capability": "/chum/capabilities/foundry-app-escape-audit-v1/",
+    "capability_llms": "/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",
+    "capability_json": "/chum/capabilities/foundry-app-escape-audit-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "website-launch-service-v1",
+  "name": "Evercraft Website Launch Service",
+  "problem": "A business needs a professional website built or upgraded without operating a site-builder interface.",
+  "pricing": "Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "canonical_offer_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
+  "intent_terms": [
+    "build me a business website",
+    "launch a website for my company",
+    "replace my bad website",
+    "make me a professional business site",
+    "handle my website for me"
+  ],
+  "discovered_user_language": [
+    "build me a business website",
+    "launch a website for my company",
+    "replace my bad website",
+    "make me a professional business site",
+    "handle my website for me"
+  ],
+  "answer_door_count": 5,
+  "answer_doors": [
+    {
+      "answer_id": "intent:47014a0bbb",
+      "phrase": "build me a business website",
+      "html": "/chum/answers/doors/build-me-a-business-website-47014a0bbb/",
+      "json": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json"
+    },
+    {
+      "answer_id": "intent:53ad580370",
+      "phrase": "handle my website for me",
+      "html": "/chum/answers/doors/handle-my-website-for-me-53ad580370/",
+      "json": "/chum/answers/doors/handle-my-website-for-me-53ad580370.json"
+    },
+    {
+      "answer_id": "intent:0a8c7a11d2",
+      "phrase": "launch a website for my company",
+      "html": "/chum/answers/doors/launch-a-website-for-my-company-0a8c7a11d2/",
+      "json": "/chum/answers/doors/launch-a-website-for-my-company-0a8c7a11d2.json"
+    },
+    {
+      "answer_id": "intent:6eeab93ed2",
+      "phrase": "make me a professional business site",
+      "html": "/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2/",
+      "json": "/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2.json"
+    },
+    {
+      "answer_id": "intent:b7db22c7e5",
+      "phrase": "replace my bad website",
+      "html": "/chum/answers/doors/replace-my-bad-website-b7db22c7e5/",
+      "json": "/chum/answers/doors/replace-my-bad-website-b7db22c7e5.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/website-launch-service-v1/",
+    "intent": "/chum/intents/website-launch-service-v1/",
+    "capability": "/chum/capabilities/website-launch-service-v1/",
+    "capability_llms": "/chum/capabilities/website-launch-service-v1/llms.txt",
+    "capability_json": "/chum/capabilities/website-launch-service-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

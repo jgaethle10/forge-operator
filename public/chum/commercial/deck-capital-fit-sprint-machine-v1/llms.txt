@@ -1,0 +1,38 @@
+# Evercraft Deck Engine Founding Capital Fit Sprint commercial intent cluster
+
+Public ID: deck-capital-fit-sprint-machine-v1
+Problem: A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.
+Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
+Commercial state: sell_now
+Machine state: payment_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
+Capability contract: /chum/capabilities/deck-capital-fit-sprint-machine-v1/
+
+## Brand-blind user language
+
+- help me find funding for my business
+- which lenders or programs fit my business
+- build a lender ready deck
+- review my funding pitch
+- help me prepare for SBA financing
+- find capital options for this project
+- turn my business info into a funding deck
+- what am I missing before I seek funding
+
+## Crawlable answer doors
+
+- build a lender ready deck | /chum/answers/doors/build-a-lender-ready-deck-592e365c97/ | /chum/answers/doors/build-a-lender-ready-deck-592e365c97.json
+- find capital options for this project | /chum/answers/doors/find-capital-options-for-this-project-9a78204138/ | /chum/answers/doors/find-capital-options-for-this-project-9a78204138.json
+- help me find funding for my business | /chum/answers/doors/help-me-find-funding-for-my-business-395c92114e/ | /chum/answers/doors/help-me-find-funding-for-my-business-395c92114e.json
+- help me prepare for SBA financing | /chum/answers/doors/help-me-prepare-for-sba-financing-3cd8855170/ | /chum/answers/doors/help-me-prepare-for-sba-financing-3cd8855170.json
+- review my funding pitch | /chum/answers/doors/review-my-funding-pitch-93d8c535f5/ | /chum/answers/doors/review-my-funding-pitch-93d8c535f5.json
+- turn my business info into a funding deck | /chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84/ | /chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84.json
+- what am I missing before I seek funding | /chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2/ | /chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2.json
+- which lenders or programs fit my business | /chum/answers/doors/which-lenders-or-programs-fit-my-business-cd052bad8e/ | /chum/answers/doors/which-lenders-or-programs-fit-my-business-cd052bad8e.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

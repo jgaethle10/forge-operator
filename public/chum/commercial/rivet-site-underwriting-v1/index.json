@@ -1,0 +1,193 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "rivet-site-underwriting-v1",
+  "name": "RIVET EV Infrastructure Intelligence",
+  "problem": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
+  "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready_human_confirmation",
+  "canonical_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+  "intent_terms": [
+    "underwrite an EV charging site",
+    "EV charger investment report",
+    "charging site economics",
+    "evaluate this address for EV charging",
+    "EV charging diligence",
+    "should I install EV chargers at my property",
+    "EV charger feasibility by address",
+    "EV charging site analysis by address",
+    "EV charging ROI for this property",
+    "EV charging demand near this property",
+    "EV charger competition near this address",
+    "EV charging incentives for this site",
+    "utility tariff for EV charging at this property",
+    "parking lot EV charging opportunity",
+    "hotel EV charging site analysis",
+    "apartment EV charging site analysis",
+    "retail EV charging site analysis",
+    "fleet depot EV charging site screening",
+    "site-specific EV charging opportunity report",
+    "preliminary EV charging site plan"
+  ],
+  "discovered_user_language": [
+    "underwrite an EV charging site",
+    "EV charger investment report",
+    "charging site economics",
+    "evaluate this address for EV charging",
+    "EV charging diligence",
+    "should I install EV chargers at my property",
+    "EV charger feasibility by address",
+    "EV charging site analysis by address",
+    "EV charging ROI for this property",
+    "EV charging demand near this property",
+    "EV charger competition near this address",
+    "EV charging incentives for this site",
+    "utility tariff for EV charging at this property",
+    "parking lot EV charging opportunity",
+    "hotel EV charging site analysis",
+    "apartment EV charging site analysis",
+    "retail EV charging site analysis",
+    "fleet depot EV charging site screening",
+    "site-specific EV charging opportunity report",
+    "preliminary EV charging site plan"
+  ],
+  "answer_door_count": 20,
+  "answer_doors": [
+    {
+      "answer_id": "intent:a4fc7910cc",
+      "phrase": "apartment EV charging site analysis",
+      "html": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
+      "json": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json"
+    },
+    {
+      "answer_id": "intent:6092dd77f1",
+      "phrase": "charging site economics",
+      "html": "/chum/answers/doors/charging-site-economics-6092dd77f1/",
+      "json": "/chum/answers/doors/charging-site-economics-6092dd77f1.json"
+    },
+    {
+      "answer_id": "intent:aa69cb1075",
+      "phrase": "EV charger competition near this address",
+      "html": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
+      "json": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json"
+    },
+    {
+      "answer_id": "intent:8a81d21c84",
+      "phrase": "EV charger feasibility by address",
+      "html": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
+      "json": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json"
+    },
+    {
+      "answer_id": "intent:ed6fd3f23a",
+      "phrase": "EV charger investment report",
+      "html": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/",
+      "json": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json"
+    },
+    {
+      "answer_id": "intent:76a21ea75b",
+      "phrase": "EV charging demand near this property",
+      "html": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
+      "json": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json"
+    },
+    {
+      "answer_id": "intent:91e2eec236",
+      "phrase": "EV charging diligence",
+      "html": "/chum/answers/doors/ev-charging-diligence-91e2eec236/",
+      "json": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json"
+    },
+    {
+      "answer_id": "intent:76fa0b5a6c",
+      "phrase": "EV charging incentives for this site",
+      "html": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
+      "json": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json"
+    },
+    {
+      "answer_id": "intent:23181c0dbc",
+      "phrase": "EV charging ROI for this property",
+      "html": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
+      "json": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json"
+    },
+    {
+      "answer_id": "intent:1e6ee8e9ee",
+      "phrase": "EV charging site analysis by address",
+      "html": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
+      "json": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json"
+    },
+    {
+      "answer_id": "intent:c676bc6509",
+      "phrase": "evaluate this address for EV charging",
+      "html": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/",
+      "json": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json"
+    },
+    {
+      "answer_id": "intent:8e120b3526",
+      "phrase": "fleet depot EV charging site screening",
+      "html": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
+      "json": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json"
+    },
+    {
+      "answer_id": "intent:7464f372e9",
+      "phrase": "hotel EV charging site analysis",
+      "html": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
+      "json": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json"
+    },
+    {
+      "answer_id": "intent:34e75d677f",
+      "phrase": "parking lot EV charging opportunity",
+      "html": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
+      "json": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json"
+    },
+    {
+      "answer_id": "intent:4551e88b1c",
+      "phrase": "preliminary EV charging site plan",
+      "html": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
+      "json": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json"
+    },
+    {
+      "answer_id": "intent:49b6979e0f",
+      "phrase": "retail EV charging site analysis",
+      "html": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
+      "json": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json"
+    },
+    {
+      "answer_id": "intent:8391032a42",
+      "phrase": "should I install EV chargers at my property",
+      "html": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
+      "json": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json"
+    },
+    {
+      "answer_id": "intent:6ff61b4426",
+      "phrase": "site-specific EV charging opportunity report",
+      "html": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/",
+      "json": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json"
+    },
+    {
+      "answer_id": "intent:c05a16b3c1",
+      "phrase": "underwrite an EV charging site",
+      "html": "/chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1/",
+      "json": "/chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1.json"
+    },
+    {
+      "answer_id": "intent:affaf0c924",
+      "phrase": "utility tariff for EV charging at this property",
+      "html": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
+      "json": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/rivet-site-underwriting-v1/",
+    "intent": "/chum/intents/rivet-site-underwriting-v1/",
+    "capability": "/chum/capabilities/rivet-site-underwriting-v1/",
+    "capability_llms": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
+    "capability_json": "/chum/capabilities/rivet-site-underwriting-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

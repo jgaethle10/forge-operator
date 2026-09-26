@@ -1,0 +1,97 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "deck-capital-fit-sprint-machine-v1",
+  "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+  "problem": "A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.",
+  "pricing": "$49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.",
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready",
+  "canonical_offer_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1",
+  "intent_terms": [
+    "help me find funding for my business",
+    "which lenders or programs fit my business",
+    "build a lender ready deck",
+    "review my funding pitch",
+    "help me prepare for SBA financing",
+    "find capital options for this project",
+    "turn my business info into a funding deck",
+    "what am I missing before I seek funding"
+  ],
+  "discovered_user_language": [
+    "help me find funding for my business",
+    "which lenders or programs fit my business",
+    "build a lender ready deck",
+    "review my funding pitch",
+    "help me prepare for SBA financing",
+    "find capital options for this project",
+    "turn my business info into a funding deck",
+    "what am I missing before I seek funding"
+  ],
+  "answer_door_count": 8,
+  "answer_doors": [
+    {
+      "answer_id": "intent:592e365c97",
+      "phrase": "build a lender ready deck",
+      "html": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97/",
+      "json": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json"
+    },
+    {
+      "answer_id": "intent:9a78204138",
+      "phrase": "find capital options for this project",
+      "html": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138/",
+      "json": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json"
+    },
+    {
+      "answer_id": "intent:395c92114e",
+      "phrase": "help me find funding for my business",
+      "html": "/chum/answers/doors/help-me-find-funding-for-my-business-395c92114e/",
+      "json": "/chum/answers/doors/help-me-find-funding-for-my-business-395c92114e.json"
+    },
+    {
+      "answer_id": "intent:3cd8855170",
+      "phrase": "help me prepare for SBA financing",
+      "html": "/chum/answers/doors/help-me-prepare-for-sba-financing-3cd8855170/",
+      "json": "/chum/answers/doors/help-me-prepare-for-sba-financing-3cd8855170.json"
+    },
+    {
+      "answer_id": "intent:93d8c535f5",
+      "phrase": "review my funding pitch",
+      "html": "/chum/answers/doors/review-my-funding-pitch-93d8c535f5/",
+      "json": "/chum/answers/doors/review-my-funding-pitch-93d8c535f5.json"
+    },
+    {
+      "answer_id": "intent:9eb111ed84",
+      "phrase": "turn my business info into a funding deck",
+      "html": "/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84/",
+      "json": "/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84.json"
+    },
+    {
+      "answer_id": "intent:ee5dbd15c2",
+      "phrase": "what am I missing before I seek funding",
+      "html": "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2/",
+      "json": "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2.json"
+    },
+    {
+      "answer_id": "intent:cd052bad8e",
+      "phrase": "which lenders or programs fit my business",
+      "html": "/chum/answers/doors/which-lenders-or-programs-fit-my-business-cd052bad8e/",
+      "json": "/chum/answers/doors/which-lenders-or-programs-fit-my-business-cd052bad8e.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/deck-capital-fit-sprint-machine-v1/",
+    "intent": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
+    "capability": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
+    "capability_llms": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
+    "capability_json": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

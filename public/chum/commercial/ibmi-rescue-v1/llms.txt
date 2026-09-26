@@ -1,0 +1,46 @@
+# Evercraft IBM i Rescue commercial intent cluster
+
+Public ID: ibmi-rescue-v1
+Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
+Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
+Commercial state: sell_now
+Machine state: human_handoff_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
+Capability contract: /chum/capabilities/ibmi-rescue-v1/
+
+## Brand-blind user language
+
+- IBM i estate assessment before changing production
+- AS/400 estate assessment before upgrading or modernizing
+- find undocumented IBM i dependencies before a maintenance window
+- IBM i 7.4 support is ending and I need an upgrade plan
+- assess an IBM i or AS/400 estate before upgrading
+- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
+- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
+- help modernize JDE World or a custom IBM i workload without losing business behavior
+- build a rollback test and evidence plan before changing an IBM i production system
+- find undocumented dependencies in an IBM i workload
+- AS/400 modernization assessment
+- IBM i upgrade proof
+
+## Crawlable answer doors
+
+- AS/400 estate assessment before upgrading or modernizing | /chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575/ | /chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json
+- AS/400 modernization assessment | /chum/answers/doors/as-400-modernization-assessment-49430f448e/ | /chum/answers/doors/as-400-modernization-assessment-49430f448e.json
+- assess an IBM i or AS/400 estate before upgrading | /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/ | /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json
+- build a rollback test and evidence plan before changing an IBM i production system | /chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/ | /chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json
+- find undocumented dependencies in an IBM i workload | /chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/ | /chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json
+- find undocumented IBM i dependencies before a maintenance window | /chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf/ | /chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json
+- help modernize JDE World or a custom IBM i workload without losing business behavior | /chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/ | /chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json
+- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software | /chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/ | /chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json
+- IBM i 7.4 support is ending and I need an upgrade plan | /chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/ | /chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json
+- IBM i estate assessment before changing production | /chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a/ | /chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json
+- IBM i upgrade proof | /chum/answers/doors/ibm-i-upgrade-proof-240178e2de/ | /chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json
+- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization | /chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/ | /chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

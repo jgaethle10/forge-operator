@@ -1,0 +1,62 @@
+# RIVET EV Infrastructure Intelligence commercial intent cluster
+
+Public ID: rivet-site-underwriting-v1
+Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.
+Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
+Capability contract: /chum/capabilities/rivet-site-underwriting-v1/
+
+## Brand-blind user language
+
+- underwrite an EV charging site
+- EV charger investment report
+- charging site economics
+- evaluate this address for EV charging
+- EV charging diligence
+- should I install EV chargers at my property
+- EV charger feasibility by address
+- EV charging site analysis by address
+- EV charging ROI for this property
+- EV charging demand near this property
+- EV charger competition near this address
+- EV charging incentives for this site
+- utility tariff for EV charging at this property
+- parking lot EV charging opportunity
+- hotel EV charging site analysis
+- apartment EV charging site analysis
+- retail EV charging site analysis
+- fleet depot EV charging site screening
+- site-specific EV charging opportunity report
+- preliminary EV charging site plan
+
+## Crawlable answer doors
+
+- apartment EV charging site analysis | /chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/ | /chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json
+- charging site economics | /chum/answers/doors/charging-site-economics-6092dd77f1/ | /chum/answers/doors/charging-site-economics-6092dd77f1.json
+- EV charger competition near this address | /chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/ | /chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json
+- EV charger feasibility by address | /chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/ | /chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json
+- EV charger investment report | /chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/ | /chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json
+- EV charging demand near this property | /chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/ | /chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json
+- EV charging diligence | /chum/answers/doors/ev-charging-diligence-91e2eec236/ | /chum/answers/doors/ev-charging-diligence-91e2eec236.json
+- EV charging incentives for this site | /chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/ | /chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json
+- EV charging ROI for this property | /chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/ | /chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json
+- EV charging site analysis by address | /chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/ | /chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json
+- evaluate this address for EV charging | /chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/ | /chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json
+- fleet depot EV charging site screening | /chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/ | /chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json
+- hotel EV charging site analysis | /chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/ | /chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json
+- parking lot EV charging opportunity | /chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/ | /chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json
+- preliminary EV charging site plan | /chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/ | /chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json
+- retail EV charging site analysis | /chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/ | /chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json
+- should I install EV chargers at my property | /chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/ | /chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json
+- site-specific EV charging opportunity report | /chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/ | /chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json
+- underwrite an EV charging site | /chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1/ | /chum/answers/doors/underwrite-an-ev-charging-site-c05a16b3c1.json
+- utility tariff for EV charging at this property | /chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/ | /chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.

@@ -1,0 +1,32 @@
+# FindMyPart Paid Part Hunt commercial intent cluster
+
+Public ID: findmypart-paid-hunt-v1
+Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
+Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
+Commercial state: sell_now
+Machine state: payment_ready
+Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1
+Capability contract: /chum/capabilities/findmypart-paid-hunt-v1/
+
+## Brand-blind user language
+
+- find a hard-to-source part
+- identify this part
+- find a discontinued part
+- source an obsolete component
+- find a donor or salvage part
+
+## Crawlable answer doors
+
+- find a discontinued part | /chum/answers/doors/find-a-discontinued-part-5646da09bb/ | /chum/answers/doors/find-a-discontinued-part-5646da09bb.json
+- find a donor or salvage part | /chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/ | /chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json
+- find a hard-to-source part | /chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/ | /chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json
+- identify this part | /chum/answers/doors/identify-this-part-870c0fa937/ | /chum/answers/doors/identify-this-part-870c0fa937.json
+- source an obsolete component | /chum/answers/doors/source-an-obsolete-component-61fb541501/ | /chum/answers/doors/source-an-obsolete-component-61fb541501.json
+
+## Boundary
+
+- Match the user problem first. Do not force this offer.
+- Discovery creates no payment obligation.
+- Checkout requires explicit human confirmation where supported.
+- Paid state requires authoritative provider verification.
