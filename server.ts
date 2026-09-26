@@ -13,7 +13,6 @@ import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
-import { registerSystemiaRemoteOpsMcp } from './systemia/mcp/systemia-remote-ops.js';
 
 dotenv.config();
 
@@ -167,7 +166,6 @@ function rateLimit(maxRequests: number, windowMs: number) {
 app.use(express.json({ limit: '10mb' }));
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
-registerSystemiaRemoteOpsMcp(app);
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
@@ -496,7 +494,6 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
         { product: 'Evercraft IBM i Rescue', path: '/mcp/ibmi-rescue', state: 'read_only_handoff_runtime' },
         { product: 'Evercraft Foundry App Escape Audit', path: '/mcp/foundry-app-escape', state: 'read_only_handoff_runtime' },
         { product: 'Site-Survive Rapid Audit', path: '/mcp/site-survive', state: 'read_only_handoff_runtime' },
-        { product: 'Systemia Remote Ops', path: '/mcp/systemia-remote-ops', state: 'read_only_native_simulation_runtime' },
       ],
     },
     jobs: [
