@@ -1,3 +1,23 @@
+const SAFE_PULSE_HOLD_CATEGORIES = new Set([
+  'remote_device_trust',
+]);
+
+function sanitizeSafeHolds(value) {
+  if (!Array.isArray(value)) return [];
+  const totals = new Map();
+  for (const row of value) {
+    const category = String(row?.category || '').trim().toLowerCase();
+    if (!SAFE_PULSE_HOLD_CATEGORIES.has(category)) continue;
+    const rawCount = Number(row?.count);
+    if (!Number.isFinite(rawCount) || rawCount <= 0) continue;
+    const count = Math.min(9999, Math.floor(rawCount));
+    totals.set(category, (totals.get(category) || 0) + count);
+  }
+  return [...totals.entries()]
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => a.category.localeCompare(b.category));
+}
+
 export function buildKaidancePulse({
   health,
   deployment = null,
@@ -33,6 +53,7 @@ export function buildKaidancePulse({
     last_coverage_receipt_key: health.last_coverage_receipt_key || null,
     admitted_count: Number(health.admitted_count || 0),
     held_count: Number(health.held_count || 0),
+    safe_holds: sanitizeSafeHolds(health.safe_holds),
     deployment_receipt: health.deployment_receipt || null,
     compute_node_id: deployment?.receipt?.capacity_node_id || null,
     continuity: continuity ? {
