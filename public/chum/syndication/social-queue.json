@@ -1,7 +1,18 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T03:38:10.486Z",
+  "generated_at": "2026-09-26T03:42:18.211Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
-  "items": []
+  "items": [
+    {
+      "dedupe_key": "legacy-rescue-lab:4d36f7b9d918ad65b311a7e221660d17d28f3f6ca14d17ab94d1e2914705e561",
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "text": "Legacy Rescue Lab: Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
+      "content_sha256": "4d36f7b9d918ad65b311a7e221660d17d28f3f6ca14d17ab94d1e2914705e561",
+      "requires_authorized_destination": true
+    }
+  ]
 }

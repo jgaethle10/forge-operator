@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-26T03:38:10.486Z",
+  "updated_at": "2026-09-26T03:42:18.211Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "2f7587032bbc37f2389b6c0df935cdff31fb8741f4ee32d2555bf26c22b6a57b",
@@ -40,7 +40,7 @@
     "globalstat": "cdc1995f5f3e6b75e791252d803fdc797fe08321774cb41e12fd092192394105",
     "guardian": "12af18ade1452827a5a401397bf05b217536d52b7c496d5343b3aa62304bf78e",
     "infinite-classroom": "4e0e47da600b437e319c2fefad3bd82369bc733dcb038d7829720c653e0b1d0c",
-    "legacy-rescue-lab": "32a05c864aff5d862e97a330ebc5f067e5499d0d75b7dad34030319afc141590",
+    "legacy-rescue-lab": "4d36f7b9d918ad65b311a7e221660d17d28f3f6ca14d17ab94d1e2914705e561",
     "little-red-book-export-qa": "41790c3c11ab59a247baed59fe6c1ecce5c94cc09d887b6d1d7ce105483a0c61",
     "raven-nexus": "fbd4d5200be76cbc0adafff989ec1f1968d5acb1673e6f229fff7fd6be57a21d",
     "roasted": "a916992d80ab03c5681dd08519298d1498e20beeaac901a5de1bd8987d8cac15",

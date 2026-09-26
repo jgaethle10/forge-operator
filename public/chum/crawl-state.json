@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:42:00.726Z",
-  "url_count": 2032,
+  "updated_at": "2026-09-26T03:42:18.372Z",
+  "url_count": 2036,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -21,8 +21,8 @@
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "08bbe13e95b5ce4b9297651e667ae65bf67a00a50a7027d5ff2b5a49491588b8",
-      "last_changed": "2026-09-26T03:40:09.576Z",
+      "content_sha256": "fc9fe3971473485827ff0cccd0fb8f7a68bf0a8de6c5fb6f5a92563146d394fd",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "b8d2bd337a1f512ecbe8be7d8ca3e599a948d2a7cf8fe1e0b2410872e511ed93",
-      "last_changed": "2026-09-26T03:42:00.726Z",
+      "content_sha256": "5902834c1e241047cf0951710459214b0186fa4452de93e4baf8d8bfd6524793",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -615,8 +615,8 @@
     },
     "/llms.txt": {
       "path": "/llms.txt",
-      "content_sha256": "9a5827aad895d15446708e1eb60f57065738b7cf855fc748b7b8bda0ff7d011f",
-      "last_changed": "2026-09-26T03:42:00.342Z",
+      "content_sha256": "ccc498c11504f0a1e6b9878c3e825079fddebadad1e36c81673e3348453a088d",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 86
     },
     "/llms-full.txt": {
@@ -2991,14 +2991,14 @@
     },
     "/chum/products/legacy-rescue-lab/ai-discovery.json": {
       "path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "content_sha256": "70f22d263f01c6e239744e9072d86f53bae6a800237a1cd8d432a7904c98eb03",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "976e3aed18ae2cdbea9ff80852830e4a6631d4cc706780fc4d2766dddced3420",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 94
     },
     "/chum/products/legacy-rescue-lab/ai-conformance.json": {
       "path": "/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "content_sha256": "59eb0c2ad91deaf410ee6f176dfe6bfc933005bbbc893e20503562a5ec0ef6b3",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "8fb1123bdaa1c10bc0cc650b16a43ad39c647ffe1d06c2970b5b561c9272336e",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 94
     },
     "/legacy-rescue-lab/editorial/": {
@@ -3011,6 +3011,30 @@
       "path": "/legacy-rescue-lab/editorial/feed.xml",
       "content_sha256": "13390c8b1892651e1e0d88501cdebed888b93dae3ffc6db23a6003d67db6d016",
       "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/editorial/save-software-before-rebuild/": {
+      "path": "/legacy-rescue-lab/editorial/save-software-before-rebuild/",
+      "content_sha256": "95337a564fcf626732a1fa3285a7ab15a168cf6cba8f462ba5c525a7754306e6",
+      "last_changed": "2026-09-26T03:42:18.372Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/editorial/developer-disappeared/": {
+      "path": "/legacy-rescue-lab/editorial/developer-disappeared/",
+      "content_sha256": "8e6ded35730a7be5e0a9b9b3acfbf271d38353e486cd99c2d0e57939113b3b73",
+      "last_changed": "2026-09-26T03:42:18.372Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/editorial/failed-ai-app/": {
+      "path": "/legacy-rescue-lab/editorial/failed-ai-app/",
+      "content_sha256": "d6f9941aed86f39a21022ba5dfd563ae4e81ea20f16d6fbe08cc81c2f3a28095",
+      "last_changed": "2026-09-26T03:42:18.372Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/editorial/broken-checkout/": {
+      "path": "/legacy-rescue-lab/editorial/broken-checkout/",
+      "content_sha256": "dc39dfcfa411b071886a0d13363cd51f86cb9250d155bc64b3fb868181e236ac",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 60
     },
     "/legacy-rescue-lab/": {
@@ -12171,14 +12195,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "78753090272f7a034727eb4dc334ae0e43a33a19d0b44effcfb9b3a95d806909",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "c3a48086527ad0942f90a5f5a425ef558f118d48b703aca85f1271784fc8a387",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "bb03aa14af719e807c9baa1f8274e1b020abb543dae3029d5b2b3eaccee48057",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "e58bb9c3521be884247112f0eb9c9efef954f370b729e9349f7ca4eec5e7c2b8",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -12189,8 +12213,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "e0bf9f7de0af97b4e3e6b118a77fe742d6cb7f1d80621cedb2d14671cbea764a",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "f3a5656ba65a209b4e4a8a6ed1aa604e10d42db30bfce1fad1fd6065c674abc9",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -12201,8 +12225,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "49b837f8f65039ce642db2221d068c6a9be8eb36d3560959702dadade74694ab",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "075440fa0654f35816dd5f18a6695f4487fe51444c182826bfc01c0a38f94796",
+      "last_changed": "2026-09-26T03:42:18.372Z",
       "priority": 80
     }
   }
