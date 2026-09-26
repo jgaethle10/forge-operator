@@ -143,6 +143,7 @@ npm run proof:saban-formation-waves
 npm run proof:saban-portfolio-archaeology
 npm run proof:saban-nodeseed-multiplier
 npm run proof:saban-nodeseed-pool
+npm run proof:forensiscope-security
 npm run proof:forensiscope-distributed
 ```
 
@@ -157,3 +158,14 @@ npm run saban:watershed
 Inventory is not publication. Finding a product does not automatically expose it. Public discovery still requires admission to the public product directory with canonical URLs, truthful intents, authority, boundaries and the correct human-confirmation rules.
 
 Internal/admin surfaces, credentials, customer data, private topology and undeclared side effects stay outside public multiplication and distribution.
+
+
+## Retry and lease safety
+
+Registered Saban assignments carry an idempotency identity across local and NodeSeed execution. NodeSeed seals completed assignment records inside its private compute root, reuses the original result on retries, preserves that decision across a NodeSeed restart, and rejects reuse of one idempotency key for different logical work. Corrupted durable idempotency records fail closed rather than silently causing a second execution.
+
+Distributed NodeSeed pools actively renew supported capacity leases while work is running. Requested lease TTL is sized against the assignment timeout, renewal outcomes are included in the pool receipt, and renewal timers plus leases are always released in a finally path.
+
+## ForensiScope source boundary
+
+ForensiScope authorized-source admission resolves canonical filesystem paths before containment checks. Existing media sources must remain inside admitted real roots, direct symlink sources are rejected, parent-directory symlink escapes are blocked, source SHA-256 identity is enforced, and a configurable source byte ceiling is applied before execution. These controls do not enable public machine intake; that remains a separate verification gate.
