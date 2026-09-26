@@ -29,5 +29,6 @@
   "role": "maintenance_only_after_activation",
   "activation_owner": "public-edge-activation-watch",
   "maintenance_owner": "public-edge-controller",
-  "hold_state": "held_waiting_for_activation_watch"
+  "hold_state": "held_waiting_for_activation_watch",
+  "proof": "systemia/organism/public-edge-controller-runner.proof.mjs"
 }
