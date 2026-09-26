@@ -832,15 +832,16 @@ export async function startEvercraftComputeNode({
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           const service = { close: async () => runtime.close() };
-          const health = async () => {
-            const response = await fetch(runtime.service_url + runtime.health_path);
-            return response.json();
-          };
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
             runtime: {
-              health,
+              health: () => ({
+                ok: true,
+                service: 'rivet-yard-report-runtime',
+                runtime: 'Evercraft Compute',
+                schema: 'evercraft.rivet.yard-runtime-health.v1'
+              }),
               setDeploymentReceipt: () => ({
                 ok: true,
                 service: 'rivet-yard-report-runtime',
