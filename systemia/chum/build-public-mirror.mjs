@@ -131,6 +131,7 @@ for (const product of directory.products || []) {
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
     distribution_surfaces: product.distribution_surfaces || null,
+    relationships: product.relationships || null,
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -160,12 +161,20 @@ for (const product of directory.products || []) {
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
     distribution_surfaces: product.distribution_surfaces || null,
+    relationships: product.relationships || null,
     provider_behavior_state: 'not_inferred_from_publication',
     machine_commerce_handoff_state: conf?.machine_commerce_handoff_state || null,
     machine_commerce_public_id: conf?.machine_commerce_public_id || product.commercial?.machine_commerce_handoff?.public_id || null,
     machine_commerce_tool: conf?.machine_commerce_tool || product.commercial?.machine_commerce_handoff?.tool || null,
     live_canary_evidence: conf?.live_canary_evidence || null
   };
+
+  const relationshipLines = Object.entries(product.relationships || {}).map(([relationshipKey, relationship]) => {
+    const label = relationship?.name || relationshipKey;
+    const description = relationship?.description || relationship?.relationship || '';
+    const publicSurface = relationship?.public_surface ? ` · ${relationship.public_surface}` : '';
+    return `- ${label}${description ? `: ${description}` : ''}${publicSurface}`;
+  });
 
   const llms = [
     `# ${product.name}`,
@@ -177,6 +186,7 @@ for (const product of directory.products || []) {
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
+    ...(relationshipLines.length ? ['', '## Related product layers', '', ...relationshipLines] : []),
     product.developer_surfaces?.hub ? `Developer hub: ${product.developer_surfaces.hub}` : null,
     product.developer_surfaces?.status ? `Verified status: ${product.developer_surfaces.status}` : null,
     product.developer_surfaces?.examples ? `Examples: ${product.developer_surfaces.examples}` : null,
