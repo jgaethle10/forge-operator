@@ -485,6 +485,29 @@ async function main() {
     mission_snapshot: path.join(outDir, 'mission-snapshot.json')
   }));
 
+  if (blockingFindings.length) {
+    console.log(JSON.stringify({
+      schema: 'evercraft.portfolio-sentinel.blocking-findings.v1',
+      cycle_key: cycleKey,
+      findings: blockingFindings.map((row) => ({
+        finding_key: row.finding_key,
+        severity: row.severity,
+        code: row.code,
+        subject: row.subject,
+        detail: row.detail,
+        repair_mode: row.repair_mode || null,
+        human_gate_required: Boolean(row.human_gate_required),
+        evidence_refs: Array.isArray(row.evidence_refs) ? row.evidence_refs.slice(0, 8) : [],
+        repair_recipe: row.repair_recipe?.recipe_id
+          ? {
+              recipe_id: row.repair_recipe.recipe_id,
+              action: row.repair_recipe.action || null
+            }
+          : null
+      }))
+    }));
+  }
+
   if (!healthy && args.enforceHealth) process.exitCode = 1;
 }
 
