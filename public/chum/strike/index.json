@@ -1,13 +1,13 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-26T00:23:48.269Z",
+  "generated_at": "2026-09-26T00:32:08.861Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
   "surfaces": [
     {
       "path": "/chum/intents/forensiscope-evidence-review-v1/",
-      "score": 190,
+      "score": 250,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -18,7 +18,7 @@
     },
     {
       "path": "/chum/products/forensiscope/",
-      "score": 186,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -29,7 +29,7 @@
     },
     {
       "path": "/chum/products/forensiscope/ai-conformance.json",
-      "score": 186,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -40,7 +40,7 @@
     },
     {
       "path": "/chum/products/forensiscope/ai-discovery.json",
-      "score": 186,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -51,7 +51,7 @@
     },
     {
       "path": "/chum/products/forensiscope/llms.txt",
-      "score": 186,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -62,7 +62,7 @@
     },
     {
       "path": "/forensiscope/developers/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -73,7 +73,7 @@
     },
     {
       "path": "/forensiscope/distribution/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -84,7 +84,7 @@
     },
     {
       "path": "/forensiscope/editorial/deduplicate-long-video-segments/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -95,7 +95,7 @@
     },
     {
       "path": "/forensiscope/editorial/forensiscope-and-assemblyai/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -106,7 +106,7 @@
     },
     {
       "path": "/forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -117,7 +117,7 @@
     },
     {
       "path": "/forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -128,7 +128,7 @@
     },
     {
       "path": "/forensiscope/editorial/forensiscope-vs-echosaw/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -139,7 +139,7 @@
     },
     {
       "path": "/forensiscope/editorial/forensiscope-vs-gemini/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -150,7 +150,7 @@
     },
     {
       "path": "/forensiscope/editorial/forensiscope-vs-k2/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -161,7 +161,7 @@
     },
     {
       "path": "/forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -172,7 +172,7 @@
     },
     {
       "path": "/forensiscope/editorial/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -183,7 +183,7 @@
     },
     {
       "path": "/forensiscope/editorial/long-video-ai-tools/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -194,7 +194,7 @@
     },
     {
       "path": "/forensiscope/editorial/video-too-large-for-chatgpt/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -205,7 +205,7 @@
     },
     {
       "path": "/forensiscope/mesh/llms.txt",
-      "score": 178,
+      "score": 238,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -216,7 +216,7 @@
     },
     {
       "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -226,7 +226,7 @@
     },
     {
       "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -236,7 +236,7 @@
     },
     {
       "path": "/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -246,7 +246,7 @@
     },
     {
       "path": "/chum/answers/doors/4-hour-video-analysis-b25c640591/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -256,7 +256,7 @@
     },
     {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -266,7 +266,7 @@
     },
     {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -276,7 +276,7 @@
     },
     {
       "path": "/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -286,7 +286,7 @@
     },
     {
       "path": "/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -296,7 +296,7 @@
     },
     {
       "path": "/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -306,7 +306,7 @@
     },
     {
       "path": "/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -316,7 +316,7 @@
     },
     {
       "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -326,7 +326,7 @@
     },
     {
       "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -336,7 +336,7 @@
     },
     {
       "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -346,7 +346,7 @@
     },
     {
       "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -356,7 +356,7 @@
     },
     {
       "path": "/chum/answers/doors/agent-benchmark-mission-d6da03bb68.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -366,7 +366,7 @@
     },
     {
       "path": "/chum/answers/doors/agent-benchmark-mission-d6da03bb68/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -376,7 +376,7 @@
     },
     {
       "path": "/chum/answers/doors/agent-persistence-a532e2a149.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -386,7 +386,7 @@
     },
     {
       "path": "/chum/answers/doors/agent-persistence-a532e2a149/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -396,7 +396,7 @@
     },
     {
       "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -406,7 +406,7 @@
     },
     {
       "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -416,7 +416,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -426,7 +426,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -436,7 +436,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-agents-still-running-6bf3174230.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -446,7 +446,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-agents-still-running-6bf3174230/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -456,7 +456,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -466,7 +466,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -476,7 +476,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -486,7 +486,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -496,7 +496,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -506,7 +506,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -516,7 +516,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -526,7 +526,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -536,7 +536,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -546,7 +546,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -556,7 +556,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -566,7 +566,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -576,7 +576,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -586,7 +586,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -596,7 +596,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -606,7 +606,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -616,7 +616,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-worker-competency-test-7f140524a9.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -626,7 +626,7 @@
     },
     {
       "path": "/chum/answers/doors/ai-worker-competency-test-7f140524a9/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -636,7 +636,7 @@
     },
     {
       "path": "/chum/answers/doors/air-quality-work-decision-6eeb07802f.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -646,7 +646,7 @@
     },
     {
       "path": "/chum/answers/doors/air-quality-work-decision-6eeb07802f/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -656,7 +656,7 @@
     },
     {
       "path": "/chum/answers/doors/airport-parking-management-software-e93ff18ae4.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -666,7 +666,7 @@
     },
     {
       "path": "/chum/answers/doors/airport-parking-management-software-e93ff18ae4/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -676,7 +676,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-a-document-dump-a54d61f378.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -686,7 +686,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-a-document-dump-a54d61f378/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -696,7 +696,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -706,7 +706,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-a-long-video-2badf65989/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -716,7 +716,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -726,7 +726,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -736,7 +736,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -746,7 +746,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -756,7 +756,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -766,7 +766,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -776,7 +776,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -786,7 +786,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -796,7 +796,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -806,7 +806,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -816,7 +816,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -826,7 +826,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -836,7 +836,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -846,7 +846,7 @@
     },
     {
       "path": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -856,7 +856,7 @@
     },
     {
       "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -866,7 +866,7 @@
     },
     {
       "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -876,7 +876,7 @@
     },
     {
       "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -886,7 +886,7 @@
     },
     {
       "path": "/chum/answers/doors/application-network-continuity-3ac8582e22/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -896,7 +896,7 @@
     },
     {
       "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -906,7 +906,7 @@
     },
     {
       "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -916,7 +916,7 @@
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -926,7 +926,7 @@
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -936,7 +936,7 @@
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -946,7 +946,7 @@
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -956,7 +956,7 @@
     },
     {
       "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -966,7 +966,7 @@
     },
     {
       "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -976,7 +976,7 @@
     },
     {
       "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -986,7 +986,7 @@
     },
     {
       "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -996,7 +996,7 @@
     },
     {
       "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -1006,7 +1006,7 @@
     },
     {
       "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2/",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
@@ -1016,7 +1016,7 @@
     },
     {
       "path": "/chum/answers/doors/audio-too-long-for-ai-e40950a338.json",
-      "score": 162,
+      "score": 222,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",

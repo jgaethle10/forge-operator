@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T00:27:47.854Z",
+  "updated_at": "2026-09-26T00:32:09.062Z",
   "url_count": 1866,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -123,32 +123,32 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "9184e04704dc7add3114f14979961c45351766b73f0e38f748d95cb5f6f04261",
-      "last_changed": "2026-09-26T00:27:47.854Z",
+      "content_sha256": "14e874134bd6dd47a96b0abb9771504c7de42718f23ab583b99f6644dca08293",
+      "last_changed": "2026-09-26T00:32:09.062Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "e0b9a5f4a9be79f737713a79ce26b373a740142f240ae5489262c1edbd059358",
-      "last_changed": "2026-09-26T00:24:32.646Z",
+      "content_sha256": "e7e41a06e059044058000fb8098c882cdc639a1e64352005e5f7a4be056ed5f1",
+      "last_changed": "2026-09-26T00:32:09.062Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "01d4cf4983391f7beb592a8e19d666fed886d6992b0d5049762889076db42b06",
-      "last_changed": "2026-09-26T00:24:32.646Z",
+      "content_sha256": "0c95db0864480a03ada9e1e4b14636b7313acdf7ef167f33a6a1c610aa706512",
+      "last_changed": "2026-09-26T00:32:09.062Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "9783bb1ddaf38f23226ff383de81990d7c4da4b5b7f142e272d55c4e72a03dc1",
-      "last_changed": "2026-09-26T00:24:32.646Z",
+      "content_sha256": "6cbf5217055eb288004ed138dbfcce11dbacd8615e636d03f189d0e6d0131fb4",
+      "last_changed": "2026-09-26T00:32:09.062Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "265b287d5cbc88f0ac01ead0ba340ef61ed1e80fa9e163111977071821933bdf",
-      "last_changed": "2026-09-26T00:24:32.646Z",
+      "content_sha256": "b5a534cff504e22deaf6983c4f1c3949d40bae18c6c1dcb0c0aaa01b3e72f65b",
+      "last_changed": "2026-09-26T00:32:09.062Z",
       "priority": 80
     },
     "/chum/sitemap.xml": {
