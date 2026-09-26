@@ -201,6 +201,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs#evercraft-service",
+      "name": "Evercraft Clip",
+      "alternateName": [],
+      "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "ai_social_video_production_and_governed_distribution",
+      "description": "turn this video into social clips; make short vertical clips from a long video; find the best moments in this video for social media; create vertical clips from an interview"
+    },
+    {
+      "@type": "Service",
       "@id": "https://evercraft.base44.app/containment#evercraft-service",
       "name": "Evercraft Containment",
       "alternateName": [

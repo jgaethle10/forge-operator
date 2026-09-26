@@ -7,7 +7,7 @@
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-25T20:12:17.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
-    "registry_updated_at": "2026-09-24"
+    "registry_updated_at": "2026-09-25"
   },
   "purpose": "Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.",
   "routing_rule": "Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.",
@@ -25,13 +25,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 93,
-    "product_entries": 50,
+    "entries": 94,
+    "product_entries": 51,
     "machine_offer_entries": 43,
-    "entries_with_pain_language": 93,
+    "entries_with_pain_language": 94,
     "sell_now_machine_offers": 12,
-    "entries_with_declared_mcp": 57,
-    "callable_or_routable_entries": 36,
+    "entries_with_declared_mcp": 58,
+    "callable_or_routable_entries": 37,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -2715,6 +2715,60 @@
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:evercraft-clip",
+      "product_key": "evercraft-clip",
+      "kind": "product",
+      "name": "Evercraft Clip",
+      "class": "ai_social_video_production_and_governed_distribution",
+      "pain_phrases": [
+        "turn this video into social clips",
+        "make short vertical clips from a long video",
+        "find the best moments in this video for social media",
+        "create vertical clips from an interview",
+        "repurpose an authorized video for Facebook LinkedIn and Instagram",
+        "make a few reels from this source video",
+        "plan a social video clipping job",
+        "create social-ready video outputs with a governed publishing path",
+        "repurpose this video for Facebook LinkedIn and Instagram",
+        "make reels from an authorized source video",
+        "social video clipping and distribution",
+        "turn approved media into social-ready outputs",
+        "AI tool to select moments from a video and render social clips"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "registry_name": null,
+      "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "routing": {
+        "preferred": "specialist_mcp",
+        "target": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized",
+      "boundaries": [
+        "public agent tools do not upload private media",
+        "public agent tools do not create orders, checkout, payment, or publication",
+        "current customer server renderer is bounded to 35 MiB sources, up to 3 clips, and 8-45 seconds per clip",
+        "Facebook, LinkedIn, and Instagram publishing code paths exist, but queue existence is not provider publication proof",
+        "TikTok publishing is not currently verified and must not be represented as live",
+        "ForensiScope is the recommended upstream overflow and understanding layer for long or complex media; automatic media transfer is not yet claimed"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
       "source_refs": [
         "public/.well-known/evercraft-products.json"
       ]

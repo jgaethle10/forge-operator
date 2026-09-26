@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-25T20:12:17.000Z",
+  "answer_id": "intent:8376f76e39",
+  "user_language": "find the best moments in this video for social media",
+  "normalized": "find the best moments in this video for social media",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:evercraft-clip",
+      "kind": "product",
+      "product_key": "evercraft-clip",
+      "public_id": null,
+      "name": "Evercraft Clip",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "specialist_mcp_declared",
+      "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "pain_page": "/chum/products/evercraft-clip/",
+      "registry_name": null,
+      "direct_mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "authority": "public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized",
+      "boundaries": [
+        "public agent tools do not upload private media",
+        "public agent tools do not create orders, checkout, payment, or publication",
+        "current customer server renderer is bounded to 35 MiB sources, up to 3 clips, and 8-45 seconds per clip",
+        "Facebook, LinkedIn, and Instagram publishing code paths exist, but queue existence is not provider publication proof",
+        "TikTok publishing is not currently verified and must not be represented as live",
+        "ForensiScope is the recommended upstream overflow and understanding layer for long or complex media; automatic media transfer is not yet claimed"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

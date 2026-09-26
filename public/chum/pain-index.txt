@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 93
-Product entries: 50
+Entries: 94
+Product entries: 51
 Machine-offer entries: 43
 Sell-now machine offers: 12
 
@@ -1121,6 +1121,30 @@ Use when the user means:
 - join a founding professional networking beta
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Clip
+Capability ID: product:evercraft-clip
+Product key: evercraft-clip
+Commercial state: product_contract
+Machine state: specialist_mcp_declared
+Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+MCP: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
+Use when the user means:
+- turn this video into social clips
+- make short vertical clips from a long video
+- find the best moments in this video for social media
+- create vertical clips from an interview
+- repurpose an authorized video for Facebook LinkedIn and Instagram
+- make a few reels from this source video
+- plan a social video clipping job
+- create social-ready video outputs with a governed publishing path
+- repurpose this video for Facebook LinkedIn and Instagram
+- make reels from an authorized source video
+- social video clipping and distribution
+- turn approved media into social-ready outputs
+- AI tool to select moments from a video and render social clips
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Evercraft Containment
 Capability ID: product:evercraft-containment

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T02:15:04.396Z",
+  "updated_at": "2026-09-26T02:19:41.271Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,480 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T02:15:04.396Z",
+      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/evercraft-clip/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/ai-conformance.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/ai-discovery.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/llms.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T02:15:04.396Z",
+      "path": "/chum/answers/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T02:15:04.396Z",
+      "last_changed": "2026-09-26T02:19:41.271Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T02:15:04.396Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "url": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/",
+      "url": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "url": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1/",
+      "url": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "url": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621/",
+      "url": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "url": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39/",
+      "url": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "url": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903/",
+      "url": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "url": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/",
+      "url": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "url": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/",
+      "url": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "url": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/",
+      "url": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "url": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf/",
+      "url": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "url": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e/",
+      "url": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "url": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/",
+      "url": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "url": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/",
+      "url": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "url": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/",
+      "url": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/evercraft-clip/",
+      "url": "/chum/products/evercraft-clip/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/ai-conformance.json",
+      "url": "/chum/products/evercraft-clip/ai-conformance.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/ai-discovery.json",
+      "url": "/chum/products/evercraft-clip/ai-discovery.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/llms.txt",
+      "url": "/chum/products/evercraft-clip/llms.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 80
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-09-26T02:19:41.271Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +494,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T02:15:04.396Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T02:15:04.396Z",
       "priority": 80
     },
@@ -723,12 +1170,6 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-26T00:43:21.674Z",
-      "priority": 88
-    },
-    {
       "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
       "url": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
       "last_changed": "2026-09-26T00:41:42.260Z",
@@ -837,24 +1278,6 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 84
-    },
-    {
       "path": "/.well-known/evercraft-discovery.json",
       "url": "/.well-known/evercraft-discovery.json",
       "last_changed": "2026-09-26T00:41:42.260Z",
@@ -865,42 +1288,6 @@
       "url": "/.well-known/evercraft-network.json",
       "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 80
     },
     {
       "path": "/ai-discovery.json",
@@ -915,21 +1302,9 @@
       "priority": 60
     },
     {
-      "path": "/schema.jsonld",
-      "url": "/schema.jsonld",
-      "last_changed": "2026-09-26T00:41:42.260Z",
-      "priority": 60
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-26T00:32:09.062Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/",
-      "url": "/chum/",
-      "last_changed": "2026-09-26T00:24:32.646Z",
       "priority": 80
     },
     {
@@ -1351,186 +1726,6 @@
       "url": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426/",
       "last_changed": "2026-09-25T20:57:58.745Z",
       "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
-      "url": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
-      "url": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/aliev/",
-      "url": "/chum/products/aliev/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "url": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
-      "url": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "url": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "url": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "url": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "url": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "url": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "url": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "url": "/chum/products/ibmi-rescue/llms.txt",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "url": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
-      "url": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
-      "url": "/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "url": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json",
-      "url": "/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c.json",
-      "url": "/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
-      "url": "/chum/answers/doors/add-idempotency-and-receipts-to-ai-business-actions-036bb2d652.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
-      "url": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/agent-benchmark-mission-d6da03bb68.json",
-      "url": "/chum/answers/doors/agent-benchmark-mission-d6da03bb68.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/agent-persistence-a532e2a149.json",
-      "url": "/chum/answers/doors/agent-persistence-a532e2a149.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "url": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
-      "url": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
     }
   ]
 }

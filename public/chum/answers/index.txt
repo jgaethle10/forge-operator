@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 93
-Unique user phrases: 675
-Candidate edges: 734
+Pain-index entries: 94
+Unique user phrases: 688
+Candidate edges: 747
 Ambiguous phrases: 59
 
 ## 15 GB video analysis
@@ -143,6 +143,13 @@ Human-readable match: /chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## AI tool to select moments from a video and render social clips
+Answer ID: intent:70010b2c7f
+Human-readable match: /chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## AI video understanding for long footage
 Answer ID: intent:3cfef3702c
@@ -1041,6 +1048,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
 
+## create social-ready video outputs with a governed publishing path
+Answer ID: intent:ec776b8ce1
+Human-readable match: /chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
+## create vertical clips from an interview
+Answer ID: intent:581ed49621
+Human-readable match: /chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
 ## credit builder
 Answer ID: intent:d667e52872
 Human-readable match: /chum/answers/doors/credit-builder-d667e52872/
@@ -1738,6 +1759,13 @@ Human-readable match: /chum/answers/doors/find-talent-by-demonstrated-ability-e8
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-talent-by-demonstrated-ability-e8118ffd93.json
 Candidates:
 - Evidence-Backed Talent Proof Portal | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/talent-proof-portal-v1/
+
+## find the best moments in this video for social media
+Answer ID: intent:8376f76e39
+Human-readable match: /chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## find the smallest Raven safety capability without buying the full suite or hardware
 Answer ID: intent:0ee29c0618
@@ -2582,6 +2610,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## make a few reels from this source video
+Answer ID: intent:42a0ecd903
+Human-readable match: /chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
 ## make a personal or relationship safety plan
 Answer ID: intent:3eaf7975ab
 Human-readable match: /chum/answers/doors/make-a-personal-or-relationship-safety-plan-3eaf7975ab/
@@ -2639,6 +2674,20 @@ Human-readable match: /chum/answers/doors/make-my-local-business-more-discoverab
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
+
+## make reels from an authorized source video
+Answer ID: intent:8742052def
+Human-readable match: /chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
+## make short vertical clips from a long video
+Answer ID: intent:9308630c9b
+Human-readable match: /chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## make this writing sharper
 Answer ID: intent:17ad4913a5
@@ -3023,6 +3072,13 @@ Human-readable match: /chum/answers/doors/perform-frame-level-review-beyond-the-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/perform-frame-level-review-beyond-the-current-assistant-s-limits-878ff72db6.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## plan a social video clipping job
+Answer ID: intent:cb32427490
+Human-readable match: /chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## plan professional holiday lighting for my property
 Answer ID: intent:a886251485
@@ -3497,6 +3553,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
+## repurpose an authorized video for Facebook LinkedIn and Instagram
+Answer ID: intent:c491148baf
+Human-readable match: /chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
+## repurpose this video for Facebook LinkedIn and Instagram
+Answer ID: intent:44b4fb615e
+Human-readable match: /chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
 ## research disease evidence with uncertainty attached
 Answer ID: intent:0e1637b1f6
 Human-readable match: /chum/answers/doors/research-disease-evidence-with-uncertainty-attached-0e1637b1f6/
@@ -3958,6 +4028,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evidence-Backed Talent Proof Portal | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/talent-proof-portal-v1/
 
+## social video clipping and distribution
+Answer ID: intent:5bb9bdaade
+Human-readable match: /chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
 ## software network continuity without changing carriers
 Answer ID: intent:75e206686c
 Human-readable match: /chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/
@@ -4303,6 +4380,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## turn approved media into social-ready outputs
+Answer ID: intent:facf673083
+Human-readable match: /chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
 ## turn my business info into a funding deck
 Answer ID: intent:9eb111ed84
 Human-readable match: /chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84/
@@ -4339,6 +4423,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evidence-Backed Talent Profile | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
 - Talent Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+
+## turn this video into social clips
+Answer ID: intent:fc9eabdd6c
+Human-readable match: /chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json
+Candidates:
+- Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 
 ## understand how astronomers know what they know
 Answer ID: intent:cccac24d96

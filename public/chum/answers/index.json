@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 93,
-    "unique_user_phrases": 675,
-    "mapped_candidate_edges": 734,
+    "pain_index_entries": 94,
+    "unique_user_phrases": 688,
+    "mapped_candidate_edges": 747,
     "ambiguous_phrases": 59,
-    "product_candidates": 50,
+    "product_candidates": 51,
     "machine_offer_candidates": 43
   },
   "doors": [
@@ -462,6 +462,29 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:70010b2c7f",
+      "user_language": "AI tool to select moments from a video and render social clips",
+      "normalized": "ai tool to select moments from a video and render social clips",
+      "relative_json": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "relative_page": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -3544,6 +3567,52 @@
       ]
     },
     {
+      "answer_id": "intent:ec776b8ce1",
+      "user_language": "create social-ready video outputs with a governed publishing path",
+      "normalized": "create social ready video outputs with a governed publishing path",
+      "relative_json": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "relative_page": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:581ed49621",
+      "user_language": "create vertical clips from an interview",
+      "normalized": "create vertical clips from an interview",
+      "relative_json": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "relative_page": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d667e52872",
       "user_language": "credit builder",
       "normalized": "credit builder",
@@ -5876,6 +5945,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-proof-portal-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8376f76e39",
+      "user_language": "find the best moments in this video for social media",
+      "normalized": "find the best moments in this video for social media",
+      "relative_json": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "relative_page": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
           "registry_name": null
         }
       ]
@@ -8738,6 +8830,29 @@
       ]
     },
     {
+      "answer_id": "intent:42a0ecd903",
+      "user_language": "make a few reels from this source video",
+      "normalized": "make a few reels from this source video",
+      "relative_json": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "relative_page": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:3eaf7975ab",
       "user_language": "make a personal or relationship safety plan",
       "normalized": "make a personal or relationship safety plan",
@@ -8942,6 +9057,52 @@
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8742052def",
+      "user_language": "make reels from an authorized source video",
+      "normalized": "make reels from an authorized source video",
+      "relative_json": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "relative_page": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9308630c9b",
+      "user_language": "make short vertical clips from a long video",
+      "normalized": "make short vertical clips from a long video",
+      "relative_json": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "relative_page": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -10256,6 +10417,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cb32427490",
+      "user_language": "plan a social video clipping job",
+      "normalized": "plan a social video clipping job",
+      "relative_json": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "relative_page": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -11849,6 +12033,52 @@
       ]
     },
     {
+      "answer_id": "intent:c491148baf",
+      "user_language": "repurpose an authorized video for Facebook LinkedIn and Instagram",
+      "normalized": "repurpose an authorized video for facebook linkedin and instagram",
+      "relative_json": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "relative_page": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:44b4fb615e",
+      "user_language": "repurpose this video for Facebook LinkedIn and Instagram",
+      "normalized": "repurpose this video for facebook linkedin and instagram",
+      "relative_json": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "relative_page": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0e1637b1f6",
       "user_language": "research disease evidence with uncertainty attached",
       "normalized": "research disease evidence with uncertainty attached",
@@ -13416,6 +13646,29 @@
       ]
     },
     {
+      "answer_id": "intent:5bb9bdaade",
+      "user_language": "social video clipping and distribution",
+      "normalized": "social video clipping and distribution",
+      "relative_json": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "relative_page": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:75e206686c",
       "user_language": "software network continuity without changing carriers",
       "normalized": "software network continuity without changing carriers",
@@ -14567,6 +14820,29 @@
       ]
     },
     {
+      "answer_id": "intent:facf673083",
+      "user_language": "turn approved media into social-ready outputs",
+      "normalized": "turn approved media into social ready outputs",
+      "relative_json": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "relative_page": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9eb111ed84",
       "user_language": "turn my business info into a funding deck",
       "normalized": "turn my business info into a funding deck",
@@ -14701,6 +14977,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/talent-atlas/",
           "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:fc9eabdd6c",
+      "user_language": "turn this video into social clips",
+      "normalized": "turn this video into social clips",
+      "relative_json": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "relative_page": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
           "registry_name": null
         }
       ]
