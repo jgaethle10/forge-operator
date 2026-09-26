@@ -189,7 +189,10 @@
         "receipt_guard",
         "retry_planner",
         "quarantine_guard",
-        "customer_boundary_guard"
+        "customer_boundary_guard",
+        "football_packer",
+        "football_carrier_guard",
+        "football_catch_guard"
       ],
       "work_sources": [],
       "reconciler": {
@@ -382,6 +385,77 @@
         "minimum_node_memory_mb": 128,
         "cpu_units_per_worker": 1,
         "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
+    },
+    {
+      "software_id": "fallen-production",
+      "name": "Fallen Production",
+      "aliases": [
+        "fallen",
+        "fallen-series-production",
+        "media-studio-production"
+      ],
+      "adapter": "systemia/media-studio/saban-adapter.mjs",
+      "default_logical_agents": 64,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 8,
+      "max_physical_workers": 128,
+      "lease_seconds": 900,
+      "roles": [
+        "need_guard",
+        "continuity_guard",
+        "identity_guard",
+        "voice_guard",
+        "rights_guard",
+        "provenance_guard",
+        "timing_guard",
+        "reconciliation_guard"
+      ],
+      "work_sources": [],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": "adapter_gated",
+        "production_provider_calls": "adapter_gated",
+        "source_media_write": false,
+        "automatic_publication": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "canon_mutation": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 128,
+        "max_work_items": 100000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 8,
+        "target_logical_per_physical_worker": 8,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 256,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 256,
         "require_capacity_hint": false
       }
     }
