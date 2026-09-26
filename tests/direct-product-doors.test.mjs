@@ -122,5 +122,5 @@ for(const dependency of [
   const occurrences=workflow.split(dependency).length-1;
   assert.ok(occurrences>=2,'Direct Product Doors must watch '+dependency+' on both push and pull_request');
 }
-assert.match(workflow,/node-version:\\s*22/,'Direct Product Doors must use the repository Node 22 baseline');
+assert.match(workflow,/node-version:\s*22/,'Direct Product Doors must use the repository Node 22 baseline');
 console.log('DIRECT_PRODUCT_DOORS_WORKFLOW_COVERAGE_PASS');
