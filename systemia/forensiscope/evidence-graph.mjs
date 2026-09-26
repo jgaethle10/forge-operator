@@ -24,10 +24,39 @@ function sortByTime(a, b) {
   return ta - tb || String(a.id).localeCompare(String(b.id));
 }
 
+function dedupePerceptualSignatures(signatures = []) {
+  const seen = new Set();
+  const output = [];
+
+  for (const signature of [...signatures].sort((a, b) =>
+    Number(a.timestamp_seconds || 0) - Number(b.timestamp_seconds || 0)
+  )) {
+    const timestamp = timeKey(signature.timestamp_seconds);
+    const dhash64 = String(signature.dhash64 || '').toLowerCase();
+    const meanRgb = Array.isArray(signature.mean_rgb)
+      ? signature.mean_rgb.slice(0, 3).map((value) => Math.round(Number(value) || 0))
+      : null;
+    if (timestamp === null || !/^[a-f0-9]{16}$/.test(dhash64) || !meanRgb) continue;
+
+    const key = [timestamp, dhash64, ...meanRgb].join(':');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    output.push({
+      timestamp_seconds: timestamp,
+      dhash64,
+      mean_rgb: meanRgb
+    });
+  }
+
+  return output;
+}
+
 export function buildEvidenceGraph({
   sourceSha256,
   transcript = {},
   timeline = [],
+  sceneBoundaries = [],
+  perceptualSignatures = [],
   exactDuplicateGroups = [],
   nearDuplicatePairs = []
 } = {}) {
@@ -85,6 +114,34 @@ export function buildEvidenceGraph({
     };
     nodes.push(node);
     keyframeNodes.push(node);
+    edges.push({
+      id: stableId('edge', ['derived_from', id, sourceId]),
+      kind: 'derived_from',
+      from: id,
+      to: sourceId
+    });
+  }
+
+  const sceneBoundaryNodes = [];
+  for (const boundary of sceneBoundaries || []) {
+    const timestamp = timeKey(boundary.timestamp_seconds);
+    if (timestamp === null) continue;
+    const id = stableId('scene', [
+      sourceSha256,
+      timestamp,
+      boundary.detector || null,
+      finite(boundary.threshold)
+    ]);
+    const node = {
+      id,
+      kind: 'scene_boundary',
+      timestamp_seconds: timestamp,
+      detector: boundary.detector || null,
+      threshold: finite(boundary.threshold),
+      shard_index: boundary.shard_index ?? null
+    };
+    nodes.push(node);
+    sceneBoundaryNodes.push(node);
     edges.push({
       id: stableId('edge', ['derived_from', id, sourceId]),
       kind: 'derived_from',
@@ -153,6 +210,7 @@ export function buildEvidenceGraph({
     .filter((node) =>
       node.kind === 'transcript_segment' ||
       node.kind === 'keyframe' ||
+      node.kind === 'scene_boundary' ||
       node.kind === 'visual_moment'
     )
     .sort(sortByTime)
@@ -169,6 +227,7 @@ export function buildEvidenceGraph({
       confidence: node.confidence,
       speaker: node.speaker
     }));
+  const comparisonSamples = dedupePerceptualSignatures(perceptualSignatures);
 
   return {
     schema: 'evercraft.forensiscope.evidence-graph.v1',
@@ -181,6 +240,7 @@ export function buildEvidenceGraph({
       chronological_node_ids: timeNodes,
       transcript_node_ids: transcriptNodes.map((node) => node.id),
       keyframe_node_ids: keyframeNodes.map((node) => node.id),
+      scene_boundary_node_ids: sceneBoundaryNodes.map((node) => node.id),
       visual_moment_node_ids: [...visualMoments.values()].map((node) => node.id)
     },
     llm_projection: {
@@ -192,10 +252,17 @@ export function buildEvidenceGraph({
         return counts;
       }, {})
     },
+    comparison_index: {
+      schema: 'evercraft.forensiscope.comparison-index.v1',
+      sample_interval_seconds: 2,
+      perceptual_sample_count: comparisonSamples.length,
+      perceptual_samples: comparisonSamples
+    },
     truth_boundary: {
       source_identity_is_hash_based: true,
       transcript_is_engine_derived: true,
       perceptual_duplicate_is_not_exact_identity: true,
+      comparison_index_is_derived_not_source_media: true,
       graph_does_not_determine_intent_or_guilt: true
     }
   };

@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { validateAuthorizedMediaSource, hashFile } from './authorized-source.mjs';
 import { transcribePreparedAudio } from './transcription-engine.mjs';
 import { buildEvidenceGraph } from './evidence-graph.mjs';
+import { attachSemanticIndex } from './semantic-index.mjs';
 
 function safeId(value) {
   return String(value || 'item')
@@ -102,6 +103,50 @@ function keyframeTimeline(sourcePath, bounds) {
       pict_type: frame.pict_type || null
     }))
     .filter((frame) => Number.isFinite(frame.timestamp_seconds));
+}
+
+function sceneBoundaries(sourcePath, bounds, threshold = 0.25) {
+  const result = spawnSync('ffmpeg', [
+    '-hide_banner',
+    '-loglevel', 'info',
+    '-ss', String(bounds.start),
+    '-t', String(bounds.duration),
+    '-i', sourcePath,
+    '-map', '0:v:0',
+    '-vf', `select='gt(scene,${threshold})',showinfo`,
+    '-an',
+    '-f', 'null',
+    '-'
+  ], {
+    encoding: 'utf8',
+    maxBuffer: 32 * 1024 * 1024
+  });
+
+  if (result.status !== 0) {
+    throw new Error(
+      `scene-boundary detection failed: ${String(result.stderr || result.stdout || '').trim().slice(-800)}`
+    );
+  }
+
+  const boundaries = [];
+  const seen = new Set();
+  const pattern = /pts_time:([0-9]+(?:\.[0-9]+)?)/g;
+  const log = String(result.stderr || '');
+  for (const match of log.matchAll(pattern)) {
+    const local = Number(match[1]);
+    if (!Number.isFinite(local)) continue;
+    const timestamp = Number((bounds.offset + bounds.start + local).toFixed(3));
+    const key = Math.round(timestamp * 20);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    boundaries.push({
+      timestamp_seconds: timestamp,
+      detector: 'ffmpeg_scene_score',
+      threshold
+    });
+    if (boundaries.length >= 500) break;
+  }
+  return boundaries;
 }
 
 function perceptualFrameSignatures(sourcePath, bounds, sampleSeconds = 2) {
@@ -397,6 +442,14 @@ export async function runAssignment({ assignment, rootDir, executionContext = {}
         }
       };
 
+    case 'scene_boundary_worker':
+      return {
+        ...receipt,
+        data: {
+          scene_boundaries: sceneBoundaries(source.path, bounds)
+        }
+      };
+
     case 'frame_hash_worker':
       return {
         ...receipt,
@@ -524,6 +577,7 @@ export async function reconcile({ results, contract }) {
   const frameOccurrences = new Map();
   const perceptualSignatures = [];
   const timeline = [];
+  const sceneBoundaryEntries = [];
   const audio = [];
   const transcriptionShards = [];
   const provenance = [];
@@ -549,6 +603,12 @@ export async function reconcile({ results, contract }) {
     }
 
     for (const frame of result?.data?.keyframes || []) timeline.push(frame);
+    for (const boundary of result?.data?.scene_boundaries || []) {
+      sceneBoundaryEntries.push({
+        ...boundary,
+        shard_index: result.shard?.shard_index ?? null
+      });
+    }
     if (result?.data?.audio) {
       audio.push({
         shard_index: result.shard?.shard_index ?? null,
@@ -587,6 +647,17 @@ export async function reconcile({ results, contract }) {
       Math.abs(pair.second_timestamp_seconds - pair.first_timestamp_seconds) >
       Math.max(2, overlap + 1)
   );
+
+  const reconciledSceneBoundaries = [];
+  const seenSceneBoundaries = new Set();
+  for (const boundary of sceneBoundaryEntries.sort(
+    (a, b) => a.timestamp_seconds - b.timestamp_seconds
+  )) {
+    const key = Math.round(Number(boundary.timestamp_seconds) * 10);
+    if (seenSceneBoundaries.has(key)) continue;
+    seenSceneBoundaries.add(key);
+    reconciledSceneBoundaries.push(boundary);
+  }
 
   const originalHashes = new Set(
     provenance
@@ -632,14 +703,19 @@ export async function reconcile({ results, contract }) {
     text: transcriptSegments.map((entry) => entry.text).join(' ')
   };
   const originalSourceSha256 = originalHashes.size === 1 ? [...originalHashes][0] : null;
-  const evidenceGraph = originalSourceSha256
+  const baseEvidenceGraph = originalSourceSha256
     ? buildEvidenceGraph({
         sourceSha256: originalSourceSha256,
         transcript: transcription,
         timeline: reconciledTimeline,
+        sceneBoundaries: reconciledSceneBoundaries,
+        perceptualSignatures,
         exactDuplicateGroups: repeatedContent,
         nearDuplicatePairs: nearRepeatedPairs
       })
+    : null;
+  const evidenceGraph = baseEvidenceGraph
+    ? attachSemanticIndex(baseEvidenceGraph)
     : null;
 
   return {
@@ -650,6 +726,7 @@ export async function reconcile({ results, contract }) {
     derivative_integrity_checks: provenance.length,
     worker_statuses: workerStatuses,
     timeline: reconciledTimeline,
+    scene_boundaries: reconciledSceneBoundaries,
     duplicate_review: {
       duplicate_hash_groups: duplicates.length,
       repeated_content_groups: repeatedContent.length,

@@ -85,10 +85,6 @@ export class YardOperator {
     fs.mkdirSync(path.join(this.stateDir, '.checkpoints'), { recursive: true, mode: 0o700 });
     fs.mkdirSync(path.join(this.stateDir, '.field-enrollments'), { recursive: true, mode: 0o700 });
     fs.mkdirSync(path.join(this.stateDir, '.field-attestations'), { recursive: true, mode: 0o700 });
-    fs.mkdirSync(
-      path.join(this.stateDir, '.remote-device-authorizations'),
-      { recursive: true, mode: 0o700 }
-    );
   }
 
   #safeId(deploymentId) {
@@ -144,22 +140,6 @@ export class YardOperator {
       this.stateDir,
       '.field-attestations',
       `${this.#safeId(deploymentId)}.json`
-    );
-  }
-
-  #remoteDeviceAuthorizationLedgerFile(deploymentId) {
-    return path.join(
-      this.stateDir,
-      '.remote-device-authorizations',
-      `${this.#safeId(deploymentId)}.jsonl`
-    );
-  }
-
-  #appendRemoteDeviceAuthorizationDecision(deploymentId, decision) {
-    fs.appendFileSync(
-      this.#remoteDeviceAuthorizationLedgerFile(deploymentId),
-      JSON.stringify(decision) + '\n',
-      { mode: 0o600 }
     );
   }
 
@@ -434,6 +414,27 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_broker_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.forensiscope-evidence-query.v1') {
+        const forensiHealthy =
+          health.ok === true &&
+          health.service === 'forensiscope-evidence-query' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === job.result?.instance_id &&
+          health.raw_media_intake === false &&
+          health.starts_analysis_jobs === false &&
+          health.checkout_or_payment === false &&
+          health.evidence_access_required === true;
+        if (!forensiHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('ForensiScope evidence service failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_forensiscope_health_verified_public_route_unbound';
       }
     }
 
@@ -827,6 +828,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
       service = 'remote-capacity-broker';
       healthPath = '/v1/remote/health';
+    } else if (workloadClass === 'systemia.forensiscope-evidence-query.v1') {
+      service = 'forensiscope-evidence-query';
+      healthPath = '/v1/health';
     } else {
       throw new Error('deployment does not support a public route');
     }
@@ -872,134 +876,6 @@ export class YardOperator {
     record.updated_at = verifiedAt;
     this.#persist(record);
     return publicRoute;
-  }
-
-  async #remoteDeviceAuthorization(deploymentId, {
-    action,
-    deviceFingerprint,
-    nodeId,
-    approvalRef,
-  } = {}) {
-    const record = this.deploymentStatus(deploymentId);
-    const secret = this.#loadLeaseSecret(deploymentId);
-    if (!record || !secret) throw new Error('deployment lease authority unavailable');
-    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
-      throw new Error('deployment is not a remote capacity broker');
-    }
-    if (!record.result?.service_id) {
-      throw new Error('remote capacity broker service is unavailable');
-    }
-
-    const normalizedAction = String(action || '');
-    if (!['authorize', 'revoke'].includes(normalizedAction)) {
-      throw new Error('remote device authorization action is invalid');
-    }
-    const fingerprint = String(deviceFingerprint || '').trim().toLowerCase();
-    if (!/^sha256:[a-f0-9]{64}$/.test(fingerprint)) {
-      throw new Error('remote device fingerprint is invalid');
-    }
-    const id = String(nodeId || '').trim();
-    if (!/^[a-zA-Z0-9._-]{1,128}$/.test(id)) {
-      throw new Error('remote node id is invalid');
-    }
-    const approval = String(approvalRef || '').trim();
-    if (!approval || approval.length > 512) {
-      throw new Error('explicit approval reference is required');
-    }
-
-    const managed = await request(
-      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-device-${normalizedAction}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          token: secret.token,
-          device_fingerprint: fingerprint,
-          node_id: id,
-          approval_ref: approval,
-        }),
-      }
-    );
-
-    const body = {
-      schema: 'evercraft.yard.remote-device-authorization.v1',
-      broker_deployment_id: deploymentId,
-      action: normalizedAction,
-      device_fingerprint: fingerprint,
-      node_id: id,
-      approval_ref: approval,
-      broker_decision_receipt_hash: managed.decision_receipt_hash || null,
-      compute_management_receipt_hash: managed.receipt?.receipt_hash || null,
-      live_session_disconnected: managed.live_session_disconnected ?? null,
-      decided_at: new Date().toISOString(),
-    };
-    const decision = {
-      ...body,
-      receipt_hash: sha(body),
-    };
-
-    record.remote_device_authorizations = {
-      ...(record.remote_device_authorizations || {}),
-      [fingerprint]: decision,
-    };
-    record.updated_at = decision.decided_at;
-    this.#persist(record);
-    this.#appendRemoteDeviceAuthorizationDecision(deploymentId, decision);
-    return decision;
-  }
-
-  async listPendingRemoteDevices(deploymentId) {
-    const record = this.deploymentStatus(deploymentId);
-    const secret = this.#loadLeaseSecret(deploymentId);
-    if (!record || !secret) throw new Error('deployment lease authority unavailable');
-    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
-      throw new Error('deployment is not a remote capacity broker');
-    }
-    if (!record.result?.service_id) {
-      throw new Error('remote capacity broker service is unavailable');
-    }
-
-    const pending = await request(
-      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-pending-enrollments`,
-      {
-        method: 'POST',
-        body: JSON.stringify({ token: secret.token }),
-      }
-    );
-
-    return {
-      schema: 'evercraft.yard.pending-remote-devices.v1',
-      broker_deployment_id: deploymentId,
-      count: Number(pending.count || 0),
-      pending: Array.isArray(pending.pending) ? pending.pending : [],
-      compute_management_receipt_hash: pending.receipt?.receipt_hash || null,
-      observed_at: new Date().toISOString(),
-    };
-  }
-
-  async authorizeRemoteDevice(deploymentId, {
-    deviceFingerprint,
-    nodeId,
-    approvalRef,
-  } = {}) {
-    return this.#remoteDeviceAuthorization(deploymentId, {
-      action: 'authorize',
-      deviceFingerprint,
-      nodeId,
-      approvalRef,
-    });
-  }
-
-  async revokeRemoteDevice(deploymentId, {
-    deviceFingerprint,
-    nodeId,
-    approvalRef,
-  } = {}) {
-    return this.#remoteDeviceAuthorization(deploymentId, {
-      action: 'revoke',
-      deviceFingerprint,
-      nodeId,
-      approvalRef,
-    });
   }
 
   async remoteCapacityGrant(deploymentId, nodeId, {
@@ -1105,12 +981,23 @@ export class YardOperator {
 
     if (
       record.receipt?.workload_class === 'systemia.chum-public-origin.v1' ||
-      record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1'
+      record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1' ||
+      record.receipt?.workload_class === 'systemia.forensiscope-evidence-query.v1'
     ) {
       const broker =
         record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1';
-      const service = broker ? 'remote-capacity-broker' : 'chum-public-origin';
-      const healthPath = broker ? '/v1/remote/health' : '/api/health';
+      const forensiscope =
+        record.receipt?.workload_class === 'systemia.forensiscope-evidence-query.v1';
+      const service = broker
+        ? 'remote-capacity-broker'
+        : forensiscope
+          ? 'forensiscope-evidence-query'
+          : 'chum-public-origin';
+      const healthPath = broker
+        ? '/v1/remote/health'
+        : forensiscope
+          ? '/v1/health'
+          : '/api/health';
 
       if (record.public_route?.verified === true) {
         try {
@@ -1120,7 +1007,13 @@ export class YardOperator {
             health.service === service &&
             health.instance_id === record.result?.instance_id &&
             health.deployment_receipt_ref === record.receipt?.receipt_hash &&
-            (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1');
+            (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1') &&
+            (!forensiscope || (
+              health.raw_media_intake === false &&
+              health.starts_analysis_jobs === false &&
+              health.checkout_or_payment === false &&
+              health.evidence_access_required === true
+            ));
           return {
             ok,
             state: ok ? 'public_route_verified' : 'public_route_mismatch',
@@ -1151,13 +1044,23 @@ export class YardOperator {
               health.ok === true &&
               health.service === service &&
               health.instance_id === record.result?.instance_id &&
-              (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1'),
+              (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1') &&
+              (!forensiscope || (
+                health.raw_media_intake === false &&
+                health.starts_analysis_jobs === false &&
+                health.checkout_or_payment === false &&
+                health.evidence_access_required === true
+              )),
             health,
           };
         } catch (error) {
           return {
             ok: false,
-            state: broker ? 'local_broker_unreachable' : 'local_origin_unreachable',
+            state: broker
+              ? 'local_broker_unreachable'
+              : forensiscope
+                ? 'local_forensiscope_unreachable'
+                : 'local_origin_unreachable',
             error: String(error?.message || error),
           };
         }
