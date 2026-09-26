@@ -399,6 +399,24 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_core_health_verified';
+      } else if (workloadClass === 'systemia.evercraft-web-browser.v1') {
+        const browserHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-owned-browser-worker' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.mode === 'public_read_only' &&
+          health.instance_id === job.result?.instance_id;
+        if (!browserHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Evercraft browser worker failed initial health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_browser_health_verified';
       } else if (workloadClass === 'systemia.chum-public-origin.v1') {
         const originHealthy =
           health.ok === true &&
@@ -511,6 +529,36 @@ export class YardOperator {
     this.deployments.set(deploymentId, record);
     this.#persist(record);
     return record;
+  }
+
+  async invokeBrowser(deploymentId, job = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.evercraft-web-browser.v1') {
+      throw new Error('deployment is not an Evercraft browser worker');
+    }
+    if (!record.result?.service_id || !record.result?.invoke_path) {
+      throw new Error('Evercraft browser worker invoke path is unavailable');
+    }
+
+    const invoked = await request(
+      new URL(record.result.invoke_path, secret.capacity_endpoint).toString(),
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          job,
+        }),
+      }
+    );
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      result: invoked.result,
+      compute_receipt_hash: invoked.receipt?.receipt_hash || null,
+    };
   }
 
   async pushMissionSnapshot(deploymentId, {
@@ -1184,6 +1232,14 @@ export class YardOperator {
           Number(health.failed_count || 0) === 0 &&
           Number(health.held_count || 0) === 0 &&
           Number(health.service_count || 0) > 0;
+      } else if (record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1') {
+        ok =
+          health.ok === true &&
+          health.service === 'evercraft-owned-browser-worker' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.mode === 'public_read_only' &&
+          health.instance_id === record.result?.instance_id &&
+          health.deployment_receipt_ref === record.receipt?.receipt_hash;
       }
       return { ok, state: ok ? 'healthy' : 'degraded', health };
     } catch (error) {

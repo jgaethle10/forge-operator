@@ -13,6 +13,10 @@ import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs'
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
+import {
+  browserContainerAvailable,
+  startBrowserContainer,
+} from '../evercraft-web/browser-worker/container-runtime.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -219,6 +223,7 @@ export async function startEvercraftComputeNode({
   allocatorToken = '',
   deviceIdentity = null,
   placementLabels = [],
+  browserRuntimeFactory = null,
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -239,11 +244,21 @@ export async function startEvercraftComputeNode({
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
   };
+  const browserWorkerSourceDir = path.join(
+    CODE_ROOT,
+    'systemia',
+    'evercraft-web',
+    'browser-worker'
+  );
+  const browserRuntimeReady =
+    typeof browserRuntimeFactory === 'function' ||
+    browserContainerAvailable();
   const serviceCapabilities = {
     forensiscope_transcription: configuredExecutableAvailable({
       enabled: process.env.FORENSISCOPE_TRANSCRIBE_ENABLED,
       executable: process.env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE
-    })
+    }),
+    evercraft_web_browser: browserRuntimeReady
   };
   const leases = new Map();
   const services = new Map();
@@ -455,6 +470,9 @@ export async function startEvercraftComputeNode({
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
+  if (browserRuntimeReady) {
+    supported.add('systemia.evercraft-web-browser.v1');
+  }
 
   async function stopService(serviceId, reason = 'operator_requested') {
     const entry = services.get(serviceId);
@@ -900,6 +918,55 @@ export async function startEvercraftComputeNode({
           });
         }
 
+        if (workloadClass === 'systemia.evercraft-web-browser.v1') {
+          if (!browserRuntimeReady) {
+            return send(res, 503, { error: 'browser_runtime_unavailable' });
+          }
+
+          const factory = typeof browserRuntimeFactory === 'function'
+            ? browserRuntimeFactory
+            : startBrowserContainer;
+          const runtime = await factory({
+            sourceDir: browserWorkerSourceDir,
+            maxConcurrency: Number(body.input?.max_concurrency || 2),
+            imageTag: String(body.input?.image_tag || ''),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            health_path: `/v1/services/${serviceId}/health`,
+            invoke_path: `/v1/services/${serviceId}/browser`,
+            instance_id: runtime.instanceId || null,
+            mode: 'public_read_only',
+            browser_engine: 'playwright-chromium',
+            private_worker_endpoint_exposed: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: result.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
         if (workloadClass === 'systemia.chum-public-origin.v1') {
           const defaultPublicRoot = path.join(CODE_ROOT, 'public');
           const requestedPublicRoot = body.input?.public_root
@@ -1263,7 +1330,7 @@ export async function startEvercraftComputeNode({
       if (req.method === 'GET' && serviceHealth) {
         const entry = services.get(serviceHealth[1]);
         if (!entry) return send(res, 404, { error: 'service_not_found' });
-        return send(res, 200, entry.runtime.health());
+        return send(res, 200, await entry.runtime.health());
       }
 
       const remoteControlGrant = req.url?.match(
@@ -1456,6 +1523,33 @@ export async function startEvercraftComputeNode({
             lease_id: entry.lease_id,
             workload_class: entry.workload_class,
             result: result.ok === true ? 'completed' : `held:${result.hold || 'unknown'}`,
+          }),
+        });
+      }
+
+      const browserInvoke = req.url?.match(/^\/v1\/services\/([^/]+)\/browser$/);
+      if (req.method === 'POST' && browserInvoke) {
+        const entry = services.get(browserInvoke[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
+          return send(res, 422, { error: 'browser_invoke_not_supported' });
+        }
+        const result = await entry.runtime.browse(body.job || {});
+        return send(res, 200, {
+          ok: true,
+          service_id: browserInvoke[1],
+          result,
+          receipt: chain.issue('browser.render.executed', {
+            service_id: browserInvoke[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            requested_url_sha256: sha(String(body.job?.url || '')),
+            evidence_receipt_sha256: result?.evidence_receipt_sha256 || null,
           }),
         });
       }
