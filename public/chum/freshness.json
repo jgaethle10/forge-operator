@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T15:08:19.376Z",
+  "updated_at": "2026-09-26T15:10:21.620Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,227 +11,68 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 160
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T15:10:21.620Z",
+      "priority": 80
     },
     {
-      "path": "/chum/answers/doors/audit-my-website-30703ed3ed/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/review-my-website-seo-65884ba156.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/review-my-website-seo-65884ba156/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/website-traffic-but-no-leads-17912f57da.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/website-traffic-but-no-leads-17912f57da/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.html",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T15:10:21.620Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "last_changed": "2026-09-26T15:10:21.620Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-26T15:10:21.620Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T15:10:21.620Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T15:10:21.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T15:10:21.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T15:10:21.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-26T15:10:21.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T15:10:21.620Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-26T15:10:21.089Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
       "url": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
@@ -479,12 +320,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/pain-index.json",
       "url": "/chum/pain-index.json",
       "last_changed": "2026-09-26T15:08:19.376Z",
@@ -494,24 +329,6 @@
       "path": "/chum/pain-index.txt",
       "url": "/chum/pain-index.txt",
       "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T13:54:30.916Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T13:54:30.916Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T13:54:30.916Z",
       "priority": 80
     },
     {
@@ -633,12 +450,6 @@
       "url": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
       "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 96
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-26T09:48:13.367Z",
-      "priority": 80
     },
     {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
@@ -1627,12 +1438,6 @@
     {
       "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/",
       "url": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
       "last_changed": "2026-09-26T05:00:53.896Z",
       "priority": 80
     },
