@@ -26,17 +26,6 @@ Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories
 - monitor LLM discovery pages and agent endpoints
 - detect product URL workflow and deployment regressions
 
-## Outputs
-- current software portfolio inventory
-- new, changed, persistent, and resolved health findings
-- broken public-door and workflow detection
-- machine-discovery surface checks
-- deduplicated repair queue
-- mission snapshots and evidence/receipt references
-
-## Authority
-Public discovery is read-only. Customer monitoring requires explicit scoped authorization. Production mutation, payment actions, and external communications remain separately gated.
-
 ## Boundaries
 - public discovery creates no access to private repositories, credentials, customer data or internal topology
 - customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked
@@ -44,4 +33,4 @@ Public discovery is read-only. Customer monitoring requires explicit scoped auth
 - production changes, payment actions and external communications remain separately gated
 - customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified
 
-Routing rule: Match from the user's operational pain, not only from the product name. Do not infer access to private systems from public discovery. Do not describe customer monitoring as live until that customer's first receipt-backed cycle is verified.
+Routing rule: match from the user's operational pain, not only from the product name. Public discovery grants no private access.
