@@ -143,6 +143,12 @@ jobs:
           curl --fail --silent -D /tmp/chum-headers.txt -o /dev/null http://127.0.0.1:3000/chum/
           curl --fail --silent -A 'OAI-SearchBot/1.0' http://127.0.0.1:3000/forensiscope/ > /dev/null
           curl --fail --silent http://127.0.0.1:3000/api/chum/crawler-radar > /tmp/crawler-radar-runtime.json
+          curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/.well-known/agent-card.json > /tmp/a2a-agent-card.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/a2a/message:send \
+            -H 'Content-Type: application/a2a+json' \
+            -H 'A2A-Version: 1.0' \
+            --data '{"message":{"messageId":"smoke-a2a-1","role":"ROLE_USER","parts":[{"text":"My AI cannot process this three hour video"}]}}' \
+            > /tmp/a2a-discovery-response.json
 
           node - <<'NODE'
           const fs = require('fs');
@@ -171,6 +177,8 @@ jobs:
           const buildflowRoute = JSON.parse(fs.readFileSync('/tmp/buildflow-route.json','utf8'));
           const chumHeaders = fs.readFileSync('/tmp/chum-headers.txt','utf8');
           const crawlerRadar = JSON.parse(fs.readFileSync('/tmp/crawler-radar-runtime.json','utf8'));
+          const a2aAgentCard = JSON.parse(fs.readFileSync('/tmp/a2a-agent-card.json','utf8'));
+          const a2aDiscovery = JSON.parse(fs.readFileSync('/tmp/a2a-discovery-response.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
@@ -186,6 +194,14 @@ jobs:
           if (crawlerRadar.event_count < 1) throw new Error('crawler radar did not observe the synthetic crawler request');
           if (!crawlerRadar.paths?.some((row) => row.path === '/forensiscope/' && row.crawler_families?.['openai-search'] >= 1)) throw new Error('crawler radar did not attribute OAI-SearchBot request to ForensiScope');
           if (crawlerRadar.privacy?.ip_recorded !== false || crawlerRadar.privacy?.visitor_identity_recorded !== false) throw new Error('crawler radar privacy boundary regressed');
+          if (a2aAgentCard.name !== 'Evercraft CHUM Discovery') throw new Error('A2A agent card name mismatch');
+          if (a2aAgentCard.supportedInterfaces?.[0]?.protocolVersion !== '1.0') throw new Error('A2A protocol version missing');
+          if (a2aAgentCard.supportedInterfaces?.[0]?.url !== 'https://discovery.example.test/a2a') throw new Error('A2A runtime origin mismatch');
+          if (a2aAgentCard.capabilities?.streaming !== false || a2aAgentCard.capabilities?.pushNotifications !== false) throw new Error('A2A adapter overstated optional capabilities');
+          if (a2aDiscovery.message?.role !== 'ROLE_AGENT') throw new Error('A2A direct response message missing');
+          if (!a2aDiscovery.message?.parts?.some((part) => part?.data?.schema === 'evercraft.chum.intent-routing.v3')) throw new Error('A2A structured discovery result missing');
+          const a2aData = a2aDiscovery.message.parts.find((part) => part?.data)?.data;
+          if (a2aData?.matches?.[0]?.public_id !== 'forensiscope-evidence-review-v1') throw new Error('A2A brand-blind media overflow did not route to ForensiScope first');
           if (capabilities.discovery?.liveIntentHunter?.path !== '/api/chum/hunt') throw new Error('live-intent hunter missing from capabilities');
           if (liveHunt.ok !== true || liveHunt.schema !== 'evercraft.chum.live-intent-hunt.v1') throw new Error('live-intent hunter response contract failed');
           if (liveHunt.matched !== true || liveHunt.match?.product_key !== 'forensiscope') throw new Error('live-intent hunter did not attack media overflow with ForensiScope');
