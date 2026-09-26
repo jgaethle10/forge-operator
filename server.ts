@@ -467,6 +467,11 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
       chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
+      specialistMcps: [
+        { product: 'Evercraft IBM i Rescue', path: '/mcp/ibmi-rescue', state: 'read_only_handoff_runtime' },
+        { product: 'Evercraft Foundry App Escape Audit', path: '/mcp/foundry-app-escape', state: 'read_only_handoff_runtime' },
+        { product: 'Site-Survive Rapid Audit', path: '/mcp/site-survive', state: 'read_only_handoff_runtime' },
+      ],
     },
     jobs: [
       'operations bottleneck diagnosis',
