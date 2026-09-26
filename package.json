@@ -133,7 +133,8 @@
     "test:portfolio-sentinel-discovery": "npm run chum:mirror && npm run chum:capabilities && npm run chum:revenue && node tests/portfolio-sentinel-discovery.test.mjs",
     "chum:syndicate": "node systemia/chum/build-syndication-mesh.mjs",
     "test:chum-syndication": "node tests/chum-syndication-mesh.test.mjs",
-    "proof:rivet-yard": "node systemia/rivet/report-runtime.proof.mjs"
+    "proof:rivet-yard": "node systemia/rivet/report-runtime.proof.mjs",
+    "build:ibmi-buyer-queue": "node systemia/organism/ibmi-direct-buyer-queue.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
