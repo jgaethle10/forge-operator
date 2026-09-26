@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
@@ -122,138 +123,156 @@ export function evaluatePublicEdgeFieldCandidate({
   };
 }
 
-const root=path.resolve(arg('--root','/var/lib/evercraft/nodeseed'));
-const fieldFile=path.resolve(arg('--field-evidence',path.join(root,'field-evidence-candidate.json')));
-const nodeReceiptFile=path.resolve(arg('--node-receipt',path.join(root,'nodeseed-receipt.json')));
-const envFile=path.resolve(arg('--env-file','/etc/evercraft/nodeseed.env'));
-const service=String(arg('--service','evercraft-nodeseed.service'));
-const baseDomain=requireSafeEnvValue('base_domain',arg('--base-domain',process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN||''));
-const sourceKey=path.resolve(requireSafeEnvValue('tls_key_path',arg('--tls-key-path',process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH||'')));
-const sourceCert=path.resolve(requireSafeEnvValue('tls_cert_path',arg('--tls-cert-path',process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH||'')));
-const publicPort=Number(arg('--public-port',process.env.EVERCRAFT_PUBLIC_EDGE_PORT||'443'));
-const apply=has('--apply');
-
-if(!fs.existsSync(fieldFile)) throw new Error('field_evidence_candidate_missing');
-if(!fs.existsSync(nodeReceiptFile)) throw new Error('nodeseed_receipt_missing');
-
-const fieldCandidate=readJson(fieldFile);
-const nodeReceipt=readJson(nodeReceiptFile);
-const candidate=evaluatePublicEdgeFieldCandidate({
-  fieldCandidate,
-  nodeReceipt,
-  baseDomain,
-  tlsKeyPath:sourceKey,
-  tlsCertPath:sourceCert,
-  publicPort,
-});
-
-let runtimeAdvertisementVerified=false;
-let capacityReceipt=null;
-let applied=false;
-
-if(apply){
-  if(typeof process.getuid==='function'&&process.getuid()!==0){
-    throw new Error('public_edge_field_apply_requires_root');
-  }
-
-  const tlsDir=path.resolve(arg('--tls-dir','/etc/evercraft/tls'));
-  const keyDest=path.join(tlsDir,'public-edge-key.pem');
-  const certDest=path.join(tlsDir,'public-edge-cert.pem');
-  const installedKey=copyTlsMaterial(sourceKey,keyDest,{mode:0o640});
-  const installedCert=copyTlsMaterial(sourceCert,certDest,{mode:0o644});
-
-  const env=readEnvFile(envFile);
-  const labels=new Set(
-    String(env.get('EVERCRAFT_NODE_LABELS')||'')
-      .split(',')
-      .map(x=>x.trim().toLowerCase())
-      .filter(Boolean)
-  );
-  labels.add('public-edge');
-  labels.add('gateway');
-
-  env.set('EVERCRAFT_NODE_LABELS',[...labels].sort().join(','));
-  env.set('EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN',candidate.base_domain);
-  env.set('EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH',requireSafeEnvValue('installed_tls_key_path',installedKey));
-  env.set('EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH',requireSafeEnvValue('installed_tls_cert_path',installedCert));
-  env.set('EVERCRAFT_PUBLIC_EDGE_PORT',String(candidate.public_port));
-  writeEnvFile(envFile,env);
-
-  if(candidate.public_port<1024){
-    const dropInDir='/etc/systemd/system/'+service+'.d';
-    fs.mkdirSync(dropInDir,{recursive:true,mode:0o755});
-    fs.writeFileSync(
-      path.join(dropInDir,'public-edge.conf'),
-      '[Service]\nCapabilityBoundingSet=CAP_NET_BIND_SERVICE\nAmbientCapabilities=CAP_NET_BIND_SERVICE\n',
-      {mode:0o644}
+export async function runPublicEdgeFieldAdmitCli(){
+  const root=path.resolve(arg('--root','/var/lib/evercraft/nodeseed'));
+  const fieldFile=path.resolve(arg('--field-evidence',path.join(root,'field-evidence-candidate.json')));
+  const nodeReceiptFile=path.resolve(arg('--node-receipt',path.join(root,'nodeseed-receipt.json')));
+  const envFile=path.resolve(arg('--env-file','/etc/evercraft/nodeseed.env'));
+  const service=String(arg('--service','evercraft-nodeseed.service'));
+  const baseDomain=requireSafeEnvValue('base_domain',arg('--base-domain',process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN||''));
+  const sourceKey=path.resolve(requireSafeEnvValue('tls_key_path',arg('--tls-key-path',process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH||'')));
+  const sourceCert=path.resolve(requireSafeEnvValue('tls_cert_path',arg('--tls-cert-path',process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH||'')));
+  const publicPort=Number(arg('--public-port',process.env.EVERCRAFT_PUBLIC_EDGE_PORT||'443'));
+  const apply=has('--apply');
+  
+  if(!fs.existsSync(fieldFile)) throw new Error('field_evidence_candidate_missing');
+  if(!fs.existsSync(nodeReceiptFile)) throw new Error('nodeseed_receipt_missing');
+  
+  const fieldCandidate=readJson(fieldFile);
+  const nodeReceipt=readJson(nodeReceiptFile);
+  const candidate=evaluatePublicEdgeFieldCandidate({
+    fieldCandidate,
+    nodeReceipt,
+    baseDomain,
+    tlsKeyPath:sourceKey,
+    tlsCertPath:sourceCert,
+    publicPort,
+  });
+  
+  let runtimeAdvertisementVerified=false;
+  let capacityReceipt=null;
+  let applied=false;
+  
+  if(apply){
+    if(typeof process.getuid==='function'&&process.getuid()!==0){
+      throw new Error('public_edge_field_apply_requires_root');
+    }
+  
+    const tlsDir=path.resolve(arg('--tls-dir','/etc/evercraft/tls'));
+    const keyDest=path.join(tlsDir,'public-edge-key.pem');
+    const certDest=path.join(tlsDir,'public-edge-cert.pem');
+    const installedKey=copyTlsMaterial(sourceKey,keyDest,{mode:0o640});
+    const installedCert=copyTlsMaterial(sourceCert,certDest,{mode:0o644});
+  
+    const env=readEnvFile(envFile);
+    const labels=new Set(
+      String(env.get('EVERCRAFT_NODE_LABELS')||'')
+        .split(',')
+        .map(x=>x.trim().toLowerCase())
+        .filter(Boolean)
     );
+    labels.add('public-edge');
+    labels.add('gateway');
+  
+    env.set('EVERCRAFT_NODE_LABELS',[...labels].sort().join(','));
+    env.set('EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN',candidate.base_domain);
+    env.set('EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH',requireSafeEnvValue('installed_tls_key_path',installedKey));
+    env.set('EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH',requireSafeEnvValue('installed_tls_cert_path',installedCert));
+    env.set('EVERCRAFT_PUBLIC_EDGE_PORT',String(candidate.public_port));
+    writeEnvFile(envFile,env);
+  
+    if(candidate.public_port<1024){
+      const dropInDir='/etc/systemd/system/'+service+'.d';
+      fs.mkdirSync(dropInDir,{recursive:true,mode:0o755});
+      fs.writeFileSync(
+        path.join(dropInDir,'public-edge.conf'),
+        '[Service]\nCapabilityBoundingSet=CAP_NET_BIND_SERVICE\nAmbientCapabilities=CAP_NET_BIND_SERVICE\n',
+        {mode:0o644}
+      );
+    }
+  
+    execFileSync('systemctl',['daemon-reload'],{stdio:'ignore'});
+    execFileSync('systemctl',['restart',service],{stdio:'ignore'});
+    execFileSync('systemctl',['is-active','--quiet',service],{stdio:'ignore'});
+  
+    const refreshedReceipt=readJson(nodeReceiptFile);
+    const endpoint=new URL(refreshedReceipt.endpoint);
+    const localCapacity=`http://127.0.0.1:${endpoint.port}/v1/capacity`;
+    const capacity=await fetchJson(localCapacity,{timeoutMs:5000});
+    const edge=capacity?.capacity_hint?.services?.public_edge;
+    const labelsNow=new Set(capacity?.placement_labels||[]);
+  
+    runtimeAdvertisementVerified=Boolean(
+      capacity?.protocol==='evercraft.capacity.v1' &&
+      capacity?.attestation_supported===true &&
+      capacity?.device_fingerprint===candidate.device_fingerprint &&
+      labelsNow.has('public-edge') &&
+      labelsNow.has('gateway') &&
+      edge?.configured===true &&
+      edge?.ready===true &&
+      edge?.public_https===true &&
+      edge?.base_domain===candidate.base_domain &&
+      Number(edge?.public_port)===candidate.public_port &&
+      edge?.certificate_fingerprint256===candidate.certificate_fingerprint256
+    );
+  
+    if(!runtimeAdvertisementVerified){
+      throw new Error('public_edge_runtime_advertisement_verification_failed');
+    }
+  
+    capacityReceipt={
+      node_id:capacity.node_id,
+      device_fingerprint:capacity.device_fingerprint,
+      placement_labels:[...(capacity.placement_labels||[])].sort(),
+      public_edge:{
+        ready:true,
+        public_https:true,
+        base_domain:edge.base_domain,
+        public_port:edge.public_port,
+        certificate_fingerprint256:edge.certificate_fingerprint256,
+        certificate_valid_to:edge.certificate_valid_to,
+      },
+      attestation_supported:true,
+    };
+    applied=true;
   }
-
-  execFileSync('systemctl',['daemon-reload'],{stdio:'ignore'});
-  execFileSync('systemctl',['restart',service],{stdio:'ignore'});
-  execFileSync('systemctl',['is-active','--quiet',service],{stdio:'ignore'});
-
-  const refreshedReceipt=readJson(nodeReceiptFile);
-  const endpoint=new URL(refreshedReceipt.endpoint);
-  const localCapacity=`http://127.0.0.1:${endpoint.port}/v1/capacity`;
-  const capacity=await fetchJson(localCapacity,{timeoutMs:5000});
-  const edge=capacity?.capacity_hint?.services?.public_edge;
-  const labelsNow=new Set(capacity?.placement_labels||[]);
-
-  runtimeAdvertisementVerified=Boolean(
-    capacity?.protocol==='evercraft.capacity.v1' &&
-    capacity?.attestation_supported===true &&
-    capacity?.device_fingerprint===candidate.device_fingerprint &&
-    labelsNow.has('public-edge') &&
-    labelsNow.has('gateway') &&
-    edge?.configured===true &&
-    edge?.ready===true &&
-    edge?.public_https===true &&
-    edge?.base_domain===candidate.base_domain &&
-    Number(edge?.public_port)===candidate.public_port &&
-    edge?.certificate_fingerprint256===candidate.certificate_fingerprint256
-  );
-
-  if(!runtimeAdvertisementVerified){
-    throw new Error('public_edge_runtime_advertisement_verification_failed');
-  }
-
-  capacityReceipt={
-    node_id:capacity.node_id,
-    device_fingerprint:capacity.device_fingerprint,
-    placement_labels:[...(capacity.placement_labels||[])].sort(),
-    public_edge:{
-      ready:true,
-      public_https:true,
-      base_domain:edge.base_domain,
-      public_port:edge.public_port,
-      certificate_fingerprint256:edge.certificate_fingerprint256,
-      certificate_valid_to:edge.certificate_valid_to,
-    },
-    attestation_supported:true,
+  
+  const body={
+    ...candidate,
+    applied,
+    runtime_advertisement_verified:runtimeAdvertisementVerified,
+    capacity_receipt:capacityReceipt,
+    ready_for_public_edge_enrollment:Boolean(
+      applied&&runtimeAdvertisementVerified&&candidate.public_edge_configuration_valid
+    ),
+    external_dns_verified:false,
+    public_reachability_verified:false,
+    external_canary_required:true,
+    observed_at:new Date().toISOString(),
   };
-  applied=true;
+  const receipt={...body,receipt_hash:sha(body)};
+  
+  if(apply){
+    const out=path.resolve(arg('--out',path.join(root,'public-edge-admission-receipt.json')));
+    fs.writeFileSync(out,JSON.stringify(receipt,null,2)+'\n',{mode:0o600});
+  }
+  
+  console.log(JSON.stringify(receipt,null,2));
+  process.exit(receipt.ready_for_public_edge_enrollment||!apply?0:6);
+  
 }
 
-const body={
-  ...candidate,
-  applied,
-  runtime_advertisement_verified:runtimeAdvertisementVerified,
-  capacity_receipt:capacityReceipt,
-  ready_for_public_edge_enrollment:Boolean(
-    applied&&runtimeAdvertisementVerified&&candidate.public_edge_configuration_valid
-  ),
-  external_dns_verified:false,
-  public_reachability_verified:false,
-  external_canary_required:true,
-  observed_at:new Date().toISOString(),
-};
-const receipt={...body,receipt_hash:sha(body)};
-
-if(apply){
-  const out=path.resolve(arg('--out',path.join(root,'public-edge-admission-receipt.json')));
-  fs.writeFileSync(out,JSON.stringify(receipt,null,2)+'\n',{mode:0o600});
+const isCli=process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url);
+if(isCli){
+  try{
+    await runPublicEdgeFieldAdmitCli();
+  }catch(error){
+    console.error(JSON.stringify({
+      ok:false,
+      schema:'evercraft.node001.public-edge-field-admit-error.v1',
+      error:error instanceof Error?error.message:String(error),
+      founder_login_required:false,
+    },null,2));
+    process.exit(7);
+  }
 }
-
-console.log(JSON.stringify(receipt,null,2));
-process.exit(receipt.ready_for_public_edge_enrollment||!apply?0:6);
