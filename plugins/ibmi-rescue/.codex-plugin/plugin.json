@@ -21,7 +21,6 @@
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
-  "releaseState": "DEPLOYMENT_CANARY_PENDING",
   "interface": {
     "displayName": "Evercraft IBM i Rescue",
     "shortDescription": "Assess IBM i and AS/400 estates before upgrade or modernization",
@@ -35,5 +34,8 @@
     "defaultPrompt": [
       "Assess this IBM i or AS/400 estate before an upgrade or modernization and preserve unknowns instead of guessing."
     ]
-  }
+  },
+  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "pendingRuntimePath": "/mcp/ibmi-rescue",
+  "publicOriginState": "https_route_unbound"
 }
