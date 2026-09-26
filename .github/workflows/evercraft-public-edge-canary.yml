@@ -70,6 +70,11 @@ jobs:
             .deployment_receipt_bound == true and
             (.deployment_receipt_ref | type == "string") and
             (.instance_id | type == "string") and
+            .identity_attestation_bound == true and
+            .same_device_binding == true and
+            (.device_fingerprint | type == "string" and test("^sha256:[a-fA-F0-9]{64}$")) and
+            (.edge_attestation_receipt_ref | type == "string" and test("^(sha256:)?[a-fA-F0-9]{64}$")) and
+            (.specialist_attestation_receipt_ref | type == "string" and test("^(sha256:)?[a-fA-F0-9]{64}$")) and
             .checkout_enabled == false and
             .payment_enabled == false
           ' >/dev/null
@@ -101,9 +106,12 @@ jobs:
 
           instance_id="$(printf '%s' "$health" | jq -r '.instance_id')"
           deployment_receipt="$(printf '%s' "$health" | jq -r '.deployment_receipt_ref')"
+          device_fingerprint="$(printf '%s' "$health" | jq -r '.device_fingerprint')"
+          edge_attestation_receipt="$(printf '%s' "$health" | jq -r '.edge_attestation_receipt_ref')"
+          specialist_attestation_receipt="$(printf '%s' "$health" | jq -r '.specialist_attestation_receipt_ref')"
           observed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-          jq -n             --arg origin "$SPECIALIST_ORIGIN"             --arg instance "$instance_id"             --arg deployment "$deployment_receipt"             --arg observed "$observed_at"             '{
+          jq -n             --arg origin "$SPECIALIST_ORIGIN"             --arg instance "$instance_id"             --arg deployment "$deployment_receipt"             --arg device "$device_fingerprint"             --arg edge_attestation "$edge_attestation_receipt"             --arg specialist_attestation "$specialist_attestation_receipt"             --arg observed "$observed_at"             '{
               schema:"evercraft.public-edge.external-canary.v1",
               verified:true,
               state:"public_https_verified",
@@ -112,6 +120,11 @@ jobs:
               service:"specialist-handoff-mcp",
               instance_id:$instance,
               deployment_receipt_ref:$deployment,
+              identity_attestation_verified:true,
+              same_device_binding:true,
+              device_fingerprint:$device,
+              edge_attestation_receipt_ref:$edge_attestation,
+              specialist_attestation_receipt_ref:$specialist_attestation,
               public_https_verified:true,
               certificate_validation:"system_default_trust_store",
               mcp_initialize_verified:true,
