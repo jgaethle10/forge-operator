@@ -116,6 +116,98 @@ try {
       )
   );
 
+  const conflictAssignments = [
+    {
+      agent_id: 'classification-proof-1',
+      idempotency_key: 'classification-proof-shared-key',
+      role: 'surface_auditor',
+      work: { kind: 'product', key: 'classification-proof-a', source_file: null },
+      item: {
+        kind: 'product',
+        key: 'classification-proof-a',
+        raw: {
+          canonical_url: 'https://example.com/classification-a',
+          intents: ['proof'],
+          authority: 'proof',
+          boundaries: ['public only']
+        }
+      }
+    },
+    {
+      agent_id: 'classification-proof-2',
+      idempotency_key: 'classification-proof-shared-key',
+      role: 'surface_auditor',
+      work: { kind: 'product', key: 'classification-proof-b', source_file: null },
+      item: {
+        kind: 'product',
+        key: 'classification-proof-b',
+        raw: {
+          canonical_url: 'https://example.com/classification-b',
+          intents: ['proof'],
+          authority: 'proof',
+          boundaries: ['public only']
+        }
+      }
+    },
+    {
+      agent_id: 'classification-proof-3',
+      idempotency_key: 'classification-proof-unique-key',
+      role: 'surface_auditor',
+      work: { kind: 'product', key: 'classification-proof-c', source_file: null },
+      item: {
+        kind: 'product',
+        key: 'classification-proof-c',
+        raw: {
+          canonical_url: 'https://example.com/classification-c',
+          intents: ['proof'],
+          authority: 'proof',
+          boundaries: ['public only']
+        }
+      }
+    }
+  ];
+
+  const classificationReceipt = await runNodeSeedAssignmentPool({
+    software: 'chum',
+    assignments: conflictAssignments,
+    endpoints: [seedB.endpoint],
+    allocatorToken,
+    maxAttempts: 3,
+    maxConcurrencyPerNode: 1,
+    assignmentTimeoutMs: 10000
+  });
+
+  assert.equal(classificationReceipt.requested_assignments, 3);
+  assert.equal(classificationReceipt.completed_assignments, 2);
+  assert.equal(classificationReceipt.failed_assignments, 1);
+  assert.equal(classificationReceipt.results[0]?.status, 'completed');
+  assert.equal(classificationReceipt.results[1]?.status, 'failed');
+  assert.equal(
+    classificationReceipt.results[1]?.failure_class,
+    'workload_conflict'
+  );
+  assert.equal(classificationReceipt.results[1]?.retryable, false);
+  assert.equal(classificationReceipt.results[1]?.node_quarantined, false);
+  assert.equal(classificationReceipt.results[1]?.node_disabled_for_run, false);
+  assert.equal(classificationReceipt.results[1]?.attempts, 1);
+  assert.equal(classificationReceipt.results[2]?.status, 'completed');
+  assert.equal(
+    classificationReceipt.nodes[0]?.node_id,
+    'saban-pool-node-b'
+  );
+  assert.equal(classificationReceipt.nodes[0]?.healthy_at_end, true);
+  assert.equal(classificationReceipt.nodes[0]?.available_at_end, true);
+  assert.ok(
+    classificationReceipt.events.some(
+      (event) =>
+        event.type === 'node.assignment.failed' &&
+        event.failure_class === 'workload_conflict' &&
+        event.retryable === false &&
+        event.node_quarantined === false &&
+        event.node_disabled_for_run === false
+    )
+  );
+
   console.log(JSON.stringify({
     schema: 'evercraft.saban.nodeseed-pool-proof.v1',
     status: 'pass',
@@ -125,6 +217,9 @@ try {
     failovers: receipt.failover_assignments,
     lease_renewals: receipt.lease_renewals.renewed,
     idempotency_preserved: true,
+    workload_conflict_classified: true,
+    workload_conflict_retry_suppressed: true,
+    healthy_node_preserved_after_workload_conflict: true,
     killed_node: 'saban-pool-node-a',
     surviving_node: 'saban-pool-node-b'
   }));
