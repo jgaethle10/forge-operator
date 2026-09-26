@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: rivet-session-sprawl
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   acquire:
