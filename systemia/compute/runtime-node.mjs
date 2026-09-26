@@ -148,17 +148,6 @@ async function writeHashedRequest(req, target, maxBytes) {
   }
 }
 
-function configuredExecutableAvailable({
-  enabled,
-  executable
-}) {
-  if (String(enabled || '').toLowerCase() !== 'true') return false;
-  const command = String(executable || '').trim();
-  if (!command) return false;
-  if (path.isAbsolute(command)) return fs.existsSync(command);
-  return executableAvailable(command);
-}
-
 function boundedLeaseTtl(value, fallback) {
   const requested = Number(value || fallback);
   if (!Number.isFinite(requested)) return fallback;
