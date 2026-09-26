@@ -73,10 +73,28 @@ try{
   assert.equal(snapshot2.counts.changed,0);
   assert.equal(snapshot2.counts.held,1);
 
-  const stateText=fs.existsSync(path.join(state,'public-edge-activation-watch.json'))
-    ? fs.readFileSync(path.join(state,'public-edge-activation-watch.json'),'utf8')
-    : '';
-  assert.equal(stateText.includes('allocator'),false);
+  const statePath=path.join(state,'public-edge-activation-watch.json');
+  assert.equal(fs.existsSync(statePath),true);
+  const persistedState=JSON.parse(fs.readFileSync(statePath,'utf8'));
+  assert.equal(persistedState.allocator_authority_persisted,false);
+  assert.equal(persistedState.selected_endpoint,null);
+
+  const forbiddenAllocatorKeys=[];
+  const visit=(value,pathParts=[])=>{
+    if(Array.isArray(value)){
+      value.forEach((entry,index)=>visit(entry,[...pathParts,String(index)]));
+      return;
+    }
+    if(!value||typeof value!=='object') return;
+    for(const [key,entry] of Object.entries(value)){
+      if(/^allocator_?tokens?$/i.test(key)||/^allocatorToken(s)?$/i.test(key)){
+        forbiddenAllocatorKeys.push([...pathParts,key].join('.'));
+      }
+      visit(entry,[...pathParts,key]);
+    }
+  };
+  visit(persistedState);
+  assert.deepEqual(forbiddenAllocatorKeys,[]);
 
   console.log(JSON.stringify({
     ok:true,
