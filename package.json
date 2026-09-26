@@ -127,7 +127,8 @@
     "scan:portfolio-sentinel:offline": "node systemia/organism/portfolio-sentinel-runner.mjs --offline",
     "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs",
     "proof:ibmi-direct-buyer-signal": "node systemia/organism/ibmi-direct-buyer-signal.proof.mjs",
-    "test:legacy-rescue-discovery": "node tests/legacy-rescue-lab-discovery.test.mjs"
+    "test:legacy-rescue-discovery": "node tests/legacy-rescue-lab-discovery.test.mjs",
+    "proof:forensiscope-artifact-return": "node systemia/forensiscope/artifact-return-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
