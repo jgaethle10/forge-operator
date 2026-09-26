@@ -7,6 +7,7 @@ const matrix = readJson('chum-probes/provider-matrix.json');
 
 const bridgeUrl = String(process.env.CHUM_PROBE_BRIDGE_URL || process.env.NEXUS_PROBE_BRIDGE_URL || '').replace(/\/$/, '');
 const bridgeToken = String(process.env.CHUM_PROBE_BRIDGE_TOKEN || process.env.NEXUS_PROBE_BRIDGE_TOKEN || '');
+const genericAgentSearchUrl = String(process.env.CHUM_GENERIC_AGENT_SEARCH_URL || 'https://neuronto.com/search').trim();
 const requestedProviders = String(process.env.CHUM_PROBE_PROVIDERS || '')
   .split(',')
   .map((v) => v.trim())
@@ -23,6 +24,7 @@ const unknownRequestedCases = requestedCases.filter(
   (caseId) => !suite.cases.some((testCase) => testCase.case_id === caseId)
 );
 const timeoutMs = 45000;
+const genericAgentTimeoutMs = 20000;
 const requireBridge = process.env.CHUM_REQUIRE_PROBE_BRIDGE === 'true' || process.argv.includes('--require-bridge');
 
 const normalize = (value) => String(value || '').toLowerCase();
@@ -59,12 +61,84 @@ function evaluate(testCase, response) {
   };
 }
 
+async function runGenericAgentProbe(testCase, probeId, surface) {
+  if (!genericAgentSearchUrl) {
+    return { probe_id: probeId, provider: 'generic_agent', product_key: testCase.product_key, case_id: testCase.case_id, status: 'blocked', surface, blocked_reason: 'generic_agent_discovery_surface_not_configured', observed_at: new Date().toISOString() };
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), genericAgentTimeoutMs);
+  try {
+    const response = await fetch(genericAgentSearchUrl, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'user-agent': 'Evercraft-CHUM-Generic-Agent-Probe/1.0'
+      },
+      body: JSON.stringify({ query: { text: testCase.prompt }, federation: 'auto' }),
+      signal: controller.signal
+    });
+    const bodyText = await response.text();
+    let body = null;
+    try { body = JSON.parse(bodyText); } catch {}
+    const results = Array.isArray(body?.results) ? body.results : [];
+    const citations = results.slice(0, 10).map((row) => ({
+      title: row?.displayName || row?.identifier || 'Federated agent discovery result',
+      url: row?.url || row?.source || '',
+      source: row?.source || null
+    })).filter((row) => row.url);
+    const urls = [...new Set(citations.map((row) => row.url))];
+    const text = results.slice(0, 10).map((row) => [
+      row?.displayName || row?.identifier || '',
+      row?.description || '',
+      row?.url || '',
+      row?.source || ''
+    ].filter(Boolean).join(' | ')).join('\n');
+
+    const sanitized = {
+      probe_id: probeId,
+      provider: 'generic_agent',
+      product_key: testCase.product_key,
+      case_id: testCase.case_id,
+      status: response.ok ? 'completed' : 'failed',
+      surface,
+      session_ref: null,
+      text,
+      citations,
+      urls,
+      screenshot_ref: null,
+      provider_receipt: {
+        schema: 'evercraft.chum.generic-agent-provider-receipt.v1',
+        engine: 'federated_agent_discovery',
+        source: (() => { try { return new URL(genericAgentSearchUrl).origin; } catch { return 'configured_generic_agent_search'; } })(),
+        http_status: response.status,
+        result_count: results.length,
+        query_sha256: sha256(testCase.prompt),
+        response_sha256: sha256(JSON.stringify(results)),
+        observed_at: new Date().toISOString()
+      },
+      blocked_reason: null,
+      error: response.ok ? null : `HTTP ${response.status}: ${bodyText.slice(0, 500)}`,
+      observed_at: new Date().toISOString()
+    };
+    sanitized.evaluation = evaluate(testCase, sanitized);
+    sanitized.response_sha256 = sha256(JSON.stringify({ text: sanitized.text, citations: sanitized.citations, urls: sanitized.urls }));
+    return sanitized;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function runProbe(provider, testCase) {
   const probeId = `${testCase.case_id}:${provider}`;
   const surface = matrix.providers.find((p) => p.provider === provider)?.surface || 'unknown';
 
   if (!testCase.enabled) {
     return { probe_id: probeId, provider, product_key: testCase.product_key, case_id: testCase.case_id, status: 'blocked', surface, blocked_reason: testCase.blocked_reason || 'case_disabled', observed_at: new Date().toISOString() };
+  }
+
+  if (provider === 'generic_agent') {
+    return runGenericAgentProbe(testCase, probeId, surface);
   }
 
   if (!bridgeUrl || !bridgeToken) {
@@ -154,24 +228,34 @@ for (const provider of providers) {
 }
 
 receipt.completed_at = new Date().toISOString();
+const consumerResults = receipt.results.filter((r) => r.provider && r.provider !== 'generic_agent');
+const machineResults = receipt.results.filter((r) => r.provider === 'generic_agent');
 receipt.summary = {
   completed: receipt.results.filter((r) => r.status === 'completed').length,
   blocked: receipt.results.filter((r) => r.status === 'blocked').length,
   failed: receipt.results.filter((r) => r.status === 'failed').length,
+  consumer_completed: consumerResults.filter((r) => r.status === 'completed').length,
+  consumer_blocked: consumerResults.filter((r) => r.status === 'blocked').length,
+  machine_completed: machineResults.filter((r) => r.status === 'completed').length,
+  machine_blocked: machineResults.filter((r) => r.status === 'blocked').length,
   pickup_observed: receipt.results.filter((r) => r.evaluation?.pickup_observed).length,
   expected_product_mentions: receipt.results.filter((r) => r.evaluation?.expected_product_mentioned).length,
   expected_host_citations: receipt.results.filter((r) => r.evaluation?.expected_host_cited).length,
   control_false_positives: receipt.results.filter((r) => r.evaluation?.control_false_positive).length
 };
-receipt.measurement_state = !receipt.bridge_configured
-  ? 'blocked_bridge_not_configured'
-  : receipt.summary.failed > 0 && receipt.summary.completed > 0
-    ? 'partial_failure'
-    : receipt.summary.failed > 0
-      ? 'failed'
-      : receipt.summary.completed > 0
-        ? 'measured'
-        : 'configured_no_completed_probes';
+receipt.measurement_state = receipt.summary.failed > 0 && receipt.summary.completed > 0
+  ? 'partial_failure'
+  : receipt.summary.failed > 0
+    ? 'failed'
+    : receipt.summary.machine_completed > 0 && receipt.summary.consumer_completed === 0
+      ? 'machine_only_measured'
+      : receipt.summary.completed > 0 && receipt.summary.blocked > 0
+        ? 'partial_measurement'
+        : receipt.summary.completed > 0
+          ? 'measured'
+          : !receipt.bridge_configured
+            ? 'blocked_bridge_not_configured'
+            : 'configured_no_completed_probes';
 
 fs.mkdirSync('artifacts/chum', { recursive: true });
 fs.writeFileSync('artifacts/chum/provider-probe-latest.json', JSON.stringify(receipt, null, 2) + '\n');
@@ -183,6 +267,8 @@ const md = [
   `Bridge configured: ${receipt.bridge_configured ? 'yes' : 'no'}`,
   `Measurement state: ${receipt.measurement_state}`,
   `Completed: ${receipt.summary.completed}`,
+  `Consumer completed: ${receipt.summary.consumer_completed}`,
+  `Machine-client completed: ${receipt.summary.machine_completed}`,
   `Blocked: ${receipt.summary.blocked}`,
   `Failed: ${receipt.summary.failed}`,
   `Observed expected pickup: ${receipt.summary.pickup_observed}`,
@@ -205,8 +291,11 @@ if (requestedCases.length && cases.length === 0) {
 if (requireBridge && !receipt.bridge_configured) {
   throw new Error('CHUM provider probes are required for this run, but no authorized probe bridge is configured.');
 }
-if (requireBridge && receipt.summary.completed === 0) {
-  throw new Error('CHUM provider probes are required for this run, but zero provider probes completed.');
+if (requireBridge && receipt.summary.consumer_completed === 0) {
+  throw new Error('CHUM consumer provider probes are required for this run, but zero consumer-chat probes completed.');
+}
+if (requireBridge && receipt.summary.consumer_blocked > 0) {
+  throw new Error(`CHUM consumer provider probe run contains ${receipt.summary.consumer_blocked} blocked probe(s).`);
 }
 if (requireBridge && receipt.summary.failed > 0) {
   throw new Error(`CHUM provider probe run contains ${receipt.summary.failed} failed probe(s).`);

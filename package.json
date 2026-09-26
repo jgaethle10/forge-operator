@@ -129,7 +129,7 @@
     "proof:ibmi-direct-buyer-signal": "node systemia/organism/ibmi-direct-buyer-signal.proof.mjs",
     "test:legacy-rescue-discovery": "node tests/legacy-rescue-lab-discovery.test.mjs",
     "proof:forensiscope-artifact-return": "node systemia/forensiscope/artifact-return-proof.mjs",
-    "test:chum-provider-probes": "node tests/chum-provider-probes.test.mjs",
+    "test:chum-provider-probes": "node tests/chum-provider-probes.test.mjs && node tests/chum-provider-generic-agent.test.mjs",
     "test:portfolio-sentinel-discovery": "npm run chum:mirror && npm run chum:capabilities && npm run chum:revenue && node tests/portfolio-sentinel-discovery.test.mjs",
     "chum:syndicate": "node systemia/chum/build-syndication-mesh.mjs",
     "test:chum-syndication": "node tests/chum-syndication-mesh.test.mjs",

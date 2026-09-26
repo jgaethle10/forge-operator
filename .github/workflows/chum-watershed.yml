@@ -194,7 +194,13 @@ jobs:
         shell: bash
         run: |
           set +e
-          npm run chum:providers
+          if [ "${{ github.event_name }}" = "push" ]; then
+            CASE_ID="$(node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('chum-probes/probe-suite.json'));const ids=s.cases.filter(x=>x.enabled&&x.expected_fit).map(x=>x.case_id);const i=Math.floor(Date.now()/3600000)%ids.length;process.stdout.write(ids[i]||'')")"
+            echo "Push measurement rotates one live generic-agent case: $CASE_ID"
+            CHUM_PROBE_PROVIDERS=generic_agent CHUM_PROBE_CASES="$CASE_ID" npm run chum:providers
+          else
+            npm run chum:providers
+          fi
           STATUS="$?"
           set -e
           node <<'NODE'
@@ -204,6 +210,8 @@ jobs:
             `measurement_state=${receipt.measurement_state || 'unknown'}`,
             `bridge_configured=${receipt.bridge_configured ? 'true' : 'false'}`,
             `completed=${receipt.summary?.completed || 0}`,
+            `consumer_completed=${receipt.summary?.consumer_completed || 0}`,
+            `machine_completed=${receipt.summary?.machine_completed || 0}`,
             `blocked=${receipt.summary?.blocked || 0}`,
             `failed=${receipt.summary?.failed || 0}`,
             `pickup_observed=${receipt.summary?.pickup_observed || 0}`
@@ -363,6 +371,8 @@ jobs:
             echo "Provider measurement state: ${{ steps.providers.outputs.measurement_state }}"
             echo "Provider bridge configured: ${{ steps.providers.outputs.bridge_configured }}"
             echo "Provider probes completed: ${{ steps.providers.outputs.completed }}"
+            echo "Consumer-chat probes completed: ${{ steps.providers.outputs.consumer_completed }}"
+            echo "Machine-client probes completed: ${{ steps.providers.outputs.machine_completed }}"
             echo "Provider probes blocked: ${{ steps.providers.outputs.blocked }}"
             echo "Provider pickup observations: ${{ steps.providers.outputs.pickup_observed }}"
             echo "Provider miss ingestion: ${{ steps.provider_repairs.outcome }}"
@@ -418,14 +428,21 @@ jobs:
           case "$PROVIDER_STATE" in
             measured)
               ;;
-            blocked_bridge_not_configured)
+            machine_only_measured)
               if [ "${{ github.event_name }}" = "push" ]; then
-                echo "::warning::Provider measurement is blocked because no authorized bridge is configured; push health remains truthful but non-blocking."
+                echo "::notice::Live machine-client provider measurement completed; consumer-chat measurement remains separately authorization-gated."
               else
                 FAILED=1
               fi
               ;;
-            partial_failure|failed|configured_no_completed_probes|"")
+            blocked_bridge_not_configured)
+              if [ "${{ github.event_name }}" = "push" ]; then
+                echo "::warning::Provider measurement is blocked because no authorized bridge or live machine-client measurement completed."
+              else
+                FAILED=1
+              fi
+              ;;
+            partial_measurement|partial_failure|failed|configured_no_completed_probes|"")
               FAILED=1
               ;;
             *)

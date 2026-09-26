@@ -1,16 +1,51 @@
 {
   "schema": "evercraft.chum.provider-matrix.v1",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "execution_owner": "CHUM",
   "orchestration_owner": "Systemia",
   "providers": [
-    {"provider":"chatgpt","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"claude","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"gemini","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"copilot","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"perplexity","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"grok","surface":"consumer_chat","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"},
-    {"provider":"generic_agent","surface":"machine_client","execution":"authorized_bridge","behavioral_probe_state":"receipt_required"}
+    {
+      "provider": "chatgpt",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required"
+    },
+    {
+      "provider": "claude",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required"
+    },
+    {
+      "provider": "gemini",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required"
+    },
+    {
+      "provider": "copilot",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required"
+    },
+    {
+      "provider": "perplexity",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required"
+    },
+    {
+      "provider": "grok",
+      "surface": "consumer_chat",
+      "execution": "authorized_bridge",
+      "behavioral_probe_state": "receipt_required"
+    },
+    {
+      "provider": "generic_agent",
+      "surface": "machine_client",
+      "execution": "federated_agent_discovery",
+      "behavioral_probe_state": "receipt_required"
+    }
   ],
   "rules": {
     "clean_session_required": true,
@@ -23,6 +58,7 @@
     "api_behavior_is_not_consumer_ui_behavior": true,
     "no_credential_exfiltration": true,
     "no_captcha_bypass": true,
-    "no_payment_or_external_message_actions": true
+    "no_payment_or_external_message_actions": true,
+    "generic_agent_is_not_consumer_ui_behavior": true
   }
 }
