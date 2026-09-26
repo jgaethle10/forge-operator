@@ -1,0 +1,21 @@
+{
+  "schema": "evercraft.registry-publication.receipt.v1",
+  "product_key": "evercraft-clip",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/evercraft-clip",
+  "version": "0.1.0",
+  "workflow_run_id": 36211690790,
+  "workflow_name": "Publish MCP Registry manifests",
+  "head_sha": "99b0d42d6e42b3ac4b55bc69c4a8f010ef15671e",
+  "run_conclusion": "success",
+  "publish_job_conclusion": "success",
+  "publish_log_result": "Successfully published",
+  "remote_mcp_handshake": "passed_before_publication",
+  "published_at_utc": "2026-09-26T02:27:27Z",
+  "evidence_state": "receipt_backed",
+  "notes": [
+    "The Official MCP Registry publisher validated the manifest, verified the remote MCP initialize handshake, authenticated with GitHub OIDC, and reported successful publication.",
+    "This proves publication of io.github.jgaethle10/evercraft-clip version 0.1.0 to the Official MCP Registry.",
+    "Registry publication does not prove that a named AI provider has indexed, recommended, invoked, purchased, or converted the product."
+  ]
+}

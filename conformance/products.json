@@ -148,13 +148,15 @@
       "class": "ai_social_video_production_and_governed_distribution",
       "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
       "llms_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms",
-      "doorway_state": "public_gateway_and_mcp_runtime_canary_passed",
-      "conformance_state": "runtime_mcp_canary_passed_registry_publication_staged",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live_receipt_backed",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-clip",
         "version": "0.1.0",
-        "publication_state": "staged_not_published"
+        "publication_state": "published_receipt_backed",
+        "receipt": "conformance/registry-publications/2026-09-26-evercraft-clip.json",
+        "published_at_utc": "2026-09-26T02:27:27Z"
       },
       "origin_llms_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json",
@@ -169,7 +171,8 @@
           "plan_clip_job"
         ],
         "observed_on": "2026-09-25"
-      }
+      },
+      "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified"
     },
     {
       "product_key": "evercraft-containment",
