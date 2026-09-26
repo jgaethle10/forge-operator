@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const MACHINE_CATALOG = 'public/.well-known/evercraft-machine-catalog.json';
 const ANSWER_GRAPH = 'public/chum/answers/index.json';
@@ -334,5 +335,5 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
   }
 }
 
-const direct = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+const direct = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 if (direct) console.log(JSON.stringify(buildCommercialDiscoveryMesh(), null, 2));
