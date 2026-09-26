@@ -262,6 +262,7 @@ export async function generateYardReport({
   return record;
 }
 
+function progressFile(stateDir,jobId){ return path.join(stateDir,'progress',safeId(jobId)+'.json'); }
 function send(res,status,body){
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{'content-type':'application/json','content-length':data.length,'cache-control':'no-store'});
@@ -302,14 +303,29 @@ export async function startRivetReportRuntime({
         const auth=clean(req.headers.authorization);
         if(auth!==('Bearer '+teamToken)) return send(res,401,{ok:false,error:'team_authorization_required'});
         const body=await readJson(req);
+        const jobId='rivet-job:'+sha256(clean(body?.address)+'|'+Date.now()+'|'+randomBytes(8).toString('hex')).slice(0,24);
+        const progress=[];
         const record=await generateYardReport({
           address:body?.address,
           sourceUrl,
           systemiaMachineKey,
           sourceFetch,
-          stateDir
+          stateDir,
+          onProgress:event=>{
+            progress.push(event);
+            atomicJson(progressFile(stateDir,jobId),{job_id:jobId,current:event,events:progress});
+          }
         });
-        return send(res,201,{ok:true,...record});
+        return send(res,201,{ok:true,job_id:jobId,progress:progress.at(-1),...record});
+      }
+      const progressMatch=req.url?.match(/^\/v1\/report-jobs\/([^/?#]+)\/progress$/);
+      if(req.method==='GET' && progressMatch){
+        const auth=clean(req.headers.authorization);
+        if(auth!==('Bearer '+teamToken)) return send(res,401,{ok:false,error:'team_authorization_required'});
+        const jobId=decodeURIComponent(progressMatch[1]);
+        const file=progressFile(stateDir,jobId);
+        if(!fs.existsSync(file)) return send(res,404,{ok:false,error:'report_job_not_found'});
+        return send(res,200,{ok:true,...JSON.parse(fs.readFileSync(file,'utf8'))});
       }
       const m=req.url?.match(/^\/v1\/reports\/([^/?#]+)$/);
       if(req.method==='GET' && m){
@@ -334,6 +350,7 @@ export async function startRivetReportRuntime({
     service_url:'http://'+host+':'+actualPort,
     health_path:'/health',
     report_path:'/v1/reports',
+    progress_path_template:'/v1/report-jobs/{job_id}/progress',
     close:()=>new Promise((resolve,reject)=>server.close(err=>err?reject(err):resolve()))
   };
 }
