@@ -14,6 +14,7 @@ import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
 import { startForensiScopeEvidenceService } from '../forensiscope/evidence-service.mjs';
+import { probeTranscriptionEngineCapability } from '../forensiscope/transcription-engine.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -191,11 +192,9 @@ export async function startEvercraftComputeNode({
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
   };
+  const transcriptionCapability = probeTranscriptionEngineCapability(process.env);
   const serviceCapabilities = {
-    forensiscope_transcription: configuredExecutableAvailable({
-      enabled: process.env.FORENSISCOPE_TRANSCRIBE_ENABLED,
-      executable: process.env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE
-    })
+    forensiscope_transcription: transcriptionCapability.ready === true
   };
   const leases = new Map();
   const services = new Map();
