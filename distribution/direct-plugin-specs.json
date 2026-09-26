@@ -274,7 +274,7 @@
       "slug": "systemia-remote-ops",
       "name": "Systemia Remote Ops",
       "short_description": "Simulate business decisions before acting",
-      "long_description": "Use Systemia Remote Ops directly when a founder or operator wants to simulate a consequential business decision before changing the real business. Pricing simulation is currently the first public executable lane; other lanes must remain clearly labeled until independently verified.",
+      "long_description": "Use Systemia Remote Ops when a founder or operator wants to simulate a consequential business decision before changing the real business. The native Yard runtime can route decisions, run a transparent pricing heuristic, and compare general business scenarios using only explicit user-supplied assumptions.",
       "category": "Business",
       "website_url": "https://systemia-remote-ops.base44.app/",
       "registry_name": null,
@@ -289,11 +289,11 @@
         "decision-lab",
         "mcp"
       ],
-      "intent": "Business decision simulation before acting, beginning with pricing changes.",
-      "truth_boundary": "Pricing simulation is live, read-only, modeled decision support with low confidence until real outcome data improves the model. Hiring and expansion remain held from MCP execution, strategic transactions remain discovery-only, and no public Remote Ops tool may mutate a real business. No remote MCP is advertised until the Evercraft Compute public edge passes the external HTTPS, MCP, authority, deployment-receipt, and NodeSeed-attestation canary.",
+      "intent": "Business decision simulation before acting, including pricing, staffing, product/service changes, expansion, capital purchases, partnerships, acquisitions, buying or selling a business, and startup scenarios.",
+      "truth_boundary": "The native Yard runtime is read-only and performs transparent scenario math. General scenario outputs use only user-supplied assumptions; pricing uses a labeled low-confidence heuristic. No remote MCP is advertised until the Evercraft Compute public edge passes the external HTTPS and MCP canary, and no simulation authorizes real-world business action.",
       "capability_public_ids": [],
       "public_origin_state": "https_route_unbound",
-      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "runtime_workload_class": "systemia.remote-ops-mcp.v1",
       "runtime_path": "/mcp/systemia-remote-ops"
     },
     {
