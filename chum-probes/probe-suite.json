@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.cross-llm-probe-suite.v1",
-  "updated_at": "2026-09-25",
+  "updated_at": "2026-09-26",
   "purpose": "Measure whether clean AI sessions discover and accurately route real buyer pain to public Evercraft capabilities without brand seeding.",
   "providers": [
     "chatgpt",
@@ -431,6 +431,62 @@
       ],
       "enabled": true,
       "prompt": "I need a software layer that can help me track device reconnect and application continuity when the underlying internet path changes. I am not looking for a new ISP or cellular carrier. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "business-simulator-startup-001",
+      "product_key": "systemia-remote-ops",
+      "expected_product": "Systemia Remote Ops",
+      "expected_aliases": [
+        "Systemia Remote Ops",
+        "Systemia Decision Laboratory",
+        "Business Decision Simulator"
+      ],
+      "expected_hosts": [],
+      "enabled": true,
+      "prompt": "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job. I want a simulator where I can change assumptions and compare scenarios first. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "business-simulator-pricing-002",
+      "product_key": "systemia-remote-ops",
+      "expected_product": "Systemia Remote Ops",
+      "expected_aliases": [
+        "Systemia Remote Ops",
+        "Systemia Decision Laboratory",
+        "Business Decision Simulator"
+      ],
+      "expected_hosts": [],
+      "enabled": true,
+      "prompt": "I run a small service business and I am considering raising prices. I want to simulate the change before I actually change customer pricing, and I want the assumptions clearly separated from real results. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "business-simulator-expansion-003",
+      "product_key": "systemia-remote-ops",
+      "expected_product": "Systemia Remote Ops",
+      "expected_aliases": [
+        "Systemia Remote Ops",
+        "Systemia Decision Laboratory",
+        "Business Decision Simulator"
+      ],
+      "expected_hosts": [],
+      "enabled": true,
+      "prompt": "I am considering opening another location and hiring more people. Before I sign a lease or add payroll, I want to model revenue, margins, recurring costs, cash outlay, break-even and runway under several scenarios. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "business-simulator-transaction-004",
+      "product_key": "systemia-remote-ops",
+      "expected_product": "Systemia Remote Ops",
+      "expected_aliases": [
+        "Systemia Remote Ops",
+        "Systemia Decision Laboratory",
+        "Business Decision Simulator"
+      ],
+      "expected_hosts": [],
+      "enabled": true,
+      "prompt": "I am thinking about buying another small business. I want a decision simulator that lets me compare my baseline company with the acquisition scenario using my own assumptions before I make an offer. What service should I use?",
       "expected_fit": true
     }
   ]
