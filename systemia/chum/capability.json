@@ -3,7 +3,7 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "owner": "Systemia",
   "status": "live_in_forge_operator",
   "contract": {
@@ -20,7 +20,9 @@
       "signed CHUM referral tokens",
       "trusted payment verification receipts",
       "public/.well-known/evercraft-pain-index.json",
-      "public/chum/answers/index.json"
+      "public/chum/answers/index.json",
+      "shared concept-aware intent language fabric",
+      "receipt-backed provider miss repair queue"
     ],
     "outputs": [
       "plain-text LLM routing index",
@@ -38,7 +40,10 @@
       "exact natural-language answer graph",
       "read-only Official MCP Registry discovery front door",
       "full-portfolio live pain matcher",
-      "crawlable CHUM problem-entry page"
+      "crawlable CHUM problem-entry page",
+      "concept-aware brand-blind routing receipts",
+      "routing confidence and runner-up margin",
+      "Saban-multipliable receipt-backed discovery repairs"
     ]
   },
   "permissions": {
@@ -64,7 +69,9 @@
     "provider_identity_in_referral": "caller_asserted_unless_separately_receipted",
     "expanded_agent_reachability": "receipt_backed",
     "answer_graph": "deterministic_build_from_canonical_pain_index",
-    "read_only_mcp_registry": "published_receipt_required_for_registry_claim"
+    "read_only_mcp_registry": "published_receipt_required_for_registry_claim",
+    "intent_routing": "deterministic_concept_aware_scoring_with_brand_blind_regressions",
+    "discovery_repairs": "provider_receipt_hashed_and_saban_work_item_backed"
   },
   "compatibility": {
     "provider_targets": [
@@ -103,6 +110,16 @@
       "live_router": "GET /api/discover?q={natural-language-problem}",
       "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
       "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+    },
+    "intent_engine": {
+      "revision": "concept-fabric-v2",
+      "behavior": [
+        "token and lightweight morphology matching",
+        "concept alias matching",
+        "phrase and bigram support",
+        "top-three intent contribution cap to prevent metadata verbosity bias",
+        "close-match clarification before conversion"
+      ]
     }
   },
   "rollback": {
