@@ -40,6 +40,8 @@ export class PublicEdgeController {
     this.requestedHostname='';
     this.identityAttestationRequired=false;
     this.fieldEnrollmentRequired=false;
+    this.fieldEnrollmentReceipt='';
+    this.publicEdgeAdmissionReceipt='';
     this.timer=null;
     this.inFlight=false;
     this.sequence=0;
@@ -53,6 +55,8 @@ export class PublicEdgeController {
           this.requestedHostname=String(persisted.requested_hostname||'');
           this.identityAttestationRequired=Boolean(persisted.identity_attestation_required);
           this.fieldEnrollmentRequired=Boolean(persisted.field_enrollment_required);
+          this.fieldEnrollmentReceipt=String(persisted.field_enrollment_receipt||'');
+          this.publicEdgeAdmissionReceipt=String(persisted.public_edge_admission_receipt||'');
           this.sequence=Math.max(0,Number(persisted.sequence||0));
         }
       }catch{}
@@ -72,6 +76,8 @@ export class PublicEdgeController {
       requested_hostname:this.requestedHostname||null,
       identity_attestation_required:this.identityAttestationRequired,
       field_enrollment_required:this.fieldEnrollmentRequired,
+      field_enrollment_receipt:this.fieldEnrollmentReceipt||null,
+      public_edge_admission_receipt:this.publicEdgeAdmissionReceipt||null,
       allow_loopback_proof:this.allowLoopbackProof,
       sequence:this.sequence,
       updated_at:new Date().toISOString(),
@@ -138,6 +144,15 @@ export class PublicEdgeController {
           capacityEndpoint,
           allocatorToken,
         });
+        this.fieldEnrollmentReceipt=String(
+          fieldEnrollmentImport.field_enrollment_receipt||''
+        );
+        this.publicEdgeAdmissionReceipt=String(
+          fieldEnrollmentImport.public_edge_admission_receipt||''
+        );
+      }else{
+        this.fieldEnrollmentReceipt='';
+        this.publicEdgeAdmissionReceipt='';
       }
       edgeRecord=await this.yard.deployRelease({
         deploymentId:this.edgeDeploymentId,
@@ -209,6 +224,9 @@ export class PublicEdgeController {
             deviceFingerprint:edgeAttestation.device_fingerprint,
             edgeAttestationReceipt:edgeAttestation.receipt_hash,
             specialistAttestationReceipt:specialistAttestation.receipt_hash,
+            fieldVerified:this.fieldEnrollmentRequired,
+            fieldEnrollmentReceipt:this.fieldEnrollmentReceipt,
+            publicEdgeAdmissionReceipt:this.publicEdgeAdmissionReceipt,
           }
         );
       }
@@ -256,10 +274,10 @@ export class PublicEdgeController {
           ? edgeAttestation?.field_verified===true && specialistAttestation?.field_verified===true
           : null,
         field_enrollment_import_receipt:this.fieldEnrollmentRequired
-          ? fieldEnrollmentImport?.field_enrollment_receipt||null
+          ? this.fieldEnrollmentReceipt||null
           : null,
         public_edge_admission_receipt:this.fieldEnrollmentRequired
-          ? fieldEnrollmentImport?.public_edge_admission_receipt||null
+          ? this.publicEdgeAdmissionReceipt||null
           : null,
         identity_verified:this.identityAttestationRequired
           ? edgeAttestation?.identity_verified===true && specialistAttestation?.identity_verified===true
@@ -382,6 +400,21 @@ export class PublicEdgeController {
       this.yard.renewDeploymentLease(this.specialistDeploymentId,{ttlMs:this.leaseTtlMs}),
     ]);
 
+    if(this.fieldEnrollmentRequired && (
+      !this.fieldEnrollmentReceipt ||
+      !this.publicEdgeAdmissionReceipt
+    )){
+      const resumeFieldImport=await this.yard.refreshFieldEnrollmentFromDeployment(
+        this.edgeDeploymentId
+      );
+      this.fieldEnrollmentReceipt=String(
+        resumeFieldImport.field_enrollment_receipt||''
+      );
+      this.publicEdgeAdmissionReceipt=String(
+        resumeFieldImport.public_edge_admission_receipt||''
+      );
+    }
+
     if(this.identityAttestationRequired){
       const [edgeAttestation,specialistAttestation]=await Promise.all([
         this.yard.attestDeployment(this.edgeDeploymentId),
@@ -403,6 +436,9 @@ export class PublicEdgeController {
           deviceFingerprint:edgeAttestation.device_fingerprint,
           edgeAttestationReceipt:edgeAttestation.receipt_hash,
           specialistAttestationReceipt:specialistAttestation.receipt_hash,
+          fieldVerified:this.fieldEnrollmentRequired,
+          fieldEnrollmentReceipt:this.fieldEnrollmentReceipt,
+          publicEdgeAdmissionReceipt:this.publicEdgeAdmissionReceipt,
         }
       );
     }
@@ -471,6 +507,14 @@ export class PublicEdgeController {
       route_verified:this.binding.route_verified,
       origin:this.binding.origin,
       route_binding_receipt:this.binding.receipt_hash,
+      field_enrollment_required:this.fieldEnrollmentRequired,
+      field_verified:this.fieldEnrollmentRequired ? true : null,
+      field_enrollment_receipt:this.fieldEnrollmentRequired
+        ? this.fieldEnrollmentReceipt||null
+        : null,
+      public_edge_admission_receipt:this.fieldEnrollmentRequired
+        ? this.publicEdgeAdmissionReceipt||null
+        : null,
       founder_login_required:false,
     });
   }
