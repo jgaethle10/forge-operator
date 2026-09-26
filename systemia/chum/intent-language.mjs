@@ -27,8 +27,9 @@ const CONCEPT_ALIASES = {
   seo: ['seo','search visibility','local search','technical seo'],
   performance: ['performance','slow site','page speed','core web vitals'],
 
-  interview: ['interview','job interview','mock interview','interview practice'],
+  interview: ['job interview','mock interview','interview practice','practice interview','interview tomorrow','recruiter screen','behavioral interview','interview answer','interview question'],
   career: ['career','job search','resume','role specific','role-specific'],
+  social_clipping: ['social clip','social clips','vertical clip','vertical clips','short form video','short-form video','social video','reels','video repurposing'],
 
   funding: ['funding','capital','loan','lender','investor','investors','financing','raise money','raising money'],
   readiness: ['readiness','ready for','fit','gaps','qualification','qualify'],

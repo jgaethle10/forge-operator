@@ -39,6 +39,15 @@ if (!absenceProbe.concept_set.has('conversion') || absenceProbe.negated_concept_
   throw new Error('CHUM confused pain-language absence with intent exclusion');
 }
 
+const interviewMediaProbe = intentSignature('turn this interview into social clips for Facebook LinkedIn and Instagram');
+if (interviewMediaProbe.concept_set.has('interview') || !interviewMediaProbe.concept_set.has('social_clipping')) {
+  throw new Error('CHUM confused interview source media with career interview intent');
+}
+const careerInterviewProbe = intentSignature('job interview tomorrow mock interview practice');
+if (!careerInterviewProbe.concept_set.has('interview')) {
+  throw new Error('CHUM failed to recognize explicit career interview intent');
+}
+
 let failed = 0;
 for (const [query, expected] of cases) {
   const results = rankDiscoveryCandidates(catalog, directory, query, { limit: 3, minimumScore: 8 });

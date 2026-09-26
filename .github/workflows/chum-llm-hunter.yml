@@ -67,28 +67,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run chum:hunt
 
-      - name: Strike federated ARD discovery
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -euo pipefail
-          HOUR="$(date -u +%H)"
-          if [ "${{ github.event_name }}" != "schedule" ] || [ "$((10#$HOUR % 6))" -eq 0 ]; then
-            echo "Submitting live Evercraft MCP endpoints into federated ARD discovery."
-            CHUM_ARD_SUBMIT=true npm run chum:ard-strike
-          else
-            echo "Recon-only ARD pass this hour; registry self-retries pending submissions."
-            CHUM_ARD_SUBMIT=false npm run chum:ard-strike
-          fi
-
-      - name: Push current Evercraft doors into search discovery
-        continue-on-error: true
-        run: npm run chum:announce
-
-      - name: Verify Official MCP Registry and remote MCP doors
-        continue-on-error: true
-        run: npm run chum:mcp
-
       - name: Rotate one brand-blind pain attack across authorized providers
         continue-on-error: true
         env:
@@ -110,6 +88,31 @@ jobs:
           else
             echo "Authorized provider bridge is not configured; direct provider attack is blocked, not faked."
           fi
+
+      - name: Strike federated ARD discovery
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOUR="$(date -u +%H)"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual ARD pass may submit bounded registry work."
+            CHUM_ARD_SUBMIT=true npm run chum:ard-strike
+          elif [ "${{ github.event_name }}" = "schedule" ] && [ "$((10#$HOUR % 6))" -eq 0 ]; then
+            echo "Six-hour scheduled ARD submission window."
+            CHUM_ARD_SUBMIT=true npm run chum:ard-strike
+          else
+            echo "Recon-only ARD pass; routine pushes do not re-submit registry endpoints."
+            CHUM_ARD_SUBMIT=false npm run chum:ard-strike
+          fi
+
+      - name: Push current Evercraft doors into search discovery
+        continue-on-error: true
+        run: npm run chum:announce
+
+      - name: Verify Official MCP Registry and remote MCP doors
+        continue-on-error: true
+        run: npm run chum:mcp
 
       - name: Upload hunter receipts
         if: always()
