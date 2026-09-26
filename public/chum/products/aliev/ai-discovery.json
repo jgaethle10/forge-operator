@@ -60,13 +60,6 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "source": "CHUM public mirror",
-  "mirror": {
-    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
-    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
-    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
-    "page": "/chum/products/aliev/"
-  },
   "relationships": {
     "rivet": {
       "name": "RIVET",
@@ -75,5 +68,12 @@
       "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
       "description": "RIVET turns AliEV address-level EV infrastructure intelligence into customer-facing property screening, planning, and reporting."
     }
+  },
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
+    "page": "/chum/products/aliev/"
   }
 }

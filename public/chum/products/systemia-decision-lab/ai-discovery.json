@@ -43,6 +43,7 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
+  "relationships": null,
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/llms.txt",

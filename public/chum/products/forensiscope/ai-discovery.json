@@ -97,6 +97,7 @@
     "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
     "llms": "/forensiscope/distribution/llms.txt"
   },
+  "relationships": null,
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",

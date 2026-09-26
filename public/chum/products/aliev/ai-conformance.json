@@ -38,11 +38,6 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "provider_behavior_state": "not_inferred_from_publication",
-  "machine_commerce_handoff_state": null,
-  "machine_commerce_public_id": null,
-  "machine_commerce_tool": null,
-  "live_canary_evidence": null,
   "relationships": {
     "rivet": {
       "name": "RIVET",
@@ -51,5 +46,10 @@
       "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
       "description": "RIVET turns AliEV address-level EV infrastructure intelligence into customer-facing property screening, planning, and reporting."
     }
-  }
+  },
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
 }

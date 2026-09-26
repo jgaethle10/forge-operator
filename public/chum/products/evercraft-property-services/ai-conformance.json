@@ -37,6 +37,7 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
+  "relationships": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,

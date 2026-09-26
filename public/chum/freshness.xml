@@ -2,9 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-26T00:44:36.244Z</updated>
+<updated>2026-09-26T00:45:08.005Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T00:45:08.005Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:982fed532f26ca5cf78bb274</id><title>/chum/products/forensiscope/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/forensiscope/ai-conformance.json"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:a741198944d9ab528a06d03f</id><title>/chum/products/forensiscope/ai-discovery.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/forensiscope/ai-discovery.json"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:ed3a911f8159e7f0e67d2599</id><title>/chum/products/aliev/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/aliev/ai-conformance.json"/><category term="priority-94"/></entry>
@@ -104,5 +105,4 @@
 <entry><id>urn:evercraft:chum:000ab92dc5f36242494fadb5</id><title>/chum/products/thoughtdrop/ai-discovery.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/thoughtdrop/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:f96d858a3f573aa8014c1642</id><title>/chum/products/towi-research/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/towi-research/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:9734cefaae32d0a2e156d104</id><title>/chum/products/towi-research/ai-discovery.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/towi-research/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:5067c37c7a64f279ab9abb9e</id><title>/chum/products/website-launch/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/website-launch/ai-conformance.json"/><category term="priority-94"/></entry>
 </feed>

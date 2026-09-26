@@ -81,6 +81,7 @@
     "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
     "llms": "/forensiscope/distribution/llms.txt"
   },
+  "relationships": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
