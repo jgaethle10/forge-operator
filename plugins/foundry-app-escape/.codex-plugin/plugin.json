@@ -1,0 +1,37 @@
+{
+  "name": "foundry-app-escape",
+  "version": "0.1.0",
+  "description": "Use Foundry App Escape directly when a founder or operator needs a portability, dependency, security, reconstruction, migration, or rollback map for an app tied to a builder-specific runtime.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "foundry",
+    "app-portability",
+    "vendor-lock-in",
+    "migration",
+    "reconstruction",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "releaseState": "DEPLOYMENT_CANARY_PENDING",
+  "interface": {
+    "displayName": "Evercraft Foundry App Escape Audit",
+    "shortDescription": "Audit portability and migration risk in builder-tied apps",
+    "longDescription": "Use Foundry App Escape directly when a founder or operator needs a portability, dependency, security, reconstruction, migration, or rollback map for an app tied to a builder-specific runtime.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+    "defaultPrompt": [
+      "Audit this app for portability, lock-in, dependency, migration, and rollback risk without changing production."
+    ]
+  }
+}
