@@ -279,7 +279,7 @@
       "website_url": "https://systemia-remote-ops.base44.app/",
       "registry_name": null,
       "mcp_url": null,
-      "state": "source_ready_deployment_unverified",
+      "state": "yard_runtime_proven_public_route_pending",
       "default_prompt": "I am considering a business decision and want to simulate the likely tradeoffs before I act.",
       "keywords": [
         "systemia",
@@ -290,10 +290,11 @@
         "mcp"
       ],
       "intent": "Business decision simulation before acting, beginning with pricing changes.",
-      "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt.",
+      "truth_boundary": "Pricing simulation is live, read-only, modeled decision support with low confidence until real outcome data improves the model. Hiring and expansion remain held from MCP execution, strategic transactions remain discovery-only, and no public Remote Ops tool may mutate a real business. No remote MCP is advertised until the Evercraft Compute public edge passes the external HTTPS, MCP, authority, deployment-receipt, and NodeSeed-attestation canary.",
       "capability_public_ids": [],
-      "candidate_mcp_url": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
-      "public_origin_state": "deployment_unverified"
+      "public_origin_state": "https_route_unbound",
+      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "runtime_path": "/mcp/systemia-remote-ops"
     },
     {
       "slug": "deck-capital-fit",
