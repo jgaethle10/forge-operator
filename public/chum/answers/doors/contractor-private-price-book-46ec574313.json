@@ -3,9 +3,9 @@
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
   "updated_at": "2026-09-26T04:35:00.000Z",
-  "answer_id": "intent:01f4e9cc68",
-  "user_language": "build a contractor estimate from scope",
-  "normalized": "build a contractor estimate from scope",
+  "answer_id": "intent:46ec574313",
+  "user_language": "contractor private price book",
+  "normalized": "contractor private price book",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
   "candidate_count": 1,
   "candidates": [

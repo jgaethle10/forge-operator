@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:42:50.291Z",
-  "url_count": 2201,
+  "updated_at": "2026-09-26T22:43:25.031Z",
+  "url_count": 2207,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "09a9fb7877ddd7bf8871d1c97f6a2abacb0610f3fa760f911c7c616e1a29d63d",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "content_sha256": "fa8f8e8af1b3d97c992dd0e95f9d9dad9fd778c1b9c19041112f2c88615f73f8",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -51,8 +51,8 @@
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "7f9b9491cbee276edbbac65b8e1949e7de9a4ffb6d54d2425e1a9a0425a0da70",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "content_sha256": "d41b9a2fdde0837fb24d71936101c2ec04740bdd03f0a26b105b6167fccca4d1",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
@@ -69,38 +69,38 @@
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "512cae2a800492defae2b1539a2de902ce4e08019807824e70c2fe7a88b22016",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "content_sha256": "cfd8fe3cba1ca12dab83714b9f392e7006d4e09c21fd5f94c642767ee76ed2f8",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 90
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "eaff5fe369443805fdfd9a3ed4c28817a9244e5b4a4e905c8477368dc7b0f1ca",
-      "last_changed": "2026-09-26T22:41:57.196Z",
+      "content_sha256": "b3b4c437f174482a3260544411e4d38e73b13fa9df746f8f3af48b4d073dec48",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "afa4a9f30d28d9831b05887b4cbba74ebe3a17875b6141d2c03418dcaeec861e",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "content_sha256": "328e7283032d331234ab2f902457726bdd3381a349a4f1a654f6e9242b81c6d5",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "a7d624240e08a5fb79f7adf5ee3f80078101ae0ffb8bd10658c780d0a85291be",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "9bcd8d4b1112a1c6e8c71d00c5eef3e18ca8dd385a3991bd8320b02c66e92e3f",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "3e2578412249b3d53a005d94b243de4f82947a03b63d84bdaab445e5c8f058ae",
-      "last_changed": "2026-09-26T22:18:18.960Z",
+      "content_sha256": "ca081668bd239450ec9109c7cfae5f3d041194b5eacf74cf056d89ae6bf61460",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "1047b4fc4a2913404b8ba079af2da279b488e9df99ac954c66837f3af61990f2",
-      "last_changed": "2026-09-26T22:18:18.960Z",
+      "content_sha256": "0f45ff064c886b8e76b83cf6fbab232213de286a46625112a3942fe0520d2eed",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "057e0bb421cf7d5e8d136286a175764d9383edf42ea00f9326119acc075049c4",
-      "last_changed": "2026-09-26T22:42:50.291Z",
+      "content_sha256": "c71c84ae666f0fd336a7e18c96c127e8152d1c211323e9cc84057d50b5ee1a62",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -195,8 +195,8 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "662194c3b97507a7fd5523d41e6f3a605a9ae52a3d6a572995fb1a358f97e89e",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "0ed8438db852e2571d8288e6f1a5aa3090b989141db74635fb8a2cff15c49bf9",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
@@ -291,8 +291,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "eaff5fe369443805fdfd9a3ed4c28817a9244e5b4a4e905c8477368dc7b0f1ca",
-      "last_changed": "2026-09-26T22:41:57.196Z",
+      "content_sha256": "b3b4c437f174482a3260544411e4d38e73b13fa9df746f8f3af48b4d073dec48",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -735,8 +735,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "3b511d1f6372996dcff5ce3eea92d45c19d9ef487b11574bc1f7e87142533945",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "content_sha256": "e5dba86fb062a0b5b36f6a8d74fc706a403d5fffa8b28f129551b9d0973e1e5b",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
@@ -1371,26 +1371,26 @@
     },
     "/chum/intents/eps-estimate-engine-machine-v1/": {
       "path": "/chum/intents/eps-estimate-engine-machine-v1/",
-      "content_sha256": "bfd47fca1a236cc71f7c26ff9124d64d6a0114bbffa2774dc2c6fb827f2a0c1e",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "42eb2e2e226a3c5a7e2d7e4f4f40eb152293bb647f2234b1431e7bef23160d6d",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 98
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/": {
       "path": "/chum/capabilities/eps-estimate-engine-machine-v1/",
-      "content_sha256": "3726ab24d5d18d103a255946dd782cc5bb7b24cf4b39e384676d6c27b69b3dd1",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "01dbfebba4c41bf7c8fd5eb63a4c0e5f61497fc0c6012b1c4e567b978689f9f9",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 96
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt": {
       "path": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
-      "content_sha256": "eea428ad348e75b8ea84db8f0e67d9d5bf702f016d8a15bcd4654d67500ba3b7",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "faba9680dcd73265b1167ff38bbe7fd774fdc5d75116f3df26e19ac1374ce755",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 96
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json": {
       "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
-      "content_sha256": "f19b4d877b8a4552c1868b45d7b0c8b79dec4c7fe401acf9551fbdb4bc660c5f",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "4b5cc7014ed6b0ff4dd0f028b9b3942edb33bd70b2b360cc51e5f5480943158c",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 96
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/schema.jsonld": {
@@ -4785,8 +4785,8 @@
     },
     "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json": {
       "path": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json",
-      "content_sha256": "11fd204cdc5c5874e742f343027349b99c34bef362c46a5400ca9ddc46bf5809",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "478d1658d12e7e1a03fab63ff63b74de3d659d909aed4cede6f3cc9c00cdc704",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/": {
@@ -5121,8 +5121,8 @@
     },
     "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json": {
       "path": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json",
-      "content_sha256": "69f47ae085a27684dd77d69b0536638ab9901f881773d988cfba53740692227b",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "d71c0572c5e2cdbe6fa82bf26717f3b941615b0b333057bc525a053ff1951510",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/": {
@@ -5649,8 +5649,8 @@
     },
     "/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json": {
       "path": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json",
-      "content_sha256": "0bbd30dc750d5aa3c0a00b522b874b62b875b804afbe6c8bef129704cb071467",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "68416444ece2a354bc6543fccf51d187254cf152835433a8daa035ff0d0badd0",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/contractor-estimating-software-49474d67fa/": {
@@ -5661,8 +5661,8 @@
     },
     "/chum/answers/doors/contractor-estimating-software-49474d67fa.json": {
       "path": "/chum/answers/doors/contractor-estimating-software-49474d67fa.json",
-      "content_sha256": "5137be85fa71db8dc8c9389124cc49dfe1d22bd3c72e18f5fee1f4b14063e1fc",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "4d0970a68816a464cfed0f7660ecc6094b6ebbbcdd9e5bbdb627a73eccaa2926",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb/": {
@@ -5700,6 +5700,18 @@
       "content_sha256": "1b78d059894b5406665290dbde78680a2b8e09b557baac2da124c5e0ea988771",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/contractor-private-price-book-46ec574313/": {
+      "path": "/chum/answers/doors/contractor-private-price-book-46ec574313/",
+      "content_sha256": "d38863d0effa6183f3d7833b900b16fba2f7002005195a7654a01556c1c31e4b",
+      "last_changed": "2026-09-26T22:43:25.031Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/contractor-private-price-book-46ec574313.json": {
+      "path": "/chum/answers/doors/contractor-private-price-book-46ec574313.json",
+      "content_sha256": "f35ec94642afda39357d324af769dd8e6f2e9dca6468dd3bda27ee44e4647d20",
+      "last_changed": "2026-09-26T22:43:25.031Z",
+      "priority": 100
     },
     "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a/": {
       "path": "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a/",
@@ -5868,6 +5880,18 @@
       "content_sha256": "2993e11271a09fe4598d37736eec08f340fce7c3146ecaef2b9723b99aadab0a",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/": {
+      "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/",
+      "content_sha256": "7ef0e7068e7535918242085cb09c6a5eb6e71610c5b3502ab8324280cb15ec7c",
+      "last_changed": "2026-09-26T22:43:25.031Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json": {
+      "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json",
+      "content_sha256": "68061f929de9a0eeca3a7ba313e6ec4e87559a144d62d4f7bd5576b782531be8",
+      "last_changed": "2026-09-26T22:43:25.031Z",
+      "priority": 100
     },
     "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/": {
       "path": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/",
@@ -6057,8 +6081,8 @@
     },
     "/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json": {
       "path": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json",
-      "content_sha256": "2aa76ccc2f78c6ee4f695472ca6dfc14a90390283869b2133da20977cb828f64",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "5c7b5abdb2fe5a7bee290e8bdeec89a271048125858c375cd02827608596f36e",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/": {
@@ -6069,8 +6093,8 @@
     },
     "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json": {
       "path": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json",
-      "content_sha256": "a8e7b5e042b9f56dba7d241a4849dabe088576c4bf7b00ad87c04ee3f7aa9a70",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "e5310d5a547356c5339ccfef17a652232db581729ebe759225860df40f458f9c",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a/": {
@@ -6669,8 +6693,8 @@
     },
     "/chum/answers/doors/field-service-estimating-software-aebb1374cd.json": {
       "path": "/chum/answers/doors/field-service-estimating-software-aebb1374cd.json",
-      "content_sha256": "ba8db63864507e3580b04b054d8ae442c735f910528e8afd04bafe8c6a591d49",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "ddbc879e847f467e0b8b9f107ccf74b889ac026f2b4c6ca4f182bccfbc502ab7",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b/": {
@@ -8265,8 +8289,8 @@
     },
     "/chum/answers/doors/job-costing-estimate-2289ed7386.json": {
       "path": "/chum/answers/doors/job-costing-estimate-2289ed7386.json",
-      "content_sha256": "636ffc498ffbd71de13db80d23c5867a4a5e5a7f9432326bb1a23a06ddcc3c65",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "50a7a51dc975963efb51d1c60c13cbfea9efa0f579c66e86abb4bc1a47b9953f",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/job-documentation-materials-equipment-safety-or-quality-control-need-a-system-3819c93b82/": {
@@ -8457,8 +8481,8 @@
     },
     "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json": {
       "path": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
-      "content_sha256": "ec524794edc4d6fc4f7f3f0dd4b6f4a815ba521502ecd0848c84d0b23bd29d93",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "ef174ac01a767ff29745c86b3afc95fd47b3effc4d235f6ed5b3f2109c97c698",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/landscaping-refresh-8f7672daf4/": {
@@ -9537,8 +9561,8 @@
     },
     "/chum/answers/doors/painting-estimate-calculator-825b60b4de.json": {
       "path": "/chum/answers/doors/painting-estimate-calculator-825b60b4de.json",
-      "content_sha256": "b68db6552b8ff81189f664cb56e6f7cc807f52cca0ca2339895c45c424e999d2",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "cff9b25c7ee8f8bbb0e28f0e13e1bb6574e99aed1f8ffad5a64defc07e3176af",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/paper-trade-before-using-real-capital-c3dec35245/": {
@@ -9909,8 +9933,8 @@
     },
     "/chum/answers/doors/price-this-contractor-job-aef270b551.json": {
       "path": "/chum/answers/doors/price-this-contractor-job-aef270b551.json",
-      "content_sha256": "67679be29660887e0ed79831a7ae774f3494762ef569286a98ad967c4173b132",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "721a9e9870aa77715a1a553ecad1e7ecf5cab0fc7355bba0dd9994f61b673004",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/prioritize-practical-website-fixes-6dfcaa1d86/": {
@@ -10953,8 +10977,8 @@
     },
     "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json": {
       "path": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json",
-      "content_sha256": "a889f129a0892678898b90a46195a86be8bf4d4ffec799080e68ad7311f9330d",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "ae22ebc758fa8cc2197c80f851103352bcd11670d591d2e636f5a42841b217dd",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/route-an-enterprise-operations-problem-06c3c59ccc/": {
@@ -11137,6 +11161,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/": {
+      "path": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/",
+      "content_sha256": "4286249cdb4d1023f821b07a777256ef5d7478d322c24b849e682372f26a7ac7",
+      "last_changed": "2026-09-26T22:43:25.031Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json": {
+      "path": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json",
+      "content_sha256": "bcb805f9daa21190aacb2c1ae738de0fcf7729c8977302fa7f90903d20dde31f",
+      "last_changed": "2026-09-26T22:43:25.031Z",
+      "priority": 100
+    },
     "/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160/": {
       "path": "/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160/",
       "content_sha256": "426f0753096724fe75a977c91f85726c2e632afcd4790a07ed33d4bb7e1c1ece",
@@ -11157,8 +11193,8 @@
     },
     "/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json": {
       "path": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json",
-      "content_sha256": "fee074ff31d709b12ef7f275d8b93db08cb34e388b2c627256440b519ae1b9f8",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "c110a1c6addf4251139aa88f19e6db77161ecae67be64bf55d669de46b80b3f7",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/set-up-family-safety-check-ins-or-preparedness-3d83a72549/": {
@@ -12033,8 +12069,8 @@
     },
     "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json": {
       "path": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json",
-      "content_sha256": "0e7c1eec8fc1c90cf0ed90493453f7b3c4c45dd70f9aba8b3b859ce51ae9d5e5",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "85d8822340fddcb59a26a5dac559b970846984b6a66a0adf0f06049779e0b0af",
+      "last_changed": "2026-09-26T22:43:25.031Z",
       "priority": 100
     },
     "/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84/": {

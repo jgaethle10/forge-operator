@@ -5,21 +5,21 @@
   <url><loc>/chum/index.json</loc><lastmod>2026-09-26T22:41:57.196Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-26T20:52:14.399Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-26T15:08:19.376Z</lastmod></url>
-  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-26T22:24:22.586Z</lastmod></url>
+  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/sell-now.html</loc><lastmod>2026-09-26T20:52:14.399Z</lastmod></url>
-  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-26T22:24:22.586Z</lastmod></url>
+  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-26T20:52:14.399Z</lastmod></url>
   <url><loc>/chum/revenue.txt</loc><lastmod>2026-09-26T20:52:14.399Z</lastmod></url>
-  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-26T22:24:22.586Z</lastmod></url>
-  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-26T22:41:57.196Z</lastmod></url>
-  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-26T22:24:22.586Z</lastmod></url>
-  <url><loc>/chum/answers/</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
-  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-26T22:18:18.960Z</lastmod></url>
-  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-26T22:18:18.960Z</lastmod></url>
+  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/answers/</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-26T22:42:50.291Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T22:42:50.291Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-26T20:07:32.492Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-26T22:41:25.228Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-26T22:41:25.228Z</lastmod></url>
@@ -31,7 +31,7 @@
   <url><loc>/chum/commercial/feed.json</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/chum/sitemaps/index.xml</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/chum/sitemaps/sell-now.xml</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
-  <url><loc>/chum/sitemaps/answers.xml</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
+  <url><loc>/chum/sitemaps/answers.xml</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/sitemaps/products.xml</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/chum/sitemaps/machine.xml</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/chum/freshness.xml</loc></url>
@@ -50,7 +50,7 @@
   <url><loc>/network/llms.txt</loc><lastmod>2026-09-26T00:53:19.713Z</lastmod></url>
   <url><loc>/network/discovery.json</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
   <url><loc>/.well-known/evercraft-network.json</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-26T22:41:57.196Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/rivet/brand.json</loc><lastmod>2026-09-25T21:21:08.209Z</lastmod></url>
@@ -124,7 +124,7 @@
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-26T22:41:24.683Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-26T22:24:22.586Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -230,10 +230,10 @@
   <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt</loc><lastmod>2026-09-26T06:32:31.395Z</lastmod></url>
   <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json</loc><lastmod>2026-09-26T21:22:54.969Z</lastmod></url>
   <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/eps-estimate-engine-machine-v1/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
-  <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
-  <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/capability.json</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
+  <url><loc>/chum/intents/eps-estimate-engine-machine-v1/</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/capability.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/schema.jsonld</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
   <url><loc>/chum/intents/eventwave-paid-promotion-v1/</loc><lastmod>2026-09-26T20:52:14.399Z</lastmod></url>
   <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/</loc><lastmod>2026-09-26T20:52:14.399Z</lastmod></url>
@@ -799,7 +799,7 @@
   <url><loc>/chum/answers/doors/brutally-critique-this-message-d550264762/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/brutally-critique-this-message-d550264762.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
   <url><loc>/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -855,7 +855,7 @@
   <url><loc>/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
   <url><loc>/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/can-my-crews-work-tomorrow-cbf6dd66e5/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -943,15 +943,17 @@
   <url><loc>/chum/answers/doors/contractor-customer-communication-reviews-or-referrals-need-a-repeatable-process-031ac09b8c/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-customer-communication-reviews-or-referrals-need-a-repeatable-process-031ac09b8c.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-estimate-calculator-991c2900a6/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-estimating-software-49474d67fa/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/contractor-estimating-software-49474d67fa.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/contractor-estimating-software-49474d67fa.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-measurement-tools-22952bd1fe/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-opportunity-network-e143bcc009/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-opportunity-network-e143bcc009.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/contractor-private-price-book-46ec574313/</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/answers/doors/contractor-private-price-book-46ec574313.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/conversation-video-timeline-14d07826b9/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -980,6 +982,8 @@
   <url><loc>/chum/answers/doors/cross-business-rewards-c465e82da6.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/cross-subject-learning-32bd20f557/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/cross-subject-learning-32bd20f557.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1011,9 +1015,9 @@
   <url><loc>/chum/answers/doors/estimate-ev-charging-opportunity-a920fb36c4/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/estimate-ev-charging-opportunity-a920fb36c4.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/estimate-from-photos-ef10e7fa6e/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/estimate-this-service-job-4e138afdda/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
@@ -1113,7 +1117,7 @@
   <url><loc>/chum/answers/doors/fetch-url-for-ai-8bb5a892cb/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/fetch-url-for-ai-8bb5a892cb.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/field-service-estimating-software-aebb1374cd/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/field-service-estimating-software-aebb1374cd.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/field-service-estimating-software-aebb1374cd.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-part-5646da09bb/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1379,7 +1383,7 @@
   <url><loc>/chum/answers/doors/jde-world-modernization-963d1229f5/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/jde-world-modernization-963d1229f5.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/job-costing-estimate-2289ed7386/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/job-costing-estimate-2289ed7386.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/job-costing-estimate-2289ed7386.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/job-documentation-materials-equipment-safety-or-quality-control-need-a-system-3819c93b82/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/job-documentation-materials-equipment-safety-or-quality-control-need-a-system-3819c93b82.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/job-interview-practice-d7dad5994f/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1411,7 +1415,7 @@
   <url><loc>/chum/answers/doors/land-resilience-070163adbc/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/land-resilience-070163adbc.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/landscaping-refresh-8f7672daf4/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/landscaping-refresh-8f7672daf4.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/large-legal-document-review-e73d20a32a/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1591,7 +1595,7 @@
   <url><loc>/chum/answers/doors/outside-support-without-routing-through-school-workplace-family-or-usual-authority-4909c5cfd2/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/outside-support-without-routing-through-school-workplace-family-or-usual-authority-4909c5cfd2.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/painting-estimate-calculator-825b60b4de/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/painting-estimate-calculator-825b60b4de.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/painting-estimate-calculator-825b60b4de.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/paper-trade-before-using-real-capital-c3dec35245/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/paper-trade-before-using-real-capital-c3dec35245.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/parking-garage-reservation-management-ae6e3aeb45/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1653,7 +1657,7 @@
   <url><loc>/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/price-this-contractor-job-aef270b551/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/price-this-contractor-job-aef270b551.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/price-this-contractor-job-aef270b551.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/prioritize-practical-website-fixes-6dfcaa1d86/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/prioritize-practical-website-fixes-6dfcaa1d86.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/privacy-minimized-public-doorway-to-verified-help-216d826ec1/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1827,7 +1831,7 @@
   <url><loc>/chum/answers/doors/roofing-weather-decision-3da193493c/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/roofing-weather-decision-3da193493c.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/route-an-enterprise-operations-problem-06c3c59ccc/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/route-an-enterprise-operations-problem-06c3c59ccc.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/route-an-operations-problem-2f0115c3c2/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1858,10 +1862,12 @@
   <url><loc>/chum/answers/doors/semantic-segment-deduplication-4e5e912564.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/semantic-video-search-across-a-long-recording-9687b2afbc/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/doors/semantic-video-search-across-a-long-recording-9687b2afbc.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
+  <url><loc>/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/separate-documented-evidence-allegations-and-commentary-in-epstein-records-f21e05d160.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/service-business-estimate-calculator-bf2411107e/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/set-up-family-safety-check-ins-or-preparedness-3d83a72549/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/set-up-family-safety-check-ins-or-preparedness-3d83a72549.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -2007,7 +2013,7 @@
   <url><loc>/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
   <url><loc>/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
+  <url><loc>/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json</loc><lastmod>2026-09-26T22:43:25.031Z</lastmod></url>
   <url><loc>/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/turn-my-call-log-into-a-complaint-packet-d5e71df390/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>

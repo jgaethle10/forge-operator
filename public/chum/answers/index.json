@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 98,
-    "unique_user_phrases": 758,
-    "mapped_candidate_edges": 851,
+    "unique_user_phrases": 761,
+    "mapped_candidate_edges": 854,
     "ambiguous_phrases": 93,
     "product_candidates": 53,
     "machine_offer_candidates": 45
@@ -3763,6 +3763,29 @@
       ]
     },
     {
+      "answer_id": "intent:46ec574313",
+      "user_language": "contractor private price book",
+      "normalized": "contractor private price book",
+      "relative_json": "/chum/answers/doors/contractor-private-price-book-46ec574313.json",
+      "relative_page": "/chum/answers/doors/contractor-private-price-book-46ec574313/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-private-price-book-46ec574313.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9c1b5a9c0a",
       "user_language": "contractor scope creep or change orders are costing money",
       "normalized": "contractor scope creep or change orders are costing money",
@@ -4104,6 +4127,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/infinite-classroom/",
           "public_url": "https://infiniteclassroom.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:80047bdd5f",
+      "user_language": "customer proposal acceptance for contractors",
+      "normalized": "customer proposal acceptance for contractors",
+      "relative_json": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json",
+      "relative_page": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
       ]
@@ -14838,6 +14884,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:51ad56a726",
+      "user_language": "send a contractor proposal link",
+      "normalized": "send a contractor proposal link",
+      "relative_json": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json",
+      "relative_page": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "discovery_and_handoff",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },

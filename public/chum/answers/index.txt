@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 98
-Unique user phrases: 758
-Candidate edges: 851
+Unique user phrases: 761
+Candidate edges: 854
 Ambiguous phrases: 93
 
 ## 15 GB video analysis
@@ -1105,6 +1105,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Contractor Cloud | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
 
+## contractor private price book
+Answer ID: intent:46ec574313
+Human-readable match: /chum/answers/doors/contractor-private-price-book-46ec574313/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-private-price-book-46ec574313.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## contractor scope creep or change orders are costing money
 Answer ID: intent:9c1b5a9c0a
 Human-readable match: /chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a/
@@ -1204,6 +1211,13 @@ Human-readable match: /chum/answers/doors/cross-subject-learning-32bd20f557/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cross-subject-learning-32bd20f557.json
 Candidates:
 - Infinite Classroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://infiniteclassroom.base44.app/
+
+## customer proposal acceptance for contractors
+Answer ID: intent:80047bdd5f
+Human-readable match: /chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## customers cannot submit our lead form
 Answer ID: intent:f7250a8fc9
@@ -4330,6 +4344,13 @@ Human-readable match: /chum/answers/doors/semantic-video-search-across-a-long-re
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/semantic-video-search-across-a-long-recording-9687b2afbc.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## send a contractor proposal link
+Answer ID: intent:51ad56a726
+Human-readable match: /chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=discovery_and_handoff | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## separate documented evidence allegations and commentary in Epstein records
 Answer ID: intent:f21e05d160

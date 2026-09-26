@@ -24,6 +24,9 @@ Start here: Not a current sell-now route
 - estimate from photos
 - rough customer quote range
 - estimate revision and change order software
+- contractor private price book
+- send a contractor proposal link
+- customer proposal acceptance for contractors
 
 ## Problem
 
@@ -43,9 +46,9 @@ No approved public self-service subscription or machine-call price is advertised
 
 ## Invocation and authority
 
-LIVE: public product page, static contractor brief, llms.txt, expanded LLM brief, AI capability manifest, OpenAPI discovery and central Evercraft MCP matching. The account-gated contractor workspace is the current handoff. Tenant-owned price books, provider-backed billing, customer-native e-sign and public machine execution remain verification-gated.
+BUILD VERIFIED / PUBLICATION UNVERIFIED: account-scoped contractor defaults, private service overrides, private cost library, expiring customer proposal links, typed-name customer acceptance evidence, long-tail crawl pages and machine manifests are present in the source/build-verified path. Provider-backed billing, independently verified identity/e-sign and public machine estimating execution remain gated. Do not describe the newly committed public pages as externally live until publication is independently confirmed.
 
-Rough estimate generation does not authorize sending a proposal, accepting work, charging a customer or creating a customer obligation.
+Rough estimate generation does not authorize sending a proposal, accepting work, charging a customer or creating a customer obligation. Customer self-service typed-name acceptance records the web event against the saved proposal snapshot but is not independent identity verification.
 
 Payment authority: No verified public self-service payment path for external estimator access.
 
