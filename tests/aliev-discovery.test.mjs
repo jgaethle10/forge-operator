@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { huntLiveIntent } from '../systemia/chum/live-intent-hunter.mjs';
 
 const fail = (message) => { throw new Error('ALIEV_DISCOVERY_FAIL: ' + message); };
 const normalize = (value) => String(value || '')
@@ -125,9 +126,23 @@ for (const route of ['/rivet/mesh/','/rivet/mesh/index.json','/rivet/mesh/llms.t
   if (!sitemap.includes(route)) fail('sitemap missing RIVET semantic mesh hub route: ' + route);
 }
 
+const liveMachineCatalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+const liveRoute = huntLiveIntent({
+  catalog: liveMachineCatalog,
+  directory,
+  painIndex: pain,
+  intent: 'I own a hotel and need to know whether this property is a good EV charging site and what the opportunity looks like.',
+  provider: 'aliev-regression-test',
+  surface: 'test'
+});
+if (liveRoute.matched !== true || liveRoute.match?.product_key !== 'aliev') {
+  fail('hotel/property screening query must route to AliEV before RIVET planning');
+}
+
 console.log('ALIEV_DISCOVERY_PASS', JSON.stringify({
   aliases: product.aliases.length,
   intents: product.intents.length,
   brand_blind_answer: target.answer_id,
-  registry: mcp.name
+  registry: mcp.name,
+  hotel_property_route: liveRoute.match?.product_key
 }));
