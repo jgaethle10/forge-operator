@@ -11,6 +11,9 @@ try { observedMissIndex = readJson('public/chum/answers/observed/index.json'); }
 const answerGraph = fs.existsSync('public/chum/answers/index.json')
   ? readJson('public/chum/answers/index.json')
   : { doors: [] };
+const commercialIntentMesh = fs.existsSync('public/chum/commercial/index.json')
+  ? readJson('public/chum/commercial/index.json')
+  : { clusters: [] };
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
@@ -582,6 +585,11 @@ const sitemapUrls = Array.from(new Set([
   ...(answerGraph.doors || []).flatMap((door) => [
     door.relative_page,
     door.relative_json
+  ].filter(Boolean)),
+  ...(commercialIntentMesh.clusters || []).flatMap((cluster) => [
+    cluster.cluster,
+    cluster.cluster_json,
+    cluster.cluster_llms
   ].filter(Boolean))
 ]));
 const sitemap = [
