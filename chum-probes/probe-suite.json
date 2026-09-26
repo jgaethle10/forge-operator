@@ -129,7 +129,9 @@
       "product_key": "aliev",
       "expected_product": "AliEV",
       "expected_aliases": [
-        "AliEV"
+        "AliEV",
+        "RIVET",
+        "RIVET EV Infrastructure Intelligence"
       ],
       "expected_hosts": [
         "aliev.base44.app"
@@ -336,6 +338,54 @@
       ],
       "enabled": true,
       "prompt": "My business depends on internet connectivity and I need a rapid audit of what breaks first during an outage and how to keep operating offline or through disruptions. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "ev-hotel-002",
+      "product_key": "aliev",
+      "expected_product": "AliEV",
+      "expected_aliases": [
+        "AliEV",
+        "RIVET",
+        "RIVET EV Infrastructure Intelligence"
+      ],
+      "expected_hosts": [
+        "aliev.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I own a hotel and want to evaluate the actual property for EV charging. I need nearby charging competition, guest dwell-time and demand context, utility and tariff considerations, incentives, and a site-specific screen before I spend money. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "ev-roi-003",
+      "product_key": "aliev",
+      "expected_product": "AliEV",
+      "expected_aliases": [
+        "AliEV",
+        "RIVET",
+        "RIVET EV Infrastructure Intelligence"
+      ],
+      "expected_hosts": [
+        "aliev.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I need a property-specific EV charging economics screen, not a generic calculator. I want charger competition, demand or utilization assumptions, electricity and demand-charge context, incentives, and scenario-based ROI tied to one address. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "ev-site-plan-004",
+      "product_key": "aliev",
+      "expected_product": "AliEV",
+      "expected_aliases": [
+        "AliEV",
+        "RIVET",
+        "RIVET EV Infrastructure Intelligence"
+      ],
+      "expected_hosts": [
+        "aliev.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I have a specific commercial address and need an EV charging opportunity report that can lead into a preliminary charger layout or site plan, while keeping public facts, modeled assumptions, and engineering unknowns separate. What service should I use?",
       "expected_fit": true
     }
   ]
