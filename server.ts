@@ -9,6 +9,7 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { renderOwnedOfferDoor } from './systemia/chum/owned-offer-door.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 
@@ -454,6 +455,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumRevenueText: '/chum/revenue.txt',
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
+      chumOfferDoor: { method: 'GET', path: '/chum/buy/{publicId}' },
       chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
     },
@@ -720,6 +722,34 @@ app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request
   }
 });
 
+app.get('/chum/buy/:publicId', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const publicId = String(req.params.publicId || '').trim();
+  const surface = String(req.query.surface || 'chum_owned_offer_door').trim().toLowerCase().slice(0, 64);
+  try {
+    const offer = findChumOffer(publicId);
+    if (!offer?.public_id) {
+      res.status(404).type('text/plain').send('Unknown public Evercraft offer.');
+      return;
+    }
+    if (offer.commercial_state !== 'sell_now') {
+      res.status(409).type('text/plain').send('This Evercraft capability is discoverable but is not currently a sell-now offer.');
+      return;
+    }
+    const continuePath = '/api/chum/go/' + encodeURIComponent(offer.public_id)
+      + '?surface=' + encodeURIComponent(surface || 'chum_owned_offer_door');
+    const origin = requestOrigin(req);
+    const canonicalUrl = origin
+      ? origin + '/chum/buy/' + encodeURIComponent(offer.public_id)
+      : '/chum/buy/' + encodeURIComponent(offer.public_id);
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.type('html').send(renderOwnedOfferDoor({ offer, continuePath, canonicalUrl }));
+  } catch (error) {
+    res.status(400).type('text/plain').send(
+      error instanceof Error ? error.message : 'Unable to open this Evercraft offer.'
+    );
+  }
+});
 app.get('/api/chum/attribution', (_req: Request, res: Response) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.json({
@@ -728,6 +758,7 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
     durableSinkConfigured: Boolean(chumAttributionSinkUrl),
     publicStages: PUBLIC_ATTRIBUTION_STAGES,
     referral: { method: 'POST', path: '/api/chum/referral' },
+    ownedOfferDoor: { method: 'GET', path: '/chum/buy/{publicId}' },
     browserHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
     publicEvent: { method: 'POST', path: '/api/chum/attribution/event' },
     manifest: '/.well-known/evercraft-chum-attribution.json',
