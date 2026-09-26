@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "evercraft_clip": {
+      "type": "http",
+      "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
+    }
+  }
+}
