@@ -1,0 +1,27 @@
+# RIVET current report options
+
+Provider: Evercraft LLC
+Canonical product: RIVET
+Start surface: /rivet/start/
+Offer manifest: /rivet/start/offer.json
+
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
+
+## Use this when
+
+- the user has a specific property or address and wants EV charging diligence
+- the user wants a preliminary site opportunity report
+- the user wants a deeper full site opportunity report
+- the user wants competition, demand, utility, tariff, incentive, site-fit, and economics context in one property-specific path
+
+## Current report options
+
+- RIVET Preliminary Site Opportunity Report: $299 (one_time)
+- RIVET Full Site Opportunity Report: $750 (one_time)
+
+## Human-confirmation boundary
+
+Opening the review path creates no payment obligation. Checkout requires explicit human confirmation. Checkout creation is not proof of payment, and paid state requires provider verification.
+
+Pricing should be read from /rivet/start/offer.json at request time rather than copied from older pages.

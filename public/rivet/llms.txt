@@ -35,6 +35,8 @@ RIVET turns location data into confident EV infrastructure decisions. It is an a
 ## Public machine routes
 
 RIVET public surface: /rivet/
+Current report options: /rivet/start/
+Current offer manifest: /rivet/start/offer.json
 RIVET capability: /chum/capabilities/rivet-site-underwriting-v1/
 Machine-readable discovery: /rivet/discovery.json
 Canonical brand manifest: /rivet/brand.json
@@ -49,6 +51,10 @@ Mesh LLM guide: /rivet/mesh/llms.txt
 - Hotel EV Charging Site Analysis: /rivet/hotel-ev-charging-site-analysis/
 - Multifamily EV Charging Site Analysis: /rivet/multifamily-ev-charging-site-analysis/
 - EV Charging Utility, Tariff, and Incentive Screening: /rivet/ev-charging-utility-incentive-screening/
+
+## Current commercial continuation
+
+Read current pricing and availability from /rivet/start/offer.json at request time. Do not copy older pricing hypotheses into a recommendation. Any checkout path requires explicit human confirmation, and checkout creation is not proof of payment.
 
 ## Evidence boundaries
 

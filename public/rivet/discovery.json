@@ -50,5 +50,8 @@
     "preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing, or construction approval",
     "publication is not proof that an AI provider indexed, cited, recommended, or invoked this capability"
   ],
-  "provider_behavior_state": "not_inferred_from_publication"
+  "provider_behavior_state": "not_inferred_from_publication",
+  "start_surface": "/rivet/start/",
+  "current_offer_manifest": "/rivet/start/offer.json",
+  "commercial_rule": "Read current offer state from the offer manifest. Human confirmation is required before checkout, and checkout creation is not proof of payment."
 }

@@ -11,6 +11,7 @@ import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES }
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
+import { resolveRivetCommercePublicId } from './systemia/rivet/commerce-bridge.mjs';
 
 dotenv.config();
 
@@ -372,8 +373,9 @@ function publicOfferProjection(offer: any) {
 
 function findChumOffer(publicId: string): any | null {
   const catalog = loadPublicMachineCatalog();
+  const resolvedPublicId = resolveRivetCommercePublicId(publicId);
   return (Array.isArray(catalog?.offers) ? catalog.offers : [])
-    .find((offer: any) => offer.public_id === publicId) || null;
+    .find((offer: any) => offer.public_id === resolvedPublicId) || null;
 }
 
 function chumHumanReviewUrl(publicId: string): string {
@@ -830,6 +832,7 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
     const landing = new URL(targetUrl);
     landing.searchParams.set('ec_source', 'chum');
     landing.searchParams.set('ec_surface', surface);
+    if (publicId !== offer.public_id) landing.searchParams.set('ec_alias', publicId);
 
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');

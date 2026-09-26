@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.rivet.commerce-bridge.v1",
+  "provider": "Evercraft LLC",
+  "name": "RIVET",
+  "purpose": "Current human-confirmed report options for address-first EV infrastructure diligence.",
+  "source_state": {
+    "catalog": "/.well-known/evercraft-machine-catalog.json",
+    "catalog_version": "2026-09-26.1",
+    "generated_from_current_verified_offer": true
+  },
+  "commercial_state": "sell_now",
+  "machine_state": "payment_ready_human_confirmation",
+  "offers": [
+    {
+      "offer_key": "site_report_299",
+      "name": "RIVET Preliminary Site Opportunity Report",
+      "price": "$299",
+      "billing": "one_time"
+    },
+    {
+      "offer_key": "site_report_750",
+      "name": "RIVET Full Site Opportunity Report",
+      "price": "$750",
+      "billing": "one_time"
+    }
+  ],
+  "start_url": "/api/chum/go/rivet-site-underwriting-v1?surface=rivet_start",
+  "confirmation": "Opening the review path creates no payment obligation. Checkout requires explicit human confirmation. Checkout creation is not proof of payment, and paid state requires provider verification.",
+  "evidence_boundaries": [
+    "missing data is not zero",
+    "mapped charger inventory is not observed utilization",
+    "program presence is not proof of site incentive eligibility",
+    "modeled economics are not guaranteed realized economics",
+    "preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing, or construction approval"
+  ]
+}
