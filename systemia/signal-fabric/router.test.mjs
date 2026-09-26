@@ -8,6 +8,9 @@ assert.equal(classify({source:'main',status:'failed'}),'warning');
 assert.equal(classify({source:'canary',status:'failed',evidence_state:'live_verified'}),'critical');
 assert.equal(classify({kind:'payment_blocked',human_action_required:true}),'critical');
 assert.equal(classify({security_incident:true,status:'failed'}),'critical');
+assert.equal(classify({source:'sentinel',kind:'cross_domain_anomaly',severity_hint:'warning',impact:'unattributed_anomaly',evidence_state:'live_verified'}),'warning');
+assert.equal(classify({source:'sentinel',kind:'cross_domain_anomaly',severity_hint:'critical',impact:'unattributed_anomaly',evidence_state:'live_verified'}),'warning');
+assert.equal(classify({source:'sentinel',kind:'cross_domain_anomaly',severity_hint:'critical',impact:'confirmed_life_safety_hazard',evidence_state:'live_verified'}),'critical');
 
 const a=fingerprint({product:'AliEV',source:'canary',kind:'health',component:'api',status:'failed'});
 const b=fingerprint({product:'AliEV',source:'canary',kind:'health',component:'api',status:'failed'});
