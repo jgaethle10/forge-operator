@@ -59,6 +59,7 @@ for (const [name, mode] of [
   ['cycle', 'cycle'],
   ['resident', 'resident'],
   ['flapper', 'resident'],
+  ['optional', 'resident'],
 ]) {
   fs.writeFileSync(path.join(fixtureDir, `${name}.workflow.json`), JSON.stringify({
     schema: 'evercraft.systemia.workflow-manifest.v1',
@@ -96,6 +97,16 @@ fs.writeFileSync(configPath, JSON.stringify({
       restart_backoff_ms: 1000,
       max_restarts_per_hour: 2,
     },
+    {
+      service_key: 'proof-optional',
+      mode: 'resident',
+      manifest: 'fixtures/optional.workflow.json',
+      executable: 'fixtures/resident.mjs',
+      optional_when_unconfigured: true,
+      env_args: {
+        '--unused': 'PROOF_OPTIONAL_REQUIRED',
+      },
+    },
   ],
 }, null, 2));
 
@@ -115,7 +126,7 @@ const supervisor = new SystemiaCoreResidentSupervisor({
 try {
   const started = supervisor.start({ immediateCycles: true });
   assert.equal(started.running, true);
-  assert.equal(started.service_count, 3);
+  assert.equal(started.service_count, 4);
 
   await sleep(4500);
 
@@ -131,12 +142,16 @@ try {
   const cycle = health.services.find((x) => x.service_key === 'proof-cycle');
   const resident = health.services.find((x) => x.service_key === 'proof-resident');
   const flapper = health.services.find((x) => x.service_key === 'proof-flapper');
+  const optional = health.services.find((x) => x.service_key === 'proof-optional');
 
   assert.ok(['idle', 'running'].includes(cycle.status));
   assert.equal(resident.status, 'running');
   assert.ok(resident.restart_count >= 1);
   assert.equal(flapper.status, 'held');
   assert.equal(flapper.hold_reason, 'restart_budget_exhausted');
+  assert.equal(optional.status, 'disabled');
+  assert.equal(optional.hold_reason, 'optional_environment_not_configured');
+  assert.equal(health.disabled_count, 1);
   assert.equal(health.held_count, 1);
 
   const receipts = fs.readFileSync(path.join(stateDir, 'receipts.jsonl'), 'utf8')
@@ -144,6 +159,11 @@ try {
   assert.ok(receipts.some((x) => x.type === 'cycle.completed'));
   assert.ok(receipts.some((x) => x.type === 'resident.exited'));
   assert.ok(receipts.filter((x) => x.type === 'resident.started').length >= 4);
+  assert.ok(receipts.some(
+    (x) => x.type === 'resident.disabled' &&
+      x.service_key === 'proof-optional' &&
+      x.reason === 'optional_environment_not_configured'
+  ));
   assert.ok(receipts.some(
     (x) => x.type === 'resident.held' &&
       x.service_key === 'proof-flapper' &&
@@ -178,6 +198,7 @@ try {
     cycle_cadence_verified: true,
     cycle_children_tracked_for_shutdown: true,
     receipt_chain_present: true,
+    optional_unconfigured_service_disabled_not_held: true,
     graceful_stop_verified: true,
   }, null, 2));
 } finally {
