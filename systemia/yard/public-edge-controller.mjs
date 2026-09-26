@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { YardPublicRouteBroker } from './public-route-broker.mjs';
+import { discoverEligibleCapacity, allocatorTokenForOffer } from './capacity-resolver.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -211,6 +212,74 @@ export class PublicEdgeController {
       }
       throw error;
     }
+  }
+
+  async provisionDiscovered({
+    releaseRef,
+    discovery = {},
+    allocatorToken = '',
+    allocatorTokens = {},
+    endpointTimeoutMs = 750,
+    requiredPlacementLabels = ['public-edge'],
+    edge = { mode: 'wildcard_https' },
+    specialist = {},
+    requestedHostname = 'evercraft-specialists',
+    edgeRollbackTarget = 'none:first_install',
+    specialistRollbackTarget = 'none:first_install',
+  } = {}) {
+    const resolution = await discoverEligibleCapacity({
+      workloadClass: 'systemia.public-edge.v1',
+      requiredWorkloads: [
+        'systemia.public-edge.v1',
+        'systemia.specialist-handoff-mcp.v1',
+      ],
+      requiredPlacementLabels,
+      requiredServiceCapabilities: ['public_edge'],
+      discovery,
+      endpointTimeoutMs,
+    });
+    if (!resolution.selected) {
+      const error = new Error('no_edge_ready_evercraft_capacity_discovered');
+      error.resolution = resolution;
+      throw error;
+    }
+
+    const selectedToken = allocatorTokenForOffer(resolution.selected, {
+      allocatorToken,
+      allocatorTokens,
+    });
+    if (
+      resolution.selected.allocation_auth === 'bearer' &&
+      !selectedToken
+    ) {
+      const error = new Error('allocator_authority_unavailable_for_edge_ready_capacity');
+      error.resolution = resolution;
+      throw error;
+    }
+
+    const provisioned = await this.provision({
+      releaseRef,
+      capacityEndpoint: resolution.selected.endpoint,
+      allocatorToken: selectedToken,
+      edge,
+      specialist,
+      requestedHostname,
+      edgeRollbackTarget,
+      specialistRollbackTarget,
+    });
+
+    return {
+      ...provisioned,
+      discovery: {
+        schema: resolution.schema,
+        receipt_hash: resolution.receipt_hash,
+        selected_node_id: resolution.selected.node_id,
+        selected_endpoint: resolution.selected.endpoint,
+        eligible_count: resolution.eligible_count,
+        discovered_count: resolution.discovered_count,
+        requirements: resolution.requirements,
+      },
+    };
   }
 
   async resume({rebindIfNeeded=true}={}){
