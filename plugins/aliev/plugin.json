@@ -1,0 +1,23 @@
+{
+  "name": "aliev",
+  "version": "0.1.0",
+  "description": "Direct address-level EV charging opportunity intelligence from AliEV and RIVET.",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://aliev.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "aliev",
+    "rivet",
+    "ev-charging",
+    "site-analysis",
+    "property",
+    "incentives",
+    "tariffs",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
