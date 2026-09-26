@@ -28,7 +28,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 jobs:
@@ -130,6 +130,10 @@ jobs:
           ref: ${{ needs.authorize.outputs.sha }}
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Determine manifests to publish
         shell: bash
         env:
@@ -189,6 +193,7 @@ jobs:
         run: |
           set -euo pipefail
           FAILED=0
+          : > /tmp/published-manifests.txt
           while IFS= read -r manifest; do
             echo "::group::Publish $manifest"
             set +e
@@ -196,13 +201,14 @@ jobs:
             CODE=$?
             set -e
             printf '%s\n' "$OUTPUT"
-            if [ "$CODE" -ne 0 ]; then
-              if printf '%s' "$OUTPUT" | grep -q 'cannot publish duplicate version'; then
-                echo "Already published at this version; continuing idempotently."
-              else
-                echo "Publish failed for $manifest" >&2
-                FAILED=1
-              fi
+            if [ "$CODE" -eq 0 ]; then
+              printf '%s\n' "$manifest" >> /tmp/published-manifests.txt
+            elif printf '%s' "$OUTPUT" | grep -q 'cannot publish duplicate version'; then
+              echo "Already published at this version; continuing idempotently."
+              printf '%s\n' "$manifest" >> /tmp/published-manifests.txt
+            else
+              echo "Publish failed for $manifest" >&2
+              FAILED=1
             fi
             echo "::endgroup::"
           done < /tmp/mcp-manifests.txt
@@ -224,6 +230,58 @@ jobs:
             printf -- '- Approval ref: `%s`\n' "$RELEASE_APPROVAL_REF"
             echo "- credential_material_stored: false"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Reconcile successful Yard specialist publications into source truth
+        shell: bash
+        env:
+          RELEASE_SHA: ${{ needs.authorize.outputs.sha }}
+          RELEASE_APPROVAL_MODE: ${{ needs.authorize.outputs.approval_mode }}
+          RELEASE_APPROVAL_REF: ${{ needs.authorize.outputs.approval_ref }}
+        run: |
+          set -euo pipefail
+          if [ ! -s /tmp/published-manifests.txt ]; then
+            echo "No successfully published manifests to reconcile."
+            exit 0
+          fi
+
+          git fetch origin main --quiet
+
+          while IFS= read -r manifest; do
+            case "$manifest" in
+              mcp-registry/ibmi-rescue.json|mcp-registry/foundry-app-escape.json|mcp-registry/site-survive.json)
+                old="$(mktemp)"
+                new="$(mktemp)"
+                git show "$RELEASE_SHA:$manifest" > "$old"
+                git show "origin/main:$manifest" > "$new"
+                cmp -s "$old" "$new" || {
+                  echo "Current main changed $manifest after publication. Holding source-state reconciliation."
+                  exit 1
+                }
+                ;;
+              *) ;;
+            esac
+          done < /tmp/published-manifests.txt
+
+          git switch -C registry-publication-record origin/main
+
+          node scripts/record-mcp-registry-publication.mjs             --manifests-file /tmp/published-manifests.txt             --workflow-run-id "$GITHUB_RUN_ID"             --release-sha "$RELEASE_SHA"             --approval-mode "$RELEASE_APPROVAL_MODE"             --approval-ref "$RELEASE_APPROVAL_REF"
+
+          node scripts/generate-direct-plugin-packages.mjs
+          node scripts/generate-mcp-registry-candidates.mjs
+          node systemia/chum/build-capability-mirror.mjs
+          npm run direct:check
+
+          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             distribution/mcp-registry-candidates             distribution/mcp-registry-publication-receipts             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             public/chum
+
+          if git diff --cached --quiet; then
+            echo "No Yard specialist registry state required reconciliation."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Record verified MCP Registry publication"
+          git push origin HEAD:main
 
   held:
     needs: authorize
