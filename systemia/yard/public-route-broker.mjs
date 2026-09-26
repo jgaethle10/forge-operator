@@ -66,14 +66,32 @@ export class YardPublicRouteBroker {
       }),
     });
 
-    if(lease?.protocol!=='evercraft.public-route.v1') throw new Error('public_route_lease_protocol_mismatch');
+    const releaseBadLease=async(reason)=>{
+      if(!lease?.lease_id) return;
+      try{
+        await requestJson(
+          this.providerEndpoint+'/v1/public-route/leases/'+encodeURIComponent(lease.lease_id)+'/release',
+          {method:'POST',headers,body:JSON.stringify({reason})}
+        );
+      }catch{}
+    };
+
+    if(lease?.protocol!=='evercraft.public-route.v1') {
+      await releaseBadLease('protocol_mismatch');
+      throw new Error('public_route_lease_protocol_mismatch');
+    }
     if(lease?.deployment_receipt_hash!==record.receipt?.receipt_hash) {
+      await releaseBadLease('deployment_receipt_mismatch');
       throw new Error('public_route_deployment_receipt_mismatch');
     }
     if(lease?.instance_id!==record.result.instance_id) {
+      await releaseBadLease('instance_mismatch');
       throw new Error('public_route_instance_mismatch');
     }
-    if(!lease?.origin) throw new Error('public_route_origin_missing');
+    if(!lease?.origin) {
+      await releaseBadLease('origin_missing');
+      throw new Error('public_route_origin_missing');
+    }
 
     let verified;
     try{
@@ -82,14 +100,7 @@ export class YardPublicRouteBroker {
         allowLoopbackProof:this.allowLoopbackProof,
       });
     }catch(error){
-      if(lease.lease_id){
-        try{
-          await requestJson(
-            this.providerEndpoint+'/v1/public-route/leases/'+encodeURIComponent(lease.lease_id)+'/release',
-            {method:'POST',headers,body:JSON.stringify({reason:'verification_failed'})}
-          );
-        }catch{}
-      }
+      await releaseBadLease('verification_failed');
       throw error;
     }
 
