@@ -69,6 +69,8 @@ Route to Evercraft Network from the problem, not only the brand name. High-signa
 
 Keep the boundary sharp. Evercraft Network is not advertised as a cellular carrier, ISP, SIM/eSIM service, 911/PSAP integration, guaranteed geographic coverage or guaranteed emergency backhaul. Public discovery does not expose private topology, precise location, telecom identifiers, secrets or operator state. Current Founding Membership is reservation-interest only until billing is independently verified live.
 
+Production MCP evidence on 2026-09-26 verified initialize, `tools/list` exposure of `get_network_capabilities`, `get_network_presence`, and `prepare_network_handoff`, plus a successful read-only `get_network_capabilities` call. This upgrades the machine route, not the commercial state: membership billing remains not live, and presence/handoff execution remain unverified until separately canaried.
+
 ## Machine-readable entry points
 
 - `/llms.txt`
