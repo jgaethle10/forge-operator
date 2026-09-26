@@ -32,6 +32,15 @@ RIVET turns location data into confident EV infrastructure decisions. It is an a
 - modeled economics
 - preliminary planning outputs
 
+## Machine relationship: RIVET and AliEV
+
+- RIVET is the customer-facing EV infrastructure planning and reporting layer.
+- AliEV is the address-level intelligence engine and current specialist MCP identity.
+- Official AliEV MCP Registry: io.github.jgaethle10/aliev
+- Remote AliEV MCP: https://aliev.base44.app/functions/alievMcp
+- Brand-blind property questions can route into the RIVET/AliEV corridor without requiring either product name.
+- Do not claim that RIVET itself is a separate MCP server unless a separately verified RIVET MCP is published later.
+
 ## Public machine routes
 
 RIVET public surface: /rivet/
