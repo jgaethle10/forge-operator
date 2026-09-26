@@ -5,6 +5,10 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createMissionState } from '../organism/kernel.mjs';
 import { admitGoalPlan, createGoalState, goalSnapshot } from '../organism/goal-runtime.mjs';
+import { YardOperator } from '../yard/operator.mjs';
+import {
+  listPendingRemoteDeviceReviews,
+} from '../yard/remote-device-review.mjs';
 
 const here = path.dirname(new URL(import.meta.url).pathname);
 const contract = JSON.parse(fs.readFileSync(path.join(here, 'machine-contract.json'), 'utf8'));
@@ -65,12 +69,16 @@ function normalizeTask(raw, index) {
 }
 
 function consequenceFor(task) {
-  const impact = lower(task?.impact);
+  const workType = lower(task?.work_type || task?.type);
+  const forcedByWorkType = Array.isArray(contract.consequential_work_types) &&
+    contract.consequential_work_types.includes(workType);
+  const declaredImpact = lower(task?.impact);
+  const impact = declaredImpact || (forcedByWorkType ? 'trust_boundary' : '');
   const declared = task?.human_gate_required === true || task?.founder_attention_required === true;
   const consequential = contract.consequential_impacts.includes(impact);
   return {
     impact,
-    required: declared || consequential,
+    required: declared || consequential || forcedByWorkType,
     authorized: unique(task?.authorization_refs || []).length > 0 || task?.authorized === true,
   };
 }
@@ -239,6 +247,67 @@ export function admitMission({ request, rootDir = process.cwd(), now = new Date(
   };
 }
 
+export async function listRemoteDeviceTrustCandidates({
+  yard = null,
+  yardStateDir = '',
+  brokerDeploymentId,
+} = {}) {
+  const broker = clean(brokerDeploymentId);
+  if (!broker) throw new Error('broker deployment id is required');
+
+  let operator = yard;
+  if (!operator) {
+    if (!clean(yardStateDir)) {
+      throw new Error('yard state directory is required');
+    }
+    operator = new YardOperator({
+      stateDir: path.resolve(String(yardStateDir)),
+    });
+  }
+
+  const result = await listPendingRemoteDeviceReviews({
+    yard: operator,
+    brokerDeploymentId: broker,
+  });
+
+  return {
+    ...result,
+    authority: 'read_only',
+    trust_change_executed: false,
+  };
+}
+
+export function prepareRemoteDeviceTrustChange({
+  brokerDeploymentId,
+  candidateRef,
+  action = 'authorize',
+} = {}) {
+  const broker = clean(brokerDeploymentId);
+  const candidate = clean(candidateRef);
+  const normalizedAction = lower(action);
+
+  if (!broker) throw new Error('broker deployment id is required');
+  if (!candidate) throw new Error('candidate ref is required');
+  if (!['authorize'].includes(normalizedAction)) {
+    throw new Error('unsupported remote device trust action');
+  }
+
+  return {
+    schema: 'evercraft.systemia.remote-device-trust-change-plan.v1',
+    action: normalizedAction,
+    broker_deployment_id: broker,
+    candidate_ref: candidate,
+    impact: 'trust_boundary',
+    specialist_component: 'yard-operator',
+    human_gate_required: true,
+    explicit_candidate_confirmation_required: true,
+    explicit_approval_reference_required: true,
+    executable_by_control_plane: false,
+    next_action:
+      'Execute the separate Yard trust-review authorization only after explicit human confirmation of this exact candidate.',
+  };
+}
+
 export function assertControlPlane(plan) {
   if (!plan || plan.schema !== 'evercraft.systemia.control-plane-plan.v1') {
     throw new Error('valid control-plane plan required');
@@ -261,6 +330,31 @@ async function main() {
   const argv = process.argv.slice(2);
   if (argv.includes('--inventory')) {
     console.log(JSON.stringify(machineInventory(process.cwd()), null, 2));
+    return;
+  }
+
+  if (argv.includes('--pending-remote-devices')) {
+    const yardIndex = argv.indexOf('--yard-state');
+    const brokerIndex = argv.indexOf('--broker-deployment');
+    const yardStateDir = yardIndex >= 0 ? argv[yardIndex + 1] : '';
+    const brokerDeploymentId = brokerIndex >= 0 ? argv[brokerIndex + 1] : '';
+    const result = await listRemoteDeviceTrustCandidates({
+      yardStateDir,
+      brokerDeploymentId,
+    });
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  if (argv.includes('--prepare-remote-device-authorization')) {
+    const brokerIndex = argv.indexOf('--broker-deployment');
+    const candidateIndex = argv.indexOf('--candidate');
+    const result = prepareRemoteDeviceTrustChange({
+      brokerDeploymentId: brokerIndex >= 0 ? argv[brokerIndex + 1] : '',
+      candidateRef: candidateIndex >= 0 ? argv[candidateIndex + 1] : '',
+      action: 'authorize',
+    });
+    console.log(JSON.stringify(result, null, 2));
     return;
   }
 

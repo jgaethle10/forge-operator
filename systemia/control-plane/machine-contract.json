@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.systemia.machine-contract.v1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "purpose": "Bind Evercraft-owned orchestration, compute, discovery, continuity, logistics, and product execution into one fail-closed operating spine.",
   "authority": {
     "mission_authority": "systemia-organism",
@@ -43,7 +43,8 @@
       "component_key": "yard-operator",
       "role": "deployment_and_runtime_handoff",
       "source_refs": [
-        "systemia/yard/operator.mjs"
+        "systemia/yard/operator.mjs",
+        "systemia/yard/remote-device-review.mjs"
       ]
     },
     {
@@ -111,7 +112,9 @@
     "commercial": "systemia-organism",
     "qa": "systemia-organism",
     "security": "systemia-organism",
-    "execute": "systemia-organism"
+    "execute": "systemia-organism",
+    "trust_review": "yard-operator",
+    "trust_change": "yard-operator"
   },
   "parallelism": {
     "provider": "saban",
@@ -139,5 +142,8 @@
     "build_green_is_not_live_verified": true,
     "checkout_url_is_not_payment": true,
     "completion_without_receipt_or_evidence": false
-  }
+  },
+  "consequential_work_types": [
+    "trust_change"
+  ]
 }
