@@ -11,6 +11,8 @@ const discovery = readJson('public/chum/products/legacy-rescue-lab/ai-discovery.
 const aiConformance = readJson('public/chum/products/legacy-rescue-lab/ai-conformance.json');
 const offer = readJson('registry/legacy-rescue-lab/offer-contract.json');
 const llms = fs.readFileSync('public/chum/products/legacy-rescue-lab/llms.txt', 'utf8');
+const sitemap = fs.readFileSync('public/sitemap.xml', 'utf8');
+const publicIndex = readJson('public/chum/index.json');
 const rootLlms = fs.readFileSync('llms.txt', 'utf8');
 const painIndex = readJson('public/.well-known/evercraft-pain-index.json');
 
