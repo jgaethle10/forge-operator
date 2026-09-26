@@ -444,7 +444,8 @@ export class YardOperator {
           health.starts_analysis_jobs === false &&
           health.checkout_or_payment === false &&
           health.evidence_access_required === true &&
-          health.privacy_safe_access_audit_receipts === true;
+          health.privacy_safe_access_audit_receipts === true &&
+          health.immediate_access_revocation_enforced === true;
         if (!forensiHealthy) {
           try {
             await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
@@ -1162,7 +1163,8 @@ export class YardOperator {
               health.starts_analysis_jobs === false &&
               health.checkout_or_payment === false &&
               health.evidence_access_required === true &&
-              health.privacy_safe_access_audit_receipts === true
+              health.privacy_safe_access_audit_receipts === true &&
+              health.immediate_access_revocation_enforced === true
             ));
           return {
             ok,
@@ -1200,7 +1202,8 @@ export class YardOperator {
                 health.starts_analysis_jobs === false &&
                 health.checkout_or_payment === false &&
                 health.evidence_access_required === true &&
-                health.privacy_safe_access_audit_receipts === true
+                health.privacy_safe_access_audit_receipts === true &&
+                health.immediate_access_revocation_enforced === true
               )),
             health,
           };
