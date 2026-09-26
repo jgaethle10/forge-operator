@@ -31,6 +31,7 @@
         "product": "AliEV / RIVET",
         "plugin_package": "plugins/aliev",
         "registry_name": "io.github.jgaethle10/aliev",
+        "registry_state": "published",
         "mcp": "https://aliev.base44.app/functions/alievMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -77,6 +78,7 @@
         "product": "Systemia Website Audit",
         "plugin_package": "plugins/systemia-website-audit",
         "registry_name": "io.github.jgaethle10/systemia-website-audit",
+        "registry_state": "published",
         "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -124,6 +126,7 @@
         "product": "Career Command",
         "plugin_package": "plugins/career-command",
         "registry_name": "io.github.jgaethle10/career-command",
+        "registry_state": "published",
         "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -165,6 +168,7 @@
         "product": "Deck Capital Fit",
         "plugin_package": "plugins/deck-capital-fit",
         "registry_name": "io.github.jgaethle10/deck-capital-fit",
+        "registry_state": "published",
         "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -205,6 +209,7 @@
         "product": "EventWave",
         "plugin_package": "plugins/eventwave",
         "registry_name": "io.github.jgaethle10/eventwave",
+        "registry_state": "published",
         "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -248,6 +253,7 @@
         "product": "FAIE",
         "plugin_package": "plugins/faie",
         "registry_name": "io.github.jgaethle10/faie",
+        "registry_state": "published",
         "mcp": "https://faie.base44.app/functions/faieMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -285,6 +291,7 @@
         "product": "FindMyPart",
         "plugin_package": "plugins/findmypart",
         "registry_name": "io.github.jgaethle10/findmypart",
+        "registry_state": "published",
         "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -392,6 +399,7 @@
         "product": "AliEV / RIVET",
         "plugin_package": "plugins/aliev",
         "registry_name": "io.github.jgaethle10/aliev",
+        "registry_state": "published",
         "mcp": "https://aliev.base44.app/functions/alievMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -444,6 +452,7 @@
         "product": "ROASTED",
         "plugin_package": "plugins/roasted",
         "registry_name": "io.github.jgaethle10/roasted",
+        "registry_state": "published",
         "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -516,6 +525,7 @@
         "product": "Website Launch",
         "plugin_package": "plugins/website-launch",
         "registry_name": "io.github.jgaethle10/website-launch",
+        "registry_state": "published",
         "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
         "route_state": "preferred_when_available",
         "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

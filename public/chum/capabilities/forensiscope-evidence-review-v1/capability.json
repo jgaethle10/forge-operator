@@ -36,6 +36,7 @@
     "product": "ForensiScope",
     "plugin_package": "plugins/forensiscope",
     "registry_name": "io.github.jgaethle10/forensiscope",
+    "registry_state": "published",
     "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

@@ -35,6 +35,7 @@
     "product": "Career Command",
     "plugin_package": "plugins/career-command",
     "registry_name": "io.github.jgaethle10/career-command",
+    "registry_state": "published",
     "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

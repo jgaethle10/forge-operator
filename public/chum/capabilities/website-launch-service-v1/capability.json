@@ -43,6 +43,7 @@
     "product": "Website Launch",
     "plugin_package": "plugins/website-launch",
     "registry_name": "io.github.jgaethle10/website-launch",
+    "registry_state": "published",
     "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

@@ -32,6 +32,7 @@
     "product": "Evercraft Clip",
     "plugin_package": "plugins/evercraft-clip",
     "registry_name": "io.github.jgaethle10/evercraft-clip",
+    "registry_state": "published",
     "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

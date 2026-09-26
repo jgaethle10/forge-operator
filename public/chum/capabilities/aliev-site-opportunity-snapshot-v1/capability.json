@@ -56,6 +56,7 @@
     "product": "AliEV / RIVET",
     "plugin_package": "plugins/aliev",
     "registry_name": "io.github.jgaethle10/aliev",
+    "registry_state": "published",
     "mcp": "https://aliev.base44.app/functions/alievMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

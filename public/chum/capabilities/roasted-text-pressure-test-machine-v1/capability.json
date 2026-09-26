@@ -38,6 +38,7 @@
     "product": "ROASTED",
     "plugin_package": "plugins/roasted",
     "registry_name": "io.github.jgaethle10/roasted",
+    "registry_state": "published",
     "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

@@ -44,6 +44,7 @@
     "product": "EventWave",
     "plugin_package": "plugins/eventwave",
     "registry_name": "io.github.jgaethle10/eventwave",
+    "registry_state": "published",
     "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"

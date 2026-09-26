@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T21:13:26.879Z",
+  "updated_at": "2026-09-26T21:22:54.969Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,102 +11,271 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-need-a-software-layer-that-can-help-me-track-device-reconnect-and-application-cont-a429410e41/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-need-a-video-rag-workflow-for-long-recordings-where-speech-and-visual-context-stay-f01012e781/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-need-to-analyze-several-hours-of-recorded-meetings-and-interviews-as-one-workflow--869143903e/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/i-want-a-brutally-honest-pressure-test-of-a-short-piece-of-copy-before-i-post-it-i-w-c58382e020/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
+      "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
     },
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-26T21:13:26.879Z",
+      "path": "/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/website-launch-service-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
+      "url": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
+      "url": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
+      "url": "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
+      "url": "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
+      "url": "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
+      "url": "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
+      "url": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
+      "url": "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
+      "url": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
+      "url": "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
+      "url": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
+      "url": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
+      "url": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
+      "url": "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
+      "url": "/chum/capabilities/faie-signal-brief-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
+      "url": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
+      "url": "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
+      "url": "/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
+      "url": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
+      "url": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/website-launch-service-v1/capability.json",
+      "url": "/chum/capabilities/website-launch-service-v1/capability.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T21:22:54.969Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json",
       "url": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json",
@@ -216,18 +385,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T21:13:26.879Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "last_changed": "2026-09-26T21:10:36.511Z",
-      "priority": 92
-    },
-    {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
       "last_changed": "2026-09-26T21:10:36.511Z",
@@ -244,12 +401,6 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-09-26T21:10:36.511Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T21:10:36.511Z",
-      "priority": 80
     },
     {
       "path": "/chum/crawler-radar.json",
@@ -336,12 +487,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "url": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
       "url": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
       "last_changed": "2026-09-26T20:52:14.399Z",
@@ -350,12 +495,6 @@
     {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
       "url": "/chum/capabilities/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "url": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
       "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
@@ -372,12 +511,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "url": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
       "url": "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
       "last_changed": "2026-09-26T20:52:14.399Z",
@@ -386,12 +519,6 @@
     {
       "path": "/chum/capabilities/eventwave-paid-promotion-v1/",
       "url": "/chum/capabilities/eventwave-paid-promotion-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
-      "url": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
       "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
@@ -408,12 +535,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "url": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
       "url": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
       "last_changed": "2026-09-26T20:52:14.399Z",
@@ -422,12 +543,6 @@
     {
       "path": "/chum/capabilities/findmypart-paid-hunt-v1/",
       "url": "/chum/capabilities/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
-      "url": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
       "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
@@ -462,12 +577,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "url": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
       "url": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
       "last_changed": "2026-09-26T20:52:14.399Z",
@@ -480,12 +589,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "url": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
       "url": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
       "last_changed": "2026-09-26T20:52:14.399Z",
@@ -494,12 +597,6 @@
     {
       "path": "/chum/capabilities/website-launch-service-v1/",
       "url": "/chum/capabilities/website-launch-service-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "url": "/chum/capabilities/website-launch-service-v1/capability.json",
       "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
@@ -1110,12 +1207,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
-      "url": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:32:31.395Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
       "url": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
       "last_changed": "2026-09-26T06:32:31.395Z",
@@ -1124,12 +1215,6 @@
     {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/",
       "url": "/chum/capabilities/evercraft-clip-social-video-v1/",
-      "last_changed": "2026-09-26T06:32:31.395Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
-      "url": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
       "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
@@ -1182,12 +1267,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
-      "url": "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/buildflow-bounded-agent-action-v1/llms.txt",
       "url": "/chum/capabilities/buildflow-bounded-agent-action-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
@@ -1196,12 +1275,6 @@
     {
       "path": "/chum/capabilities/buildflow-enterprise-ops-router-v1/",
       "url": "/chum/capabilities/buildflow-enterprise-ops-router-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
-      "url": "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
     },
@@ -1218,12 +1291,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
-      "url": "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/buildflow-entity-resolution-machine-v1/llms.txt",
       "url": "/chum/capabilities/buildflow-entity-resolution-machine-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
@@ -1232,12 +1299,6 @@
     {
       "path": "/chum/capabilities/buildflow-process-audit-machine-v1/",
       "url": "/chum/capabilities/buildflow-process-audit-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
-      "url": "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
     },
@@ -1254,12 +1315,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
-      "url": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/llms.txt",
       "url": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
@@ -1268,12 +1323,6 @@
     {
       "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/",
       "url": "/chum/capabilities/buildflow-shadow-migration-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
-      "url": "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
     },
@@ -1322,12 +1371,6 @@
     {
       "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/",
       "url": "/chum/capabilities/career-command-resume-job-fit-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
-      "url": "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
     },
@@ -1434,12 +1477,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
-      "url": "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/evercraft-web-browser-agent-v1/llms.txt",
       "url": "/chum/capabilities/evercraft-web-browser-agent-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
@@ -1470,12 +1507,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
-      "url": "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
       "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/llms.txt",
       "url": "/chum/capabilities/findmypart-repair-shop-desk-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
@@ -1484,12 +1515,6 @@
     {
       "path": "/chum/capabilities/forensiscope-evidence-review-v1/",
       "url": "/chum/capabilities/forensiscope-evidence-review-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
-      "url": "/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
     },

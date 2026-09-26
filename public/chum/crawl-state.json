@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T21:13:26.879Z",
+  "updated_at": "2026-09-26T21:22:54.969Z",
   "url_count": 2201,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "d45c30caa6d01b4960d799d589898c4d2adb040d62fe750c7cb4566168d84b21",
-      "last_changed": "2026-09-26T21:10:36.511Z",
+      "content_sha256": "c7a85f28bb52e4f49c0ec73cb6dfee3f360a2d35ee1728d4353bd45f6a6a2343",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -51,8 +51,8 @@
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "30ac93c145f975b98a0bd986281b63816bd1635135d172e4dbb37a3de6191315",
-      "last_changed": "2026-09-26T21:10:36.511Z",
+      "content_sha256": "5627fc490eeb09f0ce02469522d9f5e078ee887fa29650b4db9607410a2ef767",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "23f720a15741238a059e28e02ae14c0e75df20b10994fcca5bc5620d1a0125b4",
-      "last_changed": "2026-09-26T21:13:26.879Z",
+      "content_sha256": "dfb79afbbbca0bc8448215c796f64576be9dea22bbdde1a4cb227a40aedc99b6",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -909,8 +909,8 @@
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "content_sha256": "8c215f3aac3c7e22cb2830ade6a64510323907c6bcc8a6af43e01678db620461",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "02d1bc7cb43f57dcb4fa902b668e3c516ac3733705d308ceb81d7db8efa838fa",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld": {
@@ -939,8 +939,8 @@
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "content_sha256": "17ec2b70ddb93080873194a94c9f7a9f22c14ad10000115ea017ce8944781537",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "abfad4f0dd7864cdf8f1449625f5234c808e12c1bf5d794f95e564b591f1f77c",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld": {
@@ -969,8 +969,8 @@
     },
     "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
-      "content_sha256": "b505ca8781417ade34afff3fa0f9b042bff446aa43000e00a639a6ca66a7aeb6",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "f7e9603759638f24b8df1d6e733cdfd759d1c38c502c67493086c2f96b769bca",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-bounded-agent-action-v1/schema.jsonld": {
@@ -999,8 +999,8 @@
     },
     "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
-      "content_sha256": "b3b605277888580fc0ffc557b4c824fe8dac3bee8ee47ffc2e52a631ddcf9398",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "133ae7c5ad116c32e7ec7002b1c082dfb5602f64fee3e735934190ed68f93d5a",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-enterprise-ops-router-v1/schema.jsonld": {
@@ -1029,8 +1029,8 @@
     },
     "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
-      "content_sha256": "ed9857934fc722ee1dcdcc71d797c69583c631d340834eadd07949b6208e067d",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "67cf4a7357a05b9191a4bc17ca54985479ce6293947e7bf5b5e9be2e73706d21",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-entity-resolution-machine-v1/schema.jsonld": {
@@ -1059,8 +1059,8 @@
     },
     "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
-      "content_sha256": "508d2abf7ba03a2bf1d425d72c3822ed68de39f73e48fd5422ce6c8b41be859b",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "1432c4aed4d5e70d6b9570c8bd7f1970e69ff81cc7b4a9c0334615aaa23c4ea4",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-process-audit-machine-v1/schema.jsonld": {
@@ -1089,8 +1089,8 @@
     },
     "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
-      "content_sha256": "891b33c8afb5b63ae6ce8d692cdda2dba9c5fe906add4696ca92191e2ba1379f",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "8ad9fd2cc9b8619c09124dbc4807a299fe98ea71300ed5da8cd9f7f13b343771",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/schema.jsonld": {
@@ -1119,8 +1119,8 @@
     },
     "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
-      "content_sha256": "a1cb8e54978c2e4fc2d93446b7a5dbbd416dbccdf2684d804dd6bc82e2e9c884",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "9662e207c9cb7a22ae022db27b7a0f73048bfe170d0306a81fe128fe524a1ccb",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-shadow-migration-machine-v1/schema.jsonld": {
@@ -1209,8 +1209,8 @@
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json": {
       "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "content_sha256": "7779513562d4cc2aee67a99c5c989ff278cecbeb444899436af0141c40aea8b3",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "5e760bef7c37070add11065e78d422b018adb5d99cc546594928bded1d4c5559",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/schema.jsonld": {
@@ -1239,8 +1239,8 @@
     },
     "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json": {
       "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
-      "content_sha256": "5e278c3df109835101d5f91b92bd1444e9667de732f0d7a3274a40371c3d1215",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "73723d5288146bf406168af8ae76d2d0babf62341091378d3f43ef2ada2456eb",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/career-command-resume-job-fit-machine-v1/schema.jsonld": {
@@ -1359,8 +1359,8 @@
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json": {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
-      "content_sha256": "8ae31921b04901fa0cad845d9af5e5c9ce148c03d2ebb0186373d3e21e2a3c09",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "64b774b42fcd44b0e71a76fe3dbb3d5ed89ecf5852d7e3bc5388234138ed9431",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld": {
@@ -1419,8 +1419,8 @@
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/capability.json": {
       "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
-      "content_sha256": "7e6ba2f86cde46761bfe1a0663a84cf48fbbfccb6ae3ed3e089955c896d14d39",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "307755022d8019602637e7e841097940c8ddd8ba5b84399b8a7b599a9fee77a5",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld": {
@@ -1449,8 +1449,8 @@
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
-      "content_sha256": "65fdc2817bc6b2e204a34c58541c422dfaed4bb69af24ecb99b313230333a80d",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "f1ba33f1a1836d9f53c7a035d34dc03978181c49ecd9f590c3866972dd7e0158",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/schema.jsonld": {
@@ -1509,8 +1509,8 @@
     },
     "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
-      "content_sha256": "e5eb8276f04c5626a2e091353ed29dab6b1de6731055577335dd4f2ed915add4",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "f10f99123527214ad338036b7fa02e99126714c359beaf6eec5d806cf200cc71",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-web-browser-agent-v1/schema.jsonld": {
@@ -1569,8 +1569,8 @@
     },
     "/chum/capabilities/faie-signal-brief-v1/capability.json": {
       "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "content_sha256": "295cb2fcbbe87890e7ac7976f5d20931e6fbd8926ffdb6c9591a287429afefb0",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "cdd6712b2691395078a8c36a18b89f16c55886029f2fed82cafa2197ee16a00b",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/schema.jsonld": {
@@ -1599,8 +1599,8 @@
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/capability.json": {
       "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
-      "content_sha256": "dbca75308db828628ac35ac8692eb00558f460673bae7a787f7dd46d8f102b63",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "8c72aff0f2e9abbab4a12321e4280b28de2e54586c809bf816981a1c6c34813f",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld": {
@@ -1629,8 +1629,8 @@
     },
     "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json": {
       "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
-      "content_sha256": "7032a092109964b6d24a859f9595ead581098a453b5c6b8b5c0f6cf88ccd887f",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "57613c75c0c461f025e9decebad3a9f55ea4a799457a74b0c4ff9aebfcd46ac6",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/findmypart-repair-shop-desk-v1/schema.jsonld": {
@@ -1659,8 +1659,8 @@
     },
     "/chum/capabilities/forensiscope-evidence-review-v1/capability.json": {
       "path": "/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
-      "content_sha256": "a89e28867329762fbd38f4bab3107e34a8d4eb5d360a70cb97b6745395488b4b",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "fafaf2844eee14e506e424ab1db0df68d573966c037777ed8f898371e66a46ea",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/forensiscope-evidence-review-v1/schema.jsonld": {
@@ -1959,8 +1959,8 @@
     },
     "/chum/capabilities/rivet-site-underwriting-v1/capability.json": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "content_sha256": "a5ea19fc750df1984a623de5f8eedda92458c24e5a53faec924558324b4d3890",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "de7c368c5cba55b316789a73be4a1e034ddf0ec7d76cd5fb6099dd7696af2e9b",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld": {
@@ -1989,8 +1989,8 @@
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "content_sha256": "757536b3222f179284e846fcf73eb5e8559532ca638c7c9387372995a09b289a",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "4f280030ca3ff4cf69f752fde9aeae27e74902b77da799d2b3b50074dd814947",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld": {
@@ -2169,8 +2169,8 @@
     },
     "/chum/capabilities/website-launch-service-v1/capability.json": {
       "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "content_sha256": "736e7b53c6cf69cee39b7e721495bc85c4a4fc8f42be86805dc73a9c08584a66",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "24087597001e2dcec0cec04503d960f66e9e0de5ad4e6dba6629c87b7710574e",
+      "last_changed": "2026-09-26T21:22:54.969Z",
       "priority": 96
     },
     "/chum/capabilities/website-launch-service-v1/schema.jsonld": {

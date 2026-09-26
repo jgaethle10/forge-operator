@@ -61,6 +61,7 @@
     "product": "Systemia Website Audit",
     "plugin_package": "plugins/systemia-website-audit",
     "registry_name": "io.github.jgaethle10/systemia-website-audit",
+    "registry_state": "published",
     "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
