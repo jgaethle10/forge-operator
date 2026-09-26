@@ -128,6 +128,7 @@
     "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs",
     "proof:ibmi-direct-buyer-signal": "node systemia/organism/ibmi-direct-buyer-signal.proof.mjs",
     "test:legacy-rescue-discovery": "node tests/legacy-rescue-lab-discovery.test.mjs",
+    "proof:forensiscope-artifact-return": "node systemia/forensiscope/artifact-return-proof.mjs",
     "rivet:commerce-bridge": "node systemia/rivet/build-commerce-bridge.mjs",
     "test:rivet-commerce-bridge": "npm run rivet:commerce-bridge && node tests/rivet-commerce-bridge.test.mjs"
   },
