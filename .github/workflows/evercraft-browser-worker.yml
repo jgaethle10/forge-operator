@@ -1,0 +1,36 @@
+name: Evercraft Browser Worker
+
+on:
+  pull_request:
+    paths:
+      - "systemia/evercraft-web/browser-worker/**"
+      - ".github/workflows/evercraft-browser-worker.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/evercraft-web/browser-worker/**"
+      - ".github/workflows/evercraft-browser-worker.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  browser-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: systemia/evercraft-web/browser-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: systemia/evercraft-web/browser-worker/package-lock.json
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Policy tests
+        run: npm test
+      - name: Build worker image
+        run: docker build -t evercraft/browser-worker:ci .
