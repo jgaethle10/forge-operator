@@ -320,6 +320,8 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "mode": "discovery_only",
       "triggers": [
+        "IBM i estate assessment",
+        "AS/400 estate assessment",
         "IBM i 7.4 upgrade planning",
         "AS/400 modernization",
         "RPG or CL dependency mapping",
@@ -329,7 +331,7 @@
         "IBM i upgrade rollback plan",
         "undocumented IBM i integrations"
       ],
-      "route_note": "Public discovery mirror is authoritative until the product-specific checkout route is independently live-verified. Paid offers exist in Evercraft Payments but checkout creation still requires explicit human confirmation."
+      "route_note": "Public discovery mirror and universal Machine Commerce human handoff are live-verified. The human buyer route is externally reachable, and synthetic QA has verified backend checkout-session creation. Explicit human confirmation is required before checkout, and provider verification is required before paid state."
     },
     {
       "product_key": "infinite-classroom",
