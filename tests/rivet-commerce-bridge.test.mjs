@@ -2,8 +2,7 @@ import fs from 'node:fs';
 import {
   RIVET_PUBLIC_ID,
   RIVET_COMMERCE_TARGET_ID,
-  RIVET_REPORT_OFFER_KEYS,
-  resolveRivetCommercePublicId
+  RIVET_REPORT_OFFER_KEYS
 } from '../systemia/rivet/commerce-bridge.mjs';
 
 const fail = (message) => { throw new Error('RIVET_COMMERCE_BRIDGE_FAIL: ' + message); };
@@ -17,11 +16,8 @@ for (const key of RIVET_REPORT_OFFER_KEYS) {
   if (!(target.offers || []).some((offer) => offer.offer_key === key)) fail('target missing report offer ' + key);
 }
 
-if (resolveRivetCommercePublicId(RIVET_PUBLIC_ID) !== RIVET_COMMERCE_TARGET_ID) {
-  fail('RIVET public alias does not resolve to verified commerce target');
-}
-if (resolveRivetCommercePublicId('something-else') !== 'something-else') {
-  fail('resolver rewrites unrelated public IDs');
+if (RIVET_COMMERCE_TARGET_ID !== RIVET_PUBLIC_ID) {
+  fail('RIVET must be its own verified commerce target');
 }
 
 for (const file of [
@@ -49,8 +45,8 @@ for (const key of RIVET_REPORT_OFFER_KEYS) {
 }
 
 const server = fs.readFileSync('server.ts', 'utf8');
-if (!server.includes('resolveRivetCommercePublicId')) fail('server is not using the RIVET commerce resolver');
-if (!server.includes("landing.searchParams.set('ec_alias', publicId)")) fail('server does not preserve the RIVET alias through handoff');
+if (server.includes('resolveRivetCommercePublicId')) fail('temporary RIVET alias shim leaked into runtime');
+if (server.includes("ec_alias")) fail('temporary RIVET alias attribution leaked into runtime');
 
 const sitemap = fs.readFileSync('public/sitemap.xml', 'utf8');
 for (const route of ['/rivet/start/','/rivet/start/offer.json','/rivet/start/llms.txt']) {
