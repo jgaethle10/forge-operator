@@ -56,6 +56,8 @@ function fixture() {
     moneyRadar: {
       schema: 'evercraft.chum.money-radar.v1',
       measurement_state: 'measured',
+      acquisition_measurement_state: 'measured',
+      payment_measurement_state: 'measured',
       products: [
         { public_id: 'forensiscope-v1', product_key: 'forensiscope', landings: 2, checkout_starts: 1, verified_payments: 1, funnel_state: 'paid' },
         { public_id: 'rivet-v1', product_key: 'rivet', landings: 0, checkout_starts: 0, verified_payments: 0, funnel_state: 'no_attributed_traffic' }
@@ -173,7 +175,9 @@ test('Fire Control makes a missing authoritative payment feed a P0 after discove
   ];
   data.moneyRadar = {
     schema: 'evercraft.chum.money-radar.v1',
-    measurement_state: 'blocked_source_not_configured',
+    measurement_state: 'measured_acquisition_only',
+    acquisition_measurement_state: 'measured',
+    payment_measurement_state: 'blocked_trusted_source_not_configured',
     products: []
   };
   data.revenueEvents = [];
@@ -183,7 +187,7 @@ test('Fire Control makes a missing authoritative payment feed a P0 after discove
 
   assert.equal(row.first_broken_stage, 'payment_measurement_ready');
   assert.equal(row.next_action.priority, 'P0');
-  assert.equal(row.next_action.action, 'restore_authoritative_payment_receipt_feed');
+  assert.equal(row.next_action.action, 'connect_authoritative_payment_receipt_feed_without_treating_acquisition_as_revenue');
 });
 
 test('Fire Control routes checkout dropoff to Money Radar without claiming a payment failure cause', () => {
@@ -205,4 +209,27 @@ test('Fire Control routes checkout dropoff to Money Radar without claiming a pay
   assert.equal(row.first_broken_stage, 'provider_verified_payment');
   assert.equal(row.next_action.priority, 'P1');
   assert.equal(row.next_action.action, 'inspect_checkout_to_payment_dropoff_with_authoritative_receipts');
+});
+
+
+test('Fire Control identifies offer-view dropoff without calling it a payment failure', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes.results = [
+    { product_key: 'forensiscope', status: 'completed', evaluation: { pickup_observed: true } },
+    { product_key: 'rivet', status: 'completed', evaluation: { pickup_observed: true } }
+  ];
+  data.moneyRadar.products = [
+    { public_id: 'forensiscope-v1', product_key: 'forensiscope', landings: 2, offer_views: 2, continue_clicks: 2, checkout_starts: 1, verified_payments: 1, funnel_state: 'paid' },
+    { public_id: 'rivet-v1', product_key: 'rivet', landings: 3, offer_views: 3, continue_clicks: 0, checkout_starts: 0, verified_payments: 0, funnel_state: 'offer_view_no_continue' }
+  ];
+  data.revenueEvents = data.revenueEvents.filter((event) => event.public_id !== 'rivet-v1');
+
+  const receipt = buildFireControl({ root, ...data });
+  const row = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(row.first_broken_stage, 'provider_verified_payment');
+  assert.equal(row.next_action.action, 'repair_offer_trust_value_or_primary_cta');
+  assert.equal(row.evidence.attributed_offer_views, 3);
+  assert.equal(row.evidence.attributed_continue_clicks, 0);
 });
