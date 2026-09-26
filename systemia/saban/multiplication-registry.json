@@ -539,6 +539,74 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "rivet-session-sprawl",
+      "name": "RIVET Session Sprawl",
+      "aliases": [
+        "rivet sessions",
+        "aliev session acquisition",
+        "ev charging session sprawl"
+      ],
+      "adapter": "systemia/rivet/saban-session-adapter.mjs",
+      "default_logical_agents": 2051,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 12,
+      "max_physical_workers": 32,
+      "lease_seconds": 180,
+      "roles": [
+        "source_hunter",
+        "schema_cartographer",
+        "adapter_builder",
+        "harvester",
+        "provenance_guard",
+        "privacy_guard",
+        "coverage_radar"
+      ],
+      "work_sources": [],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": "public_source_and_catalog_only",
+        "source_system_write": false,
+        "unsolicited_human_outreach": false,
+        "public_records_request": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "auth_bypass": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 32,
+        "max_work_items": 1000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "coverage_amplification",
+        "target_logical_per_physical_worker": 128,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
