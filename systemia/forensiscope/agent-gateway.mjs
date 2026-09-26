@@ -3,6 +3,7 @@ import { verifyEvidenceAccessToken } from './evidence-access.mjs';
 import { compareForensiScopeEvidence } from './evidence-compare.mjs';
 import { recordEvidenceAccessAudit } from './evidence-audit.mjs';
 import { loadForensiScopeProvenance } from './provenance.mjs';
+import { assertEvidenceGrantNotRevoked } from './evidence-revocation.mjs';
 import {
   listForensiScopeAgentTools,
   invokeForensiScopeAgentTool
@@ -128,6 +129,11 @@ export function invokeForensiScopeGatewayTool({
       evidenceRef,
       requiredScope: 'verify'
     });
+    assertEvidenceGrantNotRevoked({
+      grantId: access.grant_id,
+      evidenceRef,
+      rootDir
+    });
     const loaded = loadEvidenceGraph(evidenceRef, { rootDir });
     const provenance = loadForensiScopeProvenance({
       evidenceRef,
@@ -205,6 +211,16 @@ export function invokeForensiScopeGatewayTool({
       evidenceRef: evidenceRefB,
       requiredScope: 'compare'
     });
+    assertEvidenceGrantNotRevoked({
+      grantId: accessA.grant_id,
+      evidenceRef: evidenceRefA,
+      rootDir
+    });
+    assertEvidenceGrantNotRevoked({
+      grantId: accessB.grant_id,
+      evidenceRef: evidenceRefB,
+      rootDir
+    });
     const loadedA = loadEvidenceGraph(evidenceRefA, { rootDir });
     const loadedB = loadEvidenceGraph(evidenceRefB, { rootDir });
 
@@ -276,6 +292,11 @@ export function invokeForensiScopeGatewayTool({
   const access = verifyEvidenceAccessToken(accessToken, {
     evidenceRef,
     requiredScope
+  });
+  assertEvidenceGrantNotRevoked({
+    grantId: access.grant_id,
+    evidenceRef,
+    rootDir
   });
   const loaded = loadEvidenceGraph(evidenceRef, { rootDir });
   const toolArgs = { ...args };
