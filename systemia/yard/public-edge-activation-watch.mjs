@@ -97,6 +97,13 @@ export class PublicEdgeActivationWatcher {
     return result;
   }
 
+  hold(reason,data={}){
+    return this.#result('hold',{
+      reason:String(reason||'activation_held'),
+      ...data,
+    });
+  }
+
   async tick(){
     if(this.inFlight){
       return this.#result('hold',{reason:'watch_tick_in_flight'});
