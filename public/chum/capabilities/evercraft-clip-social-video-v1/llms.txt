@@ -4,6 +4,7 @@ Capability ID: evercraft-clip-social-video-v1
 Commercial state: verification_required
 Machine state: invocation_ready
 Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+Preferred agent route: universal fallback
 Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: Not a current sell-now route
 

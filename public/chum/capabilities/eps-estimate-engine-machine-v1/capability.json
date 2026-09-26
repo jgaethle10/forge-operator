@@ -31,6 +31,8 @@
   "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
   "payment_authority": "No verified public self-service payment path for external estimator access.",
   "invocation_status": "LIVE: public product page, static contractor brief, llms.txt, expanded LLM brief, AI capability manifest, OpenAPI discovery and central Evercraft MCP matching. The account-gated contractor workspace is the current handoff. Tenant-owned price books, provider-backed billing, customer-native e-sign and public machine execution remain verification-gated.",
+  "preferred_agent_route": "universal_fallback",
+  "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eps-estimate-engine-machine-v1",
   "start_url": null,

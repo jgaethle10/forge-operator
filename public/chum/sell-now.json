@@ -26,6 +26,15 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "AliEV / RIVET",
+        "plugin_package": "plugins/aliev",
+        "registry_name": "io.github.jgaethle10/aliev",
+        "mcp": "https://aliev.base44.app/functions/alievMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "is this site good for EV charging",
         "EV charger site analysis",
@@ -57,6 +66,15 @@
         "price": "$500",
         "billing": "one_time",
         "price_usd_normalized": 500
+      },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Systemia Website Audit",
+        "plugin_package": "plugins/systemia-website-audit",
+        "registry_name": "io.github.jgaethle10/systemia-website-audit",
+        "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "use_when": [
         "why is my website not getting leads",
@@ -96,6 +114,15 @@
         "premium_action_limit": 25,
         "price_usd_normalized": 19
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Career Command",
+        "plugin_package": "plugins/career-command",
+        "registry_name": "io.github.jgaethle10/career-command",
+        "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "help me prepare for this interview",
         "mock interview me for this job",
@@ -128,6 +155,8 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "help me find funding for my business",
         "which lenders or programs fit my business",
@@ -158,6 +187,15 @@
         "price": "$49",
         "billing": "one_time",
         "price_usd_normalized": 49
+      },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "EventWave",
+        "plugin_package": "plugins/eventwave",
+        "registry_name": "io.github.jgaethle10/eventwave",
+        "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "use_when": [
         "promote my event on EventWave",
@@ -193,6 +231,15 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "FAIE",
+        "plugin_package": "plugins/faie",
+        "registry_name": "io.github.jgaethle10/faie",
+        "mcp": "https://faie.base44.app/functions/faieMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "research this land or water question",
         "investigate this agriculture signal",
@@ -220,6 +267,15 @@
         "price_usd": 19,
         "billing": "one_time",
         "price_usd_normalized": 19
+      },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "FindMyPart",
+        "plugin_package": "plugins/findmypart",
+        "registry_name": "io.github.jgaethle10/findmypart",
+        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "use_when": [
         "find a hard-to-source part",
@@ -250,6 +306,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 500
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "escape vendor lock-in",
         "migrate from no-code",
@@ -279,6 +337,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "IBM i estate assessment before changing production",
         "AS/400 estate assessment before upgrading or modernizing",
@@ -315,6 +375,8 @@
         "billing": "one_time",
         "price_usd_normalized": 299
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "underwrite an EV charging site",
         "EV charger investment report",
@@ -358,6 +420,8 @@
         "billing": "one_time",
         "price_usd_normalized": 0.99
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "roast this text",
         "roast my bio",
@@ -392,6 +456,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "business outage plan",
         "internet outage continuity",
@@ -418,6 +484,15 @@
         "price": "$500",
         "billing": "one_time",
         "price_usd_normalized": 500
+      },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Website Launch",
+        "plugin_package": "plugins/website-launch",
+        "registry_name": "io.github.jgaethle10/website-launch",
+        "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "use_when": [
         "build me a business website",

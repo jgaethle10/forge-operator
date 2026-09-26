@@ -4,7 +4,11 @@ Capability ID: career-command-interview-practice-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
 Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
-Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Preferred agent route: direct specialist
+Direct specialist: Career Command
+Direct MCP: https://evercraft-career-command.base44.app/functions/careerMcp
+Official MCP Registry name: io.github.jgaethle10/career-command
+Universal Evercraft fallback MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
 
 ## Use this when

@@ -21,6 +21,8 @@
   "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/capability-concierge-v1/index.html",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Internal routing exists; public universal invocation is not yet advertised.",
+  "preferred_agent_route": "universal_fallback",
+  "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1",
   "start_url": null,

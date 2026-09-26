@@ -42,6 +42,8 @@
   "public_url": "https://call-proof-vault.base44.app/",
   "payment_authority": "CallProof Vault / Stripe",
   "invocation_status": "discoverable_authenticated_checkout_required",
+  "preferred_agent_route": "universal_fallback",
+  "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=callproof-complaint-packet-machine-v1",
   "start_url": null,

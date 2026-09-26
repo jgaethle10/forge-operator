@@ -4,7 +4,11 @@ Capability ID: audit-center-website-audit-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
 Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
-Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Preferred agent route: direct specialist
+Direct specialist: Systemia Website Audit
+Direct MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+Official MCP Registry name: io.github.jgaethle10/systemia-website-audit
+Universal Evercraft fallback MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1
 
 ## Use this when

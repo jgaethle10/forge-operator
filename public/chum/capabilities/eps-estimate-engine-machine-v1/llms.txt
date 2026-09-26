@@ -4,6 +4,7 @@ Capability ID: eps-estimate-engine-machine-v1
 Commercial state: contractor_beta
 Machine state: discovery_and_handoff
 Public URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+Preferred agent route: universal fallback
 Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: Not a current sell-now route
 

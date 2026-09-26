@@ -31,6 +31,15 @@
   "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
   "payment_authority": "Evercraft Payments; central machine checkout remains verification-gated.",
   "invocation_status": "LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.",
+  "preferred_agent_route": "direct_specialist",
+  "direct_specialist": {
+    "product": "ForensiScope",
+    "plugin_package": "plugins/forensiscope",
+    "registry_name": "io.github.jgaethle10/forensiscope",
+    "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+    "route_state": "preferred_when_available",
+    "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+  },
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1",
   "start_url": null,

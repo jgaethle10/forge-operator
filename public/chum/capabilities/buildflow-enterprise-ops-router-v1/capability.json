@@ -24,6 +24,15 @@
   "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: BuildFlow public router and central MCP specialist routing are implemented and build-tested. External client canary remains pending; private data and consequential actions remain authenticated/human-gated.",
+  "preferred_agent_route": "direct_specialist",
+  "direct_specialist": {
+    "product": "BuildFlow Enterprise Operations",
+    "plugin_package": "plugins/buildflow",
+    "registry_name": "io.github.jgaethle10/buildflow",
+    "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+    "route_state": "preferred_when_available",
+    "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+  },
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-enterprise-ops-router-v1",
   "start_url": null,

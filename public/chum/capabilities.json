@@ -20,6 +20,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=agent-proving-mission-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "test my AI agent",
         "evaluate an AI agent",
@@ -43,6 +45,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ai-capability-install-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "install an AI capability",
         "add an agent tool to my system",
@@ -71,6 +75,15 @@
         "price": "$250",
         "billing": "one_time",
         "price_usd_normalized": 250
+      },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "AliEV / RIVET",
+        "plugin_package": "plugins/aliev",
+        "registry_name": "io.github.jgaethle10/aliev",
+        "mcp": "https://aliev.base44.app/functions/alievMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "use_when": [
         "is this site good for EV charging",
@@ -104,6 +117,15 @@
         "billing": "one_time",
         "price_usd_normalized": 500
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Systemia Website Audit",
+        "plugin_package": "plugins/systemia-website-audit",
+        "registry_name": "io.github.jgaethle10/systemia-website-audit",
+        "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "why is my website not getting leads",
         "audit my website",
@@ -135,6 +157,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-bounded-agent-action-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "BuildFlow Enterprise Operations",
+        "plugin_package": "plugins/buildflow",
+        "registry_name": "io.github.jgaethle10/buildflow",
+        "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "let an AI act on business systems safely",
         "AI agent needs approval before it changes ERP data",
@@ -159,6 +190,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-enterprise-ops-router-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "BuildFlow Enterprise Operations",
+        "plugin_package": "plugins/buildflow",
+        "registry_name": "io.github.jgaethle10/buildflow",
+        "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "our business operations are a mess",
         "we need an ERP but cannot survive a huge implementation",
@@ -184,6 +224,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-entity-resolution-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "BuildFlow Enterprise Operations",
+        "plugin_package": "plugins/buildflow",
+        "registry_name": "io.github.jgaethle10/buildflow",
+        "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "dedupe our vendor list safely",
         "the same customer exists in multiple systems",
@@ -208,6 +257,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-process-audit-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "BuildFlow Enterprise Operations",
+        "plugin_package": "plugins/buildflow",
+        "registry_name": "io.github.jgaethle10/buildflow",
+        "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "map how our process actually works",
         "find bottlenecks in this business workflow",
@@ -234,6 +292,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-procure-to-pay-shadow-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "BuildFlow Enterprise Operations",
+        "plugin_package": "plugins/buildflow",
+        "registry_name": "io.github.jgaethle10/buildflow",
+        "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "our invoices do not match receipts",
         "audit purchase approvals without replacing accounting",
@@ -259,6 +326,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-shadow-migration-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "BuildFlow Enterprise Operations",
+        "plugin_package": "plugins/buildflow",
+        "registry_name": "io.github.jgaethle10/buildflow",
+        "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "analyze this messy ERP export",
         "migrate our spreadsheets without losing provenance",
@@ -283,6 +359,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=callproof-complaint-packet-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "organize my robocall evidence",
         "make an FCC complaint packet",
@@ -307,6 +385,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "help my business with AI",
         "find software for this problem",
@@ -336,6 +416,15 @@
         "premium_action_limit": 25,
         "price_usd_normalized": 19
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Career Command",
+        "plugin_package": "plugins/career-command",
+        "registry_name": "io.github.jgaethle10/career-command",
+        "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "help me prepare for this interview",
         "mock interview me for this job",
@@ -361,6 +450,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-resume-job-fit-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Career Command",
+        "plugin_package": "plugins/career-command",
+        "registry_name": "io.github.jgaethle10/career-command",
+        "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "check my resume against this job",
         "why am I not getting interviews",
@@ -386,6 +484,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=community-health-evidence-brief-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "community health data",
         "county health evidence brief",
@@ -409,6 +509,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=condition-desk-field-ops-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "can my crews work tomorrow",
         "weather go no-go for field crews",
@@ -433,6 +535,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=datafoundry-data-gap-audit-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "audit this dataset for gaps",
         "what data is missing for this decision",
@@ -464,6 +568,8 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "help me find funding for my business",
         "which lenders or programs fit my business",
@@ -490,6 +596,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eps-estimate-engine-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "contractor estimating software",
         "contractor estimate calculator",
@@ -527,6 +635,15 @@
         "billing": "one_time",
         "price_usd_normalized": 49
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "EventWave",
+        "plugin_package": "plugins/eventwave",
+        "registry_name": "io.github.jgaethle10/eventwave",
+        "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "promote my event on EventWave",
         "promote my local event",
@@ -556,6 +673,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "turn this video into social clips",
         "make short vertical clips from a long video",
@@ -584,6 +703,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-network-resilience-membership-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "my connection keeps switching between wifi and cellular",
         "my internet connection keeps changing",
@@ -614,6 +735,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-web-browser-agent-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Evercraft Web",
+        "plugin_package": "plugins/evercraft-web",
+        "registry_name": "io.github.jgaethle10/evercraft-web",
+        "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "fetch a webpage for my AI agent",
         "read a URL for my AI agent",
@@ -645,6 +775,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evermaps-evidence-projection-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "map this evidence for me",
         "show lifeline coverage for this place",
@@ -674,6 +806,15 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "FAIE",
+        "plugin_package": "plugins/faie",
+        "registry_name": "io.github.jgaethle10/faie",
+        "mcp": "https://faie.base44.app/functions/faieMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "research this land or water question",
         "investigate this agriculture signal",
@@ -702,6 +843,15 @@
         "billing": "one_time",
         "price_usd_normalized": 19
       },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "FindMyPart",
+        "plugin_package": "plugins/findmypart",
+        "registry_name": "io.github.jgaethle10/findmypart",
+        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "find a hard-to-source part",
         "identify this part",
@@ -725,6 +875,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-repair-shop-desk-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "FindMyPart",
+        "plugin_package": "plugins/findmypart",
+        "registry_name": "io.github.jgaethle10/findmypart",
+        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "source difficult parts for my repair shop",
         "parts sourcing desk",
@@ -748,6 +907,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "ForensiScope",
+        "plugin_package": "plugins/forensiscope",
+        "registry_name": "io.github.jgaethle10/forensiscope",
+        "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "this video is too large for the AI",
         "the chat will not take my video",
@@ -786,6 +954,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 500
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "escape vendor lock-in",
         "migrate from no-code",
@@ -808,6 +978,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=freight-load-exception-intelligence-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "what is wrong with this load",
         "audit this freight load for exceptions",
@@ -832,6 +1004,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=globalstat-country-intelligence-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "compare these countries on this metric",
         "give me sourced country intelligence",
@@ -863,6 +1037,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "IBM i estate assessment before changing production",
         "AS/400 estate assessment before upgrading or modernizing",
@@ -893,6 +1069,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=income-war-map-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "help me make more money",
         "find revenue opportunities",
@@ -918,6 +1096,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=large-document-corpus-review-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "review thousands of documents",
         "analyze a document dump",
@@ -941,6 +1121,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=littlered-kdp-export-qa-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "check if my book is ready for KDP",
         "validate my cover dimensions",
@@ -964,6 +1146,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "monitor my software portfolio for broken products",
         "continuously audit all of our apps repositories and public URLs",
@@ -998,6 +1182,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=raven-nexus-pain-router-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "protect my bank account from AI scams",
         "AI scam draining my bank account",
@@ -1036,6 +1222,8 @@
         "billing": "one_time",
         "price_usd_normalized": 299
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "underwrite an EV charging site",
         "EV charger investment report",
@@ -1079,6 +1267,8 @@
         "billing": "one_time",
         "price_usd_normalized": 0.99
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "roast this text",
         "roast my bio",
@@ -1113,6 +1303,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "business outage plan",
         "internet outage continuity",
@@ -1135,6 +1327,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "keep this approved agent run going longer",
         "buy more runtime for this Yard execution",
@@ -1157,6 +1351,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-evidence-profile-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "evaluate this candidate from the evidence",
         "build a talent profile from this portfolio",
@@ -1181,6 +1377,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-proof-portal-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "help me hire based on skills",
         "verify candidate ability",
@@ -1205,6 +1403,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=towi-evidence-research-machine-v1",
       "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
       "use_when": [
         "research this question with sources",
         "build me an evidence brief",
@@ -1233,6 +1433,15 @@
         "price": "$500",
         "billing": "one_time",
         "price_usd_normalized": 500
+      },
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Website Launch",
+        "plugin_package": "plugins/website-launch",
+        "registry_name": "io.github.jgaethle10/website-launch",
+        "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "use_when": [
         "build me a business website",

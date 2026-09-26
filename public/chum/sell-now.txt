@@ -8,6 +8,9 @@ Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b41789
 Capability ID: aliev-site-opportunity-snapshot-v1
 Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
+Preferred agent route: direct specialist
+Direct MCP: https://aliev.base44.app/functions/alievMcp
+Official MCP Registry name: io.github.jgaethle10/aliev
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1
 Machine state: payment_ready_human_confirmation
 Use this when:
@@ -26,6 +29,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: audit-center-website-audit-machine-v1
 Price: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+Preferred agent route: direct specialist
+Direct MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+Official MCP Registry name: io.github.jgaethle10/systemia-website-audit
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1
 Machine state: payment_ready
 Use this when:
@@ -48,6 +54,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: career-command-interview-practice-machine-v1
 Price: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
+Preferred agent route: direct specialist
+Direct MCP: https://evercraft-career-command.base44.app/functions/careerMcp
+Official MCP Registry name: io.github.jgaethle10/career-command
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
 Machine state: payment_ready
 Use this when:
@@ -64,6 +73,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: deck-capital-fit-sprint-machine-v1
 Price: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Preferred agent route: universal fallback
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
 Machine state: payment_ready
 Use this when:
@@ -81,6 +91,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: eventwave-paid-promotion-v1
 Price: Event Boost $49 one-time; Venue Pack $149 one-time.
 Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
+Preferred agent route: direct specialist
+Direct MCP: https://event-wave.base44.app/functions/eventWaveMcp
+Official MCP Registry name: io.github.jgaethle10/eventwave
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1
 Machine state: payment_ready
 Use this when:
@@ -101,6 +114,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: faie-signal-brief-v1
 Price: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
+Preferred agent route: direct specialist
+Direct MCP: https://faie.base44.app/functions/faieMcp
+Official MCP Registry name: io.github.jgaethle10/faie
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
 Machine state: payment_ready
 Use this when:
@@ -115,6 +131,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: findmypart-paid-hunt-v1
 Price: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+Preferred agent route: direct specialist
+Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
+Official MCP Registry name: io.github.jgaethle10/findmypart
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1
 Machine state: payment_ready
 Use this when:
@@ -129,6 +148,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: foundry-app-escape-audit-v1
 Price: $500 one-time.
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
+Preferred agent route: universal fallback
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
 Machine state: human_handoff_ready
 Use this when:
@@ -142,6 +162,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: ibmi-rescue-v1
 Price: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+Preferred agent route: universal fallback
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
 Machine state: human_handoff_ready
 Use this when:
@@ -163,6 +184,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: rivet-site-underwriting-v1
 Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
+Preferred agent route: universal fallback
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 Machine state: payment_ready_human_confirmation
 Use this when:
@@ -192,6 +214,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: roasted-text-pressure-test-machine-v1
 Price: $0.99 USD one-time per roast.
 Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+Preferred agent route: universal fallback
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1
 Machine state: payment_ready
 Use this when:
@@ -211,6 +234,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: site-survive-rapid-audit-v1
 Price: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+Preferred agent route: universal fallback
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
 Machine state: human_handoff_ready
 Use this when:
@@ -224,6 +248,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: website-launch-service-v1
 Price: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
 Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
+Preferred agent route: direct specialist
+Direct MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
+Official MCP Registry name: io.github.jgaethle10/website-launch
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1
 Machine state: payment_ready
 Use this when:

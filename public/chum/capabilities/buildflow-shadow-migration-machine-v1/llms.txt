@@ -4,7 +4,11 @@ Capability ID: buildflow-shadow-migration-machine-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
 Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
-Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Preferred agent route: direct specialist
+Direct specialist: BuildFlow Enterprise Operations
+Direct MCP: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
+Official MCP Registry name: io.github.jgaethle10/buildflow
+Universal Evercraft fallback MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: Not a current sell-now route
 
 ## Use this when

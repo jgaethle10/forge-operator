@@ -4,7 +4,11 @@ Capability ID: aliev-site-opportunity-snapshot-v1
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
 Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
-Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Preferred agent route: direct specialist
+Direct specialist: AliEV / RIVET
+Direct MCP: https://aliev.base44.app/functions/alievMcp
+Official MCP Registry name: io.github.jgaethle10/aliev
+Universal Evercraft fallback MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1
 
 ## Use this when

@@ -4,6 +4,7 @@ Capability ID: talent-evidence-profile-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
 Public URL: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+Preferred agent route: universal fallback
 Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: Not a current sell-now route
 

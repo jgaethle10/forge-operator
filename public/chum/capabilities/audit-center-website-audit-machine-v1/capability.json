@@ -46,6 +46,15 @@
   "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
   "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
   "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.",
+  "preferred_agent_route": "direct_specialist",
+  "direct_specialist": {
+    "product": "Systemia Website Audit",
+    "plugin_package": "plugins/systemia-website-audit",
+    "registry_name": "io.github.jgaethle10/systemia-website-audit",
+    "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+    "route_state": "preferred_when_available",
+    "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+  },
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
   "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",

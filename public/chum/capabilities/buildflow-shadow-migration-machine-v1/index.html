@@ -21,6 +21,7 @@
 <li>stage an ERP migration without overwriting anything</li>
 </ul></div>
 <div class="card"><h2>Inputs and outputs</h2><p><strong>Inputs:</strong> Authenticated tenant CSV/structured exports or connector-fed records.</p><p><strong>Outputs:</strong> ImportRun, SourceRecord, mapping preview, explicit ImportConflict records and review state.</p></div>
+<div class="card"><h2>Agent route</h2><p><strong>Preferred:</strong> direct specialist</p><p><strong>Specialist MCP:</strong> <code>https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp</code></p><p><strong>Registry:</strong> <code>io.github.jgaethle10/buildflow</code></p><p class="muted">Use Evercraft Machine Commerce only when this specialist is unavailable or the user intent is ambiguous.</p></div>
 <div class="card"><h2>Open capability</h2><p><a href="https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute">Capability details</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>
 <div class="card"><h2>Authority and payment boundary</h2><p>Shadow import does not overwrite the source or silently create canonical truth. Private records require authenticated tenant access.</p><p>Payment authority: No verified Evercraft Payments path.</p></div>
 <p class="muted">Publication is not proof of provider pickup, recommendation, payment, entitlement or fulfillment. CHUM preserves current source state without upgrading it by inference.</p>
