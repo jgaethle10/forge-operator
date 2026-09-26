@@ -76,7 +76,14 @@ jobs:
             (.edge_attestation_receipt_ref | type == "string" and test("^(sha256:)?[a-fA-F0-9]{64}$")) and
             (.specialist_attestation_receipt_ref | type == "string" and test("^(sha256:)?[a-fA-F0-9]{64}$")) and
             .checkout_enabled == false and
-            .payment_enabled == false
+            .payment_enabled == false and
+            .identity_attestation_bound == true and
+            .same_device_binding == true and
+            .field_enrollment_bound == true and
+            .field_verified == true and
+            (.device_fingerprint | test("^sha256:[a-f0-9]{64}$")) and
+            (.field_enrollment_receipt_ref | test("^sha256:[a-f0-9]{64}$")) and
+            (.public_edge_admission_receipt_ref | test("^sha256:[a-f0-9]{64}$"))
           ' >/dev/null
 
           check_mcp() {
