@@ -10,6 +10,18 @@ function clean(value) {
   return String(value ?? '').trim();
 }
 
+export function firstPartyTrustedExportUrl(origin) {
+  const raw = clean(origin);
+  if (!raw) return '';
+  try {
+    const target = new URL('/api/chum/attribution/export', raw);
+    if (target.protocol !== 'https:') return '';
+    return target.toString();
+  } catch {
+    return '';
+  }
+}
+
 function parseLines(raw) {
   const text = String(raw ?? '').trim();
   if (!text) return [];
@@ -112,8 +124,13 @@ async function fetchRemote(url, token = '') {
 export async function buildMoneyRadar({
   root = process.cwd(),
   generatedAt = new Date().toISOString(),
-  sourceUrl = process.env.CHUM_ATTRIBUTION_EXPORT_URL || '',
-  sourceToken = process.env.CHUM_ATTRIBUTION_EXPORT_TOKEN || '',
+  sourceUrl =
+    process.env.CHUM_ATTRIBUTION_EXPORT_URL ||
+    firstPartyTrustedExportUrl(process.env.CHUM_PUBLIC_ORIGIN || process.env.PUBLIC_BASE_URL || ''),
+  sourceToken =
+    process.env.CHUM_ATTRIBUTION_EXPORT_TOKEN ||
+    process.env.CHUM_ATTRIBUTION_INGEST_TOKEN ||
+    '',
   publicSourceUrl = process.env.CHUM_ACQUISITION_EXPORT_URL || DEFAULT_PUBLIC_ACQUISITION_EXPORT_URL,
   sourceEvents = null,
   publicSourceEvents = null,
