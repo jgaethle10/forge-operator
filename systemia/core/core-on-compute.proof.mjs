@@ -132,6 +132,11 @@ try {
   assert.equal(route.health.deployment_receipt, core.receipt.receipt_hash);
 
   const workspace = path.join(coreRoot, 'workspace');
+  const publicEdgeMission = path.join(
+    workspace,
+    'public-edge-activation-watch',
+    'field-mission-snapshot.json'
+  );
   assert.equal(
     fs.existsSync(path.join(workspace, 'legacy-rescue-watch', 'mission-snapshot.json')),
     true
@@ -148,6 +153,34 @@ try {
     fs.existsSync(path.join(workspace, 'mission-sources.json')),
     true
   );
+  assert.equal(await waitForPath(publicEdgeMission), true);
+
+  const edgeSnapshot=JSON.parse(fs.readFileSync(publicEdgeMission,'utf8'));
+  assert.equal(edgeSnapshot.schema,'evercraft.kaidance.mission-snapshot.v1');
+  assert.equal(edgeSnapshot.mission_key,'evercraft-public-specialist-edge');
+
+  const managedMissionSources=JSON.parse(
+    fs.readFileSync(path.join(workspace,'mission-sources.json'),'utf8')
+  );
+  const edgeSource=(managedMissionSources.sources||[]).find(
+    (source)=>source.source_key==='evercraft-public-specialist-edge'
+  );
+  assert.ok(edgeSource);
+  assert.equal(
+    edgeSource.path,
+    'public-edge-activation-watch/field-mission-snapshot.json'
+  );
+
+  const edgeWatchState=path.join(
+    workspace,
+    'public-edge-activation-watch',
+    'runtime',
+    'public-edge-activation-watch.json'
+  );
+  assert.equal(await waitForPath(edgeWatchState),true);
+  const edgeWatch=JSON.parse(fs.readFileSync(edgeWatchState,'utf8'));
+  assert.equal(edgeWatch.release_ref,'e101fa959836ae9c26b52c0ebf6185a1f9957e92');
+  assert.equal(edgeWatch.allocator_authority_persisted,false);
 
   const rawHealth = JSON.stringify(route.health);
   assert.ok(!rawHealth.includes(allocatorToken));
@@ -172,6 +205,10 @@ try {
     deployment_surface: 'Yard Operator',
     core_supervised_services: expectedCoreServiceCount,
     private_workspace_verified: true,
+    public_edge_workspace_verified:true,
+    immutable_release_ref_injected:true,
+    issue_403_mission_snapshot_emitted:true,
+    public_edge_allocator_authority_not_persisted:true,
     capacity_endpoint_supplied_manually: false,
     automatic_capacity_discovery_verified: true,
     yard_health_verified: true,
