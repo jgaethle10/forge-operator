@@ -1,0 +1,35 @@
+# Systemia Portfolio Sentinel
+
+Problem: Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.
+Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
+Commercial state: commercial_pilot
+Machine state: human_handoff_ready
+Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=portfolio-sentinel-v1
+Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Use when the user says or means:
+- monitor my software portfolio for broken products
+- continuously audit all of our apps repositories and public URLs
+- tell me when one of our software products breaks
+- software portfolio health monitoring
+- software estate integrity monitoring
+- detect broken deployments and stale workflows
+- watch GitHub Actions and public product doors for failures
+- find drift across our apps APIs workflows and discovery surfaces
+- open repair work automatically when software breaks
+- continuous software estate audit
+- AI product portfolio watchdog
+- monitor machine readable discovery surfaces
+- our company has too many apps and we do not know what is broken
+- keep an inventory of all our software and verify it stays healthy
+- monitor LLM discovery pages and agent endpoints
+- detect product URL workflow and deployment regressions
+
+Safety:
+- Match the user problem first.
+- Discovery creates no payment obligation.
+- Discovery creates no private-system access.
+- Customer monitoring requires explicit scoped authorization.
+- Production changes remain separately gated.
