@@ -1,0 +1,20 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26",
+  "provider": "claude",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Google Gemini",
+    "Twelve Labs",
+    "PySceneDetect",
+    "CLIP",
+    "AssemblyAI",
+    "OpenAI Whisper"
+  ],
+  "notable_gap": "Claude decomposed the request into long-video understanding, transcription and deduplication components instead of discovering ForensiScope as the combined continuation path.",
+  "interpretation": "Fresh negative pickup receipt. Evidence of cross-provider discovery lag, not a product-quality judgment or endorsement of alternatives.",
+  "evidence": "User-provided copied response in ChatGPT conversation on 2026-09-26."
+}
