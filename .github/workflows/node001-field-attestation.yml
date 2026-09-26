@@ -9,6 +9,7 @@ on:
       - 'systemia/yard/field-attestation.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/field-attestation-proof.mjs'
+      - 'systemia/yard/field-enrollment-packet.proof.mjs'
       - 'systemia/yard/enroll-field-device.mjs'
       - 'systemia/yard/kaidance-pulse.mjs'
       - 'systemia/compute/FIELD_ATTESTATION.md'
@@ -23,6 +24,7 @@ on:
       - 'systemia/yard/field-attestation.mjs'
       - 'systemia/yard/operator.mjs'
       - 'systemia/yard/field-attestation-proof.mjs'
+      - 'systemia/yard/field-enrollment-packet.proof.mjs'
       - 'systemia/yard/enroll-field-device.mjs'
       - 'systemia/yard/kaidance-pulse.mjs'
       - 'systemia/compute/FIELD_ATTESTATION.md'
@@ -43,3 +45,5 @@ jobs:
           node --check systemia/yard/kaidance-pulse.mjs
       - name: Prove device identity without self-awarding field status
         run: node systemia/yard/field-attestation-proof.mjs
+      - name: Prove allocator-authenticated field enrollment packet
+        run: node systemia/yard/field-enrollment-packet.proof.mjs
