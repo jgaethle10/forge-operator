@@ -6,7 +6,7 @@
   "source_schema_version": "2026-09-26.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.8.2",
   "source_generated_at": "2026-09-26T04:35:00.000Z",
-  "generated_at": "2026-09-26T21:10:34.995Z",
+  "generated_at": "2026-09-26T22:24:20.406Z",
   "offer_count": 45,
   "sell_now_count": 13,
   "discovery_count": 32,
@@ -1196,8 +1196,8 @@
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
       "public_url_source": "source_catalog",
       "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
-      "invocation_status": "LIVE for public machine discovery and deterministic problem matching through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after scoped onboarding and authorization. No discovery call grants private access or production-mutation authority.",
-      "catalog_version": "2026-09-26.1"
+      "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
+      "catalog_version": "2026-09-26.2"
     },
     {
       "public_id": "raven-nexus-pain-router-v1",

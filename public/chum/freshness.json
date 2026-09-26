@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:22:12.044Z",
+  "updated_at": "2026-09-26T22:24:22.586Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,77 +11,304 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 94
+      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 94
+      "path": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/llms.txt",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 94
+      "path": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/capabilities/portfolio-sentinel-v1/capability.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/portfolio-sentinel-v1/llms.txt",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 92
     },
     {
       "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
+      "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 90
     },
     {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 88
+      "path": "/chum/revenue.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 90
     },
     {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 84
     },
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 84
+      "path": "/chum/capabilities.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/",
-      "last_changed": "2026-09-26T22:22:12.044Z",
+      "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
+      "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 80
     },
     {
       "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
+      "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 80
     },
     {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
+      "url": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
+      "url": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
+      "url": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
+      "url": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
+      "url": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
+      "url": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
+      "url": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
+      "url": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
+      "url": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
+      "url": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
+      "url": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
+      "url": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
+      "url": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
+      "url": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
+      "url": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
+      "url": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/capabilities/portfolio-sentinel-v1/capability.json",
+      "url": "/chum/capabilities/portfolio-sentinel-v1/capability.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/portfolio-sentinel-v1/llms.txt",
+      "url": "/chum/capabilities/portfolio-sentinel-v1/llms.txt",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T22:24:22.586Z",
+      "priority": 80
+    },
     {
       "path": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
       "url": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
@@ -99,12 +326,6 @@
       "url": "/chum/products/systemia-portfolio-sentinel/llms.txt",
       "last_changed": "2026-09-26T22:22:12.044Z",
       "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 90
     },
     {
       "path": "/.well-known/evercraft-products.json",
@@ -125,26 +346,8 @@
       "priority": 84
     },
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
-      "last_changed": "2026-09-26T22:22:12.044Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
       "last_changed": "2026-09-26T22:22:12.044Z",
       "priority": 80
     },
@@ -365,12 +568,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/syndication/",
       "url": "/chum/syndication/",
       "last_changed": "2026-09-26T22:18:18.960Z",
@@ -533,18 +730,6 @@
       "priority": 96
     },
     {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "last_changed": "2026-09-26T21:22:54.969Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T21:22:54.969Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json",
       "url": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json",
       "last_changed": "2026-09-26T21:13:26.879Z",
@@ -639,18 +824,6 @@
       "url": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json",
       "last_changed": "2026-09-26T21:13:26.879Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "last_changed": "2026-09-26T21:10:36.511Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "url": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-26T21:10:36.511Z",
-      "priority": 84
     },
     {
       "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
@@ -1471,114 +1644,6 @@
     {
       "path": "/chum/capabilities/buildflow-process-audit-machine-v1/llms.txt",
       "url": "/chum/capabilities/buildflow-process-audit-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/",
-      "url": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/llms.txt",
-      "url": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/",
-      "url": "/chum/capabilities/buildflow-shadow-migration-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/llms.txt",
-      "url": "/chum/capabilities/buildflow-shadow-migration-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/callproof-complaint-packet-machine-v1/",
-      "url": "/chum/capabilities/callproof-complaint-packet-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/callproof-complaint-packet-machine-v1/capability.json",
-      "url": "/chum/capabilities/callproof-complaint-packet-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/callproof-complaint-packet-machine-v1/llms.txt",
-      "url": "/chum/capabilities/callproof-complaint-packet-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/capability-concierge-v1/",
-      "url": "/chum/capabilities/capability-concierge-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/capability-concierge-v1/capability.json",
-      "url": "/chum/capabilities/capability-concierge-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/capability-concierge-v1/llms.txt",
-      "url": "/chum/capabilities/capability-concierge-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/",
-      "url": "/chum/capabilities/career-command-resume-job-fit-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/llms.txt",
-      "url": "/chum/capabilities/career-command-resume-job-fit-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/community-health-evidence-brief-v1/",
-      "url": "/chum/capabilities/community-health-evidence-brief-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/community-health-evidence-brief-v1/capability.json",
-      "url": "/chum/capabilities/community-health-evidence-brief-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/community-health-evidence-brief-v1/llms.txt",
-      "url": "/chum/capabilities/community-health-evidence-brief-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/condition-desk-field-ops-v1/",
-      "url": "/chum/capabilities/condition-desk-field-ops-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/condition-desk-field-ops-v1/capability.json",
-      "url": "/chum/capabilities/condition-desk-field-ops-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/condition-desk-field-ops-v1/llms.txt",
-      "url": "/chum/capabilities/condition-desk-field-ops-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
     }
