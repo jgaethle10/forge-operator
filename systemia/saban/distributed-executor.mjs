@@ -102,6 +102,10 @@ export async function executeDistributedMultiplicationPlan({
     timeoutMs: Number(nodePool.timeoutMs || 3000),
     assignmentTimeoutMs: Number(nodePool.assignmentTimeoutMs || 120000),
     requestedTtlMs: Number(nodePool.requestedTtlMs || Math.max(300000, plan.lease_seconds * 1000)),
+    leaseRenewalIntervalMs: nodePool.leaseRenewalIntervalMs || null,
+    artifactReturnRoot:
+      nodePool.artifactReturnRoot ||
+      path.resolve(rootDir, 'artifacts/saban-return', contract.software_id),
     resourceProfile: contract.resources || null,
     stageAuthorizedSources:
       !prepareAssignment &&
@@ -152,7 +156,9 @@ export async function executeDistributedMultiplicationPlan({
       nodes: poolReceipt.nodes,
       rejected_nodes: poolReceipt.rejected_nodes,
       lease_failures: poolReceipt.lease_failures,
-      failover_assignments: poolReceipt.failover_assignments
+      failover_assignments: poolReceipt.failover_assignments,
+      lease_renewals: poolReceipt.lease_renewals || null,
+      portable_artifacts: Number(poolReceipt.portable_artifacts || 0)
     },
     sample_results: results.slice(0, 24),
     reconciliation,
