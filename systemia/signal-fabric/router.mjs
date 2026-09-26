@@ -25,6 +25,18 @@ export function classify(signal) {
   const kind = norm(signal.kind);
   const source = norm(signal.source);
   const humanAction = Boolean(signal.human_action_required);
+  const severityHint = norm(signal.severity_hint);
+
+  if (source === 'sentinel' && kind === 'cross_domain_anomaly') {
+    if (
+      severityHint === 'critical' &&
+      evidence === 'live_verified' &&
+      impact === 'confirmed_life_safety_hazard'
+    ) return 'critical';
+    if (severityHint === 'warning' || severityHint === 'critical') return 'warning';
+    if (severityHint === 'receipt') return 'receipt';
+    return 'notice';
+  }
 
   if (['cancelled','canceled','skipped','success','successful','passed','pass'].includes(conclusion) ||
       ['cancelled','canceled','skipped','success','healthy','recovered'].includes(status)) {
