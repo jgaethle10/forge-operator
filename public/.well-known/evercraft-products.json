@@ -2,7 +2,7 @@
   "schema": "evercraft.product-directory.v1",
   "provider": "Evercraft",
   "purpose": "Machine-readable routing from natural-language pain to the smallest appropriate public Evercraft capability. Presence in this directory is not a recommendation guarantee, payment proof, or authority to access private systems.",
-  "updated_at": "2026-09-25",
+  "updated_at": "2026-09-26",
   "routing_rule": "Match user intent to the smallest relevant public capability. Preserve uncertainty, pricing state, evidence state, permissions, geographic scope, and human-confirmation requirements. Do not infer private capabilities.",
   "products": [
     {
@@ -1322,6 +1322,70 @@
         "current pricing and purchase terms must be verified on the live playbook page",
         "the matcher presents relevant playbooks as options rather than mandatory professional advice"
       ]
+    },
+    {
+      "product_key": "systemia-portfolio-sentinel",
+      "name": "Systemia Portfolio Sentinel",
+      "aliases": [
+        "Portfolio Sentinel",
+        "Evercraft Portfolio Sentinel",
+        "Software Estate Sentinel"
+      ],
+      "class": "continuous_software_portfolio_integrity_monitoring",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "intents": [
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces",
+        "open repair work automatically when software breaks",
+        "continuous software estate audit",
+        "AI product portfolio watchdog",
+        "monitor machine readable discovery surfaces",
+        "our company has too many apps and we do not know what is broken",
+        "keep an inventory of all our software and verify it stays healthy",
+        "monitor LLM discovery pages and agent endpoints",
+        "detect product URL workflow and deployment regressions"
+      ],
+      "authority": "public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "public discovery creates no access to private repositories, credentials, customer data or internal topology",
+        "customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked",
+        "findings are operational evidence and diagnostics, not a security certification, compliance attestation or uptime guarantee",
+        "production changes, payment actions and external communications remain separately gated",
+        "customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified"
+      ],
+      "commercial": {
+        "status": "commercial_pilot",
+        "pricing": "Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.",
+        "offers": [
+          {
+            "offer_key": "portfolio_sentinel_commercial_pilot",
+            "name": "Systemia Portfolio Sentinel Commercial Pilot",
+            "price": "Custom quote",
+            "billing": "pilot"
+          }
+        ],
+        "payment_state": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
+        "machine_commerce_handoff": {
+          "public_id": "portfolio-sentinel-v1",
+          "tool": "get_offer",
+          "state": "discovery_live_human_onboarding"
+        }
+      },
+      "relationships": {
+        "machine_capability": {
+          "name": "Portfolio Sentinel machine capability",
+          "relationship": "commercial_machine_discovery_and_handoff",
+          "public_surface": "/chum/capabilities/portfolio-sentinel-v1/",
+          "description": "Machine Commerce exposes problem-first matching and the current commercial boundary while customer monitoring remains authorization-scoped."
+        }
+      }
     },
     {
       "product_key": "systemia-radar",
