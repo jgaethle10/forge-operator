@@ -15,6 +15,7 @@ const clear = evaluatePendingDeviceTrustWatch({
 assert.equal(clear.state.status, 'clear');
 assert.equal(clear.state.pending_count, 0);
 assert.equal(clear.state.human_approval_required, false);
+assert.equal(clear.mission_snapshot.safe_hold, null);
 assert.deepEqual(clear.mission_snapshot.counts, {
   scanned: 1,
   changed: 0,
@@ -46,6 +47,10 @@ assert.equal(waiting.state.pending_count, 2);
 assert.equal(waiting.state.human_approval_required, true);
 assert.equal(waiting.mission_snapshot.counts.admitted, 0);
 assert.equal(waiting.mission_snapshot.counts.held, 1);
+assert.deepEqual(waiting.mission_snapshot.safe_hold, {
+  category: 'remote_device_trust',
+  count: 2,
+});
 assert.equal(waiting.state.candidate_refs.length, 2);
 assert.ok(waiting.state.candidate_refs.every((x) => x.startsWith('candidate:sha256:')));
 assert.ok(waiting.mission_snapshot.evidence_refs.includes(
