@@ -127,6 +127,7 @@ jobs:
           npm run chum:validate
           npm run test:chum-index
           npm run test:chum-answers
+          npm run test:chum-fire-control
 
       - name: Probe static AI doorways
         id: static
@@ -268,6 +269,18 @@ jobs:
         continue-on-error: true
         run: npm run chum
 
+      - name: Refresh adaptive crawler evidence for Fire Control
+        id: fire_radar
+        if: always()
+        continue-on-error: true
+        run: npm run chum:crawler-radar
+
+      - name: Run discovery-to-revenue Fire Control
+        id: fire_control
+        if: always()
+        continue-on-error: true
+        run: npm run chum:fire-control
+
       - name: Announce updated central discovery surfaces
         id: announce
         continue-on-error: true
@@ -312,9 +325,11 @@ jobs:
             echo "Provider miss ingestion: ${{ steps.provider_repairs.outcome }}"
             echo "Provider repair persistence: ${{ steps.persist_repairs.outcome }}"
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
+            echo "Fire Control crawler evidence: ${{ steps.fire_radar.outcome }}"
+            echo "Discovery-to-revenue Fire Control: ${{ steps.fire_control.outcome }}"
             echo "Freshness announce: ${{ steps.announce.outcome }}"
             echo
-            for FILE in artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/customer-gauntlet/latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/provider-miss-ingest-latest.json artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
+            for FILE in artifacts/chum/fire-control-latest.md artifacts/chum/crawl-pressure-latest.md artifacts/saban-revenue/latest.md artifacts/chum/llm-hunter-latest.md artifacts/chum/ard-strike-latest.md artifacts/chum/indexnow-latest.md artifacts/chum/mcp-canary-latest.md artifacts/chum/commerce-canary-latest.md artifacts/customer-gauntlet/latest.md artifacts/chum/crawler-audit-latest.md artifacts/chum/provider-probe-latest.md artifacts/chum/provider-miss-ingest-latest.json artifacts/chum/chum-latest.md artifacts/ai-doorway-canary.md; do
               if [ -f "$FILE" ]; then
                 echo
                 cat "$FILE"
@@ -340,7 +355,7 @@ jobs:
         run: |
           set -euo pipefail
           FAILED=0
-          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "gauntlet:${{ steps.gauntlet.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "provider_repairs:${{ steps.provider_repairs.outcome }}"             "persist_repairs:${{ steps.persist_repairs.outcome }}"             "mesh:${{ steps.mesh.outcome }}"; do
+          for PAIR in             "static:${{ steps.static.outcome }}"             "crawlers:${{ steps.crawlers.outcome }}"             "mcp:${{ steps.mcp.outcome }}"             "commerce:${{ steps.commerce.outcome }}"             "gauntlet:${{ steps.gauntlet.outcome }}"             "revenue:${{ steps.revenue.outcome }}"             "providers:${{ steps.providers.outcome }}"             "provider_repairs:${{ steps.provider_repairs.outcome }}"             "persist_repairs:${{ steps.persist_repairs.outcome }}"             "mesh:${{ steps.mesh.outcome }}"             "fire_radar:${{ steps.fire_radar.outcome }}"             "fire_control:${{ steps.fire_control.outcome }}"; do
             NAME="${PAIR%%:*}"
             STATE="${PAIR#*:}"
             echo "${NAME}: ${STATE}"
