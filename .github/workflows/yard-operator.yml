@@ -31,3 +31,5 @@ jobs:
         run: node systemia/yard/specialist-handoff.proof.mjs
       - name: Prove provider-neutral public route broker
         run: node systemia/yard/public-route-broker.proof.mjs
+      - name: Prove specialist MCP through Evercraft public edge
+        run: node systemia/yard/public-edge-specialist.proof.mjs
