@@ -90,7 +90,7 @@ function phraseNegated(norm, phrase) {
   const p = normalizeText(phrase);
   if (!p) return false;
   const escaped = escapeRegExp(p).replace(/\\ /g, '\\s+');
-  const negation = '(?:not|no|without|except|avoid|dont\\s+need|do\\s+not\\s+need|not\\s+looking\\s+for|anything\\s+but)';
+  const negation = '(?:dont\\s+need|do\\s+not\\s+need|dont\\s+want|do\\s+not\\s+want|not\\s+looking\\s+for|not\\s+interested\\s+in|anything\\s+but|except|avoid)';
   const pattern = new RegExp('\\b' + negation + '(?:\\s+[a-z0-9]+){0,3}\\s+' + escaped + '\\b', 'i');
   return pattern.test(norm);
 }
