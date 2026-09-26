@@ -1441,6 +1441,93 @@ export async function startEvercraftComputeNode({
         return send(res, 200, entry.runtime.health());
       }
 
+      const publicRouteCapabilities = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/public-route-capabilities$/
+      );
+      if (req.method === 'POST' && publicRouteCapabilities) {
+        const entry = services.get(publicRouteCapabilities[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.public-edge.v1') {
+          return send(res, 422, { error: 'public_route_provider_not_supported' });
+        }
+        const capabilities = entry.runtime.capabilities();
+        return send(res, 200, {
+          ok: true,
+          ...capabilities,
+          receipt: chain.issue('public-edge.capabilities.read', {
+            service_id: publicRouteCapabilities[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            provider_instance_id: capabilities.instance_id || null,
+          }),
+        });
+      }
+
+      const publicRouteLeaseCreate = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/public-route-leases$/
+      );
+      if (req.method === 'POST' && publicRouteLeaseCreate) {
+        const entry = services.get(publicRouteLeaseCreate[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.public-edge.v1') {
+          return send(res, 422, { error: 'public_route_provider_not_supported' });
+        }
+        const routeLease = await entry.runtime.createRouteLease(body.route || {});
+        return send(res, 201, {
+          ok: true,
+          ...routeLease,
+          receipt: chain.issue('public-edge.route-lease.created', {
+            service_id: publicRouteLeaseCreate[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            route_lease_id: routeLease.lease_id,
+            deployment_id: routeLease.deployment_id,
+            deployment_receipt_hash: routeLease.deployment_receipt_hash,
+            instance_id: routeLease.instance_id,
+          }),
+        });
+      }
+
+      const publicRouteLeaseRelease = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/public-route-leases\/([^/]+)\/release$/
+      );
+      if (req.method === 'POST' && publicRouteLeaseRelease) {
+        const entry = services.get(publicRouteLeaseRelease[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.public-edge.v1') {
+          return send(res, 422, { error: 'public_route_provider_not_supported' });
+        }
+        const released = await entry.runtime.releaseRouteLease(
+          publicRouteLeaseRelease[2],
+          String(body.reason || 'operator_requested')
+        );
+        return send(res, released.released ? 200 : 404, {
+          ...released,
+          receipt: chain.issue('public-edge.route-lease.released', {
+            service_id: publicRouteLeaseRelease[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            route_lease_id: publicRouteLeaseRelease[2],
+            released: released.released === true,
+          }),
+        });
+      }
+
       const remoteControlGrant = req.url?.match(
         /^\/v1\/services\/([^/]+)\/remote-control-grant$/
       );
