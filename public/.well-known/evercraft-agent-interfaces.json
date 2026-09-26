@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.agent-interfaces.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-26",
   "interfaces": [
     {
       "protocol": "MCP",
@@ -14,10 +14,10 @@
     },
     {
       "protocol": "A2A",
-      "state": "not_live",
-      "name": "Evercraft Machine Commerce A2A adapter",
-      "url": null,
-      "evidence": "No production A2A JSON-RPC endpoint has been live-verified. Do not infer A2A support from MCP availability."
+      "state": "release_candidate",
+      "name": "Evercraft CHUM Discovery A2A adapter",
+      "url": "/.well-known/agent-card.json",
+      "evidence": "A narrow read-only HTTP+JSON A2A 1.0 discovery adapter is implemented on this branch at /a2a/message:send. Production state remains release-gated until an external live canary passes."
     }
   ],
   "rule": "Advertise only interfaces whose protocol endpoint has been independently live-verified."
