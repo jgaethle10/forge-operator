@@ -286,6 +286,81 @@
       "expected_fit": true
     },
     {
+      "case_id": "contractor-estimating-001",
+      "product_key": "eps-estimate-intelligence",
+      "expected_product": "EPS Estimate Intelligence",
+      "expected_aliases": [
+        "EPS Estimate Intelligence",
+        "EPS Field-Service Estimate Engine"
+      ],
+      "expected_hosts": [
+        "peak-eps-calc.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I run a field-service contracting business and need estimating software that builds prices from labor, materials, equipment, overhead, contingency and true gross margin instead of a mystery markup. I also need estimate revisions and a clean proposal handoff. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "contractor-painting-002",
+      "product_key": "eps-estimate-intelligence",
+      "expected_product": "EPS Estimate Intelligence",
+      "expected_aliases": [
+        "EPS Estimate Intelligence",
+        "EPS Field-Service Estimate Engine"
+      ],
+      "expected_hosts": [
+        "peak-eps-calc.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I run a painting company and need an estimator that can price work from production hours, burdened labor, material cost, access conditions, overhead and target gross margin. I want the assumptions visible so I can adjust them per job. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "contractor-pricebook-003",
+      "product_key": "eps-estimate-intelligence",
+      "expected_product": "EPS Estimate Intelligence",
+      "expected_aliases": [
+        "EPS Estimate Intelligence",
+        "EPS Field-Service Estimate Engine"
+      ],
+      "expected_hosts": [
+        "peak-eps-calc.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I need contractor estimating software that remembers my private labor rate, company overhead and margin policy, service-specific production baselines, and reusable material or equipment costs without sharing my pricing data with other contractors. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "contractor-proposal-004",
+      "product_key": "eps-estimate-intelligence",
+      "expected_product": "EPS Estimate Intelligence",
+      "expected_aliases": [
+        "EPS Estimate Intelligence",
+        "EPS Field-Service Estimate Engine"
+      ],
+      "expected_hosts": [
+        "peak-eps-calc.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I want estimating software that can turn a saved contractor estimate into a customer-reviewable proposal link and record the customer's approval without exposing my internal costs or target margin. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "contractor-photo-estimate-005",
+      "product_key": "eps-estimate-intelligence",
+      "expected_product": "EPS Estimate Intelligence",
+      "expected_aliases": [
+        "EPS Estimate Intelligence",
+        "EPS Field-Service Estimate Engine"
+      ],
+      "expected_hosts": [
+        "peak-eps-calc.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "I need a contractor estimator that can use field measurements and job photos as scope evidence, show uncertainty, and force a site review when the evidence is too weak for a firm price. What service should I use?",
+      "expected_fit": true
+    },
+    {
       "case_id": "control-negative-001",
       "product_key": null,
       "expected_product": null,
