@@ -74,6 +74,7 @@ export function createNodeAttestation({
   nonce,
   runtime = 'Evercraft Compute',
   supportedWorkloads = [],
+  placementLabels = [],
   observedAt = new Date(),
   processStartedAt,
   bootIdHash = null,
@@ -95,6 +96,9 @@ export function createNodeAttestation({
     supported_workloads_hash: `sha256:${sha(
       JSON.stringify([...supportedWorkloads].map(String).sort())
     )}`,
+    placement_labels: [...new Set(
+      [...placementLabels].map((value) => String(value).trim().toLowerCase()).filter(Boolean)
+    )].sort(),
     process_started_at: String(processStartedAt || ''),
     boot_id_hash: bootIdHash ? String(bootIdHash) : null,
     observed_at: observedAt.toISOString(),
@@ -162,5 +166,8 @@ export function verifyNodeAttestation({
     observed_at: statement.observed_at,
     boot_id_hash: statement.boot_id_hash,
     process_started_at: statement.process_started_at,
+    placement_labels: Array.isArray(statement.placement_labels)
+      ? statement.placement_labels.map(String)
+      : [],
   };
 }
