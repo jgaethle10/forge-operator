@@ -86,6 +86,10 @@ if (rivetDiscovery.name !== 'RIVET') fail('RIVET landing canonical name drifted'
 if (!(rivetDiscovery.aliases || []).includes('RIVET EV Infrastructure Intelligence')) fail('RIVET machine alias missing');
 if (rivetDiscovery.machine_capability !== '/chum/capabilities/rivet-site-underwriting-v1/') fail('RIVET capability route drifted');
 if (rivetDiscovery.brand_manifest !== '/rivet/brand.json') fail('RIVET brand manifest route missing');
+if (rivetDiscovery.intelligence_engine?.name !== 'AliEV') fail('RIVET machine contract lost AliEV intelligence engine');
+if (rivetDiscovery.intelligence_engine?.registry_name !== 'io.github.jgaethle10/aliev') fail('RIVET machine contract lost AliEV registry identity');
+if (!/AliEV/.test(fs.readFileSync('public/rivet/llms.txt','utf8'))) fail('RIVET LLM guide lost AliEV handoff');
+if (rivetHtml.includes('AliEV')) fail('customer-facing RIVET HTML must remain RIVET-only');
 
 const sitemap = fs.readFileSync('public/sitemap.xml','utf8');
 for (const route of ['/rivet/','/rivet/llms.txt','/rivet/discovery.json','/rivet/brand.json']) {
