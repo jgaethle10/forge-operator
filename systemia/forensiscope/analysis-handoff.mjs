@@ -4,7 +4,8 @@ const DEFAULT_SCOPES = Object.freeze([
   'query',
   'context',
   'timeline',
-  'duplicates'
+  'duplicates',
+  'verify'
 ]);
 
 const TOOL_BY_SCOPE = Object.freeze({
@@ -12,7 +13,8 @@ const TOOL_BY_SCOPE = Object.freeze({
   context: 'forensiscope_build_context_packet',
   timeline: 'forensiscope_get_timeline',
   duplicates: 'forensiscope_get_duplicate_relationships',
-  compare: 'forensiscope_compare_evidence'
+  compare: 'forensiscope_compare_evidence',
+  verify: 'forensiscope_verify_analysis'
 });
 
 function normalizedScopes(scopes) {
