@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T00:54:25.375Z",
+  "updated_at": "2026-09-26T00:54:57.550Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,63 +11,23 @@
   },
   "latest_change_batch": [
     {
-      "path": "/network/mesh/llms.txt",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 86
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "last_changed": "2026-09-26T00:54:57.550Z",
       "priority": 80
-    },
-    {
-      "path": "/network/mesh/",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 60
-    },
-    {
-      "path": "/network/mesh/application-continuity/",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 60
-    },
-    {
-      "path": "/network/mesh/business-connectivity-resilience/",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 60
-    },
-    {
-      "path": "/network/mesh/device-reconnect-visibility/",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 60
-    },
-    {
-      "path": "/network/mesh/household-connectivity-resilience/",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 60
-    },
-    {
-      "path": "/network/mesh/index.json",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 60
-    },
-    {
-      "path": "/network/mesh/wifi-cellular-transition/",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T00:54:57.550Z",
+      "priority": 80
+    },
     {
       "path": "/network/mesh/llms.txt",
       "url": "/network/mesh/llms.txt",
       "last_changed": "2026-09-26T00:54:25.375Z",
       "priority": 86
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T00:54:25.375Z",
-      "priority": 80
     },
     {
       "path": "/network/mesh/",
