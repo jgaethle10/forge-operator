@@ -2,16 +2,6 @@ name: IBM i Rescue Machine Commerce canary
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - "systemia/chum/ibmi-rescue-canary.mjs"
-      - "registry/ibmi-rescue/**"
-      - "public/chum/products/ibmi-rescue/**"
-      - "public/.well-known/evercraft-products.json"
-      - "conformance/products.json"
-      - ".github/workflows/ibmi-rescue-canary.yml"
   schedule:
     - cron: "23 */6 * * *"
 
