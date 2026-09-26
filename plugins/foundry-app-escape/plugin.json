@@ -1,0 +1,22 @@
+{
+  "name": "foundry-app-escape",
+  "version": "0.1.0",
+  "description": "Audit portability and migration risk in builder-tied apps",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "foundry",
+    "app-portability",
+    "vendor-lock-in",
+    "migration",
+    "reconstruction",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "releaseState": "DEPLOYMENT_CANARY_PENDING"
+}
