@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.rivet.session-source-registry.v1",
+  "mission_id": "rivet-us-session-sprawl-001",
+  "purpose": "Seed registry for nationwide observed EV charging-session acquisition. Candidate status does not imply licensing, access, or site-level session availability.",
+  "canonical_entity": "EVObservedUsageAggregate",
+  "existing_domestic_ingestors": [
+    {"jurisdiction":"NY","adapter":"ingestNYCPlugNYCObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
+    {"jurisdiction":"NC","adapter":"ingestCaryObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
+    {"jurisdiction":"CO","adapter":"ingestBoulderObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
+    {"jurisdiction":"CA","adapter":"ingestPaloAltoObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"}
+  ],
+  "national_candidates": [
+    {
+      "name":"Joint Office EV-ChART",
+      "lane":"federal-funded-publication",
+      "status":"restricted_raw_public_aggregates_available",
+      "notes":"Quarterly charging-session data are collected for federally funded infrastructure. Raw portal access is limited to funding recipients/authorized parties; public outputs are aggregated/anonymized. Hunt state recipient publications and public reports, not restricted raw records."
+    },
+    {
+      "name":"DOE Livewire / EV WATTS",
+      "lane":"federal-funded-publication",
+      "status":"candidate",
+      "notes":"Nationwide real-world EVSE dataset and analytics include sessions, utilization and energy. Verify current downloadable geographic resolution and reuse terms before ingest."
+    },
+    {
+      "name":"California Energy Commission funded-project reporting",
+      "lane":"grant-project-reports",
+      "status":"candidate_with_confidentiality_boundary",
+      "notes":"CEC-funded projects submit detailed utilization/session data. Individual-charger utilization may be confidential, but public grant/project reports can contain publishable site/project aggregates."
+    },
+    {
+      "name":"Stable Auto",
+      "lane":"licensed-utilization-provider",
+      "status":"commercial_candidate",
+      "notes":"Markets nationwide utilization intelligence based on real charging operating data. Requires commercial evaluation and explicit purchasing authority before any paid integration."
+    },
+    {
+      "name":"AFDC charging-network directory",
+      "lane":"operator-utility-public",
+      "status":"lead_generator_only",
+      "notes":"Strong national inventory/network directory for identifying operators and station IDs. Inventory is not session telemetry and must never be promoted to observed usage."
+    }
+  ]
+}
