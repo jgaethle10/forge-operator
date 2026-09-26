@@ -39,6 +39,7 @@ export class PublicEdgeController {
     this.binding=null;
     this.requestedHostname='';
     this.identityAttestationRequired=false;
+    this.fieldEnrollmentRequired=false;
     this.timer=null;
     this.inFlight=false;
     this.sequence=0;
@@ -51,6 +52,7 @@ export class PublicEdgeController {
           this.binding=persisted.binding||null;
           this.requestedHostname=String(persisted.requested_hostname||'');
           this.identityAttestationRequired=Boolean(persisted.identity_attestation_required);
+          this.fieldEnrollmentRequired=Boolean(persisted.field_enrollment_required);
           this.sequence=Math.max(0,Number(persisted.sequence||0));
         }
       }catch{}
@@ -69,6 +71,7 @@ export class PublicEdgeController {
       binding:this.binding,
       requested_hostname:this.requestedHostname||null,
       identity_attestation_required:this.identityAttestationRequired,
+      field_enrollment_required:this.fieldEnrollmentRequired,
       allow_loopback_proof:this.allowLoopbackProof,
       sequence:this.sequence,
       updated_at:new Date().toISOString(),
@@ -113,6 +116,7 @@ export class PublicEdgeController {
     edgeRollbackTarget='none:first_install',
     specialistRollbackTarget='none:first_install',
     requireIdentityAttestation=false,
+    requireFieldEnrollment=false,
   }={}){
     if(!/^[a-f0-9]{40}$/i.test(String(releaseRef||''))){
       throw new Error('release_ref_must_be_immutable_sha');
@@ -122,10 +126,19 @@ export class PublicEdgeController {
     let edgeRecord=null;
     let specialistRecord=null;
     let broker=null;
+    let fieldEnrollmentImport=null;
+    const productionMode=String(edge.mode||'wildcard_https')==='wildcard_https';
     this.requestedHostname=String(requestedHostname||'evercraft-specialists');
-    this.identityAttestationRequired=Boolean(requireIdentityAttestation);
+    this.identityAttestationRequired=productionMode || Boolean(requireIdentityAttestation);
+    this.fieldEnrollmentRequired=productionMode || Boolean(requireFieldEnrollment);
 
     try{
+      if(this.fieldEnrollmentRequired){
+        fieldEnrollmentImport=await this.yard.enrollFieldDeviceFromCapacity({
+          capacityEndpoint,
+          allocatorToken,
+        });
+      }
       edgeRecord=await this.yard.deployRelease({
         deploymentId:this.edgeDeploymentId,
         releaseRef,
@@ -178,6 +191,12 @@ export class PublicEdgeController {
         if(specialistAttestation.identity_verified!==true){
           throw new Error('specialist_identity_attestation_failed');
         }
+        if(this.fieldEnrollmentRequired && edgeAttestation.field_verified!==true){
+          throw new Error('public_edge_field_attestation_failed');
+        }
+        if(this.fieldEnrollmentRequired && specialistAttestation.field_verified!==true){
+          throw new Error('specialist_field_attestation_failed');
+        }
         if(
           !edgeAttestation.device_fingerprint ||
           edgeAttestation.device_fingerprint!==specialistAttestation.device_fingerprint
@@ -204,7 +223,6 @@ export class PublicEdgeController {
         ttlMs:this.leaseTtlMs,
       });
 
-      const productionMode=String(edge.mode||'wildcard_https')==='wildcard_https';
       if(productionMode && this.binding.route_verified!==true){
         throw new Error('public_https_route_verification_required');
       }
@@ -233,6 +251,16 @@ export class PublicEdgeController {
         origin:this.binding.origin,
         provider_transport:this.binding.provider_transport,
         identity_attestation_required:this.identityAttestationRequired,
+        field_enrollment_required:this.fieldEnrollmentRequired,
+        field_verified:this.fieldEnrollmentRequired
+          ? edgeAttestation?.field_verified===true && specialistAttestation?.field_verified===true
+          : null,
+        field_enrollment_import_receipt:this.fieldEnrollmentRequired
+          ? fieldEnrollmentImport?.field_enrollment_receipt||null
+          : null,
+        public_edge_admission_receipt:this.fieldEnrollmentRequired
+          ? fieldEnrollmentImport?.public_edge_admission_receipt||null
+          : null,
         identity_verified:this.identityAttestationRequired
           ? edgeAttestation?.identity_verified===true && specialistAttestation?.identity_verified===true
           : null,
@@ -278,6 +306,7 @@ export class PublicEdgeController {
     edgeRollbackTarget = 'none:first_install',
     specialistRollbackTarget = 'none:first_install',
     requireIdentityAttestation = true,
+    requireFieldEnrollment = null,
   } = {}) {
     const resolution = await discoverEligibleCapacity({
       workloadClass: 'systemia.public-edge.v1',
@@ -320,6 +349,10 @@ export class PublicEdgeController {
       edgeRollbackTarget,
       specialistRollbackTarget,
       requireIdentityAttestation,
+      requireFieldEnrollment:
+        requireFieldEnrollment === null
+          ? String(edge?.mode||'wildcard_https') === 'wildcard_https'
+          : requireFieldEnrollment,
     });
 
     return {
@@ -357,6 +390,8 @@ export class PublicEdgeController {
       if(
         edgeAttestation.identity_verified!==true ||
         specialistAttestation.identity_verified!==true ||
+        (this.fieldEnrollmentRequired && edgeAttestation.field_verified!==true) ||
+        (this.fieldEnrollmentRequired && specialistAttestation.field_verified!==true) ||
         !edgeAttestation.device_fingerprint ||
         edgeAttestation.device_fingerprint!==specialistAttestation.device_fingerprint
       ){
