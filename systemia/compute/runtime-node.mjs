@@ -15,6 +15,7 @@ import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
+import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -456,6 +457,7 @@ export async function startEvercraftComputeNode({
     'systemia.remote-capacity-broker.v1',
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
+    'systemia.public-edge.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -952,6 +954,57 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.public-edge.v1') {
+          const controlHost = String(body.input?.control_host || '127.0.0.1');
+          const mode = String(body.input?.mode || 'proof_loopback');
+          const runtime = await startPublicEdgeRuntime({
+            controlHost,
+            controlPort: Number(body.input?.control_port || 0),
+            controlToken: String(body.input?.control_token || process.env.EVERCRAFT_PUBLIC_EDGE_CONTROL_TOKEN || ''),
+            mode,
+            publicHost: String(body.input?.public_host || '0.0.0.0'),
+            publicPort: Number(body.input?.public_port || 443),
+            baseDomain: String(body.input?.base_domain || process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || ''),
+            tlsKeyPath: String(body.input?.tls_key_path || process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || ''),
+            tlsCertPath: String(body.input?.tls_cert_path || process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH || ''),
+            allowPrivateUpstream: body.input?.allow_private_upstream === true,
+            defaultLeaseTtlMs: Number(body.input?.default_lease_ttl_ms || 3600000),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.controlUrl,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_provider: true,
+            route_protocol: 'evercraft.public-route.v1',
+            mode,
+            instance_id: runtime.instanceId,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
           });
           return send(res, 200, {
             ok: true,
