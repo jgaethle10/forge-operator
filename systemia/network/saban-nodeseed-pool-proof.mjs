@@ -16,6 +16,7 @@ const seedA = await startNodeSeed({
   port: 0,
   advertiseHost: '127.0.0.1',
   allocatorToken,
+  placementLabels: ['ground'],
   announce: false
 });
 
@@ -26,6 +27,7 @@ const seedB = await startNodeSeed({
   port: 0,
   advertiseHost: '127.0.0.1',
   allocatorToken,
+  placementLabels: ['air_relay', 'edge_compute'],
   announce: false
 });
 
@@ -113,6 +115,37 @@ try {
       )
   );
 
+  const airOnly = await runNodeSeedAssignmentPool({
+    software: 'chum',
+    assignments: assignments.slice(0, 2),
+    endpoints: [seedB.endpoint],
+    allocatorToken,
+    maxAttempts: 1,
+    maxConcurrencyPerNode: 1,
+    assignmentTimeoutMs: 10000,
+    resourceProfile: {
+      required_node_labels: ['air_relay']
+    }
+  });
+  assert.equal(airOnly.completed_assignments, 2);
+  assert.deepEqual(airOnly.nodes[0].placement_labels, ['air_relay', 'edge_compute']);
+
+  await assert.rejects(
+    () => runNodeSeedAssignmentPool({
+      software: 'chum',
+      assignments: assignments.slice(0, 1),
+      endpoints: [seedB.endpoint],
+      allocatorToken,
+      maxAttempts: 1,
+      maxConcurrencyPerNode: 1,
+      assignmentTimeoutMs: 10000,
+      resourceProfile: {
+        forbidden_node_labels: ['air_relay']
+      }
+    }),
+    /no_nodeseed_capacity_meets_resource_profile/
+  );
+
   console.log(JSON.stringify({
     schema: 'evercraft.saban.nodeseed-pool-proof.v1',
     status: 'pass',
@@ -122,7 +155,10 @@ try {
     failovers: receipt.failover_assignments,
     idempotency_preserved: true,
     killed_node: 'saban-pool-node-a',
-    surviving_node: 'saban-pool-node-b'
+    surviving_node: 'saban-pool-node-b',
+    placement_label_routing: true,
+    air_relay_required_profile_completed: true,
+    air_relay_forbidden_profile_rejected: true
   }));
 } finally {
   if (!seedAClosed) await seedA.close();
