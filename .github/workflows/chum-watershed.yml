@@ -172,12 +172,6 @@ jobs:
         continue-on-error: true
         run: npm run chum:hunt
 
-      - name: Strike federated agent-discovery registries
-        id: ard
-        if: always()
-        continue-on-error: true
-        run: npm run chum:ard-strike
-
       - name: Run authorized brand-blind provider probes
         id: providers
         if: always()
@@ -252,6 +246,21 @@ jobs:
 
           echo "Provider discovery repair publication lost three consecutive main-branch races." >&2
           exit 1
+
+      - name: Strike federated agent-discovery registries
+        id: ard
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "Push-triggered ARD pass is recon-only; scheduled/manual runs own active registry submission."
+            CHUM_ARD_SUBMIT=false npm run chum:ard-strike
+          else
+            echo "Scheduled/manual ARD pass may submit bounded registry work."
+            CHUM_ARD_SUBMIT=true npm run chum:ard-strike
+          fi
 
       - name: Run CHUM portfolio mesh
         id: mesh

@@ -10,6 +10,7 @@ const submitEnabled = !offline && String(process.env.CHUM_ARD_SUBMIT || 'true').
 const submitUrl = String(process.env.CHUM_ARD_SUBMIT_URL || 'https://neuronto.com/submit');
 const searchUrl = String(process.env.CHUM_ARD_SEARCH_URL || 'https://neuronto.com/search');
 const maxSubmissions = Math.max(1, Math.min(50, Number(process.env.CHUM_ARD_MAX_SUBMISSIONS || 20)));
+const submissionConcurrency = Math.max(1, Math.min(8, Number(process.env.CHUM_ARD_CONCURRENCY || 4)));
 const timeoutMs = 20000;
 
 fs.mkdirSync(artifactsDir, { recursive: true });
@@ -77,9 +78,25 @@ async function request(url, options) {
   }
 }
 
+async function mapConcurrent(items, concurrency, worker) {
+  const results = new Array(items.length);
+  let cursor = 0;
+  async function runWorker() {
+    while (true) {
+      const index = cursor++;
+      if (index >= items.length) return;
+      results[index] = await worker(items[index], index);
+    }
+  }
+  const workerCount = Math.min(concurrency, items.length);
+  await Promise.all(Array.from({ length: workerCount }, () => runWorker()));
+  return results;
+}
+
 const submissions = [];
 if (submitEnabled) {
-  for (const row of unique.slice(0, maxSubmissions)) {
+  const selected = unique.slice(0, maxSubmissions);
+  submissions.push(...await mapConcurrent(selected, submissionConcurrency, async (row) => {
     const result = await request(submitUrl, {
       method: 'POST',
       headers: {
@@ -88,7 +105,7 @@ if (submitEnabled) {
       },
       body: JSON.stringify({ endpoint: row.endpoint })
     });
-    submissions.push({
+    return {
       ...row,
       attempted: true,
       accepted: Boolean(result.ok || result.status === 202),
@@ -97,8 +114,8 @@ if (submitEnabled) {
       submission_id: result.json?.id || result.json?.submission_id || null,
       evidence: result.json?.evidence || null,
       error: result.error || (!result.ok && result.status !== 202 ? result.text.slice(0, 500) : null)
-    });
-  }
+    };
+  }));
 } else {
   for (const row of unique.slice(0, maxSubmissions)) {
     submissions.push({
@@ -178,7 +195,10 @@ const receipt = {
   registry: {
     submit_url: submitUrl,
     search_url: searchUrl,
-    federation: 'auto'
+    federation: 'auto',
+    submission_mode: offline ? 'offline' : (submitEnabled ? 'live-submit' : 'recon-only'),
+    submission_concurrency: submissionConcurrency,
+    request_timeout_ms: timeoutMs
   },
   endpoints_discovered: unique.length,
   endpoints_considered: Math.min(unique.length, maxSubmissions),
@@ -204,6 +224,8 @@ const md = [
   `Submissions attempted: ${receipt.summary.submissions_attempted}`,
   `Submissions accepted/pending: ${receipt.summary.submissions_accepted}`,
   `Submission failures: ${receipt.summary.submission_failures}`,
+  `Submission mode: ${receipt.registry.submission_mode}`,
+  `Submission concurrency: ${receipt.registry.submission_concurrency}`,
   `Brand-blind ARD pickup observed: ${receipt.summary.pickup_observed ? 'yes' : 'no'}`,
   discoveryProbe.case_id ? `Probe: ${discoveryProbe.case_id} → ${discoveryProbe.product_key}` : 'Probe: none',
   '',
