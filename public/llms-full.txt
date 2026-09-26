@@ -931,7 +931,7 @@ Boundaries:
 
 ### Christmas Lights USA
 Product key: christmas-lights-usa
-Canonical: https://christmas-lights-usa-38c82eb8.base44.app/
+Canonical: https://christmas-lights-usa.base44.app/
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-conformance.json
@@ -1849,7 +1849,7 @@ Boundaries:
 
 ### Space Dudz
 Product key: space-dudz
-Canonical: https://space-dudz.base44.app/
+Canonical: https://spacedudz.base44.app/
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-conformance.json
@@ -1983,7 +1983,7 @@ Boundaries:
 
 ### Systemia Radar
 Product key: systemia-radar
-Canonical: https://systemia-radar.base44.app/
+Canonical: https://systemia-scan-pro.base44.app/
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-conformance.json

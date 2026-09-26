@@ -77,10 +77,10 @@
     },
     {
       "@type": "Service",
-      "@id": "https://christmas-lights-usa-38c82eb8.base44.app/#evercraft-service",
+      "@id": "https://christmas-lights-usa.base44.app/#evercraft-service",
       "name": "Christmas Lights USA",
       "alternateName": [],
-      "url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "url": "https://christmas-lights-usa.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -575,10 +575,10 @@
     },
     {
       "@type": "Service",
-      "@id": "https://space-dudz.base44.app/#evercraft-service",
+      "@id": "https://spacedudz.base44.app/#evercraft-service",
       "name": "Space Dudz",
       "alternateName": [],
-      "url": "https://space-dudz.base44.app/",
+      "url": "https://spacedudz.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
@@ -641,10 +641,10 @@
     },
     {
       "@type": "Service",
-      "@id": "https://systemia-radar.base44.app/#evercraft-service",
+      "@id": "https://systemia-scan-pro.base44.app/#evercraft-service",
       "name": "Systemia Radar",
       "alternateName": [],
-      "url": "https://systemia-radar.base44.app/",
+      "url": "https://systemia-scan-pro.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },

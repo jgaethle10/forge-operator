@@ -202,7 +202,7 @@
       "name": "Christmas Lights USA",
       "aliases": [],
       "class": "holiday_lighting_marketplace_and_project_planning",
-      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "canonical_url": "https://christmas-lights-usa.base44.app/",
       "intents": [
         "estimate a professional Christmas light project",
         "find holiday light installers near me",
@@ -1688,7 +1688,7 @@
       "name": "Space Dudz",
       "aliases": [],
       "class": "retro_space_streetwear_storefront",
-      "canonical_url": "https://space-dudz.base44.app/",
+      "canonical_url": "https://spacedudz.base44.app/",
       "intents": [
         "shop retro space streetwear",
         "find psychedelic space graphic tees",
@@ -1908,7 +1908,7 @@
       "name": "Systemia Radar",
       "aliases": [],
       "class": "website_scan_competitor_monitoring_and_reporting",
-      "canonical_url": "https://systemia-radar.base44.app/",
+      "canonical_url": "https://systemia-scan-pro.base44.app/",
       "intents": [
         "scan my website for problems",
         "compare my website against competitors",

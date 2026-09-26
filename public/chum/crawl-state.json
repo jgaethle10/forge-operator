@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:18:13.898Z",
+  "updated_at": "2026-09-26T22:18:18.960Z",
   "url_count": 2201,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "5c4117eb3405fb86e96254d4def0e1045520b98833f4e5588c439e5e6719c800",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "5359d322ab5a8d4a8d9c6d1c21b8d13ab141729f86f3b44823668bf1b64b51c5",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "cd79ad317c583665a393b75e2cc6c99411b895c2686529c6d2d63b460d86d957",
-      "last_changed": "2026-09-26T16:21:20.165Z",
+      "content_sha256": "325ae99775c63de53fa46824f8e496332f7089ac0c693dcbb968fe1ec3cf7a74",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -75,14 +75,14 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "93492277d28c33c9c21058d8fd110cc87153fa31629e5913ccb4d80a1ae99fe9",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "6459469a972202f2e0caa4cd6c9d3ea44ec1ce60b5c3a3ec9ede98d6847ef9b2",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "4f48c685a1a476141c01f86e888912e356b32b6473e1ad3c04b994677868005a",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "b68161fd6fac3c5379927137b59cd4dbc65acf71a6bb49b4cd2ea5143befcf26",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/answers/": {
@@ -93,14 +93,14 @@
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "7a91554041365ac0ad697e13dc8d82491a1df59bc54dce6e9ae19e5b9750ffe7",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "3e2578412249b3d53a005d94b243de4f82947a03b63d84bdaab445e5c8f058ae",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "9960f62e1c9c53e6d09891a8ed57062a4d3fe4a1de34f6ad6ad8d7c378ebfaec",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "1047b4fc4a2913404b8ba079af2da279b488e9df99ac954c66837f3af61990f2",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "d225d501842047f4c3cc94ee6733667600fe976216b28eb71da9eeb075c52c55",
-      "last_changed": "2026-09-26T22:18:13.898Z",
+      "content_sha256": "7f084eadd2ecfaa0c05b26e36f8c1a9787cb9fba5424ed35ca0647ac53191b27",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -291,8 +291,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "93492277d28c33c9c21058d8fd110cc87153fa31629e5913ccb4d80a1ae99fe9",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "6459469a972202f2e0caa4cd6c9d3ea44ec1ce60b5c3a3ec9ede98d6847ef9b2",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -681,8 +681,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "cafdb6d4846d7d692d9f035ad1867727ba2152c7e7f42c23979b9d6fc6f4cc69",
-      "last_changed": "2026-09-26T21:10:36.511Z",
+      "content_sha256": "e74387e646f13bf81abbfdc6247c13bddc7b79c0b407fad37365b2a1bfcbdd00",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -693,8 +693,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "87efc726c5f876c4179ffd9379431a9b9fbde23c541e23856737d70a549850a3",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "ef27aa7e75e46410165a9d5bd94b0a708250980911a9e7880067ca7019c007ba",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -711,8 +711,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "831d38f35a894025e39de86a0fc6852eae28c7c0c9073969822a3e242de04a36",
-      "last_changed": "2026-09-26T04:33:16.534Z",
+      "content_sha256": "88f601594b3ae145fa216e3092833d0211b64d6b598547b1908a696209306dba",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -2277,26 +2277,26 @@
     },
     "/chum/products/christmas-lights-usa/": {
       "path": "/chum/products/christmas-lights-usa/",
-      "content_sha256": "6be6ab8afe2d50cb6344594d4889e2e2628a2ec46dc39ccde193694643e7a45c",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "fd056168cf1816bbd78269b6b506ba52c5fc10502d6ab161b70a548f262ac52d",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/christmas-lights-usa/llms.txt": {
       "path": "/chum/products/christmas-lights-usa/llms.txt",
-      "content_sha256": "3391797c4503c4e3cb8fbb3df926fbc4b4834f0b7224892610ff1631a87b03d9",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "d53b12b8866797366b37eb62985ecf5b1ab7bbe280bdb11996b1bcf259cf56ba",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/christmas-lights-usa/ai-discovery.json": {
       "path": "/chum/products/christmas-lights-usa/ai-discovery.json",
-      "content_sha256": "737fbe3ade96bbefe3fb218aa82075a7fc3605d2b12220cce392755b229ee744",
-      "last_changed": "2026-09-26T00:44:36.244Z",
+      "content_sha256": "75de6d0eb35be4983a60b3e9944583e085faccda0214fcc4fe9330a216e54c92",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/christmas-lights-usa/ai-conformance.json": {
       "path": "/chum/products/christmas-lights-usa/ai-conformance.json",
-      "content_sha256": "433e363163492a7b97e7b59249189a2b355097eebf53d4072d6c1fa7455273b0",
-      "last_changed": "2026-09-26T00:44:36.244Z",
+      "content_sha256": "8899a10bfa8d9be064f047b73dbeaa60af4dd538eb4306e59c02cdee609b3ca7",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/chronosport/": {
@@ -3267,26 +3267,26 @@
     },
     "/chum/products/space-dudz/": {
       "path": "/chum/products/space-dudz/",
-      "content_sha256": "bbdf84855fa7e7b4538f2736a7ccf563e1496c3d0332802d12bb5a06e14f77fe",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "e91a81202f506febe9900fe307aeda3ffc453d075f0c3525595b02261c916e92",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/space-dudz/llms.txt": {
       "path": "/chum/products/space-dudz/llms.txt",
-      "content_sha256": "b9daae6728adc9734c05e6d14a0623dcb9a786bd820225d7f9e199d15ab1860f",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "a845b969e4361461e0fd4baa4189f0f0de4e8ee8f479f964607042b1e0d7a413",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/space-dudz/ai-discovery.json": {
       "path": "/chum/products/space-dudz/ai-discovery.json",
-      "content_sha256": "153ea6793c67f5e2694a92eb02d976cf4acdf72f5b9c002447ea2e8228f4743d",
-      "last_changed": "2026-09-26T00:44:36.244Z",
+      "content_sha256": "13ba77fd1a4299f09def5ca3a863308b7d5e75b16a293ec654b7491d24e2af26",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/space-dudz/ai-conformance.json": {
       "path": "/chum/products/space-dudz/ai-conformance.json",
-      "content_sha256": "89d9527d616fdd73b18854b61e396a9417d9f2377aed13a5b16ec08e7c0e7b20",
-      "last_changed": "2026-09-26T00:44:36.244Z",
+      "content_sha256": "7f4fdab7c076f546db1de30c376b5efd0555deb71ce2ff09928f206854eeb006",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/systemia-atlas-freight/": {
@@ -3387,26 +3387,26 @@
     },
     "/chum/products/systemia-radar/": {
       "path": "/chum/products/systemia-radar/",
-      "content_sha256": "bd4294d340e08ca64467e7e5fab2320f8fae495f813098fe121ccb889e2b60ec",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "075eaed20e5ac4bbf2d720fbcb647ed1cfe6ffbe558c0bdf0a10d642ade8e347",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/systemia-radar/llms.txt": {
       "path": "/chum/products/systemia-radar/llms.txt",
-      "content_sha256": "30eedce33ce93f81f0db4208f10f8730a83c17c281d79bd00387677e6793ef88",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "11b8f107a8b818be2e2f8cea1609de61b186d030e37045f7499b587a7c4de97b",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/systemia-radar/ai-discovery.json": {
       "path": "/chum/products/systemia-radar/ai-discovery.json",
-      "content_sha256": "6e41a86d94cd9c97830260dd9958288123af1658863b1f7da8d23c12d7297c02",
-      "last_changed": "2026-09-26T00:44:36.244Z",
+      "content_sha256": "51f2eec4825d1355c58c0745d50147893a43afb56353722aad52d0ab57cee6bf",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/systemia-radar/ai-conformance.json": {
       "path": "/chum/products/systemia-radar/ai-conformance.json",
-      "content_sha256": "ed1f10603b9a2692fb2fec3f957ebd9632367a4fc20acf3ac58cce7796d54399",
-      "last_changed": "2026-09-26T00:44:36.244Z",
+      "content_sha256": "fbfd415dbadbe89d314bec84277ae906f0bb2d3d697b6897aaf5cd4aee910eaf",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
     "/chum/products/systemia-website-audit/": {
@@ -5061,8 +5061,8 @@
     },
     "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json": {
       "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
-      "content_sha256": "72400dd0d443ec71bafbe2b8908fc21562672c9b41baf9cf08475513877d7029",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "61153557e8d6b9f9c3d38bc51bed4308566e50350500803195a5ec3021b5488e",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/buy-event-promotion-785fc960f0/": {
@@ -5097,8 +5097,8 @@
     },
     "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json": {
       "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
-      "content_sha256": "44e202f1b955719dfb5d8ec25d612825ee977772e5d650f70c350af66c987142",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "041b93a37a4726f3ae1bffc146df8cd56d8871de4c2c93a8eb435e5c3a05c812",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3/": {
@@ -5409,8 +5409,8 @@
     },
     "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json": {
       "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
-      "content_sha256": "0bcb0b90c0dd64632e280267f0fd61e7448e87040a6faa7568d3aa27c3ed692b",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "208fc18f0bd3927b1b9227e698ab2aedc19b6bafc0c7fb3a3e5d5c920f23090a",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/compare-or-deduplicate-multiple-recordings-30d78e95a1/": {
@@ -5769,8 +5769,8 @@
     },
     "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json": {
       "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "content_sha256": "0f8d883783ff4b0d1a5bf43d0d47a487d13618ab10a919cb40b29bf7125cb6ba",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "8dd5b390ec5d7d63480d68303f708a2ee977fcda2099e35aaff70a1961df7e02",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421/": {
@@ -6033,8 +6033,8 @@
     },
     "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json": {
       "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
-      "content_sha256": "93005a8c776e1c33b809b0058fd5427f855b433eb332e599208eb5526fc3ef97",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "518e50e570c24577c482b03fa97e49eb07b4a8bb4bde945136edb436646bdd97",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/estimate-ev-charging-opportunity-a920fb36c4/": {
@@ -6921,8 +6921,8 @@
     },
     "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json": {
       "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
-      "content_sha256": "ace0ce578854ec574f1ef04ba80505cbaf8f15597eecdc3c1f631f3fc794098f",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "943a4aa4f77b0d03b90432fd60d29e187eaf25558940ccbb366588cc4803f6f8",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f/": {
@@ -6933,8 +6933,8 @@
     },
     "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json": {
       "path": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
-      "content_sha256": "6a4565afd8c672e105b5c9e0b6145ba2ed1b926d1b85483fe7911d436f7db46d",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "9f97d06001eeadd9e77e2ec7cb7704b6cc097d729988b475231998a8957c74d0",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/find-local-events-f2270ae02e/": {
@@ -7041,8 +7041,8 @@
     },
     "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json": {
       "path": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
-      "content_sha256": "32dc4b2de074ad59aa05141eeea9f1078af2611339602b7472f54417681ec40e",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "31c1fe89660d86194ba87a22df26c4b00ec4afa2376f71fa58ecd4f219ba5beb",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
     },
     "/chum/answers/doors/find-public-health-data-blind-spots-dcf7a415bd/": {
@@ -8337,8 +8337,8 @@
     },
     "/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json": {
       "path": "/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json",
-      "content_sha256": "19240da3ab9c453dced666dd6020ce377b24ac92b2dc2b572189ee20691c283b",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "9fb51cb768a769878414c3a61ed1590b55b983f3dd6bb9d80cdc0e8c260367c3",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27/": {
@@ -9141,8 +9141,8 @@
     },
     "/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json": {
       "path": "/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json",
-      "content_sha256": "2a0ce57114f7b7fae6bd84122f2afd6104f5981029aa2e156674a1b79d4bbf8f",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "bc19323e1f93d12572f03c131a7d4d451cce6fc26bd4051b5d523fb4eaa29b3a",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/multi-hour-video-analysis-061e00f507/": {
@@ -9645,8 +9645,8 @@
     },
     "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json": {
       "path": "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
-      "content_sha256": "202491fe52f027e8434bcd665c8018e058a4000abe999253f379a0427155e440",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "9580aa22990d84fd92ac94d83fd32756258ede0a8c21cc3d1e5dbe8263642458",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/playwright-api-89ca564562/": {
@@ -11037,8 +11037,8 @@
     },
     "/chum/answers/doors/scan-my-website-for-problems-076b33b229.json": {
       "path": "/chum/answers/doors/scan-my-website-for-problems-076b33b229.json",
-      "content_sha256": "8e9dcf863247e082fb24cdaefaa4adeaf46046692f258f0226bc6819af103a52",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "fbfb8acceda4c9e536fea62b99b5f9ed950443dd4c41621a3d2acacad07f7574",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/score-my-interview-answer-5e08f2c4f0/": {
@@ -11181,8 +11181,8 @@
     },
     "/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json": {
       "path": "/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json",
-      "content_sha256": "c8cfc793447f4c303bf98038d4480f0d884a01880d5dabb9cb91ebbf0682803c",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "dbdda5be268adc3408b52de50ae9debb3eba3205e3f1e9b9b0f1d800523524e7",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb/": {
@@ -11193,8 +11193,8 @@
     },
     "/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json": {
       "path": "/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json",
-      "content_sha256": "aa8c05c586c3d571ce53ec2d1c26a278bf602c794afb04d6c700bef6c39aed7f",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "e45d4a6905d7ff1276dedf4bc8165b69169dede092c556a5f5c6d01a167f9ff4",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/should-i-hire-an-employee-df9727785c/": {
@@ -11301,8 +11301,8 @@
     },
     "/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json": {
       "path": "/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json",
-      "content_sha256": "60781b639d5f69c0b936e924bb854fc5189181f2b808d7fe0166216b5df25502",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "e1824377c4eba53843186c52b77372933326c0ea0ed0299539a01bd623c84e7e",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/side-hustle-ideas-for-my-situation-45ed57e53a/": {
@@ -11637,8 +11637,8 @@
     },
     "/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json": {
       "path": "/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json",
-      "content_sha256": "9415a6d16752ef82d11077ee39a0943b54ef7d061bc619c695f2ba14e2d80513",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "1cd5b40e1f3db60f0e3f4718b80d219a6e82ebf71ab62aeeb5ac134ef5939892",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce/": {
@@ -11949,8 +11949,8 @@
     },
     "/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json": {
       "path": "/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json",
-      "content_sha256": "2daa90e380f0b782d9dc0cf3bf13df4d0fa523e0ab8a6692b869976b866ca2fc",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "17f8fafe42cdc150fd8948146f8daebc036f63f65e8cbc795433c1a8a9968173",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
     "/chum/answers/doors/transcribe-a-huge-video-and-remove-duplicate-or-repeated-segments-ea560dba5a/": {
@@ -13185,14 +13185,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "087de43117fcf98f0e62129a7d28dbbceb13b277b334074140de34e084ca6f05",
-      "last_changed": "2026-09-26T16:21:20.165Z",
+      "content_sha256": "a5e11dd099611ed4d4b06e3c7e80aa81a96f40187233b6ee605acd5a86efc5a3",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "1fda2b18db9232edd73f571696f832487b4df1335e59d6af7ed27c8c6d400091",
-      "last_changed": "2026-09-26T16:21:20.165Z",
+      "content_sha256": "0ac968a098624b0416f71c9eb3ef91a718ce8a3204f5b4a04541a4f231193ec2",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -13203,20 +13203,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "1af82477eb24da3b1d40b43edfd676efdaaa73b139fd8ff642c89b785d0c2fe9",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "56bcf21b70cb3e6a08b5afa9aa1a5d4dc5ae5c193797141349cfdedbb975d74d",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "22dbf706306aa93d49d2ec378b913fda611fbfc20b322ec0d856a3852bc9caeb",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "307481332383aeae35cdc9443732418a0d41d436110c026e348b5281a4f1422d",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "a46a510a588a1235d1fb4924fcd09fba55ad435f38dfd194322985a92e9b65cc",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "77c5847a045f7bf627303e9bb1544115590ca63517619fcbd4975b42d83f328d",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     }
   }

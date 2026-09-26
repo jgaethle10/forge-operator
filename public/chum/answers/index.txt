@@ -726,7 +726,7 @@ Answer ID: intent:5ec6340858
 Human-readable match: /chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json
 Candidates:
-- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa.base44.app/
 
 ## buy event promotion
 Answer ID: intent:785fc960f0
@@ -747,7 +747,7 @@ Answer ID: intent:dce8a879ad
 Human-readable match: /chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json
 Candidates:
-- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://spacedudz.base44.app/
 
 ## buy workforce training seats for my company
 Answer ID: intent:acb9a334c3
@@ -932,7 +932,7 @@ Answer ID: intent:d5e67cd8bf
 Human-readable match: /chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json
 Candidates:
-- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
 
 ## compare or deduplicate multiple recordings
 Answer ID: intent:30d78e95a1
@@ -1146,7 +1146,7 @@ Answer ID: intent:7cb7846615
 Human-readable match: /chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json
 Candidates:
-- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
 
 ## create an anonymous inbox
 Answer ID: intent:1cf7f12421
@@ -1303,7 +1303,7 @@ Answer ID: intent:d420395d77
 Human-readable match: /chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json
 Candidates:
-- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa.base44.app/
 
 ## estimate EV charging opportunity
 Answer ID: intent:a920fb36c4
@@ -1831,14 +1831,14 @@ Answer ID: intent:98fc8fa4ba
 Human-readable match: /chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json
 Candidates:
-- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa.base44.app/
 
 ## find kids space clothes from Baby-Rangers
 Answer ID: intent:c87537303f
 Human-readable match: /chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json
 Candidates:
-- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://spacedudz.base44.app/
 
 ## find local events
 Answer ID: intent:f2270ae02e
@@ -1902,7 +1902,7 @@ Answer ID: intent:57e559302d
 Human-readable match: /chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json
 Candidates:
-- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://spacedudz.base44.app/
 
 ## find public health data blind spots
 Answer ID: intent:dcf7a415bd
@@ -2670,7 +2670,7 @@ Answer ID: intent:caff03634f
 Human-readable match: /chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json
 Candidates:
-- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa.base44.app/
 
 ## join a local business rewards network
 Answer ID: intent:7d1ef68f27
@@ -3151,7 +3151,7 @@ Answer ID: intent:1af81f61a0
 Human-readable match: /chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json
 Candidates:
-- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
 
 ## multi-hour video analysis
 Answer ID: intent:061e00f507
@@ -3451,7 +3451,7 @@ Answer ID: intent:a886251485
 Human-readable match: /chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json
 Candidates:
-- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa.base44.app/
 
 ## Playwright API
 Answer ID: intent:89ca564562
@@ -4273,7 +4273,7 @@ Answer ID: intent:076b33b229
 Human-readable match: /chum/answers/doors/scan-my-website-for-problems-076b33b229/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/scan-my-website-for-problems-076b33b229.json
 Candidates:
-- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
 
 ## score my interview answer
 Answer ID: intent:5e08f2c4f0
@@ -4357,14 +4357,14 @@ Answer ID: intent:29e88c1eb1
 Human-readable match: /chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json
 Candidates:
-- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://spacedudz.base44.app/
 
 ## shop space gifts and accessories
 Answer ID: intent:56a15d63cb
 Human-readable match: /chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json
 Candidates:
-- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://space-dudz.base44.app/
+- Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://spacedudz.base44.app/
 
 ## should I hire an employee
 Answer ID: intent:df9727785c
@@ -4431,7 +4431,7 @@ Answer ID: intent:da1b3e4230
 Human-readable match: /chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json
 Candidates:
-- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
 
 ## side hustle ideas for my situation
 Answer ID: intent:45ed57e53a
@@ -4631,7 +4631,7 @@ Answer ID: intent:19aba7fcec
 Human-readable match: /chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json
 Candidates:
-- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa-38c82eb8.base44.app/
+- Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa.base44.app/
 
 ## summarize freight risk on this shipment
 Answer ID: intent:19d8b224ce
@@ -4816,7 +4816,7 @@ Answer ID: intent:bc173a6022
 Human-readable match: /chum/answers/doors/track-website-audit-changes-over-time-bc173a6022/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json
 Candidates:
-- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-radar.base44.app/
+- Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
 
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a

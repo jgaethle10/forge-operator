@@ -111,7 +111,7 @@
     {
       "product_key": "christmas-lights-usa",
       "name": "Christmas Lights USA",
-      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "canonical_url": "https://christmas-lights-usa.base44.app/",
       "mirror_path": "/chum/products/christmas-lights-usa/",
       "llms_path": "/chum/products/christmas-lights-usa/llms.txt",
       "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
@@ -130,7 +130,7 @@
       "human_confirmation_required": true,
       "commercial_status": "public_marketplace_offer",
       "description": "Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
-      "content_sha256": "a52fa93223db53bb58e0f7559fd3ac85e3d22a1ab730d223f37ef224776aff28",
+      "content_sha256": "271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
       "updated_at": "2026-09-26T00:00:00.000Z"
     },
     {
@@ -1118,7 +1118,7 @@
     {
       "product_key": "space-dudz",
       "name": "Space Dudz",
-      "canonical_url": "https://space-dudz.base44.app/",
+      "canonical_url": "https://spacedudz.base44.app/",
       "mirror_path": "/chum/products/space-dudz/",
       "llms_path": "/chum/products/space-dudz/llms.txt",
       "discovery_path": "/chum/products/space-dudz/ai-discovery.json",
@@ -1136,7 +1136,7 @@
       "human_confirmation_required": true,
       "commercial_status": "source_commerce_wired",
       "description": "Space Dudz is an Evercraft retro space streetwear storefront capability. Common needs: shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories.",
-      "content_sha256": "7140044e6ebfa24dc466b339a2b323ee00a2d3469bc88572b34c8136faaa8c02",
+      "content_sha256": "7e396072116f4cffe60d16d7f0664b812f5ccaeb70c50bfba55add1e6201aa7b",
       "updated_at": "2026-09-26T00:00:00.000Z"
     },
     {
@@ -1254,7 +1254,7 @@
     {
       "product_key": "systemia-radar",
       "name": "Systemia Radar",
-      "canonical_url": "https://systemia-radar.base44.app/",
+      "canonical_url": "https://systemia-scan-pro.base44.app/",
       "mirror_path": "/chum/products/systemia-radar/",
       "llms_path": "/chum/products/systemia-radar/llms.txt",
       "discovery_path": "/chum/products/systemia-radar/ai-discovery.json",
@@ -1273,7 +1273,7 @@
       "human_confirmation_required": true,
       "commercial_status": "source_checkout_wired_live_verification_pending",
       "description": "Systemia Radar is an Evercraft website scan competitor monitoring and reporting capability. Common needs: scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report.",
-      "content_sha256": "df0b52267481445cdb4bc2b446d0d26b6b25d0d83c1106763eeb3918722bcc02",
+      "content_sha256": "2ad447371b068eed8cc07b32c0fddafcad8bc83ea81a9a22bb91c890457b34c7",
       "updated_at": "2026-09-26T00:00:00.000Z"
     },
     {

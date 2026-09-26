@@ -1,9 +1,19 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T16:21:20.036Z",
+  "generated_at": "2026-09-26T22:18:18.787Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
+    {
+      "dedupe_key": "christmas-lights-usa:271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
+      "product_key": "christmas-lights-usa",
+      "name": "Christmas Lights USA",
+      "canonical_url": "https://christmas-lights-usa.base44.app/",
+      "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
+      "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
+      "content_sha256": "271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
+      "requires_authorized_destination": true
+    },
     {
       "dedupe_key": "evercraft-web:17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3",
       "product_key": "evercraft-web",
@@ -45,6 +55,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "space-dudz:7e396072116f4cffe60d16d7f0664b812f5ccaeb70c50bfba55add1e6201aa7b",
+      "product_key": "space-dudz",
+      "name": "Space Dudz",
+      "canonical_url": "https://spacedudz.base44.app/",
+      "discovery_path": "/chum/products/space-dudz/ai-discovery.json",
+      "text": "Space Dudz: Space Dudz is an Evercraft retro space streetwear storefront capability. Common needs: shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories.",
+      "content_sha256": "7e396072116f4cffe60d16d7f0664b812f5ccaeb70c50bfba55add1e6201aa7b",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "systemia-portfolio-sentinel:ad3c02185845bb0b494ec4b3bdc48cfb7701210604c420ff90fdaf41a7dcaca1",
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
@@ -52,6 +72,16 @@
       "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
       "content_sha256": "ad3c02185845bb0b494ec4b3bdc48cfb7701210604c420ff90fdaf41a7dcaca1",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "systemia-radar:2ad447371b068eed8cc07b32c0fddafcad8bc83ea81a9a22bb91c890457b34c7",
+      "product_key": "systemia-radar",
+      "name": "Systemia Radar",
+      "canonical_url": "https://systemia-scan-pro.base44.app/",
+      "discovery_path": "/chum/products/systemia-radar/ai-discovery.json",
+      "text": "Systemia Radar: Systemia Radar is an Evercraft website scan competitor monitoring and reporting capability. Common needs: scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report.",
+      "content_sha256": "2ad447371b068eed8cc07b32c0fddafcad8bc83ea81a9a22bb91c890457b34c7",
       "requires_authorized_destination": true
     },
     {

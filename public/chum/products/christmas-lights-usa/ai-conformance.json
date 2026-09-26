@@ -12,7 +12,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+  "canonical_url": "https://christmas-lights-usa.base44.app/",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json",
   "registry_name": null,

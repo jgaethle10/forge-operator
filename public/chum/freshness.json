@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:18:13.898Z",
+  "updated_at": "2026-09-26T22:18:18.960Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,502 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T22:18:13.898Z",
+      "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/scan-my-website-for-problems-076b33b229.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/ai-conformance.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/ai-discovery.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/llms.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/ai-conformance.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/ai-discovery.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/llms.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/ai-conformance.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/ai-discovery.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/llms.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T22:18:13.898Z",
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:18:13.898Z",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T22:18:13.898Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "url": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "url": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "url": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "url": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "url": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "url": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "url": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "url": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json",
+      "url": "/chum/answers/doors/join-a-holiday-lighting-installer-marketplace-caff03634f.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json",
+      "url": "/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
+      "url": "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/scan-my-website-for-problems-076b33b229.json",
+      "url": "/chum/answers/doors/scan-my-website-for-problems-076b33b229.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json",
+      "url": "/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json",
+      "url": "/chum/answers/doors/shop-space-gifts-and-accessories-56a15d63cb.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json",
+      "url": "/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json",
+      "url": "/chum/answers/doors/submit-a-christmas-light-installation-request-19aba7fcec.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json",
+      "url": "/chum/answers/doors/track-website-audit-changes-over-time-bc173a6022.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/",
+      "url": "/chum/products/christmas-lights-usa/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/ai-conformance.json",
+      "url": "/chum/products/christmas-lights-usa/ai-conformance.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/ai-discovery.json",
+      "url": "/chum/products/christmas-lights-usa/ai-discovery.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/christmas-lights-usa/llms.txt",
+      "url": "/chum/products/christmas-lights-usa/llms.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/",
+      "url": "/chum/products/space-dudz/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/ai-conformance.json",
+      "url": "/chum/products/space-dudz/ai-conformance.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/ai-discovery.json",
+      "url": "/chum/products/space-dudz/ai-discovery.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/space-dudz/llms.txt",
+      "url": "/chum/products/space-dudz/llms.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/",
+      "url": "/chum/products/systemia-radar/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/ai-conformance.json",
+      "url": "/chum/products/systemia-radar/ai-conformance.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/ai-discovery.json",
+      "url": "/chum/products/systemia-radar/ai-discovery.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-radar/llms.txt",
+      "url": "/chum/products/systemia-radar/llms.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +516,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T22:18:13.898Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T22:18:13.898Z",
       "priority": 80
     },
@@ -313,12 +782,6 @@
       "url": "/chum/revenue.json",
       "last_changed": "2026-09-26T21:10:36.511Z",
       "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-26T21:10:36.511Z",
-      "priority": 86
     },
     {
       "path": "/.well-known/evercraft-machine-catalog.json",
@@ -843,30 +1306,6 @@
       "priority": 84
     },
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T19:35:58.578Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "url": "/chum/",
-      "last_changed": "2026-09-26T19:35:58.578Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "url": "/chum/syndication/",
-      "last_changed": "2026-09-26T19:35:58.578Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T19:35:58.578Z",
-      "priority": 80
-    },
-    {
       "path": "/ai-discovery.json",
       "url": "/ai-discovery.json",
       "last_changed": "2026-09-26T19:35:58.578Z",
@@ -895,24 +1334,6 @@
       "url": "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json",
       "last_changed": "2026-09-26T16:21:20.165Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-09-26T16:21:20.165Z",
-      "priority": 60
     },
     {
       "path": "/forensiscope/long-video-deduplication-transcription/",
@@ -1081,24 +1502,6 @@
       "url": "/chum/capabilities/",
       "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 96
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T15:08:19.376Z",
-      "priority": 80
     },
     {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
@@ -1331,204 +1734,6 @@
     {
       "path": "/chum/capabilities/datafoundry-data-gap-audit-machine-v1/llms.txt",
       "url": "/chum/capabilities/datafoundry-data-gap-audit-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/",
-      "url": "/chum/capabilities/eps-estimate-engine-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
-      "url": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
-      "url": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/",
-      "url": "/chum/capabilities/evercraft-network-resilience-membership-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json",
-      "url": "/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt",
-      "url": "/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evercraft-web-browser-agent-v1/",
-      "url": "/chum/capabilities/evercraft-web-browser-agent-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evercraft-web-browser-agent-v1/llms.txt",
-      "url": "/chum/capabilities/evercraft-web-browser-agent-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evermaps-evidence-projection-machine-v1/",
-      "url": "/chum/capabilities/evermaps-evidence-projection-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json",
-      "url": "/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evermaps-evidence-projection-machine-v1/llms.txt",
-      "url": "/chum/capabilities/evermaps-evidence-projection-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/",
-      "url": "/chum/capabilities/findmypart-repair-shop-desk-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/llms.txt",
-      "url": "/chum/capabilities/findmypart-repair-shop-desk-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/forensiscope-evidence-review-v1/",
-      "url": "/chum/capabilities/forensiscope-evidence-review-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/forensiscope-evidence-review-v1/llms.txt",
-      "url": "/chum/capabilities/forensiscope-evidence-review-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/foundry-app-escape-audit-v1/",
-      "url": "/chum/capabilities/foundry-app-escape-audit-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/foundry-app-escape-audit-v1/capability.json",
-      "url": "/chum/capabilities/foundry-app-escape-audit-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",
-      "url": "/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/",
-      "url": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/capability.json",
-      "url": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/llms.txt",
-      "url": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/globalstat-country-intelligence-machine-v1/",
-      "url": "/chum/capabilities/globalstat-country-intelligence-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json",
-      "url": "/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/globalstat-country-intelligence-machine-v1/llms.txt",
-      "url": "/chum/capabilities/globalstat-country-intelligence-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/income-war-map-v1/",
-      "url": "/chum/capabilities/income-war-map-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/income-war-map-v1/capability.json",
-      "url": "/chum/capabilities/income-war-map-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/income-war-map-v1/llms.txt",
-      "url": "/chum/capabilities/income-war-map-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/large-document-corpus-review-v1/",
-      "url": "/chum/capabilities/large-document-corpus-review-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/large-document-corpus-review-v1/capability.json",
-      "url": "/chum/capabilities/large-document-corpus-review-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/large-document-corpus-review-v1/llms.txt",
-      "url": "/chum/capabilities/large-document-corpus-review-v1/llms.txt",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/",
-      "url": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/capability.json",
-      "url": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/capability.json",
-      "last_changed": "2026-09-26T06:29:53.033Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/llms.txt",
-      "url": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/llms.txt",
       "last_changed": "2026-09-26T06:29:53.033Z",
       "priority": 96
     }

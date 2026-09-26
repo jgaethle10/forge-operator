@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:18:13.898Z",
+  "updated_at": "2026-09-26T22:18:18.960Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -318,6 +318,12 @@
       "last_changed": "2026-09-26T20:52:14.399Z"
     },
     {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "priority": 90,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
       "priority": 90,
@@ -336,16 +342,58 @@
       "last_changed": "2026-09-26T20:52:14.399Z"
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "priority": 90,
-      "last_changed": "2026-09-26T15:08:19.376Z"
-    },
-    {
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
       "last_changed": "2026-09-26T21:10:36.511Z"
+    },
+    {
+      "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "url": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
+      "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "url": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
+      "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "url": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
+      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "url": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
+      "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "url": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
+      "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "url": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
+      "path": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "url": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
+    },
+    {
+      "path": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "url": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z"
     },
     {
       "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
@@ -900,12 +948,6 @@
       "last_changed": "2026-09-26T04:58:13.847Z"
     },
     {
-      "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
-      "url": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
       "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
       "url": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
       "priority": 160,
@@ -914,12 +956,6 @@
     {
       "path": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
       "url": "/chum/answers/doors/buy-more-runtime-for-this-yard-execution-f138b36c09.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
-      "url": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
       "priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z"
     },
@@ -1068,12 +1104,6 @@
       "last_changed": "2026-09-26T04:58:13.847Z"
     },
     {
-      "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
-      "url": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
       "path": "/chum/answers/doors/compare-or-deduplicate-multiple-recordings-30d78e95a1.json",
       "url": "/chum/answers/doors/compare-or-deduplicate-multiple-recordings-30d78e95a1.json",
       "priority": 160,
@@ -1172,36 +1202,6 @@
     {
       "path": "/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb.json",
       "url": "/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json",
-      "url": "/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-opportunity-network-e143bcc009.json",
-      "url": "/chum/answers/doors/contractor-opportunity-network-e143bcc009.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json",
-      "url": "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
-      "url": "/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/conversion-problems-272215f37a.json",
-      "url": "/chum/answers/doors/conversion-problems-272215f37a.json",
       "priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z"
     }

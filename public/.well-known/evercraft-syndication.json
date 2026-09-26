@@ -68,13 +68,13 @@
     {
       "product_key": "christmas-lights-usa",
       "name": "Christmas Lights USA",
-      "canonical_url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "canonical_url": "https://christmas-lights-usa.base44.app/",
       "mirror": "/chum/products/christmas-lights-usa/",
       "llms": "/chum/products/christmas-lights-usa/llms.txt",
       "discovery": "/chum/products/christmas-lights-usa/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "a52fa93223db53bb58e0f7559fd3ac85e3d22a1ab730d223f37ef224776aff28"
+      "content_sha256": "271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd"
     },
     {
       "product_key": "chronosport",
@@ -497,13 +497,13 @@
     {
       "product_key": "space-dudz",
       "name": "Space Dudz",
-      "canonical_url": "https://space-dudz.base44.app/",
+      "canonical_url": "https://spacedudz.base44.app/",
       "mirror": "/chum/products/space-dudz/",
       "llms": "/chum/products/space-dudz/llms.txt",
       "discovery": "/chum/products/space-dudz/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "7140044e6ebfa24dc466b339a2b323ee00a2d3469bc88572b34c8136faaa8c02"
+      "content_sha256": "7e396072116f4cffe60d16d7f0664b812f5ccaeb70c50bfba55add1e6201aa7b"
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -552,13 +552,13 @@
     {
       "product_key": "systemia-radar",
       "name": "Systemia Radar",
-      "canonical_url": "https://systemia-radar.base44.app/",
+      "canonical_url": "https://systemia-scan-pro.base44.app/",
       "mirror": "/chum/products/systemia-radar/",
       "llms": "/chum/products/systemia-radar/llms.txt",
       "discovery": "/chum/products/systemia-radar/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "df0b52267481445cdb4bc2b446d0d26b6b25d0d83c1106763eeb3918722bcc02"
+      "content_sha256": "2ad447371b068eed8cc07b32c0fddafcad8bc83ea81a9a22bb91c890457b34c7"
     },
     {
       "product_key": "systemia-remote-ops",
