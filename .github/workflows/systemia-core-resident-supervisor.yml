@@ -8,6 +8,10 @@ on:
       - 'systemia/core/resident-supervisor-runner.mjs'
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/RESIDENT_SUPERVISOR.md'
+      - 'systemia/yard/public-route-broker.mjs'
+      - 'systemia/yard/public-edge-controller.mjs'
+      - 'systemia/organism/public-edge-controller.workflow.json'
+      - 'systemia/organism/public-edge-controller-runner.mjs'
       - '.github/workflows/systemia-core-resident-supervisor.yml'
   push:
     branches:
