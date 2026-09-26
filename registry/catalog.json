@@ -13,10 +13,10 @@
   "products": [
     {
       "product_key": "aliev",
-      "name": "AliEV",
-      "canonical_url": "https://aliev.base44.app/",
-      "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "name": "RIVET",
+      "canonical_url": "https://rivet.base44.app/",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "triggers": [
         "EV charging site",
         "charger opportunity",
@@ -43,15 +43,14 @@
         "preliminary EV charging site plan",
         "preliminary EV charger layout for a property",
         "RIVET EV charging report",
-        "RIVET EV infrastructure analysis"
+        "RIVET EV infrastructure analysis",
+        "RIVET",
+        "RIVET site opportunity report"
       ],
       "aliases": [
-        "AliEV EV Charging Opportunity Intelligence",
-        "AliEV EV Site Analysis",
         "RIVET",
         "RIVET EV Infrastructure Intelligence",
-        "Evercraft RIVET",
-        "RIVET / AliEV"
+        "Evercraft RIVET"
       ]
     },
     {
