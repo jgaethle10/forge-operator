@@ -10,7 +10,9 @@ on:
     paths:
       - "systemia/chum/llm-hunter.mjs"
       - "systemia/chum/fire-control.mjs"
+      - "systemia/chum/money-radar.mjs"
       - "tests/chum-fire-control.test.mjs"
+      - "tests/chum-money-radar.test.mjs"
       - "systemia/saban/revenue-swarm.mjs"
       - "tests/saban-revenue-swarm.test.mjs"
       - "public/chum/revenue.json"
