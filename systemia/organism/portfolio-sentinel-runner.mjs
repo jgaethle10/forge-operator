@@ -23,7 +23,9 @@ function parseArgs(argv) {
     offline: false,
     maxUrls: 24,
     githubOwner: process.env.PORTFOLIO_SENTINEL_GITHUB_OWNER || 'jgaethle10',
-    githubRepo: process.env.GITHUB_REPOSITORY || 'jgaethle10/forge-operator'
+    githubRepo: process.env.GITHUB_REPOSITORY || 'jgaethle10/forge-operator',
+    autoHeal: process.env.PORTFOLIO_SENTINEL_AUTO_HEAL === 'true',
+    enforceHealth: process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH !== 'false'
   };
   for (let i = 0; i < argv.length; i += 1) {
     const value = argv[i];
@@ -33,6 +35,8 @@ function parseArgs(argv) {
     else if (value === '--max-urls') out.maxUrls = Math.max(1, Number(argv[++i] || 24));
     else if (value === '--github-owner') out.githubOwner = argv[++i];
     else if (value === '--github-repo') out.githubRepo = argv[++i];
+    else if (value === '--auto-heal') out.autoHeal = true;
+    else if (value === '--no-enforce-health') out.enforceHealth = false;
   }
   return out;
 }
@@ -126,8 +130,9 @@ async function scanPublicUrls(urls, maxUrls, now) {
   return { scanned: rows.length, rows, findings };
 }
 
-async function githubJson(url, token = '') {
+async function githubJson(url, token = '', method = 'GET') {
   const response = await fetch(url, {
+    method,
     headers: headers(token),
     signal: AbortSignal.timeout(9000)
   });
@@ -200,6 +205,7 @@ async function scanGithub({ owner, repository, token }) {
           if (!latest.has(key)) latest.set(key, run);
         }
         inventory.latest_workflows = [...latest.entries()].map(([name, run]) => ({
+          id: run.id,
           name,
           conclusion: run.conclusion,
           status: run.status,
@@ -215,7 +221,12 @@ async function scanGithub({ owner, repository, token }) {
             subject: `${repository} / ${row.name}`,
             detail: `Latest main-branch workflow conclusion is ${row.conclusion} (run #${row.run_number}).`,
             evidence_refs: [row.html_url ? `url:${row.html_url}` : `github:${repository}:actions`],
-            repair_mode: 'rerun_or_fix_ci'
+            repair_mode: 'rerun_or_fix_ci',
+            metadata: {
+              run_id: row.id,
+              run_number: row.run_number,
+              workflow_name: row.name
+            }
           }));
         }
       }
@@ -232,6 +243,36 @@ async function scanGithub({ owner, repository, token }) {
   }
 
   return { scanned, findings, inventory };
+}
+
+async function rerunNewFailedWorkflows({ findings = [], repository, token = '' }) {
+  const attempts = [];
+  if (!repository || !token) return attempts;
+  for (const finding of findings) {
+    if (finding.code !== 'github_workflow_failed' || finding.human_gate_required) continue;
+    const runId = Number(finding.metadata?.run_id || 0);
+    const workflowName = clean(finding.metadata?.workflow_name);
+    if (!runId || workflowName === 'Systemia Portfolio Sentinel') continue;
+    const url = `https://api.github.com/repos/${repository}/actions/runs/${runId}/rerun-failed-jobs`;
+    try {
+      const response = await githubJson(url, token, 'POST');
+      attempts.push({
+        run_id: runId,
+        workflow_name: workflowName,
+        accepted: response.ok,
+        status: response.status
+      });
+    } catch (error) {
+      attempts.push({
+        run_id: runId,
+        workflow_name: workflowName,
+        accepted: false,
+        status: null,
+        error: clean(error?.message || error)
+      });
+    }
+  }
+  return attempts;
 }
 
 async function main() {
@@ -272,6 +313,17 @@ async function main() {
   );
 
   const delta = buildPortfolioDelta(previous, activeFindings);
+  const retryCandidates = [...delta.added, ...delta.changed].filter((row) => row.code === 'github_workflow_failed');
+  const autoHeal = {
+    enabled: Boolean(args.autoHeal),
+    workflow_reruns: args.autoHeal
+      ? await rerunNewFailedWorkflows({
+          findings: retryCandidates,
+          repository: args.githubRepo,
+          token: process.env.GITHUB_TOKEN || ''
+        })
+      : []
+  };
   const repairQueue = buildPortfolioRepairQueue(activeFindings, delta);
   const evidenceRefs = activeFindings.flatMap((row) => row.evidence_refs || []).slice(0, 500);
   const snapshot = buildPortfolioMissionSnapshot({ scanned, delta, observedAt, evidenceRefs });
@@ -301,7 +353,8 @@ async function main() {
       changed: delta.changed.length,
       persistent: delta.persistent.length,
       resolved: delta.resolved.length,
-      repair_queue: repairQueue.length
+      repair_queue: repairQueue.length,
+      blocking_findings: activeFindings.filter((row) => ['critical', 'high'].includes(row.severity)).length
     },
     inventory: {
       ...local.inventory,
@@ -316,9 +369,11 @@ async function main() {
       resolved: delta.resolved
     },
     repair_queue: repairQueue,
+    auto_heal: autoHeal,
     doctrine: {
       material_change_only: true,
       safe_internal_repairs_only: true,
+      bounded_failed_workflow_retry: args.autoHeal ? 'autonomous' : 'disabled',
       production_mutation_requires_human_gate: true,
       payment_mutation_requires_human_gate: true,
       external_outreach_requires_human_gate: true
@@ -332,16 +387,23 @@ async function main() {
   atomicJson(path.join(outDir, 'admission.json'), admission || { schema: 'evercraft.portfolio-sentinel.admission.v1', admitted: false, reason: 'no_active_material_repairs', observed_at: report.observed_at });
   atomicJson(stateFile, buildSentinelState({ findings: activeFindings, observedAt }));
 
+  const blockingFindings = activeFindings.filter((row) => ['critical', 'high'].includes(row.severity));
+  const healthy = blockingFindings.length === 0;
+
   console.log(JSON.stringify({
-    ok: !activeFindings.some((row) => row.severity === 'critical'),
+    ok: healthy,
     cycle_key: cycleKey,
     scanned,
     active_findings: activeFindings.length,
     severity_counts: severityCounts,
     delta: { added: delta.added.length, changed: delta.changed.length, resolved: delta.resolved.length },
     repair_queue: repairQueue.length,
+    blocking_findings: blockingFindings.length,
+    auto_heal_reruns: autoHeal.workflow_reruns.length,
     mission_snapshot: path.join(outDir, 'mission-snapshot.json')
   }));
+
+  if (!healthy && args.enforceHealth) process.exitCode = 1;
 }
 
 await main();

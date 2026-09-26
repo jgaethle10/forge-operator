@@ -81,6 +81,21 @@ jobs:
             echo "::endgroup::"
           }
 
+          check_offer() {
+            NAME="$1"
+            URL="$2"
+            PUBLIC_ID="$3"
+            echo "::group::$NAME offer contract"
+            BODY="$(curl -fsS --max-time 20 "$URL?action=offer&public_id=$PUBLIC_ID" -H 'Accept: application/json')"
+            printf '%s\n' "$BODY" | head -c 4000
+            echo
+            printf '%s' "$BODY" | grep -q "\"public_id\":\"$PUBLIC_ID\"" || {
+              echo "Machine Commerce did not expose $PUBLIC_ID for $NAME" >&2
+              exit 1
+            }
+            echo "::endgroup::"
+          }
+
           check "Evercraft Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
           check_tool "Evercraft Rewards" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_rewards_partner_enrollment"
           check "AliEV" "https://aliev.base44.app/functions/alievMcp"
@@ -92,9 +107,9 @@ jobs:
           check "FAIE" "https://faie.base44.app/functions/faieMcp"
           check "EventWave" "https://event-wave.base44.app/functions/eventWaveMcp"
           check "ForensiScope" "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
-          check "IBM i Rescue" "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/ibmiRescueMcp"
-          check_tool "IBM i Rescue" "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/ibmiRescueMcp" "prepare_ibmi_rescue_handoff"
-          check "Foundry App Escape" "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp"
-          check_tool "Foundry App Escape" "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp" "prepare_foundry_app_escape_handoff"
-          check "Site-Survive" "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp"
-          check_tool "Site-Survive" "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp" "prepare_site_survive_handoff"
+          check_offer "IBM i Rescue" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway" "ibmi-rescue-v1"
+          check_tool "IBM i Rescue via Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_quote_ready_service_handoff"
+          check_offer "Foundry App Escape" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway" "foundry-app-escape-audit-v1"
+          check_tool "Foundry App Escape via Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_quote_ready_service_handoff"
+          check_offer "Site-Survive" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway" "site-survive-rapid-audit-v1"
+          check_tool "Site-Survive via Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_quote_ready_service_handoff"

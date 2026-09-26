@@ -4,6 +4,9 @@ import { rankPain } from './pain-index-lib.mjs';
 const MACHINE_COMMERCE_GATEWAY =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 
+const COMMERCIAL_CONTINUATION_PATTERN =
+  /\b(buy|purchase|checkout|price|pricing|quote|paid|report|underwrite|underwriting|diligence|roi|investment|site plan|preliminary|full report)\b/i;
+
 function clampLimit(value) {
   const n = Number(value);
   if (!Number.isFinite(n)) return 3;
@@ -216,26 +219,46 @@ export function huntLiveIntent({
   }
 
   const max = clampLimit(limit);
+  const painMatches = rankPain(painIndex, q, max)
+    .filter(({ score }) => Number(score) >= minimumScore)
+    .map(({ entry, score }) => projectPainMatch(entry, Number(score)));
+
   const offerMatches = rankDiscoveryCandidates(catalog, directory, q, {
     limit: max,
     minimumScore
   }).map(projectOfferMatch);
 
-  const painMatches = rankPain(painIndex, q, max)
-    .filter(({ score }) => Number(score) >= minimumScore)
-    .map(({ entry, score }) => projectPainMatch(entry, Number(score)));
+  const explicitCommercialContinuation = COMMERCIAL_CONTINUATION_PATTERN.test(q);
+  const strongProblemSignal = Boolean(
+    painMatches[0] &&
+    Number(painMatches[0].score || 0) >= Math.max(24, Number(minimumScore) * 3)
+  );
+  const genericProblemMode = strongProblemSignal && !explicitCommercialContinuation;
 
-  const ranked = dedupe([...painMatches, ...offerMatches])
-    .sort((a, b) => Number(b.score || 0) - Number(a.score || 0))
-    .slice(0, max);
+  let ranked;
+  if (genericProblemMode) {
+    const topPain = painMatches[0];
+    const remainder = dedupe([...painMatches.slice(1), ...offerMatches])
+      .filter((match) => !sameFamily(topPain, match))
+      .sort((a, b) => {
+        const sourceDelta = Number(b.source === 'pain_index') - Number(a.source === 'pain_index');
+        return sourceDelta || Number(b.score || 0) - Number(a.score || 0);
+      });
+    ranked = [topPain, ...remainder].slice(0, max);
+  } else {
+    ranked = dedupe([...painMatches, ...offerMatches])
+      .sort((a, b) => Number(b.score || 0) - Number(a.score || 0))
+      .slice(0, max);
+  }
 
   const top = ranked[0] || null;
   const state = top ? routeState(top) : 'no_match';
-  const routingConfidence = confidenceEnvelope(ranked, Number(minimumScore));
+  const confidenceBasis = genericProblemMode ? painMatches : ranked;
+  const routingConfidence = confidenceEnvelope(confidenceBasis, Number(minimumScore));
 
   return {
     schema: 'evercraft.chum.live-intent-hunt.v1',
-    engine_revision: 'concept-fabric-v2',
+    engine_revision: 'concept-fabric-v3',
     matched: Boolean(top),
     state,
     provider: normalized(provider) || 'unknown',
@@ -251,7 +274,10 @@ export function huntLiveIntent({
       support: Number(top.support || 0),
       matched_intents: top.matched_intents || [],
       matched_concepts: top.matched_concepts || [],
-      runner_up_margin: routingConfidence.margin
+      runner_up_margin: routingConfidence.margin,
+      ranking_mode: genericProblemMode ? 'problem_first' : 'commercial_or_general',
+      explicit_commercial_continuation: explicitCommercialContinuation,
+      strong_problem_signal: strongProblemSignal
     } : null,
     continuation: continuationFor(top, state),
     attack_instruction: attackInstruction(state, routingConfidence),

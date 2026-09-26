@@ -25,7 +25,7 @@ on:
 
 permissions:
   contents: read
-  actions: read
+  actions: write
 
 concurrency:
   group: systemia-portfolio-sentinel
@@ -59,7 +59,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PORTFOLIO_SENTINEL_GITHUB_OWNER: jgaethle10
-        run: node systemia/organism/portfolio-sentinel-runner.mjs --max-urls 24
+          PORTFOLIO_SENTINEL_AUTO_HEAL: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
+          PORTFOLIO_SENTINEL_ENFORCE_HEALTH: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
+        run: node systemia/organism/portfolio-sentinel-runner.mjs --max-urls 200
 
       - name: Save Sentinel state
         if: always()
@@ -90,7 +92,9 @@ jobs:
             echo "## Systemia Portfolio Sentinel"
             echo
             echo "Cadence: 5 minutes"
-            echo "Coverage: products + URLs + GitHub + workflows + Systemia resident services + machine discovery"
+            echo "Coverage: products + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery"
+            echo "Bounded failed-workflow retry: autonomous for newly observed failures"
+            echo "Health gate: critical/high findings fail closed until cleared"
             echo "Production mutation: human-gated"
             echo
             for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/repair-queue.json; do
