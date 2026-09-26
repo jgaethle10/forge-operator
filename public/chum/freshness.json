@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T20:52:14.399Z",
+  "updated_at": "2026-09-26T20:54:02.763Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,247 +11,40 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
+      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
+      "last_changed": "2026-09-26T20:54:02.763Z",
+      "priority": 80
     },
     {
-      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/eventwave-paid-promotion-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/faie-signal-brief-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/ibmi-rescue-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-paid-hunt-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/llms.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/revenue.html",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-26T20:54:02.763Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "last_changed": "2026-09-26T20:54:02.763Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
+      "url": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
+      "last_changed": "2026-09-26T20:54:02.763Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-26T20:54:02.763Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T20:54:02.763Z",
+      "priority": 80
+    },
     {
       "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
       "url": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
@@ -535,12 +328,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T20:52:14.399Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
       "last_changed": "2026-09-26T20:52:10.178Z",
@@ -562,12 +349,6 @@
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-26T20:07:32.492Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-26T19:42:38.469Z",
       "priority": 80
     },
     {
@@ -963,12 +744,6 @@
     {
       "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/answer.json",
       "url": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/answer.json",
-      "last_changed": "2026-09-26T18:05:44.640Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
-      "url": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
       "last_changed": "2026-09-26T18:05:44.640Z",
       "priority": 80
     },

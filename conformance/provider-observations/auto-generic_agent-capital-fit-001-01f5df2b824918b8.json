@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T20:54:00.448Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "deck-capital-fit",
+  "source": "authorized_provider_probe",
+  "case_id": "capital-fit-001",
+  "prompt": "I run a small company and need to figure out which funding or capital paths realistically fit us, what we are ready for, and what gaps to fix before talking to lenders or investors. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Evercraft Deck Capital Fit capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "1ee544e9a7bb6db322075bcc0370ee11a89fe594529afd9e71737b1c09a9ca33",
+  "response_sha256": "52cb63f5142e0c47e2e410bab589f285b3a4688454f5652984aab5d03688a12c",
+  "probe_id": "capital-fit-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "57ad0e7158337cda51a2ccd288b4bc3f96d594a3f4b545e3fc48a5c26d26c541",
+    "tokens": [
+      "run",
+      "small",
+      "company",
+      "figure",
+      "out",
+      "fund",
+      "capital",
+      "path",
+      "realistically",
+      "fit",
+      "us",
+      "ready",
+      "gaps",
+      "fix",
+      "before",
+      "talk",
+      "lender",
+      "investor",
+      "service"
+    ],
+    "concepts": [
+      "funding",
+      "readiness"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "funding",
+        "evidence": "funding"
+      },
+      {
+        "concept": "readiness",
+        "evidence": "ready for"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}
