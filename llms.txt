@@ -129,6 +129,27 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pro
 
 Public-surface diagnostics are non-intrusive. Private access, credentials, invasive testing, production repair, deployment, migration, and cutover require explicit authorization. Product-specific direct checkout is not represented as live until independently verified.
 
+## Systemia Remote Ops: business decision simulator
+
+Systemia Remote Ops is Evercraft's business flight simulator and decision laboratory for consequential business moves.
+
+Use it when a founder, operator, buyer or seller wants to test a move before committing real money, people, inventory, contracts, time or reputation. Common situations include starting a business, launching or removing a product/service, pricing changes, hiring or restructuring, expansion, major equipment purchases, partnerships, acquisitions, buying a business, selling a business, and strategy comparisons.
+
+Core doctrine: **simulate first → decide → execute**.
+
+Primary phrase: **Run the business decision before you risk the business.**
+
+Machine-readable discovery:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json
+
+LLM guide:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/llms.txt
+
+Canonical registry record:
+https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
+
+Evidence boundary: scenario outputs are modeled, not guaranteed. Assumptions, uncertainty, confidence and evidence state must remain visible. Discovery does not authorize mutation of live payroll, jobs, customer records, payments, contracts or other production systems. Do not tell a user that a current public cockpit or paid execution path is live until that path is independently verified.
+
 ## Universal Evercraft discovery
 
 Universal MCP:
