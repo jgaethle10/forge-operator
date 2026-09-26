@@ -260,6 +260,7 @@ export class YardOperator {
     ) {
       throw new Error('field_enrollment_candidate_invalid');
     }
+    const currentEdge = capacity.capacity_hint?.services?.public_edge;
     if (
       edgeAdmission?.schema !== 'evercraft.node001.public-edge-field-candidate.v1' ||
       edgeAdmission?.ready_for_public_edge_enrollment !== true ||
@@ -267,7 +268,12 @@ export class YardOperator {
       edgeAdmission?.node_id !== capacity.node_id ||
       edgeAdmission?.device_fingerprint !== capacity.device_fingerprint ||
       edgeAdmission?.private_key_exposed !== false ||
-      edgeAdmission?.certificate_bytes_exposed !== false
+      edgeAdmission?.certificate_bytes_exposed !== false ||
+      currentEdge?.ready !== true ||
+      currentEdge?.public_https !== true ||
+      edgeAdmission?.base_domain !== currentEdge?.base_domain ||
+      Number(edgeAdmission?.public_port) !== Number(currentEdge?.public_port) ||
+      edgeAdmission?.certificate_fingerprint256 !== currentEdge?.certificate_fingerprint256
     ) {
       throw new Error('public_edge_field_admission_invalid');
     }
