@@ -150,6 +150,13 @@ export class PublicEdgeActivationWatcher {
           selected_node_id:provisioned.discovery?.selected_node_id||null,
           resolver_receipt:provisioned.discovery?.receipt_hash||null,
           provision_receipt:provisioned.receipt_hash,
+          provider_transport:provisioned.provider_transport,
+          identity_attestation_required:provisioned.identity_attestation_required===true,
+          identity_verified:provisioned.identity_verified===true,
+          device_fingerprint:provisioned.device_fingerprint||null,
+          edge_attestation_receipt:provisioned.edge_attestation_receipt||null,
+          specialist_attestation_receipt:provisioned.specialist_attestation_receipt||null,
+          specialist_identity_binding_receipt:provisioned.specialist_identity_binding_receipt||null,
           allocator_authority_persisted:false,
         });
       }catch(error){
