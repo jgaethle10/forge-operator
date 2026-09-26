@@ -199,6 +199,100 @@ export class YardOperator {
     return enrollment;
   }
 
+  async enrollFieldDeviceFromCapacity({
+    capacityEndpoint,
+    allocatorToken = '',
+    expectedNodeId = '',
+    expectedDeviceFingerprint = '',
+  } = {}) {
+    if (!capacityEndpoint) throw new Error('capacityEndpoint is required');
+
+    const capacity = await request(`${capacityEndpoint}/v1/capacity`);
+    if (capacity.protocol !== 'evercraft.capacity.v1') {
+      throw new Error('capacity endpoint does not speak evercraft.capacity.v1');
+    }
+    if (capacity.attestation_supported !== true) {
+      throw new Error('field_enrollment_requires_attestation_support');
+    }
+    if (!String(capacity.device_fingerprint || '').startsWith('sha256:')) {
+      throw new Error('field_enrollment_capacity_fingerprint_missing');
+    }
+    if (expectedNodeId && String(capacity.node_id) !== String(expectedNodeId)) {
+      throw new Error('field_enrollment_node_id_mismatch');
+    }
+    if (
+      expectedDeviceFingerprint &&
+      String(capacity.device_fingerprint) !== String(expectedDeviceFingerprint)
+    ) {
+      throw new Error('field_enrollment_device_fingerprint_mismatch');
+    }
+
+    const response = await request(`${capacityEndpoint}/v1/field-enrollment-packet`, {
+      method: 'POST',
+      headers: allocatorToken ? { authorization: `Bearer ${allocatorToken}` } : {},
+      body: JSON.stringify({}),
+    });
+    const packet = response.packet;
+    if (packet?.schema !== 'evercraft.compute.field-enrollment-packet.v1') {
+      throw new Error('field_enrollment_packet_schema_invalid');
+    }
+    if (
+      packet.node_id !== capacity.node_id ||
+      packet.device_fingerprint !== capacity.device_fingerprint
+    ) {
+      throw new Error('field_enrollment_packet_identity_mismatch');
+    }
+    if (
+      packet.tls_private_key_included !== false ||
+      packet.tls_certificate_bytes_included !== false ||
+      packet.allocator_authority_included !== false
+    ) {
+      throw new Error('field_enrollment_packet_secret_boundary_invalid');
+    }
+
+    const candidate = packet.field_candidate;
+    const edgeAdmission = packet.public_edge_admission;
+    if (
+      candidate?.schema !== 'evercraft.node001.field-evidence-candidate.v1' ||
+      candidate?.ready_for_yard_enrollment !== true ||
+      candidate?.evidence?.node_id !== capacity.node_id ||
+      candidate?.evidence?.device_fingerprint !== capacity.device_fingerprint
+    ) {
+      throw new Error('field_enrollment_candidate_invalid');
+    }
+    if (
+      edgeAdmission?.schema !== 'evercraft.node001.public-edge-field-candidate.v1' ||
+      edgeAdmission?.ready_for_public_edge_enrollment !== true ||
+      edgeAdmission?.runtime_advertisement_verified !== true ||
+      edgeAdmission?.node_id !== capacity.node_id ||
+      edgeAdmission?.device_fingerprint !== capacity.device_fingerprint ||
+      edgeAdmission?.private_key_exposed !== false ||
+      edgeAdmission?.certificate_bytes_exposed !== false
+    ) {
+      throw new Error('public_edge_field_admission_invalid');
+    }
+
+    const enrollment = this.enrollFieldDevice({
+      deviceFingerprint: capacity.device_fingerprint,
+      nodeId: capacity.node_id,
+      evidence: candidate.evidence,
+    });
+
+    return {
+      schema: 'evercraft.yard.field-enrollment-import.v1',
+      node_id: capacity.node_id,
+      device_fingerprint: capacity.device_fingerprint,
+      field_enrollment_receipt: enrollment.receipt_hash,
+      field_evidence_receipt: enrollment.field_evidence_receipt,
+      public_edge_admission_receipt: edgeAdmission.receipt_hash || null,
+      compute_packet_receipt: response.receipt?.receipt_hash || null,
+      allocator_authority_persisted: false,
+      tls_private_key_imported: false,
+      tls_certificate_bytes_imported: false,
+      imported_at: new Date().toISOString(),
+    };
+  }
+
   async attestDeployment(deploymentId, { maxAgeMs = 60_000 } = {}) {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);
