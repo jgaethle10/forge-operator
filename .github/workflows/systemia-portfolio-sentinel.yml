@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - "systemia/organism/portfolio-sentinel**"
+      - "systemia/sentinel/**"
       - "systemia/core/resident-services.json"
       - "systemia/collider/mission-sources.json"
       - "public/.well-known/evercraft-products.json"
@@ -16,6 +17,7 @@ on:
   pull_request:
     paths:
       - "systemia/organism/portfolio-sentinel**"
+      - "systemia/sentinel/**"
       - "systemia/core/resident-services.json"
       - "systemia/collider/mission-sources.json"
       - "package.json"
@@ -55,6 +57,9 @@ jobs:
       - name: Prove Sentinel contract
         run: node systemia/organism/portfolio-sentinel.proof.mjs
 
+      - name: Prove architectural invariants and trigger modes
+        run: npm run test:sentinel-invariants
+
       - name: Run live portfolio integrity cycle
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -81,6 +86,7 @@ jobs:
             artifacts/portfolio-sentinel/repair-queue.json
             artifacts/portfolio-sentinel/inventory.json
             artifacts/portfolio-sentinel/admission.json
+            artifacts/portfolio-sentinel/repair-memory.json
           if-no-files-found: error
           retention-days: 14
 
@@ -94,10 +100,13 @@ jobs:
             echo "Cadence: 5 minutes"
             echo "Coverage: products + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery"
             echo "Bounded failed-workflow retry: autonomous for newly observed failures"
+            echo "Architectural invariants: enforced before green"
+            echo "Trigger modes: push + schedule + manual simulated from one shared policy"
+            echo "Repair memory: learned failure fingerprints mapped to bounded recipes"
             echo "Health gate: critical/high findings fail closed until cleared"
             echo "Production mutation: human-gated"
             echo
-            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/repair-queue.json; do
+            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json; do
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'
