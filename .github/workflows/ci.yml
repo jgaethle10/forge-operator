@@ -127,7 +127,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/chum/buy/aliev-site-opportunity-snapshot-v1 > /tmp/chum-buy.html
           grep -q "Published pricing" /tmp/chum-buy.html
           grep -q "Continue to purchase review" /tmp/chum-buy.html
-          grep -q "\\$299" /tmp/chum-buy.html
+          grep -Fq '$299' /tmp/chum-buy.html
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
           curl --fail --silent --get \
