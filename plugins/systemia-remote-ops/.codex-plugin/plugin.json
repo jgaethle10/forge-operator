@@ -1,7 +1,7 @@
 {
   "name": "systemia-remote-ops",
   "version": "0.1.0",
-  "description": "Use Systemia Remote Ops directly when a founder or operator wants to simulate a consequential business decision before changing the real business. Pricing simulation is currently the first public executable lane; other lanes must remain clearly labeled until independently verified.",
+  "description": "Use Systemia Remote Ops when a founder or operator wants to simulate a consequential business decision before changing the real business. The resident Evercraft Compute runtime can route decisions, run a transparent native pricing heuristic, and compare startup, staffing, product/service, expansion, transaction, partnership, capital-purchase, and other scenarios using only explicit caller-supplied assumptions.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "Systemia Remote Ops",
     "shortDescription": "Simulate business decisions before acting",
-    "longDescription": "Use Systemia Remote Ops directly when a founder or operator wants to simulate a consequential business decision before changing the real business. Pricing simulation is currently the first public executable lane; other lanes must remain clearly labeled until independently verified.",
+    "longDescription": "Use Systemia Remote Ops when a founder or operator wants to simulate a consequential business decision before changing the real business. The resident Evercraft Compute runtime can route decisions, run a transparent native pricing heuristic, and compare startup, staffing, product/service, expansion, transaction, partnership, capital-purchase, and other scenarios using only explicit caller-supplied assumptions.",
     "developerName": "Evercraft LLC",
     "category": "Business",
     "capabilities": [
