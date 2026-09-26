@@ -177,6 +177,10 @@ const CHUM_DISCOVERY_LINKS = [
   '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
   '</openapi.json>; rel="service-desc"; type="application/json"',
   '</sitemap.xml>; rel="sitemap"; type="application/xml"',
+  '</chum/sitemaps/index.xml>; rel="sitemap"; type="application/xml"; title="Evercraft Segmented Sitemap Index"',
+  '</chum/commercial/>; rel="alternate"; type="text/html"; title="Evercraft Commercial Intent Mesh"',
+  '</chum/commercial/feed.xml>; rel="alternate"; type="application/rss+xml"; title="Evercraft Commercial Intent RSS"',
+  '</chum/commercial/feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Commercial Intent JSON Feed"',
   '</feed.xml>; rel="alternate"; type="application/rss+xml"; title="Evercraft Product Discovery RSS"',
   '</feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Product Discovery JSON Feed"',
   '</opensearch.xml>; rel="search"; type="application/opensearchdescription+xml"; title="Evercraft Search"',
@@ -273,7 +277,7 @@ function publicAssetPath(relativePath: string): string {
   return path.resolve(__dirname, isProd ? `dist/${relativePath}` : `public/${relativePath}`);
 }
 
-app.get('/sitemap.xml', (req: Request, res: Response) => {
+function sendPublicXmlWithAbsoluteLocs(relativePath: string, req: Request, res: Response) {
   const origin = requestOrigin(req);
   if (!origin) {
     res.status(503).type('text/plain').send('Public origin unavailable.');
@@ -281,15 +285,29 @@ app.get('/sitemap.xml', (req: Request, res: Response) => {
   }
 
   try {
-    const raw = fs.readFileSync(publicAssetPath('sitemap.xml'), 'utf8');
+    const raw = fs.readFileSync(publicAssetPath(relativePath), 'utf8');
     const absolute = raw.replace(
       /<loc>(\/[^<]*)<\/loc>/g,
       (_match, pathname) => `<loc>${origin}${pathname}</loc>`
     );
     res.type('application/xml').send(absolute);
   } catch (error: any) {
-    res.status(503).type('text/plain').send(`Sitemap unavailable: ${error?.message || String(error)}`);
+    res.status(503).type('text/plain').send(`Discovery XML unavailable: ${error?.message || String(error)}`);
   }
+}
+
+app.get('/sitemap.xml', (req: Request, res: Response) => {
+  sendPublicXmlWithAbsoluteLocs('sitemap.xml', req, res);
+});
+
+const segmentedSitemaps = new Set(['index.xml', 'sell-now.xml', 'answers.xml', 'products.xml', 'machine.xml']);
+app.get('/chum/sitemaps/:name', (req: Request, res: Response) => {
+  const name = String(req.params.name || '');
+  if (!segmentedSitemaps.has(name)) {
+    res.status(404).type('text/plain').send('Sitemap not found.');
+    return;
+  }
+  sendPublicXmlWithAbsoluteLocs(`chum/sitemaps/${name}`, req, res);
 });
 
 app.get('/robots.txt', (req: Request, res: Response) => {
@@ -298,7 +316,9 @@ app.get('/robots.txt', (req: Request, res: Response) => {
     const raw = fs.readFileSync(publicAssetPath('robots.txt'), 'utf8')
       .replace(/^Sitemap:.*$/gmi, '')
       .trimEnd();
-    res.type('text/plain').send(raw + (origin ? `\n\nSitemap: ${origin}/sitemap.xml\n` : '\n'));
+    res.type('text/plain').send(raw + (origin
+      ? `\n\nSitemap: ${origin}/sitemap.xml\nSitemap: ${origin}/chum/sitemaps/index.xml\n`
+      : '\n'));
   } catch (error: any) {
     res.status(503).type('text/plain').send(`Robots policy unavailable: ${error?.message || String(error)}`);
   }
@@ -445,6 +465,9 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       agentManifest: '/.well-known/evercraft-agent.json',
       aiDirectory: '/ai',
       sitemap: '/sitemap.xml',
+      segmentedSitemapIndex: '/chum/sitemaps/index.xml',
+      commercialIntentMesh: '/chum/commercial/',
+      commercialIntentFeed: '/chum/commercial/feed.json',
       robots: '/robots.txt',
       freshnessAtom: '/chum/freshness.xml',
       freshnessJson: '/chum/freshness.json',
