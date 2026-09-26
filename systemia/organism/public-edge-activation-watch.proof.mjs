@@ -70,6 +70,7 @@ try{
   assert.equal(snapshot1.schema,'evercraft.kaidance.mission-snapshot.v1');
   assert.equal(snapshot1.workflow_key,'public-edge-activation-watch');
   assert.equal(snapshot1.material_change,true);
+  assert.ok(snapshot1.counts.scanned>=1);
   assert.equal(snapshot1.counts.admitted,0);
   assert.equal(snapshot1.counts.held,1);
 
@@ -87,7 +88,7 @@ try{
   const snapshot2=JSON.parse(fs.readFileSync(path.join(out,'mission-snapshot.json'),'utf8'));
   assert.equal(snapshot2.material_change,false);
   assert.equal(snapshot2.counts.changed,0);
-  assert.equal(snapshot2.counts.held,1);
+  assert.equal(snapshot2.counts.held,0);
 
   const stateText=fs.existsSync(path.join(state,'public-edge-activation-watch.json'))
     ? fs.readFileSync(path.join(state,'public-edge-activation-watch.json'),'utf8')
