@@ -11,6 +11,13 @@ export const CIVILIAN_AIR_RELAY_PURPOSES = Object.freeze([
   'temporary_event_connectivity'
 ]);
 
+export const AIR_RELAY_ROUTE_OBJECTIVES = Object.freeze([
+  'balanced',
+  'latency',
+  'energy',
+  'infrastructure_avoidance'
+]);
+
 const FORBIDDEN_TERMS = [
   'combat', 'weapon', 'targeting', 'strike', 'munition',
   'payload_delivery', 'person_tracking', 'mass_surveillance',
@@ -38,7 +45,15 @@ function missionGate(mission = {}) {
   if (!mission.source_node_id || !mission.destination_node_id) {
     return { ok: false, reason: 'source_and_destination_required' };
   }
-  return { ok: true, purpose };
+
+  const routeObjective = String(mission.route_objective || 'balanced')
+    .trim()
+    .toLowerCase();
+  if (!AIR_RELAY_ROUTE_OBJECTIVES.includes(routeObjective)) {
+    return { ok: false, reason: 'route_objective_not_supported' };
+  }
+
+  return { ok: true, purpose, routeObjective };
 }
 
 function nodeEligible(node) {
@@ -89,6 +104,31 @@ function paths(source, destination, nodesById, links, maxHops) {
   return found;
 }
 
+function infrastructureCounterfactual(mission) {
+  const supplied = mission.infrastructure_counterfactual || {};
+  const evidenceRefs = Array.isArray(supplied.evidence_refs)
+    ? supplied.evidence_refs.map(String).slice(0, 50)
+    : [];
+  return {
+    evidence_state: String(supplied.evidence_state || 'modeled'),
+    evidence_refs: evidenceRefs,
+    trench_meters_without_relay: Math.max(
+      0,
+      num(
+        supplied.trench_meters_without_relay,
+        mission.estimated_trench_meters_without_relay
+      )
+    ),
+    temporary_towers_without_relay: Math.max(
+      0,
+      num(
+        supplied.temporary_towers_without_relay,
+        mission.estimated_temporary_towers_without_relay
+      )
+    )
+  };
+}
+
 function metrics(path, nodesById, mission) {
   const routeNodes = path.visited.map((id) => nodesById.get(id));
   const air = routeNodes.filter((node) => node.kind === 'air_relay');
@@ -97,10 +137,7 @@ function metrics(path, nodesById, mission) {
     ? Math.min(...path.used.map((link) => num(link.bandwidth_mbps)))
     : 0;
   const energy = air.reduce((sum, node) => sum + num(node.energy_wh_per_hour), 0);
-  const trench = air.length ? Math.max(0, num(mission.estimated_trench_meters_without_relay)) : 0;
-  const towers = air.length ? Math.max(0, num(mission.estimated_temporary_towers_without_relay)) : 0;
-  const benefit = trench * 0.02 + towers * 25;
-  const penalty = latency * 0.05 + energy * 0.01 + path.used.length * 2;
+  const counterfactual = infrastructureCounterfactual(mission);
 
   return {
     air_relay_count: air.length,
@@ -113,19 +150,75 @@ function metrics(path, nodesById, mission) {
       ? Math.min(...air.map((node) => num(node.endurance_minutes)))
       : null,
     modeled_infrastructure: {
-      evidence_state: 'modeled',
-      trench_meters_avoided: trench,
-      temporary_towers_avoided: towers
-    },
-    score: benefit - penalty
+      evidence_state: 'modeled_counterfactual',
+      source_evidence_state: counterfactual.evidence_state,
+      evidence_refs: counterfactual.evidence_refs,
+      potential_trench_meters_avoided: air.length
+        ? counterfactual.trench_meters_without_relay
+        : 0,
+      potential_temporary_towers_avoided: air.length
+        ? counterfactual.temporary_towers_without_relay
+        : 0
+    }
   };
+}
+
+function compareCandidates(a, b, objective) {
+  const am = a.metrics;
+  const bm = b.metrics;
+  const byLatency =
+    am.latency_ms - bm.latency_ms ||
+    bm.bottleneck_bandwidth_mbps - am.bottleneck_bandwidth_mbps ||
+    am.hop_count - bm.hop_count ||
+    am.energy_wh_per_hour - bm.energy_wh_per_hour;
+
+  if (objective === 'latency') return byLatency;
+
+  if (objective === 'energy') {
+    return (
+      am.energy_wh_per_hour - bm.energy_wh_per_hour ||
+      am.latency_ms - bm.latency_ms ||
+      am.hop_count - bm.hop_count ||
+      bm.bottleneck_bandwidth_mbps - am.bottleneck_bandwidth_mbps
+    );
+  }
+
+  if (objective === 'infrastructure_avoidance') {
+    return (
+      bm.modeled_infrastructure.potential_trench_meters_avoided -
+        am.modeled_infrastructure.potential_trench_meters_avoided ||
+      bm.modeled_infrastructure.potential_temporary_towers_avoided -
+        am.modeled_infrastructure.potential_temporary_towers_avoided ||
+      am.latency_ms - bm.latency_ms ||
+      am.energy_wh_per_hour - bm.energy_wh_per_hour ||
+      am.hop_count - bm.hop_count
+    );
+  }
+
+  return byLatency;
+}
+
+function rankingOrder(objective) {
+  if (objective === 'energy') {
+    return ['energy_wh_per_hour:asc', 'latency_ms:asc', 'hop_count:asc', 'bottleneck_bandwidth_mbps:desc'];
+  }
+  if (objective === 'infrastructure_avoidance') {
+    return [
+      'potential_trench_meters_avoided:desc',
+      'potential_temporary_towers_avoided:desc',
+      'latency_ms:asc',
+      'energy_wh_per_hour:asc',
+      'hop_count:asc'
+    ];
+  }
+  return ['latency_ms:asc', 'bottleneck_bandwidth_mbps:desc', 'hop_count:asc', 'energy_wh_per_hour:asc'];
 }
 
 export function planAirRelay({ mission = {}, nodes = [], links = [], max_hops = 6 } = {}) {
   const gate = missionGate(mission);
   if (!gate.ok) {
     return {
-      schema: 'evercraft.air-relay-plan.v1',
+      schema: 'evercraft.air-relay-plan.v2',
       status: 'POLICY_DENIED',
       reason: gate.reason,
       selected: null,
@@ -137,7 +230,7 @@ export function planAirRelay({ mission = {}, nodes = [], links = [], max_hops = 
   const nodesById = new Map(eligibleNodes.map((node) => [node.id, node]));
   if (!nodesById.has(mission.source_node_id) || !nodesById.has(mission.destination_node_id)) {
     return {
-      schema: 'evercraft.air-relay-plan.v1',
+      schema: 'evercraft.air-relay-plan.v2',
       status: 'NO_ROUTE',
       reason: 'source_or_destination_not_eligible',
       selected: null,
@@ -165,19 +258,17 @@ export function planAirRelay({ mission = {}, nodes = [], links = [], max_hops = 
         from: link.from,
         to: link.to,
         transport_id: link.transport_id || null,
-        evidence: link.evidence || null
+        evidence: link.evidence || null,
+        infrastructure_class: link.infrastructure_class || null
       })),
       metrics: metrics(path, nodesById, mission)
     }))
     .filter((row) => row.metrics.latency_ms <= maximumPathLatency)
-    .sort((a, b) =>
-      b.metrics.score - a.metrics.score ||
-      a.metrics.latency_ms - b.metrics.latency_ms
-    );
+    .sort((a, b) => compareCandidates(a, b, gate.routeObjective));
 
   if (!candidates.length) {
     return {
-      schema: 'evercraft.air-relay-plan.v1',
+      schema: 'evercraft.air-relay-plan.v2',
       status: 'NO_ROUTE',
       reason: 'no_verified_authorized_path_meets_requirements',
       selected: null,
@@ -186,16 +277,22 @@ export function planAirRelay({ mission = {}, nodes = [], links = [], max_hops = 
   }
 
   return {
-    schema: 'evercraft.air-relay-plan.v1',
+    schema: 'evercraft.air-relay-plan.v2',
     status: 'ROUTE_READY',
     purpose: gate.purpose,
+    route_objective: gate.routeObjective,
+    selection_basis: {
+      weighted_score_used: false,
+      ranking_order: rankingOrder(gate.routeObjective)
+    },
     selected: candidates[0],
     candidates,
     truth_boundary: {
       flight_control_performed: false,
       autonomous_navigation_performed: false,
       radio_capability_claimed_beyond_evidence: false,
-      infrastructure_avoidance_is_modeled: true
+      infrastructure_avoidance_is_modeled_counterfactual: true,
+      ecological_impact_quantified: false
     }
   };
 }
