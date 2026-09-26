@@ -36,7 +36,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -121,7 +121,10 @@
     "test:network-discovery": "node tests/network-discovery.test.mjs",
     "test:network-semantic-mesh": "node tests/network-semantic-mesh.test.mjs",
     "chum:fire-control": "node systemia/chum/fire-control.mjs",
-    "test:chum-fire-control": "node tests/chum-fire-control.test.mjs"
+    "test:chum-fire-control": "node tests/chum-fire-control.test.mjs",
+    "proof:portfolio-sentinel": "node systemia/organism/portfolio-sentinel.proof.mjs",
+    "run:portfolio-sentinel": "node systemia/organism/portfolio-sentinel-runner.mjs",
+    "scan:portfolio-sentinel:offline": "node systemia/organism/portfolio-sentinel-runner.mjs --offline"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
