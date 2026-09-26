@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "rivet_reporting_runtime",
+  "priority": 3,
+  "source": {
+    "platform": "base44",
+    "product": "RIVET",
+    "authority": "legacy_compatibility_for_unmigrated_ui_data_auth_and_route_only",
+    "identifiers_public": false
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "transport": "beast_football",
+    "public_handoff": "authenticated_rivet_ui_via_verified_yard_route"
+  },
+  "observed": {
+    "canonical_report_engine_in_github": true,
+    "focused_address_to_ready_proof": "pass",
+    "beast_football_integrity_proof": "pass",
+    "systemia_control_plane_gate": "pass",
+    "saban_gate": "pass",
+    "source_snapshot_contract": "rivet_report_snapshot_v1",
+    "historical_base44_report_records_preserved": true,
+    "fresh_report_acceptance_only": true,
+    "live_yard_route_verified": false,
+    "live_fresh_report_ready_verified": false,
+    "base44_report_execution_retired": false,
+    "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2"
+  },
+  "migrate": [
+    "report_execution_runtime",
+    "aliev_source_adapter",
+    "report_progress_telemetry",
+    "beast_football_source_snapshot_transport",
+    "live_rivet_ui_route",
+    "auth_and_team_authority_adapter",
+    "report_record_persistence_adapter",
+    "customer_and_team_delivery_handoff"
+  ],
+  "acceptance": {
+    "canary_address": "6405 W Chestnut Ave, Yakima, WA 98908",
+    "canary_mode": "fresh_report_creation_only",
+    "required_generation_state": "ready",
+    "historical_failed_record_retry_not_acceptance": true,
+    "source_response_profile_required": "rivet_report_snapshot_v1",
+    "beast_football_hash_verification_required": true,
+    "live_yard_route_required": true,
+    "auth_parity_required": true,
+    "data_reconciliation_required": true,
+    "rollback_required": true,
+    "observation_window_required": true
+  },
+  "blockers": [
+    "live authenticated Yard report route has not yet been independently verified",
+    "RIVET New Report UI is still temporarily bound to the Base44 generateQuickReport compatibility function",
+    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through Yard"
+  ],
+  "next_action": "bind_the_new_report_creation_path_to_a_verified_yard_report_route_then_create_a_fresh_6405_w_chestnut_report_and_require_generation_state_ready",
+  "destructive_cutover_allowed": false
+}
