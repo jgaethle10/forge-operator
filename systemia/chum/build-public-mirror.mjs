@@ -38,6 +38,14 @@ function safePublicUrl(value, fallback = null) {
   }
 }
 
+function registryNameFor(registry, conf) {
+  const publicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
+  if (conf?.mcp_registry?.name) {
+    return publicationState.startsWith('published') ? conf.mcp_registry.name : null;
+  }
+  return registry?.registry_name || null;
+}
+
 function slugify(value) {
   return String(value || '')
     .toLowerCase()
@@ -110,10 +118,7 @@ for (const product of directory.products || []) {
   fs.mkdirSync(dir, { recursive: true });
   const canonicalUrl = safePublicUrl(product.canonical_url, base + '/index.html');
   const specialistMcp = safePublicUrl(registry?.mcp, null);
-  const registryPublicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
-  const registryName = conf?.mcp_registry?.name
-    ? (registryPublicationState.startsWith('published') ? conf.mcp_registry.name : null)
-    : (registry?.registry_name || null);
+  const registryName = registryNameFor(registry, conf);
 
   const discovery = {
     schema: 'evercraft.chum.product-discovery.v1',
@@ -639,7 +644,7 @@ for (const product of directory.products || []) {
   const safeCanonical = safePublicUrl(product.canonical_url, `${mirrorBase}/index.html`);
   const invocation =
     safeMcp
-      ? { mode: 'mcp', url: safeMcp, registry_name: registry.registry_name || conf?.mcp_registry?.name || null }
+      ? { mode: 'mcp', url: safeMcp, registry_name: registryNameFor(registry, conf) }
       : safeHttpRouter
         ? { mode: 'bounded_http', url: safeHttpRouter, registry_name: null }
         : { mode: 'discovery_only', url: null, registry_name: null };
