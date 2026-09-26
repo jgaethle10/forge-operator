@@ -29,7 +29,15 @@
       "/chum/crawl-state.json",
       "/sitemap.xml",
       "/chum/hot/",
-      "/chum/hot/index.json"
+      "/chum/hot/index.json",
+      "/mcp/ibmi-rescue",
+      "/mcp/foundry-app-escape",
+      "/mcp/site-survive"
+    ],
+    "specialist_mcp_paths": [
+      "/mcp/ibmi-rescue",
+      "/mcp/foundry-app-escape",
+      "/mcp/site-survive"
     ]
   },
   "environment": {
