@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T02:29:21.053Z",
+  "updated_at": "2026-09-26T02:32:16.242Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,197 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/intents/ibmi-rescue-v1/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.html",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-26T02:32:16.242Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "last_changed": "2026-09-26T02:32:16.242Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-26T02:32:16.242Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T02:32:16.242Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
@@ -409,12 +241,6 @@
     {
       "path": "/chum/capabilities.json",
       "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T02:29:21.053Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T02:29:21.053Z",
       "priority": 80
     },
@@ -1472,12 +1298,6 @@
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-26T00:32:09.062Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-26T00:24:32.646Z",
       "priority": 80
     },
     {
