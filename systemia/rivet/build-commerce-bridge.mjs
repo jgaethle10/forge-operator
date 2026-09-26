@@ -144,6 +144,18 @@ fs.writeFileSync(path.join(outputDir, 'offer.json'), offerJson);
 fs.writeFileSync(path.join(outputDir, 'llms.txt'), llms);
 fs.writeFileSync(path.join(outputDir, 'index.html'), html);
 
+const rootSitemapPath = 'public/sitemap.xml';
+if (fs.existsSync(rootSitemapPath)) {
+  let sitemap = fs.readFileSync(rootSitemapPath, 'utf8');
+  const routes = ['/rivet/start/', '/rivet/start/offer.json', '/rivet/start/llms.txt'];
+  const missing = routes.filter((route) => !sitemap.includes(`<loc>${route}</loc>`));
+  if (missing.length) {
+    const entries = missing.map((route) => `  <url><loc>${route}</loc></url>`).join('\n') + '\n';
+    sitemap = sitemap.replace('</urlset>', entries + '</urlset>');
+    fs.writeFileSync(rootSitemapPath, sitemap);
+  }
+}
+
 console.log(JSON.stringify({
   schema: manifest.schema,
   commercial_state: manifest.commercial_state,
