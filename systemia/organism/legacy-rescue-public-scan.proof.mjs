@@ -126,6 +126,17 @@ assert.equal(buyerScan.buyer_signals[0].buying_intent_state,'unknown');
 assert.equal(buyerScan.buyer_signals[0].recommended_offer_key,'ibmi_estate_xray_250');
 assert.equal(buyerScan.receipts[0].buyer_signal_state,'research_candidate');
 
+const buyerPersisted = await scanLegacyRescuePublicSources({
+  sources:[{...buyerSource,min_poll_minutes:30}],
+  previousState:buyerScan.state,
+  fetchImpl:async () => { throw new Error('buyer source should not fetch before due'); },
+  now:new Date('2026-09-25T20:35:00Z'),
+});
+assert.equal(buyerPersisted.receipts[0].state,'skipped_not_due');
+assert.equal(buyerPersisted.buyer_signals.length,1);
+assert.equal(buyerPersisted.buyer_signals[0].source_key,'ibmi-buyer');
+assert.equal(buyerPersisted.buyer_signals[0].recommended_offer_key,'ibmi_estate_xray_250');
+
 // A hiring page mentioning IBM i 7.4 explicitly may route to the release-specific
 // diagnostic, but even then it does not prove buying intent.
 const v74BuyerFetch = async () => ({
