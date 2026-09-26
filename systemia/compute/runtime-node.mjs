@@ -1802,6 +1802,35 @@ export async function startEvercraftComputeNode({
         });
       }
 
+      const remoteCapacityNodes = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-capacity-nodes$/
+      );
+      if (req.method === 'POST' && remoteCapacityNodes) {
+        const entry = services.get(remoteCapacityNodes[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_capacity_nodes_not_supported' });
+        }
+        const snapshot = entry.runtime.snapshot();
+        const nodes = Array.isArray(snapshot?.nodes) ? snapshot.nodes : [];
+        return send(res, 200, {
+          ok: true,
+          nodes,
+          count: nodes.length,
+          receipt: chain.issue('remote-capacity.nodes.read', {
+            service_id: remoteCapacityNodes[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            node_count: nodes.length,
+          }),
+        });
+      }
+
       const remoteControlGrant = req.url?.match(
         /^\/v1\/services\/([^/]+)\/remote-control-grant$/
       );
