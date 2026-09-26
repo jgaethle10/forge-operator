@@ -136,7 +136,15 @@
         "AI tool to select moments from a video and render social clips"
       ],
       "route_note": "Public agent surface is read-only discovery and planning. Actual media submission, paid processing and publishing remain authenticated and human-authorized. Current customer server renderer is bounded to 35 MiB, up to 3 clips, 8-45 seconds each. TikTok publishing is not currently verified.",
-      "registry_name": "io.github.jgaethle10/evercraft-clip"
+      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "machine_commerce": {
+        "public_id": "evercraft-clip-social-video-v1",
+        "commercial_state": "verification_required",
+        "machine_state": "invocation_ready",
+        "pricing_contract": "$4.99 one-time processor contract; public checkout creation not independently verified",
+        "checkout_state": "not_supported_do_not_claim_sell_now",
+        "authority": "discovery and non-executing planning only; paid processing remains authenticated and provider-verified"
+      }
     },
     {
       "product_key": "evercraft-containment",
