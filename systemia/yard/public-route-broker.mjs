@@ -121,4 +121,28 @@ export class YardPublicRouteBroker {
     };
     return {...body,receipt_hash:sha(body)};
   }
+
+  async releaseBinding(binding,{reason='operator_requested'}={}){
+    const leaseId=String(binding?.route_lease_id||'').trim();
+    if(!leaseId) throw new Error('route_lease_id_required');
+    const headers=this.providerToken?{authorization:`Bearer ${this.providerToken}`}:{};
+    const released=await requestJson(
+      this.providerEndpoint+'/v1/public-route/leases/'+encodeURIComponent(leaseId)+'/release',
+      {
+        method:'POST',
+        headers,
+        body:JSON.stringify({reason:String(reason||'operator_requested')}),
+      }
+    );
+    const body={
+      schema:'evercraft.yard.public-route-release.v1',
+      route_lease_id:leaseId,
+      deployment_id:binding?.deployment_id||null,
+      origin:binding?.origin||null,
+      released:released?.released===true,
+      reason:String(reason||'operator_requested'),
+      released_at:new Date().toISOString(),
+    };
+    return {...body,receipt_hash:sha(body)};
+  }
 }
