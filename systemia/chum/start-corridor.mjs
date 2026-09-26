@@ -5,7 +5,7 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
   'www.systemiacommandcenters.com'
 ]);
 
-const DIRECT_HUMAN_BUYER_DESTINATIONS = Object.freeze({
+export const DIRECT_HUMAN_BUYER_DESTINATIONS = Object.freeze({
   'career-command-interview-practice-machine-v1': 'https://evercraft-career-command.base44.app/',
   'aliev-site-opportunity-snapshot-v1': 'https://aliev.base44.app/',
   'rivet-site-underwriting-v1': 'https://rivet.base44.app/',
@@ -15,7 +15,10 @@ const DIRECT_HUMAN_BUYER_DESTINATIONS = Object.freeze({
   'faie-signal-brief-v1': 'https://faie.base44.app/',
   'eventwave-paid-promotion-v1': 'https://event-wave.base44.app/',
   'roasted-text-pressure-test-machine-v1': 'https://get-roasted-hub.base44.app/',
-  'ibmi-rescue-v1': 'https://findmypart.base44.app/ibmi-rescue'
+  'ibmi-rescue-v1': 'https://findmypart.base44.app/ibmi-rescue',
+  'deck-capital-fit-sprint-machine-v1': 'https://systemia-audit-pro.base44.app/services/capital-fit-sprint',
+  'foundry-app-escape-audit-v1': 'https://systemia-audit-pro.base44.app/services/app-escape-audit',
+  'site-survive-rapid-audit-v1': 'https://systemia-audit-pro.base44.app/services/site-survive'
 });
 
 export function machineReviewUrl(publicId, gateway = DEFAULT_MACHINE_COMMERCE_GATEWAY) {
