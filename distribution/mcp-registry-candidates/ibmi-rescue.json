@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/ibmi-rescue",
+  "title": "Evercraft IBM i Rescue",
+  "description": "IBM i / AS/400 estate assessment, dependency mapping, upgrade-risk review and bounded human handoff.",
+  "version": "0.1.0",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+  "repository": {
+    "url": "https://github.com/jgaethle10/forge-operator",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/ibmiRescueMcp"
+    }
+  ]
+}
