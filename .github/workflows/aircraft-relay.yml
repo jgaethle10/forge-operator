@@ -1,0 +1,52 @@
+name: Aircraft Relay proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/network/aircraft-relay-planner.mjs"
+      - "systemia/network/aircraft-relay-proof.mjs"
+      - "systemia/network/transient-contact-queue.mjs"
+      - "systemia/network/transient-contact-queue-proof.mjs"
+      - "systemia/network/AIRCRAFT-RELAY.md"
+      - "systemia/network/README.md"
+      - "package.json"
+      - ".github/workflows/aircraft-relay.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/network/aircraft-relay-planner.mjs"
+      - "systemia/network/aircraft-relay-proof.mjs"
+      - "systemia/network/transient-contact-queue.mjs"
+      - "systemia/network/transient-contact-queue-proof.mjs"
+      - "systemia/network/AIRCRAFT-RELAY.md"
+      - "systemia/network/README.md"
+      - "package.json"
+      - ".github/workflows/aircraft-relay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aircraft-relay-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove aircraft relay planning
+        run: node systemia/network/aircraft-relay-proof.mjs
+
+      - name: Prove transient contact queue
+        run: node systemia/network/transient-contact-queue-proof.mjs
