@@ -33,6 +33,7 @@
     "checkout_is_payment_proof": false
   },
   "source_refs": [
+    "conformance/provider-observations/auto-generic_agent-capital-fit-001-15f5b2276c7ab7ac.json",
     "conformance/provider-observations/auto-generic_agent-capital-fit-001-547a00af10ba674d.json",
     "conformance/provider-observations/auto-generic_agent-capital-fit-001-e2ef32443c25aa59.json"
   ]
