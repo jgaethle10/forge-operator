@@ -1,0 +1,119 @@
+name: Evercraft Public Edge External Canary
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SPECIALIST_ORIGIN: ${{ vars.EVERCRAFT_SPECIALIST_MCP_ORIGIN }}
+    steps:
+      - name: Prepare receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          if [ -z "${SPECIALIST_ORIGIN:-}" ]; then
+            cat > artifacts/evercraft-public-edge-canary.json <<'JSON'
+          {
+            "schema": "evercraft.public-edge.external-canary.v1",
+            "verified": false,
+            "state": "held_no_public_origin_configured",
+            "public_https_verified": false,
+            "founder_login_required": false
+          }
+          JSON
+            cat artifacts/evercraft-public-edge-canary.json
+            exit 0
+          fi
+
+          node - <<'NODE'
+          const raw=process.env.SPECIALIST_ORIGIN||'';
+          const url=new URL(raw);
+          if(url.protocol!=='https:') throw new Error('SPECIALIST_ORIGIN must use HTTPS');
+          if(url.username||url.password||url.search||url.hash) throw new Error('SPECIALIST_ORIGIN must be a clean HTTPS origin');
+          if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('specialist public edge must not resolve to Base44');
+          if(url.pathname!=='/'&&url.pathname!=='') throw new Error('SPECIALIST_ORIGIN must not include a path');
+          NODE
+
+      - name: Verify external health and MCP handshakes
+        if: env.SPECIALIST_ORIGIN != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          health="$(curl --fail --silent --show-error --max-time 20 "${SPECIALIST_ORIGIN%/}/health")"
+          printf '%s' "$health" | jq -e '
+            .ok == true and
+            .service == "specialist-handoff-mcp" and
+            .runtime == "Evercraft Compute" and
+            .deployment_receipt_bound == true and
+            (.deployment_receipt_ref | type == "string") and
+            (.instance_id | type == "string") and
+            .checkout_enabled == false and
+            .payment_enabled == false
+          ' >/dev/null
+
+          check_mcp() {
+            local path="$1"
+            local server="$2"
+            local tool_a="$3"
+            local tool_b="$4"
+
+            init="$(curl --fail --silent --show-error --max-time 20               -H 'content-type: application/json'               --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"evercraft-external-canary","version":"1"}}}'               "${SPECIALIST_ORIGIN%/}$path")"
+            printf '%s' "$init" | jq -e --arg server "$server" '
+              .result.serverInfo.name == $server and
+              .result.protocolVersion == "2025-03-26"
+            ' >/dev/null
+
+            tools="$(curl --fail --silent --show-error --max-time 20               -H 'content-type: application/json'               --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'               "${SPECIALIST_ORIGIN%/}$path")"
+            printf '%s' "$tools" | jq -e --arg a "$tool_a" --arg b "$tool_b" '
+              [.result.tools[].name] as $names |
+              ($names | index($a)) != null and
+              ($names | index($b)) != null and
+              ([.result.tools[] | select(.annotations.readOnlyHint != true or .annotations.destructiveHint != false)] | length) == 0
+            ' >/dev/null
+          }
+
+          check_mcp "/mcp/ibmi-rescue" "evercraft-ibmi-rescue"             "get_ibmi_rescue_offer" "prepare_ibmi_rescue_handoff"
+          check_mcp "/mcp/foundry-app-escape" "evercraft-foundry-app-escape"             "get_foundry_app_escape_offer" "prepare_foundry_app_escape_handoff"
+          check_mcp "/mcp/site-survive" "evercraft-site-survive"             "get_site_survive_offer" "prepare_site_survive_handoff"
+
+          instance_id="$(printf '%s' "$health" | jq -r '.instance_id')"
+          deployment_receipt="$(printf '%s' "$health" | jq -r '.deployment_receipt_ref')"
+          observed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          jq -n             --arg origin "$SPECIALIST_ORIGIN"             --arg instance "$instance_id"             --arg deployment "$deployment_receipt"             --arg observed "$observed_at"             '{
+              schema:"evercraft.public-edge.external-canary.v1",
+              verified:true,
+              state:"public_https_verified",
+              origin:$origin,
+              runtime:"Evercraft Compute",
+              service:"specialist-handoff-mcp",
+              instance_id:$instance,
+              deployment_receipt_ref:$deployment,
+              public_https_verified:true,
+              certificate_validation:"system_default_trust_store",
+              mcp_initialize_verified:true,
+              mcp_tools_list_verified:true,
+              read_only_authority_verified:true,
+              founder_login_required:false,
+              external_saas_route_provider_required:false,
+              observed_at:$observed
+            }' > artifacts/evercraft-public-edge-canary.json
+
+          cat artifacts/evercraft-public-edge-canary.json
+
+      - name: Upload external canary receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-public-edge-canary
+          path: artifacts/evercraft-public-edge-canary.json
+          retention-days: 90
