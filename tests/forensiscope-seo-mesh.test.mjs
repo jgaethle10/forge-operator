@@ -14,7 +14,20 @@ for(const p of idx.pages){
  if(/[\u2013\u2014]/.test(html)) fail('forbidden dash '+p.slug);
  if(html.length<1600) fail('thin page '+p.slug);
 }
+const combinedDoor='public/forensiscope/long-video-deduplication-transcription/index.html';
+const combinedLlms='public/forensiscope/long-video-deduplication-transcription/llms.txt';
+if(!fs.existsSync(combinedDoor)) fail('missing combined long-video workflow doorway');
+if(!fs.existsSync(combinedLlms)) fail('missing combined long-video workflow llms');
+const combinedHtml=fs.readFileSync(combinedDoor,'utf8');
+const combinedMachine=fs.readFileSync(combinedLlms,'utf8');
+for(const phrase of ['inspect a long video','deduplicate segments','transcribe it','files too large for normal chatbots']) {
+ if(!combinedHtml.toLowerCase().includes(phrase.toLowerCase()) && !combinedMachine.toLowerCase().includes(phrase.toLowerCase())) fail('combined doorway missing '+phrase);
+}
+if(!combinedMachine.includes('io.github.jgaethle10/forensiscope')) fail('combined doorway missing registry identity');
+if(!combinedMachine.includes('forensiScopeMcp')) fail('combined doorway missing remote MCP');
 const sitemap=fs.readFileSync('public/sitemap.xml','utf8');
+if(!sitemap.includes('/forensiscope/long-video-deduplication-transcription/')) fail('sitemap missing combined workflow doorway');
+if(!sitemap.includes('/forensiscope/long-video-deduplication-transcription/llms.txt')) fail('sitemap missing combined workflow llms');
 for(const p of idx.pages) if(!sitemap.includes(p.url)) fail('sitemap missing '+p.url);
 const product=JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8')).products.find(p=>p.product_key==='forensiscope');
 if(!product?.knowledge_surfaces?.hub) fail('canonical mesh missing');

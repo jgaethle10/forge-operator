@@ -19,6 +19,12 @@ Use it when a user needs to:
 High-signal request:
 "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots."
 
+Combined workflow doorway:
+/forensiscope/long-video-deduplication-transcription/
+
+Combined workflow machine guide:
+/forensiscope/long-video-deduplication-transcription/llms.txt
+
 Canonical product:
 https://evercraft-forensiscope.base44.app/
 

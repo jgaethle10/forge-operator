@@ -1,0 +1,14 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26",
+  "provider": "chatgpt",
+  "provider_surface": "consumer_chat",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": true,
+  "surfaced_position": 1,
+  "notable_result": "A separate user account/chat surfaced ForensiScope by Evercraft as the closest match for the exact brand-blind long-video, transcription, deduplication and oversized-file request.",
+  "interpretation": "Positive pickup receipt from a separate user context. Stronger evidence of independent consumer-chat discovery than a result from the founder's own account, but not proof of universal OpenAI-wide ranking behavior.",
+  "evidence": "User-provided screenshot and copied response in ChatGPT conversation on 2026-09-26. The separate user's identity is intentionally not stored in this receipt."
+}

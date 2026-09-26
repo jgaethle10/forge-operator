@@ -128,5 +128,10 @@
     "state": "descriptive_category_adjacency_only",
     "index": "/forensiscope/editorial/semantic-neighborhood.json",
     "boundary": "Related market vocabulary does not imply provider endorsement, feature equivalence, provider pickup, AI recommendation, conversion or payment."
+  },
+  "combined_workflow": {
+    "html": "/forensiscope/long-video-deduplication-transcription/",
+    "llms": "/forensiscope/long-video-deduplication-transcription/llms.txt",
+    "trigger": "long or oversized video inspection + timestamped transcription + duplicate or near-duplicate segment review in one workflow"
   }
 }

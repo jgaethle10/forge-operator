@@ -1,0 +1,18 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26",
+  "provider": "chatgpt",
+  "provider_surface": "Independent ChatGPT consumer session, user-reported",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Twelve Labs",
+    "Google Gemini API",
+    "Azure AI Video Indexer"
+  ],
+  "notable_gap": "A separate ChatGPT consumer session received the same brand-blind pain statement but did not surface ForensiScope, instead recommending incumbent video-analysis services.",
+  "interpretation": "Negative same-provider consistency receipt. Combined with a positive ChatGPT receipt for the same prompt, this shows consumer discovery is intermittent rather than reliably green.",
+  "evidence": "User-provided copied response from a separate ChatGPT session in this conversation on 2026-09-26."
+}
