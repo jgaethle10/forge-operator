@@ -34,6 +34,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: chum-llm-hunter
@@ -141,13 +142,26 @@ jobs:
         continue-on-error: true
         run: npm run chum:mcp
 
+      - name: Mint trusted payment export identity
+        id: payment_identity
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESPONSE="$(curl -fsSL \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=evercraft-chum-payment-export")"
+          TOKEN="$(printf '%s' "$RESPONSE" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const j=JSON.parse(s);if(!j.value)process.exit(1);process.stdout.write(j.value)})")"
+          echo "::add-mask::$TOKEN"
+          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+
       - name: Measure authoritative payment funnel
         id: money_radar
         if: always()
         continue-on-error: true
         env:
-          CHUM_ATTRIBUTION_EXPORT_URL: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_URL }}
-          CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_TOKEN }}
+          CHUM_ATTRIBUTION_EXPORT_URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport
+          CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ steps.payment_identity.outputs.token }}
           CHUM_MONEY_RADAR_STRICT: "false"
         run: npm run chum:money-radar
 
