@@ -43,6 +43,10 @@ for (const product of directory.products || []) {
   assert.ok(html.includes('name="robots"'), `${key} product page missing crawler metadata`);
   assert.ok(html.includes('./llms.txt'), `${key} product page missing llms.txt link`);
   assert.ok(html.includes('./ai-discovery.json'), `${key} product page missing discovery JSON link`);
+  assert.ok(html.includes(`rel="canonical" href="/chum/products/${key}/"`), `${key} product page missing canonical link`);
+  assert.ok(html.includes('/feed.xml'), `${key} product page missing RSS discovery link`);
+  assert.ok(html.includes('/feed.json'), `${key} product page missing JSON Feed discovery link`);
+  assert.ok(html.includes('/.well-known/agent-card.json'), `${key} product page missing A2A agent-card link`);
 
   const painPhrases = Array.isArray(product.intents) ? product.intents.filter(Boolean) : [];
   assert.ok(painPhrases.length > 0, `${key} has no public problem-language intents`);
@@ -69,6 +73,16 @@ for (const file of publicFiles) {
     assert.ok(!pattern.test(content), `secret-like material found in ${file}`);
   }
 }
+
+const schemaGraph = JSON.parse(fs.readFileSync('public/schema.jsonld','utf8'));
+assert.ok(
+  schemaGraph['@graph']?.some((node) => node?.['@id'] === 'https://github.com/jgaethle10/forge-operator#evercraft-discovery-site' && node?.['@type'] === 'WebSite'),
+  'schema graph missing Evercraft discovery WebSite node'
+);
+assert.ok(
+  schemaGraph['@graph']?.some((node) => node?.['@type'] === 'WebSite' && node?.potentialAction?.['@type'] === 'SearchAction'),
+  'schema graph missing SearchAction'
+);
 
 console.log('CHUM PUBLIC DISCOVERY SURFACES PASS', JSON.stringify({
   products: (directory.products || []).length,
