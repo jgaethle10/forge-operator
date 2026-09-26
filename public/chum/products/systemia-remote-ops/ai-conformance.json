@@ -1,0 +1,45 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Remote Ops",
+  "product_key": "systemia-remote-ops",
+  "aliases": [
+    "Systemia Decision Lab",
+    "Systemia Business Simulator",
+    "Systemia Business Flight Simulator",
+    "Systemia Decision Laboratory",
+    "Remote Ops",
+    "Business Decision Simulator"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery and simulation-intent routing only; no live-business mutation authority is granted by discovery",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "simulation outputs are modeled scenarios, not guarantees, predictions, accounting statements, legal advice, tax advice, investment advice or financing approval",
+    "assumptions, inputs, uncertainty, confidence and evidence state must remain visible so modeled output is not confused with observed reality",
+    "simulation cannot mutate live payroll, jobs, customer records, payments, contracts or other production business systems",
+    "external actions, purchases, hiring, firing, financing, contracting, publishing and other consequential moves remain human-confirmed",
+    "Evercraft InternalOps and live operating systems remain separate from the simulation environment",
+    "the current public cockpit URL and production customer execution path are not represented as verified here until independently confirmed"
+  ],
+  "commercial": {
+    "status": "discovery_ready_execution_unverified",
+    "pricing": "No public price is represented as verified in this record.",
+    "payment_state": "Discovery creates no payment obligation. No paid cockpit entitlement is represented as verified here.",
+    "offers": []
+  },
+  "provider_behavior_state": "not_inferred_from_publication",
+  "live_canary_evidence": null
+}
