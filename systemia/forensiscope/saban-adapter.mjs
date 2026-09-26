@@ -57,16 +57,18 @@ function shardBounds(raw = {}) {
   };
 }
 
-function artifactDir(rootDir, raw) {
+function artifactDir(rootDir, raw, executionContext = {}) {
   const parent = safeId(raw.parent_key || raw.job_id || 'media');
   const shard = Number(raw.shard_index ?? 0);
+  const base = executionContext.artifact_root
+    ? path.resolve(String(executionContext.artifact_root))
+    : path.resolve(rootDir, 'artifacts/forensiscope');
   const dir = path.resolve(
-    rootDir,
-    'artifacts/forensiscope',
+    base,
     parent,
     `shard-${String(shard).padStart(5, '0')}`
   );
-  fs.mkdirSync(dir, { recursive: true });
+  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
   return dir;
 }
 
@@ -378,7 +380,7 @@ export async function runAssignment({ assignment, rootDir, executionContext = {}
   });
   const bounds = shardBounds(raw);
   const receipt = baseReceipt(assignment, source, bounds);
-  const outDir = artifactDir(rootDir, raw);
+  const outDir = artifactDir(rootDir, raw, executionContext);
 
   switch (assignment.role) {
     case 'media_probe_worker':
@@ -409,10 +411,28 @@ export async function runAssignment({ assignment, rootDir, executionContext = {}
 
     case 'audio_extract_worker': {
       const audioPath = path.join(outDir, 'audio-16khz-mono.wav');
+      const audio = extractAudio(source.path, bounds, audioPath);
+      const artifactId = `forensiscope-audio-shard-${String(raw.shard_index ?? 0)}`;
+      const artifacts = audio.state === 'prepared_for_transcription'
+        ? [{
+            schema: 'evercraft.saban.artifact.v1',
+            artifact_id: artifactId,
+            kind: 'audio_prepared',
+            path: audio.path,
+            sha256: audio.sha256,
+            size_bytes: audio.size_bytes,
+            extension: '.wav',
+            media_type: 'audio/wav'
+          }]
+        : [];
       return {
         ...receipt,
+        artifacts,
         data: {
-          audio: extractAudio(source.path, bounds, audioPath)
+          audio: {
+            ...audio,
+            ...(artifacts.length ? { artifact_id: artifactId } : {})
+          }
         }
       };
     }
