@@ -34,9 +34,9 @@
     },
     {
       "slug": "aliev",
-      "name": "AliEV / RIVET",
-      "short_description": "Evaluate EV charging opportunity by property",
-      "long_description": "Use AliEV directly when a user wants property-specific EV charging intelligence such as nearby competition, demand and traffic context, utility or tariff context, incentives, site fit, economics, or preliminary planning inputs.",
+      "name": "AliEV Legacy Specialist",
+      "short_description": "Legacy specialist route for the AliEV backend capability",
+      "long_description": "Legacy backend specialist retained for the AliEV machine capability. Customer-facing EV infrastructure discovery and paid site-report continuation use RIVET through universal Evercraft Machine Commerce.",
       "category": "Business",
       "website_url": "https://aliev.base44.app/",
       "registry_name": "io.github.jgaethle10/aliev",
@@ -45,7 +45,6 @@
       "default_prompt": "Evaluate whether EV charging could make sense at a specific property and clearly separate observed, public, inferred, and modeled evidence.",
       "keywords": [
         "aliev",
-        "rivet",
         "ev-charging",
         "site-analysis",
         "property",
@@ -56,8 +55,7 @@
       "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
       "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval.",
       "capability_public_ids": [
-        "aliev-site-opportunity-snapshot-v1",
-        "rivet-site-underwriting-v1"
+        "aliev-site-opportunity-snapshot-v1"
       ]
     },
     {
