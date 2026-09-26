@@ -1580,6 +1580,9 @@ export async function startEvercraftComputeNode({
             deviceFingerprint: body.device_fingerprint,
             edgeAttestationReceipt: body.edge_attestation_receipt,
             specialistAttestationReceipt: body.specialist_attestation_receipt,
+            fieldVerified: body.field_verified === true,
+            fieldEnrollmentReceipt: body.field_enrollment_receipt,
+            publicEdgeAdmissionReceipt: body.public_edge_admission_receipt,
             sameDeviceBinding: body.same_device_binding === true,
           });
         } catch (error) {
@@ -1593,6 +1596,10 @@ export async function startEvercraftComputeNode({
           device_fingerprint: health.device_fingerprint || null,
           edge_attestation_receipt_ref: health.edge_attestation_receipt_ref || null,
           specialist_attestation_receipt_ref: health.specialist_attestation_receipt_ref || null,
+          field_enrollment_bound: health.field_enrollment_bound === true,
+          field_verified: health.field_verified === true,
+          field_enrollment_receipt_ref: health.field_enrollment_receipt_ref || null,
+          public_edge_admission_receipt_ref: health.public_edge_admission_receipt_ref || null,
           receipt: chain.issue('specialist.identity-attestation.bound', {
             service_id: specialistIdentityAttestation[1],
             lease_id: entry.lease_id,
@@ -1600,6 +1607,9 @@ export async function startEvercraftComputeNode({
             device_fingerprint: health.device_fingerprint || null,
             edge_attestation_receipt_ref: health.edge_attestation_receipt_ref || null,
             specialist_attestation_receipt_ref: health.specialist_attestation_receipt_ref || null,
+            field_verified: health.field_verified === true,
+            field_enrollment_receipt_ref: health.field_enrollment_receipt_ref || null,
+            public_edge_admission_receipt_ref: health.public_edge_admission_receipt_ref || null,
             same_device_binding: health.same_device_binding === true,
           }),
         });
