@@ -191,13 +191,22 @@
       "canonical_url": "https://network-control.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "source_build_green_live_mcp_verified",
+      "conformance_state": "live_read_only_mcp_verified",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://network-control.base44.app/llms.txt",
       "origin_discovery_url": "https://network-control.base44.app/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "machine_commerce_handoff_state": "bounded_read_only_mcp_verified",
+      "machine_commerce_public_id": "evercraft-network-resilience-membership-v1",
+      "machine_commerce_tool": "get_network_capabilities",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "publication_state": "published_shared_server"
+      },
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
     },
     {
       "product_key": "evercraft-property-services",
