@@ -113,6 +113,13 @@ export class PublicEdgeActivationWatcher {
             origin:resumed.origin,
             route_scope:resumed.route_scope,
             route_verified:resumed.route_verified,
+            field_enrollment_required:
+              resumed.field_enrollment_required===true,
+            field_verified:resumed.field_verified===true,
+            field_enrollment_receipt:
+              resumed.field_enrollment_receipt||null,
+            public_edge_admission_receipt:
+              resumed.public_edge_admission_receipt||null,
             resume_receipt:resumed.receipt_hash,
           });
         }catch(error){
@@ -123,7 +130,7 @@ export class PublicEdgeActivationWatcher {
         }
       }
 
-      let delegatedFailure=null;
+      let delegatedCapacityFailed=false;
       if(this.capacityGrantProvider){
         try{
           const grant=await this.capacityGrantProvider({
@@ -175,7 +182,7 @@ export class PublicEdgeActivationWatcher {
             });
           }
         }catch(error){
-          delegatedFailure=String(error?.message||error).slice(0,500);
+          delegatedCapacityFailed=true;
         }
       }
 
@@ -186,7 +193,7 @@ export class PublicEdgeActivationWatcher {
         return this.#result('hold',{
           reason:'allocator_authority_provider_failed',
           detail:String(error?.message||error).slice(0,500),
-          delegated_capacity_detail:delegatedFailure,
+          delegated_capacity_failed:delegatedCapacityFailed,
         });
       }
 
@@ -213,6 +220,13 @@ export class PublicEdgeActivationWatcher {
           resolver_receipt:provisioned.discovery?.receipt_hash||null,
           provision_receipt:provisioned.receipt_hash,
           provider_transport:provisioned.provider_transport,
+          field_enrollment_required:
+            provisioned.field_enrollment_required===true,
+          field_verified:provisioned.field_verified===true,
+          field_enrollment_receipt:
+            provisioned.field_enrollment_import_receipt||null,
+          public_edge_admission_receipt:
+            provisioned.public_edge_admission_receipt||null,
           identity_attestation_required:provisioned.identity_attestation_required===true,
           identity_verified:provisioned.identity_verified===true,
           device_fingerprint:provisioned.device_fingerprint||null,
