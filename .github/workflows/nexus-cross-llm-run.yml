@@ -21,10 +21,17 @@ jobs:
           node-version: 22
       - name: Run brand-blind provider probes through Nexus
         run: node scripts/run-nexus-cross-llm-probes.mjs
+      - name: Build CHUM pickup radar
+        run: npm run chum:pickup-radar
+
       - name: Preserve behavioral receipts
         uses: actions/upload-artifact@v4
         with:
           name: nexus-cross-llm-receipts-${{ github.run_id }}
-          path: probe-receipts/*.json
+          path: |
+            probe-receipts/*.json
+            artifacts/chum/pickup-radar-latest.json
+            public/chum/pickup-radar.json
+            public/chum/pickup-radar.txt
           if-no-files-found: error
           retention-days: 30
