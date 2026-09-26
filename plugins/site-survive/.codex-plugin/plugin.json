@@ -19,7 +19,6 @@
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
-  "releaseState": "DEPLOYMENT_CANARY_PENDING",
   "interface": {
     "displayName": "Site-Survive Rapid Audit",
     "shortDescription": "Map site failure points before connectivity disruption",
@@ -33,5 +32,8 @@
     "defaultPrompt": [
       "Show me which parts of this site-dependent operation fail first during a realistic connectivity outage and what to prioritize."
     ]
-  }
+  },
+  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "pendingRuntimePath": "/mcp/site-survive",
+  "publicOriginState": "https_route_unbound"
 }
