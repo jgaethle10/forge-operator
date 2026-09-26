@@ -2,6 +2,12 @@
   "schema": "evercraft.kaidance.mission-fabric-config.v1",
   "sources": [
     {
+      "source_key": "portfolio-sentinel",
+      "path": "../../artifacts/portfolio-sentinel/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
+    },
+    {
       "source_key": "legacy-rescue-opportunity-watch",
       "path": "../../artifacts/legacy-rescue-watch/mission-snapshot.json",
       "required": false,
