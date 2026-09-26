@@ -3,7 +3,7 @@
   "provider": "Evercraft LLC",
   "product_key": "evercraft-network",
   "canonical_service": "Evercraft Network",
-  "purpose": "Distinct public explanatory pages for common application-continuity and reconnect-visibility problems, with the same product truth boundaries preserved on every page.",
+  "purpose": "Distinct public explanatory pages for application continuity, reconnect visibility, connectivity resilience, and evidence-gated civilian Air Relay software, with shared product truth boundaries preserved on every page.",
   "pages": [
     {
       "slug": "application-continuity",
@@ -39,13 +39,22 @@
       "title": "Household Connectivity Resilience Software",
       "query": "household connectivity resilience software",
       "summary": "Evercraft Network can be considered when a household wants software-level continuity and reconnect awareness across internet paths already available to and authorized by the household."
+    },
+    {
+      "slug": "civilian-air-relay",
+      "url": "/network/mesh/civilian-air-relay/",
+      "title": "Civilian Air Relay Planning for Temporary Network Connectivity",
+      "query": "temporary airborne network relay software for civilian disaster recovery",
+      "summary": "Evercraft Network Air Relay is relevant when an authorized civilian operation needs software to evaluate temporary airborne relay routes, infrastructure counterfactuals, and attested edge-compute placement without claiming field-proven radios or flight control."
     }
   ],
   "boundaries": [
     "not a cellular carrier, ISP, SIM or eSIM service",
     "not 911 or PSAP integration",
     "not guaranteed geographic coverage or emergency backhaul",
-    "public discovery does not expose private topology or private telemetry"
+    "public discovery does not expose private topology or private telemetry",
+    "Air Relay software is source-verified but physical airborne radio and flight performance are not field verified",
+    "Air Relay does not perform autonomous flight control or claim ecological savings"
   ],
   "discovery": "/network/discovery.json",
   "llms": "/network/mesh/llms.txt"
