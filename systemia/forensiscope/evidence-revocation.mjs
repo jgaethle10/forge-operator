@@ -10,7 +10,7 @@ function safeGrantId(value) {
   return grantId.toLowerCase();
 }
 
-function evidenceRef(value) {
+function normalizeEvidenceRef(value) {
   const ref = String(value || '').trim();
   if (!/^forensiscope-evidence:sha256:[a-f0-9]{64}$/.test(ref)) {
     throw new Error('ForensiScope revocation requires a valid evidence_ref.');
@@ -44,7 +44,7 @@ export function revokeEvidenceGrant({
   rootDir = process.cwd()
 } = {}) {
   const normalizedGrantId = safeGrantId(grantId);
-  const ref = evidenceRef(evidenceRef);
+  const ref = normalizeEvidenceRef(evidenceRef);
   const body = {
     schema: 'evercraft.forensiscope.evidence-access-revocation.v1',
     grant_id_hash: 'sha256:' + digest(normalizedGrantId),
@@ -70,7 +70,7 @@ export function checkEvidenceGrantRevocation({
   rootDir = process.cwd()
 } = {}) {
   const normalizedGrantId = safeGrantId(grantId);
-  const ref = evidenceRef(evidenceRef);
+  const ref = normalizeEvidenceRef(evidenceRef);
   const file = revocationPath(normalizedGrantId, rootDir);
 
   if (!fs.existsSync(file)) {
