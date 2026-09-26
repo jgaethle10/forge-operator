@@ -8,6 +8,15 @@ import { YardOperator } from '../yard/operator.mjs';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+async function waitForPath(target, timeoutMs = 15000, intervalMs = 200) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (fs.existsSync(target)) return true;
+    await sleep(intervalMs);
+  }
+  return fs.existsSync(target);
+}
+
 async function freeUdpPort() {
   const socket = dgram.createSocket('udp4');
   await new Promise((resolve, reject) => {
@@ -125,7 +134,7 @@ try {
     true
   );
   assert.equal(
-    fs.existsSync(path.join(workspace, 'portfolio-sentinel', 'mission-snapshot.json')),
+    await waitForPath(path.join(workspace, 'portfolio-sentinel', 'mission-snapshot.json')),
     true
   );
   assert.equal(
