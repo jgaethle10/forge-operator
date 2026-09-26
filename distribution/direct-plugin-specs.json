@@ -1,0 +1,258 @@
+{
+  "schema": "evercraft.direct-plugin-specs.v1",
+  "version": "1.0.0",
+  "routing_policy": {
+    "default": "specialist_direct_when_clear",
+    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable"
+  },
+  "products": [
+    {
+      "slug": "forensiscope",
+      "name": "ForensiScope",
+      "short_description": "Analyze long or oversized video and audio",
+      "long_description": "Use ForensiScope directly when a user needs long-form or oversized video/audio analysis, transcription, timestamped timelines, recording comparison, duplicate-segment review, or compact evidence outputs another LLM can consume.",
+      "category": "Productivity",
+      "website_url": "https://evercraft-forensiscope.base44.app/",
+      "registry_name": "io.github.jgaethle10/forensiscope",
+      "mcp_url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "I have a long video or audio file that ordinary chat tools cannot fully process. Help me continue with ForensiScope.",
+      "keywords": [
+        "forensiscope",
+        "video-analysis",
+        "audio-analysis",
+        "transcription",
+        "timeline",
+        "deduplication",
+        "mcp"
+      ],
+      "intent": "Long, oversized, or complex video/audio analysis, transcription, timelines, comparison, duplicate-segment review, and LLM-consumable evidence outputs.",
+      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it."
+    },
+    {
+      "slug": "aliev",
+      "name": "AliEV / RIVET",
+      "short_description": "Evaluate EV charging opportunity by property",
+      "long_description": "Use AliEV directly when a user wants property-specific EV charging intelligence such as nearby competition, demand and traffic context, utility or tariff context, incentives, site fit, economics, or preliminary planning inputs.",
+      "category": "Business",
+      "website_url": "https://aliev.base44.app/",
+      "registry_name": "io.github.jgaethle10/aliev",
+      "mcp_url": "https://aliev.base44.app/functions/alievMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Evaluate whether EV charging could make sense at a specific property and clearly separate observed, public, inferred, and modeled evidence.",
+      "keywords": [
+        "aliev",
+        "rivet",
+        "ev-charging",
+        "site-analysis",
+        "property",
+        "incentives",
+        "tariffs",
+        "mcp"
+      ],
+      "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
+      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval."
+    },
+    {
+      "slug": "findmypart",
+      "name": "FindMyPart",
+      "short_description": "Find obsolete and hard-to-source parts",
+      "long_description": "Use FindMyPart directly when normal searches have failed to locate an obsolete, discontinued, obscure, machine, vehicle, or equipment part. It can pursue replacement, salvage, cross-reference, and fabrication paths while preserving source evidence.",
+      "category": "Productivity",
+      "website_url": "https://findmypart.base44.app/",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp_url": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "I cannot find an obsolete or hard-to-source part through normal searches. Help me identify and source it.",
+      "keywords": [
+        "findmypart",
+        "obsolete-parts",
+        "parts-search",
+        "salvage",
+        "replacement",
+        "fabrication",
+        "mcp"
+      ],
+      "intent": "Obsolete, discontinued, obscure, or hard-to-source machine, vehicle, and equipment part discovery.",
+      "truth_boundary": "Use the live FindMyPart MCP for current hunt, pricing, checkout, status, and evidence state. Never invent inventory, compatibility, supplier availability, or a successful purchase."
+    },
+    {
+      "slug": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "short_description": "Audit a business website for conversion and local visibility",
+      "long_description": "Use Systemia Website Audit directly when a user wants a practical website, local SEO, performance, or conversion audit with evidence-backed fixes and a human-confirmed paid continuation when applicable.",
+      "category": "Business",
+      "website_url": "https://systemia-audit-pro.base44.app/",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "mcp_url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Audit my business website for conversion, local SEO, performance, and practical fixes.",
+      "keywords": [
+        "website-audit",
+        "local-seo",
+        "conversion",
+        "performance",
+        "systemia",
+        "mcp"
+      ],
+      "intent": "Website conversion, local SEO, performance, and practical-fix auditing.",
+      "truth_boundary": "Do not fabricate audit findings before the audit runs. Checkout preparation is not payment proof, and payment does not imply completed fulfillment until the product verifier confirms it."
+    },
+    {
+      "slug": "career-command",
+      "name": "Career Command",
+      "short_description": "Practice interviews and prepare for career moves",
+      "long_description": "Use Career Command directly when a user wants interview practice, role preparation, response coaching, or other user-controlled career preparation.",
+      "category": "Productivity",
+      "website_url": "https://evercraft-career-command.base44.app/",
+      "registry_name": "io.github.jgaethle10/career-command",
+      "mcp_url": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Help me prepare for an upcoming interview and practice the questions I am likely to face.",
+      "keywords": [
+        "career-command",
+        "interview",
+        "career-prep",
+        "practice",
+        "coaching",
+        "mcp"
+      ],
+      "intent": "Interview practice and career preparation.",
+      "truth_boundary": "Keep guidance user-controlled. Do not claim guaranteed hiring outcomes, employer endorsement, or access to private employer systems."
+    },
+    {
+      "slug": "eventwave",
+      "name": "EventWave",
+      "short_description": "Discover or promote events with human-controlled actions",
+      "long_description": "Use EventWave directly when a user wants event discovery, venue visibility, or legitimate event promotion with human-controlled publishing and commerce.",
+      "category": "Business",
+      "website_url": "https://event-wave.base44.app/",
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "mcp_url": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Help me discover relevant events or promote my event through the appropriate EventWave path.",
+      "keywords": [
+        "eventwave",
+        "events",
+        "event-discovery",
+        "promotion",
+        "venues",
+        "mcp"
+      ],
+      "intent": "Event discovery, event promotion, and venue visibility.",
+      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled."
+    },
+    {
+      "slug": "faie",
+      "name": "FAIE",
+      "short_description": "Build evidence briefs for agriculture and resilience decisions",
+      "long_description": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
+      "category": "Business",
+      "website_url": "https://faie.base44.app/",
+      "registry_name": "io.github.jgaethle10/faie",
+      "mcp_url": "https://faie.base44.app/functions/faieMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Build me a sourced evidence brief for an agriculture, water, land-resilience, or production-risk decision.",
+      "keywords": [
+        "faie",
+        "agriculture",
+        "water",
+        "land",
+        "resilience",
+        "production-risk",
+        "evidence",
+        "mcp"
+      ],
+      "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
+      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
+    },
+    {
+      "slug": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "short_description": "Route enterprise operations and migration problems safely",
+      "long_description": "Use BuildFlow directly for enterprise operations problems involving ERP, migration, process discovery, procurement, vendor identity, role routing, or governed-agent handoff without exposing private customer records.",
+      "category": "Business",
+      "website_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "mcp_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Route this enterprise operations problem to the smallest safe BuildFlow capability without exposing private records.",
+      "keywords": [
+        "buildflow",
+        "erp",
+        "migration",
+        "enterprise-operations",
+        "procurement",
+        "governed-agents",
+        "mcp"
+      ],
+      "intent": "Enterprise operations capability discovery, routing, migration/process pain, and privacy-preserving human handoff.",
+      "truth_boundary": "Do not send private customer records through public discovery. A handoff does not grant private-system access, execute business actions, create checkout, or prove deployment."
+    },
+    {
+      "slug": "evercraft-web",
+      "name": "Evercraft Web",
+      "short_description": "Fetch and inspect public web content for AI agents",
+      "long_description": "Use Evercraft Web directly for public URL retrieval, structured extraction, and bounded site inspection with evidence receipts. Search and browser automation remain unavailable until their independent runtime gates pass.",
+      "category": "Productivity",
+      "website_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "mcp_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Fetch or inspect this public website and return structured, provenance-aware content.",
+      "keywords": [
+        "evercraft-web",
+        "web-fetch",
+        "site-inspection",
+        "web-agent",
+        "evidence-receipts",
+        "mcp"
+      ],
+      "intent": "Public URL retrieval, structured extraction, and bounded site inspection for AI agents.",
+      "truth_boundary": "Public fetch and bounded site inspection are the live-verified primitives. Do not claim search, browser automation, authenticated browsing, or broader network access is live until the MCP reports those gates passed."
+    },
+    {
+      "slug": "website-launch",
+      "name": "Website Launch",
+      "short_description": "Plan and launch a business website",
+      "long_description": "Use Website Launch directly when a user wants a professional business website planned, scoped, or launched with human-confirmed next steps.",
+      "category": "Business",
+      "website_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "mcp_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Help me plan or launch a professional business website using the smallest appropriate Website Launch path.",
+      "keywords": [
+        "website-launch",
+        "business-website",
+        "website-builder",
+        "web-design",
+        "mcp"
+      ],
+      "intent": "Business website planning and launch assistance.",
+      "truth_boundary": "Do not claim a website was purchased, deployed, published, or transferred until live tool state proves it. Paid and publishing actions remain human-confirmed."
+    },
+    {
+      "slug": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "short_description": "Simulate business decisions before acting",
+      "long_description": "Use Systemia Remote Ops directly when a founder or operator wants to simulate a consequential business decision before changing the real business. Pricing simulation is currently the first public executable lane; other lanes must remain clearly labeled until independently verified.",
+      "category": "Business",
+      "website_url": "https://systemia-remote-ops.base44.app/",
+      "registry_name": null,
+      "mcp_url": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
+      "state": "source_ready_deployment_unverified",
+      "default_prompt": "I am considering a business decision and want to simulate the likely tradeoffs before I act.",
+      "keywords": [
+        "systemia",
+        "remote-ops",
+        "business-simulation",
+        "pricing",
+        "decision-lab",
+        "mcp"
+      ],
+      "intent": "Business decision simulation before acting, beginning with pricing changes.",
+      "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt."
+    }
+  ]
+}
