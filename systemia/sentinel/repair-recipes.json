@@ -249,6 +249,56 @@
       ],
       "rollback": "Revert any change that allows public acquisition telemetry to create revenue events.",
       "learned_from": "Zero-sale funnel blindness Sep 26 2026"
+    },
+    {
+      "recipe_id": "restore-universal-buyer-frontage",
+      "match": {
+        "invariant_ids": [
+          "sell-now-human-start-uses-universal-buyer-frontage"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "systemia/chum/start-corridor.mjs",
+          "server.ts",
+          "systemia/chum/commerce-canary.mjs"
+        ],
+        "instructions": "Restore the universal branded /buy/<publicId> buyer frontage as the first human continuation for every sell-now offer. Keep direct product and machine review URLs downstream only."
+      },
+      "verification": [
+        "npm run test:chum-start-corridor",
+        "npm run chum:commerce-canary",
+        "Forge production container smoke"
+      ],
+      "rollback": "Restore the last known-green universal buyer-frontage revision.",
+      "learned_from": "Human conversion audit Sep 26 2026"
+    },
+    {
+      "recipe_id": "restore-money-radar-oidc-payment-export",
+      "match": {
+        "invariant_ids": [
+          "money-radar-private-payment-export-uses-oidc"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          ".github/workflows/chum-watershed.yml",
+          ".github/workflows/chum-llm-hunter.yml",
+          "systemia/chum/money-radar.mjs"
+        ],
+        "instructions": "Restore the GitHub OIDC-authenticated private payment export. Do not publish verified revenue on a public unauthenticated endpoint and do not treat checkout creation as payment."
+      },
+      "verification": [
+        "npm run test:chum-money-radar",
+        "CHUM commerce canary private export fails closed without OIDC",
+        "CHUM watershed Money Radar obtains measured trusted payment source on main"
+      ],
+      "rollback": "Fail closed to acquisition-only measurement if the authenticated payment export cannot be proven.",
+      "learned_from": "Money Radar payment blind spot Sep 26 2026"
     }
   ]
 }
