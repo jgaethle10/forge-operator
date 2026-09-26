@@ -163,6 +163,15 @@ receipt.summary = {
   expected_host_citations: receipt.results.filter((r) => r.evaluation?.expected_host_cited).length,
   control_false_positives: receipt.results.filter((r) => r.evaluation?.control_false_positive).length
 };
+receipt.measurement_state = !receipt.bridge_configured
+  ? 'blocked_bridge_not_configured'
+  : receipt.summary.failed > 0 && receipt.summary.completed > 0
+    ? 'partial_failure'
+    : receipt.summary.failed > 0
+      ? 'failed'
+      : receipt.summary.completed > 0
+        ? 'measured'
+        : 'configured_no_completed_probes';
 
 fs.mkdirSync('artifacts/chum', { recursive: true });
 fs.writeFileSync('artifacts/chum/provider-probe-latest.json', JSON.stringify(receipt, null, 2) + '\n');
@@ -172,6 +181,7 @@ const md = [
   '',
   `Run: ${receipt.run_id}`,
   `Bridge configured: ${receipt.bridge_configured ? 'yes' : 'no'}`,
+  `Measurement state: ${receipt.measurement_state}`,
   `Completed: ${receipt.summary.completed}`,
   `Blocked: ${receipt.summary.blocked}`,
   `Failed: ${receipt.summary.failed}`,
@@ -184,7 +194,7 @@ const md = [
 ];
 fs.writeFileSync('artifacts/chum/provider-probe-latest.md', md.join('\n') + '\n');
 
-console.log(JSON.stringify({ run_id: receipt.run_id, bridge_configured: receipt.bridge_configured, require_bridge: requireBridge, summary: receipt.summary }));
+console.log(JSON.stringify({ run_id: receipt.run_id, bridge_configured: receipt.bridge_configured, measurement_state: receipt.measurement_state, require_bridge: requireBridge, summary: receipt.summary }));
 
 if (requestedCases.length && unknownRequestedCases.length) {
   throw new Error(`CHUM provider probe requested unknown case(s): ${unknownRequestedCases.join(', ')}`);

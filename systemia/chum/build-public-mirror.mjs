@@ -223,6 +223,11 @@ for (const product of directory.products || []) {
           )
         : []),
       ...(product.commercial.pricing ? [`- Pricing: ${product.commercial.pricing}`] : []),
+      ...(product.commercial.machine_commerce_handoff?.state === 'live_verified'
+        ? ['- Machine Commerce human handoff is live-verified.']
+        : product.commercial.machine_commerce_handoff?.state
+          ? [`- Machine Commerce human handoff state: ${product.commercial.machine_commerce_handoff.state}.`]
+          : []),
       ...(String(product.commercial.status || '').includes('canary_pending') ? ['- Checkout route remains canary-pending.', '- Product-specific public checkout route is not represented as live until its independent canary passes.'] : []),
       ...(product.commercial.payment_state ? [`- Payment state: ${product.commercial.payment_state}`] : [])
     ] : []),
