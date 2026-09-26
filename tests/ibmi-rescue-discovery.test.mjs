@@ -59,6 +59,7 @@ assert.match(llms, /\$250 one-time/);
 assert.match(llms, /\$1,500 one-time/);
 assert.match(llms, /human buyer route is externally reachable/i);
 assert.match(llms, /backend checkout creation is independently verified/i);
+assert.match(llms, /checkout creation is not payment proof/i);
 assert.match(topLevel, /Evercraft IBM i Rescue/);
 
 console.log(JSON.stringify({
