@@ -78,6 +78,11 @@
       "name": "AliEV EV Site Opportunity Intelligence",
       "intent_terms": [
         "is this site good for EV charging",
+        "is this property a good EV charging site",
+        "is my hotel a good EV charging site",
+        "what is the EV charging opportunity at this property",
+        "hotel EV charging opportunity",
+        "property EV charging opportunity",
         "EV charger site analysis",
         "EV charging feasibility by address",
         "what EV chargers are near this property",
@@ -125,7 +130,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
       "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.",
-      "catalog_version": "2026-09-23.16"
+      "catalog_version": "2026-09-26.18"
     },
     {
       "public_id": "audit-center-website-audit-machine-v1",
@@ -147,15 +152,25 @@
       ],
       "problem": "A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.",
       "inputs": "Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.",
-      "outputs": "Observed website findings, deterministic category scores and breakdowns, prioritized audit findings, deeper fix plan/report for paid tier, and remediation scope for Audit + Patch.",
+      "outputs": "Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.",
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
-      "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
       "offers": [
         {
           "name": "Free Preview",
           "price": "$0",
           "billing": "free"
+        },
+        {
+          "offer_key": "quick",
+          "name": "Quick Win Audit",
+          "price": "$49",
+          "price_usd": 49,
+          "billing": "one_time",
+          "fulfillment": "automatic",
+          "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+          "upgrade_credit": "$49"
         },
         {
           "name": "Complete Audit",
@@ -169,12 +184,12 @@
         }
       ],
       "human_ui_required": false,
-      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.",
+      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
       "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
       "public_url_source": "source_catalog",
       "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-      "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.",
-      "catalog_version": "2026-09-23.16"
+      "invocation_status": "LIVE DISCOVERY: the public specialist offers surface exposes the $49 Quick Win Audit and requires explicit human confirmation before checkout. Source/build checks enforce exact $49 USD payment matching and automatic bounded fulfillment after provider-verified payment. This QA path does not create a real purchase, so checkout creation and paid fulfillment remain separately receipt-gated.",
+      "catalog_version": "2026-09-26.17"
     },
     {
       "public_id": "buildflow-bounded-agent-action-v1",
@@ -1486,5 +1501,6 @@
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "catalog_version": "2026-09-23.13"
     }
-  ]
+  ],
+  "updated_at": "2026-09-26T23:35:19.407Z"
 }
