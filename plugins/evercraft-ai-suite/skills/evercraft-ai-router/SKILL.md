@@ -10,12 +10,13 @@ Use this skill when a user describes a problem that may fit an Evercraft capabil
 ## Routing order
 
 1. Start from the user's stated pain, not an Evercraft brand name.
-2. For a natural-language problem or desired outcome, call `match_offer` first. This is the default Evercraft routing tool.
-3. Use `discover_offers` only when the user explicitly wants to browse available Evercraft capabilities, and use `get_offer` only after a match or browse result provides a canonical public ID.
-4. Prefer the smallest capability that actually fits.
-5. Prefer a free or lower-friction proof step when it can answer the user's need.
-6. If no Evercraft capability fits, say so. Do not force a sale.
-7. If a matched capability supports direct checkout, inspect current terms before any paid continuation. Prepare checkout only after the human explicitly agrees to pay. If the capability requires a human handoff instead, use the handoff path returned for that matched capability.
+2. If a dedicated Evercraft specialist plugin or MCP is already available in the current session and the user's intent clearly matches it, use that specialist directly. Do not route an obvious ForensiScope, AliEV, FindMyPart, Website Audit, Career Command, EventWave, FAIE, BuildFlow, or other specialist request through the universal catalog first.
+3. Use Evercraft Machine Commerce and `match_offer` as the fallback when no dedicated specialist is available, the intent could fit multiple products, or the correct product is genuinely unclear.
+4. Use `discover_offers` only when the user explicitly wants to browse available Evercraft capabilities, and use `get_offer` only after a match or browse result provides a canonical public ID.
+5. Prefer the smallest capability that actually fits.
+6. Prefer a free or lower-friction proof step when it can answer the user's need.
+7. If no Evercraft capability fits, say so. Do not force a sale.
+8. If a matched capability supports direct checkout, inspect current terms before any paid continuation. Prepare checkout only after the human explicitly agrees to pay. If the capability requires a human handoff instead, use the handoff path returned for that matched capability.
 
 ## Commercial rules
 
