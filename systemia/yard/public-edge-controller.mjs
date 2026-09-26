@@ -166,6 +166,7 @@ export class PublicEdgeController {
 
       let edgeAttestation=null;
       let specialistAttestation=null;
+      let identityBinding=null;
       if(this.identityAttestationRequired){
         [edgeAttestation,specialistAttestation]=await Promise.all([
           this.yard.attestDeployment(this.edgeDeploymentId),
@@ -183,6 +184,14 @@ export class PublicEdgeController {
         ){
           throw new Error('edge_specialist_device_attestation_mismatch');
         }
+        identityBinding=await this.yard.bindSpecialistIdentityAttestation(
+          this.specialistDeploymentId,
+          {
+            deviceFingerprint:edgeAttestation.device_fingerprint,
+            edgeAttestationReceipt:edgeAttestation.receipt_hash,
+            specialistAttestationReceipt:specialistAttestation.receipt_hash,
+          }
+        );
       }
 
       broker=new YardPublicRouteBroker({
@@ -235,6 +244,9 @@ export class PublicEdgeController {
           : null,
         specialist_attestation_receipt:this.identityAttestationRequired
           ? specialistAttestation?.receipt_hash||null
+          : null,
+        specialist_identity_binding_receipt:this.identityAttestationRequired
+          ? identityBinding?.compute_binding_receipt||null
           : null,
         founder_login_required:false,
       });
@@ -350,6 +362,14 @@ export class PublicEdgeController {
       ){
         throw new Error('controller_resume_identity_attestation_failed');
       }
+      await this.yard.bindSpecialistIdentityAttestation(
+        this.specialistDeploymentId,
+        {
+          deviceFingerprint:edgeAttestation.device_fingerprint,
+          edgeAttestationReceipt:edgeAttestation.receipt_hash,
+          specialistAttestationReceipt:specialistAttestation.receipt_hash,
+        }
+      );
     }
 
     const broker=new YardPublicRouteBroker({
