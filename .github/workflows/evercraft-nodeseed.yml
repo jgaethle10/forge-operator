@@ -3,15 +3,13 @@ name: Evercraft NodeSeed
 on:
   pull_request:
     paths:
-      - 'systemia/compute/**'
-      - 'systemia/yard/**'
+      - 'systemia/**'
       - '.github/workflows/evercraft-nodeseed.yml'
   push:
     branches:
       - main
     paths:
-      - 'systemia/compute/**'
-      - 'systemia/yard/**'
+      - 'systemia/**'
       - '.github/workflows/evercraft-nodeseed.yml'
 
 jobs:
@@ -25,3 +23,5 @@ jobs:
           node-version: '22'
       - name: Prove Evercraft NodeSeed discovery and authenticated allocation
         run: node systemia/compute/node-seed-proof.mjs
+      - name: Prove public edge field admission
+        run: node systemia/compute/public-edge-field-admit.proof.mjs
