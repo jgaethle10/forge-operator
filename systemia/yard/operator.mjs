@@ -416,6 +416,23 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_origin_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
+        const rivetHealthy =
+          health.ok === true &&
+          health.service === 'rivet-yard-report-runtime' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === job.result?.instance_id;
+        if (!rivetHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('RIVET report runtime failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_rivet_report_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
         const brokerHealthy =
           health.ok === true &&
@@ -827,6 +844,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
       service = 'remote-capacity-broker';
       healthPath = '/v1/remote/health';
+    } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
+      service = 'rivet-yard-report-runtime';
+      healthPath = '/health';
     } else {
       throw new Error('deployment does not support a public route');
     }
@@ -1076,6 +1096,31 @@ export class YardOperator {
     };
   }
 
+  rivetReportRuntimeReceipt(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    if (!record) throw new Error('deployment not found');
+    if (record.receipt?.workload_class !== 'systemia.rivet-report-runtime.v1') {
+      throw new Error('deployment is not a RIVET report runtime');
+    }
+    if (record.public_route?.verified !== true || record.public_route?.scope !== 'public_https') {
+      throw new Error('verified public HTTPS route is required');
+    }
+
+    return {
+      schema: 'evercraft.rivet.report-runtime-origin.v1',
+      runtime: 'Evercraft Compute',
+      verified: true,
+      origin: record.public_route.origin,
+      report_path: record.result?.report_path || '/v1/reports',
+      health_path: record.public_route.health_path || '/health',
+      deployment_receipt_hash: record.receipt.receipt_hash,
+      public_route_receipt_hash: record.public_route.receipt_hash,
+      instance_id: record.result?.instance_id || null,
+      verified_at: record.public_route.verified_at,
+      source: 'Systemia Yard Operator',
+    };
+  }
+
   runtimeOriginReceipt(deploymentId) {
     const record = this.deploymentStatus(deploymentId);
     if (!record) throw new Error('deployment not found');
@@ -1105,12 +1150,23 @@ export class YardOperator {
 
     if (
       record.receipt?.workload_class === 'systemia.chum-public-origin.v1' ||
-      record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1'
+      record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1' ||
+      record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1'
     ) {
       const broker =
         record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1';
-      const service = broker ? 'remote-capacity-broker' : 'chum-public-origin';
-      const healthPath = broker ? '/v1/remote/health' : '/api/health';
+      const rivet =
+        record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1';
+      const service = broker
+        ? 'remote-capacity-broker'
+        : rivet
+          ? 'rivet-yard-report-runtime'
+          : 'chum-public-origin';
+      const healthPath = broker
+        ? '/v1/remote/health'
+        : rivet
+          ? '/health'
+          : '/api/health';
 
       if (record.public_route?.verified === true) {
         try {

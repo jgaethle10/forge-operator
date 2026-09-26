@@ -287,17 +287,26 @@ export async function startRivetReportRuntime({
   fs.mkdirSync(stateDir,{recursive:true,mode:0o750});
   if(!clean(systemiaMachineKey)) throw new Error('SYSTEMIA_MACHINE_KEY is required');
   if(!clean(teamToken)) throw new Error('RIVET_YARD_TEAM_TOKEN is required');
+  const instanceId='rivet_'+randomBytes(12).toString('hex');
+  const startedAt=new Date().toISOString();
+  let deploymentReceiptRef='';
+  let server=null;
+  const health=()=>({
+    schema:'evercraft.rivet.yard-runtime-health.v1',
+    ok:Boolean(server?.listening),
+    service:'rivet-yard-report-runtime',
+    runtime:'Evercraft Compute',
+    instance_id:instanceId,
+    deployment_receipt_bound:Boolean(deploymentReceiptRef),
+    deployment_receipt_ref:deploymentReceiptRef||null,
+    source_adapter:'aliev-rivet-report-snapshot-v1',
+    started_at:startedAt
+  });
 
-  const server=http.createServer(async(req,res)=>{
+  server=http.createServer(async(req,res)=>{
     try{
       if(req.method==='GET' && req.url==='/health'){
-        return send(res,200,{
-          ok:true,
-          service:'rivet-yard-report-runtime',
-          runtime:'Evercraft Compute',
-          schema:'evercraft.rivet.yard-runtime-health.v1',
-          source_adapter:'aliev-rivet-report-snapshot-v1'
-        });
+        return send(res,200,health());
       }
       if(req.method==='POST' && req.url==='/v1/reports'){
         const auth=clean(req.headers.authorization);
@@ -347,10 +356,16 @@ export async function startRivetReportRuntime({
   return {
     schema:'evercraft.rivet.yard-runtime.v1',
     service:'rivet-yard-report-runtime',
+    instance_id:instanceId,
     service_url:'http://'+host+':'+actualPort,
     health_path:'/health',
     report_path:'/v1/reports',
     progress_path_template:'/v1/report-jobs/{job_id}/progress',
+    health,
+    setDeploymentReceipt:(receiptRef)=>{
+      deploymentReceiptRef=clean(receiptRef);
+      return health();
+    },
     close:()=>new Promise((resolve,reject)=>server.close(err=>err?reject(err):resolve()))
   };
 }
