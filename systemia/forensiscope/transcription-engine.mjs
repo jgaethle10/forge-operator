@@ -1,7 +1,11 @@
+import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 const DEFAULT_MAX_BUFFER = 32 * 1024 * 1024;
 const MAX_SEGMENTS_PER_SHARD = 10000;
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const MANAGED_RUNNER = path.join(HERE, 'asr-runner.mjs');
 
 function asFinite(value, fallback = null) {
   const parsed = Number(value);
@@ -31,15 +35,55 @@ function substitute(value, context) {
     .replaceAll('{shard_end}', String(context.shard_end_seconds));
 }
 
+
+function managedProviderEngine(env) {
+  const provider = String(env.FORENSISCOPE_ASR_PROVIDER || '').trim().toLowerCase();
+  if (!provider) return null;
+
+  if (!['openai', 'openai-compatible'].includes(provider)) {
+    return {
+      state: 'misconfigured',
+      engine_id: null,
+      reason: `Unsupported FORENSISCOPE_ASR_PROVIDER: ${provider}`
+    };
+  }
+
+  const apiKeyPresent = Boolean(String(env.FORENSISCOPE_ASR_API_KEY || env.OPENAI_API_KEY || '').trim());
+  if (!apiKeyPresent) {
+    return {
+      state: 'misconfigured',
+      engine_id: null,
+      reason: 'Managed ASR requires FORENSISCOPE_ASR_API_KEY or OPENAI_API_KEY.'
+    };
+  }
+
+  const model = String(env.FORENSISCOPE_ASR_MODEL || 'gpt-4o-transcribe-diarize').trim();
+  return {
+    state: 'configured',
+    engine_id: `${provider}:${model}`,
+    executable: process.execPath,
+    args_template: [MANAGED_RUNNER, '{input}', '--duration', '{duration}'],
+    max_buffer_bytes: Math.max(
+      1024 * 1024,
+      asFinite(env.FORENSISCOPE_TRANSCRIBE_MAX_BUFFER_BYTES, DEFAULT_MAX_BUFFER)
+    )
+  };
+}
+
 export function resolveTranscriptionEngine(env = process.env) {
-  const enabled = String(env.FORENSISCOPE_TRANSCRIBE_ENABLED || '').toLowerCase() === 'true';
-  if (!enabled) {
+  const enabledSetting = String(env.FORENSISCOPE_TRANSCRIBE_ENABLED || '').trim().toLowerCase();
+  const managed = managedProviderEngine(env);
+  const enabled = enabledSetting === 'true' || (!enabledSetting && managed !== null);
+
+  if (!enabled || enabledSetting === 'false') {
     return {
       state: 'disabled',
       engine_id: null,
-      reason: 'FORENSISCOPE_TRANSCRIBE_ENABLED is not true.'
+      reason: 'Transcription is disabled. Set FORENSISCOPE_TRANSCRIBE_ENABLED=true or configure FORENSISCOPE_ASR_PROVIDER.'
     };
   }
+
+  if (managed) return managed;
 
   const engineId = String(env.FORENSISCOPE_TRANSCRIBE_ENGINE_ID || '').trim();
   const executable = String(env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE || '').trim();
@@ -47,7 +91,7 @@ export function resolveTranscriptionEngine(env = process.env) {
     return {
       state: 'misconfigured',
       engine_id: engineId || null,
-      reason: 'Enabled transcription requires FORENSISCOPE_TRANSCRIBE_ENGINE_ID and FORENSISCOPE_TRANSCRIBE_EXECUTABLE.'
+      reason: 'Enabled transcription requires either a managed FORENSISCOPE_ASR_PROVIDER or FORENSISCOPE_TRANSCRIBE_ENGINE_ID plus FORENSISCOPE_TRANSCRIBE_EXECUTABLE.'
     };
   }
 
@@ -92,6 +136,28 @@ function normalizeSegments(payload, bounds) {
   }
 
   return segments;
+}
+
+export function probeTranscriptionEngine({ env = process.env } = {}) {
+  const engine = resolveTranscriptionEngine(env);
+  if (engine.state !== 'configured') return engine;
+
+  const managed = engine.executable === process.execPath && engine.args_template?.[0] === MANAGED_RUNNER;
+  if (!managed) return { ...engine, probe_state: 'configuration_only' };
+
+  const result = spawnSync(engine.executable, [MANAGED_RUNNER, '--healthcheck'], {
+    encoding: 'utf8',
+    maxBuffer: 1024 * 1024,
+    env
+  });
+
+  return {
+    ...engine,
+    probe_state: result.status === 0 ? 'ready' : 'unavailable',
+    probe_reason: result.status === 0
+      ? null
+      : (result.error?.message || String(result.stderr || '').trim().slice(-1200) || 'ASR healthcheck failed.')
+  };
 }
 
 export function transcribePreparedAudio({

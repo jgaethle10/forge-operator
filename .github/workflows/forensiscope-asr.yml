@@ -1,0 +1,39 @@
+name: ForensiScope ASR contract
+
+on:
+  pull_request:
+    paths:
+      - "systemia/forensiscope/asr-runner.mjs"
+      - "systemia/forensiscope/asr-runner.test.mjs"
+      - "systemia/forensiscope/transcription-engine.mjs"
+      - "systemia/forensiscope/ASR.md"
+      - "package.json"
+      - ".github/workflows/forensiscope-asr.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/forensiscope/asr-runner.mjs"
+      - "systemia/forensiscope/asr-runner.test.mjs"
+      - "systemia/forensiscope/transcription-engine.mjs"
+      - "systemia/forensiscope/ASR.md"
+      - "package.json"
+      - ".github/workflows/forensiscope-asr.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  asr-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax check
+        run: |
+          node --check systemia/forensiscope/asr-runner.mjs
+          node --check systemia/forensiscope/transcription-engine.mjs
+      - name: ASR contract tests
+        run: npm run test:forensiscope-asr
