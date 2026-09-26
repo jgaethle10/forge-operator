@@ -66,6 +66,8 @@ export function issueForensiScopeAnalysisHandoff({
     product: 'ForensiScope by Evercraft',
     job_id: analysisReceipt.job_id,
     evidence_ref: evidenceRef,
+    provenance_ref: analysisReceipt.result?.provenance_ref || null,
+    provenance_digest: analysisReceipt.result?.provenance_digest || null,
     source_sha256: analysisReceipt.source?.sha256 || null,
     access: {
       token: access.access_token,
