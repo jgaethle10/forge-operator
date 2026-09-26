@@ -35,6 +35,7 @@
     "checkout_is_payment_proof": false
   },
   "source_refs": [
+    "conformance/provider-observations/auto-generic_agent-media-overflow-001-3e2b4a06e21b8b38.json",
     "conformance/provider-observations/auto-generic_agent-media-overflow-001-5f84f40dd2894a9b.json"
   ]
 }

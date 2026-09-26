@@ -33,6 +33,7 @@
     "checkout_is_payment_proof": false
   },
   "source_refs": [
+    "conformance/provider-observations/auto-generic_agent-local-rewards-001-7c5ff88575e6915c.json",
     "conformance/provider-observations/auto-generic_agent-local-rewards-001-fbd09041dd1e0c37.json"
   ]
 }
