@@ -14,6 +14,7 @@ import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
+import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -454,6 +455,7 @@ export async function startEvercraftComputeNode({
     'systemia.chum-public-origin.v1',
     'systemia.remote-capacity-broker.v1',
     'systemia.rivet-report-runtime.v1',
+    'systemia.specialist-handoff-mcp.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -950,6 +952,66 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
+          const serviceHost = String(body.input?.host || '127.0.0.1');
+          const loopbackService =
+            serviceHost === '127.0.0.1' ||
+            serviceHost === '::1' ||
+            serviceHost === 'localhost';
+          if (!loopbackService && body.input?.allow_public_bind !== true) {
+            return send(res, 403, { error: 'explicit_public_bind_authority_required' });
+          }
+
+          const runtime = await startSpecialistHandoffRuntime({
+            host: serviceHost,
+            port: Number(body.input?.port || 0),
+            gatewayUrl: String(
+              body.input?.gateway_url ||
+              process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
+              'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway'
+            ),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/health',
+            instance_id: runtime.instanceId,
+            specialist_paths: [
+              '/mcp/ibmi-rescue',
+              '/mcp/foundry-app-escape',
+              '/mcp/site-survive',
+            ],
+            read_only_specialist_handoff: true,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
           });
           return send(res, 200, {
             ok: true,
