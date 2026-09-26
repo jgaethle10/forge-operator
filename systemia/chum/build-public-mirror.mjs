@@ -544,6 +544,8 @@ const sitemapStatic = [
   '/schema.jsonld',
   '/openapi.json',
   '/.well-known/evercraft-agent.json',
+  '/.well-known/agent-card.json',
+  '/.well-known/agent.json',
   '/.well-known/evercraft-agent-directory.json',
   '/.well-known/evercraft-agent-interfaces.json',
   '/.well-known/evercraft-discovery.json',
@@ -790,6 +792,7 @@ const agentDirectory = {
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     pain_index: '/.well-known/evercraft-pain-index.json',
     answer_graph: '/chum/answers/index.json',
+    a2aAgentCard: '/.well-known/agent-card.json',
     machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
     machine_commerce_mcp: universalMcp,
     use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant.'
@@ -840,6 +843,9 @@ const discoveryWatershed = {
     intent_router: '/api/discover?q={natural-language-problem}',
     revenue_router: '/api/revenue-watershed',
     schema: '/schema.jsonld',
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a_alias: '/.well-known/agent.json',
+    a2a_state: 'release_candidate_pending_live_canary',
     openapi: '/openapi.json'
   },
   universal_front_door: {
