@@ -12,6 +12,12 @@
       "path": "../../artifacts/node001-field/megatron-status/mission-snapshot.json",
       "required": true,
       "stale_after_seconds": 900
+    },
+    {
+      "source_key": "remote-device-trust-watch",
+      "path": "../../artifacts/remote-device-trust-watch/mission-snapshot.json",
+      "required": true,
+      "stale_after_seconds": 900
     }
   ]
 }
