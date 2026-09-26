@@ -124,7 +124,8 @@
     "test:chum-fire-control": "node tests/chum-fire-control.test.mjs",
     "proof:portfolio-sentinel": "node systemia/organism/portfolio-sentinel.proof.mjs",
     "run:portfolio-sentinel": "node systemia/organism/portfolio-sentinel-runner.mjs",
-    "scan:portfolio-sentinel:offline": "node systemia/organism/portfolio-sentinel-runner.mjs --offline"
+    "scan:portfolio-sentinel:offline": "node systemia/organism/portfolio-sentinel-runner.mjs --offline",
+    "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
