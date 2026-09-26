@@ -53,9 +53,13 @@ test('CHUM syndication mesh fans canonical products out without bootstrap spam',
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'public/.well-known/evercraft-syndication.json')));
   assert.equal(manifest.product_count, 2);
   assert.equal(manifest.feeds.rss, '/feed.xml');
+  assert.equal(manifest.feeds.commercial_intent_json, '/chum/commercial/feed.json');
+  assert.equal(manifest.feeds.segmented_sitemap_index, '/chum/sitemaps/index.xml');
   const sitemap = fs.readFileSync(path.join(root, 'public/sitemap.xml'), 'utf8');
   assert.match(sitemap, /<loc>\/feed\.xml<\/loc>/);
   assert.match(sitemap, /<loc>\/chum\/syndication\/<\/loc>/);
+  assert.match(sitemap, /<loc>\/chum\/commercial\/feed\.json<\/loc>/);
+  assert.match(sitemap, /<loc>\/chum\/sitemaps\/index\.xml<\/loc>/);
 
   const discovery = JSON.parse(fs.readFileSync(path.join(root, 'public/.well-known/evercraft-discovery.json')));
   assert.equal(discovery.start_here.json_feed, '/feed.json');
