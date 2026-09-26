@@ -60,6 +60,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           PORTFOLIO_SENTINEL_GITHUB_OWNER: jgaethle10
           PORTFOLIO_SENTINEL_AUTO_HEAL: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
+          PORTFOLIO_SENTINEL_ENFORCE_HEALTH: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
         run: node systemia/organism/portfolio-sentinel-runner.mjs --max-urls 200
 
       - name: Save Sentinel state
