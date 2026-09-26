@@ -5,7 +5,7 @@
   "purpose": "Current human-confirmed report options for address-first EV infrastructure diligence.",
   "source_state": {
     "catalog": "/.well-known/evercraft-machine-catalog.json",
-    "catalog_version": "2026-09-26.1",
+    "catalog_version": "2026-09-26.2",
     "generated_from_current_verified_offer": true
   },
   "commercial_state": "sell_now",
