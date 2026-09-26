@@ -24,7 +24,8 @@ function parseArgs(argv) {
     maxUrls: 24,
     githubOwner: process.env.PORTFOLIO_SENTINEL_GITHUB_OWNER || 'jgaethle10',
     githubRepo: process.env.GITHUB_REPOSITORY || 'jgaethle10/forge-operator',
-    autoHeal: process.env.PORTFOLIO_SENTINEL_AUTO_HEAL === 'true'
+    autoHeal: process.env.PORTFOLIO_SENTINEL_AUTO_HEAL === 'true',
+    enforceHealth: process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH !== 'false'
   };
   for (let i = 0; i < argv.length; i += 1) {
     const value = argv[i];
@@ -35,6 +36,7 @@ function parseArgs(argv) {
     else if (value === '--github-owner') out.githubOwner = argv[++i];
     else if (value === '--github-repo') out.githubRepo = argv[++i];
     else if (value === '--auto-heal') out.autoHeal = true;
+    else if (value === '--no-enforce-health') out.enforceHealth = false;
   }
   return out;
 }
@@ -401,7 +403,7 @@ async function main() {
     mission_snapshot: path.join(outDir, 'mission-snapshot.json')
   }));
 
-  if (!healthy) process.exitCode = 1;
+  if (!healthy && args.enforceHealth) process.exitCode = 1;
 }
 
 await main();
