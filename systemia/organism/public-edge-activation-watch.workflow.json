@@ -27,7 +27,9 @@
   "outputs": {
     "cycle_report": "artifacts/public-edge-activation-watch/latest.json",
     "mission_snapshot": "artifacts/public-edge-activation-watch/mission-snapshot.json",
-    "safe_state": "artifacts/public-edge-activation-watch/runtime/public-edge-activation-watch.json"
+    "safe_state": "artifacts/public-edge-activation-watch/runtime/public-edge-activation-watch.json",
+    "field_mission": "artifacts/public-edge-activation-watch/field-mission.json",
+    "field_mission_snapshot": "artifacts/public-edge-activation-watch/field-mission-snapshot.json"
   },
   "private_runtime_inputs": {
     "allocator_authority": "EVERCRAFT_ALLOCATOR_TOKEN or EVERCRAFT_ALLOCATOR_TOKENS_JSON",
@@ -61,5 +63,11 @@
     "software_path": "ci_proven",
     "public_production_edge": "not_verified",
     "physical_dependency": "waiting_on_field_evidence"
+  },
+  "dependencies": {
+    "node001_field_mission": "artifacts/node001-field/megatron-status/latest.json",
+    "node001_issue": "github:issue:175",
+    "public_edge_issue": "github:issue:403",
+    "direct_plugin_specs": "distribution/direct-plugin-specs.json"
   }
 }
