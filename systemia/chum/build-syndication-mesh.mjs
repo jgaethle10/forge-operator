@@ -290,6 +290,12 @@ export function buildSyndicationMesh({
       json_feed: RAW_BASE + '/feed.json',
       manifest: RAW_BASE + '/.well-known/evercraft-syndication.json'
     },
+    machine_protocols: {
+      mcp_directory: '/.well-known/evercraft-agent-interfaces.json',
+      a2a_agent_card: '/.well-known/agent-card.json',
+      a2a_alias: '/.well-known/agent.json',
+      a2a_state: 'release_candidate_pending_live_canary'
+    },
     social_publication: {
       state: 'destination_gated',
       rule: 'Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.',
