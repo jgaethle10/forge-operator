@@ -161,8 +161,10 @@ function publicFileForUrl(publicRoot, urlPath) {
   return null;
 }
 
-function crawlPriority(urlPath) {
+export function crawlPriority(urlPath) {
   const value = String(urlPath || '');
+  if (value.includes('/chum/commercial/')) return 112;
+  if (value.includes('/chum/sitemaps/')) return 108;
   if (value.includes('/chum/answers/doors/')) return 100;
   if (value.includes('/chum/intents/')) return 98;
   if (value.includes('/chum/capabilities/')) return 96;

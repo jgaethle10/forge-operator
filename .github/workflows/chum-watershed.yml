@@ -140,6 +140,7 @@ jobs:
           npm run chum:validate
           npm run test:chum-index
           npm run test:chum-answers
+          npm run test:chum-commercial-mesh
           npm run test:chum-money-radar
           npm run test:chum-fire-control
 

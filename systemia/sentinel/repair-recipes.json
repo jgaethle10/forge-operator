@@ -175,6 +175,31 @@
       ],
       "rollback": "restore last known-green trigger-mode contract",
       "learned_from": "push-green / schedule-red CHUM policy divergence"
+    },
+    {
+      "recipe_id": "commercial-discovery-frontage-regression",
+      "match": {
+        "invariant_ids": [
+          "commercial-discovery-frontage-stays-advertised"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "server.ts",
+          "systemia/chum/build-commercial-discovery-mesh.mjs",
+          "systemia/chum/build-public-mirror.mjs"
+        ],
+        "instructions": "Restore the commercial intent mesh, segmented sitemap runtime route, feed Link headers, and root-crawl inclusion without manufacturing duplicate doorway content."
+      },
+      "verification": [
+        "npm run test:chum-commercial-mesh",
+        "npm run test:chum-crawl-pressure",
+        "Forge production container health and discovery smoke"
+      ],
+      "rollback": "Restore the last known-green commercial crawl frontage if discovery runtime behavior regresses.",
+      "learned_from": "Commercial discovery expansion Sep 26 2026"
     }
   ]
 }

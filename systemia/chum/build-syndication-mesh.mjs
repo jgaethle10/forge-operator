@@ -137,6 +137,9 @@ function augmentDiscovery(file) {
     syndication: '/.well-known/evercraft-syndication.json',
     rss: '/feed.xml',
     json_feed: '/feed.json',
+    commercial_intent_rss: '/chum/commercial/feed.xml',
+    commercial_intent_json: '/chum/commercial/feed.json',
+    segmented_sitemap_index: '/chum/sitemaps/index.xml',
     opensearch: '/opensearch.xml',
     syndication_hub: '/chum/syndication/'
   };
@@ -145,6 +148,9 @@ function augmentDiscovery(file) {
     policy: 'One truthful canonical product record is fanned out into standard discovery formats. Material changes may be queued for authorized social publishing, with dedupe by content hash.',
     rss: '/feed.xml',
     json_feed: '/feed.json',
+    commercial_intent_rss: '/chum/commercial/feed.xml',
+    commercial_intent_json: '/chum/commercial/feed.json',
+    segmented_sitemap_index: '/chum/sitemaps/index.xml',
     hub: '/chum/syndication/',
     manifest: '/.well-known/evercraft-syndication.json'
   };
@@ -272,8 +278,11 @@ export function buildSyndicationMesh({
     feeds: {
       rss: '/feed.xml',
       json_feed: '/feed.json',
+      commercial_intent_rss: '/chum/commercial/feed.xml',
+      commercial_intent_json: '/chum/commercial/feed.json',
       freshness_atom: '/chum/freshness.xml',
       sitemap: '/sitemap.xml',
+      segmented_sitemap_index: '/chum/sitemaps/index.xml',
       opensearch: '/opensearch.xml'
     },
     raw_github_mirrors: {
@@ -358,12 +367,14 @@ export function buildSyndicationMesh({
     '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
     '<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Evercraft Product Discovery RSS">',
     '<link rel="alternate" type="application/feed+json" href="/feed.json" title="Evercraft Product Discovery JSON Feed">',
+    '<link rel="alternate" type="application/rss+xml" href="/chum/commercial/feed.xml" title="Evercraft Commercial Intent RSS">',
+    '<link rel="alternate" type="application/feed+json" href="/chum/commercial/feed.json" title="Evercraft Commercial Intent JSON Feed">',
     '<link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Evercraft Search">',
     '<link rel="alternate" type="application/json" href="./index.json">',
     '</head><body><main>',
     '<h1>Evercraft Syndication Mesh</h1>',
     '<p>One truthful product catalog, fanned out into standard formats so crawlers, search engines, LLMs and agents have more legitimate doors into the same canonical information.</p>',
-    '<p><a href="/feed.xml">RSS</a> · <a href="/feed.json">JSON Feed</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="/.well-known/evercraft-syndication.json">Machine manifest</a></p>',
+    '<p><a href="/feed.xml">Product RSS</a> · <a href="/feed.json">Product JSON Feed</a> · <a href="/chum/commercial/feed.xml">Commercial intent RSS</a> · <a href="/chum/commercial/feed.json">Commercial intent JSON Feed</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="/chum/sitemaps/index.xml">Segmented sitemap index</a> · <a href="/.well-known/evercraft-syndication.json">Machine manifest</a></p>',
     '<h2>Products</h2>',
     '<ul>',
     ...productRows,
@@ -386,6 +397,14 @@ export function buildSyndicationMesh({
     '/feed.xml',
     '/feed.json',
     '/opensearch.xml',
+    '/chum/commercial/',
+    '/chum/commercial/feed.xml',
+    '/chum/commercial/feed.json',
+    '/chum/sitemaps/index.xml',
+    '/chum/sitemaps/sell-now.xml',
+    '/chum/sitemaps/answers.xml',
+    '/chum/sitemaps/products.xml',
+    '/chum/sitemaps/machine.xml',
     '/.well-known/evercraft-syndication.json',
     '/chum/syndication/',
     '/chum/syndication/index.json'

@@ -126,6 +126,8 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/chum/ > /tmp/chum.html
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/robots.txt > /tmp/robots.txt
           curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/sitemap.xml > /tmp/sitemap.xml
+          curl --fail --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3000/chum/sitemaps/index.xml > /tmp/segmented-sitemap.xml
+          curl --fail --silent http://127.0.0.1:3000/chum/commercial/index.json > /tmp/commercial-intent-mesh.json
           curl --fail --silent --get \
             --data-urlencode "q=I cannot find a discontinued machine part and I only have markings measurements and a photo" \
             http://127.0.0.1:3000/api/discover > /tmp/portfolio-route.json
@@ -160,6 +162,8 @@ jobs:
           const chumHtml = fs.readFileSync('/tmp/chum.html','utf8');
           const robots = fs.readFileSync('/tmp/robots.txt','utf8');
           const sitemap = fs.readFileSync('/tmp/sitemap.xml','utf8');
+          const segmentedSitemap = fs.readFileSync('/tmp/segmented-sitemap.xml','utf8');
+          const commercialIntentMesh = JSON.parse(fs.readFileSync('/tmp/commercial-intent-mesh.json','utf8'));
           const forensiscopeDiscovery = JSON.parse(fs.readFileSync('/tmp/forensiscope-discovery.json','utf8'));
           const forensiscopeOffer = JSON.parse(fs.readFileSync('/tmp/forensiscope-offer.json','utf8'));
           const forensiscopeRoute = JSON.parse(fs.readFileSync('/tmp/forensiscope-route.json','utf8'));
@@ -208,9 +212,14 @@ jobs:
           }
           if (!robots.includes('User-agent: OAI-SearchBot')) throw new Error('OAI-SearchBot policy missing');
           if (!robots.includes('Sitemap: https://discovery.example.test/sitemap.xml')) throw new Error('absolute runtime sitemap declaration missing');
+          if (!robots.includes('Sitemap: https://discovery.example.test/chum/sitemaps/index.xml')) throw new Error('segmented sitemap declaration missing');
           if (!sitemap.includes('<loc>https://discovery.example.test/chum/</loc>')) throw new Error('absolute CHUM sitemap URL missing');
           if (!sitemap.includes('/chum/intents/findmypart-paid-hunt-v1/')) throw new Error('machine-offer pain page missing from root sitemap');
           if (sitemap.includes('<loc>/')) throw new Error('relative sitemap URL leaked from runtime');
+          if (!segmentedSitemap.includes('<loc>https://discovery.example.test/chum/sitemaps/sell-now.xml</loc>')) throw new Error('segmented sitemap index did not render absolute URLs');
+          if (segmentedSitemap.includes('<loc>/')) throw new Error('relative segmented sitemap URL leaked from runtime');
+          if (commercialIntentMesh.schema !== 'evercraft.chum.commercial-intent-mesh.v1') throw new Error('commercial intent mesh missing');
+          if (!commercialIntentMesh.clusters?.some((x) => x.public_id === 'rivet-site-underwriting-v1')) throw new Error('RIVET missing from commercial intent mesh');
           if (forensiscopeDiscovery.product_key !== 'forensiscope') throw new Error('ForensiScope discovery manifest missing');
           if (!forensiscopeLlms.includes('files too large for normal chatbots')) throw new Error('ForensiScope brand-blind pain language missing');
           if (forensiscopeRoute.matches?.[0]?.public_id !== 'forensiscope-evidence-review-v1') {
@@ -224,6 +233,8 @@ jobs:
           }
           if (!/^link:.*\/llms\.txt/im.test(chumHeaders)) throw new Error('CHUM response missing llms Link header');
           if (!/^link:.*evercraft-pain-index\.json/im.test(chumHeaders)) throw new Error('CHUM response missing pain-index Link header');
+          if (!/^link:.*chum\/sitemaps\/index\.xml/im.test(chumHeaders)) throw new Error('CHUM response missing segmented sitemap Link header');
+          if (!/^link:.*chum\/commercial\/feed\.json/im.test(chumHeaders)) throw new Error('CHUM response missing commercial intent feed Link header');
           if (!/^access-control-allow-origin:\s*\*/im.test(chumHeaders)) throw new Error('CHUM public discovery CORS missing');
           NODE
 

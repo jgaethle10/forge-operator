@@ -11,6 +11,9 @@ try { observedMissIndex = readJson('public/chum/answers/observed/index.json'); }
 const answerGraph = fs.existsSync('public/chum/answers/index.json')
   ? readJson('public/chum/answers/index.json')
   : { doors: [] };
+const commercialIntentMesh = fs.existsSync('public/chum/commercial/index.json')
+  ? readJson('public/chum/commercial/index.json')
+  : { clusters: [] };
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
@@ -385,7 +388,7 @@ const publicIndexHtml = [
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
   '<form action="/api/discover" method="get" class="card"><label for="q"><strong>Describe the problem</strong></label><br><input id="q" name="q" required style="width:min(100%,700px);padding:10px;margin:10px 0" placeholder="Example: I cannot find a discontinued machine part"><button type="submit" style="padding:10px 16px">Find the smallest matching capability</button></form>',
   `<p><strong>Read-only AI discovery:</strong> <code>${escapeHtml(READ_ONLY_DISCOVERY_REGISTRY)}</code></p>`,
-  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/chum/strike/">Adaptive strike hub</a> · <a href="/chum/crawler-radar.json">Crawler radar</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/commercial/">Commercial intent mesh</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/chum/strike/">Adaptive strike hub</a> · <a href="/chum/crawler-radar.json">Crawler radar</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
   '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
@@ -445,6 +448,16 @@ const sitemapStatic = [
   '/chum/strike/index.json',
   '/chum/crawler-radar.json',
   '/chum/crawler-radar.txt',
+  '/chum/commercial/',
+  '/chum/commercial/index.json',
+  '/chum/commercial/llms.txt',
+  '/chum/commercial/feed.xml',
+  '/chum/commercial/feed.json',
+  '/chum/sitemaps/index.xml',
+  '/chum/sitemaps/sell-now.xml',
+  '/chum/sitemaps/answers.xml',
+  '/chum/sitemaps/products.xml',
+  '/chum/sitemaps/machine.xml',
   '/chum/freshness.xml',
   '/chum/freshness.json',
   '/chum/crawl-state.json',
@@ -572,6 +585,11 @@ const sitemapUrls = Array.from(new Set([
   ...(answerGraph.doors || []).flatMap((door) => [
     door.relative_page,
     door.relative_json
+  ].filter(Boolean)),
+  ...(commercialIntentMesh.clusters || []).flatMap((cluster) => [
+    cluster.cluster,
+    cluster.cluster_json,
+    cluster.cluster_llms
   ].filter(Boolean))
 ]));
 const sitemap = [
@@ -617,6 +635,9 @@ const llmsLines = [
   `Pain Index: ${rawBase}/public/.well-known/evercraft-pain-index.json`,
   `Answer Graph: ${rawBase}/public/chum/answers/index.json`,
   `Observed discovery repairs: ${rawBase}/public/chum/answers/observed/index.json`,
+  `Commercial intent mesh: ${rawBase}/public/chum/commercial/index.json`,
+  `Commercial intent feed: ${rawBase}/public/chum/commercial/feed.json`,
+  `Segmented sitemap index: ${rawBase}/public/chum/sitemaps/index.xml`,
   `Crawler radar: ${rawBase}/public/chum/crawler-radar.json`,
   `Adaptive strike hub: ${rawBase}/public/chum/strike/index.json`,
   `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
@@ -802,6 +823,9 @@ const discoveryWatershed = {
     answer_graph: '/chum/answers/index.json',
     answer_graph_text: '/chum/answers/index.txt',
     observed_miss_answers: '/chum/answers/observed/index.json',
+    commercial_intent_mesh: '/chum/commercial/index.json',
+    commercial_intent_feed: '/chum/commercial/feed.json',
+    segmented_sitemap_index: '/chum/sitemaps/index.xml',
     read_only_mcp_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     products: '/.well-known/evercraft-products.json',
     agents: '/.well-known/evercraft-agent-directory.json',

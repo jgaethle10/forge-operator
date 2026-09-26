@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { buildCrawlPressure } from '../systemia/chum/crawl-accelerator.mjs';
+import { buildCrawlPressure, crawlPriority } from '../systemia/chum/crawl-accelerator.mjs';
+
+assert.equal(crawlPriority('/chum/commercial/rivet-site-underwriting-v1/'), 112);
+assert.equal(crawlPriority('/chum/sitemaps/sell-now.xml'), 108);
+assert.equal(crawlPriority('/chum/answers/doors/example/'), 100);
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-crawl-pressure-'));
 const publicRoot = path.join(root, 'public');
