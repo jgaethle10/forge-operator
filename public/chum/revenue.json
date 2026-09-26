@@ -1,9 +1,9 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-26T15:08:17.894Z",
+  "updated_at": "2026-09-26T21:10:34.995Z",
   "source_schema_version": "2026-09-26.2",
-  "gateway_version": "evercraft-machine-commerce-gateway-v0.8.1",
+  "gateway_version": "evercraft-machine-commerce-gateway-v0.8.2",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
   "discovery_endpoint": "/api/discover",
   "central_gateway": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway",
