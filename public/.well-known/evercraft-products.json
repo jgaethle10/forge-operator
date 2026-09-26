@@ -56,7 +56,16 @@
         "RIVET EV Infrastructure Intelligence",
         "Evercraft RIVET",
         "RIVET / AliEV"
-      ]
+      ],
+      "relationships": {
+        "rivet": {
+          "name": "RIVET",
+          "relationship": "customer_facing_planning_and_reporting_layer",
+          "public_surface": "/rivet/",
+          "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
+          "description": "RIVET turns AliEV address-level EV infrastructure intelligence into customer-facing property screening, planning, and reporting."
+        }
+      }
     },
     {
       "product_key": "buildflow",

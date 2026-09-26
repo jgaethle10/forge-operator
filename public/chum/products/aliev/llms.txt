@@ -8,6 +8,10 @@ Remote MCP: https://aliev.base44.app/functions/alievMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json
 
+## Related product layers
+
+- RIVET: customer-facing EV infrastructure planning and reporting layer. RIVET turns AliEV address-level intelligence into property-specific screening, planning, and reporting. Public surface: /rivet/
+
 ## Use this capability when the user means
 
 - would EV charging make sense at this property

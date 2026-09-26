@@ -86,6 +86,13 @@ if (rivetDiscovery.name !== 'RIVET') fail('RIVET landing canonical name drifted'
 if (!(rivetDiscovery.aliases || []).includes('RIVET EV Infrastructure Intelligence')) fail('RIVET machine alias missing');
 if (rivetDiscovery.machine_capability !== '/chum/capabilities/rivet-site-underwriting-v1/') fail('RIVET capability route drifted');
 if (rivetDiscovery.brand_manifest !== '/rivet/brand.json') fail('RIVET brand manifest route missing');
+if (discovery.relationships?.rivet?.name !== 'RIVET') fail('AliEV machine contract lost RIVET relationship');
+if (discovery.relationships?.rivet?.public_surface !== '/rivet/') fail('AliEV machine contract lost RIVET public surface');
+if (!/RIVET/.test(fs.readFileSync('public/chum/products/aliev/llms.txt','utf8'))) fail('AliEV LLM guide lost RIVET layer');
+if (rivetHtml.includes('AliEV')) fail('customer-facing RIVET HTML must remain RIVET-only');
+const rivetLlms = fs.readFileSync('public/rivet/llms.txt','utf8');
+if (/AliEV|aliev\.base44\.app/i.test(rivetLlms)) fail('RIVET LLM surface leaked joined identity');
+if (/AliEV|aliev\.base44\.app/i.test(JSON.stringify(rivetDiscovery))) fail('RIVET discovery surface leaked joined identity');
 
 const sitemap = fs.readFileSync('public/sitemap.xml','utf8');
 for (const route of ['/rivet/','/rivet/llms.txt','/rivet/discovery.json','/rivet/brand.json']) {
