@@ -95,7 +95,12 @@ jobs:
             exit 0
           fi
           echo "Running receipt-backed brand-blind provider probe case: $CASE_ID"
-          CHUM_PROBE_CASES="$CASE_ID" CHUM_REQUIRE_PROBE_BRIDGE=false npm run chum:providers
+          if { [ -n "${CHUM_PROBE_BRIDGE_URL:-}" ] && [ -n "${CHUM_PROBE_BRIDGE_TOKEN:-}" ]; } || { [ -n "${NEXUS_PROBE_BRIDGE_URL:-}" ] && [ -n "${NEXUS_PROBE_BRIDGE_TOKEN:-}" ]; }; then
+            CHUM_PROBE_CASES="$CASE_ID" CHUM_REQUIRE_PROBE_BRIDGE=false npm run chum:providers
+          else
+            echo "Consumer bridge is not configured; running the approved generic-agent machine-client measurement instead."
+            CHUM_PROBE_PROVIDERS=generic_agent CHUM_PROBE_CASES="$CASE_ID" CHUM_REQUIRE_PROBE_BRIDGE=false npm run chum:providers
+          fi
           node <<'NODE'
           const fs = require('fs');
           const receipt = JSON.parse(fs.readFileSync('artifacts/chum/provider-probe-latest.json', 'utf8'));

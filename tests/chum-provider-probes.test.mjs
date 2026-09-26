@@ -26,5 +26,7 @@ assert.equal(receipt.measurement_state, 'blocked_bridge_not_configured');
 assert.equal(receipt.summary.completed, 0);
 assert.equal(receipt.summary.blocked, 1);
 assert.equal(receipt.summary.failed, 0);
+assert.equal(receipt.summary.consumer_completed, 0);
+assert.equal(receipt.summary.machine_completed, 0);
 assert.equal(receipt.results[0]?.blocked_reason, 'authorized_probe_bridge_not_configured');
 console.log('CHUM provider probe truth-state proof passed.');
