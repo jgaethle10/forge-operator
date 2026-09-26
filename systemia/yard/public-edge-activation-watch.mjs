@@ -21,6 +21,7 @@ export class PublicEdgeActivationWatcher {
     releaseRef,
     discovery={},
     allocatorTokenProvider=async()=>({allocatorToken:'',allocatorTokens:{}}),
+    capacityGrantProvider=null,
     edge={mode:'wildcard_https'},
     specialist={},
     requiredPlacementLabels=['public-edge'],
@@ -38,11 +39,15 @@ export class PublicEdgeActivationWatcher {
     if(typeof allocatorTokenProvider!=='function'){
       throw new Error('allocator_token_provider_required');
     }
+    if(capacityGrantProvider!==null&&typeof capacityGrantProvider!=='function'){
+      throw new Error('capacity_grant_provider_invalid');
+    }
 
     this.stateDir=path.resolve(stateDir);
     this.releaseRef=String(releaseRef);
     this.discovery=discovery;
     this.allocatorTokenProvider=allocatorTokenProvider;
+    this.capacityGrantProvider=capacityGrantProvider;
     this.edge=edge;
     this.specialist=specialist;
     this.requiredPlacementLabels=requiredPlacementLabels;
@@ -118,6 +123,62 @@ export class PublicEdgeActivationWatcher {
         }
       }
 
+      let delegatedFailure=null;
+      if(this.capacityGrantProvider){
+        try{
+          const grant=await this.capacityGrantProvider({
+            requiredWorkloads:[
+              'systemia.public-edge.v1',
+              'systemia.specialist-handoff-mcp.v1',
+            ],
+            requiredPlacementLabels:this.requiredPlacementLabels,
+          });
+          if(grant?.capacityEndpoint&&grant?.allocatorToken){
+            const provisioned=await this.controller.provision({
+              releaseRef:this.releaseRef,
+              capacityEndpoint:String(grant.capacityEndpoint),
+              allocatorToken:String(grant.allocatorToken),
+              edge:this.edge,
+              specialist:this.specialist,
+              requestedHostname:this.requestedHostname,
+              edgeRollbackTarget:'systemia:public-edge-watch-previous',
+              specialistRollbackTarget:'systemia:specialist-watch-previous',
+              requireIdentityAttestation:true,
+            });
+            return this.#result('activated',{
+              origin:provisioned.origin,
+              route_scope:provisioned.route_scope,
+              route_verified:provisioned.route_verified,
+              selected_node_id:grant.nodeId||provisioned.edge_node_id||null,
+              capacity_source:'delegated_broker',
+              capacity_grant_receipt:grant.receiptHash||null,
+              provision_receipt:provisioned.receipt_hash,
+              provider_transport:provisioned.provider_transport,
+              field_enrollment_required:
+                provisioned.field_enrollment_required===true,
+              field_verified:provisioned.field_verified===true,
+              field_enrollment_receipt:
+                provisioned.field_enrollment_import_receipt||null,
+              public_edge_admission_receipt:
+                provisioned.public_edge_admission_receipt||null,
+              identity_attestation_required:
+                provisioned.identity_attestation_required===true,
+              identity_verified:provisioned.identity_verified===true,
+              device_fingerprint:provisioned.device_fingerprint||null,
+              edge_attestation_receipt:
+                provisioned.edge_attestation_receipt||null,
+              specialist_attestation_receipt:
+                provisioned.specialist_attestation_receipt||null,
+              specialist_identity_binding_receipt:
+                provisioned.specialist_identity_binding_receipt||null,
+              allocator_authority_persisted:false,
+            });
+          }
+        }catch(error){
+          delegatedFailure=String(error?.message||error).slice(0,500);
+        }
+      }
+
       let authority={allocatorToken:'',allocatorTokens:{}};
       try{
         authority=await this.allocatorTokenProvider();
@@ -125,6 +186,7 @@ export class PublicEdgeActivationWatcher {
         return this.#result('hold',{
           reason:'allocator_authority_provider_failed',
           detail:String(error?.message||error).slice(0,500),
+          delegated_capacity_detail:delegatedFailure,
         });
       }
 
