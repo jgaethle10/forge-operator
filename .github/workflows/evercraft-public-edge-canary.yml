@@ -14,7 +14,7 @@ on:
     - cron: '17 * * * *'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   canary:
@@ -23,6 +23,11 @@ jobs:
     env:
       SPECIALIST_ORIGIN: ${{ vars.EVERCRAFT_SPECIALIST_MCP_ORIGIN }}
     steps:
+      - name: Checkout exact canary revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Prepare receipt
         shell: bash
         run: |
@@ -119,9 +124,51 @@ jobs:
 
           cat artifacts/evercraft-public-edge-canary.json
 
-      - name: Upload external canary receipt
+      - name: Confirm promotion revision is still current main
+        if: env.SPECIALIST_ORIGIN != ''
+        id: promotion_gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          if [ "$(git rev-parse origin/main)" = "$GITHUB_SHA" ]; then
+            echo "promote=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "promote=false" >> "$GITHUB_OUTPUT"
+            echo "Canary is valid, but main advanced during verification. Holding metadata promotion for the next run."
+          fi
+
+      - name: Promote externally verified specialist doors
+        if: env.SPECIALIST_ORIGIN != '' && steps.promotion_gate.outputs.promote == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node systemia/yard/promote-specialist-edge.mjs             --receipt artifacts/evercraft-public-edge-canary.json             --out artifacts/direct-door-promotion-receipt.json
+          node scripts/generate-direct-plugin-packages.mjs
+          node systemia/chum/build-capability-mirror.mjs
+          npm run direct:check
+
+      - name: Commit verified discovery promotion
+        if: env.SPECIALIST_ORIGIN != '' && steps.promotion_gate.outputs.promote == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             public/chum
+          if git diff --cached --quiet; then
+            echo "Discovery already reflects this verified public edge."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Promote canary-verified specialist MCP doors"
+          git push origin HEAD:main
+
+      - name: Upload external canary receipts
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-public-edge-canary
-          path: artifacts/evercraft-public-edge-canary.json
+          path: |
+            artifacts/evercraft-public-edge-canary.json
+            artifacts/direct-door-promotion-receipt.json
+          if-no-files-found: warn
           retention-days: 90
