@@ -1,14 +1,57 @@
 {
   "schema": "evercraft.chum.cross-llm-bridge-contract.v1",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-25",
   "endpoint": "POST /v1/probe",
-  "request": {"required":["probe_id","provider","surface","clean_session","prompt","capture","constraints"]},
-  "response": {"required":["status","provider","surface"],"status":["completed","blocked","failed"],"optional":["session_ref","text","citations","urls","screenshot_ref","provider_receipt","started_at","completed_at","blocked_reason","error"]},
+  "request": {
+    "required": [
+      "probe_id",
+      "provider",
+      "surface",
+      "clean_session",
+      "prompt",
+      "capture",
+      "constraints"
+    ]
+  },
+  "response": {
+    "required": [
+      "status",
+      "provider",
+      "surface"
+    ],
+    "status": [
+      "completed",
+      "blocked",
+      "failed"
+    ],
+    "optional": [
+      "session_ref",
+      "text",
+      "citations",
+      "urls",
+      "screenshot_ref",
+      "provider_receipt",
+      "started_at",
+      "completed_at",
+      "blocked_reason",
+      "error"
+    ]
+  },
   "security": [
     "Provider credentials and cookies stay inside the authorized execution boundary.",
     "Receipts never include raw credentials, auth headers, cookies, or session tokens.",
     "Do not bypass CAPTCHAs, provider access controls, rate limits, or account restrictions.",
     "A provider API response must not be labeled as consumer UI behavior.",
     "No messages, purchases, subscriptions, uploads, or consequential external actions are permitted during discovery probes."
-  ]
+  ],
+  "runtime": {
+    "broker_endpoint": "POST /v1/probe",
+    "health_endpoint": "GET /v1/probe/health",
+    "auth": [
+      "Static Evercraft bridge token when CHUM_PROBE_BRIDGE_INBOUND_TOKEN is configured.",
+      "Ephemeral GitHub Actions token verified against the forge-operator workflow run identity."
+    ],
+    "provider_adapter_env": "CHUM_<PROVIDER>_PROBE_ADAPTER_URL + CHUM_<PROVIDER>_PROBE_ADAPTER_TOKEN",
+    "receipt_sanitization": "The broker hashes adapter receipts and session references; raw provider cookies, auth headers, session tokens, and raw adapter receipts are not returned."
+  }
 }

@@ -161,7 +161,13 @@ async function runProbe(provider, testCase) {
   try {
     const response = await fetch(`${bridgeUrl}/v1/probe`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${bridgeToken}` },
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${bridgeToken}`,
+        'x-evercraft-repository': String(process.env.GITHUB_REPOSITORY || ''),
+        'x-evercraft-run-id': String(process.env.GITHUB_RUN_ID || ''),
+        'x-evercraft-sha': String(process.env.GITHUB_SHA || '')
+      },
       body: JSON.stringify(payload),
       signal: controller.signal
     });

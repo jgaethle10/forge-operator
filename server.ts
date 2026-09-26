@@ -10,6 +10,7 @@ import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
+import { authenticateProviderBridgeRequest, executeProviderBridgeProbe, providerBridgeHealth } from './systemia/chum/provider-bridge.ts';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 
 dotenv.config();
@@ -328,6 +329,40 @@ app.use('/api/chum', (req: Request, res: Response, next: NextFunction) => {
 app.get('/api/chum/crawler-radar', (_req: Request, res: Response) => {
   res.setHeader('Cache-Control', 'no-store');
   res.json(crawlerRadarStore.snapshot());
+});
+
+async function authorizeProviderBridge(req: Request, res: Response): Promise<boolean> {
+  const auth = await authenticateProviderBridgeRequest({
+    authorization: req.get('authorization') || '',
+    repository: req.get('x-evercraft-repository') || '',
+    runId: req.get('x-evercraft-run-id') || '',
+    sha: req.get('x-evercraft-sha') || ''
+  });
+  if (!auth.ok) {
+    res.status(auth.status).json({ status: 'blocked', error: auth.error });
+    return false;
+  }
+  return true;
+}
+
+app.get('/v1/probe/health', rateLimit(60, 60 * 60 * 1000), async (req: Request, res: Response) => {
+  if (!(await authorizeProviderBridge(req, res))) return;
+  res.setHeader('Cache-Control', 'no-store');
+  res.json(providerBridgeHealth());
+});
+
+app.post('/v1/probe', rateLimit(120, 60 * 60 * 1000), async (req: Request, res: Response) => {
+  if (!(await authorizeProviderBridge(req, res))) return;
+  try {
+    const result = await executeProviderBridgeProbe(req.body);
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(result.status === 'failed' ? 502 : 200).json(result);
+  } catch (error: any) {
+    res.status(400).json({
+      status: 'blocked',
+      error: error?.message || String(error)
+    });
+  }
 });
 
 function loadPublicMachineCatalog(): any {
