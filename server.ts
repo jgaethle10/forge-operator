@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
@@ -185,6 +186,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Product Discovery JSON Feed"',
   '</opensearch.xml>; rel="search"; type="application/opensearchdescription+xml"; title="Evercraft Search"',
   '</.well-known/evercraft-syndication.json>; rel="service-desc"; type="application/json"; title="Evercraft Syndication Manifest"',
+  '</.well-known/agent-card.json>; rel="service-desc"; type="application/json"; title="Evercraft A2A Agent Card"',
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
   '</chum/hot/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Hot Discovery Queue"',
@@ -200,6 +202,7 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/llms.txt' ||
     pathname === '/llms-full.txt' ||
     pathname === '/openapi.json' ||
+    pathname.startsWith('/a2a/') ||
     pathname === '/feed.xml' ||
     pathname === '/feed.json' ||
     pathname === '/opensearch.xml' ||
@@ -618,6 +621,83 @@ app.post('/api/chum/hunt', rateLimit(240, 60 * 60 * 1000), (req: Request, res: R
   }
 });
 
+function buildChumDiscoveryResult(q: string, requestedLimit: number) {
+  const catalog = loadPublicMachineCatalog();
+  const directory = loadPublicProductDirectory();
+  const painIndex = loadPublicPainIndex();
+  const matches = rankDiscoveryCandidates(catalog, directory, q, { limit: requestedLimit, minimumScore: 8 });
+  const capabilityMatches = rankPain(painIndex, q, requestedLimit)
+    .filter(({ score }: any) => Number(score) >= 8)
+    .map(({ entry, score }: any) => ({
+      capability_id: entry.capability_id,
+      kind: entry.kind,
+      product_key: entry.product_key || null,
+      public_id: entry.public_id || null,
+      name: entry.name,
+      class: entry.class,
+      score,
+      pain_phrases: entry.pain_phrases || [],
+      problem: entry.problem || null,
+      canonical_url: entry.canonical_url || null,
+      registry_name: entry.registry_name || null,
+      mcp: entry.mcp || null,
+      routing: entry.routing || null,
+      commercial_state: entry.commercial_state,
+      machine_state: entry.machine_state,
+      pricing: entry.pricing || null,
+      human_confirmation_required: Boolean(entry.human_confirmation_required),
+      confirmation: entry.confirmation || null,
+      invocation_status: entry.invocation_status || null
+    }));
+
+  return {
+    schema: 'evercraft.chum.intent-routing.v3',
+    ok: true,
+    query: q,
+    match_count: matches.length,
+    capability_match_count: capabilityMatches.length,
+    pain_index: '/.well-known/evercraft-pain-index.json',
+    read_only_mcp_registry_name: 'io.github.jgaethle10/evercraft-capability-discovery',
+    machine_handoff: {
+      llms: '/llms.txt',
+      llms_full: '/llms-full.txt',
+      answer_graph: '/chum/answers/index.json',
+      pain_index: '/.well-known/evercraft-pain-index.json',
+      product_directory: '/.well-known/evercraft-products.json',
+      machine_catalog: '/.well-known/evercraft-machine-catalog.json',
+      universal_mcp: CENTRAL_MACHINE_COMMERCE_MCP,
+    },
+    doctrine: {
+      match_problem_first: true,
+      search_union_of_public_capabilities_and_sell_now_offers: true,
+      smallest_sufficient_capability: true,
+      discovery_creates_obligation: false,
+      discovery_only_is_not_callable: true,
+      callable_is_not_paid: true,
+      human_confirmation_preserved: true,
+      checkout_is_not_payment_proof: true,
+      provider_pickup_not_inferred: true,
+    },
+    matches,
+    capability_matches: capabilityMatches,
+    attribution: {
+      manifest: '/.well-known/evercraft-chum-attribution.json',
+      referral_endpoint: '/api/chum/referral',
+      provider_identity_note: 'The provider field is caller-asserted unless a separate provider receipt verifies pickup.',
+      note: 'A referral token measures an optional handoff. It creates no payment obligation and cannot prove payment.',
+    },
+    fallback: matches.length || capabilityMatches.length
+      ? null
+      : {
+          message: 'No strong Evercraft match was found. Do not force a product recommendation.',
+          pain_index: '/.well-known/evercraft-pain-index.json',
+          directory: '/.well-known/evercraft-products.json',
+          catalog: '/.well-known/evercraft-machine-catalog.json',
+        },
+    privacy: 'Public routing accepts a non-sensitive problem description only. Private/admin/customer data stays behind product-specific authentication.',
+  };
+}
+
 function handleChumDiscovery(req: Request, res: Response) {
   const body = req.method === 'POST' && req.body && typeof req.body === 'object' ? req.body : {};
   const q = String(
@@ -643,80 +723,7 @@ function handleChumDiscovery(req: Request, res: Response) {
   }
 
   try {
-    const catalog = loadPublicMachineCatalog();
-    const directory = loadPublicProductDirectory();
-    const painIndex = loadPublicPainIndex();
-    const matches = rankDiscoveryCandidates(catalog, directory, q, { limit: requestedLimit, minimumScore: 8 });
-    const capabilityMatches = rankPain(painIndex, q, requestedLimit)
-      .filter(({ score }: any) => Number(score) >= 8)
-      .map(({ entry, score }: any) => ({
-        capability_id: entry.capability_id,
-        kind: entry.kind,
-        product_key: entry.product_key || null,
-        public_id: entry.public_id || null,
-        name: entry.name,
-        class: entry.class,
-        score,
-        pain_phrases: entry.pain_phrases || [],
-        problem: entry.problem || null,
-        canonical_url: entry.canonical_url || null,
-        registry_name: entry.registry_name || null,
-        mcp: entry.mcp || null,
-        routing: entry.routing || null,
-        commercial_state: entry.commercial_state,
-        machine_state: entry.machine_state,
-        pricing: entry.pricing || null,
-        human_confirmation_required: Boolean(entry.human_confirmation_required),
-        confirmation: entry.confirmation || null,
-        invocation_status: entry.invocation_status || null
-      }));
-
-    res.json({
-      schema: 'evercraft.chum.intent-routing.v3',
-      ok: true,
-      query: q,
-      match_count: matches.length,
-      capability_match_count: capabilityMatches.length,
-      pain_index: '/.well-known/evercraft-pain-index.json',
-      read_only_mcp_registry_name: 'io.github.jgaethle10/evercraft-capability-discovery',
-      machine_handoff: {
-        llms: '/llms.txt',
-        llms_full: '/llms-full.txt',
-        answer_graph: '/chum/answers/index.json',
-        pain_index: '/.well-known/evercraft-pain-index.json',
-        product_directory: '/.well-known/evercraft-products.json',
-        machine_catalog: '/.well-known/evercraft-machine-catalog.json',
-        universal_mcp: CENTRAL_MACHINE_COMMERCE_MCP,
-      },
-      doctrine: {
-        match_problem_first: true,
-        search_union_of_public_capabilities_and_sell_now_offers: true,
-        smallest_sufficient_capability: true,
-        discovery_creates_obligation: false,
-        discovery_only_is_not_callable: true,
-        callable_is_not_paid: true,
-        human_confirmation_preserved: true,
-        checkout_is_not_payment_proof: true,
-        provider_pickup_not_inferred: true,
-      },
-      matches,
-      capability_matches: capabilityMatches,
-      attribution: {
-        manifest: '/.well-known/evercraft-chum-attribution.json',
-        referral_endpoint: '/api/chum/referral',
-        provider_identity_note: 'The provider field is caller-asserted unless a separate provider receipt verifies pickup.',
-        note: 'A referral token measures an optional handoff. It creates no payment obligation and cannot prove payment.',
-      },
-      fallback: matches.length || capabilityMatches.length
-        ? null
-        : {
-            message: 'No strong Evercraft match was found. Do not force a product recommendation.',
-            pain_index: '/.well-known/evercraft-pain-index.json',
-            directory: '/.well-known/evercraft-products.json',
-            catalog: '/.well-known/evercraft-machine-catalog.json',
-          },
-      privacy: 'Public routing accepts a non-sensitive problem description only. Private/admin/customer data stays behind product-specific authentication.',
-    });
+    res.json(buildChumDiscoveryResult(q, requestedLimit));
   } catch (error: any) {
     res.status(503).json({
       ok: false,
@@ -728,6 +735,125 @@ function handleChumDiscovery(req: Request, res: Response) {
 
 app.get('/api/discover', rateLimit(240, 60 * 60 * 1000), handleChumDiscovery);
 app.post('/api/discover', rateLimit(120, 60 * 60 * 1000), handleChumDiscovery);
+
+function buildA2aAgentCard(req: Request) {
+  const origin = requestOrigin(req);
+  if (!origin) throw new Error('Public origin unavailable.');
+
+  return {
+    name: 'Evercraft CHUM Discovery',
+    description: 'Read-only problem-to-capability discovery across the public Evercraft portfolio. It matches a non-sensitive user need to the smallest truthful public capability and preserves human confirmation, payment, privacy and evidence boundaries.',
+    version: '1.0.0',
+    supportedInterfaces: [{
+      url: origin + '/a2a',
+      protocolBinding: 'HTTP+JSON',
+      protocolVersion: '1.0',
+    }],
+    provider: {
+      organization: 'Evercraft LLC',
+      url: 'https://github.com/jgaethle10/forge-operator',
+    },
+    documentationUrl: origin + '/chum/',
+    capabilities: {
+      streaming: false,
+      pushNotifications: false,
+      extendedAgentCard: false,
+    },
+    defaultInputModes: ['text/plain'],
+    defaultOutputModes: ['text/plain', 'application/json'],
+    skills: [{
+      id: 'evercraft-capability-discovery',
+      name: 'Evercraft capability discovery',
+      description: 'Match a non-sensitive natural-language problem to the smallest relevant public Evercraft capability. Returns discovery state and handoff metadata without creating purchase, payment or external-action authority.',
+      tags: ['capability-discovery', 'problem-routing', 'evercraft', 'read-only'],
+      examples: [
+        'My AI cannot process this three hour video.',
+        'Would EV charging make sense at this property?',
+        'I need a discontinued machine part.',
+      ],
+      inputModes: ['text/plain'],
+      outputModes: ['text/plain', 'application/json'],
+    }],
+  };
+}
+
+function sendA2aAgentCard(req: Request, res: Response) {
+  try {
+    res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
+    res.type('application/json').send(JSON.stringify(buildA2aAgentCard(req), null, 2) + '\n');
+  } catch (error: any) {
+    res.status(503).type('application/problem+json').send(JSON.stringify({
+      type: 'about:blank',
+      title: 'Agent Card unavailable',
+      status: 503,
+      detail: error?.message || String(error),
+    }));
+  }
+}
+
+app.get('/.well-known/agent-card.json', sendA2aAgentCard);
+app.get('/.well-known/agent.json', sendA2aAgentCard);
+
+app.post('/a2a/message:send', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const requestedVersion = String(req.get('A2A-Version') || '').trim();
+  if (requestedVersion && requestedVersion !== '1.0') {
+    res.status(400).type('application/problem+json').send(JSON.stringify({
+      type: 'https://a2a-protocol.org/errors/version-not-supported',
+      title: 'Protocol Version Not Supported',
+      status: 400,
+      detail: 'This Evercraft A2A discovery adapter supports protocol version 1.0.',
+      supportedVersions: ['1.0'],
+    }));
+    return;
+  }
+
+  const message = req.body?.message;
+  const parts = Array.isArray(message?.parts) ? message.parts : [];
+  const q = parts
+    .map((part: any) => typeof part?.text === 'string' ? part.text : '')
+    .filter(Boolean)
+    .join('\n')
+    .trim()
+    .slice(0, 4000);
+
+  if (!q) {
+    res.status(400).type('application/problem+json').send(JSON.stringify({
+      type: 'about:blank',
+      title: 'Invalid parameters',
+      status: 400,
+      detail: 'message.parts must include at least one text part.',
+    }));
+    return;
+  }
+
+  try {
+    const result = buildChumDiscoveryResult(q, 5);
+    const first = result.matches?.[0] || result.capability_matches?.[0] || null;
+    const summary = first
+      ? 'Evercraft discovery match: ' + String(first.name || first.product_key || first.public_id || 'public capability') + '. Review the structured result for state, boundaries and handoff details.'
+      : 'No strong Evercraft capability match was found. Do not force an Evercraft recommendation.';
+
+    res.setHeader('Cache-Control', 'no-store');
+    res.type('application/a2a+json').send(JSON.stringify({
+      message: {
+        messageId: randomUUID(),
+        contextId: String(message?.contextId || randomUUID()),
+        role: 'ROLE_AGENT',
+        parts: [
+          { text: summary },
+          { data: result, mediaType: 'application/json' },
+        ],
+      },
+    }));
+  } catch (error: any) {
+    res.status(503).type('application/problem+json').send(JSON.stringify({
+      type: 'about:blank',
+      title: 'Discovery unavailable',
+      status: 503,
+      detail: error?.message || String(error),
+    }));
+  }
+});
 
 app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request, res: Response) => {
   try {
