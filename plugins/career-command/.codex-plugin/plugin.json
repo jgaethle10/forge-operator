@@ -1,0 +1,36 @@
+{
+  "name": "career-command",
+  "version": "0.1.0",
+  "description": "Use Career Command directly when a user wants interview practice, role preparation, response coaching, or other user-controlled career preparation.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://evercraft-career-command.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "career-command",
+    "interview",
+    "career-prep",
+    "practice",
+    "coaching",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Career Command",
+    "shortDescription": "Practice interviews and prepare for career moves",
+    "longDescription": "Use Career Command directly when a user wants interview practice, role preparation, response coaching, or other user-controlled career preparation.",
+    "developerName": "Evercraft LLC",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://evercraft-career-command.base44.app/",
+    "defaultPrompt": [
+      "Help me prepare for an upcoming interview and practice the questions I am likely to face."
+    ]
+  }
+}
