@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "site_survive": {
+      "type": "http",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp"
+    }
+  }
+}
