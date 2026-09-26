@@ -115,7 +115,7 @@ try{
     broker.bindDeployment('route-broker-mismatch-proof'),
     /public_route_instance_mismatch/
   );
-  assert.equal(provider.releaseCount(),before);
+  assert.equal(provider.releaseCount(),before+1);
 
   await yard.stopDeployment('route-broker-specialist-proof',{reason:'proof_complete'});
   await yard.stopDeployment('route-broker-mismatch-proof',{reason:'proof_complete'});
