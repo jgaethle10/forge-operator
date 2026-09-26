@@ -4,7 +4,8 @@
   "product_key": "evercraft-network",
   "name": "Evercraft Network",
   "aliases": [
-    "Evercraft Network Resilience"
+    "Evercraft Network Resilience",
+    "Evercraft Network Air Relay"
   ],
   "category": "application_network_continuity",
   "updated_at": "2026-09-25",
@@ -18,7 +19,12 @@
     "business connectivity resilience software",
     "device reconnect and health visibility",
     "continuity visibility when an authorized internet path changes",
-    "resilient application identity across authorized network changes"
+    "resilient application identity across authorized network changes",
+    "temporary airborne network relay software for civilian disaster recovery",
+    "drone relay network planning for rural connectivity",
+    "temporary network bridge that can reduce the need for new trenching",
+    "authenticated airborne edge compute relay",
+    "civilian drone network relay for environmental monitoring"
   ],
   "do_not_claim": [
     "cellular carrier or ISP service",
@@ -26,7 +32,11 @@
     "911 or PSAP integration",
     "guaranteed geographic coverage",
     "guaranteed emergency backhaul",
-    "access to private topology or private telemetry"
+    "access to private topology or private telemetry",
+    "field-tested drone radio or airborne coverage",
+    "autonomous flight or navigation control",
+    "verified ecological savings from Air Relay",
+    "replacement of fiber in every use case"
   ],
   "canonical_product": "https://network-control.base44.app/",
   "human_join": "https://network-control.base44.app/join",
@@ -61,12 +71,49 @@
   "boundaries": [
     "Use only internet paths the client is already authorized to use.",
     "Discovery never enrolls a device, creates a payment, controls connectivity, exposes private telemetry or routes an emergency.",
-    "Private device identity, precise location, telecom identifiers, secrets and operator state are not public."
+    "Private device identity, precise location, telecom identifiers, secrets and operator state are not public.",
+    "Air Relay discovery describes verified software behavior only until physical field receipts exist.",
+    "Air Relay performs no autonomous flight control and does not bypass aviation or radio authorization."
   ],
   "related_public_surfaces": {
     "portfolio_llms": "/llms.txt",
     "chum_product": "/chum/products/evercraft-network/",
     "capability": "/chum/capabilities/evercraft-network-resilience-membership-v1/",
     "well_known": "/.well-known/evercraft-network.json"
-  }
+  },
+  "software_capabilities": [
+    {
+      "id": "air-relay-planning-v2",
+      "name": "Evercraft Network Air Relay",
+      "state": "source_verified_software_only",
+      "summary": "Evidence-gated civilian airborne relay route planning with explicit route objectives, modeled infrastructure counterfactuals, and attested NodeSeed placement for bounded edge compute.",
+      "match_when": [
+        "temporary airborne network relay software for civilian disaster recovery",
+        "drone relay network planning for rural connectivity",
+        "temporary network bridge that can reduce the need for new trenching",
+        "authenticated airborne edge compute relay",
+        "civilian drone network relay for environmental monitoring"
+      ],
+      "verified_evidence": [
+        "systemia/network/air-relay-proof.mjs",
+        "systemia/network/nodeseed-placement-label-proof.mjs"
+      ],
+      "verified_software_behaviors": [
+        "civilian-purpose admission and forbidden-intent rejection",
+        "verified-link-only route selection",
+        "explicit latency, energy, balanced, or infrastructure-avoidance route objectives",
+        "modeled counterfactual infrastructure accounting without ecological outcome claims",
+        "signed NodeSeed placement labels with Saban capacity-to-attestation label matching"
+      ],
+      "field_state": "not_field_verified",
+      "field_proof_required": [
+        "physical airborne radio path",
+        "real separate-device link testing",
+        "battery and thermal endurance",
+        "aviation authorization for the intended operation",
+        "real-world infrastructure and ecological impact measurement"
+      ],
+      "invocation_state": "discovery_only_no_flight_control"
+    }
+  ]
 }
