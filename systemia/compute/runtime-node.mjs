@@ -13,6 +13,7 @@ import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs'
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
+import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -216,6 +217,7 @@ export async function startEvercraftComputeNode({
     'systemia.kaidance-collider.v1',
     'systemia.chum-public-origin.v1',
     'systemia.remote-capacity-broker.v1',
+    'systemia.rivet-report-runtime.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -805,6 +807,70 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result,
             receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.rivet-report-runtime.v1') {
+          const stateRoot = path.resolve(String(
+            body.input?.state_root || path.join(allowedRoot, '.evercraft', 'rivet-report-runtime')
+          ));
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'rivet_report_state_outside_admitted_root' });
+          }
+
+          const runtime = await startRivetReportRuntime({
+            stateDir: stateRoot,
+            host: '127.0.0.1',
+            port: 0,
+            sourceUrl: String(
+              body.input?.source_url ||
+              process.env.ALIEV_YARD_SOURCE_URL ||
+              'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup'
+            ),
+            systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
+            teamToken: process.env.RIVET_YARD_TEAM_TOKEN || ''
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          const service = { close: async () => runtime.close() };
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime: {
+              health: () => ({
+                ok: true,
+                service: 'rivet-yard-report-runtime',
+                runtime: 'Evercraft Compute',
+                schema: 'evercraft.rivet.yard-runtime-health.v1'
+              }),
+              setDeploymentReceipt: () => ({
+                ok: true,
+                service: 'rivet-yard-report-runtime',
+                runtime: 'Evercraft Compute'
+              })
+            },
+            service
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            health_path: `/v1/services/${serviceId}/health`,
+            report_path: runtime.report_path,
+            private_runtime_url: runtime.service_url
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt
           });
         }
 
