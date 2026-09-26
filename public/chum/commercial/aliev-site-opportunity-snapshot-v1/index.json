@@ -11,6 +11,11 @@
   "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1",
   "intent_terms": [
     "is this site good for EV charging",
+    "is this property a good EV charging site",
+    "is my hotel a good EV charging site",
+    "what is the EV charging opportunity at this property",
+    "hotel EV charging opportunity",
+    "property EV charging opportunity",
     "EV charger site analysis",
     "EV charging feasibility by address",
     "what EV chargers are near this property",
@@ -22,6 +27,11 @@
   ],
   "discovered_user_language": [
     "is this site good for EV charging",
+    "is this property a good EV charging site",
+    "is my hotel a good EV charging site",
+    "what is the EV charging opportunity at this property",
+    "hotel EV charging opportunity",
+    "property EV charging opportunity",
     "EV charger site analysis",
     "EV charging feasibility by address",
     "what EV chargers are near this property",
@@ -31,7 +41,7 @@
     "find EV charging opportunities in this market",
     "commercial EV site report"
   ],
-  "answer_door_count": 9,
+  "answer_door_count": 14,
   "answer_doors": [
     {
       "answer_id": "intent:f593e514df",
@@ -70,10 +80,34 @@
       "json": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json"
     },
     {
+      "answer_id": "intent:17daee3ad4",
+      "phrase": "hotel EV charging opportunity",
+      "html": "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4/",
+      "json": "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json"
+    },
+    {
+      "answer_id": "intent:aff9013502",
+      "phrase": "is my hotel a good EV charging site",
+      "html": "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502/",
+      "json": "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json"
+    },
+    {
+      "answer_id": "intent:28f9203083",
+      "phrase": "is this property a good EV charging site",
+      "html": "/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083/",
+      "json": "/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083.json"
+    },
+    {
       "answer_id": "intent:ea2b7ebe4d",
       "phrase": "is this site good for EV charging",
       "html": "/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d/",
       "json": "/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d.json"
+    },
+    {
+      "answer_id": "intent:7c86f6e67b",
+      "phrase": "property EV charging opportunity",
+      "html": "/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b/",
+      "json": "/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b.json"
     },
     {
       "answer_id": "intent:cccfe7bfe5",
@@ -86,6 +120,12 @@
       "phrase": "what EV chargers are near this property",
       "html": "/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4/",
       "json": "/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4.json"
+    },
+    {
+      "answer_id": "intent:c7b5d57976",
+      "phrase": "what is the EV charging opportunity at this property",
+      "html": "/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976/",
+      "json": "/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976.json"
     }
   ],
   "related_surfaces": {

@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 98
-Unique user phrases: 761
-Candidate edges: 854
+Unique user phrases: 766
+Candidate edges: 859
 Ambiguous phrases: 93
 
 ## 15 GB video analysis
@@ -2360,6 +2360,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Raven Nexus Modular Safety & Stability | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
 
+## hotel EV charging opportunity
+Answer ID: intent:17daee3ad4
+Human-readable match: /chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json
+Candidates:
+- AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
 ## hotel EV charging site analysis
 Answer ID: intent:7464f372e9
 Human-readable match: /chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/
@@ -2609,12 +2616,26 @@ Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 - Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
+## is my hotel a good EV charging site
+Answer ID: intent:aff9013502
+Human-readable match: /chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json
+Candidates:
+- AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
 ## is my resume ATS friendly
 Answer ID: intent:3b113a7b48
 Human-readable match: /chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48.json
 Candidates:
 - Career Command Resume + Job Fit Audit | kind=machine_offer | commercial=verify | machine=discovery_only | public=https://evercraft-career-command.base44.app/
+
+## is this property a good EV charging site
+Answer ID: intent:28f9203083
+Human-readable match: /chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083.json
+Candidates:
+- AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
 
 ## is this property good for EV charging
 Answer ID: intent:59cbb00f58
@@ -3722,6 +3743,13 @@ Human-readable match: /chum/answers/doors/property-cleanout-or-debris-removal-13
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91.json
 Candidates:
 - Evercraft Property Services | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftpropertyservices.com/
+
+## property EV charging opportunity
+Answer ID: intent:7c86f6e67b
+Human-readable match: /chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b.json
+Candidates:
+- AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
 
 ## property EV fit
 Answer ID: intent:4fdb4582c5
@@ -5265,6 +5293,13 @@ Human-readable match: /chum/answers/doors/what-is-still-running-after-i-turned-t
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-is-still-running-after-i-turned-the-automation-off-98c67beafc.json
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/containment
+
+## what is the EV charging opportunity at this property
+Answer ID: intent:c7b5d57976
+Human-readable match: /chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976.json
+Candidates:
+- AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
 
 ## what is wrong with this load
 Answer ID: intent:c902d7993e

@@ -25,7 +25,7 @@
   "human_ui_required": false,
   "confirmation": "Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.",
   "payment_authority": "Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.",
-  "invocation_status": "LIVE: public Clip HTTP gateway, OpenAPI, llms guidance and Official MCP Registry server io.github.jgaethle10/evercraft-clip v0.1.0 provide read-only capability discovery and non-executing job planning. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.",
+  "invocation_status": "LIVE: Clip Production Engine V2 public gateway exposes Creative Director planning with style/caption choices and a ForensiScope overflow recommendation for oversized, long, deduplicated or full-timeline media. Official MCP Registry server io.github.jgaethle10/evercraft-clip remains read-only. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1",
   "machine_offer_url": null,
   "start_url": null,

@@ -660,6 +660,8 @@
   <url><loc>/chum/answers/doors/home-safety-monitoring-9f6680ea5c/</loc></url>
   <url><loc>/chum/answers/doors/home-stability-help-b3ad9f869f.json</loc></url>
   <url><loc>/chum/answers/doors/home-stability-help-b3ad9f869f/</loc></url>
+  <url><loc>/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json</loc></url>
+  <url><loc>/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4/</loc></url>
   <url><loc>/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json</loc></url>
   <url><loc>/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/</loc></url>
   <url><loc>/chum/answers/doors/household-connectivity-resilience-846c28a64f.json</loc></url>
@@ -730,8 +732,12 @@
   <url><loc>/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556/</loc></url>
   <url><loc>/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json</loc></url>
   <url><loc>/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86/</loc></url>
+  <url><loc>/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json</loc></url>
+  <url><loc>/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502/</loc></url>
   <url><loc>/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48.json</loc></url>
   <url><loc>/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48/</loc></url>
+  <url><loc>/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083.json</loc></url>
+  <url><loc>/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083/</loc></url>
   <url><loc>/chum/answers/doors/is-this-property-good-for-ev-charging-59cbb00f58.json</loc></url>
   <url><loc>/chum/answers/doors/is-this-property-good-for-ev-charging-59cbb00f58/</loc></url>
   <url><loc>/chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d.json</loc></url>
@@ -1042,6 +1048,8 @@
   <url><loc>/chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1/</loc></url>
   <url><loc>/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91.json</loc></url>
   <url><loc>/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91/</loc></url>
+  <url><loc>/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b.json</loc></url>
+  <url><loc>/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b/</loc></url>
   <url><loc>/chum/answers/doors/property-ev-fit-4fdb4582c5.json</loc></url>
   <url><loc>/chum/answers/doors/property-ev-fit-4fdb4582c5/</loc></url>
   <url><loc>/chum/answers/doors/protect-a-business-from-phishing-fake-payment-instructions-account-compromise-or-c-c32b1f3f7b.json</loc></url>
@@ -1476,6 +1484,8 @@
   <url><loc>/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4/</loc></url>
   <url><loc>/chum/answers/doors/what-is-still-running-after-i-turned-the-automation-off-98c67beafc.json</loc></url>
   <url><loc>/chum/answers/doors/what-is-still-running-after-i-turned-the-automation-off-98c67beafc/</loc></url>
+  <url><loc>/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976.json</loc></url>
+  <url><loc>/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976/</loc></url>
   <url><loc>/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e.json</loc></url>
   <url><loc>/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e/</loc></url>
   <url><loc>/chum/answers/doors/what-public-ev-charging-is-near-this-address-85011db389.json</loc></url>

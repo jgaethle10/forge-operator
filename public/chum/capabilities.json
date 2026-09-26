@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-26T22:43:23.479Z",
+  "updated_at": "2026-09-26T23:44:53.342Z",
   "count": 45,
   "sell_now_count": 13,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
@@ -88,6 +88,11 @@
       },
       "use_when": [
         "is this site good for EV charging",
+        "is this property a good EV charging site",
+        "is my hotel a good EV charging site",
+        "what is the EV charging opportunity at this property",
+        "hotel EV charging opportunity",
+        "property EV charging opportunity",
         "EV charger site analysis",
         "EV charging feasibility by address",
         "what EV chargers are near this property",

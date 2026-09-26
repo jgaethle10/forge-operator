@@ -11,6 +11,11 @@ Capability contract: /chum/capabilities/aliev-site-opportunity-snapshot-v1/
 ## Brand-blind user language
 
 - is this site good for EV charging
+- is this property a good EV charging site
+- is my hotel a good EV charging site
+- what is the EV charging opportunity at this property
+- hotel EV charging opportunity
+- property EV charging opportunity
 - EV charger site analysis
 - EV charging feasibility by address
 - what EV chargers are near this property
@@ -28,9 +33,14 @@ Capability contract: /chum/capabilities/aliev-site-opportunity-snapshot-v1/
 - EV charging feasibility by address | /chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee/ | /chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json
 - EV charging opportunity report | /chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31/ | /chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json
 - find EV charging opportunities in this market | /chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/ | /chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871.json
+- hotel EV charging opportunity | /chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4/ | /chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json
+- is my hotel a good EV charging site | /chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502/ | /chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json
+- is this property a good EV charging site | /chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083/ | /chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083.json
 - is this site good for EV charging | /chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d/ | /chum/answers/doors/is-this-site-good-for-ev-charging-ea2b7ebe4d.json
+- property EV charging opportunity | /chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b/ | /chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b.json
 - should I install EV chargers at this property | /chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5/ | /chum/answers/doors/should-i-install-ev-chargers-at-this-property-cccfe7bfe5.json
 - what EV chargers are near this property | /chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4/ | /chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4.json
+- what is the EV charging opportunity at this property | /chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976/ | /chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976.json
 
 ## Boundary
 

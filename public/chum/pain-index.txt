@@ -52,6 +52,11 @@ MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Use when the user means:
 - is this site good for EV charging
+- is this property a good EV charging site
+- is my hotel a good EV charging site
+- what is the EV charging opportunity at this property
+- hotel EV charging opportunity
+- property EV charging opportunity
 - EV charger site analysis
 - EV charging feasibility by address
 - what EV chargers are near this property
@@ -432,9 +437,9 @@ Use when the user means:
 - plan a social video clipping job
 - AI tool to select moments from a video and render social clips
 Problem: An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.
-Outputs: Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Public agent tools currently provide discovery and non-executing planning only.
+Outputs: Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Clip V2 adds clean/bold/documentary/property creative direction, source-grounded caption cues, and distinct Facebook/LinkedIn/Instagram copy. Public agent tools remain discovery and non-executing planning only.
 Confirmation boundary: Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.
-Invocation status: LIVE: public Clip HTTP gateway, OpenAPI, llms guidance and Official MCP Registry server io.github.jgaethle10/evercraft-clip v0.1.0 provide read-only capability discovery and non-executing job planning. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.
+Invocation status: LIVE: Clip Production Engine V2 public gateway exposes Creative Director planning with style/caption choices and a ForensiScope overflow recommendation for oversized, long, deduplicated or full-timeline media. Official MCP Registry server io.github.jgaethle10/evercraft-clip remains read-only. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.
 
 ## Evercraft Network Resilience + Founding Membership
 Capability ID: offer:evercraft-network-resilience-membership-v1

@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T23:44:49.479Z",
-  "url_count": 2207,
+  "updated_at": "2026-09-26T23:44:54.286Z",
+  "url_count": 2221,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "fa8f8e8af1b3d97c992dd0e95f9d9dad9fd778c1b9c19041112f2c88615f73f8",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "107f2c0d7ddcffbab825a4aa06fbaf54957cd0550c131726b395ddf7a5a21723",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -51,56 +51,74 @@
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "d41b9a2fdde0837fb24d71936101c2ec04740bdd03f0a26b105b6167fccca4d1",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "eeed1f09b3ac1350d61cb1e69252f1d80b7247c27813bd2db75e8c6965055f73",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "2a1cfdc010d497dfd580da682acb1384dc8062a49a41880f2ccbf1077b155dc9",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "efb7e3f7e6a6f4ce3eaf5dbeb8bdabc57c31e6d8b993787f2b9442a97a71aca9",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
       "path": "/chum/revenue.txt",
-      "content_sha256": "e88982072336adf91917a92948282f1d4626abcffb9de96dbbcc860212c185b8",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "23734bfbb7fc3d15a050245639bc05d220774bfb92313b9e9374032d19bdbbe0",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 90
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "cfd8fe3cba1ca12dab83714b9f392e7006d4e09c21fd5f94c642767ee76ed2f8",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "b7dd2fd29138de1d997ea05ca9ea37997359c0bffdf99b216e239086e3566da5",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 90
+    },
+    "/chum/agent-commerce.json": {
+      "path": "/chum/agent-commerce.json",
+      "content_sha256": "3cd386e585d7fcc3e5d2f3fe55badd348de3b18c706e14afc48810dd78971fe5",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 80
+    },
+    "/chum/agent-commerce.txt": {
+      "path": "/chum/agent-commerce.txt",
+      "content_sha256": "ea72284e204fc07b299e34be4b395861db5be5acfb443c5fc239d19afc207b45",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 80
+    },
+    "/chum/agent-commerce.html": {
+      "path": "/chum/agent-commerce.html",
+      "content_sha256": "ce3b43a7284e525678363413a7f1d20cb6ea712d513beda402037535a8643208",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 80
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "b3b4c437f174482a3260544411e4d38e73b13fa9df746f8f3af48b4d073dec48",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "dd8224ac2dfe43f1f2ec1cae3f1e58de9ab57293c12853e386d0efc65a33112b",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "328e7283032d331234ab2f902457726bdd3381a349a4f1a654f6e9242b81c6d5",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "3b2fe5b0af25dd16ed4482146ef5707b74645c8cec56f8c8f936bbd37bd5e11e",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "9bcd8d4b1112a1c6e8c71d00c5eef3e18ca8dd385a3991bd8320b02c66e92e3f",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "d04cfb9e0c40b5e35846f8f3cf389668a99efa24523ed1c1ee96eaf4d90f5c44",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "ca081668bd239450ec9109c7cfae5f3d041194b5eacf74cf056d89ae6bf61460",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "bb7d9309ff5c531a9dfb27b144c8b9f16f9bb4d9d03c4c799275ccc39e75bdf5",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "0f45ff064c886b8e76b83cf6fbab232213de286a46625112a3942fe0520d2eed",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "7d240c7c97d4085e36777f454e91acaaa463d710fae5b17f17f1fdbac1e7ccc2",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -123,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "79c35f62c3f9db3ac79b1f2d80565b732a14a0d26e9cefada5806ee3bb770c73",
-      "last_changed": "2026-09-26T23:44:49.479Z",
+      "content_sha256": "6af53f9209315e4321ad753c696df4bac14d6d7e99240ae6b98be2e215872a58",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,32 +171,32 @@
     },
     "/chum/commercial/": {
       "path": "/chum/commercial/",
-      "content_sha256": "8097be527b3552bc463ec470ec1e49179c40f98c21f744bf88a3db961150189d",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "7f297dafee7ce7645db4bcedda2dcbe1558c1f46d52975d03a6b41947c559f31",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/commercial/index.json": {
       "path": "/chum/commercial/index.json",
-      "content_sha256": "3a3cb06883da750fbf92d7c18c4e820a14b5d9ec7f3b8860be37ac8070860610",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "710db53790a548e6291b7ddd5202f9ca75c0d8df5efee530367f03d149c28b7a",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/commercial/llms.txt": {
       "path": "/chum/commercial/llms.txt",
-      "content_sha256": "3eaea0a77913b667b75582ecbc75c2683d8175779f79984bcf6637053c5e7229",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "909cd41dbd49a62518fa2f25a149408d019524787c707f5f8104a6c68a43aeb6",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/commercial/feed.xml": {
       "path": "/chum/commercial/feed.xml",
-      "content_sha256": "f991af0703c51164dbd92a2c3f342c5253055a3453d771246b14a609a6dfd65e",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "c5df2f8bd2ef92a4f496ed023528939931d59ceccb8b13c04f568578dcc70cfe",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/commercial/feed.json": {
       "path": "/chum/commercial/feed.json",
-      "content_sha256": "56028148d52cafa38118a0b851a5c9dd6c99d75f130421cc6aa7de826431d1c9",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "5e68db7028bf752ec4e06e8d5cf8ee33f46230c09ce541c1c7be56de5c311163",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/sitemaps/index.xml": {
@@ -189,14 +207,14 @@
     },
     "/chum/sitemaps/sell-now.xml": {
       "path": "/chum/sitemaps/sell-now.xml",
-      "content_sha256": "188b2e2ea1d34f8a5c560ac626d884bd4d398fb7d947edd5ef099b4bedb5a1d5",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "8de585e2c35152d12373e0eb06a3ebedf2e458ac3d75f5a98d57accbba95de09",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 108
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "0ed8438db852e2571d8288e6f1a5aa3090b989141db74635fb8a2cff15c49bf9",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "d64cb5c641e392c942de92cb7c5d4a45def32bd60a2ffa75e5b97e3a8ff583ea",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
@@ -291,8 +309,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "b3b4c437f174482a3260544411e4d38e73b13fa9df746f8f3af48b4d073dec48",
-      "last_changed": "2026-09-26T22:43:25.031Z",
+      "content_sha256": "dd8224ac2dfe43f1f2ec1cae3f1e58de9ab57293c12853e386d0efc65a33112b",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -681,8 +699,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "e74387e646f13bf81abbfdc6247c13bddc7b79c0b407fad37365b2a1bfcbdd00",
-      "last_changed": "2026-09-26T22:18:18.960Z",
+      "content_sha256": "452123d5d461866a000e866b2662397487b29b945a1c98f361ddb4be53dcff53",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -715,6 +733,12 @@
       "last_changed": "2026-09-26T22:41:57.196Z",
       "priority": 84
     },
+    "/.well-known/evercraft-agent-commerce.json": {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "content_sha256": "3cd386e585d7fcc3e5d2f3fe55badd348de3b18c706e14afc48810dd78971fe5",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 84
+    },
     "/.well-known/evercraft-agent-interfaces.json": {
       "path": "/.well-known/evercraft-agent-interfaces.json",
       "content_sha256": "9fa418d3bda54b3bfdae687d378d80e7acb4e4451662fadcad0776765b7afc64",
@@ -735,8 +759,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "3ca067a234f6beff7b04ecbb42d4eeadb9f8594e4aec7634d67545203578665b",
-      "last_changed": "2026-09-26T23:44:49.028Z",
+      "content_sha256": "8b7d58ef0036831bebbe1a809a55b0a9c51552a846e6c61056314c0bb23a7543",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
@@ -891,26 +915,26 @@
     },
     "/chum/intents/aliev-site-opportunity-snapshot-v1/": {
       "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "content_sha256": "f16a4009cdba9e584040b036f045612e4fa0205c5105474281053d834eacd910",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "e780613c566ebb7664fb9c7898abfe4e198eb370d87223a1161d79cd23d1734d",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 98
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
-      "content_sha256": "3f451e2c6c0df2f4c75a6cd0001aff4fba8a97e490425fe073dde8fe0c2275c1",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "596d241250ac037cf3ac82d7413afd9099083da7c0867dc09c8763ee7c0a243f",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
-      "content_sha256": "68f2d7a117b2cbc7be6fe46837dbd4d1c742226a05eeedc2bce1053e43582bd8",
-      "last_changed": "2026-09-26T20:52:14.399Z",
+      "content_sha256": "008c36f0f19d17613cc9c2e37712b1657fcf950563562062db1c7b15782ebc66",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "content_sha256": "02d1bc7cb43f57dcb4fa902b668e3c516ac3733705d308ceb81d7db8efa838fa",
-      "last_changed": "2026-09-26T21:22:54.969Z",
+      "content_sha256": "cc3b560b7efbdeb864e65d25c3fb1b60507f4dadffd507fdc9d3213d1c2eb82a",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld": {
@@ -1437,20 +1461,20 @@
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/",
-      "content_sha256": "f5d082ee3a56b37c31573e28e1268f261945641fa750957281738210910d91c2",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "bbcf0898f46f9bac69e44f37e6b77fc2ea055abedebc7bdfb12da3ebbfa8c779",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/llms.txt": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/llms.txt",
-      "content_sha256": "36ecd8a8794267714f241c6d02e5de8f37794d750c8fff652db2a75bd64b84e3",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "c1c729f5f6494044287f498b6c40f2f68bb4cd70129a6a16de1644dfe18c989e",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
-      "content_sha256": "f1ba33f1a1836d9f53c7a035d34dc03978181c49ecd9f590c3866972dd7e0158",
-      "last_changed": "2026-09-26T21:22:54.969Z",
+      "content_sha256": "b83985ca75f792efabd07b679795fc518fe6ac85479d176067fbe0d49c3b2988",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/schema.jsonld": {
@@ -4125,8 +4149,8 @@
     },
     "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json": {
       "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
-      "content_sha256": "ac918cdcfa329aaa4d60d52f9f0e4565a0c729ca1a8297cb1b8cff3d59ec99f6",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "201720bbddf226e00ffadb1c4239cf0a119c0c492a5fb08a2ea7f26fe7c7c35b",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/": {
@@ -5829,8 +5853,8 @@
     },
     "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json": {
       "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
-      "content_sha256": "3b5f8a9818cf57d03e18f63d01b18f2ec9028d1a43829f9275a843456f6d639d",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "781e54e9a8a98f80e33d8b0254ee1cc4e4dcefbac40dd36bd451280714927de6",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/credit-builder-d667e52872/": {
@@ -7173,8 +7197,8 @@
     },
     "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json": {
       "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
-      "content_sha256": "9cdf66c15b6ad5ab5b30151db5150f51b1c254dc8b32164ff31e8df15200fce4",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "7b0f4f00dd4f1472d2472252f1537b40d5b3c2f64c05c783309fa439bcb2e7a8",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/find-the-smallest-raven-safety-capability-without-buying-the-full-suite-or-hardwar-0ee29c0618/": {
@@ -7813,6 +7837,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4/": {
+      "path": "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4/",
+      "content_sha256": "9768a0bccad6149f5410dc74d2ead05c0cffc8fefc05043a9d665c4076e0c014",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json": {
+      "path": "/chum/answers/doors/hotel-ev-charging-opportunity-17daee3ad4.json",
+      "content_sha256": "41025c2f14e7a2640d10eaa27dd9f212909bea9202d251f7c2453c5227645c3b",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
     "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/": {
       "path": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
       "content_sha256": "d1985d8a84d6f09823aca3f29b2eec3c6c8b0154f0fa2828b6b238c0dfc1e90e",
@@ -8233,6 +8269,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502/": {
+      "path": "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502/",
+      "content_sha256": "a75f60062db7736a8b22b415ca8686207f3934b499c0d7094dab8efaf40ce283",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json": {
+      "path": "/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502.json",
+      "content_sha256": "35d2f5201c2a8ef0a9d661f5d1d7bc6b810d43188b75bced3932f3f493025cd2",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
     "/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48/": {
       "path": "/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48/",
       "content_sha256": "445024edea9cd5232e7be0e6562e2022a8bb4c8878dc2784787b91ad23695478",
@@ -8243,6 +8291,18 @@
       "path": "/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48.json",
       "content_sha256": "46ba3041c8318e7c0b8602b72845015d498e6cf96078f84f793bfce1492bc553",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083/": {
+      "path": "/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083/",
+      "content_sha256": "70e1e00664e39371965e943cbd0015d23df2ba0e72f168b4f4a155fc488c2a0b",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083.json": {
+      "path": "/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083.json",
+      "content_sha256": "9f78f24e4f57e78167fed0414548c9ddd09a9b4a270b90229bd53b72c4ce773f",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/is-this-property-good-for-ev-charging-59cbb00f58/": {
@@ -8841,8 +8901,8 @@
     },
     "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json": {
       "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
-      "content_sha256": "81aa2dc332a4fa43405a718296ad0564a5863d0a452056ca29b60503659467ef",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "5a4fcfc82dac563123db583912e753baca4aef51abeb0f52ee259daf0b198eba",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b/": {
@@ -8853,8 +8913,8 @@
     },
     "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json": {
       "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
-      "content_sha256": "6bdde9f15de039a6a750c4f26a151e484f248f2c0a80eaec54cefa163d741190",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "d64c393a39712b065712f97b632c1c3aaad79a3fe9052445e9809b61457ba1b3",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/make-this-writing-sharper-17ad4913a5/": {
@@ -9657,8 +9717,8 @@
     },
     "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json": {
       "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
-      "content_sha256": "fff4ff2d0b2bb94fb2cc1fa61fe9803ccaaa255115d6c3be4b515cdf2f49e66d",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "471718b907cfecfd9e0e4cdeb12a3379c66f718ab184d71c34619719289008ec",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485/": {
@@ -10103,6 +10163,18 @@
       "path": "/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91.json",
       "content_sha256": "31ad3c2d9ad1416b013b4b3b0cba8129c6bcfcc1797b387576ca97d1e9c65126",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b/": {
+      "path": "/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b/",
+      "content_sha256": "81b0c68be9671e49c07f57490b66740d3e03b465b17dd722b2385b821eee4cc8",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b.json": {
+      "path": "/chum/answers/doors/property-ev-charging-opportunity-7c86f6e67b.json",
+      "content_sha256": "48ff08489884fec9123cf4b09d64b9a0860ad4aeb097958d513a260c583bddf7",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/property-ev-fit-4fdb4582c5/": {
@@ -10557,8 +10629,8 @@
     },
     "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json": {
       "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
-      "content_sha256": "dbc18e38b1b4b823abb33eab8f75df665eab30a1cd65778be37be6906496341d",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "4b737465371d5b9654059c66f2018f8202bdd72d2dbe87dbd1a4a54b22af9e97",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/research-disease-evidence-with-uncertainty-attached-0e1637b1f6/": {
@@ -11409,8 +11481,8 @@
     },
     "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json": {
       "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
-      "content_sha256": "26898eacbae71ba98d98db10d329bf86b076bc5b0c53b01d10bf1e675bc2e39f",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "92e3cbb1580db6508896a12a3b0dd5a612fc23d6d04d28262a84abc173e2229c",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771/": {
@@ -12057,8 +12129,8 @@
     },
     "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json": {
       "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
-      "content_sha256": "8961a6c40a82419b2bd86b54aafb0b6043e4e926e04f8d8d8db5e05d31457d11",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "ab314dfa3c023065017e480a0807a5ca3d8a4b2b3ad7df3a38bbfed8afd09c70",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/": {
@@ -12153,8 +12225,8 @@
     },
     "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json": {
       "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
-      "content_sha256": "39d3d92125287ddfe081a527c8cdf2dd0a448bd1b786199a01c019bb6fe4e15b",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "cea753c3c85c391b62afa188db3377a46c59f9c10ac7d04bd2c8efdf984e17ed",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 100
     },
     "/chum/answers/doors/understand-how-astronomers-know-what-they-know-cccac24d96/": {
@@ -12709,6 +12781,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976/": {
+      "path": "/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976/",
+      "content_sha256": "ed97158d5f784e544c46a6c63982fd2861e9ce86964ffa882a4c72b8929f6742",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976.json": {
+      "path": "/chum/answers/doors/what-is-the-ev-charging-opportunity-at-this-property-c7b5d57976.json",
+      "content_sha256": "7352adfe8016ad35c79adfe674d7c6dbef35234fd1f067dc3af0f2bea50f0eb0",
+      "last_changed": "2026-09-26T23:44:54.286Z",
+      "priority": 100
+    },
     "/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e/": {
       "path": "/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e/",
       "content_sha256": "cf707ecde1175a3675486f3211af72452a29b08d49443ade381c3608ff16c62e",
@@ -12987,20 +13071,20 @@
     },
     "/chum/commercial/aliev-site-opportunity-snapshot-v1/": {
       "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
-      "content_sha256": "97520ebc8fa85dcd9b08b48e1470d3ab850f6c0961a92c6eabdc7d72b0700e44",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "7178589904e32498fd8601a1a8b7b1d5200a4ecc462715bd218db4d1de734a8a",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json": {
       "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
-      "content_sha256": "52aacba1ce3d5d7a69693fffe0b8789be80bc7143d90f0936040bfdc61aa2ec3",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "3d64ea6c5bdaaa96d0aa2262d5de4767b3d587ae0ab855c636f9870c357a9a61",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt": {
       "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
-      "content_sha256": "b602d023fa16d3662287f58edff10f41119137091d7c33104509e8a62c69ecf0",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "45ff2c826b36738ac2c533cb428874238008c6a96c217c55ceb3da34053918f3",
+      "last_changed": "2026-09-26T23:44:54.286Z",
       "priority": 112
     },
     "/chum/commercial/career-command-interview-practice-machine-v1/": {

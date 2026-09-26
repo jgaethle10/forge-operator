@@ -122,6 +122,11 @@
       "class": "machine_commerce_offer",
       "pain_phrases": [
         "is this site good for EV charging",
+        "is this property a good EV charging site",
+        "is my hotel a good EV charging site",
+        "what is the EV charging opportunity at this property",
+        "hotel EV charging opportunity",
+        "property EV charging opportunity",
         "EV charger site analysis",
         "EV charging feasibility by address",
         "what EV chargers are near this property",
@@ -993,7 +998,7 @@
       ],
       "problem": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
       "inputs": "Authorized source video. Current customer renderer is bounded to 35 MiB. Optional source duration, desired social goal and target platforms improve planning.",
-      "outputs": "Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Public agent tools currently provide discovery and non-executing planning only.",
+      "outputs": "Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Clip V2 adds clean/bold/documentary/property creative direction, source-grounded caption cues, and distinct Facebook/LinkedIn/Instagram copy. Public agent tools remain discovery and non-executing planning only.",
       "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
@@ -1011,7 +1016,7 @@
       "human_confirmation_required": true,
       "confirmation": "Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.",
       "payment_authority": "Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.",
-      "invocation_status": "LIVE: public Clip HTTP gateway, OpenAPI, llms guidance and Official MCP Registry server io.github.jgaethle10/evercraft-clip v0.1.0 provide read-only capability discovery and non-executing job planning. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.",
+      "invocation_status": "LIVE: Clip Production Engine V2 public gateway exposes Creative Director planning with style/caption choices and a ForensiScope overflow recommendation for oversized, long, deduplicated or full-timeline media. Official MCP Registry server io.github.jgaethle10/evercraft-clip remains read-only. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
