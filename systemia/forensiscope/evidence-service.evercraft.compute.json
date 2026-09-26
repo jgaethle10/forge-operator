@@ -20,7 +20,8 @@
     "access_token_max_ttl_seconds": 86400,
     "evidence_graph_wholesale_export": false,
     "source_paths_public": false,
-    "modern_mcp_header_integrity": true
+    "modern_mcp_header_integrity": true,
+    "privacy_safe_access_audit_receipts": true
   },
   "protocols": {
     "mcp_modern": "2026-07-28",
@@ -38,7 +39,9 @@
     "public route uses HTTPS",
     "public health matches deployed instance",
     "public MCP canary succeeds",
-    "public route receipt recorded before discovery migration"
+    "public route receipt recorded before discovery migration",
+    "health reports privacy-safe evidence access audit receipts",
+    "public MCP canary verifies scoped access and no raw-media or checkout tools"
   ],
   "provider_policy": {
     "named_cloud_dependency": false,
