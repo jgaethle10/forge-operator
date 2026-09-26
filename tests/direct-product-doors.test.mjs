@@ -5,6 +5,12 @@ const readJson=(p)=>JSON.parse(fs.readFileSync(p,'utf8'));
 const specs=readJson('distribution/direct-plugin-specs.json');
 const publicDoors=readJson('public/.well-known/evercraft-direct-doors.json');
 const distributionDoors=readJson('distribution/direct-product-doors.json');
+const LIVE_DIRECT_STATES=new Set([
+  'registry_published_direct_mcp_existing',
+  'public_https_verified_registry_pending',
+]);
+const isDirectLive=(p)=>LIVE_DIRECT_STATES.has(p.state)&&typeof p.mcp_url==='string'&&p.mcp_url.startsWith('https://');
+const isRegistryPublished=(p)=>p.state==='registry_published_direct_mcp_existing'&&typeof p.registry_name==='string';
 
 assert.equal(publicDoors.schema,'evercraft.direct-product-doors.v1');
 assert.equal(publicDoors.generated_from,'distribution/direct-plugin-specs.json');
@@ -20,8 +26,11 @@ for(const [name,p] of specByName){
   const door=doorByName.get(name);
   assert.ok(door,'missing direct door: '+name);
   assert.equal(door.intent,p.intent,name+': intent drift');
-  assert.equal(door.registry_name,p.registry_name,name+': registry drift');
-  const expectedMcp=p.state==='registry_published_direct_mcp_existing'?p.mcp_url:null;
+  const expectedRegistry=isRegistryPublished(p)?p.registry_name:null;
+  const expectedRegistryState=isRegistryPublished(p)?'published':(isDirectLive(p)?'pending':'not_published');
+  assert.equal(door.registry_name,expectedRegistry,name+': registry drift');
+  assert.equal(door.registry_state,expectedRegistryState,name+': registry state drift');
+  const expectedMcp=isDirectLive(p)?p.mcp_url:null;
   assert.equal(door.remote_mcp,expectedMcp,name+': MCP URL drift');
   assert.equal(door.runtime_path||null,p.runtime_path||null,name+': runtime path drift');
   assert.equal(door.runtime_workload_class||null,p.runtime_workload_class||null,name+': runtime workload drift');
@@ -45,7 +54,7 @@ for(const [name,p] of specByName){
 
   const mcp=readJson('plugins/'+p.slug+'/mcp.json');
   const servers=Object.values(mcp.mcpServers||{});
-  if(p.state==='registry_published_direct_mcp_existing'){
+  if(isDirectLive(p)){
     const server=servers[0];
     assert.ok(server,name+': missing MCP server config');
     assert.equal(server.url,p.mcp_url,name+': plugin MCP URL drift');
@@ -57,8 +66,14 @@ for(const [name,p] of specByName){
   assert.equal(codex.interface?.displayName,p.name,name+': display name drift');
   assert.equal(codex.interface?.websiteURL,p.website_url,name+': website drift');
 
-  if(p.state==='registry_published_direct_mcp_existing'){
+  if(isRegistryPublished(p)){
     assert.match(p.registry_name,/^io\.github\.jgaethle10\//,name+': registry-backed product must have official namespace');
+  }else if(isDirectLive(p)){
+    assert.equal(p.registry_name,null,name+': registry-pending direct product must not claim registry publication');
+    assert.equal(plugin.registryState,'PENDING',name+': plugin must mark registry pending');
+    assert.equal(codex.registryState,'PENDING',name+': Codex plugin must mark registry pending');
+    assert.equal(plugin.releaseState,undefined,name+': callable product must not be release-held');
+    assert.equal(codex.releaseState,undefined,name+': callable Codex product must not be release-held');
   }else{
     assert.equal(p.registry_name,null,name+': held product must not claim registry publication');
     assert.ok(plugin.releaseState,name+': held product must expose releaseState');
@@ -85,6 +100,8 @@ assert.match(suiteSkill,/fallback when no dedicated specialist is available/i);
 
 console.log('DIRECT_PRODUCT_DOORS_PASS',JSON.stringify({
   direct_doors:publicDoors.doors.length,
-  registry_backed_specialists:specs.products.filter(p=>p.state==='registry_published_direct_mcp_existing').length,
-  held:specs.products.filter(p=>p.state!=='registry_published_direct_mcp_existing').map(p=>p.slug)
+  direct_live_specialists:specs.products.filter(isDirectLive).length,
+  registry_backed_specialists:specs.products.filter(isRegistryPublished).length,
+  registry_pending_specialists:specs.products.filter(p=>isDirectLive(p)&&!isRegistryPublished(p)).map(p=>p.slug),
+  held:specs.products.filter(p=>!isDirectLive(p)).map(p=>p.slug)
 }));
