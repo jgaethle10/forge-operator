@@ -20,6 +20,7 @@
     "machine_catalog": "/.well-known/evercraft-machine-catalog.json",
     "chum": "/.well-known/evercraft-chum.json",
     "chum_public_mirror": "/chum/index.json",
+    "network": "/.well-known/evercraft-network.json",
     "revenue_watershed": "/chum/revenue.json",
     "revenue_watershed_text": "/chum/revenue.txt",
     "revenue_watershed_html": "/chum/revenue.html",

@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 93,
-    "unique_user_phrases": 667,
-    "mapped_candidate_edges": 726,
+    "unique_user_phrases": 675,
+    "mapped_candidate_edges": 734,
     "ambiguous_phrases": 59,
     "product_candidates": 50,
     "machine_offer_candidates": 43
@@ -784,6 +784,29 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:27b764741f",
+      "user_language": "application continuity across changing internet connections",
+      "normalized": "application continuity across changing internet connections",
+      "relative_json": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
+      "relative_page": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -2046,6 +2069,29 @@
       ]
     },
     {
+      "answer_id": "intent:183d3d81cb",
+      "user_language": "business connectivity resilience software",
+      "normalized": "business connectivity resilience software",
+      "relative_json": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json",
+      "relative_page": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0babb51749",
       "user_language": "business continuity and safety",
       "normalized": "business continuity and safety",
@@ -3164,6 +3210,29 @@
       ]
     },
     {
+      "answer_id": "intent:a1495c5301",
+      "user_language": "continuity visibility when an authorized internet path changes",
+      "normalized": "continuity visibility when an authorized internet path changes",
+      "relative_json": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json",
+      "relative_page": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c9c2d9c21a",
       "user_language": "contractor cash flow payroll timing or receivables are causing stress",
       "normalized": "contractor cash flow payroll timing or receivables are causing stress",
@@ -3654,6 +3723,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e196d4412a",
+      "user_language": "device reconnect and health visibility",
+      "normalized": "device reconnect and health visibility",
+      "relative_json": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json",
+      "relative_page": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
           "registry_name": null
         }
       ]
@@ -7092,6 +7184,29 @@
       ]
     },
     {
+      "answer_id": "intent:7ecdd87b46",
+      "user_language": "household connectivity resilience software",
+      "normalized": "household connectivity resilience software",
+      "relative_json": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json",
+      "relative_page": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:27d6bd2ff4",
       "user_language": "how can I increase my income",
       "normalized": "how can i increase my income",
@@ -8112,6 +8227,29 @@
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
           "public_url": "https://network-control.base44.app/join",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:039034f34d",
+      "user_language": "keep my application connected when Wi-Fi and cellular paths change",
+      "normalized": "keep my application connected when wi fi and cellular paths change",
+      "relative_json": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json",
+      "relative_page": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
           "registry_name": null
         }
       ]
@@ -11861,6 +11999,29 @@
       ]
     },
     {
+      "answer_id": "intent:d92ea30f81",
+      "user_language": "resilient application identity across authorized network changes",
+      "normalized": "resilient application identity across authorized network changes",
+      "relative_json": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json",
+      "relative_page": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:f6c12230af",
       "user_language": "resolve duplicate suppliers across ERP exports",
       "normalized": "resolve duplicate suppliers across erp exports",
@@ -13250,6 +13411,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-proof-portal-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:75e206686c",
+      "user_language": "software network continuity without changing carriers",
+      "normalized": "software network continuity without changing carriers",
+      "relative_json": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json",
+      "relative_page": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-network",
+          "kind": "product",
+          "product_key": "evercraft-network",
+          "public_id": null,
+          "name": "Evercraft Network",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-network/",
+          "public_url": "https://network-control.base44.app/",
           "registry_name": null
         }
       ]

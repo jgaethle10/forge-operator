@@ -1210,6 +1210,14 @@ Use when the user means:
 - member device reconnect visibility
 - continuity readiness tools
 - Evercraft Network membership
+- keep my application connected when Wi-Fi and cellular paths change
+- application continuity across changing internet connections
+- software network continuity without changing carriers
+- household connectivity resilience software
+- business connectivity resilience software
+- device reconnect and health visibility
+- continuity visibility when an authorized internet path changes
+- resilient application identity across authorized network changes
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
