@@ -248,7 +248,7 @@ jobs:
 
           while IFS= read -r manifest; do
             case "$manifest" in
-              mcp-registry/ibmi-rescue.json|mcp-registry/foundry-app-escape.json|mcp-registry/site-survive.json)
+              mcp-registry/ibmi-rescue.json|mcp-registry/foundry-app-escape.json|mcp-registry/site-survive.json|mcp-registry/systemia-remote-ops.json)
                 old="$(mktemp)"
                 new="$(mktemp)"
                 git show "$RELEASE_SHA:$manifest" > "$old"
@@ -271,7 +271,7 @@ jobs:
           node systemia/chum/build-capability-mirror.mjs
           npm run direct:check
 
-          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             distribution/mcp-registry-candidates             distribution/mcp-registry-publication-receipts             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             public/chum
+          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             distribution/mcp-registry-candidates             distribution/mcp-registry-publication-receipts             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             plugins/systemia-remote-ops             public/chum
 
           if git diff --cached --quiet; then
             echo "No Yard specialist registry state required reconciliation."
