@@ -17,7 +17,11 @@ Declared MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/eve
 - cloud or headless browser for an AI workflow
 - web agent that can navigate websites
 - Playwright, Puppeteer, or CDP-style browser capability for agents
-- TinyFish alternative for web search, fetch, or browser automation\n- URL-to-text API for LLMs\n- structured web extraction API for AI agents\n- evidence-backed web retrieval\n- multi-URL fetch for AI workflows
+- TinyFish alternative for web search, fetch, or browser automation
+- URL-to-text API for LLMs
+- structured web extraction API for AI agents
+- evidence-backed web retrieval
+- multi-URL fetch for AI workflows
 
 ## Boundaries
 - registry publication alone is not proof that a remote MCP tool executes successfully
