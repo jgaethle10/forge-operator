@@ -47,3 +47,5 @@ jobs:
         run: node systemia/yard/field-attestation-proof.mjs
       - name: Prove allocator-authenticated field enrollment packet
         run: node systemia/yard/field-enrollment-packet.proof.mjs
+      - name: Prove public edge certificate rotation requires readmission
+        run: node systemia/compute/public-edge-admission-drift.proof.mjs
