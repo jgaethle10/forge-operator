@@ -30,6 +30,9 @@ const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.tr
 const machineCommerceGatewayUrl =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const chumBuyerFrontageOrigin =
+  process.env.EVERCRAFT_BUYER_FRONTAGE_ORIGIN?.trim() ||
+  'https://evercraft-ai-suite-08c4d2b8.base44.app';
 const crawlerRadarStore = createCrawlerRadarStore({
   maxEvents: Number(process.env.CHUM_CRAWLER_RADAR_MAX_EVENTS || 5000),
   persistPath: process.env.CHUM_CRAWLER_OBSERVATION_PATH?.trim() || '',
@@ -400,13 +403,19 @@ function findChumOffer(publicId: string): any | null {
     .find((offer: any) => offer.public_id === publicId) || null;
 }
 
-function chumHumanReviewUrl(publicId: string): string {
-  const target = new URL(machineCommerceGatewayUrl);
-  if (target.protocol !== 'https:') {
-    throw new Error('Evercraft Machine Commerce gateway must use HTTPS.');
+function chumBuyerFrontageUrl(
+  publicId: string,
+  { source = 'chum', surface = 'chum_public_surface', campaign = 'buyer-frontage' } = {},
+): string {
+  const origin = new URL(chumBuyerFrontageOrigin);
+  if (origin.protocol !== 'https:') {
+    throw new Error('Evercraft buyer frontage must use HTTPS.');
   }
-  target.searchParams.set('view', 'service');
-  target.searchParams.set('public_id', publicId);
+  const target = new URL('/buy/' + encodeURIComponent(publicId), origin.origin);
+  target.searchParams.set('src', source);
+  target.searchParams.set('campaign', campaign);
+  target.searchParams.set('ec_surface', surface);
+  target.searchParams.set('ec_public_id', publicId);
   return target.toString();
 }
 
@@ -798,18 +807,22 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       return;
     }
 
+    const targetUrl = chumBuyerFrontageUrl(offer.public_id, {
+      source: providerClaim || 'chum',
+      surface,
+      campaign: 'chum-referral',
+    });
     const issued = issueReferralToken({
       productKey: offer.product_key || offer.public_id,
       publicId: offer.public_id,
       providerClaim,
       surface,
-      targetUrl: offer.public_url,
+      targetUrl,
       intent,
     }, chumAttributionSecret);
 
-    const landing = new URL(offer.public_url);
+    const landing = new URL(targetUrl);
     landing.searchParams.set('ec_ref', issued.token);
-    landing.searchParams.set('ec_source', 'chum');
 
     res.json({
       schema: 'evercraft.chum.referral-response.v1',
@@ -858,10 +871,12 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
       return;
     }
 
-    const targetUrl = chumHumanReviewUrl(offer.public_id);
+    const targetUrl = chumBuyerFrontageUrl(offer.public_id, {
+      source: providerClaim || 'chum',
+      surface,
+      campaign: 'chum-handoff',
+    });
     const landing = new URL(targetUrl);
-    landing.searchParams.set('ec_source', 'chum');
-    landing.searchParams.set('ec_surface', surface);
 
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -913,7 +928,7 @@ app.post('/api/chum/attribution/event', rateLimit(240, 60 * 60 * 1000), async (r
   if (!PUBLIC_ATTRIBUTION_STAGES.includes(stage as (typeof PUBLIC_ATTRIBUTION_STAGES)[number])) {
     res.status(403).json({
       success: false,
-      error: 'Public callers may record landing or checkout_started only. Payment verification requires the trusted payment adapter.',
+      error: 'Public callers may record landing, offer_view, continue_clicked, or checkout_started only. Payment verification requires the trusted payment adapter.',
     });
     return;
   }
