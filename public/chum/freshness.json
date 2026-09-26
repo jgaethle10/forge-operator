@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T15:27:34.822Z",
+  "updated_at": "2026-09-26T16:21:13.460Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,45 +11,61 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
-      "last_changed": "2026-09-26T15:27:34.822Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T16:21:13.460Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T16:21:13.460Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T15:27:34.822Z",
+      "last_changed": "2026-09-26T16:21:13.460Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T16:21:13.460Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
-      "url": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
-      "last_changed": "2026-09-26T15:27:34.822Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T15:27:34.822Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T15:24:22.798Z",
+      "last_changed": "2026-09-26T16:21:13.460Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T15:24:22.798Z",
+      "last_changed": "2026-09-26T16:21:13.460Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T16:21:13.460Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T15:24:22.798Z",
+      "last_changed": "2026-09-26T16:21:13.460Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-26T16:21:13.127Z",
+      "priority": 88
+    },
+    {
+      "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
+      "url": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
+      "last_changed": "2026-09-26T15:27:34.822Z",
       "priority": 80
     },
     {
@@ -1513,12 +1529,6 @@
     {
       "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
       "url": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json",
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
-      "url": "/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     }

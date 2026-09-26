@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-26T15:24:22.587Z",
+  "generated_at": "2026-09-26T16:21:13.321Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -8,7 +8,7 @@
     "evidence_state": "none"
   },
   "observation_count": 0,
-  "negative_provider_pickup_receipts": 86,
+  "negative_provider_pickup_receipts": 91,
   "surface_count": 2150,
   "strike_now_count": 1946,
   "doctrine": {
@@ -74,6 +74,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -114,6 +138,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -321,6 +351,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -361,6 +415,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -568,6 +628,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -608,6 +692,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -815,6 +905,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -855,6 +969,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -1062,6 +1182,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -1102,6 +1246,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -1309,6 +1459,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -1349,6 +1523,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -1556,6 +1736,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -1596,6 +1800,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -1803,6 +2013,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -1843,6 +2077,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -2050,6 +2290,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -2090,6 +2354,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -2297,6 +2567,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -2337,6 +2631,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -2544,6 +2844,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -2584,6 +2908,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -2791,6 +3121,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -2831,6 +3185,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -3038,6 +3398,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -3078,6 +3462,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -3285,6 +3675,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -3325,6 +3739,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -3532,6 +3952,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -3572,6 +4016,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -3779,6 +4229,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -3819,6 +4293,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -4026,6 +4506,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -4066,6 +4570,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -4273,6 +4783,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -4313,6 +4847,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
@@ -4520,6 +5060,30 @@
           "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
         },
         {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
           "provider": "generic_agent",
           "observed_at": "2026-09-26T11:27:38.456Z",
           "source": "authorized_provider_probe",
@@ -4560,6 +5124,12 @@
           "observed_at": "2026-09-26T11:27:39.502Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
         },
         {
           "provider": "generic_agent",
