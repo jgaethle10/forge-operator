@@ -6,6 +6,10 @@ const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
 ).digest('hex');
 
+const SAFE_HOLD_CATEGORIES = new Set([
+  'remote_device_trust',
+]);
+
 function clean(value) {
   return String(value ?? '').trim();
 }
@@ -17,6 +21,23 @@ function unique(values, limit = 500) {
 function inside(root, target) {
   const rel = path.relative(root, target);
   return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
+}
+
+function validateSafeHold(value) {
+  if (value == null) return null;
+  if (typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('mission_snapshot_safe_hold_invalid');
+  }
+  const category = clean(value.category).toLowerCase();
+  if (!SAFE_HOLD_CATEGORIES.has(category)) {
+    throw new Error('mission_snapshot_safe_hold_category_not_allowed');
+  }
+  const rawCount = Number(value.count);
+  if (!Number.isFinite(rawCount) || rawCount < 0) {
+    throw new Error('mission_snapshot_safe_hold_count_invalid');
+  }
+  const count = Math.min(9999, Math.floor(rawCount));
+  return count > 0 ? { category, count } : null;
 }
 
 function validateSnapshot(snapshot) {
@@ -40,6 +61,7 @@ function validateSnapshot(snapshot) {
     snapshot_ref: clean(snapshot.snapshot_ref),
     observed_at: clean(snapshot.observed_at),
     evidence_refs: unique(snapshot.evidence_refs || []),
+    safe_hold: validateSafeHold(snapshot.safe_hold),
   };
 }
 
@@ -123,6 +145,7 @@ export function aggregateMissionSnapshots({
       report.status = 'accepted';
       report.snapshot_ref = snapshot.snapshot_ref || null;
       report.observed_at = snapshot.observed_at || null;
+      report.safe_hold = snapshot.safe_hold || null;
       sourceReports.push(report);
       accepted.push({
         ...snapshot,
@@ -145,6 +168,19 @@ export function aggregateMissionSnapshots({
     admitted: acc.admitted + source.admitted,
     held: acc.held + source.held,
   }), { scanned: 0, changed: 0, admitted: 0, held: 0 });
+
+  const safeHoldMap = new Map();
+  for (const source of accepted) {
+    if (!source.safe_hold) continue;
+    const category = source.safe_hold.category;
+    safeHoldMap.set(
+      category,
+      (safeHoldMap.get(category) || 0) + source.safe_hold.count
+    );
+  }
+  const safeHolds = [...safeHoldMap.entries()]
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => a.category.localeCompare(b.category));
 
   const refBody = sourceReports.map((row) => ({
     source_key: row.source_key,
@@ -175,6 +211,7 @@ export function aggregateMissionSnapshots({
     sources: sourceReports,
     aggregate_snapshot_ref: snapshot.snapshot_ref,
     counts,
+    safe_holds: safeHolds,
   };
 
   return {
