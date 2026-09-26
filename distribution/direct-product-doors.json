@@ -11,6 +11,9 @@
       "intent": "Long, oversized, or complex video/audio analysis, transcription, timelines, comparison, duplicate-segment review, and LLM-consumable evidence outputs.",
       "registry_name": "io.github.jgaethle10/forensiscope",
       "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/forensiscope",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it."
@@ -20,6 +23,9 @@
       "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
       "registry_name": "io.github.jgaethle10/aliev",
       "remote_mcp": "https://aliev.base44.app/functions/alievMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/aliev",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval."
@@ -29,6 +35,9 @@
       "intent": "Obsolete, discontinued, obscure, or hard-to-source machine, vehicle, and equipment part discovery.",
       "registry_name": "io.github.jgaethle10/findmypart",
       "remote_mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/findmypart",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Use the live FindMyPart MCP for current hunt, pricing, checkout, status, and evidence state. Never invent inventory, compatibility, supplier availability, or a successful purchase."
@@ -38,6 +47,9 @@
       "intent": "Website conversion, local SEO, performance, and practical-fix auditing.",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
       "remote_mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/systemia-website-audit",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Do not fabricate audit findings before the audit runs. Checkout preparation is not payment proof, and payment does not imply completed fulfillment until the product verifier confirms it."
@@ -47,6 +59,9 @@
       "intent": "Interview practice and career preparation.",
       "registry_name": "io.github.jgaethle10/career-command",
       "remote_mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/career-command",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Keep guidance user-controlled. Do not claim guaranteed hiring outcomes, employer endorsement, or access to private employer systems."
@@ -56,6 +71,9 @@
       "intent": "Event discovery, event promotion, and venue visibility.",
       "registry_name": "io.github.jgaethle10/eventwave",
       "remote_mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/eventwave",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled."
@@ -65,6 +83,9 @@
       "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
       "registry_name": "io.github.jgaethle10/faie",
       "remote_mcp": "https://faie.base44.app/functions/faieMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/faie",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
@@ -74,6 +95,9 @@
       "intent": "Enterprise operations capability discovery, routing, migration/process pain, and privacy-preserving human handoff.",
       "registry_name": "io.github.jgaethle10/buildflow",
       "remote_mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/buildflow",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Do not send private customer records through public discovery. A handoff does not grant private-system access, execute business actions, create checkout, or prove deployment."
@@ -83,6 +107,9 @@
       "intent": "Public URL retrieval, structured extraction, and bounded site inspection for AI agents.",
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "remote_mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/evercraft-web",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Public fetch and bounded site inspection are the live-verified primitives. Do not claim search, browser automation, authenticated browsing, or broader network access is live until the MCP reports those gates passed."
@@ -92,6 +119,9 @@
       "intent": "Business website planning and launch assistance.",
       "registry_name": "io.github.jgaethle10/website-launch",
       "remote_mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/website-launch",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Do not claim a website was purchased, deployed, published, or transferred until live tool state proves it. Paid and publishing actions remain human-confirmed."
@@ -100,7 +130,10 @@
       "product": "Systemia Remote Ops",
       "intent": "Business decision simulation before acting, beginning with pricing changes.",
       "registry_name": null,
-      "remote_mcp": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
+      "remote_mcp": null,
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": "deployment_unverified",
       "plugin_package": "plugins/systemia-remote-ops",
       "state": "source_ready_deployment_unverified",
       "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt."
@@ -110,6 +143,9 @@
       "intent": "Founder capital-fit, funding-readiness, and fundraising preparation analysis.",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "remote_mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/deck-capital-fit",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Treat the output as decision support, not investment, securities, legal, tax, valuation, or fundraising-success advice. Do not imply investor interest, financing approval, or committed capital unless independently verified."
@@ -119,6 +155,9 @@
       "intent": "Read-only social-video production discovery and job planning.",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
       "remote_mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/evercraft-clip",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "The current MCP is read-only discovery and job planning. Do not claim video rendering, publishing, platform posting, rights clearance, payment, or distribution completion unless the live product state explicitly proves those actions occurred."
@@ -128,6 +167,9 @@
       "intent": "Low-cost text pressure tests, critique, and sharper writing feedback.",
       "registry_name": "io.github.jgaethle10/roasted",
       "remote_mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "runtime_path": null,
+      "runtime_workload_class": null,
+      "public_origin_state": null,
       "plugin_package": "plugins/roasted",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Checkout requires human confirmation. Checkout creation is not payment proof, and a paid result must not be claimed until provider verification confirms paid state and result availability."
@@ -136,28 +178,37 @@
       "product": "Evercraft IBM i Rescue",
       "intent": "IBM i or AS/400 estate assessment, dependency mapping, upgrade-risk review, modernization proof, and rollback/test planning.",
       "registry_name": null,
-      "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/ibmiRescueMcp",
+      "remote_mcp": null,
+      "runtime_path": "/mcp/ibmi-rescue",
+      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "public_origin_state": "https_route_unbound",
       "plugin_package": "plugins/ibmi-rescue",
-      "state": "deployment_canary_pending",
-      "truth_boundary": "Discovery does not authorize credentials, production access, upgrades, cutovers, payment, or paid work. The direct MCP is read-only offer/handoff until independently verified otherwise."
+      "state": "yard_runtime_proven_public_route_pending",
+      "truth_boundary": "Discovery does not authorize credentials, production access, upgrades, cutovers, payment, or paid work. The read-only Yard runtime is proven locally, but no remote MCP may be advertised until an independent public HTTPS route is verified."
     },
     {
       "product": "Evercraft Foundry App Escape Audit",
       "intent": "App portability, vendor-lock-in, dependency, security, reconstruction, migration, and rollback analysis.",
       "registry_name": null,
-      "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp",
+      "remote_mcp": null,
+      "runtime_path": "/mcp/foundry-app-escape",
+      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "public_origin_state": "https_route_unbound",
       "plugin_package": "plugins/foundry-app-escape",
-      "state": "deployment_canary_pending",
-      "truth_boundary": "Source access, payment, migration work, deployment, and production changes remain separately authorized. The direct MCP is read-only offer/handoff until independently verified otherwise."
+      "state": "yard_runtime_proven_public_route_pending",
+      "truth_boundary": "Source access, payment, migration work, deployment, and production changes remain separately authorized. The read-only Yard runtime is proven locally, but no remote MCP may be advertised until an independent public HTTPS route is verified."
     },
     {
       "product": "Site-Survive Rapid Audit",
       "intent": "Site continuity, internet-outage dependency analysis, and prioritized operational resilience planning.",
       "registry_name": null,
-      "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp",
+      "remote_mcp": null,
+      "runtime_path": "/mcp/site-survive",
+      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "public_origin_state": "https_route_unbound",
       "plugin_package": "plugins/site-survive",
-      "state": "deployment_canary_pending",
-      "truth_boundary": "The direct MCP does not create payment, perform the paid resilience audit, change networks, or guarantee continuity. It is read-only offer/handoff until independently verified otherwise."
+      "state": "yard_runtime_proven_public_route_pending",
+      "truth_boundary": "The direct runtime does not create payment, perform the paid resilience audit, change networks, or guarantee continuity. The read-only Yard runtime is proven locally, but no remote MCP may be advertised until an independent public HTTPS route is verified."
     }
   ]
 }
