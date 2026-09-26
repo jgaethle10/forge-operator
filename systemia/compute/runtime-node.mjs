@@ -1432,12 +1432,16 @@ export async function startEvercraftComputeNode({
           const stateRoot = path.resolve(String(body.input?.state_root || ''));
           const yardStateDir = path.resolve(String(body.input?.yard_state_dir || ''));
           const kaidanceDeploymentId = String(body.input?.kaidance_deployment_id || '').trim();
+          const releaseRef = String(body.release_ref || '').trim();
 
           if (!stateRoot || !yardStateDir || !kaidanceDeploymentId) {
             return send(res, 422, { error: 'core_supervisor_runtime_bindings_required' });
           }
           if (!isWithin(allowedRoot, stateRoot) || !isWithin(allowedRoot, yardStateDir)) {
             return send(res, 403, { error: 'core_supervisor_path_outside_admitted_root' });
+          }
+          if (!/^[a-f0-9]{40}$/i.test(releaseRef)) {
+            return send(res, 422, { error: 'core_supervisor_immutable_release_ref_required' });
           }
 
           const workspaceRoot = path.join(stateRoot, 'workspace');
@@ -1449,6 +1453,11 @@ export async function startEvercraftComputeNode({
             workspaceRoot,
             'remote-device-trust-watch'
           );
+          const publicEdgeOut = path.join(
+            workspaceRoot,
+            'public-edge-activation-watch'
+          );
+          const publicEdgeState = path.join(publicEdgeOut, 'runtime');
           const publisherLedger = path.join(workspaceRoot, 'mission-publisher', 'ledger.json');
           const missionSourcesConfig = path.join(workspaceRoot, 'mission-sources.json');
           fs.mkdirSync(workspaceRoot, { recursive: true, mode: 0o750 });
@@ -1479,11 +1488,18 @@ export async function startEvercraftComputeNode({
                 required: true,
                 stale_after_seconds: 900,
               },
+              {
+                source_key: 'evercraft-public-specialist-edge',
+                path: 'public-edge-activation-watch/field-mission-snapshot.json',
+                required: false,
+                stale_after_seconds: 900,
+              },
             ],
           });
 
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
+            EVERCRAFT_RELEASE_REF: releaseRef,
             SYSTEMIA_YARD_STATE_DIR: yardStateDir,
             KAIDANCE_DEPLOYMENT_ID: kaidanceDeploymentId,
             SYSTEMIA_WORKSPACE_ROOT: workspaceRoot,
@@ -1496,6 +1512,9 @@ export async function startEvercraftComputeNode({
             SYSTEMIA_PORTFOLIO_SENTINEL_OUT_DIR: portfolioSentinelOut,
             SYSTEMIA_NODE001_FIELD_DIR: node001Field,
             SYSTEMIA_NODE001_STATUS_DIR: node001Status,
+            EVERCRAFT_NODE001_FIELD_MISSION_STATE: path.join(node001Status, 'latest.json'),
+            EVERCRAFT_PUBLIC_EDGE_ARTIFACT_DIR: publicEdgeOut,
+            EVERCRAFT_PUBLIC_EDGE_STATE_DIR: publicEdgeState,
             SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID: String(
               body.input?.remote_broker_deployment_id || ''
             ).trim(),
