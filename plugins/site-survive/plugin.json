@@ -1,0 +1,22 @@
+{
+  "name": "site-survive",
+  "version": "0.1.0",
+  "description": "Map site failure points before connectivity disruption",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "site-survive",
+    "business-continuity",
+    "internet-outage",
+    "resilience",
+    "offline-operations",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "releaseState": "DEPLOYMENT_CANARY_PENDING"
+}
