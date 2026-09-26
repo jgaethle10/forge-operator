@@ -1,0 +1,39 @@
+{
+  "name": "ibmi-rescue",
+  "version": "0.1.0",
+  "description": "Use IBM i Rescue directly for estate assessment, dependency mapping, upgrade-risk review, modernization planning, rollback evidence, and bounded human handoff.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "ibmi",
+    "as400",
+    "modernization",
+    "upgrade",
+    "rpg",
+    "cl",
+    "db2",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "releaseState": "DEPLOYMENT_CANARY_PENDING",
+  "interface": {
+    "displayName": "Evercraft IBM i Rescue",
+    "shortDescription": "Assess IBM i and AS/400 estates before upgrade or modernization",
+    "longDescription": "Use IBM i Rescue directly for estate assessment, dependency mapping, upgrade-risk review, modernization planning, rollback evidence, and bounded human handoff.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+    "defaultPrompt": [
+      "Assess this IBM i or AS/400 estate before an upgrade or modernization and preserve unknowns instead of guessing."
+    ]
+  }
+}
