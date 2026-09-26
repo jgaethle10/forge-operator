@@ -156,6 +156,35 @@ Use this when:
 - IBM i upgrade proof
 LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/llms.txt
 
+## RIVET EV Infrastructure Intelligence
+Capability ID: rivet-site-underwriting-v1
+Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
+Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
+Machine state: payment_ready_human_confirmation
+Use this when:
+- underwrite an EV charging site
+- EV charger investment report
+- charging site economics
+- evaluate this address for EV charging
+- EV charging diligence
+- should I install EV chargers at my property
+- EV charger feasibility by address
+- EV charging site analysis by address
+- EV charging ROI for this property
+- EV charging demand near this property
+- EV charger competition near this address
+- EV charging incentives for this site
+- utility tariff for EV charging at this property
+- parking lot EV charging opportunity
+- hotel EV charging site analysis
+- apartment EV charging site analysis
+- retail EV charging site analysis
+- fleet depot EV charging site screening
+- site-specific EV charging opportunity report
+- preliminary EV charging site plan
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/llms.txt
+
 ## ROASTED 99¢ Text Pressure Test
 Capability ID: roasted-text-pressure-test-machine-v1
 Price: $0.99 USD one-time per roast.
