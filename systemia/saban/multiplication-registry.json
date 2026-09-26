@@ -52,6 +52,12 @@
           "field": "entries",
           "kind": "pain",
           "key_field": "public_id"
+        },
+        {
+          "file": "artifacts/chum/provider-miss-ingest-latest.json",
+          "field": "repair_queue",
+          "kind": "discovery_repair",
+          "key_field": "product_key"
         }
       ],
       "reconciler": {
