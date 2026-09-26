@@ -51,8 +51,17 @@ assert.equal(aiConformance.machine_commerce_handoff_state, 'live_verified');
 assert.match(llms, /IBM i 7\.4 Deadline X-Ray/);
 assert.match(llms, /\$250 one-time/);
 assert.match(llms, /\$1,500 one-time/);
-assert.match(llms, /Machine Commerce human handoff is live-verified/i);
-assert.match(llms, /product-specific public checkout route is not represented as live/i);
+assert.match(
+  llms,
+  /(Machine Commerce human handoff is live-verified|Human buyer route[^\n]*(?:live-verified|externally reachable))/i,
+  'IBM i Rescue must preserve verified human continuation evidence'
+);
+assert.match(
+  llms,
+  /(product-specific public checkout route is not represented as live|backend checkout creation[^\n]*(?:verified|independently verified))/i,
+  'IBM i Rescue must state the currently evidenced checkout state'
+);
+assert.match(llms, /checkout creation is not payment proof/i);
 assert.match(topLevel, /Evercraft IBM i Rescue/);
 
 console.log(JSON.stringify({
