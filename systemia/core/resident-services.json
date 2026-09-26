@@ -2,6 +2,22 @@
   "schema": "evercraft.systemia.resident-supervisor-config.v1",
   "services": [
     {
+      "service_key": "portfolio-sentinel",
+      "mode": "cycle",
+      "manifest": "systemia/organism/portfolio-sentinel.workflow.json",
+      "executable": "systemia/organism/portfolio-sentinel-runner.mjs",
+      "cadence_seconds": 300,
+      "static_args": [
+        "--max-urls",
+        "24"
+      ],
+      "optional_env_args": {
+        "--github-owner": "PORTFOLIO_SENTINEL_GITHUB_OWNER",
+        "--github-repo": "GITHUB_REPOSITORY",
+        "--out": "SYSTEMIA_PORTFOLIO_SENTINEL_OUT_DIR"
+      }
+    },
+    {
       "service_key": "legacy-rescue-opportunity-watch",
       "mode": "cycle",
       "manifest": "systemia/organism/legacy-rescue-watch.workflow.json",
