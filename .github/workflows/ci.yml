@@ -42,6 +42,7 @@ jobs:
           set -euo pipefail
           npm run chum:revenue
           npm run test:chum-router
+          node tests/chum-deal-desk.test.mjs
           npm run chum:index
           npm run chum:answers
           npm run chum:mirror
@@ -108,6 +109,10 @@ jobs:
             -H 'Content-Type: application/json' \
             --data '{"intent":"I own a hotel and need to know whether this property is a good EV charging site and what the opportunity looks like","provider":"smoke-llm","surface":"ci"}' \
             > /tmp/aliev-live-hunt.json
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/chum/negotiate \
+            -H 'Content-Type: application/json' \
+            --data '{"intent":"My business website gets traffic but no calls and I need a complete website audit","public_id":"audit-center-website-audit-machine-v1","offer_name":"Complete Audit","requested_price_cents":70000,"provider":"buyer-agent","surface":"ci","round":1}' \
+            > /tmp/chum-deal-desk.json
           curl --fail --silent http://127.0.0.1:3000/llms.txt > /tmp/llms.txt
           curl --fail --silent http://127.0.0.1:3000/.well-known/evercraft-capabilities.json > /tmp/manifest.json
           curl --fail --silent -X POST http://127.0.0.1:3000/api/route-capability \
@@ -150,6 +155,7 @@ jobs:
           const fallenEpisode = JSON.parse(fs.readFileSync('/tmp/fallen-episode.json','utf8'));
           const liveHunt = JSON.parse(fs.readFileSync('/tmp/live-hunt-route.json','utf8'));
           const alievLiveHunt = JSON.parse(fs.readFileSync('/tmp/aliev-live-hunt.json','utf8'));
+          const dealDesk = JSON.parse(fs.readFileSync('/tmp/chum-deal-desk.json','utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
           const browserRoute = JSON.parse(fs.readFileSync('/tmp/first-party-browser-route.json','utf8'));
           const fetchRoute = JSON.parse(fs.readFileSync('/tmp/first-party-fetch-route.json','utf8'));
@@ -186,6 +192,12 @@ jobs:
           if (liveHunt.ok !== true || liveHunt.schema !== 'evercraft.chum.live-intent-hunt.v1') throw new Error('live-intent hunter response contract failed');
           if (liveHunt.matched !== true || liveHunt.match?.product_key !== 'forensiscope') throw new Error('live-intent hunter did not attack media overflow with ForensiScope');
           if (alievLiveHunt.matched !== true || alievLiveHunt.match?.product_key !== 'aliev') throw new Error('live-intent hunter did not route brand-blind EV property opportunity to AliEV');
+          if (capabilities.discovery?.dealDesk?.path !== '/api/chum/negotiate') throw new Error('CHUM Deal Desk missing from capabilities');
+          if (dealDesk.ok !== true || dealDesk.schema !== 'evercraft.chum.deal-negotiation.v1') throw new Error('CHUM Deal Desk response contract failed');
+          if (dealDesk.binding !== false || dealDesk.external_delivery_performed !== false) throw new Error('CHUM Deal Desk crossed non-binding/outbound boundary');
+          if (dealDesk.match?.public_id !== 'audit-center-website-audit-machine-v1') throw new Error('CHUM Deal Desk did not preserve targeted relevant offer');
+          if (dealDesk.counterproposal?.price?.cents !== 50000) throw new Error('CHUM Deal Desk did not counter at the published Complete Audit price');
+          if (dealDesk.next_step?.payment_created !== false || dealDesk.next_step?.contract_accepted !== false) throw new Error('CHUM Deal Desk created unauthorized commercial state');
           if (liveHunt.doctrine?.same_turn_response !== true) throw new Error('live-intent hunter lost same-turn doctrine');
           if (!manifest || typeof manifest !== 'object') throw new Error('machine manifest missing');
           if (capabilities.discovery?.firstPartyRouter?.path !== '/api/route-capability') throw new Error('first-party router missing from capabilities');

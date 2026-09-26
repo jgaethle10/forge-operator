@@ -21,6 +21,7 @@ COPY --from=build /app/systemia/chum/intent-language.mjs ./systemia/chum/intent-
 COPY --from=build /app/systemia/chum/pain-index-lib.mjs ./systemia/chum/pain-index-lib.mjs
 COPY --from=build /app/systemia/chum/attribution.ts ./systemia/chum/attribution.ts
 COPY --from=build /app/systemia/chum/live-intent-hunter.mjs ./systemia/chum/live-intent-hunter.mjs
+COPY --from=build /app/systemia/chum/deal-desk.mjs ./systemia/chum/deal-desk.mjs
 COPY --from=build /app/systemia/chum/crawler-radar.mjs ./systemia/chum/crawler-radar.mjs
 COPY --from=build /app/systemia/media-studio ./systemia/media-studio
 COPY --from=build /app/registry ./registry
