@@ -7,7 +7,9 @@ const specs=JSON.parse(
   fs.readFileSync(path.join(root,'distribution/direct-plugin-specs.json'),'utf8')
 );
 const outDir=path.join(root,'distribution/mcp-registry-candidates');
+const checkOnly=process.argv.includes('--check');
 fs.mkdirSync(outDir,{recursive:true});
+const stable=(value)=>JSON.stringify(value,null,2)+'\n';
 
 const TARGETS=new Map([
   ['ibmi-rescue',{
@@ -82,7 +84,14 @@ for(const [slug,meta] of TARGETS){
   };
 
   const file=path.join(outDir,slug+'.json');
-  fs.writeFileSync(file,JSON.stringify(candidate,null,2)+'\n');
+  const content=stable(candidate);
+  if(checkOnly){
+    if(!fs.existsSync(file)) throw new Error('registry_candidate_missing:'+slug);
+    const current=fs.readFileSync(file,'utf8');
+    if(current!==content) throw new Error('registry_candidate_drift:'+slug);
+  }else{
+    fs.writeFileSync(file,content);
+  }
   written.push({
     slug,
     publication_state:candidate.publication_state,
@@ -93,5 +102,6 @@ for(const [slug,meta] of TARGETS){
 
 console.log(JSON.stringify({
   schema:'evercraft.mcp-registry-candidate-generation.v1',
+  mode:checkOnly?'check':'generate',
   candidates:written,
 },null,2));
