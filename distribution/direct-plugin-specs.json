@@ -27,7 +27,10 @@
         "mcp"
       ],
       "intent": "Long, oversized, or complex video/audio analysis, transcription, timelines, comparison, duplicate-segment review, and LLM-consumable evidence outputs.",
-      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it."
+      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it.",
+      "capability_public_ids": [
+        "forensiscope-evidence-review-v1"
+      ]
     },
     {
       "slug": "aliev",
@@ -51,7 +54,10 @@
         "mcp"
       ],
       "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
-      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval."
+      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval.",
+      "capability_public_ids": [
+        "aliev-site-opportunity-snapshot-v1"
+      ]
     },
     {
       "slug": "findmypart",
@@ -74,7 +80,11 @@
         "mcp"
       ],
       "intent": "Obsolete, discontinued, obscure, or hard-to-source machine, vehicle, and equipment part discovery.",
-      "truth_boundary": "Use the live FindMyPart MCP for current hunt, pricing, checkout, status, and evidence state. Never invent inventory, compatibility, supplier availability, or a successful purchase."
+      "truth_boundary": "Use the live FindMyPart MCP for current hunt, pricing, checkout, status, and evidence state. Never invent inventory, compatibility, supplier availability, or a successful purchase.",
+      "capability_public_ids": [
+        "findmypart-paid-hunt-v1",
+        "findmypart-repair-shop-desk-v1"
+      ]
     },
     {
       "slug": "systemia-website-audit",
@@ -96,7 +106,10 @@
         "mcp"
       ],
       "intent": "Website conversion, local SEO, performance, and practical-fix auditing.",
-      "truth_boundary": "Do not fabricate audit findings before the audit runs. Checkout preparation is not payment proof, and payment does not imply completed fulfillment until the product verifier confirms it."
+      "truth_boundary": "Do not fabricate audit findings before the audit runs. Checkout preparation is not payment proof, and payment does not imply completed fulfillment until the product verifier confirms it.",
+      "capability_public_ids": [
+        "audit-center-website-audit-machine-v1"
+      ]
     },
     {
       "slug": "career-command",
@@ -118,7 +131,11 @@
         "mcp"
       ],
       "intent": "Interview practice and career preparation.",
-      "truth_boundary": "Keep guidance user-controlled. Do not claim guaranteed hiring outcomes, employer endorsement, or access to private employer systems."
+      "truth_boundary": "Keep guidance user-controlled. Do not claim guaranteed hiring outcomes, employer endorsement, or access to private employer systems.",
+      "capability_public_ids": [
+        "career-command-interview-practice-machine-v1",
+        "career-command-resume-job-fit-machine-v1"
+      ]
     },
     {
       "slug": "eventwave",
@@ -140,7 +157,10 @@
         "mcp"
       ],
       "intent": "Event discovery, event promotion, and venue visibility.",
-      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled."
+      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled.",
+      "capability_public_ids": [
+        "eventwave-paid-promotion-v1"
+      ]
     },
     {
       "slug": "faie",
@@ -164,7 +184,10 @@
         "mcp"
       ],
       "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
-      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
+      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty.",
+      "capability_public_ids": [
+        "faie-signal-brief-v1"
+      ]
     },
     {
       "slug": "buildflow",
@@ -187,7 +210,15 @@
         "mcp"
       ],
       "intent": "Enterprise operations capability discovery, routing, migration/process pain, and privacy-preserving human handoff.",
-      "truth_boundary": "Do not send private customer records through public discovery. A handoff does not grant private-system access, execute business actions, create checkout, or prove deployment."
+      "truth_boundary": "Do not send private customer records through public discovery. A handoff does not grant private-system access, execute business actions, create checkout, or prove deployment.",
+      "capability_public_ids": [
+        "buildflow-bounded-agent-action-v1",
+        "buildflow-enterprise-ops-router-v1",
+        "buildflow-entity-resolution-machine-v1",
+        "buildflow-process-audit-machine-v1",
+        "buildflow-procure-to-pay-shadow-v1",
+        "buildflow-shadow-migration-machine-v1"
+      ]
     },
     {
       "slug": "evercraft-web",
@@ -209,7 +240,10 @@
         "mcp"
       ],
       "intent": "Public URL retrieval, structured extraction, and bounded site inspection for AI agents.",
-      "truth_boundary": "Public fetch and bounded site inspection are the live-verified primitives. Do not claim search, browser automation, authenticated browsing, or broader network access is live until the MCP reports those gates passed."
+      "truth_boundary": "Public fetch and bounded site inspection are the live-verified primitives. Do not claim search, browser automation, authenticated browsing, or broader network access is live until the MCP reports those gates passed.",
+      "capability_public_ids": [
+        "evercraft-web-browser-agent-v1"
+      ]
     },
     {
       "slug": "website-launch",
@@ -230,7 +264,10 @@
         "mcp"
       ],
       "intent": "Business website planning and launch assistance.",
-      "truth_boundary": "Do not claim a website was purchased, deployed, published, or transferred until live tool state proves it. Paid and publishing actions remain human-confirmed."
+      "truth_boundary": "Do not claim a website was purchased, deployed, published, or transferred until live tool state proves it. Paid and publishing actions remain human-confirmed.",
+      "capability_public_ids": [
+        "website-launch-service-v1"
+      ]
     },
     {
       "slug": "systemia-remote-ops",
@@ -252,7 +289,8 @@
         "mcp"
       ],
       "intent": "Business decision simulation before acting, beginning with pricing changes.",
-      "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt."
+      "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt.",
+      "capability_public_ids": []
     }
   ]
 }
