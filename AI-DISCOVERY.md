@@ -100,6 +100,7 @@ Keep the boundary sharp. Evercraft Network is not advertised as a cellular carri
 - `/.well-known/evercraft-agent.json`
 - `/.well-known/evercraft-discovery.json`
 - `/.well-known/evercraft-products.json`
+- `/.well-known/evercraft-direct-doors.json` - direct specialist MCP/plugin doors; use before the universal fallback when intent is clear
 - `/.well-known/evercraft-pain-index.json`
 - `/chum/pain-index.txt`
 - `/.well-known/evercraft-agent-directory.json`
