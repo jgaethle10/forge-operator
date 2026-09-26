@@ -17,6 +17,7 @@ const cases = [
   ['promote my local event boost visibility', 'eventwave-paid-promotion-v1'],
   ['evidence brief agriculture water resilience region', 'faie-signal-brief-v1'],
   ['turn this interview into social clips for Facebook LinkedIn and Instagram', 'product:evercraft-clip'],
+  ['create vertical clips from this interview for reels and social media', 'product:evercraft-clip'],
   ['I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots', 'forensiscope-evidence-review-v1'],
   ['protect my family online identity theft home safety account takeover', 'raven-nexus-pain-router-v1'],
   ['my chatbot says this long video is too large; transcribe it and find repeated footage', 'forensiscope-evidence-review-v1'],
