@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { ingestProviderMisses } from '../systemia/chum/provider-miss-ingest.mjs';
+import { runAssignment } from '../systemia/chum/saban-adapter.mjs';
 
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-provider-miss-'));
 const suitePath=path.join(root,'probe-suite.json');
@@ -71,4 +72,17 @@ assert.deepEqual(summary.repair_queue[0].providers,['chatgpt']);
 assert.ok(summary.repair_queue[0].concepts.includes('media'));
 assert.ok(summary.repair_queue[0].concepts.includes('timeline'));
 assert.equal(summary.repair_queue[0].next_actions.length,4);
+const repairActions=await runAssignment({
+  assignment:{
+    agent_id:'chum-test-00001',
+    role:'intent_cartographer',
+    work:{kind:'discovery_repair',key:'forensiscope'},
+    item:{kind:'discovery_repair',raw:summary.repair_queue[0]}
+  }
+});
+const actionTypes=repairActions.actions.map((action)=>action.type);
+assert.ok(actionTypes.includes('expand_concept_coverage_from_receipt_backed_miss'));
+assert.ok(actionTypes.includes('add_brand_blind_regression_case'));
+assert.ok(actionTypes.includes('rerun_provider_probe_after_surface_change'));
+assert.ok(actionTypes.includes('map_buyer_language_to_smallest_truthful_capability'));
 console.log('CHUM PROVIDER MISS INGEST PASS',JSON.stringify(summary));
