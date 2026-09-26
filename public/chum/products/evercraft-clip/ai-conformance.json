@@ -40,8 +40,8 @@
     }
   },
   "provider_behavior_state": "not_inferred_from_publication",
-  "machine_commerce_handoff_state": null,
-  "machine_commerce_public_id": null,
-  "machine_commerce_tool": null,
+  "machine_commerce_handoff_state": "verification_required_checkout_not_verified",
+  "machine_commerce_public_id": "evercraft-clip-social-video-v1",
+  "machine_commerce_tool": "get_offer",
   "live_canary_evidence": null
 }
