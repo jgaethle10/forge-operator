@@ -21,12 +21,21 @@ const root=fs.mkdtempSync(path.join(os.tmpdir(),'public-edge-organism-proof-'));
 const out=path.join(root,'artifacts');
 const state=path.join(root,'state');
 const port=await freeUdpPort();
+const node001MissionFile=path.join(root,'node001-field-mission.json');
+fs.writeFileSync(node001MissionFile,JSON.stringify({
+  schema:'evercraft.node001.field-mission-state.v1',
+  status:'waiting_on_field_evidence',
+  completed_steps:['field_kit_ready'],
+  next_step:'preflight_passed',
+  human_field_action_required:true,
+},null,2)+'\n');
 
 const env={
   ...process.env,
   EVERCRAFT_RELEASE_REF:'9768cc2548afe0da33e3dac2440c8afabe0c41a1',
   EVERCRAFT_PUBLIC_EDGE_ARTIFACT_DIR:out,
   EVERCRAFT_PUBLIC_EDGE_STATE_DIR:state,
+  EVERCRAFT_NODE001_FIELD_MISSION_STATE:node001MissionFile,
   EVERCRAFT_DISCOVERY_BIND_ADDRESS:'127.0.0.1',
   EVERCRAFT_DISCOVERY_MULTICAST_ADDRESS:'127.0.0.1',
   EVERCRAFT_DISCOVERY_PORT:String(port),
@@ -42,15 +51,22 @@ try{
   ));
   assert.equal(first.ok,true);
   assert.equal(first.action,'hold');
-  assert.equal(first.reason,'no_compute_capacity_discovered');
+  assert.equal(first.reason,'node001_field_certification_incomplete');
   assert.equal(first.founder_action_required,false);
   assert.equal(first.public_https_verified,false);
   assert.equal(first.material_change,true);
 
   const latest1=JSON.parse(fs.readFileSync(path.join(out,'latest.json'),'utf8'));
   const snapshot1=JSON.parse(fs.readFileSync(path.join(out,'mission-snapshot.json'),'utf8'));
+  const fieldMission1=JSON.parse(
+    fs.readFileSync(path.join(out,'field-mission.json'),'utf8')
+  );
+  assert.equal(fieldMission1.status,'waiting_on_field_evidence');
+  assert.equal(fieldMission1.systemia_autonomy_ready,false);
   assert.equal(latest1.action,'hold');
   assert.equal(latest1.founder_action_required,false);
+  assert.equal(latest1.production_activation_attempted,false);
+  assert.equal(latest1.node001_status,'waiting_on_field_evidence');
   assert.equal(snapshot1.schema,'evercraft.kaidance.mission-snapshot.v1');
   assert.equal(snapshot1.workflow_key,'public-edge-activation-watch');
   assert.equal(snapshot1.material_change,true);
@@ -64,7 +80,7 @@ try{
   ));
   assert.equal(second.ok,true);
   assert.equal(second.action,'hold');
-  assert.equal(second.reason,'no_compute_capacity_discovered');
+  assert.equal(second.reason,'node001_field_certification_incomplete');
   assert.equal(second.founder_action_required,false);
   assert.equal(second.material_change,false);
 
@@ -89,6 +105,8 @@ try{
     schema:'evercraft.public-edge.activation-watch-organism-proof.v1',
     cadence_seconds:300,
     first_cycle_hold:true,
+    node001_dependency_gate:true,
+    production_activation_attempted_before_node001_complete:false,
     founder_action_required:false,
     second_identical_cycle_material_change:false,
     kaidance_snapshot:true,
