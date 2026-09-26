@@ -5,6 +5,16 @@ import { once } from 'node:events';
 import { discoverCapacityBeacons } from '../compute/capacity-beacon.mjs';
 import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 
+class NodeSeedRequestError extends Error {
+  constructor(status, code, url) {
+    super(`${status}:${code || 'request_failed'}`);
+    this.name = 'NodeSeedRequestError';
+    this.status = Number(status);
+    this.code = String(code || 'request_failed');
+    this.url = String(url || '');
+  }
+}
+
 async function requestJson(url, options = {}, timeoutMs = 5000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -19,12 +29,114 @@ async function requestJson(url, options = {}, timeoutMs = 5000) {
     });
     const body = await response.json().catch(() => ({}));
     if (!response.ok) {
-      throw new Error(`${response.status}:${body.error || 'request_failed'}`);
+      throw new NodeSeedRequestError(
+        response.status,
+        body.error || 'request_failed',
+        url
+      );
     }
     return body;
   } finally {
     clearTimeout(timer);
   }
+}
+
+function classifyAssignmentFailure(error) {
+  const reason = error instanceof Error ? error.message : String(error);
+  const integrityCodes = new Set([
+    'saban_idempotency_record_integrity_failed',
+    'saban_idempotency_record_schema_invalid',
+    'saban_artifact_store_integrity_failed',
+    'saban_artifact_replay_integrity_failed',
+    'artifact_integrity_failed'
+  ]);
+
+  if (
+    error?.name === 'AbortError' ||
+    error?.name === 'TimeoutError' ||
+    (
+      error?.name === 'TypeError' &&
+      /fetch|network|socket|connect/i.test(reason)
+    )
+  ) {
+    return {
+      failure_class: 'transport_failure',
+      retryable: true,
+      quarantine_node: true,
+      disable_for_run: true,
+      reason
+    };
+  }
+
+  const status = Number(error?.status || 0);
+  const code = String(error?.code || '').trim();
+  if (integrityCodes.has(code)) {
+    return {
+      failure_class: 'integrity_failure',
+      retryable: false,
+      quarantine_node: true,
+      disable_for_run: true,
+      reason
+    };
+  }
+
+  if (status === 409 && code === 'idempotency_key_conflict') {
+    return {
+      failure_class: 'workload_conflict',
+      retryable: false,
+      quarantine_node: false,
+      disable_for_run: false,
+      reason
+    };
+  }
+
+  if (status === 401 || status === 410) {
+    return {
+      failure_class: 'lease_or_auth_failure',
+      retryable: true,
+      quarantine_node: false,
+      disable_for_run: true,
+      reason
+    };
+  }
+
+  if ([408, 425, 429].includes(status)) {
+    return {
+      failure_class: 'transient_request_failure',
+      retryable: true,
+      quarantine_node: false,
+      disable_for_run: false,
+      reason
+    };
+  }
+
+  if (status >= 500) {
+    return {
+      failure_class: 'node_service_failure',
+      retryable: true,
+      quarantine_node: true,
+      disable_for_run: true,
+      reason
+    };
+  }
+
+  if (status >= 400 && status < 500) {
+    return {
+      failure_class: 'workload_rejected',
+      retryable: false,
+      quarantine_node: false,
+      disable_for_run: false,
+      reason
+    };
+  }
+
+  return {
+    failure_class: 'local_or_unknown_failure',
+    retryable: false,
+    quarantine_node: false,
+    disable_for_run: false,
+    reason
+  };
 }
 
 function hashFile(file) {
@@ -487,9 +599,11 @@ export async function resolveNodeSeedPool({
 }
 
 function pickNode(nodes, cursor) {
-  const healthy = nodes.filter((node) => node.healthy !== false);
-  if (!healthy.length) return null;
-  return healthy[cursor % healthy.length];
+  const eligible = nodes.filter(
+    (node) => node.healthy !== false && node.available !== false
+  );
+  if (!eligible.length) return null;
+  return eligible[cursor % eligible.length];
 }
 
 function meetsResourceProfile(node, profile = null) {
@@ -785,9 +899,16 @@ export async function runNodeSeedAssignmentPool({
         });
       } catch (error) {
         job.total_duration_ms += Math.max(0, Date.now() - attemptStartedAt);
-        const reason = error instanceof Error ? error.message : String(error);
+        const failure = classifyAssignmentFailure(error);
+        const reason = failure.reason;
         job.last_node_id = node.node_id;
-        node.healthy = false;
+
+        if (failure.quarantine_node) {
+          node.healthy = false;
+        }
+        if (failure.disable_for_run) {
+          node.available = false;
+        }
 
         await emit({
           type: 'node.assignment.failed',
@@ -795,17 +916,35 @@ export async function runNodeSeedAssignmentPool({
           node_id: node.node_id,
           endpoint: node.endpoint,
           attempt: job.attempts,
-          reason
+          reason,
+          failure_class: failure.failure_class,
+          retryable: failure.retryable,
+          node_quarantined: failure.quarantine_node,
+          node_disabled_for_run: failure.disable_for_run
         });
 
-        if (job.attempts < maxAttempts && leased.some((candidate) => candidate.healthy !== false)) {
+        const alternateCapacity = leased.some(
+          (candidate) =>
+            candidate.healthy !== false &&
+            candidate.available !== false
+        );
+
+        if (
+          failure.retryable &&
+          job.attempts < maxAttempts &&
+          alternateCapacity
+        ) {
           queue.push(job);
         } else {
           failures.push({
             assignment: job.assignment,
             attempts: job.attempts,
             last_node_id: node.node_id,
-            reason
+            reason,
+            failure_class: failure.failure_class,
+            retryable: failure.retryable,
+            node_quarantined: failure.quarantine_node,
+            node_disabled_for_run: failure.disable_for_run
           });
           results[job.index] = {
             status: 'failed',
@@ -814,7 +953,11 @@ export async function runNodeSeedAssignmentPool({
             attempts: job.attempts,
             duration_ms: job.total_duration_ms,
             last_node_id: node.node_id,
-            reason
+            reason,
+            failure_class: failure.failure_class,
+            retryable: failure.retryable,
+            node_quarantined: failure.quarantine_node,
+            node_disabled_for_run: failure.disable_for_run
           };
         }
       }
@@ -868,7 +1011,8 @@ export async function runNodeSeedAssignmentPool({
       node_attestation_verified: node.attestation?.verified === true,
       device_fingerprint: node.attestation?.device_fingerprint || null,
       field_claim: node.attestation?.field_claim ?? null,
-      healthy_at_end: node.healthy !== false
+      healthy_at_end: node.healthy !== false,
+      available_at_end: node.available !== false
     })),
     rejected_nodes: [...resolved.rejected, ...resourceRejected],
     lease_failures: leaseFailures,
