@@ -20,11 +20,23 @@ async function fetchJson(url, timeoutMs) {
 
 export async function discoverEligibleCapacity({
   workloadClass,
+  requiredWorkloads = [],
+  requiredPlacementLabels = [],
+  requiredServiceCapabilities = [],
   discovery = {},
   endpointTimeoutMs = 750,
   excludeNodeIds = [],
 } = {}) {
   if (!workloadClass) throw new Error('workloadClass is required');
+  const workloadRequirements = [...new Set(
+    [workloadClass, ...(requiredWorkloads || [])].map(String).filter(Boolean)
+  )];
+  const labelRequirements = [...new Set(
+    (requiredPlacementLabels || []).map((x) => String(x).trim().toLowerCase()).filter(Boolean)
+  )];
+  const serviceRequirements = [...new Set(
+    (requiredServiceCapabilities || []).map((x) => String(x).trim()).filter(Boolean)
+  )];
 
   const beacons = await discoverCapacityBeacons(discovery);
   const excluded = new Set((excludeNodeIds || []).map(String));
@@ -40,6 +52,8 @@ export async function discoverEligibleCapacity({
       reason: null,
       allocation_auth: null,
       runtime: null,
+      placement_labels: [],
+      service_capabilities: {},
     };
 
     try {
@@ -64,8 +78,19 @@ export async function discoverEligibleCapacity({
       } else if (String(capacity.node_id || '') !== String(beacon.node_id || '')) {
         candidate.reason = 'node_identity_mismatch';
       } else if (!Array.isArray(capacity.supported_workloads) ||
-                 !capacity.supported_workloads.includes(workloadClass)) {
+                 !workloadRequirements.every((required) =>
+                   capacity.supported_workloads.includes(required)
+                 )) {
         candidate.reason = 'workload_unsupported';
+      } else if (!labelRequirements.every((required) =>
+                   (capacity.placement_labels || []).map((x) => String(x).toLowerCase()).includes(required)
+                 )) {
+        candidate.reason = 'placement_label_missing';
+      } else if (!serviceRequirements.every((required) => {
+                   const value = capacity.capacity_hint?.services?.[required];
+                   return value === true || value?.ready === true;
+                 })) {
+        candidate.reason = 'service_capability_not_ready';
       } else if (capacity.expires_at &&
                  Number.isFinite(Date.parse(capacity.expires_at)) &&
                  Date.parse(capacity.expires_at) < Date.now()) {
@@ -75,6 +100,15 @@ export async function discoverEligibleCapacity({
         candidate.allocation_auth = String(capacity.allocation_auth || 'unspecified');
         candidate.runtime = String(capacity.runtime || '');
         candidate.platform = String(capacity.platform || '');
+        candidate.placement_labels = Array.isArray(capacity.placement_labels)
+          ? capacity.placement_labels.map(String)
+          : [];
+        candidate.service_capabilities = Object.fromEntries(
+          serviceRequirements.map((key) => [
+            key,
+            capacity.capacity_hint?.services?.[key] ?? null
+          ])
+        );
       }
     } catch (error) {
       candidate.reason = error?.name === 'AbortError'
@@ -95,6 +129,11 @@ export async function discoverEligibleCapacity({
   const body = {
     schema: 'evercraft.yard.capacity-resolution.v1',
     workload_class: workloadClass,
+    requirements: {
+      workloads: workloadRequirements,
+      placement_labels: labelRequirements,
+      service_capabilities: serviceRequirements,
+    },
     observed_at: observedAt,
     discovered_count: beacons.length,
     eligible_count: eligible.length,
