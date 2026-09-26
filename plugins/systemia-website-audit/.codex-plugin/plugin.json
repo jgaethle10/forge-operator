@@ -1,0 +1,36 @@
+{
+  "name": "systemia-website-audit",
+  "version": "0.1.0",
+  "description": "Use Systemia Website Audit directly when a user wants a practical website, local SEO, performance, or conversion audit with evidence-backed fixes and a human-confirmed paid continuation when applicable.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://systemia-audit-pro.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "website-audit",
+    "local-seo",
+    "conversion",
+    "performance",
+    "systemia",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Systemia Website Audit",
+    "shortDescription": "Audit a business website for conversion and local visibility",
+    "longDescription": "Use Systemia Website Audit directly when a user wants a practical website, local SEO, performance, or conversion audit with evidence-backed fixes and a human-confirmed paid continuation when applicable.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://systemia-audit-pro.base44.app/",
+    "defaultPrompt": [
+      "Audit my business website for conversion, local SEO, performance, and practical fixes."
+    ]
+  }
+}
