@@ -1,0 +1,59 @@
+{
+  "schema": "evercraft.network.live-mcp-evidence.v1",
+  "observed_at": "2026-09-26T03:13:53.427Z",
+  "product_key": "evercraft-network",
+  "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "server_info": {
+    "name": "evercraft-machine-commerce",
+    "version": "1.2.1"
+  },
+  "verification": {
+    "initialize": "pass",
+    "tools_list": {
+      "status": "pass",
+      "required_tools": [
+        "get_network_capabilities",
+        "get_network_presence",
+        "prepare_network_handoff"
+      ]
+    },
+    "live_read_only_call": {
+      "tool": "get_network_capabilities",
+      "status": "pass",
+      "has_result": true,
+      "is_error": false,
+      "structured_content_present": true,
+      "content_types": [
+        "text"
+      ]
+    }
+  },
+  "github_actions": {
+    "workflow": "Evercraft MCP External Canary",
+    "workflow_run_id": 36214150440,
+    "workflow_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/36214150440",
+    "head_sha": "a970e2781c735c299dcd14753ee16a2304f8317d",
+    "artifact": {
+      "id": 10896468339,
+      "name": "evercraft-network-public-mcp-canary",
+      "digest": "sha256:cf3dea0825b31fee765bf45ffde51c785fd704b39852ba9a85841c5c0c323a3b",
+      "expires_at": "2026-12-25T03:13:45Z"
+    }
+  },
+  "verified": [
+    "production MCP initialize returned serverInfo",
+    "production tools/list exposed all three declared Evercraft Network tools",
+    "production get_network_capabilities read-only call returned a non-error result"
+  ],
+  "not_verified": [
+    "get_network_presence tool execution",
+    "prepare_network_handoff tool execution",
+    "device enrollment",
+    "payment or paid membership activation",
+    "private telemetry access",
+    "connectivity control",
+    "carrier control",
+    "911 or PSAP routing",
+    "guaranteed geographic coverage or emergency backhaul"
+  ]
+}
