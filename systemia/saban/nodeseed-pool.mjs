@@ -150,6 +150,9 @@ async function inspectNode(endpoint, options = {}) {
     endpoint,
     node_id: capacity.node_id,
     capacity_hint: capacity.capacity_hint || null,
+    placement_labels: Array.isArray(capacity.placement_labels)
+      ? capacity.placement_labels.map(String)
+      : [],
     allocation_auth: capacity.allocation_auth || null,
     supported_workloads: capacity.supported_workloads
   };
@@ -293,6 +296,24 @@ function meetsResourceProfile(node, profile = null) {
       return {
         eligible: false,
         reason: `missing_required_service:${service}`
+      };
+    }
+  }
+
+  const labels = new Set((node.placement_labels || []).map(String));
+  for (const label of profile.required_node_labels || []) {
+    if (!labels.has(String(label))) {
+      return {
+        eligible: false,
+        reason: `missing_required_node_label:${label}`
+      };
+    }
+  }
+  for (const label of profile.forbidden_node_labels || []) {
+    if (labels.has(String(label))) {
+      return {
+        eligible: false,
+        reason: `forbidden_node_label:${label}`
       };
     }
   }
@@ -547,6 +568,7 @@ export async function runNodeSeedAssignmentPool({
       node_id: node.node_id,
       endpoint: node.endpoint,
       capacity_hint: node.capacity_hint,
+      placement_labels: node.placement_labels || [],
       healthy_at_end: node.healthy !== false
     })),
     rejected_nodes: [...resolved.rejected, ...resourceRejected],
