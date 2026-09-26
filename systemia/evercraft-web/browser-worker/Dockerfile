@@ -2,6 +2,7 @@ FROM mcr.microsoft.com/playwright:v1.63.0-noble
 
 WORKDIR /app
 COPY package.json ./
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 RUN npm install --omit=dev --no-audit --no-fund
 COPY policy.mjs server.mjs ./
 
