@@ -1,0 +1,180 @@
+{
+  "schema": "evercraft.portfolio-sentinel.repair-recipes.v1",
+  "version": "2026-09-26.1",
+  "purpose": "Failure fingerprints and bounded recovery/verification recipes learned from real Evercraft incidents.",
+  "recipes": [
+    {
+      "recipe_id": "rerun-failed-github-workflow",
+      "match": {
+        "finding_codes": [
+          "github_workflow_failed"
+        ]
+      },
+      "authority": "autonomous",
+      "action": {
+        "type": "github_rerun_failed_jobs",
+        "max_attempts": 1
+      },
+      "verification": [
+        "latest workflow conclusion becomes success"
+      ],
+      "rollback": "none; rerun does not mutate source",
+      "learned_from": "Portfolio Sentinel failed-workflow auto-heal"
+    },
+    {
+      "recipe_id": "chum-provider-health-policy-drift",
+      "match": {
+        "invariant_ids": [
+          "chum-consumer-bridge-is-coverage-not-machine-health"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          ".github/workflows/chum-watershed.yml",
+          "systemia/chum/provider-probes.mjs"
+        ],
+        "instructions": "Keep consumer-chat authorization as a separate coverage state; accept healthy machine-only measurement; retain bounded transient retries."
+      },
+      "verification": [
+        "npm run test:chum-provider-probes",
+        "npm run test:chum-pickup-consistency",
+        "CHUM watershed final health gate succeeds"
+      ],
+      "rollback": "revert the repair commit if machine-client failures are accidentally masked",
+      "learned_from": "CHUM watershed #417"
+    },
+    {
+      "recipe_id": "sentinel-health-gate-drift",
+      "match": {
+        "invariant_ids": [
+          "sentinel-fail-closed-on-critical-high"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "systemia/organism/portfolio-sentinel-runner.mjs"
+        ],
+        "instructions": "Critical or high findings must make enforced Sentinel cycles non-green."
+      },
+      "verification": [
+        "node systemia/organism/portfolio-sentinel.proof.mjs"
+      ],
+      "rollback": "revert any patch that weakens fail-closed semantics",
+      "learned_from": "Sentinel false-green severity bug"
+    },
+    {
+      "recipe_id": "docker-runtime-import-coverage",
+      "match": {
+        "invariant_ids": [
+          "forge-runtime-imports-covered-by-docker"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "Dockerfile"
+        ],
+        "instructions": "Copy every direct server.ts systemia runtime import into the runtime image, preferably by the narrowest stable directory boundary."
+      },
+      "verification": [
+        "npm run build",
+        "Forge production container build/start/health smoke"
+      ],
+      "rollback": "revert Docker copy change if image build or runtime smoke regresses",
+      "learned_from": "missing systemia/mcp/specialist-handoff runtime module"
+    },
+    {
+      "recipe_id": "retired-mcp-door-regression",
+      "match": {
+        "invariant_ids": [
+          "retired-specialist-mcp-doors-stay-retired"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          ".github/workflows/evercraft-mcp-canary.yml"
+        ],
+        "instructions": "Use central Machine Commerce offer/tool contracts for retired specialist MCP doors; do not resurrect stale direct endpoints."
+      },
+      "verification": [
+        "Evercraft MCP External Canary succeeds"
+      ],
+      "rollback": "restore last known-green central Machine Commerce canary",
+      "learned_from": "stale IBM i Rescue / Foundry App Escape / Site-Survive direct MCP endpoints"
+    },
+    {
+      "recipe_id": "aliev-rivet-routing-regression",
+      "match": {
+        "invariant_ids": [
+          "aliev-rivet-intent-boundary-regression-protected"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "systemia/chum/live-intent-hunter.mjs",
+          "tests/chum-live-intent-hunter.test.mjs"
+        ],
+        "instructions": "Generic EV opportunity/problem language routes to AliEV; explicit paid report/underwriting/diligence/site-plan continuation routes to RIVET."
+      },
+      "verification": [
+        "npm run test:chum-live-intent"
+      ],
+      "rollback": "restore last known-green concept-fabric routing revision",
+      "learned_from": "RIVET/AliEV brand-blind routing regression"
+    },
+    {
+      "recipe_id": "sell-now-continuation-contract",
+      "match": {
+        "invariant_ids": [
+          "sell-now-static-continuation-contract"
+        ]
+      },
+      "authority": "queue_exact_data_repair",
+      "action": {
+        "type": "contract_repair_recipe",
+        "targets": [
+          "public/.well-known/evercraft-machine-catalog.json"
+        ],
+        "instructions": "Every sell-now offer must retain a concrete public continuation, pricing, payment authority, confirmation boundary, and at least one offer record."
+      },
+      "verification": [
+        "npm run chum:commerce-canary",
+        "npm run customer:gauntlet"
+      ],
+      "rollback": "restore last known-green machine catalog entry",
+      "learned_from": "RIVET buyer continuation break"
+    },
+    {
+      "recipe_id": "trigger-mode-policy-drift",
+      "match": {
+        "invariant_ids": [
+          "trigger-mode-policy-single-source"
+        ]
+      },
+      "authority": "queue_exact_code_repair",
+      "action": {
+        "type": "source_patch_recipe",
+        "targets": [
+          "systemia/sentinel/trigger-mode-policy.mjs",
+          ".github/workflows/chum-watershed.yml"
+        ],
+        "instructions": "Resolve push, schedule, and workflow_dispatch policy through the shared trigger-mode resolver instead of inline event-specific health logic."
+      },
+      "verification": [
+        "node systemia/sentinel/trigger-mode-policy.test.mjs",
+        "node systemia/organism/portfolio-sentinel.proof.mjs"
+      ],
+      "rollback": "restore last known-green trigger-mode contract",
+      "learned_from": "push-green / schedule-red CHUM policy divergence"
+    }
+  ]
+}
