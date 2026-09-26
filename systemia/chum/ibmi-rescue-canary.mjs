@@ -38,7 +38,7 @@ const quoteResponse = await request(PAYMENTS_ENDPOINT, {
   method: 'POST',
   body: JSON.stringify({
     action: 'quote',
-    offer_key: 'ibmi_74_deadline_xray_250',
+    offer_key: 'ibmi_estate_xray_250',
   }),
 });
 assert(quoteResponse.response.ok, `payments_quote_http_${quoteResponse.response.status}`);
@@ -52,7 +52,7 @@ const checkoutResponse = await request(PAYMENTS_ENDPOINT, {
   method: 'POST',
   body: JSON.stringify({
     action: 'create_checkout',
-    offer_key: 'ibmi_74_deadline_xray_250',
+    offer_key: 'ibmi_estate_xray_250',
     order_key: qaOrderKey,
     customer_email: 'qa-ibmi-rescue-canary@example.com',
     business_name: 'Systemia Synthetic QA',
@@ -67,7 +67,7 @@ assert(checkoutResponse.response.ok, `payments_checkout_http_${checkoutResponse.
 const checkoutPayload = JSON.parse(checkoutResponse.text);
 assert(checkoutPayload.ok === true, 'payments_checkout_not_ok');
 assert(checkoutPayload.amount_cents === 25000, 'payments_checkout_amount_wrong');
-assert(checkoutPayload.offer_key === 'ibmi_74_deadline_xray_250', 'payments_checkout_offer_wrong');
+assert(checkoutPayload.offer_key === 'ibmi_estate_xray_250', 'payments_checkout_offer_wrong');
 assert(typeof checkoutPayload.session_id === 'string' && checkoutPayload.session_id.startsWith('cs_'), 'payments_checkout_session_missing');
 assert(typeof checkoutPayload.checkout_url === 'string' && /^https:\/\/checkout\.stripe\.com\//.test(checkoutPayload.checkout_url), 'payments_checkout_url_invalid');
 
@@ -83,7 +83,7 @@ assert(offerPayload.offer?.commercial_state === 'sell_now', 'not_sell_now');
 assert(offerPayload.offer?.machine_state === 'human_handoff_ready', 'wrong_machine_state');
 assert(offerPayload.continuation?.mode === 'fixed_price_human_handoff', 'wrong_continuation_mode');
 assert(offerPayload.continuation?.next_tool === 'prepare_quote_ready_service_handoff', 'wrong_next_tool');
-assert(Array.isArray(offerPayload.offer?.offers) && offerPayload.offer.offers.length === 2, 'offer_tiers_missing');
+assert(Array.isArray(offerPayload.offer?.offers) && offerPayload.offer.offers.length === 3, 'offer_tiers_missing');
 
 const handoffUrl = new URL(GATEWAY);
 handoffUrl.searchParams.set('action', 'service_handoff');
@@ -105,6 +105,7 @@ assert(/<html|<!doctype html/i.test(productRouteResponse.text), 'product_route_h
 const reviewResponse = await get(handoffPayload.handoff_url);
 assert(reviewResponse.response.ok, `review_http_${reviewResponse.response.status}`);
 assert(/Evercraft IBM i Rescue/i.test(reviewResponse.text), 'review_page_name_missing');
+assert(/IBM i Estate X-Ray/i.test(reviewResponse.text), 'review_page_estate_xray_missing');
 assert(/\$250/.test(reviewResponse.text), 'review_page_xray_price_missing');
 assert(/\$1,500/.test(reviewResponse.text), 'review_page_sprint_price_missing');
 assert(/creates no invoice, checkout, entitlement, outreach, payment obligation/i.test(reviewResponse.text), 'review_page_payment_boundary_missing');
