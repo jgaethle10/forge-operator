@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "roasted": {
+      "type": "http",
+      "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
+    }
+  }
+}
