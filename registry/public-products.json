@@ -197,7 +197,7 @@
       "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
       "github_record": "./evercraft-clip/README.md",
       "llms": "./evercraft-clip/llms.txt",
-      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "registry_name": null,
       "invocation": {
         "mode": "mcp",
         "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"

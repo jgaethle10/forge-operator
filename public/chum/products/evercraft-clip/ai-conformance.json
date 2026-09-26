@@ -15,7 +15,7 @@
   "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json",
-  "registry_name": "io.github.jgaethle10/evercraft-clip",
+  "registry_name": null,
   "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
   "authority": "public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized",
   "human_confirmation_required": true,

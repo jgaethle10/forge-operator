@@ -1133,7 +1133,6 @@ Boundaries:
 Product key: evercraft-clip
 Canonical: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 Machine state: mcp
-Official MCP Registry: io.github.jgaethle10/evercraft-clip
 Invocation: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json

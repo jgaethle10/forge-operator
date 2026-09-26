@@ -289,7 +289,7 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json",
       "page_url": "/chum/products/evercraft-clip/",
-      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "registry_name": null,
       "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
       "commercial": null,
       "developer_surfaces": null
