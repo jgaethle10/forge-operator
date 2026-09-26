@@ -501,11 +501,11 @@ assert.ok(persistedEvidenceQuery.match_count > 0);
 assert.equal(persistedEvidenceQuery.hits[0].source_sha256, sourceHashAfter);
 
 const gatewayTools = listForensiScopeGatewayTools();
-assert.equal(gatewayTools.length, 5);
+assert.equal(gatewayTools.length, 6);
 const singleEvidenceGatewayTools = gatewayTools.filter(
   (tool) => tool.name !== 'forensiscope_compare_evidence'
 );
-assert.equal(singleEvidenceGatewayTools.length, 4);
+assert.equal(singleEvidenceGatewayTools.length, 5);
 assert.ok(
   singleEvidenceGatewayTools.every((tool) =>
     tool.inputSchema.required.includes('evidence_ref') &&
@@ -607,10 +607,15 @@ const modernToolList = handleForensiScopeMcpRequest({
   }
 }, { rootDir });
 assert.equal(modernToolList.result.resultType, 'complete');
-assert.equal(modernToolList.result.tools.length, 5);
+assert.equal(modernToolList.result.tools.length, 6);
 assert.ok(
   modernToolList.result.tools.some(
     (tool) => tool.name === 'forensiscope_compare_evidence'
+  )
+);
+assert.ok(
+  modernToolList.result.tools.some(
+    (tool) => tool.name === 'forensiscope_verify_analysis'
   )
 );
 
@@ -660,7 +665,7 @@ const legacyToolList = handleForensiScopeMcpRequest({
   method: 'tools/list',
   params: {}
 }, { rootDir });
-assert.equal(legacyToolList.result.tools.length, 5);
+assert.equal(legacyToolList.result.tools.length, 6);
 assert.equal(legacyToolList.result.resultType, undefined);
 
 const legacyToolCall = handleForensiScopeMcpRequest({
@@ -808,6 +813,12 @@ assert.ok(pipelineReceipt.result.transcript_segments > 0);
 assert.ok(/^forensiscope-evidence:sha256:[a-f0-9]{64}$/.test(
   pipelineReceipt.result.evidence_ref
 ));
+assert.ok(/^forensiscope-provenance:sha256:[a-f0-9]{64}$/.test(
+  pipelineReceipt.result.provenance_ref
+));
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(
+  pipelineReceipt.result.provenance_digest
+));
 assert.equal(pipelineReceipt.truth_boundary.source_path_returned, false);
 assert.equal(pipelineReceipt.truth_boundary.public_machine_intake_enabled, false);
 assert.equal(pipelineReceipt.truth_boundary.checkout_or_payment_created, false);
@@ -849,7 +860,7 @@ const analysisHandoff = issueForensiScopeAnalysisHandoff({
     confirmed: true,
     recipient: 'forensiscope-proof-agent'
   },
-  scopes: ['query', 'context', 'timeline'],
+  scopes: ['query', 'context', 'timeline', 'verify'],
   ttlSeconds: 3600
 });
 assert.equal(
@@ -870,6 +881,43 @@ assert.equal(
 assert.ok(
   analysisHandoff.tools.includes('forensiscope_build_context_packet')
 );
+assert.ok(
+  analysisHandoff.tools.includes('forensiscope_verify_analysis')
+);
+assert.equal(
+  analysisHandoff.provenance_ref,
+  pipelineReceipt.result.provenance_ref
+);
+
+const handoffVerification = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_verify_analysis',
+  args: {
+    evidence_ref: analysisHandoff.evidence_ref,
+    provenance_ref: analysisHandoff.provenance_ref,
+    access_token: analysisHandoff.access.token
+  },
+  rootDir
+});
+assert.equal(
+  handoffVerification.schema,
+  'evercraft.forensiscope.gateway-verification-result.v1'
+);
+assert.equal(handoffVerification.result.verified, true);
+assert.equal(
+  handoffVerification.result.provenance_ref,
+  analysisHandoff.provenance_ref
+);
+assert.equal(
+  handoffVerification.result.privacy.transcript_text_included,
+  false
+);
+assert.equal(
+  handoffVerification.result.privacy.authorization_actor_included,
+  false
+);
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(
+  handoffVerification.audit.event_hash
+));
 
 const handoffQuery = invokeForensiScopeGatewayTool({
   name: 'forensiscope_query_evidence',
@@ -1088,6 +1136,9 @@ const proof = {
   single_entry_query_matches: pipelineQuery.result.match_count,
   human_confirmed_handoff_tools: analysisHandoff.tools.length,
   human_confirmed_handoff_query_matches: handoffQuery.result.match_count,
+  provenance_ref: pipelineReceipt.result.provenance_ref,
+  provenance_verified: handoffVerification.result.verified,
+  provenance_audit_hash: handoffVerification.audit.event_hash,
   evidence_access_audit_hash: handoffQuery.audit.event_hash,
   evidence_access_audit_privacy_verified: true,
   single_entry_pipeline_wall_ms: pipelineReceipt.metrics.pipeline_wall_time_ms,
