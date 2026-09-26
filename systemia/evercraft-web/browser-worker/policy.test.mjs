@@ -33,6 +33,7 @@ test('rejects private, loopback, link-local, reserved and documentation IPs', ()
 test('rejects credential-bearing and non-http URLs', () => {
   assert.throws(() => normalizePublicHttpUrl('file:///etc/passwd'), /unsupported_url_scheme/);
   assert.throws(() => normalizePublicHttpUrl('https://user:pass@example.com/'), /embedded_credentials_not_allowed/);
+  assert.throws(() => normalizePublicHttpUrl('https://example.com:8443/'), /unsupported_port/);
   assert.equal(normalizePublicHttpUrl('https://example.com/path?q=1').hostname, 'example.com');
 });
 
