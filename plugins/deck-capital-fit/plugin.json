@@ -1,0 +1,21 @@
+{
+  "name": "deck-capital-fit",
+  "version": "0.1.0",
+  "description": "Assess founder capital fit and funding readiness",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "deck-capital-fit",
+    "funding-readiness",
+    "capital-fit",
+    "fundraising",
+    "founder",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
