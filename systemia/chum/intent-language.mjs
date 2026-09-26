@@ -42,6 +42,8 @@ const CONCEPT_ALIASES = {
 
   enterprise_ops: ['erp','operations','workflow','workflows','disconnected systems','handoff','handoffs','entity resolution','deduplication','modernize'],
   migration: ['vendor lock in','vendor lock-in','migrate','migration','portability','no code','no-code','builder lock in','builder lock-in'],
+  social_clip: ['social clip','social clips','vertical clip','vertical clips','short form video','short-form video','reel','reels'],
+  social_distribution: ['social media','facebook','linkedin','instagram','social ready','social-ready','publishing path'],
   copy_review: ['copy','headline','caption','post','roast','critique','pressure test'],
   agriculture: ['agriculture','farm','farming','water','land','crop','production','resilience'],
   resources: ['housing','food','benefits','transportation','childcare','legal aid','stability']
