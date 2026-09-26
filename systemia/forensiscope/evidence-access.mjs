@@ -8,7 +8,8 @@ const ALLOWED_SCOPES = new Set([
   'timeline',
   'duplicates',
   'context',
-  'compare'
+  'compare',
+  'verify'
 ]);
 
 function base64url(value) {
