@@ -1,0 +1,28 @@
+{
+  "schema": "evercraft.legacy-rescue.offer-contract.v1",
+  "product_key": "legacy-rescue-lab",
+  "offer_key": "legacy_rescue_scan_299",
+  "name": "Legacy Rescue Scan",
+  "price_usd": 299,
+  "billing": "one_time",
+  "purpose": "Bounded evidence-first diagnosis of an existing public-facing or customer-authorized software system before a larger repair, migration, or rebuild decision.",
+  "inputs": [
+    "public URL or customer-authorized system target",
+    "customer description of the observed failure or business pain",
+    "optional customer-supplied screenshots, logs, exports, or repository evidence that the customer is authorized to provide"
+  ],
+  "outputs": [
+    "observed failure inventory",
+    "evidence references",
+    "prioritized repair hypotheses",
+    "known-versus-unknown boundary",
+    "recommended smallest next rescue step",
+    "Rescue Sprint scope proposal when appropriate"
+  ],
+  "credit_policy": "100% of the $299 Legacy Rescue Scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
+  "human_confirmation_required": true,
+  "private_access_requires_explicit_authorization": true,
+  "production_change_included": false,
+  "payment_state": "unverified_product_specific_checkout",
+  "paid_state_authority": "authoritative payment-provider receipt only"
+}
