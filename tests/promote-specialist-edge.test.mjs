@@ -167,3 +167,24 @@ test('HTTPS without NodeSeed attestation cannot promote direct doors',()=>{
     /external_canary_not_verified/
   );
 });
+
+
+test('missing field enrollment proof cannot promote direct doors',()=>{
+  assert.throws(
+    ()=>promoteSpecialistSpecs(pendingFixture(),verifiedReceipt({
+      field_enrollment_verified:false,
+      field_enrollment_receipt_ref:null,
+      public_edge_admission_receipt_ref:null,
+    })),
+    /external_canary_not_verified/
+  );
+});
+
+test('malformed field enrollment receipt cannot promote direct doors',()=>{
+  assert.throws(
+    ()=>validateExternalCanary(verifiedReceipt({
+      field_enrollment_receipt_ref:'not-a-receipt',
+    })),
+    /external_canary_field_enrollment_receipt_invalid/
+  );
+});
