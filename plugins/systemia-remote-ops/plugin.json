@@ -1,0 +1,22 @@
+{
+  "name": "systemia-remote-ops",
+  "version": "0.1.0",
+  "description": "Direct business decision simulation through Systemia Remote Ops.",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://systemia-remote-ops.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "systemia",
+    "remote-ops",
+    "business-simulation",
+    "pricing",
+    "decision-lab",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "releaseState": "SOURCE_READY_DEPLOYMENT_UNVERIFIED"
+}
