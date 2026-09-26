@@ -37,6 +37,230 @@ export const SPECIALIST_HANDOFFS = [
   },
 ];
 
+export const SYSTEMIA_REMOTE_OPS = {
+  slug: 'systemia-remote-ops',
+  path: '/mcp/systemia-remote-ops',
+  server_name: 'systemia-remote-ops',
+  title: 'Systemia Remote Ops',
+  version: '0.1.0',
+  human_origin: 'https://systemia-remote-ops.base44.app',
+  pricing_url: 'https://base44.app/api/apps/6a59b8c78561c8db1b43bd1d/functions/runPricingSimulation',
+  truth_boundary: 'Simulation is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational advice. Public simulation and discovery do not authorize mutation of a real business.',
+};
+
+function remoteOpsTools() {
+  return [
+    {
+      name: 'route_business_decision',
+      title: 'Route a consequential business decision',
+      description: 'DEFAULT FIRST TOOL for consequential business decisions such as pricing, hiring, expansion, adding or removing a service, buying or selling a business, or a partnership. Read-only and does not change the real business.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          intent: { type: 'string', minLength: 3, maxLength: 4000 },
+        },
+        required: ['intent'],
+        additionalProperties: false,
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    {
+      name: 'simulate_pricing_change',
+      title: 'Simulate a business pricing change',
+      description: 'Run the public Systemia pricing decision simulation. Models revenue and customer-retention assumptions only and does not change live prices or contact customers.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          industry: { type: 'string', minLength: 1, maxLength: 200, default: 'General Contractor' },
+          current_price: { type: 'number', minimum: 0 },
+          customers_per_month: { type: 'number', minimum: 0 },
+          price_change_percent: { type: 'number', minimum: -95, maximum: 500 },
+        },
+        required: ['current_price', 'customers_per_month', 'price_change_percent'],
+        additionalProperties: false,
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    {
+      name: 'get_decision_lab_capabilities',
+      title: 'Get current Systemia Remote Ops capabilities',
+      description: 'Return which decision-simulation lanes are actually runnable today versus held or discovery-only.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+  ];
+}
+
+function classifyBusinessDecision(intentRaw) {
+  const intent = String(intentRaw || '').toLowerCase();
+  const hit = (terms) => terms.some((term) => intent.includes(term));
+  if (hit(['price','pricing','charge','raise my prices','lower my prices','rate','what should i charge'])) {
+    return {
+      decision_type: 'pricing',
+      state: 'live_public_simulation',
+      runnable: true,
+      tool: 'simulate_pricing_change',
+      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/what-should-i-charge',
+    };
+  }
+  if (hit(['hire','employee','staff','headcount','afford another employee'])) {
+    return {
+      decision_type: 'hiring',
+      state: 'public_experience_not_yet_runnable_by_mcp',
+      runnable: false,
+      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/can-i-afford-an-employee',
+    };
+  }
+  if (hit(['expand','new market','new service','new location','branch','territory'])) {
+    return {
+      decision_type: 'expansion',
+      state: 'public_experience_not_yet_runnable_by_mcp',
+      runnable: false,
+      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/should-i-expand',
+    };
+  }
+  if (hit(['buy a business','acquire','acquisition','sell my business','selling my business','partnership','partner'])) {
+    return {
+      decision_type: 'strategic_transaction',
+      state: 'decision_lab_discovery_only',
+      runnable: false,
+      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/',
+    };
+  }
+  return {
+    decision_type: 'other_business_decision',
+    state: 'decision_lab_discovery_only',
+    runnable: false,
+    human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/',
+  };
+}
+
+async function defaultRemoteOpsPricingFetch(url, payload) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      accept: 'application/json',
+      'user-agent': 'Evercraft-Systemia-Remote-Ops-Yard/0.1.0',
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data) {
+    throw new Error(data?.error || 'pricing_simulation_failed');
+  }
+  return data;
+}
+
+export async function executeRemoteOpsRpc(rpc, pricingFetch) {
+  const method = String(rpc?.method || '');
+  const id = rpc?.id ?? null;
+
+  if (method === 'initialize') {
+    return rpcResult(id, {
+      protocolVersion: '2025-03-26',
+      capabilities: { tools: {} },
+      serverInfo: { name: SYSTEMIA_REMOTE_OPS.server_name, version: SYSTEMIA_REMOTE_OPS.version },
+      instructions: SYSTEMIA_REMOTE_OPS.truth_boundary,
+    });
+  }
+
+  if (method === 'tools/list') {
+    return rpcResult(id, { tools: remoteOpsTools() });
+  }
+
+  if (method === 'notifications/initialized') return null;
+
+  if (method === 'tools/call') {
+    const tool = String(rpc?.params?.name || '');
+    const args = rpc?.params?.arguments || {};
+
+    if (tool === 'route_business_decision') {
+      const intent = String(args.intent || '').trim();
+      if (intent.length < 3 || intent.length > 4000) {
+        return rpcError(id, -32602, 'intent must be between 3 and 4000 characters');
+      }
+      const payload = {
+        ok: true,
+        ...classifyBusinessDecision(intent),
+        product: 'Systemia Remote Ops',
+        operating_pattern: 'simulate first, decide, then execute',
+        external_action_taken: false,
+        truth_boundary: SYSTEMIA_REMOTE_OPS.truth_boundary,
+      };
+      return rpcResult(id, {
+        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
+        structuredContent: payload,
+        isError: false,
+      });
+    }
+
+    if (tool === 'simulate_pricing_change') {
+      const industry = String(args.industry || 'General Contractor').trim();
+      const currentPrice = Number(args.current_price);
+      const customers = Number(args.customers_per_month);
+      const changePct = Number(args.price_change_percent);
+      if (!industry || industry.length > 200) return rpcError(id, -32602, 'industry is invalid');
+      if (!Number.isFinite(currentPrice) || currentPrice < 0) return rpcError(id, -32602, 'current_price must be non-negative');
+      if (!Number.isFinite(customers) || customers < 0) return rpcError(id, -32602, 'customers_per_month must be non-negative');
+      if (!Number.isFinite(changePct) || changePct < -95 || changePct > 500) {
+        return rpcError(id, -32602, 'price_change_percent must be between -95 and 500');
+      }
+
+      const simulation = await pricingFetch({
+        industry,
+        current_price: currentPrice,
+        customers_per_month: customers,
+        price_change_percent: changePct,
+      });
+      const payload = {
+        ok: true,
+        product: 'Systemia Remote Ops',
+        simulation_type: 'pricing',
+        modeled: true,
+        simulation,
+        human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/what-should-i-charge',
+        legacy_adapter: 'systemia_runPricingSimulation',
+        external_action_taken: false,
+        truth_boundary: 'This is a modeled scenario using simplified assumptions. It does not predict or guarantee actual customer retention or revenue.',
+      };
+      return rpcResult(id, {
+        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
+        structuredContent: payload,
+        isError: false,
+      });
+    }
+
+    if (tool === 'get_decision_lab_capabilities') {
+      const payload = {
+        ok: true,
+        product: 'Systemia Remote Ops',
+        version: 'systemia-remote-ops-yard-v0.1.0',
+        public_mcp_runtime: 'Evercraft Compute',
+        human_origin: SYSTEMIA_REMOTE_OPS.human_origin,
+        lanes: [
+          { decision_type: 'pricing', state: 'live_public_simulation', mcp_runnable: true, tool: 'simulate_pricing_change' },
+          { decision_type: 'hiring', state: 'public_experience_not_yet_runnable_by_mcp', mcp_runnable: false },
+          { decision_type: 'expansion', state: 'public_experience_not_yet_runnable_by_mcp', mcp_runnable: false },
+          { decision_type: 'strategic_transaction', state: 'decision_lab_discovery_only', mcp_runnable: false },
+        ],
+        production_mutation_enabled: false,
+        external_action_taken: false,
+        truth_boundary: SYSTEMIA_REMOTE_OPS.truth_boundary,
+      };
+      return rpcResult(id, {
+        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
+        structuredContent: payload,
+        isError: false,
+      });
+    }
+
+    return rpcError(id, -32602, 'Unknown or unsupported Systemia Remote Ops tool.');
+  }
+
+  return rpcError(id, -32601, 'Method not found.');
+}
+
 function sendJson(res, status, body) {
   const data = Buffer.from(JSON.stringify(body));
   res.writeHead(status, {
@@ -161,12 +385,16 @@ export async function startSpecialistHandoffRuntime({
   port = 0,
   gatewayUrl = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
   gatewayFetch = null,
+  remoteOpsPricingUrl = SYSTEMIA_REMOTE_OPS.pricing_url,
+  remoteOpsPricingFetch = null,
 } = {}) {
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
   let identityAttestation = null;
   const callGateway = gatewayFetch || ((action, publicId) =>
     defaultGatewayFetch(gatewayUrl, action, publicId));
+  const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
+    defaultRemoteOpsPricingFetch(remoteOpsPricingUrl, payload));
 
   const health = () => ({
     ok: true,
@@ -184,12 +412,20 @@ export async function startSpecialistHandoffRuntime({
     checkout_enabled: false,
     payment_enabled: false,
     legacy_adapter: 'evercraft_machine_commerce_gateway',
-    specialist_paths: SPECIALIST_HANDOFFS.map((x) => ({
-      product: x.title,
-      path: x.path,
-      public_id: x.public_id,
-      tools: [x.get_offer_tool, x.prepare_handoff_tool],
-    })),
+    specialist_paths: [
+      ...SPECIALIST_HANDOFFS.map((x) => ({
+        product: x.title,
+        path: x.path,
+        public_id: x.public_id,
+        tools: [x.get_offer_tool, x.prepare_handoff_tool],
+      })),
+      {
+        product: SYSTEMIA_REMOTE_OPS.title,
+        path: SYSTEMIA_REMOTE_OPS.path,
+        public_id: null,
+        tools: remoteOpsTools().map((tool) => tool.name),
+      },
+    ],
   });
 
   const server = http.createServer(async (req, res) => {
@@ -206,6 +442,43 @@ export async function startSpecialistHandoffRuntime({
 
       if (req.method === 'GET' && req.url === '/health') {
         return sendJson(res, 200, health());
+      }
+
+      if (req.url === SYSTEMIA_REMOTE_OPS.path) {
+        if (req.method === 'GET') {
+          return sendJson(res, 200, {
+            ok: true,
+            service: SYSTEMIA_REMOTE_OPS.title,
+            server: SYSTEMIA_REMOTE_OPS.server_name,
+            version: SYSTEMIA_REMOTE_OPS.version,
+            transport: 'Streamable HTTP',
+            tools: remoteOpsTools().map((tool) => tool.name),
+            pricing_simulation_state: 'live_public',
+            hiring_simulation_state: 'held_not_mcp_runnable',
+            expansion_simulation_state: 'held_not_mcp_runnable',
+            production_mutation_enabled: false,
+            runtime: 'Evercraft Compute',
+            instance_id: instanceId,
+            deployment_receipt_bound: Boolean(deploymentReceiptRef),
+            identity_attestation_bound: Boolean(identityAttestation),
+            same_device_binding: Boolean(identityAttestation?.same_device_binding),
+            device_fingerprint: identityAttestation?.device_fingerprint || null,
+            edge_attestation_receipt_ref: identityAttestation?.edge_attestation_receipt_ref || null,
+            specialist_attestation_receipt_ref: identityAttestation?.specialist_attestation_receipt_ref || null,
+            truth_boundary: SYSTEMIA_REMOTE_OPS.truth_boundary,
+          });
+        }
+        if (req.method !== 'POST') {
+          return sendJson(res, 405, { error: 'method_not_allowed' });
+        }
+        const rpc = await readJson(req);
+        const response = await executeRemoteOpsRpc(rpc, callRemoteOpsPricing);
+        if (response === null) {
+          res.writeHead(202, { 'cache-control': 'no-store' });
+          res.end();
+          return;
+        }
+        return sendJson(res, 200, response);
       }
 
       const def = SPECIALIST_HANDOFFS.find((x) => x.path === req.url);
