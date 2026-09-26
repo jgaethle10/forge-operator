@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.legacy-rescue.discovery.v1",
+  "product_key": "legacy-rescue-lab",
+  "name": "Legacy Rescue Lab",
+  "provider": "Evercraft LLC",
+  "purpose": "Evidence-first rescue of existing software that is broken, fragile, abandoned, slow, undocumented, or too risky to replace blindly.",
+  "pain_phrases": [
+    "broken checkout",
+    "broken lead form",
+    "abandoned codebase",
+    "developer disappeared",
+    "failed AI-built app",
+    "fragile SaaS",
+    "slow legacy website",
+    "legacy platform migration",
+    "repair before rebuild"
+  ],
+  "offer": {
+    "name": "Legacy Rescue Scan",
+    "price_usd": 299,
+    "billing": "one_time",
+    "credit_policy": "Full scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery."
+  },
+  "authority": "Public discovery and non-intrusive public-surface diagnosis only until explicit authorization expands scope.",
+  "private_access_requires_explicit_authorization": true,
+  "production_change_included": false,
+  "direct_checkout_state": "unverified",
+  "machine_surfaces": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/legacy-rescue-lab/llms.txt",
+    "chum": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
+    "pain_index": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
+    "answer_graph": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json"
+  },
+  "editorial": {
+    "hub": "/legacy-rescue-lab/editorial/",
+    "rss": "/legacy-rescue-lab/editorial/feed.xml"
+  },
+  "distribution": {
+    "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
+  }
+}
