@@ -24,6 +24,7 @@ import { runForensiScopeAnalysis } from './pipeline.mjs';
 import { compareForensiScopeEvidence } from './evidence-compare.mjs';
 import { issueForensiScopeAnalysisHandoff } from './analysis-handoff.mjs';
 import { evidenceAuditPath } from './evidence-audit.mjs';
+import { revokeEvidenceGrant } from './evidence-revocation.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -942,6 +943,27 @@ assert.equal(auditLedger.includes(analysisHandoff.access.token), false);
 assert.equal(auditLedger.includes('boundary-3'), false);
 assert.equal(auditLedger.includes(mockTranscriberPath), false);
 
+const handoffRevocation = revokeEvidenceGrant({
+  grantId: analysisHandoff.access.grant_id,
+  evidenceRef: analysisHandoff.evidence_ref,
+  reason: 'distributed-proof-revocation',
+  rootDir
+});
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(handoffRevocation.revocation_hash));
+assert.throws(
+  () => invokeForensiScopeGatewayTool({
+    name: 'forensiscope_query_evidence',
+    args: {
+      evidence_ref: analysisHandoff.evidence_ref,
+      access_token: analysisHandoff.access.token,
+      query: 'boundary-3',
+      top_k: 1
+    },
+    rootDir
+  }),
+  /grant has been revoked/
+);
+
 const comparisonPipelineReceipt = await runForensiScopeAnalysis({
   source: {
     path: comparisonSourcePath,
@@ -1141,6 +1163,8 @@ const proof = {
   provenance_audit_hash: handoffVerification.audit.event_hash,
   evidence_access_audit_hash: handoffQuery.audit.event_hash,
   evidence_access_audit_privacy_verified: true,
+  handoff_grant_revocation_hash: handoffRevocation.revocation_hash,
+  handoff_grant_revocation_enforced: true,
   single_entry_pipeline_wall_ms: pipelineReceipt.metrics.pipeline_wall_time_ms,
   single_entry_execution_wall_ms: pipelineReceipt.metrics.execution_wall_time_ms,
   single_entry_media_seconds_per_execution_second:
