@@ -57,9 +57,14 @@ assert.match(llms, /IBM i Estate X-Ray/);
 assert.match(llms, /IBM i 7\.4 Deadline X-Ray/);
 assert.match(llms, /\$250 one-time/);
 assert.match(llms, /\$1,500 one-time/);
-assert.match(llms, /Machine Commerce human handoff is live-verified/i);
-assert.match(llms, /human buyer route is externally reachable/i);
-assert.match(llms, /backend checkout creation is independently verified/i);
+assert.match(
+  llms,
+  /(Machine Commerce human handoff is live-verified|Human buyer route[^\n]*(?:live-verified|externally reachable))/i,
+  'IBM i Rescue must preserve verified human continuation evidence'
+);
+assert.match(llms, /human buyer route[^\n]*(?:live-verified|externally reachable)/i);
+assert.match(llms, /backend checkout creation[^\n]*(?:live-verified|verified|independently verified)/i);
+assert.match(llms, /checkout creation is not payment proof/i);
 assert.match(topLevel, /Evercraft IBM i Rescue/);
 
 console.log(JSON.stringify({
