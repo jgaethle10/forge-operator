@@ -267,42 +267,43 @@ function pickNode(nodes, cursor) {
 function meetsResourceProfile(node, profile = null) {
   if (!profile) return { eligible: true, reason: null };
   const hint = node.capacity_hint;
-  if (!hint) {
-    return profile.require_capacity_hint === true
-      ? { eligible: false, reason: 'capacity_hint_required' }
-      : { eligible: true, reason: null };
+  if (!hint && profile.require_capacity_hint === true) {
+    return { eligible: false, reason: 'capacity_hint_required' };
   }
 
-  const minCpu = Number(profile.minimum_node_cpu_units || 0);
-  const minMemory = Number(profile.minimum_node_memory_mb || 0);
-  if (minCpu && Number(hint.cpu_units || 0) < minCpu) {
-    return { eligible: false, reason: 'insufficient_cpu_capacity' };
-  }
-  if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
-    return { eligible: false, reason: 'insufficient_memory_capacity' };
-  }
-
-  for (const executable of profile.required_executables || []) {
-    if (hint.executables?.[executable] !== true) {
-      return {
-        eligible: false,
-        reason: `missing_required_executable:${executable}`
-      };
+  if (hint) {
+    const minCpu = Number(profile.minimum_node_cpu_units || 0);
+    const minMemory = Number(profile.minimum_node_memory_mb || 0);
+    if (minCpu && Number(hint.cpu_units || 0) < minCpu) {
+      return { eligible: false, reason: 'insufficient_cpu_capacity' };
     }
-  }
+    if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
+      return { eligible: false, reason: 'insufficient_memory_capacity' };
+    }
 
-  for (const service of profile.required_services || []) {
-    if (hint.services?.[service] !== true) {
-      return {
-        eligible: false,
-        reason: `missing_required_service:${service}`
-      };
+    for (const executable of profile.required_executables || []) {
+      if (hint.executables?.[executable] !== true) {
+        return {
+          eligible: false,
+          reason: `missing_required_executable:${executable}`
+        };
+      }
+    }
+
+    for (const service of profile.required_services || []) {
+      if (hint.services?.[service] !== true) {
+        return {
+          eligible: false,
+          reason: `missing_required_service:${service}`
+        };
+      }
     }
   }
 
   const labels = new Set((node.placement_labels || []).map(String));
   for (const label of profile.required_node_labels || []) {
-    if (!labels.has(String(label))) {
+    const normalized = String(label || '').trim().toLowerCase();
+    if (!labels.has(normalized)) {
       return {
         eligible: false,
         reason: `missing_required_node_label:${label}`
@@ -310,7 +311,8 @@ function meetsResourceProfile(node, profile = null) {
     }
   }
   for (const label of profile.forbidden_node_labels || []) {
-    if (labels.has(String(label))) {
+    const normalized = String(label || '').trim().toLowerCase();
+    if (labels.has(normalized)) {
       return {
         eligible: false,
         reason: `forbidden_node_label:${label}`
