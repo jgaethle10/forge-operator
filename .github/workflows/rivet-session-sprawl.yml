@@ -29,10 +29,8 @@ jobs:
           node-version: 22
       - name: Prove acquisition boundaries
         run: npm run proof:rivet-session-sprawl && npm run proof:rivet-session-harvester && npm run proof:rivet-session-saban-coverage
-      - name: Build Saban work inventory
-        run: npm run rivet:sessions:saban:inventory
-      - name: Execute 2,044-role Saban coverage pass
-        run: node systemia/saban/multiplier.mjs --software rivet-session-sprawl --inventory artifacts/rivet-session-sprawl/saban-jobs.json --agents 2044 --workers 12 --execute --reconcile
+      - name: Execute complete role x work Saban coverage pass
+        run: npm run rivet:sessions:saban
       - name: Harvest admitted public session feeds
         run: npm run rivet:sessions:harvest -- --max-pages 500
       - name: Upload receipts and normalized aggregates
