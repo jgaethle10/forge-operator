@@ -23,6 +23,7 @@ import { handleForensiScopeMcpHttp } from './mcp-http.mjs';
 import { runForensiScopeAnalysis } from './pipeline.mjs';
 import { compareForensiScopeEvidence } from './evidence-compare.mjs';
 import { issueForensiScopeAnalysisHandoff } from './analysis-handoff.mjs';
+import { evidenceAuditPath } from './evidence-audit.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -883,6 +884,15 @@ const handoffQuery = invokeForensiScopeGatewayTool({
 });
 assert.equal(handoffQuery.access.verified, true);
 assert.ok(handoffQuery.result.match_count > 0);
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(handoffQuery.audit.event_hash));
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(handoffQuery.audit.request_digest));
+assert.ok(/^sha256:[a-f0-9]{64}$/.test(handoffQuery.audit.result_digest));
+
+const auditLedger = fs.readFileSync(evidenceAuditPath(rootDir), 'utf8');
+assert.ok(auditLedger.includes(handoffQuery.audit.event_id));
+assert.equal(auditLedger.includes(analysisHandoff.access.token), false);
+assert.equal(auditLedger.includes('boundary-3'), false);
+assert.equal(auditLedger.includes(mockTranscriberPath), false);
 
 const comparisonPipelineReceipt = await runForensiScopeAnalysis({
   source: {
@@ -1078,6 +1088,8 @@ const proof = {
   single_entry_query_matches: pipelineQuery.result.match_count,
   human_confirmed_handoff_tools: analysisHandoff.tools.length,
   human_confirmed_handoff_query_matches: handoffQuery.result.match_count,
+  evidence_access_audit_hash: handoffQuery.audit.event_hash,
+  evidence_access_audit_privacy_verified: true,
   single_entry_pipeline_wall_ms: pipelineReceipt.metrics.pipeline_wall_time_ms,
   single_entry_execution_wall_ms: pipelineReceipt.metrics.execution_wall_time_ms,
   single_entry_media_seconds_per_execution_second:
