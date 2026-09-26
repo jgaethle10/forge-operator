@@ -1349,6 +1349,49 @@ export class YardOperator {
     });
   }
 
+  async listRemoteCapacityNodes(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const response = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-capacity-nodes`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ token: secret.token }),
+      }
+    );
+
+    const nodes = Array.isArray(response.nodes)
+      ? response.nodes.map((node) => ({
+          node_id: String(node.node_id || ''),
+          device_fingerprint: String(node.device_fingerprint || ''),
+          connected: node.connected === true,
+          last_seen_at: node.last_seen_at || null,
+          session_expires_at: node.session_expires_at || null,
+          capacity: node.capacity || null,
+          queued_commands: Number(node.queued_commands || 0),
+          pending_commands: Number(node.pending_commands || 0),
+          secure_envelope_schema: node.secure_envelope_schema || null,
+        }))
+      : [];
+
+    return {
+      schema: 'evercraft.yard.remote-capacity-nodes.v1',
+      broker_deployment_id: deploymentId,
+      count: nodes.length,
+      nodes,
+      compute_management_receipt_hash: response.receipt?.receipt_hash || null,
+      observed_at: new Date().toISOString(),
+    };
+  }
+
   async remoteCapacityGrant(deploymentId, nodeId, {
     allowLoopbackProof = false,
   } = {}) {
