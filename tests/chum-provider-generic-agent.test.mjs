@@ -7,6 +7,7 @@ const suite = JSON.parse(fs.readFileSync('chum-probes/probe-suite.json', 'utf8')
 const testCase = suite.cases.find((row) => row.case_id === 'media-overflow-001');
 assert.ok(testCase);
 
+let requestCount = 0;
 const server = http.createServer((req, res) => {
   if (req.method !== 'POST' || req.url !== '/search') {
     res.writeHead(404).end();
@@ -18,7 +19,13 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     const payload = JSON.parse(body || '{}');
     assert.equal(payload?.query?.text, testCase.prompt);
+    requestCount += 1;
     res.setHeader('content-type', 'application/json');
+    if (requestCount < 3) {
+      res.writeHead(503);
+      res.end(JSON.stringify({ error: 'temporary upstream unavailable' }));
+      return;
+    }
     res.end(JSON.stringify({
       results: [{
         identifier: 'urn:test:forensiscope',
@@ -68,5 +75,8 @@ assert.equal(receipt.results[0]?.provider, 'generic_agent');
 assert.equal(receipt.results[0]?.status, 'completed');
 assert.equal(receipt.results[0]?.evaluation?.pickup_observed, true);
 assert.equal(receipt.results[0]?.provider_receipt?.engine, 'federated_agent_discovery');
+assert.equal(requestCount, 3);
+assert.equal(receipt.results[0]?.provider_receipt?.attempt, 3);
+assert.equal(receipt.results[0]?.provider_receipt?.max_attempts, 3);
 assert.ok(receipt.results[0]?.provider_receipt?.response_sha256);
 console.log('CHUM generic-agent live measurement proof passed.');
