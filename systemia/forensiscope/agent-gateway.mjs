@@ -1,6 +1,7 @@
 import { loadEvidenceGraph } from './evidence-store.mjs';
 import { verifyEvidenceAccessToken } from './evidence-access.mjs';
 import { compareForensiScopeEvidence } from './evidence-compare.mjs';
+import { recordEvidenceAccessAudit } from './evidence-audit.mjs';
 import {
   listForensiScopeAgentTools,
   invokeForensiScopeAgentTool
@@ -148,6 +149,16 @@ export function invokeForensiScopeGatewayTool({
       }
     );
 
+    const audit = recordEvidenceAccessAudit({
+      rootDir,
+      tool: name,
+      evidenceRefs: [loadedA.evidence_ref, loadedB.evidence_ref],
+      subjects: [accessA.subject, accessB.subject],
+      scopes: ['compare'],
+      args,
+      result
+    });
+
     return {
       schema: 'evercraft.forensiscope.gateway-comparison-result.v1',
       tool: name,
@@ -169,6 +180,7 @@ export function invokeForensiScopeGatewayTool({
           expires_at_unix: accessB.expires_at_unix
         }
       ],
+      audit,
       result,
       authority: {
         completed_evidence_query_only: true,
@@ -207,6 +219,16 @@ export function invokeForensiScopeGatewayTool({
     graph: loaded.graph
   });
 
+  const audit = recordEvidenceAccessAudit({
+    rootDir,
+    tool: name,
+    evidenceRefs: [loaded.evidence_ref],
+    subjects: [access.subject],
+    scopes: [access.required_scope],
+    args,
+    result
+  });
+
   return {
     schema: 'evercraft.forensiscope.gateway-result.v1',
     tool: name,
@@ -218,6 +240,7 @@ export function invokeForensiScopeGatewayTool({
       required_scope: access.required_scope,
       expires_at_unix: access.expires_at_unix
     },
+    audit,
     result,
     authority: {
       completed_evidence_query_only: true,
