@@ -66,5 +66,14 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
     "page": "/chum/products/aliev/"
+  },
+  "relationships": {
+    "rivet": {
+      "name": "RIVET",
+      "relationship": "customer_facing_planning_and_reporting_layer",
+      "public_surface": "/rivet/",
+      "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
+      "description": "RIVET turns AliEV address-level EV infrastructure intelligence into customer-facing property screening, planning, and reporting."
+    }
   }
 }
