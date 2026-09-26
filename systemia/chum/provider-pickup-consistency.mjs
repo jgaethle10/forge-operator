@@ -105,7 +105,7 @@ export function measureProviderPickupConsistency({
     policy: {
       target_pickup_rate: targetRate,
       minimum_independent_receipts_for_green: minSamples,
-      mixed_positive_and_negative_receipts_are_intermitent_until_threshold_is_met: true,
+      mixed_positive_and_negative_receipts_are_intermittent_until_threshold_is_met: true,
       publication_does_not_imply_provider_pickup: true
     },
     measurements
