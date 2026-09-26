@@ -1,6 +1,6 @@
 # Forge Operator
 
-> **AI and agent discovery:** Evercraft exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
+> **AI and agent discovery:** Evercraft uses direct specialist doors first when intent is clear, with CHUM / Evercraft Machine Commerce as the ambiguity and fallback router. The machine-readable direct-door index is at [public/.well-known/evercraft-direct-doors.json](public/.well-known/evercraft-direct-doors.json). Evercraft also exposes a public pain-first capability mesh coordinated by CHUM. Start with [AI-DISCOVERY.md](AI-DISCOVERY.md), the [full machine index](llms-full.txt), the [CHUM public mirror](public/chum/index.json), or the [machine product directory](public/.well-known/evercraft-products.json). The user does not need to know an Evercraft product name first. Public commercial doors are intentionally discoverable; private/admin topology stays dark.
 
 
 Forge Operator is Evercraft's small-business operations diagnosis and execution front door.
