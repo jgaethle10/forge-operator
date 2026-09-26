@@ -150,6 +150,9 @@ async function inspectNode(endpoint, options = {}) {
     endpoint,
     node_id: capacity.node_id,
     capacity_hint: capacity.capacity_hint || null,
+    placement_labels: Array.isArray(capacity.placement_labels)
+      ? capacity.placement_labels.map(String)
+      : [],
     allocation_auth: capacity.allocation_auth || null,
     supported_workloads: capacity.supported_workloads
   };
@@ -264,35 +267,55 @@ function pickNode(nodes, cursor) {
 function meetsResourceProfile(node, profile = null) {
   if (!profile) return { eligible: true, reason: null };
   const hint = node.capacity_hint;
-  if (!hint) {
-    return profile.require_capacity_hint === true
-      ? { eligible: false, reason: 'capacity_hint_required' }
-      : { eligible: true, reason: null };
+  if (!hint && profile.require_capacity_hint === true) {
+    return { eligible: false, reason: 'capacity_hint_required' };
   }
 
-  const minCpu = Number(profile.minimum_node_cpu_units || 0);
-  const minMemory = Number(profile.minimum_node_memory_mb || 0);
-  if (minCpu && Number(hint.cpu_units || 0) < minCpu) {
-    return { eligible: false, reason: 'insufficient_cpu_capacity' };
-  }
-  if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
-    return { eligible: false, reason: 'insufficient_memory_capacity' };
-  }
+  if (hint) {
+    const minCpu = Number(profile.minimum_node_cpu_units || 0);
+    const minMemory = Number(profile.minimum_node_memory_mb || 0);
+    if (minCpu && Number(hint.cpu_units || 0) < minCpu) {
+      return { eligible: false, reason: 'insufficient_cpu_capacity' };
+    }
+    if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
+      return { eligible: false, reason: 'insufficient_memory_capacity' };
+    }
 
-  for (const executable of profile.required_executables || []) {
-    if (hint.executables?.[executable] !== true) {
-      return {
-        eligible: false,
-        reason: `missing_required_executable:${executable}`
-      };
+    for (const executable of profile.required_executables || []) {
+      if (hint.executables?.[executable] !== true) {
+        return {
+          eligible: false,
+          reason: `missing_required_executable:${executable}`
+        };
+      }
+    }
+
+    for (const service of profile.required_services || []) {
+      if (hint.services?.[service] !== true) {
+        return {
+          eligible: false,
+          reason: `missing_required_service:${service}`
+        };
+      }
     }
   }
 
-  for (const service of profile.required_services || []) {
-    if (hint.services?.[service] !== true) {
+  const labels = new Set((node.placement_labels || []).map(String));
+  for (const label of profile.required_node_labels || []) {
+    const normalized = String(label || '').trim().toLowerCase();
+    if (!labels.has(normalized)) {
       return {
         eligible: false,
-        reason: `missing_required_service:${service}`
+        reason: `missing_required_node_label:${label}`
+      };
+    }
+  }
+  for (const label of profile.forbidden_node_labels || []) {
+    const normalized = String(label || '').trim().toLowerCase();
+    if (labels.has(normalized)) {
+      return {
+        eligible: false,
+        reason: `forbidden_node_label:${label}`
       };
     }
   }
@@ -547,6 +570,7 @@ export async function runNodeSeedAssignmentPool({
       node_id: node.node_id,
       endpoint: node.endpoint,
       capacity_hint: node.capacity_hint,
+      placement_labels: node.placement_labels || [],
       healthy_at_end: node.healthy !== false
     })),
     rejected_nodes: [...resolved.rejected, ...resourceRejected],
