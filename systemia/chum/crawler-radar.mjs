@@ -214,6 +214,17 @@ function providerMisses(root) {
   return misses;
 }
 
+function pickupRepairByProduct(root) {
+  const radar = readJson(path.join(root, 'public', 'chum', 'pickup-radar.json'));
+  if (radar?.schema !== 'evercraft.chum.pickup-radar.v1') return new Map();
+  return new Map((radar.products || []).map((row) => [clean(row.product_key).toLowerCase(), {
+    state: clean(row.state),
+    pickup_score_100: row.pickup_score_100,
+    miss_count: Number(row.miss_count || 0),
+    provider_states: Array.isArray(row.provider_states) ? row.provider_states : [],
+  }]));
+}
+
 function productKeyFromPath(pathname) {
   const parts = safePath(pathname).split('/').filter(Boolean);
   if (parts[0] === 'forensiscope') return 'forensiscope';
@@ -285,7 +296,7 @@ function ageHours(value, nowMs) {
   return Math.max(0, (nowMs - parsed) / 3_600_000);
 }
 
-function scoreSurface({ entry, latest, misses, nowMs }) {
+function scoreSurface({ entry, latest, misses, pickupRepair, nowMs }) {
   let score = Math.max(0, Number(entry.priority || 0));
   const reasons = [];
   const changedMs = Date.parse(entry.last_changed || '');
@@ -293,6 +304,7 @@ function scoreSurface({ entry, latest, misses, nowMs }) {
   const changedAge = ageHours(entry.last_changed, nowMs);
   const productKey = productKeyFromPath(entry.path);
   const productMisses = productKey ? misses.filter((row) => row.product_key === productKey) : [];
+  const pickupState = productKey ? pickupRepair.get(productKey) : null;
 
   if (!latest) {
     score += 35;
@@ -316,6 +328,14 @@ function scoreSurface({ entry, latest, misses, nowMs }) {
   if (productMisses.length) {
     score += Math.min(30, productMisses.length * 10);
     reasons.push('negative_provider_pickup_receipt');
+  }
+
+  if (pickupState?.state === 'repair_needed') {
+    score += 25;
+    reasons.push('llm_pickup_repair_needed');
+  } else if (pickupState?.state === 'mention_only') {
+    score += 12;
+    reasons.push('llm_pickup_mention_without_stronger_signal');
   }
 
   if (entry.content_sha256 !== entry.last_indexnow_sha256) {
@@ -344,11 +364,17 @@ function scoreSurface({ entry, latest, misses, nowMs }) {
       source: row.source,
       evidence_ref: row.file,
     })),
+    llm_pickup_state: pickupState ? {
+      state: pickupState.state,
+      pickup_score_100: pickupState.pickup_score_100,
+      miss_count: pickupState.miss_count,
+    } : null,
     reasons,
     recommended_actions: [
       ...(entry.content_sha256 !== entry.last_indexnow_sha256 ? ['verify_live_bytes_then_indexnow'] : []),
       ...(!latest || (Number.isFinite(changedMs) && fetchedMs < changedMs) ? ['promote_in_hot_discovery_queue'] : []),
       ...(productMisses.length ? ['run_brand_blind_provider_probe_after_publication'] : []),
+      ...(pickupState?.state === 'repair_needed' ? ['apply_pickup_radar_repair_queue'] : []),
       ...(score >= 120 ? ['increase_internal_crosslinks_from_relevant_public_surfaces'] : []),
     ],
   };
@@ -372,6 +398,7 @@ export async function buildCrawlerRadar({
   const observations = [...localRows, ...runtimeRows(liveSnapshot)];
   const latest = latestObservationByPath(observations);
   const misses = providerMisses(root);
+  const pickupRepair = pickupRepairByProduct(root);
   const nowMs = now instanceof Date ? now.getTime() : new Date(now).getTime();
 
   const surfaces = Object.values(crawlState.entries || {})
@@ -379,6 +406,7 @@ export async function buildCrawlerRadar({
       entry,
       latest: latest.get(safePath(entry.path)),
       misses,
+      pickupRepair,
       nowMs,
     }))
     .sort((a, b) => b.score - a.score || a.path.localeCompare(b.path));
@@ -401,6 +429,7 @@ export async function buildCrawlerRadar({
       indexing_is_not_ranking: true,
       ranking_is_not_citation: true,
       citation_is_not_conversion: true,
+      pickup_miss_can_raise_crawl_priority: true,
       legitimate_public_signals_only: true,
       no_unsolicited_human_outreach: true,
     },

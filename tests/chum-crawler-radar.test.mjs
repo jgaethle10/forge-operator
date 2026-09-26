@@ -74,6 +74,14 @@ fs.writeFileSync(path.join(root, 'public', 'chum', 'crawl-state.json'), JSON.str
   }
 }, null, 2) + '\n');
 
+fs.writeFileSync(path.join(root, 'public', 'chum', 'pickup-radar.json'), JSON.stringify({
+  schema: 'evercraft.chum.pickup-radar.v1',
+  products: [
+    { product_key: 'forensiscope', state: 'repair_needed', pickup_score_100: 20, miss_count: 2, provider_states: [] },
+    { product_key: 'aliev', state: 'pickup_observed', pickup_score_100: 90, miss_count: 0, provider_states: [] }
+  ]
+}, null, 2) + '\n');
+
 fs.writeFileSync(path.join(root, 'conformance', 'provider-observations', 'forensiscope-miss.json'), JSON.stringify({
   schema: 'evercraft.provider-observation.v1',
   observed_at: '2026-09-25T19:30:00Z',
@@ -98,6 +106,8 @@ assert.ok(fsRow.score > alievRow.score);
 assert.equal(fsRow.urgency, 'strike_now');
 assert.ok(fsRow.reasons.includes('content_changed_after_last_observed_crawler_fetch'));
 assert.ok(fsRow.reasons.includes('negative_provider_pickup_receipt'));
+assert.ok(fsRow.reasons.includes('llm_pickup_repair_needed'));
+assert.equal(fsRow.llm_pickup_state?.state, 'repair_needed');
 assert.ok(fs.existsSync(path.join(root, 'public', 'chum', 'crawler-radar.json')));
 assert.ok(fs.existsSync(path.join(root, 'public', 'chum', 'strike', 'index.html')));
 assert.ok(fs.existsSync(path.join(root, 'public', 'chum', 'strike', 'index.json')));

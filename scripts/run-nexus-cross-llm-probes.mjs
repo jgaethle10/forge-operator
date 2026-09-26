@@ -30,21 +30,62 @@ const normalizeText = value => String(value || '').toLowerCase();
 const hash = value => crypto.createHash('sha256').update(String(value || '')).digest('hex');
 
 function evaluate(testCase, response) {
+  const text = String(response?.text || '');
   const haystack = [
-    response?.text,
+    text,
     ...(Array.isArray(response?.urls) ? response.urls : []),
     ...(Array.isArray(response?.citations) ? response.citations.map(c => `${c?.title || ''} ${c?.url || ''}`) : [])
   ].join('\n').toLowerCase();
 
   const expected = normalizeText(testCase.expected_product);
+  const productKey = normalizeText(testCase.product_key);
   const productMention = Boolean(expected && haystack.includes(expected));
   const evercraftMention = haystack.includes('evercraft');
+  const cited = (response?.citations || []).some(citation => {
+    const citationText = normalizeText(`${citation?.title || ''} ${citation?.url || ''}`);
+    return Boolean(
+      (expected && citationText.includes(expected)) ||
+      (productKey && citationText.includes(productKey)) ||
+      (citationText.includes('evercraft') && (expected || productKey))
+    );
+  }) || (response?.urls || []).some(url => {
+    const urlText = normalizeText(url);
+    return Boolean((productKey && urlText.includes(productKey)) || (expected && urlText.includes(expected.replace(/\s+/g, '-'))));
+  });
+
+  let recommended = false;
+  if (expected && normalizeText(text).includes(expected)) {
+    const normalizedText = normalizeText(text);
+    const index = normalizedText.indexOf(expected);
+    const window = normalizedText.slice(Math.max(0, index - 180), Math.min(normalizedText.length, index + expected.length + 180));
+    recommended = ['recommend', 'use ', 'try ', 'consider ', 'good fit', 'best fit', 'service', 'tool', 'platform', 'option']
+      .some(term => window.includes(term));
+  }
+
   const falsePositive = !testCase.expected_fit && (evercraftMention || productMention);
+  const pickupObserved = Boolean(testCase.expected_fit && (productMention || cited || recommended));
+  const pickupState = !testCase.expected_fit
+    ? (falsePositive ? 'control_false_positive' : 'control_clean')
+    : cited && recommended
+      ? 'cited_and_recommended'
+      : cited
+        ? 'cited'
+        : recommended
+          ? 'recommended'
+          : productMention
+            ? 'mentioned'
+            : 'miss';
 
   return {
     expected_fit: testCase.expected_fit,
     expected_product: testCase.expected_product,
+    product_key: testCase.product_key || null,
     expected_product_mentioned: productMention,
+    expected_product_cited: cited,
+    expected_product_recommended: recommended,
+    recommendation_evidence_state: recommended ? 'heuristic_text_signal' : 'not_observed',
+    pickup_observed: pickupObserved,
+    pickup_state: pickupState,
     evercraft_mentioned: evercraftMention,
     control_false_positive: falsePositive
   };
@@ -160,6 +201,10 @@ receipt.summary = {
   blocked: receipt.results.filter(r => r.status === 'blocked').length,
   failed: receipt.results.filter(r => r.status === 'failed').length,
   expected_product_mentions: receipt.results.filter(r => r.evaluation?.expected_product_mentioned).length,
+  expected_product_citations: receipt.results.filter(r => r.evaluation?.expected_product_cited).length,
+  expected_product_recommendation_signals: receipt.results.filter(r => r.evaluation?.expected_product_recommended).length,
+  pickup_observed: receipt.results.filter(r => r.evaluation?.pickup_observed).length,
+  pickup_misses: receipt.results.filter(r => r.evaluation?.pickup_state === 'miss').length,
   control_false_positives: receipt.results.filter(r => r.evaluation?.control_false_positive).length
 };
 
