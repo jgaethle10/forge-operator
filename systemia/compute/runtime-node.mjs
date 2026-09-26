@@ -602,7 +602,25 @@ export async function startEvercraftComputeNode({
         }
 
         const fingerprint = String(deviceIdentity.fingerprint || '');
+        const expectedEvidenceDigest = fieldCandidate?.evidence
+          ? `sha256:${sha(JSON.stringify(fieldCandidate.evidence))}`
+          : '';
+        const { receipt_hash: edgeReceiptHash, ...edgeReceiptBody } =
+          edgeAdmission && typeof edgeAdmission === 'object'
+            ? edgeAdmission
+            : {};
+        const expectedEdgeReceiptHash =
+          edgeAdmission && typeof edgeAdmission === 'object'
+            ? `sha256:${sha(JSON.stringify(edgeReceiptBody))}`
+            : '';
+        const fieldEvidenceIntegrityValid =
+          fieldCandidate?.evidence_digest === expectedEvidenceDigest;
+        const edgeAdmissionIntegrityValid =
+          edgeReceiptHash === expectedEdgeReceiptHash;
+
         const packetValid = Boolean(
+          fieldEvidenceIntegrityValid &&
+          edgeAdmissionIntegrityValid &&
           fieldCandidate?.schema === 'evercraft.node001.field-evidence-candidate.v1' &&
           fieldCandidate?.ready_for_yard_enrollment === true &&
           fieldCandidate?.evidence?.node_id === nodeId &&
