@@ -1,0 +1,23 @@
+{
+  "name": "forensiscope",
+  "version": "0.1.0",
+  "description": "Direct access to ForensiScope for long, large, and complex video or audio analysis.",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://evercraft-forensiscope.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "forensiscope",
+    "video-analysis",
+    "audio-analysis",
+    "transcription",
+    "timeline",
+    "deduplication",
+    "mcp",
+    "agents"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
