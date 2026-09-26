@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import http from 'node:http';
 import { chromium } from 'playwright';
+import { createSecureOutboundProxy } from './secure-proxy.mjs';
 import {
   assertBrowserRequestUrl,
   assertPublicHttpUrl,
@@ -21,6 +22,7 @@ if (!WORKER_TOKEN) {
 
 let browserPromise = null;
 let activeJobs = 0;
+const outboundProxyPromise = createSecureOutboundProxy();
 
 function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -132,7 +134,9 @@ async function extractPage(page, maxTextChars) {
 async function browse(job) {
   const startedAt = new Date();
   const browser = await getBrowser();
+  const outboundProxy = await outboundProxyPromise;
   const context = await browser.newContext({
+    proxy:{server:outboundProxy.url},
     viewport:job.viewport,
     javaScriptEnabled:true,
     serviceWorkers:'block',
@@ -260,6 +264,8 @@ async function browse(job) {
         outbound_authorization_headers_stripped:true,
         allowed_network_methods:['GET','HEAD','OPTIONS'],
         private_and_reserved_targets_blocked:true,
+        dns_pinned_outbound_proxy:true,
+        allowed_destination_ports:[80,443],
         websocket_blocked:true,
         form_submit_action_supported:false,
         arbitrary_click_action_supported:false,
@@ -327,6 +333,7 @@ const server = http.createServer(async (req,res) => {
       'unsupported_url_scheme',
       'missing_hostname',
       'embedded_credentials_not_allowed',
+      'unsupported_port',
       'private_or_reserved_target',
       'dns_resolution_failed',
       'dns_resolution_empty',
@@ -349,6 +356,10 @@ async function shutdown(signal) {
       await browser.close();
     } catch {}
   }
+  try {
+    const outboundProxy = await outboundProxyPromise;
+    await outboundProxy.close();
+  } catch {}
   console.log(JSON.stringify({event:'browser_worker_stopped',signal}));
   process.exit(0);
 }
