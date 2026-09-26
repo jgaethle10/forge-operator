@@ -72,6 +72,33 @@
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000
+    },
+    {
+      "service_key": "public-edge-controller",
+      "mode": "resident",
+      "manifest": "systemia/organism/public-edge-controller.workflow.json",
+      "executable": "systemia/organism/public-edge-controller-runner.mjs",
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--yard-state": "SYSTEMIA_YARD_STATE_DIR",
+        "--controller-state": "SYSTEMIA_PUBLIC_EDGE_CONTROLLER_STATE_DIR",
+        "--capacity-endpoint": "EVERCRAFT_PUBLIC_EDGE_CAPACITY_ENDPOINT",
+        "--release-ref": "EVERCRAFT_PUBLIC_EDGE_RELEASE_REF",
+        "--base-domain": "EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN",
+        "--tls-key-path": "EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH",
+        "--tls-cert-path": "EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH",
+        "--allocator-token-file": "EVERCRAFT_PUBLIC_EDGE_ALLOCATOR_TOKEN_FILE"
+      },
+      "optional_env_args": {
+        "--requested-hostname": "EVERCRAFT_PUBLIC_EDGE_SPECIALIST_HOSTNAME",
+        "--gateway-url": "EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL",
+        "--public-port": "EVERCRAFT_PUBLIC_EDGE_PORT",
+        "--lease-ttl-ms": "EVERCRAFT_PUBLIC_EDGE_LEASE_TTL_MS",
+        "--renew-every-ms": "EVERCRAFT_PUBLIC_EDGE_RENEW_EVERY_MS",
+        "--interval-ms": "EVERCRAFT_PUBLIC_EDGE_CONTROLLER_INTERVAL_MS"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
     }
   ]
 }
