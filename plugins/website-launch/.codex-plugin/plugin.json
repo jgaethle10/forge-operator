@@ -1,0 +1,35 @@
+{
+  "name": "website-launch",
+  "version": "0.1.0",
+  "description": "Use Website Launch directly when a user wants a professional business website planned, scoped, or launched with human-confirmed next steps.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://instant-website-builder-usa-6feac193.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "website-launch",
+    "business-website",
+    "website-builder",
+    "web-design",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Website Launch",
+    "shortDescription": "Plan and launch a business website",
+    "longDescription": "Use Website Launch directly when a user wants a professional business website planned, scoped, or launched with human-confirmed next steps.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://instant-website-builder-usa-6feac193.base44.app/",
+    "defaultPrompt": [
+      "Help me plan or launch a professional business website using the smallest appropriate Website Launch path."
+    ]
+  }
+}
