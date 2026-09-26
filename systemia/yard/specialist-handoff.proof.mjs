@@ -37,6 +37,7 @@ try{
     '/mcp/ibmi-rescue',
     '/mcp/foundry-app-escape',
     '/mcp/site-survive',
+    '/mcp/systemia-remote-ops',
   ]);
 
   const health=await fetch(deployment.result.local_url+'/health').then(r=>r.json());
@@ -78,6 +79,33 @@ try{
   );
   assert.ok(tools.result.tools.every(x=>x.annotations.readOnlyHint===true));
   assert.ok(tools.result.tools.every(x=>x.annotations.destructiveHint===false));
+
+  const remoteOpsInit=await fetch(deployment.result.local_url+'/mcp/systemia-remote-ops',{
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({
+      jsonrpc:'2.0',id:3,method:'initialize',
+      params:{protocolVersion:'2025-03-26',capabilities:{},clientInfo:{name:'proof',version:'1'}}
+    })
+  }).then(r=>r.json());
+  assert.equal(remoteOpsInit.result.serverInfo.name,'systemia-remote-ops');
+
+  const remoteOpsTools=await fetch(deployment.result.local_url+'/mcp/systemia-remote-ops',{
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({jsonrpc:'2.0',id:4,method:'tools/list',params:{}})
+  }).then(r=>r.json());
+  assert.deepEqual(
+    remoteOpsTools.result.tools.map(x=>x.name),
+    [
+      'route_business_decision',
+      'simulate_pricing_change',
+      'simulate_business_scenario',
+      'get_decision_lab_capabilities',
+    ]
+  );
+  assert.ok(remoteOpsTools.result.tools.every(x=>x.annotations.readOnlyHint===true));
+  assert.ok(remoteOpsTools.result.tools.every(x=>x.annotations.destructiveHint===false));
 
   const stopped=await yard.stopDeployment('specialist-handoff-proof',{reason:'proof_complete'});
   assert.equal(stopped.ok,true);
