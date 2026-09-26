@@ -46,12 +46,17 @@ export function scoreOffer(offer, query) {
     if (coverage >= 0.8 && matched.length >= 2) intentScore += 10;
 
     if (intentScore > 0) {
-      score += intentScore;
       support += 1;
       for (const concept of cmp.matched_concepts) matchedConcepts.add(concept);
       matchedIntents.push({ intent: rawIntent, score: intentScore });
     }
   }
+
+  // Cap intent contribution to the strongest three phrases. This prevents a
+  // verbose offer with dozens of near-duplicate intent terms from outranking
+  // a tighter, more accurate offer merely because it has more metadata.
+  matchedIntents.sort((a,b) => b.score - a.score);
+  score += matchedIntents.slice(0,3).reduce((sum, item) => sum + item.score, 0);
 
   if (score > 0 && offer.commercial_state === 'sell_now') score += 3;
   if (score > 0 && /payment_ready|human_handoff_ready|callable|live|routable/.test(String(offer.machine_state || ''))) {
@@ -61,7 +66,6 @@ export function scoreOffer(offer, query) {
   return {
     score: Number(score.toFixed(3)),
     matched_intents: matchedIntents
-      .sort((a,b) => b.score - a.score)
       .slice(0,3)
       .map((item) => item.intent),
     matched_concepts: [...matchedConcepts],
