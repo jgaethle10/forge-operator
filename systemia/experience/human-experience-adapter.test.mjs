@@ -51,3 +51,41 @@ test('reconciliation returns an explicit reconciled status for the Saban quality
     fs.rmSync(rootDir, {recursive: true, force: true});
   }
 });
+
+
+test('uses a fresh Customer Gauntlet receipt as owned browser evidence', async () => {
+  const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-human-experience-fresh-'));
+  try {
+    const dir = path.join(rootDir, 'artifacts/customer-gauntlet');
+    fs.mkdirSync(dir, {recursive: true});
+    fs.writeFileSync(path.join(dir, 'latest.json'), JSON.stringify({
+      generated_at: new Date().toISOString(),
+      summary: {visual_browser_blocked: 2, sell_now_offers: 13, interactive_bridge_configured: true}
+    }));
+    const out = await reconcile({results: [], rootDir});
+    assert.equal(out.browser.available, true);
+    assert.equal(out.browser.stale, false);
+    assert.equal(out.browser.visual_browser_blocked, 2);
+    assert.ok(out.findings.some(f => f.code === 'owned_browser_visual_checks_blocked'));
+  } finally {
+    fs.rmSync(rootDir, {recursive: true, force: true});
+  }
+});
+
+test('refuses to treat a stale Customer Gauntlet receipt as current visual proof', async () => {
+  const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-human-experience-stale-'));
+  try {
+    const dir = path.join(rootDir, 'artifacts/customer-gauntlet');
+    fs.mkdirSync(dir, {recursive: true});
+    fs.writeFileSync(path.join(dir, 'latest.json'), JSON.stringify({
+      generated_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+      summary: {visual_browser_blocked: 0, sell_now_offers: 13, interactive_bridge_configured: true}
+    }));
+    const out = await reconcile({results: [], rootDir});
+    assert.equal(out.browser.available, false);
+    assert.equal(out.browser.stale, true);
+    assert.ok(out.findings.some(f => f.code === 'owned_browser_visual_receipt_unavailable' && /stale/i.test(f.detail)));
+  } finally {
+    fs.rmSync(rootDir, {recursive: true, force: true});
+  }
+});
