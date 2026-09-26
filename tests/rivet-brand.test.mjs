@@ -52,6 +52,7 @@ for (const file of publicFiles) {
   const value = read(file);
   if (/\bLuma\b/i.test(value)) fail('retired Luma identity found in ' + file);
   if (/RIVET\s*\/\s*AliEV/i.test(value)) fail('joined identity found in public RIVET surface ' + file);
+  if (/\bAliEV\b/i.test(value)) fail('backend identity found in public RIVET surface ' + file);
   if (/aliev\.base44\.app/i.test(value)) fail('legacy runtime found in public RIVET surface ' + file);
 }
 
