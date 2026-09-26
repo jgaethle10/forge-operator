@@ -116,6 +116,7 @@ export async function buildMoneyRadar({
   sourceToken = process.env.CHUM_ATTRIBUTION_EXPORT_TOKEN || '',
   publicSourceUrl = process.env.CHUM_ACQUISITION_EXPORT_URL || DEFAULT_PUBLIC_ACQUISITION_EXPORT_URL,
   sourceEvents = null,
+  publicSourceEvents = null,
 } = {}) {
   const artifactDir = path.join(root, 'artifacts', 'chum');
   const localFile = path.join(artifactDir, 'attribution-events.ndjson');
@@ -152,12 +153,15 @@ export async function buildMoneyRadar({
     paymentFetched = true;
   }
 
-  let acquisitionConfigured = Boolean(clean(publicSourceUrl));
+  let acquisitionConfigured = Array.isArray(publicSourceEvents) || Boolean(clean(publicSourceUrl));
   let acquisitionFetched = false;
   let acquisitionEvents = [];
   let acquisitionError = null;
 
-  if (acquisitionConfigured) {
+  if (Array.isArray(publicSourceEvents)) {
+    acquisitionEvents = publicSourceEvents;
+    acquisitionFetched = true;
+  } else if (acquisitionConfigured) {
     try {
       acquisitionEvents = await fetchRemote(clean(publicSourceUrl));
       acquisitionFetched = true;
