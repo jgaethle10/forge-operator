@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-26T19:03:42.679Z</updated>
+<updated>2026-09-26T19:03:47.635Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T19:03:47.635Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-26T19:03:42.679Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-26T19:03:42.679Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T19:03:42.679Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-26T19:03:42.679Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:f139d01ecc39a4a98dfce22a</id><title>/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json</title><updated>2026-09-26T18:05:44.640Z</updated><link href="/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/answer.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:fceb321c952f48c1bac6203a</id><title>/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/answer.json</title><updated>2026-09-26T18:05:44.640Z</updated><link href="/chum/answers/observed/i-have-a-very-large-video-file-that-my-ai-assistant-cannot-fully-upload-or-analyze-i-2221805ec4/answer.json"/><category term="priority-80"/></entry>
