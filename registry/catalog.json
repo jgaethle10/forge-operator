@@ -183,12 +183,27 @@
         "Playwright API",
         "Puppeteer API",
         "CDP browser",
-        "TinyFish alternative"
+        "TinyFish alternative",
+        "URL-to-text API for LLMs",
+        "structured web content extraction for AI agents",
+        "evidence-backed web retrieval for an AI workflow",
+        "multi-URL public web fetch for an AI agent",
+        "retrieve several web pages with provenance hashes",
+        "AI research retrieval API",
+        "public webpage extraction with headings links and canonical metadata",
+        "web content API for RAG ingestion",
+        "browserless public web retrieval for agents",
+        "read multiple public pages without sharing cookies or credentials"
       ],
       "registry_publication_state": "published_receipt_backed_runtime_canary_passed",
       "registry_receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
       "runtime_state": "public_fetch_live_verified_search_and_browser_held",
-      "route_note": "Canonical public Evercraft Web route is the neutral Evercraft AI Suite gateway/MCP. Public fetch is live-verified; search and browser automation remain separately held."
+      "route_note": "Canonical public Evercraft Web route is the neutral Evercraft AI Suite gateway/MCP. Public fetch is live-verified; search and browser automation remain separately held.",
+      "next_candidate": {
+        "version": "0.3.0",
+        "state": "build_verified_external_canary_pending",
+        "new_tool": "fetch_urls"
+      }
     },
     {
       "product_key": "evernest",
