@@ -145,6 +145,7 @@ export async function activatePublicSpecialistEdge({
     device_fingerprint:provisioned.device_fingerprint||null,
     edge_attestation_receipt:provisioned.edge_attestation_receipt||null,
     specialist_attestation_receipt:provisioned.specialist_attestation_receipt||null,
+    specialist_identity_binding_receipt:provisioned.specialist_identity_binding_receipt||null,
     founder_login_required:false,
     selected_endpoint_exposed:false,
     allocator_token_exposed:false,
