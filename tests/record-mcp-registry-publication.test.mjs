@@ -35,6 +35,7 @@ function makeRoot({canary=true,remoteMismatch=false}={}){
         deployment_receipt_ref:'sha256:'+'a'.repeat(64),
         device_fingerprint:'sha256:'+'b'.repeat(64),
         field_enrollment_verified:true,
+        mcp_tool_calls_verified:true,
         field_enrollment_receipt_ref:'sha256:'+'c'.repeat(64),
         public_edge_admission_receipt_ref:'sha256:'+'d'.repeat(64),
       } : null,
@@ -147,6 +148,28 @@ test('publication recorder refuses a canary without field enrollment proof',()=>
     }
     fs.writeFileSync(specsPath,JSON.stringify(specs,null,2)+'\n');
 
+    assert.throws(
+      ()=>execFileSync(process.execPath,[
+        script,
+        '--manifests-file','published.txt',
+        '--workflow-run-id','123456',
+        '--release-sha','b'.repeat(40),
+      ],{cwd:root,stdio:'pipe'}),
+      /Command failed/
+    );
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+
+test('publication recorder refuses a canary without executed tool-call proof',()=>{
+  const root=makeRoot();
+  try{
+    const specsPath=path.join(root,'distribution/direct-plugin-specs.json');
+    const specs=JSON.parse(fs.readFileSync(specsPath,'utf8'));
+    for(const product of specs.products){
+      product.public_edge_canary.mcp_tool_calls_verified=false;
+    }
+    fs.writeFileSync(specsPath,JSON.stringify(specs,null,2)+'\n');
     assert.throws(
       ()=>execFileSync(process.execPath,[
         script,
