@@ -57,6 +57,7 @@ for(const [slug,meta] of TARGETS){
   const fieldBackedCanary=
     product.public_edge_canary?.verified===true &&
     product.public_edge_canary?.field_enrollment_verified===true &&
+    product.public_edge_canary?.mcp_tool_calls_verified===true &&
     /^sha256:[a-f0-9]{64}$/i.test(String(product.public_edge_canary?.device_fingerprint||'')) &&
     /^sha256:[a-f0-9]{64}$/i.test(String(product.public_edge_canary?.field_enrollment_receipt_ref||'')) &&
     /^sha256:[a-f0-9]{64}$/i.test(String(product.public_edge_canary?.public_edge_admission_receipt_ref||''));
