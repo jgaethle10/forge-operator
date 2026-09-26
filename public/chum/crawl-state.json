@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T15:24:28.099Z",
+  "updated_at": "2026-09-26T15:27:34.822Z",
   "url_count": 2150,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "ab8645def8072e40eef4c922b7bc93b9c1435d344746fe09376a5f4b69efa0f8",
-      "last_changed": "2026-09-26T15:24:28.099Z",
+      "content_sha256": "8b027b4c035d68267c43ffb365a5fa6c64b7d585ca53e890255b4da21d0042ba",
+      "last_changed": "2026-09-26T15:27:34.822Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -3501,8 +3501,8 @@
     },
     "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json": {
       "path": "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json",
-      "content_sha256": "6b1d2e1d0a9533d464034752312604f88db1fd7c02db1baf0bfba6c18d250747",
-      "last_changed": "2026-09-26T15:12:40.638Z",
+      "content_sha256": "4e1afc7dcf964fc477c77804286952c37c242f165efe705856f2ff25a945995a",
+      "last_changed": "2026-09-26T15:27:34.822Z",
       "priority": 80
     },
     "/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/llms.txt": {
