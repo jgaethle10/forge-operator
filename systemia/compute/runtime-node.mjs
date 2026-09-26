@@ -70,6 +70,22 @@ function atomicJson(file, value) {
   fs.renameSync(tmp, file);
 }
 
+function hashFileSha256(file) {
+  const hash = createHash('sha256');
+  const fd = fs.openSync(file, 'r');
+  const buffer = Buffer.allocUnsafe(1024 * 1024);
+  try {
+    while (true) {
+      const bytes = fs.readSync(fd, buffer, 0, buffer.length, null);
+      if (!bytes) break;
+      hash.update(buffer.subarray(0, bytes));
+    }
+  } finally {
+    fs.closeSync(fd);
+  }
+  return `sha256:${hash.digest('hex')}`;
+}
+
 function safeMissionSourceKey(value) {
   const key = String(value || '').trim();
   if (!/^[a-zA-Z0-9._-]{1,96}$/.test(key)) {
@@ -233,7 +249,12 @@ export async function startEvercraftComputeNode({
   const services = new Map();
   const stagedBlobs = new Map();
   const sabanInflight = new Map();
+  const leaseArtifactAccess = new Map();
   const sabanIdempotencyDir = path.join(allowedRoot, '.evercraft', 'saban-idempotency');
+  const sabanArtifactStore = path.join(allowedRoot, '.evercraft', 'saban-artifacts');
+  const maxReturnedArtifactBytes = Number(
+    process.env.EVERCRAFT_MAX_RETURNED_ARTIFACT_BYTES || 536870912
+  );
 
   const sabanIdempotencyPath = (cacheKey) =>
     path.join(sabanIdempotencyDir, `${cacheKey}.json`);
@@ -265,9 +286,154 @@ export async function startEvercraftComputeNode({
   const stagedLeaseDir = (leaseId) =>
     path.join(allowedRoot, '.evercraft', 'staged', String(leaseId));
 
+  const artifactWorkDir = (leaseId) =>
+    path.join(allowedRoot, '.evercraft', 'saban-work', String(leaseId));
+
+  const artifactStorePath = (sha256, extension = '.bin') => {
+    const digest = String(sha256 || '').replace(/^sha256:/, '').toLowerCase();
+    if (!/^[a-f0-9]{64}$/.test(digest)) throw new Error('saban_artifact_digest_invalid');
+    const safeExtension = /^\.[a-z0-9]{1,8}$/.test(String(extension || '').toLowerCase())
+      ? String(extension).toLowerCase()
+      : '.bin';
+    return path.join(sabanArtifactStore, `${digest}${safeExtension}`);
+  };
+
   const cleanupStagedLease = (leaseId) => {
     stagedBlobs.delete(leaseId);
+    leaseArtifactAccess.delete(leaseId);
     fs.rmSync(stagedLeaseDir(leaseId), { recursive: true, force: true });
+    fs.rmSync(artifactWorkDir(leaseId), { recursive: true, force: true });
+  };
+
+  const rewriteArtifactPaths = (value, pathMap, byId) => {
+    if (Array.isArray(value)) {
+      return value.map((entry) => rewriteArtifactPaths(entry, pathMap, byId));
+    }
+    if (!value || typeof value !== 'object') return value;
+
+    const next = {};
+    for (const [key, entry] of Object.entries(value)) {
+      if (
+        key === 'path' &&
+        typeof entry === 'string' &&
+        pathMap.has(path.resolve(entry))
+      ) {
+        continue;
+      }
+      next[key] = rewriteArtifactPaths(entry, pathMap, byId);
+    }
+
+    const artifact = next.artifact_id ? byId.get(String(next.artifact_id)) : null;
+    if (artifact) {
+      next.artifact_sha256 = artifact.sha256;
+      next.portable = true;
+    }
+    return next;
+  };
+
+  const registerWorkerArtifacts = (leaseId, workerResult) => {
+    const clone = structuredClone(workerResult);
+    const descriptors = Array.isArray(clone?.result?.artifacts)
+      ? clone.result.artifacts
+      : [];
+    if (!descriptors.length) {
+      return { worker_result: clone, artifacts: [] };
+    }
+
+    const workRoot = path.resolve(artifactWorkDir(leaseId));
+    fs.mkdirSync(workRoot, { recursive: true, mode: 0o700 });
+    fs.mkdirSync(sabanArtifactStore, { recursive: true, mode: 0o700 });
+
+    const manifest = [];
+    const pathMap = new Map();
+    const byId = new Map();
+    for (const descriptor of descriptors) {
+      const sourcePath = path.resolve(String(descriptor?.path || ''));
+      if (!sourcePath || !isWithin(workRoot, sourcePath)) {
+        throw new Error('saban_artifact_path_outside_lease_work_root');
+      }
+      if (!fs.existsSync(sourcePath) || !fs.statSync(sourcePath).isFile()) {
+        throw new Error('saban_artifact_missing');
+      }
+      const stat = fs.statSync(sourcePath);
+      if (stat.size > maxReturnedArtifactBytes) {
+        throw new Error('saban_artifact_too_large');
+      }
+
+      const observedHash = hashFileSha256(sourcePath);
+      if (descriptor.sha256 && descriptor.sha256 !== observedHash) {
+        throw new Error('saban_artifact_hash_mismatch');
+      }
+      if (
+        descriptor.size_bytes != null &&
+        Number(descriptor.size_bytes) !== Number(stat.size)
+      ) {
+        throw new Error('saban_artifact_size_mismatch');
+      }
+
+      const extension = /^\.[a-z0-9]{1,8}$/.test(
+        String(descriptor.extension || path.extname(sourcePath) || '.bin').toLowerCase()
+      )
+        ? String(descriptor.extension || path.extname(sourcePath) || '.bin').toLowerCase()
+        : '.bin';
+      const target = artifactStorePath(observedHash, extension);
+      if (!fs.existsSync(target)) {
+        fs.copyFileSync(sourcePath, target);
+        fs.chmodSync(target, 0o600);
+      }
+      if (hashFileSha256(target) !== observedHash) {
+        throw new Error('saban_artifact_store_integrity_failed');
+      }
+
+      const portable = {
+        schema: 'evercraft.saban.portable-artifact.v1',
+        artifact_id: String(descriptor.artifact_id || observedHash),
+        kind: descriptor.kind || null,
+        sha256: observedHash,
+        size_bytes: stat.size,
+        extension,
+        media_type: descriptor.media_type || 'application/octet-stream',
+        portable: true
+      };
+      manifest.push(portable);
+      pathMap.set(sourcePath, portable);
+      byId.set(portable.artifact_id, portable);
+    }
+
+    if (!leaseArtifactAccess.has(leaseId)) leaseArtifactAccess.set(leaseId, new Map());
+    for (const artifact of manifest) {
+      leaseArtifactAccess.get(leaseId).set(
+        artifact.sha256.replace(/^sha256:/, ''),
+        artifact
+      );
+    }
+
+    clone.result = rewriteArtifactPaths(clone.result, pathMap, byId);
+    clone.result.artifacts = manifest;
+    return { worker_result: clone, artifacts: manifest };
+  };
+
+  const grantWorkerArtifactAccess = (leaseId, workerResult) => {
+    const manifest = Array.isArray(workerResult?.result?.artifacts)
+      ? workerResult.result.artifacts
+      : [];
+    if (!manifest.length) return [];
+    if (!leaseArtifactAccess.has(leaseId)) leaseArtifactAccess.set(leaseId, new Map());
+
+    for (const artifact of manifest) {
+      const stored = artifactStorePath(artifact.sha256, artifact.extension);
+      if (!fs.existsSync(stored) || !fs.statSync(stored).isFile()) {
+        throw new Error('saban_artifact_missing_for_replay');
+      }
+      if (hashFileSha256(stored) !== artifact.sha256) {
+        throw new Error('saban_artifact_replay_integrity_failed');
+      }
+      leaseArtifactAccess.get(leaseId).set(
+        artifact.sha256.replace(/^sha256:/, ''),
+        artifact
+      );
+    }
+    return manifest;
   };
 
   const stagedBlobFor = (leaseId, digest) =>
@@ -582,23 +748,31 @@ export async function startEvercraftComputeNode({
             });
           }
 
-          const makeReusedResponse = (record, reuseKind) => ({
-            ok: true,
-            node_id: nodeId,
-            workload_class: body.workload_class,
-            result: record.worker_result,
-            checkpoint: record.checkpoint,
-            deduplicated: true,
-            idempotency_key: idempotencyKey,
-            receipt: chain.issue('saban.assignment.reused', {
-              lease_id: body.lease_id,
+          const makeReusedResponse = (record, reuseKind) => {
+            const artifacts = grantWorkerArtifactAccess(
+              body.lease_id,
+              record.worker_result
+            );
+            return {
+              ok: true,
+              node_id: nodeId,
               workload_class: body.workload_class,
-              software_id: record.worker_result?.software_id || software,
-              agent_id: record.worker_result?.agent_id || assignment.agent_id,
+              result: record.worker_result,
+              checkpoint: record.checkpoint,
+              artifacts,
+              deduplicated: true,
               idempotency_key: idempotencyKey,
-              reuse_kind: reuseKind
-            })
-          });
+              receipt: chain.issue('saban.assignment.reused', {
+                lease_id: body.lease_id,
+                workload_class: body.workload_class,
+                software_id: record.worker_result?.software_id || software,
+                agent_id: record.worker_result?.agent_id || assignment.agent_id,
+                idempotency_key: idempotencyKey,
+                reuse_kind: reuseKind,
+                portable_artifacts: artifacts.length
+              })
+            };
+          };
 
           if (existing) {
             return send(res, 200, makeReusedResponse(existing, 'durable_cache'));
@@ -610,27 +784,33 @@ export async function startEvercraftComputeNode({
               assignment: { ...assignment, idempotency_key: idempotencyKey },
               rootDir: CODE_ROOT,
               executionContext: {
-                media_roots: [stagedLeaseDir(body.lease_id)]
+                media_roots: [stagedLeaseDir(body.lease_id)],
+                artifact_root: artifactWorkDir(body.lease_id)
               }
             });
+            const registeredArtifacts = registerWorkerArtifacts(
+              body.lease_id,
+              workerResult
+            );
+            const portableWorkerResult = registeredArtifacts.worker_result;
             const checkpoint = {
               step: Number(body.checkpoint?.step || 0) + 1,
               state: {
-                software_id: workerResult.software_id,
-                agent_id: workerResult.agent_id,
-                idempotency_key: workerResult.idempotency_key || idempotencyKey,
-                work: workerResult.work,
-                result: workerResult.result,
+                software_id: portableWorkerResult.software_id,
+                agent_id: portableWorkerResult.agent_id,
+                idempotency_key: portableWorkerResult.idempotency_key || idempotencyKey,
+                work: portableWorkerResult.work,
+                result: portableWorkerResult.result,
               },
               last_node: nodeId,
             };
             const record = {
               schema: 'evercraft.saban.idempotency-record.v1',
               created_at: new Date().toISOString(),
-              software_id: workerResult.software_id,
+              software_id: portableWorkerResult.software_id,
               idempotency_key: idempotencyKey,
               assignment_fingerprint: assignmentFingerprint,
-              worker_result: workerResult,
+              worker_result: portableWorkerResult,
               checkpoint
             };
             writeSabanIdempotency(cacheKey, record);
@@ -665,12 +845,17 @@ export async function startEvercraftComputeNode({
             return send(res, 200, makeReusedResponse(record, 'inflight'));
           }
 
+          const artifacts = grantWorkerArtifactAccess(
+            body.lease_id,
+            record.worker_result
+          );
           return send(res, 200, {
             ok: true,
             node_id: nodeId,
             workload_class: body.workload_class,
             result: record.worker_result,
             checkpoint: record.checkpoint,
+            artifacts,
             deduplicated: false,
             idempotency_key: idempotencyKey,
             receipt: chain.issue('saban.assignment.executed', {
@@ -679,6 +864,7 @@ export async function startEvercraftComputeNode({
               software_id: record.worker_result.software_id,
               agent_id: record.worker_result.agent_id,
               idempotency_key: idempotencyKey,
+              portable_artifacts: artifacts.length,
             })
           });
         }
@@ -1326,6 +1512,44 @@ export async function startEvercraftComputeNode({
         }
         const receipt = await stopService(serviceStop[1], 'operator_requested');
         return send(res, 200, { ok: true, receipt });
+      }
+
+      const artifactDownload = req.url?.match(
+        /^\/v1\/leases\/([^/]+)\/artifacts\/([a-f0-9]{64})$/i
+      );
+      if (req.method === 'GET' && artifactDownload) {
+        const leaseId = artifactDownload[1];
+        const digest = artifactDownload[2].toLowerCase();
+        const lease = leases.get(leaseId);
+        const authorization = String(req.headers.authorization || '');
+        const presented = authorization.startsWith('Bearer ')
+          ? authorization.slice(7)
+          : '';
+
+        if (!lease || !presented || lease.token_hash !== sha(presented)) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (lease.expires_at < Date.now()) {
+          return send(res, 410, { error: 'expired_lease' });
+        }
+
+        const artifact = leaseArtifactAccess.get(leaseId)?.get(digest);
+        if (!artifact) return send(res, 404, { error: 'artifact_not_granted' });
+
+        const stored = artifactStorePath(artifact.sha256, artifact.extension);
+        if (!fs.existsSync(stored) || hashFileSha256(stored) !== artifact.sha256) {
+          return send(res, 409, { error: 'artifact_integrity_failed' });
+        }
+
+        const stat = fs.statSync(stored);
+        res.writeHead(200, {
+          'content-type': artifact.media_type || 'application/octet-stream',
+          'content-length': stat.size,
+          'x-evercraft-sha256': artifact.sha256,
+          'x-evercraft-artifact-id': artifact.artifact_id
+        });
+        fs.createReadStream(stored).pipe(res);
+        return;
       }
 
       const release = req.url?.match(/^\/v1\/leases\/([^/]+)\/release$/);
