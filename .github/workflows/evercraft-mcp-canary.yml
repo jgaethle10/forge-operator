@@ -2,20 +2,11 @@ name: Evercraft MCP External Canary
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/evercraft-mcp-canary.yml"
-      - "systemia/network/public-mcp-canary.mjs"
-      - "public/network/**"
-      - "public/.well-known/evercraft-network.json"
   push:
     branches:
       - main
     paths:
       - ".github/workflows/evercraft-mcp-canary.yml"
-      - "systemia/network/public-mcp-canary.mjs"
-      - "public/network/**"
-      - "public/.well-known/evercraft-network.json"
       - "registry/**/server.json"
 
 permissions:
@@ -29,23 +20,6 @@ jobs:
   canary:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Verify Evercraft Network live MCP contract
-        run: node systemia/network/public-mcp-canary.mjs
-
-      - name: Upload Evercraft Network MCP receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: evercraft-network-public-mcp-canary
-          path: artifacts/network/public-mcp-canary-latest.json
-          if-no-files-found: warn
-
       - name: Verify remote MCP handshakes
         shell: bash
         run: |
