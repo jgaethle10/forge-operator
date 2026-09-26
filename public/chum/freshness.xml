@@ -2,12 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-26T22:44:38.317Z</updated>
+<updated>2026-09-26T22:44:59.989Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:b05ebff964ecfb528cac1198</id><title>/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json</title><updated>2026-09-26T22:44:59.989Z</updated><link href="/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T22:44:59.989Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-26T22:44:38.317Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-26T22:44:38.317Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T22:44:38.317Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-26T22:44:38.317Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-26T22:44:37.613Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-09-26T22:43:25.031Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
@@ -45,7 +46,6 @@
 <entry><id>urn:evercraft:chum:c79ba768239ed82ae5d8f574</id><title>/chum/capabilities.json</title><updated>2026-09-26T22:43:25.031Z</updated><link href="/chum/capabilities.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:54c615f3a47d6649bffba47c</id><title>/chum/pain-index.json</title><updated>2026-09-26T22:43:25.031Z</updated><link href="/chum/pain-index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:dd55382bdac459cac744435b</id><title>/chum/pain-index.txt</title><updated>2026-09-26T22:43:25.031Z</updated><link href="/chum/pain-index.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:b05ebff964ecfb528cac1198</id><title>/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json</title><updated>2026-09-26T22:42:50.291Z</updated><link href="/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:ac560bf959fbcac547378c24</id><title>/chum/products/systemia-portfolio-sentinel/ai-conformance.json</title><updated>2026-09-26T22:41:57.196Z</updated><link href="/chum/products/systemia-portfolio-sentinel/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:e898ff2392cb96f03dde6351</id><title>/chum/products/systemia-portfolio-sentinel/ai-discovery.json</title><updated>2026-09-26T22:41:57.196Z</updated><link href="/chum/products/systemia-portfolio-sentinel/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:901775e23cd6e7d85bd20643</id><title>/.well-known/evercraft-agent-directory.json</title><updated>2026-09-26T22:41:57.196Z</updated><link href="/.well-known/evercraft-agent-directory.json"/><category term="priority-84"/></entry>
