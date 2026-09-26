@@ -114,6 +114,34 @@ export function rankOffers(catalog, query, options = {}) {
     }));
 }
 
+function hostOf(value) {
+  try { return new URL(String(value || '')).hostname.toLowerCase(); }
+  catch { return ''; }
+}
+
+function familyIdentity(row, products = []) {
+  if (row.product_key) return `product:${row.product_key}`;
+
+  const rowName = normalizeText(row.name);
+  const rowHost = hostOf(row.public_url || row.canonical_url);
+  const candidates = products.filter((product) => {
+    const productName = normalizeText(product.name);
+    const nameMatch = productName.length >= 4 && (
+      rowName === productName ||
+      rowName.startsWith(productName + ' ') ||
+      rowName.endsWith(' ' + productName)
+    );
+    const productHost = hostOf(product.canonical_url);
+    const hostMatch = Boolean(rowHost && productHost && rowHost === productHost);
+    return nameMatch || hostMatch;
+  });
+
+  if (candidates.length === 1 && candidates[0].product_key) {
+    return `product:${candidates[0].product_key}`;
+  }
+  return `offer:${row.public_id}`;
+}
+
 function productAsDiscoveryOffer(product) {
   return {
     public_id: `product:${product.product_key}`,
@@ -164,10 +192,9 @@ export function rankDiscoveryCandidates(machineCatalog, productDirectory, query,
   // over that same product's generic directory record. Between offers from the same
   // source class, keep the strongest semantic match.
   const byIdentity = new Map();
+  const directoryProducts = Array.isArray(productDirectory?.products) ? productDirectory.products : [];
   for (const row of [...commercial, ...directory]) {
-    const identity = row.product_key
-      ? `product:${row.product_key}`
-      : `offer:${row.public_id}`;
+    const identity = familyIdentity(row, directoryProducts);
     const prior = byIdentity.get(identity);
     if (!prior) {
       byIdentity.set(identity, row);
