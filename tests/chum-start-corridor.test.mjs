@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  buyerFrontageUrl,
   configuredChumPublicOrigin,
   directHumanBuyerUrl,
   humanStartState,
@@ -26,14 +27,20 @@ assert.match(direct, /campaign=buyer-frontage/);
 assert.match(direct, /ec_surface=test_surface/);
 assert.match(direct, /ec_public_id=career-command-interview-practice-machine-v1/);
 
+const frontage = buyerFrontageUrl(offer, { surface: 'test_surface' });
+assert.match(frontage, /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/career-command-interview-practice-machine-v1\?/);
+assert.match(frontage, /src=chum/);
+assert.match(frontage, /campaign=buyer-frontage/);
+assert.match(frontage, /ec_surface=test_surface/);
+
 assert.equal(
   humanStartUrl(offer, { publicOrigin: '', surface: 'test_surface' }),
-  direct,
-  'when Forge origin is unavailable, use the clean verified product buyer destination before exposing machine plumbing'
+  frontage,
+  'when Forge origin is unavailable, keep the first human click on the branded central buyer frontage'
 );
 assert.equal(
   humanStartState(offer, { publicOrigin: '' }),
-  'direct_human_buyer_destination'
+  'central_buyer_frontage'
 );
 
 const rivet = {
@@ -42,21 +49,21 @@ const rivet = {
 };
 assert.match(
   humanStartUrl(rivet, { publicOrigin: '' }),
-  /^https:\/\/rivet\.base44\.app\//
+  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/rivet-site-underwriting-v1\?/
 );
 
 const handoffOnly = {
   public_id: 'foundry-app-escape-audit-v1',
   commercial_state: 'sell_now'
 };
-assert.equal(
+assert.match(
   humanStartUrl(handoffOnly, { publicOrigin: '' }),
-  machineReviewUrl(handoffOnly.public_id),
-  'handoff-only services without a verified clean buyer app retain the human-readable Machine Commerce review page'
+  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/foundry-app-escape-audit-v1\?/,
+  'handoff-only services use the same branded buyer review frontage rather than exposing Machine Commerce plumbing'
 );
 assert.equal(
   humanStartState(handoffOnly, { publicOrigin: '' }),
-  'machine_commerce_review_fallback'
+  'central_buyer_frontage'
 );
 
 const live = humanStartUrl(offer, {
@@ -79,8 +86,8 @@ assert.equal(
 
 console.log(JSON.stringify({
   ok: true,
-  direct_human_buyer_destination: true,
-  rivet_clean_buyer_frontage: true,
+  central_buyer_frontage_for_all_sell_now: true,
+  direct_human_buyer_destination_still_available_downstream: Boolean(direct),
   machine_review_is_last_fallback: true,
   tracked_corridor_requires_configured_https_origin: true
 }));
