@@ -708,6 +708,37 @@
       "developer_surfaces": null
     },
     {
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "aliases": [
+        "Evercraft Legacy Rescue Lab",
+        "Legacy Rescue",
+        "Software Rescue",
+        "Website Rescue",
+        "App Rescue"
+      ],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json",
+      "page_url": "/chum/products/legacy-rescue-lab/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "offer_contract_published_human_handoff_ready_direct_checkout_unverified",
+        "offers": [
+          {
+            "name": "Legacy Rescue Scan",
+            "price": "$299 one-time",
+            "offer_key": "legacy_rescue_scan_299"
+          }
+        ],
+        "credit_policy": "100% of the $299 Legacy Rescue Scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
+        "payment_state": "Product offer is published for discovery and human handoff. Product-specific direct checkout and paid state remain receipt-gated until independently verified."
+      },
+      "developer_surfaces": null
+    },
+    {
       "product_key": "little-red-book-export-qa",
       "name": "Little Red Studio Book Export QA",
       "aliases": [
