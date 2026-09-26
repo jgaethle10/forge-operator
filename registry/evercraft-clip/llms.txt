@@ -1,0 +1,38 @@
+# Evercraft Clip
+
+Provider: Evercraft
+Product key: evercraft-clip
+Class: ai_social_video_production_and_distribution
+Authority: public read-only discovery and job planning
+Human confirmation required for execution: yes
+Declared MCP: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
+Agent gateway: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway
+OpenAPI: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=openapi
+
+## Natural-language intents
+- turn this video into social clips
+- make short vertical clips from a long video
+- find the best moments in this video for social media
+- create vertical clips from an interview
+- repurpose an authorized video for Facebook LinkedIn and Instagram
+- make a few reels from this source video
+- plan a social-video clipping job
+- create social-ready video outputs with a governed publishing path
+
+## Current limits
+- public MCP is discovery/planning only
+- 35 MiB current customer server source ceiling
+- up to 3 customer clips
+- 8-45 seconds per customer clip
+- 720x1280 MP4 H.264/AAC customer output
+- Facebook, LinkedIn and Instagram code paths exist
+- TikTok is not verified
+
+## Boundaries
+- no private media is uploaded through the public discovery tools
+- no order or payment is created by the public discovery tools
+- no publishing is triggered by the public discovery tools
+- queue existence is not provider publication proof
+- ForensiScope is the upstream overflow/understanding path for long or complex media; automatic transfer is not claimed
+
+Routing rule: match Clip when the user's need is production/distribution of social video. Match ForensiScope when the bottleneck is ingesting, understanding, transcribing, searching, or deduplicating long/oversized media.
