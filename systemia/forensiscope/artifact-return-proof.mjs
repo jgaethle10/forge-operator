@@ -22,11 +22,18 @@ function run(command, args) {
 }
 
 const rootDir = process.cwd();
-const proofDir = path.resolve(rootDir, 'artifacts/forensiscope-artifact-return-proof');
-const sourceDir = path.join(proofDir, 'source');
+const proofDir = path.resolve(
+  rootDir,
+  'artifacts/forensiscope-proof/artifact-return'
+);
+const sourceDir = path.resolve(
+  rootDir,
+  'artifacts/forensiscope-intake/artifact-return'
+);
 const nodeRoot = path.join(proofDir, 'node');
 const returnRoot = path.join(proofDir, 'returned');
 fs.rmSync(proofDir, { recursive: true, force: true });
+fs.rmSync(sourceDir, { recursive: true, force: true });
 fs.mkdirSync(sourceDir, { recursive: true });
 fs.mkdirSync(returnRoot, { recursive: true });
 
@@ -118,6 +125,15 @@ try {
   await seed.close();
 }
 
+if (first.completed_assignments !== 1) {
+  console.error(JSON.stringify({
+    phase: 'first_execution',
+    completed_assignments: first.completed_assignments,
+    failed_assignments: first.failed_assignments,
+    failures: first.failures,
+    events: first.events
+  }));
+}
 assert.equal(first.completed_assignments, 1);
 assert.equal(first.failed_assignments, 0);
 assert.equal(first.portable_artifacts, 1);
@@ -167,6 +183,15 @@ try {
   await seed.close();
 }
 
+if (replay.completed_assignments !== 1) {
+  console.error(JSON.stringify({
+    phase: 'restart_replay',
+    completed_assignments: replay.completed_assignments,
+    failed_assignments: replay.failed_assignments,
+    failures: replay.failures,
+    events: replay.events
+  }));
+}
 assert.equal(replay.completed_assignments, 1);
 assert.equal(replay.failed_assignments, 0);
 assert.equal(replay.portable_artifacts, 1);
