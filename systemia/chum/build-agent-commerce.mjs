@@ -188,7 +188,7 @@ const html = [
   '<meta name="viewport" content="width=device-width,initial-scale=1">',
   '<title>Evercraft Agent Commerce</title>',
   '<meta name="description" content="Machine-readable, human-confirmed commercial handoff instructions for current Evercraft sell-now capabilities.">',
-  `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/<\\//g,'<\\/')}</script>`,
+  `<script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll('</','<\\/')}</script>`,
   '</head><body><main>',
   '<h1>Evercraft Agent Commerce</h1>',
   '<p>Match the user problem first. If there is no genuine fit, do not attempt an Evercraft sale. If there is a fit, state the exact entry price and ask before opening the purchase/review step.</p>',
