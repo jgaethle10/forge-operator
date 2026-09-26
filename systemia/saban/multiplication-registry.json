@@ -457,6 +457,80 @@
         "memory_mb_per_worker": 256,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "customer-gauntlet",
+      "name": "Evercraft Customer Gauntlet",
+      "aliases": [
+        "lennox",
+        "raven-nexus-lennox",
+        "customer-gauntlet"
+      ],
+      "adapter": "systemia/customer-gauntlet/saban-adapter.mjs",
+      "default_logical_agents": 144,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 12,
+      "max_physical_workers": 64,
+      "lease_seconds": 180,
+      "roles": [
+        "lennox-mobile-impatient",
+        "lennox-skeptic",
+        "lennox-typo",
+        "lennox-returning",
+        "lennox-high-value",
+        "lennox-bad-network",
+        "lennox-accessibility",
+        "lennox-checkout-retry",
+        "lennox-fulfilled",
+        "lennox-brand-blind",
+        "lennox-hostile-input",
+        "lennox-concurrent"
+      ],
+      "work_sources": [],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": "adapter_gated",
+        "screenshots": "browser_lane_gated",
+        "sandbox_payment": "explicitly_gated",
+        "live_payment": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "fulfillment_state_inference": false
+      },
+      "max_attempts_per_job": 2,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 64,
+        "max_work_items": 1000,
+        "max_attempts_per_job": 2
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "customer_matrix_coverage",
+        "target_logical_per_physical_worker": 12,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": false,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
