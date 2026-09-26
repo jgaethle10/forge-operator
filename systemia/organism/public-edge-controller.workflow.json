@@ -1,29 +1,33 @@
 {
   "schema": "evercraft.systemia.workflow-manifest.v1",
   "workflow_key": "public-edge-controller",
-  "mission_key": "public-specialist-edge",
+  "mission_key": "evercraft-public-specialist-edge",
   "runtime": "systemia-core-resident",
   "collider_compatible": false,
   "cadence_seconds": 60,
   "entrypoint": "systemia/organism/public-edge-controller-runner.mjs",
   "authority": {
-    "deploy_admitted_edge_workload": "autonomous_when_configured",
-    "deploy_admitted_specialist_workload": "autonomous_when_configured",
-    "bind_public_route": "autonomous_after_https_verification",
+    "resume_existing_admitted_edge": "autonomous",
     "renew_compute_leases": "autonomous",
-    "release_route_on_decommission": "autonomous",
+    "verify_route_and_receipts": "autonomous",
+    "rebind_existing_route": "autonomous_after_receipt_and_instance_match",
+    "provision_new_capacity": false,
+    "discover_capacity": false,
     "create_payment_obligation": false,
     "grant_customer_production_access": false,
     "founder_login_required": false
   },
   "truth_gates": [
-    "immutable_release_ref",
-    "authorized_capacity_endpoint",
-    "allocator_authority_file",
-    "wildcard_tls_admission",
+    "activation_watch_completed_initial_provision",
+    "existing_yard_deployment_state",
+    "existing_controller_binding",
     "deployment_receipt_binding",
     "instance_binding",
     "public_https_verification",
     "external_canary_before_discovery_promotion"
-  ]
+  ],
+  "role": "maintenance_only_after_activation",
+  "activation_owner": "public-edge-activation-watch",
+  "maintenance_owner": "public-edge-controller",
+  "hold_state": "held_waiting_for_activation_watch"
 }
