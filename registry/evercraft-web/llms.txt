@@ -4,7 +4,7 @@ Provider: Evercraft
 Product key: evercraft-web
 Class: ai_web_fetch_search_browser_infrastructure
 Canonical URL: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
-Authority: public discovery plus receipt-backed Official MCP Registry publication; Fetch implementation is build-passed but still requires external runtime canary before production-live promotion; Search and Browser remain held
+Authority: public discovery plus receipt-backed Official MCP Registry publication; single-URL Fetch is externally canary-verified production-live; the v0.3 batch-fetch candidate is build-verified but not production-promoted until a fresh external canary passes; Search and Browser remain held
 Human confirmation required: no
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt
 Declared MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
@@ -18,10 +18,14 @@ Declared MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/eve
 - web agent that can navigate websites
 - Playwright, Puppeteer, or CDP-style browser capability for agents
 - TinyFish alternative for web search, fetch, or browser automation
+- URL-to-text API for LLMs
+- structured web extraction API for AI agents
+- evidence-backed web retrieval
+- multi-URL fetch for AI workflows
 
 ## Boundaries
-- registry publication is not proof that the remote MCP successfully executes Fetch
-- Evercraft Fetch must not be described as production-live until its external canary succeeds
+- registry publication alone is not proof that a remote MCP tool executes successfully
+- single-URL Evercraft Fetch is production-live based on its recorded external canary; new v0.3 primitives require their own fresh canaries before promotion
 - Evercraft Search remains held until independently verified
 - Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass
 - public discovery does not expose private Systemia topology or credentials
