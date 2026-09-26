@@ -58,12 +58,34 @@ for (const file of publicFiles) {
 
 for (const file of [
   'public/chum/capabilities/rivet-site-underwriting-v1/index.html',
-  'public/chum/intents/rivet-site-underwriting-v1/index.html'
+  'public/chum/intents/rivet-site-underwriting-v1/index.html',
+  'public/chum/products/aliev/index.html'
 ]) {
   const value = read(file);
   if (!value.includes('/rivet/brand.css')) fail('generated RIVET surface not branded: ' + file);
   if (/\bLuma\b/i.test(value)) fail('retired Luma identity found in ' + file);
+  if (/\bAliEV\b/i.test(value)) fail('backend identity found in generated RIVET surface ' + file);
 }
+
+for (const file of [
+  'public/chum/products/aliev/llms.txt',
+  'public/chum/products/aliev/ai-discovery.json',
+  'public/chum/products/aliev/ai-conformance.json'
+]) {
+  const value = read(file);
+  if (/\bAliEV\b/i.test(value)) fail('backend identity found in generated RIVET machine surface ' + file);
+}
+
+const productDirectory = JSON.parse(read('public/.well-known/evercraft-products.json'));
+const publicRivetProduct = (productDirectory.products || []).find((row) => row.product_key === 'aliev');
+if (publicRivetProduct?.name !== 'RIVET') fail('public EV product identity is not RIVET');
+if ((publicRivetProduct?.aliases || []).some((x) => /AliEV/i.test(x))) fail('backend identity leaked into public RIVET product aliases');
+if (publicRivetProduct?.canonical_url !== 'https://rivet.base44.app/') fail('public RIVET canonical URL drifted');
+
+const registryCatalog = JSON.parse(read('registry/catalog.json'));
+const registryRivet = (registryCatalog.products || []).find((row) => row.product_key === 'aliev');
+if (registryRivet?.name !== 'RIVET') fail('registry EV product identity is not RIVET');
+if (registryRivet?.registry_name !== 'io.github.jgaethle10/evercraft-machine-commerce') fail('RIVET must route through universal Machine Commerce registry');
 
 const discovery = JSON.parse(read('public/rivet/discovery.json'));
 if (discovery.name !== 'RIVET') fail('machine discovery canonical name drift');
