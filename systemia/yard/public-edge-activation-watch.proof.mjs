@@ -56,6 +56,7 @@ const discovery={
 };
 
 let seed=null;
+let heldSeed=null;
 let watcher=null;
 let restarted=null;
 
@@ -86,10 +87,36 @@ try{
 
   const initial=await watcher.tick();
   assert.equal(initial.action,'hold');
-  assert.equal(initial.reason,'no_edge_ready_compute_node');
+  assert.equal(initial.reason,'no_compute_capacity_discovered');
   assert.equal(initial.discovered_count,0);
   assert.equal(initial.eligible_count,0);
   assert.equal(initial.founder_action_required,false);
+
+  heldSeed=await startNodeSeed({
+    root:path.join(root,'unadmitted-node'),
+    nodeId:'watch-unadmitted-node',
+    host:'127.0.0.1',
+    port:0,
+    advertiseHost:'127.0.0.1',
+    allocatorToken:token,
+    placementLabels:['general'],
+    announce:true,
+    announceAddress:'127.0.0.1',
+    announcePort,
+    announceIntervalMs:100,
+  });
+  await new Promise(resolve=>setTimeout(resolve,180));
+
+  const admissionHold=await watcher.tick();
+  assert.equal(admissionHold.action,'hold');
+  assert.equal(admissionHold.reason,'field_or_tls_admission_pending');
+  assert.equal(admissionHold.discovered_count,1);
+  assert.equal(admissionHold.eligible_count,0);
+  assert.equal(admissionHold.candidate_reason_counts.placement_label_missing,1);
+  assert.equal(admissionHold.founder_action_required,false);
+
+  await heldSeed.close();
+  heldSeed=null;
 
   seed=await startNodeSeed({
     root:path.join(root,'node'),
@@ -165,6 +192,7 @@ try{
     ok:true,
     schema:'evercraft.public-edge.activation-watch-proof.v1',
     zero_capacity_hold:true,
+    field_or_tls_admission_hold:true,
     founder_action_required_on_hold:false,
     edge_ready_node_detected:true,
     automatic_activation:true,
@@ -180,6 +208,7 @@ try{
     public_https_verified:false,
     proof_scope:'loopback_only',
     initial_hold_receipt:initial.receipt_hash,
+    admission_hold_receipt:admissionHold.receipt_hash,
     activation_receipt:activated.receipt_hash,
     resume_receipt:resumed.receipt_hash,
     stop_receipt:stopped.receipt_hash,
@@ -188,6 +217,7 @@ try{
   try{watcher?.stop();}catch{}
   try{restarted?.stop();}catch{}
   try{await seed?.close();}catch{}
+  try{await heldSeed?.close();}catch{}
   if(previous.domain===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN;
   else process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN=previous.domain;
   if(previous.key===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH;
