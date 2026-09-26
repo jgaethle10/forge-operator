@@ -33,6 +33,10 @@ const negationProbe = intentSignature('I do not need EV charging. My website get
 if (!negationProbe.negated_concept_set.has('ev') || !negationProbe.concept_set.has('website')) {
   throw new Error('CHUM intent fabric failed negation polarity proof');
 }
+const absenceProbe = intentSignature('My website gets visitors but no phone calls or inquiries.');
+if (!absenceProbe.concept_set.has('conversion') || absenceProbe.negated_concept_set.has('conversion')) {
+  throw new Error('CHUM confused pain-language absence with intent exclusion');
+}
 
 let failed = 0;
 for (const [query, expected] of cases) {
