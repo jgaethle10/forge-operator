@@ -1,0 +1,36 @@
+{
+  "name": "evercraft-web",
+  "version": "0.1.0",
+  "description": "Use Evercraft Web directly for public URL retrieval, structured extraction, and bounded site inspection with evidence receipts. Search and browser automation remain unavailable until their independent runtime gates pass.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft-web",
+    "web-fetch",
+    "site-inspection",
+    "web-agent",
+    "evidence-receipts",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Evercraft Web",
+    "shortDescription": "Fetch and inspect public web content for AI agents",
+    "longDescription": "Use Evercraft Web directly for public URL retrieval, structured extraction, and bounded site inspection with evidence receipts. Search and browser automation remain unavailable until their independent runtime gates pass.",
+    "developerName": "Evercraft LLC",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+    "defaultPrompt": [
+      "Fetch or inspect this public website and return structured, provenance-aware content."
+    ]
+  }
+}
