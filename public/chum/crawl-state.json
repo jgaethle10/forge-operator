@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T00:43:22.193Z",
+  "updated_at": "2026-09-26T00:44:36.244Z",
   "url_count": 1886,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "4d48b947024c426832bf316539de2d58c5f4107242982bf99cf3c3e7e5b94ecf",
-      "last_changed": "2026-09-26T00:43:22.193Z",
+      "content_sha256": "b662caea2c21b2dd50f21181530f74064d237bc4bedef5855ba2fc1372ab090e",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -2019,20 +2019,20 @@
     },
     "/chum/products/aliev/llms.txt": {
       "path": "/chum/products/aliev/llms.txt",
-      "content_sha256": "cb04e9e4562234ec63f750c5151abe93753d550222b8891b0f16ea17e084d9ff",
-      "last_changed": "2026-09-26T00:43:21.674Z",
+      "content_sha256": "35e6d39f26dfd8ca2cb3e0c880306381751e25940841114d9e2b739584dd1fdd",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/aliev/ai-discovery.json": {
       "path": "/chum/products/aliev/ai-discovery.json",
-      "content_sha256": "d98a56d83905f5b827b6948d387981d3d1d69244eeebfb8491fcb5c31d99346c",
-      "last_changed": "2026-09-26T00:43:21.674Z",
+      "content_sha256": "ae23acece35b410b26bfbb106bbebf4cd54aa8d5e66f9aeda771c732a08154dd",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/aliev/ai-conformance.json": {
       "path": "/chum/products/aliev/ai-conformance.json",
-      "content_sha256": "a810c11567f58d5d5108d9ee531e7fa7c13985adc37574f0a5c4c5b974bf2f9a",
-      "last_changed": "2026-09-26T00:43:21.674Z",
+      "content_sha256": "2244896504cc1b0fce60ce143dca7b454484c0852965db360d985b0864a8ea56",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/buildflow/": {
@@ -2049,14 +2049,14 @@
     },
     "/chum/products/buildflow/ai-discovery.json": {
       "path": "/chum/products/buildflow/ai-discovery.json",
-      "content_sha256": "fbd68aea683be588492433b9cc74cd7de6579faa5bee4912bfe7566bd286b37e",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "c9d50d7a3682e2c3225792c4c62f2fc549fbac2561e681b2fc7e1da1f0bd3ba5",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/buildflow/ai-conformance.json": {
       "path": "/chum/products/buildflow/ai-conformance.json",
-      "content_sha256": "3b1c0a74e6a395f606d6402db5071b1534e55e4a92f663ce63d28c435576a1fe",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "98bb7f6b61b2c0ce88ad480fa7c3de7aa3b38871c4fa0e4bd1540f02953e7f48",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/callproof-vault/": {
@@ -2073,14 +2073,14 @@
     },
     "/chum/products/callproof-vault/ai-discovery.json": {
       "path": "/chum/products/callproof-vault/ai-discovery.json",
-      "content_sha256": "7e27c907059ee3e900632fbedfa1f4115adf34a196f45e274c26a900126a5e95",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "5d9fd5e2f91d92619d6a93849071d7133135a520d5012f752cc8a7bea5fcad6e",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/callproof-vault/ai-conformance.json": {
       "path": "/chum/products/callproof-vault/ai-conformance.json",
-      "content_sha256": "57394d93b1fe845119965af1285f47e3651982db8f7ecda43f4c593445d63aeb",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "bd65e9ea4cd3c5e57f313cf39ccaebb6e0037e667b52501cfceee1fa3a4f5cfa",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/career-command/": {
@@ -2097,14 +2097,14 @@
     },
     "/chum/products/career-command/ai-discovery.json": {
       "path": "/chum/products/career-command/ai-discovery.json",
-      "content_sha256": "b2e914fed4a1b1ad08030fb76d48d371ad212d4eea3abe44edc51175924038e1",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "af50bcd1ac678932a3e79cabb1ba2227926708a94fb35a56dc51d019cd5e970c",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/career-command/ai-conformance.json": {
       "path": "/chum/products/career-command/ai-conformance.json",
-      "content_sha256": "5c0afa45516918b72abeeb12c39b2f8736f304502e0db472fbbe538ddc6012d1",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "c2a1d16d05ec99810efca83d99f73f459c96715c59c3dca43718666f474063d8",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/christmas-lights-usa/": {
@@ -2121,14 +2121,14 @@
     },
     "/chum/products/christmas-lights-usa/ai-discovery.json": {
       "path": "/chum/products/christmas-lights-usa/ai-discovery.json",
-      "content_sha256": "469668a6019161af1d8277f57f9a8b53a9affbb72c467b2bb7799712047bbd2c",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "737fbe3ade96bbefe3fb218aa82075a7fc3605d2b12220cce392755b229ee744",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/christmas-lights-usa/ai-conformance.json": {
       "path": "/chum/products/christmas-lights-usa/ai-conformance.json",
-      "content_sha256": "b1b0db41e757ee23c103b965b1c1f5bcfde48cfd8b3b1780009060eccbc9d796",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "433e363163492a7b97e7b59249189a2b355097eebf53d4072d6c1fa7455273b0",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/chronosport/": {
@@ -2145,14 +2145,14 @@
     },
     "/chum/products/chronosport/ai-discovery.json": {
       "path": "/chum/products/chronosport/ai-discovery.json",
-      "content_sha256": "d7f7b64562bd65da1a26bf428eb848b55fcde363b3b4efc1c035f023d680fe81",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "86efa939bcd60e3800c6f7f7ef3f4c9badb0ddf10f85bb2b7dfc893be0f9a91d",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/chronosport/ai-conformance.json": {
       "path": "/chum/products/chronosport/ai-conformance.json",
-      "content_sha256": "15070f6b63458e9960037acee692650f4fb5b384a3c969c7a68cb8d16d9d17a3",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "b759fd630c84a49f6544ef4a2e858b3a1993611557440b6160a2c40284109a52",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/coda-y-codigo/": {
@@ -2169,14 +2169,14 @@
     },
     "/chum/products/coda-y-codigo/ai-discovery.json": {
       "path": "/chum/products/coda-y-codigo/ai-discovery.json",
-      "content_sha256": "45f33060bbc85632aed0ffc79653cefcefedf7d52c79c44cc296734842a0e411",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "ded4c48e69bdab1e72f6c415705ae63b4e0dd5805b7f041a68e6ed474a70dad7",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/coda-y-codigo/ai-conformance.json": {
       "path": "/chum/products/coda-y-codigo/ai-conformance.json",
-      "content_sha256": "947619cd1098ef367cb81c5b6aeb305876a51efa03f9f396adc30c0fe0c77133",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "c067f8453aef4583654e397d1064c506146febdbae03585cf36f69b40b989774",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/contractor-cloud/": {
@@ -2193,14 +2193,14 @@
     },
     "/chum/products/contractor-cloud/ai-discovery.json": {
       "path": "/chum/products/contractor-cloud/ai-discovery.json",
-      "content_sha256": "d06e4c2f52b818df17e5525774b704edced4b805caabe5a4e136188bf10eff78",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "4c1666722e3994df794f52ad1629611b71f72da40a85c0eb878d5398c6f84d4f",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/contractor-cloud/ai-conformance.json": {
       "path": "/chum/products/contractor-cloud/ai-conformance.json",
-      "content_sha256": "71a32eca9e91e0b9ca49af8d974ae9f4fa1a1aa06a40eefcd52d8b87c513e243",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "d41f0dccf14fcc4a3ee8d7b3a694f5a9704a8fe4226cf949e2e77334352cb4c3",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/daytrade-lens/": {
@@ -2217,14 +2217,14 @@
     },
     "/chum/products/daytrade-lens/ai-discovery.json": {
       "path": "/chum/products/daytrade-lens/ai-discovery.json",
-      "content_sha256": "53abf3c8f7df1308c4e6c710574bc3c83ed77109be411eadd5a50a79cb75e6d8",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "229ed9b9d41df6c967d24e8d5e684bc11c06dc19d0081a70a7ef47fcb2957210",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/daytrade-lens/ai-conformance.json": {
       "path": "/chum/products/daytrade-lens/ai-conformance.json",
-      "content_sha256": "08a75046b988b02e9d0757272798360a62b8a0f5d085712f0cbd6cc0221ff19a",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "e52caa7916a7cbc71d34e276653fdbc2e9da478e6a206c34e15e67d9fe02e5cf",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/deck-capital-fit/": {
@@ -2241,14 +2241,14 @@
     },
     "/chum/products/deck-capital-fit/ai-discovery.json": {
       "path": "/chum/products/deck-capital-fit/ai-discovery.json",
-      "content_sha256": "a966fdd5040a56d45ec07a6b49f9aeaef217dda9cef907ec4c2bd9005798a20e",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "5988794a7c00d49b79c89fb37b862eff8a68e1d21b68ce2e5e8a2f443d366cd1",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/deck-capital-fit/ai-conformance.json": {
       "path": "/chum/products/deck-capital-fit/ai-conformance.json",
-      "content_sha256": "0f0efe4b9a7b00c717d0dce22f935e6c59154da6f2e4296c11e0ddaa5ccb162e",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "ca8bdc356a3abed0edfd49829cf58810c3c28b4408941ee285e0269be86b9e17",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/ecoledger/": {
@@ -2265,14 +2265,14 @@
     },
     "/chum/products/ecoledger/ai-discovery.json": {
       "path": "/chum/products/ecoledger/ai-discovery.json",
-      "content_sha256": "15efb8dea675056086d365ef53ab5bdf205300c1c5c3098533d4e2e13f95b377",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "df1b6d26559c829b2d790bd88a1425dd7660fad6217f99595bc3ef11dc2f9503",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/ecoledger/ai-conformance.json": {
       "path": "/chum/products/ecoledger/ai-conformance.json",
-      "content_sha256": "0572bda1c44c49a65e5a3dd6e45a9736286a767842d644e0df4174247cc528fb",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "a92ef5c9dd5aedc0d10d787d0be20b2360be2e3dc00c4d6783937f29df5c7e9f",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/eps-estimate-engine/": {
@@ -2289,14 +2289,14 @@
     },
     "/chum/products/eps-estimate-engine/ai-discovery.json": {
       "path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "content_sha256": "da9492fe80a0fe5ee64e72c1e2ac33c24f81d0555e59f85424bb724d7c31e0ac",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "cd58386e80a749a3c9949c6de8822151fe020285f8b2a1be9f28a2bf1101ce00",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/eps-estimate-engine/ai-conformance.json": {
       "path": "/chum/products/eps-estimate-engine/ai-conformance.json",
-      "content_sha256": "8ef2cce9c8dc54e31dd50e8090d5d23c5deeed9b35d2d26ab4209ee8b0b1dbf5",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "778da7fccd6c64ccf148b9668f23dbd31de2ea0753a279b854d225df74b8b9ce",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/eventwave/": {
@@ -2313,14 +2313,14 @@
     },
     "/chum/products/eventwave/ai-discovery.json": {
       "path": "/chum/products/eventwave/ai-discovery.json",
-      "content_sha256": "53271265557cc584fb33c19b8680654a95d988f189880cb1ab6139478f00cfaf",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "bbc85304f263fdc81f74ca5027f4e10337ea2224ece98314521c7d69a9b35656",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/eventwave/ai-conformance.json": {
       "path": "/chum/products/eventwave/ai-conformance.json",
-      "content_sha256": "89c41a45fc41326ce5dd08240132930611cfda492e1a437e25b971a642f2a726",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "f06814201f304fb70a17e30573ac151b0c262501e26ec12e703b14ec78055ba8",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-circles/": {
@@ -2337,14 +2337,14 @@
     },
     "/chum/products/evercraft-circles/ai-discovery.json": {
       "path": "/chum/products/evercraft-circles/ai-discovery.json",
-      "content_sha256": "a364554601caae819e23a840870d6a44d4e88d9781701e0178ec4750f0d6101d",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "a3d8bf33e9e14003519cd1bfa6c1d4fae4f70a9ea68c58a5b4c610398197fc37",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-circles/ai-conformance.json": {
       "path": "/chum/products/evercraft-circles/ai-conformance.json",
-      "content_sha256": "e7eab3da8ab4598e20384613b92dbe1d5dee169fc0581e11bc07fafadfa91197",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "4147f129e16d33a764978087a51a22afbdd0da9f89d2c7f3e6337187de900f8e",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-containment/": {
@@ -2361,14 +2361,14 @@
     },
     "/chum/products/evercraft-containment/ai-discovery.json": {
       "path": "/chum/products/evercraft-containment/ai-discovery.json",
-      "content_sha256": "48eb082399f348950d86ab05f9f165d14267b2202d9f50bd3721a850567f88d8",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "182ab5c66b17564a4a18cadf1a67be852fa516144ed96fbd62d47c039873aee0",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-containment/ai-conformance.json": {
       "path": "/chum/products/evercraft-containment/ai-conformance.json",
-      "content_sha256": "c93b55af2f319cbb8f244b56348a399a1a8554c75bb3e59acb1be3f98ffb975d",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "739305443903b77bd0ca4076383223eccadc4c1004ec4a33003025726e0f0a3d",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-cosmos-atlas/": {
@@ -2385,14 +2385,14 @@
     },
     "/chum/products/evercraft-cosmos-atlas/ai-discovery.json": {
       "path": "/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
-      "content_sha256": "aad0dd4eff48e1231e53fe5eab72e1be91293cd335f9833a5b1b6602e4bc8bf9",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "177ea8b3737243bb0cc76f3eaa3b69af7bcd830f953c9130301835c81cfef776",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-cosmos-atlas/ai-conformance.json": {
       "path": "/chum/products/evercraft-cosmos-atlas/ai-conformance.json",
-      "content_sha256": "7c3300fae1758321904db96dd223a2bc7e7d9f4ebdb48b9ac5de07f51b6cc65d",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "b1b17252d582c5b86390efb35ecb93bbd1c5b0f419330f50b50a74bfc609d6b7",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-fantasy-intelligence/": {
@@ -2409,14 +2409,14 @@
     },
     "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json": {
       "path": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
-      "content_sha256": "ffdbe03b078d44dad2ae77a5ecd73ea63717610b8dd382be6248c5a8448b4c50",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "c284acf305c9e0ec39ac6debbce1d52e5051aec745bb25bdfbe147012f536dc8",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-fantasy-intelligence/ai-conformance.json": {
       "path": "/chum/products/evercraft-fantasy-intelligence/ai-conformance.json",
-      "content_sha256": "0642c339aec703bc38e7e603e11ffe5c0c3c339ce9a4f6ebe0ebb9db9c932871",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "c663dc4269b6d9bc3c5a7599e57dab1139b920a2035f7cd85fce21332d7c533d",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-global-health-atlas/": {
@@ -2433,14 +2433,14 @@
     },
     "/chum/products/evercraft-global-health-atlas/ai-discovery.json": {
       "path": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
-      "content_sha256": "903e28af3a5397dcd032df1f5f16ed54025a9c10438874105863340d95163de4",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "378af7aa338a1a0105598573c0ce977ee3bd0bcecd61927642b02f3d981e611b",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-global-health-atlas/ai-conformance.json": {
       "path": "/chum/products/evercraft-global-health-atlas/ai-conformance.json",
-      "content_sha256": "28ce8dbc2e0be4f63f120e290fe2bcffb0469f3c95664c5a4432ccacdd5e5998",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "933af77ac3107adb897462ed1e9ddd2fbcaf7529bc72b1f9dbd8fa72a3319e85",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-network/": {
@@ -2457,14 +2457,14 @@
     },
     "/chum/products/evercraft-network/ai-discovery.json": {
       "path": "/chum/products/evercraft-network/ai-discovery.json",
-      "content_sha256": "e10eaaf5b5e5f05cf58635ffc38d2ca606f68fb1e760863fdcce54dc870fbc3f",
-      "last_changed": "2026-09-26T00:41:42.260Z",
+      "content_sha256": "105b552442f0ed4d332507fdcf9855c9439e997be442acec9b21806a1e6d0101",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-network/ai-conformance.json": {
       "path": "/chum/products/evercraft-network/ai-conformance.json",
-      "content_sha256": "5e98f4675da90a4e1a02634b72f4b1e051c859d67cca50b8e5e327d2ca9fbd47",
-      "last_changed": "2026-09-26T00:41:42.260Z",
+      "content_sha256": "12ca314c2db1ab86a88bbf65804e9a4234bf1715df3b3c59edc8d21bd8f406ed",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-physics-atlas/": {
@@ -2481,14 +2481,14 @@
     },
     "/chum/products/evercraft-physics-atlas/ai-discovery.json": {
       "path": "/chum/products/evercraft-physics-atlas/ai-discovery.json",
-      "content_sha256": "4c5ef1ac22dd387d07e585c4bbdfb00d6f1ae1c5f0aa3f3dd7636c16943dbcce",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "1bbc6f1139ed46414f870923db99cc51ee52a0434e5ede24f9b7e88f4f140547",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-physics-atlas/ai-conformance.json": {
       "path": "/chum/products/evercraft-physics-atlas/ai-conformance.json",
-      "content_sha256": "1f09d0b189be8e248bd08ec3e25c1c846ae58b600eca7d95b4c9669785f9484b",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "0950416a9215c7cd1de38ff5a42e6d98f0aa68d0e2e47a6923597cf779be972a",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-property-services/": {
@@ -2505,14 +2505,14 @@
     },
     "/chum/products/evercraft-property-services/ai-discovery.json": {
       "path": "/chum/products/evercraft-property-services/ai-discovery.json",
-      "content_sha256": "6d331583237cd1acefe3784217b08b0445c15162557a998bed9f927be0aeedef",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "3167756787fa208e64a1fc53667ca936331116488a93dbfbd4b35439a66faf77",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-property-services/ai-conformance.json": {
       "path": "/chum/products/evercraft-property-services/ai-conformance.json",
-      "content_sha256": "f243807c9f4a28133a1ca5d02bc76a90706cb7564521c65e32718b3037b5f6f6",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "99bf4360e915777c61f9978318d98e3f8bb5f4f9bca6784664d3c2ea28ab63ca",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/": {
@@ -2529,14 +2529,14 @@
     },
     "/chum/products/evercraft-rewards/ai-discovery.json": {
       "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "content_sha256": "50217991d087e0b8b216ceac11b6759a3d7b1c3ef5114e901d7d86a0b0ad4ecb",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "e992b2872af0b8ede5d898fbe93dac8bf8f4901a5e8d45597ff0e2d75a17edc1",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/ai-conformance.json": {
       "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "content_sha256": "84b9de3ee116d803ee1ece4f1ab478ad841a7291f19a1372c7e36aa38517c4b7",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "3386608d61a7834c15f93fd11b5bc45c2dc239014073cbc3da88d262b59a2eee",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/": {
@@ -2553,14 +2553,14 @@
     },
     "/chum/products/evercraft-web/ai-discovery.json": {
       "path": "/chum/products/evercraft-web/ai-discovery.json",
-      "content_sha256": "af28b943166ba267a11a7102d2a88fcb6087e8d8ce196697269e883fac78d51f",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "8653a12f922d579ae3418ea7ed5eba1a5df8b20ce53495c537ae6ec0f6c1fc8e",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/ai-conformance.json": {
       "path": "/chum/products/evercraft-web/ai-conformance.json",
-      "content_sha256": "e53b5861d969b755899d6190a8b8af6d1b2c3b5d6211f3fe7420d46af7201066",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "bfcf494144a7ddcf7880188ed7182affc8e86853307dd657207302ad24613950",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-wildlife-atlas/": {
@@ -2577,14 +2577,14 @@
     },
     "/chum/products/evercraft-wildlife-atlas/ai-discovery.json": {
       "path": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
-      "content_sha256": "e75771c6d00c7cb7e6e1a1454c6d80f02022d27ea0ef3241f60fdd5253d622cf",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "397e67b35c12d210f4c3a7272ab2738974691339a430c4a0ff0184ba2c2e2141",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evercraft-wildlife-atlas/ai-conformance.json": {
       "path": "/chum/products/evercraft-wildlife-atlas/ai-conformance.json",
-      "content_sha256": "46afb71a35aad60c60428051caba0dd79997514828aacc0c28fae2bfed763d10",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "67ddad1f55be17f5dc3a90a0fdd593dc8c2aa8bce4ed0ea442ff6424438cde5b",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evermaps/": {
@@ -2601,14 +2601,14 @@
     },
     "/chum/products/evermaps/ai-discovery.json": {
       "path": "/chum/products/evermaps/ai-discovery.json",
-      "content_sha256": "29100ab07b10b83a424b0f7420d4f2277df3afcb7ff7342d8ea32144794e97ea",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "20bb44b0c404e1d8d7438fc75c6c1124b606dc3cddde41de016e2940edc8a1ee",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evermaps/ai-conformance.json": {
       "path": "/chum/products/evermaps/ai-conformance.json",
-      "content_sha256": "b711e4fd92e8bb70229388015828728a65f12047c017b574b66d582eeb98256d",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "61dea1523b4a9ac85fd611b25c761af67e0e09ea59098a567efbe4508d8d8b60",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evernest/": {
@@ -2625,14 +2625,14 @@
     },
     "/chum/products/evernest/ai-discovery.json": {
       "path": "/chum/products/evernest/ai-discovery.json",
-      "content_sha256": "e2b531c3354608ece91252cb2b3dcf8ae60f2f0ef61aa3a08721c2e98fd57567",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "53f8cf3e3c674f9d426d380556a98474d704d7f88d55b7bfc9942d43431fc576",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/evernest/ai-conformance.json": {
       "path": "/chum/products/evernest/ai-conformance.json",
-      "content_sha256": "9117bc06d6b58e1c6ea15725ae0d68e96bf65aa57690a2ee883b922090f86d01",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "7559260d3b3c53926a004c06f86bbdd9862151e4df2d19cd1685030a9e00e0dd",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/everystage/": {
@@ -2649,14 +2649,14 @@
     },
     "/chum/products/everystage/ai-discovery.json": {
       "path": "/chum/products/everystage/ai-discovery.json",
-      "content_sha256": "72f483c54d203adf879a1311ef5cdb8c4e350f410013051fb6218d59f26e9ee4",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "0e114e0d38f114fc5edb42ad3b95f9b8c11ca8223593d340f0f252821278803d",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/everystage/ai-conformance.json": {
       "path": "/chum/products/everystage/ai-conformance.json",
-      "content_sha256": "7004cd575982ce79a88cdda613b0dc69f277ef67dc9a4d4a610a7f61a046c06b",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "5e50b85d9b5c4f6844d55f171f6f8893d8602a8898e1ec45b730561513429dfa",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/faie/": {
@@ -2673,14 +2673,14 @@
     },
     "/chum/products/faie/ai-discovery.json": {
       "path": "/chum/products/faie/ai-discovery.json",
-      "content_sha256": "8b2b28da7fb038e4893b814d467d4c4dc76d09a2745616c631903e80013c88ee",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "ba9c1d9fd172926329d2de36d6ebf720f80d2bddae4314ebc18f64e7dafe01c3",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/faie/ai-conformance.json": {
       "path": "/chum/products/faie/ai-conformance.json",
-      "content_sha256": "59529e4c6443b8950c8afc4fd3a18ca82127c0635ad3ed111af6d3e0330463ce",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "5e8cd269bc604ea46f6a69e4b0f0301b44a211ce5778166a75ad545b1887898c",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/findmypart/": {
@@ -2697,14 +2697,14 @@
     },
     "/chum/products/findmypart/ai-discovery.json": {
       "path": "/chum/products/findmypart/ai-discovery.json",
-      "content_sha256": "94fb39b8b4644fd7160e5494546dd75748fa2fa40a9ee02d64cbfae1e732eead",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "0368d8b69cab57b0ad85ca66ec7ee621e8981c9be24263c4cd9e5db24297c695",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/findmypart/ai-conformance.json": {
       "path": "/chum/products/findmypart/ai-conformance.json",
-      "content_sha256": "f403db38fb9b4d2136005e6c0358b690029ee620da79488763feb1f5a3ce0bf1",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "22115288f74ac43ca6e4f322f68b7c3944aafe828d4514e7497dc3692ed6b2a6",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/forensic-record/": {
@@ -2721,14 +2721,14 @@
     },
     "/chum/products/forensic-record/ai-discovery.json": {
       "path": "/chum/products/forensic-record/ai-discovery.json",
-      "content_sha256": "a3ff929c065d2d1fb75817ae24f82c04c3a7e82cdeefce734e306ef7620ee10b",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "42b251797ce10b04e9d0c79a183375a7a4abbddb8a68e8cb6a6bd43a02c1dabc",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/forensic-record/ai-conformance.json": {
       "path": "/chum/products/forensic-record/ai-conformance.json",
-      "content_sha256": "2d5b639bec6dbf31878bb0f98abb25293314a6a35e84ec4ae2fb4de7baab0312",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "7f5fc764977e756ef6869205e5b1ce4c3cc727530462359ed8ab4072ad4f6d79",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/forensiscope/": {
@@ -2745,14 +2745,14 @@
     },
     "/chum/products/forensiscope/ai-discovery.json": {
       "path": "/chum/products/forensiscope/ai-discovery.json",
-      "content_sha256": "c24c874784e1bdf5a987594b1bdb0b7e1ad3bcc394d9028a0cd3c0bbf908b383",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "f0ebacdfb5c26d9ca92b9d0e42eecefb9360fa4f30731be50dd6f11805967012",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 154
     },
     "/chum/products/forensiscope/ai-conformance.json": {
       "path": "/chum/products/forensiscope/ai-conformance.json",
-      "content_sha256": "fce7b082f5dc617300fba0c18deeadae1568902a4013fbbceb56c2a8b025a793",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "1e4141b09d223d4446ddb7519b56494b7dee239ad435ffba63d858c45330f02e",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 154
     },
     "/chum/products/global-energy-atlas/": {
@@ -2769,14 +2769,14 @@
     },
     "/chum/products/global-energy-atlas/ai-discovery.json": {
       "path": "/chum/products/global-energy-atlas/ai-discovery.json",
-      "content_sha256": "170f1865dcbc2920a1cd98cebbc7cb6ae7bda512dbd2dfbaae4ba5b54d0fbcd9",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "adcbb701e5670d8b73c449279e431f597f0dbbd8e103920136f6983c62a4c91b",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/global-energy-atlas/ai-conformance.json": {
       "path": "/chum/products/global-energy-atlas/ai-conformance.json",
-      "content_sha256": "12047edcaa3e8c11c911410e3227c68c0bf7295f813fb5ccc98705d6396217a5",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "c0c8c00b16899f66a0d224a9170415607caf02c4d7c0a8f630b95b4828936faf",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/globalstat/": {
@@ -2793,14 +2793,14 @@
     },
     "/chum/products/globalstat/ai-discovery.json": {
       "path": "/chum/products/globalstat/ai-discovery.json",
-      "content_sha256": "1fe30e1a8f142c79e7c6c0789d7ef7b0122e7267dec73f0e59451d18856bb638",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "113f3165e72c0d35a0875dc1585cf246c64743a58d7fba4ff3aeb8c22245fb2a",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/globalstat/ai-conformance.json": {
       "path": "/chum/products/globalstat/ai-conformance.json",
-      "content_sha256": "ffa3f9366969609be02711887378e669cb344cbb2b115cd2009b0e95013e8502",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "2b490ab44bb1daba04e8c62806f3396ac827cf94e15fc416fe7671112af79ce0",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/guardian/": {
@@ -2817,14 +2817,14 @@
     },
     "/chum/products/guardian/ai-discovery.json": {
       "path": "/chum/products/guardian/ai-discovery.json",
-      "content_sha256": "873f66b2c7f5b8249e746c712b21ad0101373442068bd369cedf99554ecb3bbd",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "f16472d52b7da809a6ce705fa260485544492fc621eda0c35a3cd9f49e68840b",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/guardian/ai-conformance.json": {
       "path": "/chum/products/guardian/ai-conformance.json",
-      "content_sha256": "1b72f79bbb18ef56f0bd940846a3cd597756e4662182b199e89c92a7f7471c59",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "39a4892a2c7ed78aea452d33a96404affc21e7453e7d518085fa97120df44976",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/ibmi-rescue/": {
@@ -2841,14 +2841,14 @@
     },
     "/chum/products/ibmi-rescue/ai-discovery.json": {
       "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "content_sha256": "6d3782e607afe82cba5462370b7564a33be01ddf53be060a6574e6f0ea2b6417",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "644fc26609b2b1400c57009290f43697eea48e8a4a2f17934e331b91edab7714",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/ibmi-rescue/ai-conformance.json": {
       "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "content_sha256": "e96f111e56077beb306d99e741f0ab63edd2c50d51e54c3ad4621a98a4f39364",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "4e1bc794eb153ac3ef429246ab56e48a11d3513c67e01486a72c1a0c51e9e5d3",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/infinite-classroom/": {
@@ -2865,14 +2865,14 @@
     },
     "/chum/products/infinite-classroom/ai-discovery.json": {
       "path": "/chum/products/infinite-classroom/ai-discovery.json",
-      "content_sha256": "845e9e2dc82e4fffeb6c259075b497b4f0e7e175cf4b1eb8f13414b92f0b75a7",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "d628edba976721ddd2f49ee9d9b31f26b70247d5d1133e892005a29b0cecb0c4",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/infinite-classroom/ai-conformance.json": {
       "path": "/chum/products/infinite-classroom/ai-conformance.json",
-      "content_sha256": "2533f6e57181ecf5804a45c67c5e27e2fd13afaa24ec44eea69616c99f2551d1",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "a1e229694507b5989876752d5efd24326f12d0194baf9f885a18e85549cc5f0e",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/little-red-book-export-qa/": {
@@ -2889,14 +2889,14 @@
     },
     "/chum/products/little-red-book-export-qa/ai-discovery.json": {
       "path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "content_sha256": "abf5ea75aa71f840719f99cabf41ae1b79d96f9364e338c60cad93d5e9d8e744",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "27e15f91bb8e2ec0bb02ed9d19d89a9f870329e150925100c009e3e29a70f64a",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/little-red-book-export-qa/ai-conformance.json": {
       "path": "/chum/products/little-red-book-export-qa/ai-conformance.json",
-      "content_sha256": "ddc5069f3f55298c9e45f19538658055375d60d9f2b7ed06dd9af8578cb9fe3d",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "48e1ed97e7990e48c74f63ae21dc0022bb1c601a13ccf1ebcaba4b4a6e342fab",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/raven-nexus/": {
@@ -2913,14 +2913,14 @@
     },
     "/chum/products/raven-nexus/ai-discovery.json": {
       "path": "/chum/products/raven-nexus/ai-discovery.json",
-      "content_sha256": "89884a253124a3391ec6c83121662debfabd1706f6761dae287c5a087925266e",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "5a1d32cffe8c9497d06c369c2ea1871931efdcc77d70490f7f457668b38d97cb",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/raven-nexus/ai-conformance.json": {
       "path": "/chum/products/raven-nexus/ai-conformance.json",
-      "content_sha256": "c3c98b8718a65e5228bcd5ba53bb258e245309522869a5ffd5cde83e97c3b90f",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "fe5a9a4d91f88ea8556adac642d92acfef7abf3dbe9a143ccdb0401be913d69c",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/roasted/": {
@@ -2937,14 +2937,14 @@
     },
     "/chum/products/roasted/ai-discovery.json": {
       "path": "/chum/products/roasted/ai-discovery.json",
-      "content_sha256": "944f2a317f1472e93a1f93279e531ec22fddba221ce98600140465f516e2fbfc",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "510d119739348fde452ed9f200628516901c77d459a623e549f56a36a7f5e8cf",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/roasted/ai-conformance.json": {
       "path": "/chum/products/roasted/ai-conformance.json",
-      "content_sha256": "3233a5615a64cf425af94ed898b6373bacf38681363dec2f99345063bdc85af1",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "a6c93a2acd9b6d90fcfe6559f1063de482b8ef23587e5ee8ccc4e1d2ec8a3dd7",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/skyops-parking/": {
@@ -2961,14 +2961,14 @@
     },
     "/chum/products/skyops-parking/ai-discovery.json": {
       "path": "/chum/products/skyops-parking/ai-discovery.json",
-      "content_sha256": "8df0bc254b7d4a211e5e22e4c91102db7ee8a3682f47dda86df4749158759cc0",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "a739ce3c9cb0a631efe41c44dd60b314bcb8bf58c1569b935e1eded57970c05f",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/skyops-parking/ai-conformance.json": {
       "path": "/chum/products/skyops-parking/ai-conformance.json",
-      "content_sha256": "a401501a50b51d33c3adce110444885598f322800dd404e2e0d2016d9c378bb5",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "1df3bf4e7d051e8e7717b52495b9e32cc59460004cc05e547cab281351158a7e",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/space-dudz/": {
@@ -2985,14 +2985,14 @@
     },
     "/chum/products/space-dudz/ai-discovery.json": {
       "path": "/chum/products/space-dudz/ai-discovery.json",
-      "content_sha256": "8de48e24fe29ae9cec041de766518615b8d2b87ed7a3101ac104f1d12c558a57",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "153ea6793c67f5e2694a92eb02d976cf4acdf72f5b9c002447ea2e8228f4743d",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/space-dudz/ai-conformance.json": {
       "path": "/chum/products/space-dudz/ai-conformance.json",
-      "content_sha256": "556e31c21b1d1e0e96733f42c8e23275a71002383a529d3acd8a5b514167a894",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "89d9527d616fdd73b18854b61e396a9417d9f2377aed13a5b16ec08e7c0e7b20",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-atlas-freight/": {
@@ -3009,14 +3009,14 @@
     },
     "/chum/products/systemia-atlas-freight/ai-discovery.json": {
       "path": "/chum/products/systemia-atlas-freight/ai-discovery.json",
-      "content_sha256": "41e37a6b851d315a1fc6687b5bd17ca7a5efdd30eca9a3a39bc9e344c0cd78e6",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "dbe8663fb4a6b9b9d3b8b72ae11030ba9b19961ed57c7fbb60bf0d3504313993",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-atlas-freight/ai-conformance.json": {
       "path": "/chum/products/systemia-atlas-freight/ai-conformance.json",
-      "content_sha256": "61e58562e8187d0029511ef6643bff345480d4476cd8dbf3dd7f6b95ea0ce3ee",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "753f845bd4f65466557f7192ae72f1bfca4f4892e573b845fee78825f328f24a",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-decision-lab/": {
@@ -3033,14 +3033,14 @@
     },
     "/chum/products/systemia-decision-lab/ai-discovery.json": {
       "path": "/chum/products/systemia-decision-lab/ai-discovery.json",
-      "content_sha256": "c83a420875280fad36a094941a8a5e053a936f56681311621338daed2dfc8e56",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "624c664d2e78afea9a0a8ca68aefda9a4bc692347e6075d3171fdba5948886aa",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-decision-lab/ai-conformance.json": {
       "path": "/chum/products/systemia-decision-lab/ai-conformance.json",
-      "content_sha256": "1126f2bdb2b4b2ddf8dc582a7370921a2d54a90204f190da8e0a46ae630fe4bc",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "368995aa5adaea372f18f3f9d374de23d721321cb80962d6a813be39f1ef010a",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-field-library/": {
@@ -3057,14 +3057,14 @@
     },
     "/chum/products/systemia-field-library/ai-discovery.json": {
       "path": "/chum/products/systemia-field-library/ai-discovery.json",
-      "content_sha256": "b4f66cc19a122a99f80b10d096a19432b6d56ef92b6070c1f5b7f6056804f237",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "7d460dacf0e0e10ef89b9a4b7e45fcf5b21399c727442a306439f163a90fbd1f",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-field-library/ai-conformance.json": {
       "path": "/chum/products/systemia-field-library/ai-conformance.json",
-      "content_sha256": "289e4c8f25ab36bd986377d74728c34f5d916460241b491bc75434b1fe40c7c0",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "238f544de9d49496632e970fe41f6030ed885735787f0786ea2534a59c705a9b",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-radar/": {
@@ -3081,14 +3081,14 @@
     },
     "/chum/products/systemia-radar/ai-discovery.json": {
       "path": "/chum/products/systemia-radar/ai-discovery.json",
-      "content_sha256": "3e9d73d5db37993c8add0287fbd28528f3e7bc9808045f3e64c43e8496aa0d52",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "6e41a86d94cd9c97830260dd9958288123af1658863b1f7da8d23c12d7297c02",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-radar/ai-conformance.json": {
       "path": "/chum/products/systemia-radar/ai-conformance.json",
-      "content_sha256": "a979d505d9751f817e9eb5b4cf88c83b2361668469c9f7bf606b842630cbacfd",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "ed1f10603b9a2692fb2fec3f957ebd9632367a4fc20acf3ac58cce7796d54399",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-website-audit/": {
@@ -3105,14 +3105,14 @@
     },
     "/chum/products/systemia-website-audit/ai-discovery.json": {
       "path": "/chum/products/systemia-website-audit/ai-discovery.json",
-      "content_sha256": "96d6ac597343705b8f3e96629e6a9b484850926c15b774fee1176d24b839a36b",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "f04efd259e96b45b920635b87f4bc52c590648b31a63ea9f2b159741f39e98cf",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/systemia-website-audit/ai-conformance.json": {
       "path": "/chum/products/systemia-website-audit/ai-conformance.json",
-      "content_sha256": "52573c932b7937cab8fc90d06af7ac3d436a9c40eb4db1b5d62a438e92938762",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "d6cd8742032504950f76610806dcc311d8aa5aea4abde8ee915b9e45566608f3",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/talent-atlas/": {
@@ -3129,14 +3129,14 @@
     },
     "/chum/products/talent-atlas/ai-discovery.json": {
       "path": "/chum/products/talent-atlas/ai-discovery.json",
-      "content_sha256": "dcd0a062030ad59745736851d61ad6031fc230b1fe62ceec60209a0727c76af4",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "a51311aaa3182b78c69d1d8cf958e59b95ede668a86d3c0e2e7810429f3415cd",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/talent-atlas/ai-conformance.json": {
       "path": "/chum/products/talent-atlas/ai-conformance.json",
-      "content_sha256": "d662ea1b30a5e5bc4fa4a6c01a2d313d2287540ae41e83285f56b48145a30673",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "c1dcf20b2a452313cb076767197d5f6b594a49bbb1efd5e33790908c70ab7200",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/thoughtdrop/": {
@@ -3153,14 +3153,14 @@
     },
     "/chum/products/thoughtdrop/ai-discovery.json": {
       "path": "/chum/products/thoughtdrop/ai-discovery.json",
-      "content_sha256": "80e540296f6e4bd3cde385b36d3a99d5b11cace5396cb6a9c62d437c6ee57a83",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "50f08d3a3ae3fa43eff3265c1e7b9982b176a19e875127fb3234cd616460f758",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/thoughtdrop/ai-conformance.json": {
       "path": "/chum/products/thoughtdrop/ai-conformance.json",
-      "content_sha256": "6add6a9518d503452442f4deb2d1ee97545261f0f8f10cd2a58c496efe6b2183",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "b5ecd0da49d6cfa5cbb3d5c0d73c0da96e99bc302fa9e4b0c6e01dfdbd18d663",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/towi-research/": {
@@ -3177,14 +3177,14 @@
     },
     "/chum/products/towi-research/ai-discovery.json": {
       "path": "/chum/products/towi-research/ai-discovery.json",
-      "content_sha256": "8d25ec469bffd83b3cc7ff795dbad53ae3338338ae13c6f4b425389b3396007a",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "1560c5514330acd8a2a55b0056e93c5c93551739b82b31b6a94a217c8fb126c6",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/towi-research/ai-conformance.json": {
       "path": "/chum/products/towi-research/ai-conformance.json",
-      "content_sha256": "ffabfaaba1a9f148ac767b31494c39120b08a63e1e777ddb6d1c89bba7d34074",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "f00da1c0ba68b2167ec3499a90673b836e6e42fe65e21a83b2130780b9a5ca16",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/website-launch/": {
@@ -3201,14 +3201,14 @@
     },
     "/chum/products/website-launch/ai-discovery.json": {
       "path": "/chum/products/website-launch/ai-discovery.json",
-      "content_sha256": "88abd4bf6b32d1b61f7e102df11a94170f6195826d3bbcaac10ea541d646ba7c",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "41f205e04553f6749620a7b9e4848db121a9b95a2885af79afbf5fffdef1eae8",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/products/website-launch/ai-conformance.json": {
       "path": "/chum/products/website-launch/ai-conformance.json",
-      "content_sha256": "24e61b2488f16e4a4eed25cb10b795da6cda0608fcaa9feaa3d66ac68d056926",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "97a42d821db024813a4e892f961f894f4ea4ed85a2a67b28ed9e84c3fb8f30ee",
+      "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
     "/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/": {
