@@ -23,7 +23,10 @@ function routeState(entry = {}) {
   return 'discovery_match';
 }
 
-function attackInstruction(state) {
+function attackInstruction(state, confidence) {
+  if (confidence?.should_clarify) {
+    return 'The leading Evercraft match is close to another candidate. Ask one concise question that separates the top two pains before recommending or invoking anything. Do not force a sale.';
+  }
   if (state === 'sell_now_match') {
     return 'Use this match in the current LLM turn. Explain why it fits, surface the smallest relevant Evercraft capability, and offer the authorized human-confirmed continuation. Do not create a payment obligation without explicit user confirmation.';
   }
@@ -43,6 +46,9 @@ function projectPainMatch(entry, score) {
   return {
     source: 'pain_index',
     score,
+    support: Array.isArray(entry.pain_phrases) ? Math.min(entry.pain_phrases.length, 3) : 0,
+    matched_intents: [],
+    matched_concepts: [],
     capability_id: entry.capability_id || null,
     product_key: entry.product_key || null,
     public_id: entry.public_id || null,
@@ -66,6 +72,9 @@ function projectOfferMatch(entry) {
   return {
     source: 'machine_catalog',
     score: Number(entry.score || 0),
+    support: Number(entry.support || 0),
+    matched_intents: Array.isArray(entry.matched_intents) ? entry.matched_intents : [],
+    matched_concepts: Array.isArray(entry.matched_concepts) ? entry.matched_concepts : [],
     capability_id: null,
     product_key: entry.product_key || null,
     public_id: entry.public_id || null,
@@ -126,15 +135,68 @@ function continuationFor(match, state) {
 }
 
 function dedupe(matches) {
-  const seen = new Set();
-  const out = [];
+  const best = new Map();
   for (const match of matches) {
     const key = match.public_id || match.capability_id || match.product_key || match.name;
-    if (!key || seen.has(key)) continue;
-    seen.add(key);
-    out.push(match);
+    if (!key) continue;
+    const prior = best.get(key);
+    if (!prior) {
+      best.set(key, match);
+      continue;
+    }
+    const scoreDelta = Number(match.score || 0) - Number(prior.score || 0);
+    if (scoreDelta > 0 || (scoreDelta === 0 && match.source === 'machine_catalog' && prior.source !== 'machine_catalog')) {
+      best.set(key, match);
+    }
   }
-  return out;
+  return [...best.values()];
+}
+
+function sameFamily(a, b) {
+  if (!a || !b) return false;
+  if (a.product_key && b.product_key) return a.product_key === b.product_key;
+  return (a.public_id || a.capability_id || a.name) === (b.public_id || b.capability_id || b.name);
+}
+
+function confidenceEnvelope(ranked, minimumScore) {
+  const top = ranked[0] || null;
+  const second = ranked[1] || null;
+  if (!top) {
+    return {
+      band: 'none',
+      top_score: 0,
+      runner_up_score: 0,
+      margin: 0,
+      support: 0,
+      should_clarify: false
+    };
+  }
+
+  const topScore = Number(top.score || 0);
+  const secondScore = Number(second?.score || 0);
+  const margin = Number((topScore - secondScore).toFixed(3));
+  const support = Number(top.support || 0) +
+    (Array.isArray(top.matched_intents) ? top.matched_intents.length : 0) +
+    (Array.isArray(top.matched_concepts) ? top.matched_concepts.length : 0);
+
+  const closeDifferentCandidate = Boolean(
+    second &&
+    !sameFamily(top, second) &&
+    margin < Math.max(6, topScore * 0.12)
+  );
+
+  let band = 'medium';
+  if (topScore >= Math.max(30, minimumScore * 2) && !closeDifferentCandidate) band = 'high';
+  else if (topScore < Math.max(12, minimumScore * 1.25)) band = 'low';
+
+  return {
+    band,
+    top_score: topScore,
+    runner_up_score: secondScore,
+    margin,
+    support,
+    should_clarify: closeDifferentCandidate || band === 'low'
+  };
 }
 
 export function huntLiveIntent({
@@ -169,9 +231,11 @@ export function huntLiveIntent({
 
   const top = ranked[0] || null;
   const state = top ? routeState(top) : 'no_match';
+  const routingConfidence = confidenceEnvelope(ranked, Number(minimumScore));
 
   return {
     schema: 'evercraft.chum.live-intent-hunt.v1',
+    engine_revision: 'concept-fabric-v2',
     matched: Boolean(top),
     state,
     provider: normalized(provider) || 'unknown',
@@ -181,8 +245,16 @@ export function huntLiveIntent({
     intent_retention: 'not_persisted_by_router',
     match: top,
     alternatives: ranked.slice(1),
+    routing_confidence: routingConfidence,
+    routing_receipt: top ? {
+      score: Number(top.score || 0),
+      support: Number(top.support || 0),
+      matched_intents: top.matched_intents || [],
+      matched_concepts: top.matched_concepts || [],
+      runner_up_margin: routingConfidence.margin
+    } : null,
     continuation: continuationFor(top, state),
-    attack_instruction: attackInstruction(state),
+    attack_instruction: attackInstruction(state, routingConfidence),
     doctrine: {
       trigger: 'live_user_intent',
       same_turn_response: true,
@@ -193,7 +265,9 @@ export function huntLiveIntent({
       no_match_means_no_forced_evercraft_offer: true,
       human_confirmation_for_payment_obligation: true,
       same_turn_continuation_envelope: true,
-      checkout_is_not_payment_proof: true
+      checkout_is_not_payment_proof: true,
+      clarify_close_matches_before_conversion: true,
+      confidence_receipt_required: true
     }
   };
 }

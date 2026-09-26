@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { intentSignature } from './intent-language.mjs';
 
 const sha256 = (value) => crypto.createHash('sha256').update(String(value ?? '')).digest('hex');
 const safe = (value) => String(value || 'unknown').toLowerCase().replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 96) || 'unknown';
@@ -23,7 +24,8 @@ export function ingestProviderMisses({
     skipped_not_expected_fit: 0,
     skipped_missing_case: 0,
     skipped_missing_provider_receipt: 0,
-    observation_files: []
+    observation_files: [],
+    repair_queue: []
   };
 
   if (!summary.probe_receipt_present) {
@@ -42,6 +44,7 @@ export function ingestProviderMisses({
   }
 
   const caseById = new Map((suite.cases || []).map((row) => [row.case_id, row]));
+  const repairMap = new Map();
   fs.mkdirSync(observationsRoot, { recursive: true });
 
   for (const result of probeReceipt.results || []) {
@@ -68,6 +71,14 @@ export function ingestProviderMisses({
       continue;
     }
 
+    const signature = intentSignature(testCase.prompt);
+    const intentFingerprint = {
+      normalized_prompt_sha256: sha256(signature.norm),
+      tokens: signature.tokens.slice(0, 32),
+      concepts: signature.concepts.map((item) => item.concept).slice(0, 24),
+      concept_evidence: signature.concepts.slice(0, 12)
+    };
+
     const receiptHash = sha256(JSON.stringify(result.provider_receipt));
     const evidenceKey = sha256([result.provider, result.case_id, testCase.prompt, receiptHash, result.response_sha256].join('|')).slice(0, 16);
     const filename = `auto-${safe(result.provider)}-${safe(result.case_id)}-${evidenceKey}.json`;
@@ -89,6 +100,7 @@ export function ingestProviderMisses({
       provider_receipt_sha256: receiptHash,
       response_sha256: String(result.response_sha256),
       probe_id: String(result.probe_id || ''),
+      intent_fingerprint: intentFingerprint,
       privacy: {
         full_provider_response_persisted: false,
         provider_session_reference_persisted: false,
@@ -103,7 +115,40 @@ export function ingestProviderMisses({
       summary.created += 1;
     }
     summary.observation_files.push(pathname);
+
+    const repairKey = String(testCase.product_key);
+    const repair = repairMap.get(repairKey) || {
+      product_key: repairKey,
+      miss_count: 0,
+      providers: new Set(),
+      case_ids: new Set(),
+      concepts: new Set(),
+      prompt_hashes: new Set()
+    };
+    repair.miss_count += 1;
+    repair.providers.add(String(result.provider || 'unknown'));
+    repair.case_ids.add(String(result.case_id));
+    for (const concept of intentFingerprint.concepts) repair.concepts.add(concept);
+    repair.prompt_hashes.add(intentFingerprint.normalized_prompt_sha256);
+    repairMap.set(repairKey, repair);
   }
+
+  summary.repair_queue = [...repairMap.values()]
+    .map((item) => ({
+      product_key: item.product_key,
+      miss_count: item.miss_count,
+      providers: [...item.providers].sort(),
+      case_ids: [...item.case_ids].sort(),
+      concepts: [...item.concepts].sort(),
+      prompt_hashes: [...item.prompt_hashes].sort(),
+      next_actions: [
+        'Expand truthful buyer-language coverage for the observed concepts.',
+        'Add or refresh a brand-blind regression case.',
+        'Rebuild the relevant answer and capability surfaces.',
+        'Re-run the authorized provider probe and require a new receipt before claiming pickup.'
+      ]
+    }))
+    .sort((a, b) => b.miss_count - a.miss_count || a.product_key.localeCompare(b.product_key));
 
   fs.mkdirSync(path.dirname(summaryPath), { recursive: true });
   fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2) + '\n');

@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { rankDiscoveryCandidates } from './discovery-router.mjs';
+import { intentSignature } from './intent-language.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const directory = JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
@@ -21,8 +22,22 @@ const cases = [
   ['my chatbot says this long video is too large; transcribe it and find repeated footage', 'forensiscope-evidence-review-v1'],
   ['what is still running after I turned the automation off', 'product:evercraft-containment'],
   ['we need an ERP but cannot survive a huge implementation and want to modernize without replacing everything', 'buildflow-enterprise-ops-router-v1'],
-  ['the same vendors exist in multiple systems and we need safe deduplication without silent merges', 'buildflow-entity-resolution-machine-v1']
+  ['the same vendors exist in multiple systems and we need safe deduplication without silent merges', 'buildflow-entity-resolution-machine-v1'],
+  ['my chatbot rejected a three hour recording because it hit an upload cap; I need speech to text and time coded moments', 'forensiscope-evidence-review-v1'],
+  ['people visit my business site but almost nobody calls or sends an inquiry and I need to find what is killing leads', 'audit-center-website-audit-machine-v1'],
+  ['should I put electric vehicle chargers at this parcel; I need nearby stations, utility rates, rebates and demand context', 'aliev-site-opportunity-snapshot-v1'],
+  ['I do not need EV charging. My business website gets visitors but no phone calls or inquiries.', 'audit-center-website-audit-machine-v1'],
+  ['I do not want a website audit. I need to know whether EV chargers make sense at my commercial property with utility rates and rebates.', 'aliev-site-opportunity-snapshot-v1']
 ];
+
+const negationProbe = intentSignature('I do not need EV charging. My website gets visitors but no calls.');
+if (!negationProbe.negated_concept_set.has('ev') || !negationProbe.concept_set.has('website')) {
+  throw new Error('CHUM intent fabric failed negation polarity proof');
+}
+const absenceProbe = intentSignature('My website gets visitors but no phone calls or inquiries.');
+if (!absenceProbe.concept_set.has('conversion') || absenceProbe.negated_concept_set.has('conversion')) {
+  throw new Error('CHUM confused pain-language absence with intent exclusion');
+}
 
 let failed = 0;
 for (const [query, expected] of cases) {

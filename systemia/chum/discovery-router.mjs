@@ -1,74 +1,75 @@
-const STOP_WORDS = new Set([
-  'a','an','and','are','as','at','be','been','but','by','can','do','for','from','has','have',
-  'help','how','i','in','is','it','me','my','of','on','or','that','the','this','to','want',
-  'what','when','where','which','who','why','with','would','you'
-]);
+import { normalizeText, tokenize as meaningfulTokens, intentSignature, compareIntent } from './intent-language.mjs';
 
-export function normalizeText(value) {
-  return String(value || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+function overlapScore(querySig, text, weight) {
+  const cmp = compareIntent(querySig, text);
+  return cmp.token_overlap * weight + cmp.concept_overlap * Math.max(3, weight);
 }
 
-export function meaningfulTokens(value) {
-  return normalizeText(value)
-    .split(' ')
-    .filter((token) => token.length >= 3 && !STOP_WORDS.has(token));
-}
-
-function overlapScore(queryTokens, text, weight) {
-  const tokens = new Set(meaningfulTokens(text));
-  let matched = 0;
-  for (const token of queryTokens) {
-    if (tokens.has(token)) matched += 1;
-  }
-  return matched * weight;
-}
+export { normalizeText, meaningfulTokens };
 
 export function scoreOffer(offer, query) {
   const q = normalizeText(query);
-  const queryTokens = meaningfulTokens(query);
-  if (!q || queryTokens.length === 0) return { score: 0, matched_intents: [] };
+  const querySig = intentSignature(query);
+  if (!q || querySig.tokens.length === 0) {
+    return { score: 0, matched_intents: [], matched_concepts: [], support: 0 };
+  }
 
   let score = 0;
   const matchedIntents = [];
+  const matchedConcepts = new Set();
+  let support = 0;
   const name = normalizeText(offer.name);
   const problem = normalizeText(offer.problem);
   const intents = Array.isArray(offer.intent_terms) ? offer.intent_terms : [];
 
-  if (name && (name.includes(q) || q.includes(name))) score += 20;
-  score += overlapScore(queryTokens, name, 4);
-  score += overlapScore(queryTokens, problem, 2);
+  if (name && (name.includes(q) || q.includes(name))) {
+    score += 20;
+    support += 1;
+  }
+  score += overlapScore(querySig, name, 4);
+
+  const problemCmp = compareIntent(querySig, problem);
+  score += problemCmp.score * 0.7;
+  if (problemCmp.token_overlap > 0 || problemCmp.concept_overlap > 0) support += 1;
+  for (const concept of problemCmp.matched_concepts) matchedConcepts.add(concept);
 
   for (const rawIntent of intents) {
     const intent = normalizeText(rawIntent);
-    let intentScore = overlapScore(queryTokens, intent, 5);
+    const cmp = compareIntent(querySig, intent);
+    let intentScore = cmp.score;
     if (intent && (intent.includes(q) || q.includes(intent))) intentScore += 20;
 
     const intentTokens = meaningfulTokens(intent);
-    const querySet = new Set(queryTokens);
-    const matched = intentTokens.filter((token) => querySet.has(token));
+    const matched = intentTokens.filter((token) => querySig.token_set.has(token));
     const coverage = intentTokens.length ? matched.length / intentTokens.length : 0;
     if (coverage >= 0.6 && matched.length >= 2) intentScore += 12;
     if (coverage >= 0.8 && matched.length >= 2) intentScore += 10;
 
     if (intentScore > 0) {
-      score += intentScore;
+      support += 1;
+      for (const concept of cmp.matched_concepts) matchedConcepts.add(concept);
       matchedIntents.push({ intent: rawIntent, score: intentScore });
     }
   }
 
+  // Cap intent contribution to the strongest three phrases. This prevents a
+  // verbose offer with dozens of near-duplicate intent terms from outranking
+  // a tighter, more accurate offer merely because it has more metadata.
+  matchedIntents.sort((a,b) => b.score - a.score);
+  score += matchedIntents.slice(0,3).reduce((sum, item) => sum + item.score, 0);
+
   if (score > 0 && offer.commercial_state === 'sell_now') score += 3;
-  if (score > 0 && /payment_ready|human_handoff_ready/.test(String(offer.machine_state || ''))) score += 1;
+  if (score > 0 && /payment_ready|human_handoff_ready|callable|live|routable/.test(String(offer.machine_state || ''))) {
+    score += 1;
+  }
 
   return {
-    score,
+    score: Number(score.toFixed(3)),
     matched_intents: matchedIntents
-      .sort((a,b) => b.score - a.score)
       .slice(0,3)
-      .map((item) => item.intent)
+      .map((item) => item.intent),
+    matched_concepts: [...matchedConcepts],
+    support
   };
 }
 
@@ -82,11 +83,12 @@ export function rankOffers(catalog, query, options = {}) {
     .filter((row) => row.score >= minimumScore)
     .sort((a,b) =>
       b.score - a.score ||
+      b.support - a.support ||
       Number(b.offer.commercial_state === 'sell_now') - Number(a.offer.commercial_state === 'sell_now') ||
       String(a.offer.name || '').localeCompare(String(b.offer.name || ''))
     )
     .slice(0, limit)
-    .map(({ offer, score, matched_intents }) => ({
+    .map(({ offer, score, matched_intents, matched_concepts, support }) => ({
       public_id: offer.public_id,
       product_key: offer.product_key || null,
       source: offer.source || 'machine_catalog',
@@ -94,6 +96,8 @@ export function rankOffers(catalog, query, options = {}) {
       problem: offer.problem,
       intent_terms: offer.intent_terms || [],
       matched_intents,
+      matched_concepts,
+      support,
       score,
       commercial_state: offer.commercial_state,
       machine_state: offer.machine_state,
@@ -108,6 +112,34 @@ export function rankOffers(catalog, query, options = {}) {
       boundaries: Array.isArray(offer.boundaries) ? offer.boundaries : [],
       catalog_version: offer.catalog_version
     }));
+}
+
+function hostOf(value) {
+  try { return new URL(String(value || '')).hostname.toLowerCase(); }
+  catch { return ''; }
+}
+
+function familyIdentity(row, products = []) {
+  if (row.product_key) return `product:${row.product_key}`;
+
+  const rowName = normalizeText(row.name);
+  const rowHost = hostOf(row.public_url || row.canonical_url);
+  const candidates = products.filter((product) => {
+    const productName = normalizeText(product.name);
+    const nameMatch = productName.length >= 4 && (
+      rowName === productName ||
+      rowName.startsWith(productName + ' ') ||
+      rowName.endsWith(' ' + productName)
+    );
+    const productHost = hostOf(product.canonical_url);
+    const hostMatch = Boolean(rowHost && productHost && rowHost === productHost);
+    return nameMatch || hostMatch;
+  });
+
+  if (candidates.length === 1 && candidates[0].product_key) {
+    return `product:${candidates[0].product_key}`;
+  }
+  return `offer:${row.public_id}`;
 }
 
 function productAsDiscoveryOffer(product) {
@@ -155,23 +187,49 @@ export function rankDiscoveryCandidates(machineCatalog, productDirectory, query,
     }))
     .filter((row) => row.score >= minimumScore);
 
-  const combined = [...commercial, ...directory]
+  // Collapse each product family before global ranking. A declared machine-catalog
+  // offer is the more specific continuation contract and therefore takes precedence
+  // over that same product's generic directory record. Between offers from the same
+  // source class, keep the strongest semantic match.
+  const byIdentity = new Map();
+  const directoryProducts = Array.isArray(productDirectory?.products) ? productDirectory.products : [];
+  for (const row of [...commercial, ...directory]) {
+    const identity = familyIdentity(row, directoryProducts);
+    const inferredProductKey = !row.product_key && identity.startsWith('product:')
+      ? identity.slice('product:'.length)
+      : null;
+    const candidate = inferredProductKey
+      ? {
+          ...row,
+          product_key: inferredProductKey,
+          product_key_source: 'derived_from_public_directory_name_or_host'
+        }
+      : row;
+
+    const prior = byIdentity.get(identity);
+    if (!prior) {
+      byIdentity.set(identity, candidate);
+      continue;
+    }
+    const rowIsMachine = candidate.source === 'machine_catalog';
+    const priorIsMachine = prior.source === 'machine_catalog';
+    if (
+      (rowIsMachine && !priorIsMachine) ||
+      (rowIsMachine === priorIsMachine && (
+        candidate.score > prior.score ||
+        (candidate.score === prior.score && candidate.support > prior.support)
+      ))
+    ) {
+      byIdentity.set(identity, candidate);
+    }
+  }
+
+  return [...byIdentity.values()]
     .sort((a,b) =>
       b.score - a.score ||
+      b.support - a.support ||
       Number(a.source !== 'machine_catalog') - Number(b.source !== 'machine_catalog') ||
       String(a.name || '').localeCompare(String(b.name || ''))
-    );
-
-  const seen = new Set();
-  const result = [];
-  for (const row of combined) {
-    const identity = row.product_key
-      ? `product:${row.product_key}`
-      : `offer:${row.public_id}`;
-    if (seen.has(identity)) continue;
-    seen.add(identity);
-    result.push(row);
-    if (result.length >= limit) break;
-  }
-  return result;
+    )
+    .slice(0, limit);
 }

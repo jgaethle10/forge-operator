@@ -44,6 +44,11 @@ const result = huntLiveIntent({
 
 assert.equal(result.matched, true);
 assert.equal(result.state, 'sell_now_match');
+assert.equal(result.schema, 'evercraft.chum.live-intent-hunt.v1');
+assert.equal(result.engine_revision, 'concept-fabric-v2');
+assert.ok(['high','medium'].includes(result.routing_confidence.band));
+assert.equal(typeof result.routing_confidence.margin, 'number');
+assert.ok(result.routing_receipt);
 assert.equal(result.match.name, 'ForensiScope');
 assert.equal(result.doctrine.same_turn_response, true);
 assert.equal(result.doctrine.no_private_thread_surveillance, true);

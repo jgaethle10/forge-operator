@@ -38,12 +38,28 @@ function inspectPain(raw = {}) {
   return actions;
 }
 
+function inspectDiscoveryRepair(raw = {}) {
+  const actions = [];
+  if (!present(raw.product_key)) actions.push({ type: 'repair_item_missing_product_key' });
+  if (Number(raw.miss_count || 0) > 0) {
+    actions.push({
+      type: 'expand_concept_coverage_from_receipt_backed_miss',
+      concepts: list(raw.concepts).slice(0, 16)
+    });
+    actions.push({ type: 'add_brand_blind_regression_case' });
+    actions.push({ type: 'rebuild_observed_answer_door' });
+    actions.push({ type: 'rerun_provider_probe_after_surface_change' });
+  }
+  return actions;
+}
+
 function roleActions(role, item) {
   const raw = item?.raw || {};
   const actions =
     item?.kind === 'product' ? inspectProduct(raw) :
     item?.kind === 'offer' ? inspectOffer(raw) :
     item?.kind === 'pain' ? inspectPain(raw) :
+    item?.kind === 'discovery_repair' ? inspectDiscoveryRepair(raw) :
     item?.kind === 'external_inventory' ? [{ type: 'candidate_requires_admission_review' }] :
     [];
 
