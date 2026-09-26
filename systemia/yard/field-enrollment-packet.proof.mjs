@@ -41,6 +41,7 @@ const seed=await startNodeSeed({
   port:0,
   advertiseHost:'127.0.0.1',
   allocatorToken:token,
+  placementLabels:['public-edge','gateway'],
   announce:false,
 });
 
@@ -50,6 +51,8 @@ try{
   assert.ok(/^sha256:[a-f0-9]{64}$/i.test(capacity.device_fingerprint));
   assert.equal(capacity.capacity_hint.services.public_edge.ready,true);
   assert.equal(capacity.capacity_hint.services.public_edge.public_https,true);
+  assert.ok(capacity.placement_labels.includes('public-edge'));
+  assert.ok(capacity.placement_labels.includes('gateway'));
 
   const evidence={
     schema:'evercraft.node001.field-evidence.v1',
