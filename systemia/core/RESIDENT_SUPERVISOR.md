@@ -11,6 +11,7 @@ The initial supervised organism is:
 
 - Legacy Rescue opportunity watch, every 300 seconds.
 - Node 001 / Megatron field-certification tracker, every 300 seconds.
+- Remote device trust watch, every 300 seconds, surfacing attested pending devices as explicit KAIDANCE holds without granting authority.
 - KAIDANCE mission publisher, resident, publishing changed mission snapshots on its own 300-second cadence.
 
 Private runtime bindings do not live in the public config. The mission publisher receives its Yard state directory and KAIDANCE deployment ID from environment bindings at runtime.

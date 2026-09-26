@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "remote-device-trust-watch",
+  "mission_key": "remote-device-pending-authorization",
+  "runtime": "systemia-organism+collider",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/pending-device-trust-watch-runner.mjs",
+  "proof": "systemia/organism/pending-device-trust-watch.proof.mjs",
+  "authority": {
+    "observe_pending_device_identity_receipts": "autonomous",
+    "evaluate_pending_trust_state": "autonomous",
+    "authorize_remote_device": false,
+    "revoke_remote_device": false,
+    "create_control_grant": false,
+    "create_capacity_lease": false,
+    "publish_raw_device_fingerprint": false,
+    "publish_private_key": false
+  },
+  "collider": {
+    "heartbeat_seconds": 300,
+    "mission_snapshot_schema": "evercraft.kaidance.mission-snapshot.v1",
+    "pending_device_behavior": "hold_for_explicit_human_authorization",
+    "auto_authorize": false
+  }
+}

@@ -715,6 +715,10 @@ export async function startEvercraftComputeNode({
           const legacyOut = path.join(workspaceRoot, 'legacy-rescue-watch');
           const node001Field = path.join(workspaceRoot, 'node001-field', 'megatron');
           const node001Status = path.join(workspaceRoot, 'node001-field', 'megatron-status');
+          const remoteDeviceTrustWatchOut = path.join(
+            workspaceRoot,
+            'remote-device-trust-watch'
+          );
           const publisherLedger = path.join(workspaceRoot, 'mission-publisher', 'ledger.json');
           const missionSourcesConfig = path.join(workspaceRoot, 'mission-sources.json');
           fs.mkdirSync(workspaceRoot, { recursive: true, mode: 0o750 });
@@ -730,6 +734,12 @@ export async function startEvercraftComputeNode({
               {
                 source_key: 'node001-megatron-field-certification',
                 path: 'node001-field/megatron-status/mission-snapshot.json',
+                required: true,
+                stale_after_seconds: 900,
+              },
+              {
+                source_key: 'remote-device-trust-watch',
+                path: 'remote-device-trust-watch/mission-snapshot.json',
                 required: true,
                 stale_after_seconds: 900,
               },
@@ -749,6 +759,11 @@ export async function startEvercraftComputeNode({
             SYSTEMIA_LEGACY_RESCUE_OUT_DIR: legacyOut,
             SYSTEMIA_NODE001_FIELD_DIR: node001Field,
             SYSTEMIA_NODE001_STATUS_DIR: node001Status,
+            SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID: String(
+              body.input?.remote_broker_deployment_id || ''
+            ).trim(),
+            SYSTEMIA_REMOTE_DEVICE_TRUST_WATCH_OUT_DIR:
+              remoteDeviceTrustWatchOut,
             SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
             SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
           };

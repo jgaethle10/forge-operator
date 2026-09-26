@@ -1,0 +1,37 @@
+name: Remote device trust watch
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/pending-device-trust-watch.mjs'
+      - 'systemia/organism/pending-device-trust-watch-runner.mjs'
+      - 'systemia/organism/pending-device-trust-watch.workflow.json'
+      - 'systemia/organism/pending-device-trust-watch.proof.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/collider/mission-sources.json'
+      - '.github/workflows/remote-device-trust-watch.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/organism/pending-device-trust-watch.mjs'
+      - 'systemia/organism/pending-device-trust-watch-runner.mjs'
+      - 'systemia/organism/pending-device-trust-watch.workflow.json'
+      - 'systemia/organism/pending-device-trust-watch.proof.mjs'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/collider/mission-sources.json'
+      - '.github/workflows/remote-device-trust-watch.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove pending trust stays held for explicit approval
+        run: node systemia/organism/pending-device-trust-watch.proof.mjs
