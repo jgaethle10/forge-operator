@@ -82,6 +82,23 @@ process.env.FORENSISCOPE_TRANSCRIBE_ARGS_JSON = JSON.stringify([
   '{duration}',
   '{timeline_offset}'
 ]);
+process.env.FORENSISCOPE_TRANSCRIBE_HEALTHCHECK_ARGS_JSON = JSON.stringify([
+  '-e',
+  'process.exit(1)'
+]);
+const seedFailedHealthcheck = await startNodeSeed({
+  root: path.join(proofDir, 'node-failed-transcription-healthcheck'),
+  nodeId: 'forensiscope-proof-node-failed-transcription-healthcheck',
+  host: '127.0.0.1',
+  port: 0,
+  advertiseHost: '127.0.0.1',
+  allocatorToken,
+  announce: false
+});
+process.env.FORENSISCOPE_TRANSCRIBE_HEALTHCHECK_ARGS_JSON = JSON.stringify([
+  '-e',
+  'process.exit(0)'
+]);
 
 const mockSemanticPath = path.join(proofDir, 'mock-semantic-engine.mjs');
 fs.writeFileSync(
@@ -234,7 +251,12 @@ try {
     rootDir,
     reconcile: true,
     nodePool: {
-      endpoints: [seedIneligible.endpoint, seedA.endpoint, seedB.endpoint],
+      endpoints: [
+        seedIneligible.endpoint,
+        seedFailedHealthcheck.endpoint,
+        seedA.endpoint,
+        seedB.endpoint
+      ],
       allocatorToken,
       maxAttempts: 3,
       maxConcurrencyPerNode: 2,
@@ -242,7 +264,12 @@ try {
     }
   });
 } finally {
-  await Promise.allSettled([seedIneligible.close(), seedA.close(), seedB.close()]);
+  await Promise.allSettled([
+    seedIneligible.close(),
+    seedFailedHealthcheck.close(),
+    seedA.close(),
+    seedB.close()
+  ]);
 }
 const sourceHashAfter = hashFile(sourcePath);
 
@@ -262,6 +289,13 @@ assert.ok(
   receipt.pool_summary.rejected_nodes.some(
     (entry) =>
       entry.node_id === 'forensiscope-proof-node-no-transcription' &&
+      entry.reason === 'missing_required_service:forensiscope_transcription'
+  )
+);
+assert.ok(
+  receipt.pool_summary.rejected_nodes.some(
+    (entry) =>
+      entry.node_id === 'forensiscope-proof-node-failed-transcription-healthcheck' &&
       entry.reason === 'missing_required_service:forensiscope_transcription'
   )
 );
