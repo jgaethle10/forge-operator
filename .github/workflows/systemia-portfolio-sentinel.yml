@@ -13,6 +13,10 @@ on:
       - "public/.well-known/evercraft-products.json"
       - "public/.well-known/evercraft-capabilities.json"
       - "package.json"
+      - "Dockerfile"
+      - "server.ts"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - "tests/chum-live-intent-hunter.test.mjs"
       - ".github/workflows/**"
   pull_request:
     paths:
@@ -21,7 +25,11 @@ on:
       - "systemia/core/resident-services.json"
       - "systemia/collider/mission-sources.json"
       - "package.json"
-      - ".github/workflows/systemia-portfolio-sentinel.yml"
+      - "Dockerfile"
+      - "server.ts"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - "tests/chum-live-intent-hunter.test.mjs"
+      - ".github/workflows/**"
   schedule:
     - cron: "*/5 * * * *"
 
