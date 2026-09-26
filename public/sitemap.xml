@@ -19,11 +19,11 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-25T23:24:44.679Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-26T03:49:24.951Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T03:56:03.490Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T03:57:56.595Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-26T00:32:09.062Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-26T03:56:03.490Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-26T03:56:03.490Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-26T03:56:03.490Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-26T03:57:56.595Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-26T03:57:56.595Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-26T03:57:56.595Z</lastmod></url>
   <url><loc>/chum/freshness.xml</loc></url>
   <url><loc>/chum/freshness.json</loc></url>
   <url><loc>/chum/crawl-state.json</loc></url>
@@ -113,7 +113,7 @@
   <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-26T03:57:56.041Z</lastmod></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -448,8 +448,8 @@
   <url><loc>/chum/products/evercraft-rewards/ai-discovery.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
   <url><loc>/chum/products/evercraft-rewards/ai-conformance.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
   <url><loc>/chum/products/evercraft-web/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-web/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/products/evercraft-web/ai-discovery.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-web/llms.txt</loc><lastmod>2026-09-26T03:57:56.041Z</lastmod></url>
+  <url><loc>/chum/products/evercraft-web/ai-discovery.json</loc><lastmod>2026-09-26T03:57:56.041Z</lastmod></url>
   <url><loc>/chum/products/evercraft-web/ai-conformance.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
   <url><loc>/chum/products/evercraft-wildlife-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/evercraft-wildlife-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
