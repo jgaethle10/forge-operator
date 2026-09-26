@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:41:57.196Z",
+  "updated_at": "2026-09-26T22:42:50.291Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,62 +11,40 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 94
+      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
+      "last_changed": "2026-09-26T22:42:50.291Z",
+      "priority": 80
     },
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 84
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-26T22:42:50.291Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
+      "last_changed": "2026-09-26T22:42:50.291Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
+      "url": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
+      "last_changed": "2026-09-26T22:42:50.291Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-26T22:42:50.291Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T22:42:50.291Z",
+      "priority": 80
+    },
     {
       "path": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
       "url": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
@@ -96,12 +74,6 @@
       "url": "/.well-known/evercraft-syndication.json",
       "last_changed": "2026-09-26T22:41:57.196Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:41:57.196Z",
-      "priority": 80
     },
     {
       "path": "/chum/index.json",
@@ -156,18 +128,6 @@
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-26T22:41:24.683Z",
       "priority": 88
-    },
-    {
-      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
-      "url": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
-      "last_changed": "2026-09-26T22:40:38.781Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-26T22:36:22.914Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",

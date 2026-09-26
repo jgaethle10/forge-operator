@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:41:57.196Z",
+  "updated_at": "2026-09-26T22:42:50.291Z",
   "url_count": 2201,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -117,14 +117,14 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "f0df629710b4a09324a8188d2b4c40cdbe988de898d55f93692c733574b4ee66",
-      "last_changed": "2026-09-26T22:36:22.914Z",
+      "content_sha256": "ab736caca9a6e6e516d06b39ba42a84a2695f2bee63694bdea134a9f1ebb5076",
+      "last_changed": "2026-09-26T22:42:50.291Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "3242f99af4cf1b666ecd19de438ebe35f5b764e5ebe7443e225bd4a374d31a47",
-      "last_changed": "2026-09-26T22:41:57.196Z",
+      "content_sha256": "057e0bb421cf7d5e8d136286a175764d9383edf42ea00f9326119acc075049c4",
+      "last_changed": "2026-09-26T22:42:50.291Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -3825,8 +3825,8 @@
     },
     "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json": {
       "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
-      "content_sha256": "aa5f630dd5597b998823e100757bade175f21ce17f3e0682c04f2d74658c2008",
-      "last_changed": "2026-09-26T22:40:38.781Z",
+      "content_sha256": "661279ed9ea736927e74082708c78cad881a6a7a9741068cd0a6cbf989d9f440",
+      "last_changed": "2026-09-26T22:42:50.291Z",
       "priority": 80
     },
     "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/llms.txt": {
