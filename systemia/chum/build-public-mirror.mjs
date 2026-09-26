@@ -294,6 +294,8 @@ for (const product of directory.products || []) {
         '@type': 'WebPage',
         name: pageTitle(product),
         description: pageDescription(product),
+        url: `/chum/products/${key}/`,
+        isPartOf: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft-discovery-site' },
         about: { '@id': `${canonicalUrl}#evercraft-capability` }
       }
     ]
@@ -306,7 +308,11 @@ for (const product of directory.products || []) {
     `<title>${escapeHtml(pageTitle(product))}</title>`,
     `<meta name="description" content="${escapeHtml(pageDescription(product))}">`,
     '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',
+    `<link rel="canonical" href="/chum/products/${key}/">`,
     '<link rel="alternate" type="text/plain" href="./llms.txt">',
+    '<link rel="alternate" type="application/rss+xml" href="/feed.xml" title="Evercraft Product Discovery RSS">',
+    '<link rel="alternate" type="application/feed+json" href="/feed.json" title="Evercraft Product Discovery JSON Feed">',
+    '<link rel="service-desc" type="application/json" href="/.well-known/agent-card.json" title="Evercraft A2A Agent Card">',
     '<link rel="alternate" type="application/json" href="./ai-discovery.json">',
     `<script type="application/ld+json">${JSON.stringify(productPageJsonLd).replace(/</g, '\\u003c')}</script>`,
     '<style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>',
@@ -388,7 +394,7 @@ const publicIndexHtml = [
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
   '<form action="/api/discover" method="get" class="card"><label for="q"><strong>Describe the problem</strong></label><br><input id="q" name="q" required style="width:min(100%,700px);padding:10px;margin:10px 0" placeholder="Example: I cannot find a discontinued machine part"><button type="submit" style="padding:10px 16px">Find the smallest matching capability</button></form>',
   `<p><strong>Read-only AI discovery:</strong> <code>${escapeHtml(READ_ONLY_DISCOVERY_REGISTRY)}</code></p>`,
-  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/commercial/">Commercial intent mesh</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/chum/strike/">Adaptive strike hub</a> · <a href="/chum/crawler-radar.json">Crawler radar</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/commercial/">Commercial intent mesh</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/chum/strike/">Adaptive strike hub</a> · <a href="/chum/crawler-radar.json">Crawler radar</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/.well-known/agent-card.json">A2A Agent Card</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
   '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
@@ -544,6 +550,8 @@ const sitemapStatic = [
   '/schema.jsonld',
   '/openapi.json',
   '/.well-known/evercraft-agent.json',
+  '/.well-known/agent-card.json',
+  '/.well-known/agent.json',
   '/.well-known/evercraft-agent-directory.json',
   '/.well-known/evercraft-agent-interfaces.json',
   '/.well-known/evercraft-discovery.json',
@@ -790,6 +798,7 @@ const agentDirectory = {
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     pain_index: '/.well-known/evercraft-pain-index.json',
     answer_graph: '/chum/answers/index.json',
+    a2aAgentCard: '/.well-known/agent-card.json',
     machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
     machine_commerce_mcp: universalMcp,
     use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant.'
@@ -840,6 +849,9 @@ const discoveryWatershed = {
     intent_router: '/api/discover?q={natural-language-problem}',
     revenue_router: '/api/revenue-watershed',
     schema: '/schema.jsonld',
+    a2a_agent_card: '/.well-known/agent-card.json',
+    a2a_alias: '/.well-known/agent.json',
+    a2a_state: 'release_candidate_pending_live_canary',
     openapi: '/openapi.json'
   },
   universal_front_door: {
@@ -886,6 +898,17 @@ const schemaGraph = {
       name: 'Evercraft LLC',
       url: 'https://github.com/jgaethle10/forge-operator',
       description: 'Evercraft builds public machine-discoverable software, research, safety, operations, media, infrastructure and commerce capabilities.'
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://github.com/jgaethle10/forge-operator#evercraft-discovery-site',
+      name: 'Evercraft Public Capability Discovery',
+      publisher: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: '/api/discover?q={search_term_string}',
+        'query-input': 'required name=search_term_string'
+      }
     },
     {
       '@type': 'SoftwareApplication',
