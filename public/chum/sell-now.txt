@@ -73,7 +73,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: deck-capital-fit-sprint-machine-v1
 Price: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
-Preferred agent route: universal fallback
+Preferred agent route: direct specialist
+Direct MCP: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp
+Official MCP Registry name: io.github.jgaethle10/deck-capital-fit
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
 Machine state: payment_ready
 Use this when:
@@ -214,7 +216,9 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 Capability ID: roasted-text-pressure-test-machine-v1
 Price: $0.99 USD one-time per roast.
 Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
-Preferred agent route: universal fallback
+Preferred agent route: direct specialist
+Direct MCP: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
+Official MCP Registry name: io.github.jgaethle10/roasted
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1
 Machine state: payment_ready
 Use this when:

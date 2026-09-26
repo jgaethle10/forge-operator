@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T06:30:07.443Z",
+  "updated_at": "2026-09-26T06:32:31.395Z",
   "url_count": 2150,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,26 +39,26 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "43225232939415a82bdc309fe2184f344a175b059328b79605ec5bfd083dfea9",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "40bfcde517c892d92393b42c5401aeeeb357e96be1af32c29eebe6423a68015c",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
       "path": "/chum/sell-now.html",
-      "content_sha256": "747120b22578c0ec6cf6b3a05fdb55b14d5ba07d27c1aa5d982d38de5ff78784",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "d3a78a7607cfefd9331296b036410be8883f1e496d89c972b628934fa014b05e",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 92
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "0d45caddcee35238c41dc51779672687705ed00e396e867943573e1890ac7dac",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "654a7df724c02624815a6fbec8747c574e7e967fdc67642b8caf3a565d3ce729",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "4a9e6d31ecf571263b1c4cab056ec3c3054ac105b890f2c5928f0a9e420fa9c8",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "73727a0e40aa24862a215fa1261c623ba22c8f00f10a0e33420ee1ac8e6f919d",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "a1ec197835cfb38d4e0ed8f6231dbe2e6ec0a802c1e595025c5939dff70ed714",
-      "last_changed": "2026-09-26T06:30:07.443Z",
+      "content_sha256": "78ec48d6696dd8941b97049d28bfd8625f033700c810b6136668f2546268e7fe",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -1287,20 +1287,20 @@
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/": {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
-      "content_sha256": "e025065dc02acb3bb7c5d310b8f86859eda0985748973d0ec0f56913df82dc0d",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "baadbf343a8246b37664851be7ce17ef04879a4de68629b957969e8dfb403e32",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt": {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
-      "content_sha256": "2d0edcaec9aebee5f8aa43846e15eb1e6fc050dc14228c0455615df6d687b10d",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "4796908fde230aeb2f9feda423fcbd8517ca26daaa60c6bbe9289fa218fbb5b5",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json": {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
-      "content_sha256": "0d541738cddc9c3b241e9ae8b602a84b69cf36b2bdc49353a5d62c0bd464f139",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "8ae31921b04901fa0cad845d9af5e5c9ce148c03d2ebb0186373d3e21e2a3c09",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld": {
@@ -1377,20 +1377,20 @@
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/",
-      "content_sha256": "1c3aac53c3599591f4754e1e6460ec0462943a5c865b4481f4de7ffa944f666b",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "f5d082ee3a56b37c31573e28e1268f261945641fa750957281738210910d91c2",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/llms.txt": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/llms.txt",
-      "content_sha256": "f2a2cb542d9d9da31ff9d7882b8bb5e7ae63490140ad0c34ac84ff35040c3149",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "36ecd8a8794267714f241c6d02e5de8f37794d750c8fff652db2a75bd64b84e3",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
-      "content_sha256": "72a85c9aca3d180ae2b4dabb2e8daf424cf99d7aba2e22e84f604fc8d7d614c3",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "65fdc2817bc6b2e204a34c58541c422dfaed4bb69af24ecb99b313230333a80d",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/schema.jsonld": {
@@ -1917,20 +1917,20 @@
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
-      "content_sha256": "75f31cebf247569c27957d2c9230b966c5bbdebe0edc2aa89cef1665f5293c9a",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "56547e81ffab890490c627a035ccbbc8c0ce7d580a7738bd07190951a54ce841",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
-      "content_sha256": "7d3dcd8ac3992a14e0a02b1dbe4ad5a14a0de626697dc84c3a21c43c52892845",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "2fe8d955ab2801c08079af3aafb543bc30dbc2d9aa89b768abd95a1ffa4c3dc1",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "content_sha256": "eaa4b495486cbc59ecc7e746932f40650b826f65db58aa6ac2a6f840eb00a1c4",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "d3eb5d4f991580e74d77adf74a1c45a92120029d69289542a7dad68097f99634",
+      "last_changed": "2026-09-26T06:32:31.395Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld": {

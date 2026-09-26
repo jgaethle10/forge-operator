@@ -155,8 +155,15 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
-      "preferred_agent_route": "universal_fallback",
-      "direct_specialist": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Deck Capital Fit",
+        "plugin_package": "plugins/deck-capital-fit",
+        "registry_name": "io.github.jgaethle10/deck-capital-fit",
+        "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "help me find funding for my business",
         "which lenders or programs fit my business",
@@ -420,8 +427,15 @@
         "billing": "one_time",
         "price_usd_normalized": 0.99
       },
-      "preferred_agent_route": "universal_fallback",
-      "direct_specialist": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "ROASTED",
+        "plugin_package": "plugins/roasted",
+        "registry_name": "io.github.jgaethle10/roasted",
+        "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "roast this text",
         "roast my bio",

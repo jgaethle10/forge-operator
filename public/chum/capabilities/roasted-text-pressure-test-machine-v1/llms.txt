@@ -4,8 +4,11 @@ Capability ID: roasted-text-pressure-test-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
 Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
-Preferred agent route: universal fallback
-Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Preferred agent route: direct specialist
+Direct specialist: ROASTED
+Direct MCP: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
+Official MCP Registry name: io.github.jgaethle10/roasted
+Universal Evercraft fallback MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1
 
 ## Use this when

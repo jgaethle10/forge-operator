@@ -568,8 +568,15 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
-      "preferred_agent_route": "universal_fallback",
-      "direct_specialist": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Deck Capital Fit",
+        "plugin_package": "plugins/deck-capital-fit",
+        "registry_name": "io.github.jgaethle10/deck-capital-fit",
+        "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "help me find funding for my business",
         "which lenders or programs fit my business",
@@ -673,8 +680,15 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1",
       "entry_paid_offer": null,
-      "preferred_agent_route": "universal_fallback",
-      "direct_specialist": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "Evercraft Clip",
+        "plugin_package": "plugins/evercraft-clip",
+        "registry_name": "io.github.jgaethle10/evercraft-clip",
+        "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "turn this video into social clips",
         "make short vertical clips from a long video",
@@ -1267,8 +1281,15 @@
         "billing": "one_time",
         "price_usd_normalized": 0.99
       },
-      "preferred_agent_route": "universal_fallback",
-      "direct_specialist": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "ROASTED",
+        "plugin_package": "plugins/roasted",
+        "registry_name": "io.github.jgaethle10/roasted",
+        "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
       "use_when": [
         "roast this text",
         "roast my bio",
