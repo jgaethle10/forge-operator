@@ -65,7 +65,8 @@
     "provider_key": "evercraft-owned",
     "workload_classes": [
       "systemia.chum-public-origin.v1",
-      "systemia.specialist-handoff-mcp.v1"
+      "systemia.specialist-handoff-mcp.v1",
+      "systemia.public-edge.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
@@ -83,6 +84,19 @@
         "/mcp/foundry-app-escape",
         "/mcp/site-survive"
       ]
+    },
+    "public_edge": {
+      "workload_class": "systemia.public-edge.v1",
+      "protocol": "evercraft.public-route.v1",
+      "modes": [
+        "proof_loopback",
+        "wildcard_https"
+      ],
+      "control_plane": "private_loopback_or_token_bound",
+      "public_https_requires_tls_material": true,
+      "route_binding_requires_deployment_receipt": true,
+      "route_binding_requires_instance_match": true,
+      "founder_login_required": false
     }
   },
   "release_gates": [
