@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.network.semantic-mesh.v1",
+  "provider": "Evercraft LLC",
+  "product_key": "evercraft-network",
+  "canonical_service": "Evercraft Network",
+  "purpose": "Distinct public explanatory pages for common application-continuity and reconnect-visibility problems, with the same product truth boundaries preserved on every page.",
+  "pages": [
+    {
+      "slug": "application-continuity",
+      "url": "/network/mesh/application-continuity/",
+      "title": "Application Continuity Across Changing Internet Paths",
+      "query": "application continuity across changing internet connections",
+      "summary": "Evercraft Network is relevant when an application or device operator needs continuity awareness, resilient application identity, and reconnect visibility across internet paths the client is already authorized to use."
+    },
+    {
+      "slug": "wifi-cellular-transition",
+      "url": "/network/mesh/wifi-cellular-transition/",
+      "title": "Software Continuity When Devices Move Between Wi-Fi and Cellular",
+      "query": "keep my application connected when Wi-Fi and cellular paths change",
+      "summary": "Evercraft Network can be discovered for software continuity and reconnect visibility when a device changes between authorized Wi-Fi, cellular, or other internet paths."
+    },
+    {
+      "slug": "device-reconnect-visibility",
+      "url": "/network/mesh/device-reconnect-visibility/",
+      "title": "Device Reconnect Visibility After Connectivity Changes",
+      "query": "device reconnect and health visibility",
+      "summary": "Evercraft Network is designed to expose public-safe continuity and reconnect concepts while keeping private device identity, precise location, telecom identifiers, secrets, and private telemetry out of public discovery."
+    },
+    {
+      "slug": "business-connectivity-resilience",
+      "url": "/network/mesh/business-connectivity-resilience/",
+      "title": "Business Connectivity Resilience Software",
+      "query": "business connectivity resilience software",
+      "summary": "Evercraft Network fits business continuity problems where applications and devices may reconnect through different authorized internet paths and the operator wants continuity-readiness context without replacing the carrier."
+    },
+    {
+      "slug": "household-connectivity-resilience",
+      "url": "/network/mesh/household-connectivity-resilience/",
+      "title": "Household Connectivity Resilience Software",
+      "query": "household connectivity resilience software",
+      "summary": "Evercraft Network can be considered when a household wants software-level continuity and reconnect awareness across internet paths already available to and authorized by the household."
+    }
+  ],
+  "boundaries": [
+    "not a cellular carrier, ISP, SIM or eSIM service",
+    "not 911 or PSAP integration",
+    "not guaranteed geographic coverage or emergency backhaul",
+    "public discovery does not expose private topology or private telemetry"
+  ],
+  "discovery": "/network/discovery.json",
+  "llms": "/network/mesh/llms.txt"
+}
