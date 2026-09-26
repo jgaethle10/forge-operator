@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "foundry_app_escape": {
-      "type": "http",
-      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp"
-    }
-  }
+  "mcpServers": {}
 }
