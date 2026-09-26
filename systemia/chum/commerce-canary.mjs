@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const catalog=JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const gateway='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const paymentExport='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport';
 const timeoutMs=15000;
 
 function containsId(value,expected,depth=0){
@@ -150,6 +151,9 @@ for(const offer of offers){
   });
 }
 
+const paymentExportProbe=await getResponse(paymentExport,{requireJson:true});
+const paymentExportFailClosed=paymentExportProbe.status===401&&paymentExportProbe.json?.error==='bearer_required';
+
 const failures=results.filter(r=>!r.valid);
 const offerFailures=results.filter(r=>!r.offer_door_valid);
 const reviewFailures=results.filter(r=>!r.review_door_valid);
@@ -184,7 +188,8 @@ const receipt={
     readable_human_buyer_doors:buyerRequired.length-buyerFailures.length,
     failed_human_buyer_doors:buyerFailures.length,
     healthy_money_paths:results.length-failures.length,
-    failed_money_paths:failures.length
+    failed_money_paths:failures.length,
+    private_payment_export_fail_closed:paymentExportFailClosed
   },
   results
 };
@@ -202,7 +207,8 @@ const md=[
   `Required direct-sale downstream buyer doors: ${receipt.summary.required_human_buyer_doors}`,
   `Readable direct-sale buyer doors: ${receipt.summary.readable_human_buyer_doors}`,
   `Healthy money paths: ${receipt.summary.healthy_money_paths}`,
-  `Failed money paths: ${receipt.summary.failed_money_paths}`,'',
+  `Failed money paths: ${receipt.summary.failed_money_paths}`,
+  `Private payment export fail-closed without GitHub OIDC: ${receipt.summary.private_payment_export_fail_closed}`,'',
   '> This is a read-only money-path canary. It verifies offer discovery, the machine review door, the branded buyer frontage for every sell-now offer, and the downstream buyer destination for direct-checkout offers. It never creates checkout, attempts payment, or treats a reachable URL as payment proof.','',
   '| Offer | Public ID | State | Offer HTTP | Review HTTP | Frontage HTTP | Downstream HTTP | Result |','|---|---|---|---:|---:|---:|---:|---|',
   ...results.map(r=>`| ${r.name} | ${r.public_id} | ${r.machine_state||''} | ${r.status} | ${r.review_status} | ${r.buyer_frontage_status} | ${r.buyer_required?r.buyer_status:'n/a'} | ${r.valid?'money path readable':r.reason} |`),
@@ -214,3 +220,4 @@ fs.writeFileSync('artifacts/chum/commerce-canary-latest.md',md.join('\n'));
 console.log(JSON.stringify(receipt.summary));
 
 if(failures.length) throw new Error(`CHUM commerce canary found ${failures.length} broken sell-now money path(s)`);
+if(!paymentExportFailClosed) throw new Error(`CHUM private payment export did not fail closed as expected (HTTP ${paymentExportProbe.status})`);
