@@ -124,11 +124,15 @@ export async function buildMoneyRadar({
   } else if (clean(sourceUrl)) {
     sourceKind = 'remote_https';
     configured = true;
-    try {
-      events = await fetchRemote(clean(sourceUrl), clean(sourceToken));
-      fetched = true;
-    } catch (error) {
-      sourceError = error instanceof Error ? error.message : String(error);
+    if (!clean(sourceToken)) {
+      sourceError = 'Money Radar remote source requires an authentication token.';
+    } else {
+      try {
+        events = await fetchRemote(clean(sourceUrl), clean(sourceToken));
+        fetched = true;
+      } catch (error) {
+        sourceError = error instanceof Error ? error.message : String(error);
+      }
     }
   } else if (fs.existsSync(localFile)) {
     sourceKind = 'local_artifact';
@@ -198,6 +202,7 @@ export async function buildMoneyRadar({
 
   const measurementState =
     !configured ? 'blocked_source_not_configured'
+      : sourceKind === 'remote_https' && !clean(sourceToken) ? 'blocked_source_auth_missing'
       : !fetched ? 'blocked_source_fetch_failed'
       : 'measured';
 
