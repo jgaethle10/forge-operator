@@ -900,6 +900,17 @@ const schemaGraph = {
       description: 'Evercraft builds public machine-discoverable software, research, safety, operations, media, infrastructure and commerce capabilities.'
     },
     {
+      '@type': 'WebSite',
+      '@id': 'https://github.com/jgaethle10/forge-operator#evercraft-discovery-site',
+      name: 'Evercraft Public Capability Discovery',
+      publisher: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: '/api/discover?q={search_term_string}',
+        'query-input': 'required name=search_term_string'
+      }
+    },
+    {
       '@type': 'SoftwareApplication',
       '@id': 'https://github.com/jgaethle10/forge-operator#chum',
       name: 'CHUM',
