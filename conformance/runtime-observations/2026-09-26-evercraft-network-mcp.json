@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.network.live-mcp-evidence.v1",
+  "observed_at": "2026-09-26T23:48:52Z",
+  "product_key": "evercraft-network",
+  "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "server_info": {
+    "name": "evercraft-machine-commerce",
+    "version": "1.3.1"
+  },
+  "verification": {
+    "initialize": "pass",
+    "tools_list": {
+      "status": "pass",
+      "required_tools": [
+        "get_network_capabilities",
+        "get_network_presence",
+        "prepare_network_handoff"
+      ]
+    },
+    "live_read_only_call": {
+      "tool": "get_network_capabilities",
+      "status": "pass",
+      "has_result": true,
+      "is_error": false,
+      "structured_content_present": true,
+      "content_types": [
+        "text"
+      ]
+    }
+  },
+  "github_actions": {
+    "workflow": "Evercraft Network MCP Canary",
+    "workflow_run_id": 36280593232,
+    "workflow_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/36280593232",
+    "head_sha": "49bff41914433fae822c7e721fa76ec1ef374ff4",
+    "conclusion": "success",
+    "artifact": {
+      "id": 10918167735,
+      "name": "evercraft-network-public-mcp-canary",
+      "digest": "sha256:2f29bde87952d89399f7df09d05792b3b250bc1e12eba38e27b63747d9565ce8",
+      "expires_at": "2026-12-25T23:48:45Z"
+    }
+  },
+  "verified": [
+    "dedicated Evercraft Network MCP Canary completed successfully",
+    "production MCP initialize returned serverInfo for evercraft-machine-commerce v1.3.1",
+    "production tools/list exposed all three declared Evercraft Network tools",
+    "production get_network_capabilities read-only call returned a non-error result"
+  ],
+  "not_verified": [
+    "get_network_presence tool execution",
+    "prepare_network_handoff tool execution",
+    "device enrollment",
+    "payment or paid membership activation",
+    "private telemetry access",
+    "connectivity control",
+    "carrier control",
+    "911 or PSAP routing",
+    "guaranteed geographic coverage or emergency backhaul"
+  ]
+}

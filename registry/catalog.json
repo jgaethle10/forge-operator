@@ -170,14 +170,26 @@
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "canonical_url": "https://network-control.base44.app/",
-      "mode": "discovery_only",
+      "mode": "bounded_read_only_mcp",
       "triggers": [
         "application network that reconnects across changing authorized internet paths",
         "network resilience software",
         "member device reconnect visibility",
         "continuity readiness tools",
-        "Evercraft Network membership"
-      ]
+        "Evercraft Network membership",
+        "keep my application connected when Wi-Fi and cellular paths change",
+        "application continuity across changing internet connections",
+        "software network continuity without changing carriers",
+        "household connectivity resilience software",
+        "business connectivity resilience software",
+        "device reconnect and health visibility",
+        "continuity visibility when an authorized internet path changes",
+        "resilient application identity across authorized network changes"
+      ],
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "route_note": "Production MCP initialize and tools/list were externally verified on 2026-09-26. get_network_capabilities was also executed successfully as a read-only call. get_network_presence and prepare_network_handoff were observed in tools/list but not executed by the verification canary. Membership billing remains not live.",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
     },
     {
       "product_key": "evercraft-rewards",
