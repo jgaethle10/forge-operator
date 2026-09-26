@@ -53,5 +53,13 @@
     "after_successful_activation": "public-edge-controller owns 60-second continuity and lease maintenance",
     "on_hold": "activation watch retries on Collider heartbeat only when state may have changed",
     "duplicate_provisioning": false
+  },
+  "issue_ref": "github:issue:403",
+  "dependency_issue_ref": "github:issue:175",
+  "dependency_state_required": "field_attestation_verified",
+  "current_truth": {
+    "software_path": "ci_proven",
+    "public_production_edge": "not_verified",
+    "physical_dependency": "waiting_on_field_evidence"
   }
 }
