@@ -28,7 +28,10 @@
       "registry_name": "io.github.jgaethle10/aliev",
       "mcp": "https://aliev.base44.app/functions/alievMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "buildflow",
@@ -42,7 +45,10 @@
       "registry_name": "io.github.jgaethle10/buildflow",
       "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "callproof-vault",
@@ -73,7 +79,10 @@
         ],
         "payment_state": "Authentication required; live Stripe plan at checkout is authoritative and payment must be independently verified"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "career-command",
@@ -87,7 +96,10 @@
       "registry_name": "io.github.jgaethle10/career-command",
       "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "christmas-lights-usa",
@@ -118,7 +130,10 @@
         ],
         "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "chronosport",
@@ -132,7 +147,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "coda-y-codigo",
@@ -171,7 +189,10 @@
         ],
         "payment_state": "Source includes Stripe checkout, webhook, confirmation and commerce-health functions; access is prepared only after authoritative completed-payment confirmation"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "contractor-cloud",
@@ -185,7 +206,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "daytrade-lens",
@@ -204,7 +228,10 @@
         "pricing": "$19/month",
         "payment_state": "Evercraft Payments cutover pending verified production origin and runtime release"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "deck-capital-fit",
@@ -218,7 +245,10 @@
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "ecoledger",
@@ -234,7 +264,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "eps-estimate-engine",
@@ -250,7 +283,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "eventwave",
@@ -264,7 +300,10 @@
       "registry_name": "io.github.jgaethle10/eventwave",
       "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-circles",
@@ -278,7 +317,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-clip",
@@ -292,7 +334,10 @@
       "registry_name": "io.github.jgaethle10/evercraft-clip",
       "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-containment",
@@ -309,7 +354,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-cosmos-atlas",
@@ -323,7 +371,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-fantasy-intelligence",
@@ -356,7 +407,10 @@
         ],
         "payment_state": "Explicit user confirmation and authoritative completed-payment verification required"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-global-health-atlas",
@@ -373,7 +427,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-network",
@@ -389,7 +446,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-physics-atlas",
@@ -403,7 +463,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-property-services",
@@ -424,7 +487,10 @@
         "pricing": "Quote required after scope review",
         "payment_state": "No payment required for public estimate intake"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-rewards",
@@ -438,7 +504,10 @@
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-web",
@@ -452,7 +521,10 @@
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evercraft-wildlife-atlas",
@@ -466,7 +538,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evermaps",
@@ -482,7 +557,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "evernest",
@@ -496,7 +574,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "everystage",
@@ -510,7 +591,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "faie",
@@ -524,7 +608,10 @@
       "registry_name": "io.github.jgaethle10/faie",
       "mcp": "https://faie.base44.app/functions/faieMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "findmypart",
@@ -538,7 +625,10 @@
       "registry_name": "io.github.jgaethle10/findmypart",
       "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "forensic-record",
@@ -552,7 +642,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "forensiscope",
@@ -603,6 +696,22 @@
         "registry_name": "io.github.jgaethle10/forensiscope",
         "playground": "/forensiscope/developers/playground.html",
         "clients": "/forensiscope/developers/clients/"
+      },
+      "editorial_surfaces": {
+        "hub": "/forensiscope/editorial/",
+        "index": "/forensiscope/editorial/index.json",
+        "rss": "/forensiscope/editorial/feed.xml",
+        "social_pack": "/forensiscope/editorial/social-pack.json"
+      },
+      "knowledge_surfaces": {
+        "hub": "/forensiscope/mesh/",
+        "index": "/forensiscope/mesh/index.json",
+        "llms": "/forensiscope/mesh/llms.txt"
+      },
+      "distribution_surfaces": {
+        "hub": "/forensiscope/distribution/",
+        "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
+        "llms": "/forensiscope/distribution/llms.txt"
       }
     },
     {
@@ -617,7 +726,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "globalstat",
@@ -633,7 +745,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "guardian",
@@ -649,7 +764,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "ibmi-rescue",
@@ -696,7 +814,10 @@
           "evidence": "GitHub Actions canary 36211823272 verified three-tier offer discovery, live human handoff, buyer-route reachability, and synthetic backend checkout creation with zero payment."
         }
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "infinite-classroom",
@@ -710,7 +831,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "legacy-rescue-lab",
@@ -741,7 +865,23 @@
         "credit_policy": "100% of the $299 Legacy Rescue Scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
         "payment_state": "Product offer is published for discovery and human handoff. Product-specific direct checkout and paid state remain receipt-gated until independently verified."
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": {
+        "hub": "/legacy-rescue-lab/editorial/",
+        "rss": "/legacy-rescue-lab/editorial/feed.xml",
+        "journal_article": "https://evercraftjournal.base44.app/journal/save-the-software-before-you-rebuild-it",
+        "journal_guide": "https://evercraftjournal.base44.app/guides/software-rescue-before-rebuild"
+      },
+      "knowledge_surfaces": {
+        "hub": "/legacy-rescue-lab/",
+        "llms": "/legacy-rescue-lab/llms.txt",
+        "discovery": "/legacy-rescue-lab/discovery.json",
+        "answer_graph": "/chum/answers/"
+      },
+      "distribution_surfaces": {
+        "hub": "/legacy-rescue-lab/distribution/",
+        "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
+      }
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -757,7 +897,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "raven-nexus",
@@ -771,7 +914,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "roasted",
@@ -785,7 +931,10 @@
       "registry_name": "io.github.jgaethle10/roasted",
       "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "skyops-parking",
@@ -799,7 +948,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "space-dudz",
@@ -818,7 +970,10 @@
         "pricing": "Varies by current product and variant",
         "payment_state": "Source includes Stripe checkout, webhook, order authorization and capture functions; completed payment and order state must be provider-verified"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -834,7 +989,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "systemia-decision-lab",
@@ -861,7 +1019,10 @@
         ],
         "payment_state": "Source includes Stripe checkout and confirmation functions; paid state must be independently provider-verified before fulfillment"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "systemia-field-library",
@@ -875,7 +1036,10 @@
       "registry_name": "io.github.jgaethle10/systemia-field-library",
       "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "systemia-portfolio-sentinel",
@@ -910,7 +1074,10 @@
           "state": "discovery_live_human_onboarding"
         }
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "systemia-radar",
@@ -941,7 +1108,10 @@
         ],
         "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "systemia-website-audit",
@@ -955,7 +1125,10 @@
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
       "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "talent-atlas",
@@ -971,7 +1144,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "thoughtdrop",
@@ -1000,7 +1176,10 @@
         ],
         "payment_state": "Explicit user confirmation and authoritative completed-payment verification required before reveal"
       },
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "towi-research",
@@ -1017,7 +1196,10 @@
       "registry_name": null,
       "mcp": null,
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     },
     {
       "product_key": "website-launch",
@@ -1031,7 +1213,10 @@
       "registry_name": "io.github.jgaethle10/website-launch",
       "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
       "commercial": null,
-      "developer_surfaces": null
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
     }
   ]
 }

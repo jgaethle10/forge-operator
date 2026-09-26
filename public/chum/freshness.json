@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:38:10.646Z",
+  "updated_at": "2026-09-26T03:40:09.576Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,182 +11,106 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/evercraft-clip/",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-clip/ai-conformance.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-clip/ai-discovery.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-clip/llms.txt",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/llms.txt",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "path": "/legacy-rescue-lab/llms.txt",
+      "last_changed": "2026-09-26T03:40:09.576Z",
       "priority": 86
     },
     {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "last_changed": "2026-09-26T03:40:09.576Z",
       "priority": 80
     },
     {
       "path": "/chum/index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "last_changed": "2026-09-26T03:40:09.576Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "path": "/legacy-rescue-lab/",
+      "last_changed": "2026-09-26T03:40:09.576Z",
       "priority": 60
     },
     {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "path": "/legacy-rescue-lab/discovery.json",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/distribution/",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/distribution/social-pack.json",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/editorial/",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/editorial/feed.xml",
+      "last_changed": "2026-09-26T03:40:09.576Z",
       "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/legacy-rescue-lab/llms.txt",
+      "url": "/legacy-rescue-lab/llms.txt",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 80
+    },
+    {
+      "path": "/legacy-rescue-lab/",
+      "url": "/legacy-rescue-lab/",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/discovery.json",
+      "url": "/legacy-rescue-lab/discovery.json",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/distribution/",
+      "url": "/legacy-rescue-lab/distribution/",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/distribution/social-pack.json",
+      "url": "/legacy-rescue-lab/distribution/social-pack.json",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/editorial/",
+      "url": "/legacy-rescue-lab/editorial/",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    {
+      "path": "/legacy-rescue-lab/editorial/feed.xml",
+      "url": "/legacy-rescue-lab/editorial/feed.xml",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
     {
       "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
       "url": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
@@ -352,18 +276,6 @@
     {
       "path": "/chum/answers/index.json",
       "url": "/chum/answers/index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T03:38:10.646Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
       "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 80
     },
@@ -1642,48 +1554,6 @@
     {
       "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
       "url": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
-      "url": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
-      "url": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "url": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
-      "url": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
-      "url": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "url": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
-      "url": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
       "last_changed": "2026-09-26T03:20:55.613Z",
       "priority": 160
     }

@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:38:10.646Z",
-  "url_count": 2025,
+  "updated_at": "2026-09-26T03:40:09.576Z",
+  "url_count": 2032,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -21,8 +21,8 @@
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "0b9a7606f962202f3a85cdaa207b5c617104a10933353f153aedea6fc59ba17e",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "08bbe13e95b5ce4b9297651e667ae65bf67a00a50a7027d5ff2b5a49491588b8",
+      "last_changed": "2026-09-26T03:40:09.576Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "9aff040011f1b5582e15572ad483baf9d6c828359310d06a425122a19c308645",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "edcfeaff6707fdf6c119d3e6defe5da82d67cb9321425152bde215b9a135b67d",
+      "last_changed": "2026-09-26T03:40:09.576Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -3000,6 +3000,48 @@
       "content_sha256": "59eb0c2ad91deaf410ee6f176dfe6bfc933005bbbc893e20503562a5ec0ef6b3",
       "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 94
+    },
+    "/legacy-rescue-lab/editorial/": {
+      "path": "/legacy-rescue-lab/editorial/",
+      "content_sha256": "842632c0dc6884c15aedee5020a55ea662e186f992465de7dab9606946a49c4d",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/editorial/feed.xml": {
+      "path": "/legacy-rescue-lab/editorial/feed.xml",
+      "content_sha256": "13390c8b1892651e1e0d88501cdebed888b93dae3ffc6db23a6003d67db6d016",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/": {
+      "path": "/legacy-rescue-lab/",
+      "content_sha256": "193da6937ee8ddd9bde5df0db789df0a993ddf31be902af9cc046721a6ee1d7e",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/llms.txt": {
+      "path": "/legacy-rescue-lab/llms.txt",
+      "content_sha256": "3a66163f9cf916c2e5ead021d70a2e313acfaa60df6f35cd47da454eca17a580",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 86
+    },
+    "/legacy-rescue-lab/discovery.json": {
+      "path": "/legacy-rescue-lab/discovery.json",
+      "content_sha256": "124a1b4ee402f3515f1fd80db53af8dc12024837a413b8dd2b52eafeab66e793",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/distribution/": {
+      "path": "/legacy-rescue-lab/distribution/",
+      "content_sha256": "47eb8a2c08c1a0e86550b13c3f38f3bbecf8e13bdc4a1f910696c77e72b8085d",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
+    },
+    "/legacy-rescue-lab/distribution/social-pack.json": {
+      "path": "/legacy-rescue-lab/distribution/social-pack.json",
+      "content_sha256": "f5a5874bcaaf6db1d37bc26d0ef1a36ce57ce76d81922b418cf290ec3546523f",
+      "last_changed": "2026-09-26T03:40:09.576Z",
+      "priority": 60
     },
     "/chum/products/little-red-book-export-qa/": {
       "path": "/chum/products/little-red-book-export-qa/",
