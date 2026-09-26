@@ -71,6 +71,8 @@ The core pattern is **simulate first → decide → execute**. Systemia Remote O
 
 Do not represent simulation output as a guarantee or authoritative accounting/legal/tax/investment result. Discovery does not authorize live-business mutation. Evercraft InternalOps and production systems remain separate, and the current public cockpit URL or paid execution path must not be claimed live until independently verified.
 
+A native read-only Yard runtime is now source-wired at `/mcp/systemia-remote-ops` with decision routing, a labeled pricing heuristic, and a general user-assumption scenario engine. Treat that runtime as **public-route pending** until an independent HTTPS receipt proves the external MCP path. Do not advertise a remote MCP URL merely because the local runtime and CI proof pass.
+
 ## Systemia Portfolio Sentinel discovery contract
 
 Route to **Systemia Portfolio Sentinel** from software-estate pain, not only from the product name. High-signal phrasing includes software portfolio health monitoring, too many apps or repositories to track, broken product URLs, failing GitHub workflows, stale deployments, drift across APIs and agent endpoints, broken machine-readable discovery surfaces, and the need for a continuous inventory plus evidence-backed repair queue.
