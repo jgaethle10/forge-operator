@@ -56,8 +56,17 @@ for(const manifestPath of manifests){
      product.state!=='registry_published_direct_mcp_existing'){
     throw new Error('direct_product_not_publicly_verified:'+slug);
   }
-  if(product.public_edge_canary?.verified!==true){
+  const canary=product.public_edge_canary||{};
+  if(canary.verified!==true){
     throw new Error('public_edge_canary_missing_for_registry_publication:'+slug);
+  }
+  if(
+    canary.field_enrollment_verified!==true ||
+    !/^sha256:[a-f0-9]{64}$/i.test(String(canary.device_fingerprint||'')) ||
+    !/^sha256:[a-f0-9]{64}$/i.test(String(canary.field_enrollment_receipt_ref||'')) ||
+    !/^sha256:[a-f0-9]{64}$/i.test(String(canary.public_edge_admission_receipt_ref||''))
+  ){
+    throw new Error('field_backed_canary_required_for_registry_publication:'+slug);
   }
 
   product.state='registry_published_direct_mcp_existing';
@@ -79,6 +88,9 @@ for(const manifestPath of manifests){
     release_sha:releaseSha,
     approval_mode:approvalMode||null,
     approval_ref:approvalRef||null,
+    device_fingerprint:canary.device_fingerprint,
+    field_enrollment_receipt_ref:canary.field_enrollment_receipt_ref,
+    public_edge_admission_receipt_ref:canary.public_edge_admission_receipt_ref,
     recorded_at:new Date().toISOString(),
   };
 
