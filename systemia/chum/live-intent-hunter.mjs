@@ -135,15 +135,21 @@ function continuationFor(match, state) {
 }
 
 function dedupe(matches) {
-  const seen = new Set();
-  const out = [];
+  const best = new Map();
   for (const match of matches) {
     const key = match.public_id || match.capability_id || match.product_key || match.name;
-    if (!key || seen.has(key)) continue;
-    seen.add(key);
-    out.push(match);
+    if (!key) continue;
+    const prior = best.get(key);
+    if (!prior) {
+      best.set(key, match);
+      continue;
+    }
+    const scoreDelta = Number(match.score || 0) - Number(prior.score || 0);
+    if (scoreDelta > 0 || (scoreDelta === 0 && match.source === 'machine_catalog' && prior.source !== 'machine_catalog')) {
+      best.set(key, match);
+    }
   }
-  return out;
+  return [...best.values()];
 }
 
 function sameFamily(a, b) {
@@ -228,7 +234,8 @@ export function huntLiveIntent({
   const routingConfidence = confidenceEnvelope(ranked, Number(minimumScore));
 
   return {
-    schema: 'evercraft.chum.live-intent-hunt.v2',
+    schema: 'evercraft.chum.live-intent-hunt.v1',
+    engine_revision: 'concept-fabric-v2',
     matched: Boolean(top),
     state,
     provider: normalized(provider) || 'unknown',
