@@ -42,8 +42,8 @@
   "invocation_status": "LIVE for public machine discovery and deterministic problem matching through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after scoped onboarding and authorization. No discovery call grants private access or production-mutation authority.",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-  "start_url": null,
-  "start_url_state": "not_sell_now",
+  "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+  "start_url_state": "machine_commerce_review_fallback",
   "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/portfolio-sentinel-v1/",
@@ -51,5 +51,5 @@
     "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/capability.json",
     "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/schema.jsonld"
   },
-  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
+  "authority_rule": "Discovery never creates a payment obligation or private-system access. Customer monitoring requires explicit scoped authorization. Production mutation and payment remain separately gated."
 }
