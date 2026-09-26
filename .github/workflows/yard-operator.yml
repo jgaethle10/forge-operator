@@ -41,3 +41,5 @@ jobs:
         run: node systemia/yard/public-edge-tls.proof.mjs
       - name: Prove persistent public edge controller lifecycle
         run: node systemia/yard/public-edge-controller.proof.mjs
+      - name: Prove automatic public edge activation
+        run: node systemia/yard/public-edge-activator.proof.mjs
