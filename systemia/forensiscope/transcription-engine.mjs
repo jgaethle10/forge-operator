@@ -31,6 +31,20 @@ function substitute(value, context) {
     .replaceAll('{shard_end}', String(context.shard_end_seconds));
 }
 
+function parseHealthcheckArgs(raw) {
+  if (!raw) return null;
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error('FORENSISCOPE_TRANSCRIBE_HEALTHCHECK_ARGS_JSON must be valid JSON.');
+  }
+  if (!Array.isArray(parsed) || !parsed.every((value) => typeof value === 'string')) {
+    throw new Error('FORENSISCOPE_TRANSCRIBE_HEALTHCHECK_ARGS_JSON must be a JSON array of strings.');
+  }
+  return parsed;
+}
+
 export function resolveTranscriptionEngine(env = process.env) {
   const enabled = String(env.FORENSISCOPE_TRANSCRIBE_ENABLED || '').toLowerCase() === 'true';
   if (!enabled) {
@@ -92,6 +106,79 @@ function normalizeSegments(payload, bounds) {
   }
 
   return segments;
+}
+
+export function probeTranscriptionEngineCapability(env = process.env) {
+  const engine = resolveTranscriptionEngine(env);
+  if (engine.state !== 'configured') {
+    return {
+      ready: false,
+      state: engine.state,
+      engine_id: engine.engine_id || null,
+      reason: engine.reason || null
+    };
+  }
+
+  let args;
+  try {
+    args = parseHealthcheckArgs(
+      env.FORENSISCOPE_TRANSCRIBE_HEALTHCHECK_ARGS_JSON
+    );
+  } catch (error) {
+    return {
+      ready: false,
+      state: 'healthcheck_configuration_error',
+      engine_id: engine.engine_id,
+      reason: error instanceof Error ? error.message : String(error)
+    };
+  }
+
+  if (!args) {
+    return {
+      ready: false,
+      state: 'healthcheck_not_configured',
+      engine_id: engine.engine_id,
+      reason:
+        'FORENSISCOPE_TRANSCRIBE_HEALTHCHECK_ARGS_JSON is required before a NodeSeed may advertise transcription capability.'
+    };
+  }
+
+  const started = Date.now();
+  const result = spawnSync(engine.executable, args, {
+    encoding: 'utf8',
+    env,
+    timeout: Math.max(
+      250,
+      Math.min(
+        30000,
+        Number(env.FORENSISCOPE_TRANSCRIBE_HEALTHCHECK_TIMEOUT_MS || 5000)
+      )
+    ),
+    maxBuffer: Math.min(engine.max_buffer_bytes, 4 * 1024 * 1024)
+  });
+
+  const durationMs = Date.now() - started;
+  if (result.status !== 0) {
+    return {
+      ready: false,
+      state: result.error?.code === 'ETIMEDOUT'
+        ? 'healthcheck_timeout'
+        : 'healthcheck_failed',
+      engine_id: engine.engine_id,
+      duration_ms: durationMs,
+      reason:
+        result.error?.message ||
+        String(result.stderr || result.stdout || '').trim().slice(-1000) ||
+        'Transcription engine healthcheck failed.'
+    };
+  }
+
+  return {
+    ready: true,
+    state: 'ready',
+    engine_id: engine.engine_id,
+    duration_ms: durationMs
+  };
 }
 
 export function transcribePreparedAudio({
