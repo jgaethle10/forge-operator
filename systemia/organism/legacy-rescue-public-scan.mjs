@@ -148,13 +148,17 @@ export async function scanLegacyRescuePublicSources({
         })
       : null;
 
-    if (buyerSignal && buyerSignal.outreach_state !== 'hold') {
-      buyerSignals.push({
-        ...buyerSignal,
-        source_key: source.key,
-        source_name: source.name || source.key,
-        source_ref: source.url,
-      });
+    const buyerSignalWithSource = buyerSignal
+      ? {
+          ...buyerSignal,
+          source_key: source.key,
+          source_name: source.name || source.key,
+          source_ref: source.url,
+        }
+      : null;
+
+    if (buyerSignalWithSource && buyerSignalWithSource.outreach_state !== 'hold') {
+      buyerSignals.push(buyerSignalWithSource);
     }
 
     nextState.sources[source.key] = {
@@ -166,7 +170,7 @@ export async function scanLegacyRescuePublicSources({
       last_http_status: Number(response.status || 200),
       last_error: null,
       known_links: discoveredLinks,
-      buyer_signal: buyerSignal,
+      buyer_signal: buyerSignalWithSource,
     };
 
     if ((firstSeen && source.emit_on_first_seen === true) || (changed && source.emit_body_change_signal !== false)) {
@@ -204,12 +208,17 @@ export async function scanLegacyRescuePublicSources({
     });
   }
 
+  const activeBuyerSignals = Object.values(nextState.sources)
+    .map((row) => row?.buyer_signal)
+    .filter((row) => row && row.outreach_state !== 'hold');
+
   return {
     schema: 'evercraft.legacy-rescue-public-scan.v1',
     workflow_key: 'legacy-rescue-opportunity-watch',
     observed_at: observedAt,
     signals,
-    buyer_signals: buyerSignals,
+    buyer_signals: activeBuyerSignals,
+    buyer_signal_updates: buyerSignals,
     state: nextState,
     receipts,
   };
