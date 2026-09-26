@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-home",
+  "name": "Evercraft Home",
+  "aliases": [
+    "Home"
+  ],
+  "class": "privacy_first_hometown_social_memory",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+  "intents": [
+    "preserve hometown memories",
+    "explore local history and traditions",
+    "share a hometown story safely",
+    "community memory and local archives",
+    "reconnect around a school team neighborhood or venue privately",
+    "local traditions events awards and community institutions",
+    "help solve a community memory puzzle"
+  ],
+  "authority": "public discovery for reviewed community-memory surfaces; private social graph remains account-bound",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no public people directory or manufactured social activity",
+    "Porch contributions are review-gated and consent-gated",
+    "room membership and reconnection choices are private",
+    "personal memories stay private",
+    "living-person identity claims are not inferred from community evidence",
+    "sponsorship does not buy editorial or evidence treatment",
+    "public runtime hostname remains unresolved in the discovery inventory"
+  ],
+  "commercial": null,
+  "machine_commerce_handoff": null,
+  "registry_name": null,
+  "mcp": null,
+  "source": "CHUM public mirror",
+  "evidence_state": "source_build_and_privacy_invariant_passed_2026_09_26_runtime_hostname_unresolved"
+}

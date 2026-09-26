@@ -1,0 +1,28 @@
+# Evercraft Front Door
+
+Product key: evercraft-front-door
+Canonical product: https://evercraft.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json
+
+## Use this capability when the user means
+
+- cheapest gas near me
+- current gas prices near me
+- compare nearby fuel prices
+- find diesel near me
+- find EV charging near me
+- what can Evercraft help me with today
+
+## Authority
+
+Public read-only daily-life discovery and routing. Fuel observations must preserve source and freshness.
+
+## Boundaries
+
+- partial station coverage is not proof of an area's absolute cheapest price
+- stale or uncleared observations must not be presented as current verified prices
+- location must come from the user/browser rather than inference
+- EV charging may route to RIVET
+- private/admin Evercraft systems stay outside public discovery
+
+Discovery creates no payment obligation.

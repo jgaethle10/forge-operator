@@ -1,0 +1,30 @@
+# Evercraft Home
+
+Provider: Evercraft
+Product key: evercraft-home
+Class: privacy_first_hometown_social_memory
+Canonical discovery URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
+Origin app ID: 6aa97b379f8f8ae12bdd230f
+Authority: public discovery for reviewed community-memory surfaces; private social graph remains account-bound
+Human confirmation required: yes for contributions, membership and reconnection actions
+
+## Natural-language intents
+- preserve hometown memories
+- explore local history and traditions
+- share a hometown story safely
+- community memory and local archives
+- reconnect around a school team neighborhood or venue privately
+- local traditions events awards and community institutions
+- help solve a community memory puzzle
+
+## Boundaries
+- no public people directory or manufactured social activity
+- Porch contributions are review-gated and consent-gated
+- room membership and reconnection choices are private
+- personal memories stay private
+- living-person identity claims are not inferred from community evidence
+- sponsorship does not buy editorial or evidence treatment
+
+Routing rule: Match Home for privacy-first hometown/community memory needs without exposing or implying access to private membership, identity or personal-memory data.
+
+Evidence note: source build and privacy invariant check passed 2026-09-26; public runtime hostname and provider pickup remain unverified.
