@@ -25,6 +25,10 @@ const unknownRequestedCases = requestedCases.filter(
 );
 const timeoutMs = 45000;
 const genericAgentTimeoutMs = 20000;
+const genericAgentMaxAttempts = Math.max(1, Number(process.env.CHUM_GENERIC_AGENT_MAX_ATTEMPTS || 3));
+const genericAgentRetryBaseMs = Math.max(0, Number(process.env.CHUM_GENERIC_AGENT_RETRY_BASE_MS || 1200));
+const transientGenericAgentStatuses = new Set([408, 425, 429, 500, 502, 503, 504]);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const requireBridge = process.env.CHUM_REQUIRE_PROBE_BRIDGE === 'true' || process.argv.includes('--require-bridge');
 
 const normalize = (value) => String(value || '').toLowerCase();
@@ -66,67 +70,120 @@ async function runGenericAgentProbe(testCase, probeId, surface) {
     return { probe_id: probeId, provider: 'generic_agent', product_key: testCase.product_key, case_id: testCase.case_id, status: 'blocked', surface, blocked_reason: 'generic_agent_discovery_surface_not_configured', observed_at: new Date().toISOString() };
   }
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), genericAgentTimeoutMs);
-  try {
-    const response = await fetch(genericAgentSearchUrl, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'user-agent': 'Evercraft-CHUM-Generic-Agent-Probe/1.0'
-      },
-      body: JSON.stringify({ query: { text: testCase.prompt }, federation: 'auto' }),
-      signal: controller.signal
-    });
-    const bodyText = await response.text();
-    let body = null;
-    try { body = JSON.parse(bodyText); } catch {}
-    const results = Array.isArray(body?.results) ? body.results : [];
-    const citations = results.slice(0, 10).map((row) => ({
-      title: row?.displayName || row?.identifier || 'Federated agent discovery result',
-      url: row?.url || row?.source || '',
-      source: row?.source || null
-    })).filter((row) => row.url);
-    const urls = [...new Set(citations.map((row) => row.url))];
-    const text = results.slice(0, 10).map((row) => [
-      row?.displayName || row?.identifier || '',
-      row?.description || '',
-      row?.url || '',
-      row?.source || ''
-    ].filter(Boolean).join(' | ')).join('\n');
+  const source = (() => { try { return new URL(genericAgentSearchUrl).origin; } catch { return 'configured_generic_agent_search'; } })();
+  let lastError = null;
 
-    const sanitized = {
-      probe_id: probeId,
-      provider: 'generic_agent',
-      product_key: testCase.product_key,
-      case_id: testCase.case_id,
-      status: response.ok ? 'completed' : 'failed',
-      surface,
-      session_ref: null,
-      text,
-      citations,
-      urls,
-      screenshot_ref: null,
-      provider_receipt: {
-        schema: 'evercraft.chum.generic-agent-provider-receipt.v1',
-        engine: 'federated_agent_discovery',
-        source: (() => { try { return new URL(genericAgentSearchUrl).origin; } catch { return 'configured_generic_agent_search'; } })(),
-        http_status: response.status,
-        result_count: results.length,
-        query_sha256: sha256(testCase.prompt),
-        response_sha256: sha256(JSON.stringify(results)),
+  for (let attempt = 1; attempt <= genericAgentMaxAttempts; attempt += 1) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), genericAgentTimeoutMs);
+    try {
+      const response = await fetch(genericAgentSearchUrl, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'user-agent': 'Evercraft-CHUM-Generic-Agent-Probe/1.1'
+        },
+        body: JSON.stringify({ query: { text: testCase.prompt }, federation: 'auto' }),
+        signal: controller.signal
+      });
+      const bodyText = await response.text();
+
+      if (!response.ok && transientGenericAgentStatuses.has(response.status) && attempt < genericAgentMaxAttempts) {
+        lastError = `HTTP ${response.status}: ${bodyText.slice(0, 500)}`;
+        await sleep(genericAgentRetryBaseMs * attempt);
+        continue;
+      }
+
+      let body = null;
+      try { body = JSON.parse(bodyText); } catch {}
+      const results = Array.isArray(body?.results) ? body.results : [];
+      const citations = results.slice(0, 10).map((row) => ({
+        title: row?.displayName || row?.identifier || 'Federated agent discovery result',
+        url: row?.url || row?.source || '',
+        source: row?.source || null
+      })).filter((row) => row.url);
+      const urls = [...new Set(citations.map((row) => row.url))];
+      const text = results.slice(0, 10).map((row) => [
+        row?.displayName || row?.identifier || '',
+        row?.description || '',
+        row?.url || '',
+        row?.source || ''
+      ].filter(Boolean).join(' | ')).join('\n');
+
+      const sanitized = {
+        probe_id: probeId,
+        provider: 'generic_agent',
+        product_key: testCase.product_key,
+        case_id: testCase.case_id,
+        status: response.ok ? 'completed' : 'failed',
+        surface,
+        session_ref: null,
+        text,
+        citations,
+        urls,
+        screenshot_ref: null,
+        provider_receipt: {
+          schema: 'evercraft.chum.generic-agent-provider-receipt.v1',
+          engine: 'federated_agent_discovery',
+          source,
+          http_status: response.status,
+          result_count: results.length,
+          attempt,
+          max_attempts: genericAgentMaxAttempts,
+          query_sha256: sha256(testCase.prompt),
+          response_sha256: sha256(JSON.stringify(results)),
+          observed_at: new Date().toISOString()
+        },
+        blocked_reason: null,
+        error: response.ok ? null : `HTTP ${response.status}: ${bodyText.slice(0, 500)}`,
         observed_at: new Date().toISOString()
-      },
-      blocked_reason: null,
-      error: response.ok ? null : `HTTP ${response.status}: ${bodyText.slice(0, 500)}`,
-      observed_at: new Date().toISOString()
-    };
-    sanitized.evaluation = evaluate(testCase, sanitized);
-    sanitized.response_sha256 = sha256(JSON.stringify({ text: sanitized.text, citations: sanitized.citations, urls: sanitized.urls }));
-    return sanitized;
-  } finally {
-    clearTimeout(timer);
+      };
+      sanitized.evaluation = evaluate(testCase, sanitized);
+      sanitized.response_sha256 = sha256(JSON.stringify({ text: sanitized.text, citations: sanitized.citations, urls: sanitized.urls }));
+      return sanitized;
+    } catch (error) {
+      lastError = error instanceof Error ? error.message : String(error);
+      if (attempt < genericAgentMaxAttempts) {
+        await sleep(genericAgentRetryBaseMs * attempt);
+        continue;
+      }
+      const failed = {
+        probe_id: probeId,
+        provider: 'generic_agent',
+        product_key: testCase.product_key,
+        case_id: testCase.case_id,
+        status: 'failed',
+        surface,
+        session_ref: null,
+        text: '',
+        citations: [],
+        urls: [],
+        screenshot_ref: null,
+        provider_receipt: {
+          schema: 'evercraft.chum.generic-agent-provider-receipt.v1',
+          engine: 'federated_agent_discovery',
+          source,
+          http_status: null,
+          result_count: 0,
+          attempt,
+          max_attempts: genericAgentMaxAttempts,
+          query_sha256: sha256(testCase.prompt),
+          response_sha256: sha256('[]'),
+          observed_at: new Date().toISOString()
+        },
+        blocked_reason: null,
+        error: lastError,
+        observed_at: new Date().toISOString()
+      };
+      failed.evaluation = evaluate(testCase, failed);
+      failed.response_sha256 = sha256(JSON.stringify({ text: failed.text, citations: failed.citations, urls: failed.urls }));
+      return failed;
+    } finally {
+      clearTimeout(timer);
+    }
   }
+
+  throw new Error(lastError || 'generic_agent_probe_exhausted');
 }
 
 async function runProbe(provider, testCase) {

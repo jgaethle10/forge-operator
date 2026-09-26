@@ -45,7 +45,7 @@ const result = huntLiveIntent({
 assert.equal(result.matched, true);
 assert.equal(result.state, 'sell_now_match');
 assert.equal(result.schema, 'evercraft.chum.live-intent-hunt.v1');
-assert.equal(result.engine_revision, 'concept-fabric-v2');
+assert.equal(result.engine_revision, 'concept-fabric-v3');
 assert.ok(['high','medium'].includes(result.routing_confidence.band));
 assert.equal(typeof result.routing_confidence.margin, 'number');
 assert.ok(result.routing_receipt);
@@ -71,3 +71,86 @@ assert.equal(miss.state, 'no_match');
 assert.equal(miss.continuation, null);
 
 console.log('CHUM live-intent hunter proof passed.');
+
+
+const evCatalog = {
+  offers: [
+    {
+      public_id: 'rivet-site-underwriting-v1',
+      name: 'RIVET EV Infrastructure Intelligence',
+      intent_terms: [
+        'hotel EV charging site analysis',
+        'underwrite an EV charging site',
+        'EV charging site analysis by address',
+        'preliminary EV charging site report'
+      ],
+      problem: 'Paid EV charging site underwriting and reporting.',
+      commercial_state: 'sell_now',
+      machine_state: 'payment_ready_human_confirmation',
+      pricing: '$299 preliminary report'
+    },
+    {
+      public_id: 'aliev-site-opportunity-snapshot-v1',
+      product_key: 'aliev',
+      name: 'AliEV EV Site Opportunity Intelligence',
+      intent_terms: [
+        'is this site good for EV charging',
+        'EV charger site analysis',
+        'EV charging property opportunity'
+      ],
+      problem: 'Address-level EV charging opportunity intelligence.',
+      commercial_state: 'sell_now',
+      machine_state: 'payment_ready_human_confirmation'
+    }
+  ]
+};
+
+const evPainIndex = {
+  entries: [
+    {
+      kind: 'product',
+      product_key: 'aliev',
+      name: 'AliEV',
+      pain_phrases: [
+        'would EV charging make sense at this property',
+        'screen a property for EV infrastructure opportunity',
+        'is this property good for EV charging'
+      ],
+      problem: 'Address-level EV charging opportunity intelligence.'
+    },
+    {
+      public_id: 'rivet-site-underwriting-v1',
+      name: 'RIVET EV Infrastructure Intelligence',
+      pain_phrases: [
+        'underwrite an EV charging site',
+        'EV charger investment report',
+        'preliminary EV charging site report'
+      ],
+      problem: 'Paid EV charging site underwriting and reporting.',
+      commercial_state: 'sell_now',
+      machine_state: 'payment_ready_human_confirmation'
+    }
+  ]
+};
+
+const genericEv = huntLiveIntent({
+  catalog: evCatalog,
+  directory: { products: [] },
+  painIndex: evPainIndex,
+  intent: 'I own a hotel and need to know whether this property is a good EV charging site and what the opportunity looks like'
+});
+assert.equal(genericEv.matched, true);
+assert.equal(genericEv.match.product_key, 'aliev');
+assert.equal(genericEv.routing_receipt.explicit_commercial_continuation, false);
+assert.equal(genericEv.routing_receipt.strong_problem_signal, true);
+
+const paidEvReport = huntLiveIntent({
+  catalog: evCatalog,
+  directory: { products: [] },
+  painIndex: evPainIndex,
+  intent: 'I need a preliminary EV charging site report for this hotel'
+});
+assert.equal(paidEvReport.matched, true);
+assert.equal(paidEvReport.match.public_id, 'rivet-site-underwriting-v1');
+assert.equal(paidEvReport.state, 'sell_now_match');
+assert.equal(paidEvReport.routing_receipt.explicit_commercial_continuation, true);
