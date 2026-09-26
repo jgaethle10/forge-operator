@@ -27,9 +27,17 @@ URL: /network/mesh/household-connectivity-resilience/
 Brand-blind phrase: household connectivity resilience software
 Evercraft Network can be considered when a household wants software-level continuity and reconnect awareness across internet paths already available to and authorized by the household.
 
+
+## Civilian Air Relay Planning for Temporary Network Connectivity
+URL: /network/mesh/civilian-air-relay/
+Brand-blind phrase: temporary airborne network relay software for civilian disaster recovery
+Evercraft Network Air Relay matches authorized civilian use cases that need evidence-gated temporary relay route planning, modeled infrastructure counterfactuals, and attested edge-compute placement. The software proofs do not establish a field-tested airborne radio, autonomous flight, aviation approval, battery endurance, geographic coverage, or ecological savings.
+
 ## Shared truth boundary
 - Not a cellular carrier, ISP, SIM or eSIM service.
 - Not 911 or PSAP integration.
 - Not guaranteed geographic coverage or emergency backhaul.
 - Public discovery does not expose private topology, private telemetry, precise location, telecom identifiers, secrets, or operator state.
 - Current Founding Membership billing is not advertised as live until independently verified.
+
+- Air Relay does not perform autonomous flight control and remains field-unverified for physical airborne radio performance.
