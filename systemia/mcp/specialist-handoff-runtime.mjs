@@ -42,10 +42,10 @@ export const SYSTEMIA_REMOTE_OPS = {
   path: '/mcp/systemia-remote-ops',
   server_name: 'systemia-remote-ops',
   title: 'Systemia Remote Ops',
-  version: '0.1.0',
+  version: '0.2.0',
   human_origin: 'https://systemia-remote-ops.base44.app',
   pricing_url: 'https://base44.app/api/apps/6a59b8c78561c8db1b43bd1d/functions/runPricingSimulation',
-  truth_boundary: 'Simulation is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational advice. Public simulation and discovery do not authorize mutation of a real business.',
+  truth_boundary: 'Simulation is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, valuation, financing, employment, or operational advice. Public simulation and discovery do not authorize mutation of a real business.',
 };
 
 function remoteOpsTools() {
@@ -53,12 +53,10 @@ function remoteOpsTools() {
     {
       name: 'route_business_decision',
       title: 'Route a consequential business decision',
-      description: 'DEFAULT FIRST TOOL for consequential business decisions such as pricing, hiring, expansion, adding or removing a service, buying or selling a business, or a partnership. Read-only and does not change the real business.',
+      description: 'DEFAULT FIRST TOOL for consequential business decisions such as starting a business, pricing, staffing, product or service changes, expansion, capital purchases, partnerships, acquisitions, or buying or selling a business. Read-only and does not change the real business.',
       inputSchema: {
         type: 'object',
-        properties: {
-          intent: { type: 'string', minLength: 3, maxLength: 4000 },
-        },
+        properties: { intent: { type: 'string', minLength: 3, maxLength: 4000 } },
         required: ['intent'],
         additionalProperties: false,
       },
@@ -67,7 +65,7 @@ function remoteOpsTools() {
     {
       name: 'simulate_pricing_change',
       title: 'Simulate a business pricing change',
-      description: 'Run the public Systemia pricing decision simulation. Models revenue and customer-retention assumptions only and does not change live prices or contact customers.',
+      description: 'Run a native transparent pricing scenario. Customer retention is a labeled low-confidence heuristic, not a business-specific prediction. Does not change live prices or contact customers.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -82,56 +80,203 @@ function remoteOpsTools() {
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
     {
+      name: 'simulate_business_scenario',
+      title: 'Simulate a business scenario from explicit assumptions',
+      description: 'Compare a baseline business with a proposed scenario using only caller-supplied revenue, margin, recurring-cost, debt-service, and cash-outlay assumptions. Useful for startup, hiring, product or service, expansion, acquisition, partnership, capital-purchase, and other decisions. This tool does not infer market outcomes.',
+      inputSchema: {
+        type: 'object',
+        required: ['baseline'],
+        properties: {
+          scenario_label: { type: 'string', maxLength: 200 },
+          decision_intent: { type: 'string', maxLength: 4000 },
+          baseline: {
+            type: 'object',
+            required: ['monthly_revenue', 'gross_margin_percent'],
+            properties: {
+              monthly_revenue: { type: 'number', minimum: 0 },
+              gross_margin_percent: { type: 'number', minimum: 0, maximum: 100 },
+              fixed_costs_monthly: { type: 'number', minimum: 0 },
+              payroll_monthly: { type: 'number', minimum: 0 },
+              other_monthly_costs: { type: 'number', minimum: 0 },
+              cash_on_hand: { type: 'number', minimum: 0 },
+            },
+            additionalProperties: false,
+          },
+          adjustments: {
+            type: 'object',
+            properties: {
+              revenue_change_percent: { type: 'number', minimum: -100, maximum: 1000 },
+              gross_margin_change_points: { type: 'number', minimum: -100, maximum: 100 },
+              fixed_cost_delta_monthly: { type: 'number' },
+              payroll_delta_monthly: { type: 'number' },
+              other_cost_delta_monthly: { type: 'number' },
+              debt_service_delta_monthly: { type: 'number' },
+              one_time_cash_outlay: { type: 'number', minimum: 0 },
+            },
+            additionalProperties: false,
+          },
+        },
+        additionalProperties: false,
+      },
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    {
       name: 'get_decision_lab_capabilities',
       title: 'Get current Systemia Remote Ops capabilities',
-      description: 'Return which decision-simulation lanes are actually runnable today versus held or discovery-only.',
+      description: 'Return the current native decision-simulation lanes and their truth boundaries.',
       inputSchema: { type: 'object', properties: {}, additionalProperties: false },
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     },
   ];
 }
 
-function classifyBusinessDecision(intentRaw) {
+export function classifyBusinessDecision(intentRaw) {
   const intent = String(intentRaw || '').toLowerCase();
   const hit = (terms) => terms.some((term) => intent.includes(term));
   if (hit(['price','pricing','charge','raise my prices','lower my prices','rate','what should i charge'])) {
-    return {
-      decision_type: 'pricing',
-      state: 'live_public_simulation',
-      runnable: true,
-      tool: 'simulate_pricing_change',
-      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/what-should-i-charge',
-    };
+    return { decision_type: 'pricing', state: 'native_deterministic_simulation', runnable: true, tool: 'simulate_pricing_change', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/what-should-i-charge' };
   }
-  if (hit(['hire','employee','staff','headcount','afford another employee'])) {
-    return {
-      decision_type: 'hiring',
-      state: 'public_experience_not_yet_runnable_by_mcp',
-      runnable: false,
-      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/can-i-afford-an-employee',
-    };
+  if (hit(['hire','employee','staff','headcount','layoff','restructur'])) {
+    return { decision_type: 'hiring_or_staffing', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/can-i-afford-an-employee' };
   }
-  if (hit(['expand','new market','new service','new location','branch','territory'])) {
-    return {
-      decision_type: 'expansion',
-      state: 'public_experience_not_yet_runnable_by_mcp',
-      runnable: false,
-      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/should-i-expand',
-    };
+  if (hit(['new product','new service','add a service','remove a service','launch a product','launch a service'])) {
+    return { decision_type: 'product_or_service', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
   }
-  if (hit(['buy a business','acquire','acquisition','sell my business','selling my business','partnership','partner'])) {
-    return {
-      decision_type: 'strategic_transaction',
-      state: 'decision_lab_discovery_only',
-      runnable: false,
-      human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/',
-    };
+  if (hit(['expand','new market','new location','branch','territory','second location','another location'])) {
+    return { decision_type: 'expansion', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/should-i-expand' };
   }
+  if (hit(['buy a business','acquire','acquisition','sell my business','selling my business','business sale'])) {
+    return { decision_type: 'business_transaction', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+  }
+  if (hit(['partnership','partner','ownership change','equity partner'])) {
+    return { decision_type: 'partnership_or_ownership', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+  }
+  if (hit(['equipment','vehicle','machine','capital purchase','buy this asset','lease this'])) {
+    return { decision_type: 'capital_purchase', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+  }
+  if (hit(['start a business','starting a business','new business','business idea','launch a business'])) {
+    return { decision_type: 'startup', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+  }
+  return { decision_type: 'other_business_decision', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+}
+
+function finiteNumber(value, field, { min = null, max = null } = {}) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) throw new Error(field + ' must be a finite number');
+  if (min !== null && number < min) throw new Error(field + ' must be >= ' + min);
+  if (max !== null && number > max) throw new Error(field + ' must be <= ' + max);
+  return number;
+}
+function round2(value) { return Math.round((value + Number.EPSILON) * 100) / 100; }
+function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+
+export function simulateRemoteOpsPricing(args = {}) {
+  const industry = String(args.industry || 'Business').trim().slice(0, 200) || 'Business';
+  const currentPrice = finiteNumber(args.current_price, 'current_price', { min: 0 });
+  const customers = finiteNumber(args.customers_per_month, 'customers_per_month', { min: 0 });
+  const changePercent = finiteNumber(args.price_change_percent, 'price_change_percent', { min: -95, max: 500 });
+  const abs = Math.abs(changePercent);
+  let retention = abs < 5 ? 0.97 : abs < 10 ? 0.94 : abs < 20 ? 0.88 : 0.78;
+  if (changePercent < 0) retention = Math.min(1, retention + 0.05);
+  const newPrice = currentPrice * (1 + changePercent / 100);
+  const newCustomers = Math.round(customers * retention);
+  const currentRevenue = currentPrice * customers;
+  const projectedRevenue = newPrice * newCustomers;
+  const revenueDelta = projectedRevenue - currentRevenue;
   return {
-    decision_type: 'other_business_decision',
-    state: 'decision_lab_discovery_only',
-    runnable: false,
-    human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/',
+    schema: 'systemia.remote-ops.pricing-simulation.v2',
+    industry,
+    current_state: { price: round2(currentPrice), customers_per_month: round2(customers), monthly_revenue: round2(currentRevenue) },
+    projected_state: { price: round2(newPrice), customers_per_month: newCustomers, monthly_revenue: round2(projectedRevenue), retention_rate: round2(retention * 100) },
+    revenue_change: round2(revenueDelta),
+    revenue_change_percent: currentRevenue > 0 ? round2((revenueDelta / currentRevenue) * 100) : 0,
+    risk_level: abs < 10 ? 'Low' : abs < 20 ? 'Medium' : 'High',
+    confidence_level: 'Low',
+    confidence_note: 'Retention is a transparent simplified heuristic, not a business-specific elasticity estimate.',
+    assumptions: [
+      'Customer retention is modeled only from the size and direction of the proposed price change.',
+      'The model does not infer competitor response, seasonality, acquisition changes, capacity changes, cost changes, or customer-specific behavior.',
+    ],
+    falsification_criteria: 'If pricing changes in the real business, compare actual retained customers and revenue against the scenario over a defined review period and revise the retention assumption when observed results diverge.',
+  };
+}
+
+export function simulateRemoteOpsBusinessScenario(args = {}) {
+  const baseline = args.baseline || {};
+  const adjustments = args.adjustments || {};
+  const monthlyRevenue = finiteNumber(baseline.monthly_revenue, 'baseline.monthly_revenue', { min: 0 });
+  const grossMarginPercent = finiteNumber(baseline.gross_margin_percent, 'baseline.gross_margin_percent', { min: 0, max: 100 });
+  const fixedCosts = finiteNumber(baseline.fixed_costs_monthly ?? 0, 'baseline.fixed_costs_monthly', { min: 0 });
+  const payroll = finiteNumber(baseline.payroll_monthly ?? 0, 'baseline.payroll_monthly', { min: 0 });
+  const otherCosts = finiteNumber(baseline.other_monthly_costs ?? 0, 'baseline.other_monthly_costs', { min: 0 });
+  const cashOnHand = finiteNumber(baseline.cash_on_hand ?? 0, 'baseline.cash_on_hand', { min: 0 });
+  const revenueChangePercent = finiteNumber(adjustments.revenue_change_percent ?? 0, 'adjustments.revenue_change_percent', { min: -100, max: 1000 });
+  const marginChangePoints = finiteNumber(adjustments.gross_margin_change_points ?? 0, 'adjustments.gross_margin_change_points', { min: -100, max: 100 });
+  const fixedCostDelta = finiteNumber(adjustments.fixed_cost_delta_monthly ?? 0, 'adjustments.fixed_cost_delta_monthly');
+  const payrollDelta = finiteNumber(adjustments.payroll_delta_monthly ?? 0, 'adjustments.payroll_delta_monthly');
+  const otherCostDelta = finiteNumber(adjustments.other_cost_delta_monthly ?? 0, 'adjustments.other_cost_delta_monthly');
+  const debtServiceDelta = finiteNumber(adjustments.debt_service_delta_monthly ?? 0, 'adjustments.debt_service_delta_monthly');
+  const oneTimeCashOutlay = finiteNumber(adjustments.one_time_cash_outlay ?? 0, 'adjustments.one_time_cash_outlay', { min: 0 });
+
+  const baselineGrossProfit = monthlyRevenue * (grossMarginPercent / 100);
+  const baselineRecurringCosts = fixedCosts + payroll + otherCosts;
+  const baselineContribution = baselineGrossProfit - baselineRecurringCosts;
+  const scenarioRevenue = monthlyRevenue * (1 + revenueChangePercent / 100);
+  const scenarioMarginPercent = clamp(grossMarginPercent + marginChangePoints, 0, 100);
+  const scenarioMarginRate = scenarioMarginPercent / 100;
+  const scenarioFixedCosts = Math.max(0, fixedCosts + fixedCostDelta);
+  const scenarioPayroll = Math.max(0, payroll + payrollDelta);
+  const scenarioOtherCosts = Math.max(0, otherCosts + otherCostDelta);
+  const scenarioDebtService = Math.max(0, debtServiceDelta);
+  const scenarioGrossProfit = scenarioRevenue * scenarioMarginRate;
+  const scenarioRecurringCosts = scenarioFixedCosts + scenarioPayroll + scenarioOtherCosts + scenarioDebtService;
+  const scenarioContribution = scenarioGrossProfit - scenarioRecurringCosts;
+  const cashAfterOutlay = cashOnHand - oneTimeCashOutlay;
+  const breakEvenRevenue = scenarioMarginRate > 0 ? scenarioRecurringCosts / scenarioMarginRate : null;
+  const runwayMonths = scenarioContribution < 0 ? Math.max(0, cashAfterOutlay) / Math.abs(scenarioContribution) : null;
+
+  return {
+    schema: 'systemia.remote-ops.business-scenario.v1',
+    modeled: true,
+    model_type: 'user_assumption_arithmetic',
+    scenario_label: String(args.scenario_label || 'Scenario').trim().slice(0, 200) || 'Scenario',
+    decision_type: classifyBusinessDecision(args.decision_intent || '').decision_type,
+    baseline: {
+      monthly_revenue: round2(monthlyRevenue),
+      gross_margin_percent: round2(grossMarginPercent),
+      monthly_gross_profit: round2(baselineGrossProfit),
+      recurring_costs_monthly: round2(baselineRecurringCosts),
+      operating_contribution_monthly: round2(baselineContribution),
+      cash_on_hand: round2(cashOnHand),
+    },
+    scenario: {
+      monthly_revenue: round2(scenarioRevenue),
+      gross_margin_percent: round2(scenarioMarginPercent),
+      monthly_gross_profit: round2(scenarioGrossProfit),
+      recurring_costs_monthly: round2(scenarioRecurringCosts),
+      operating_contribution_monthly: round2(scenarioContribution),
+      cash_after_one_time_outlay: round2(cashAfterOutlay),
+      break_even_monthly_revenue: breakEvenRevenue === null ? null : round2(breakEvenRevenue),
+      runway_months_if_operating_contribution_negative: runwayMonths === null ? null : round2(runwayMonths),
+    },
+    delta: {
+      monthly_revenue: round2(scenarioRevenue - monthlyRevenue),
+      monthly_gross_profit: round2(scenarioGrossProfit - baselineGrossProfit),
+      recurring_costs_monthly: round2(scenarioRecurringCosts - baselineRecurringCosts),
+      operating_contribution_monthly: round2(scenarioContribution - baselineContribution),
+      cash_immediate: round2(-oneTimeCashOutlay),
+    },
+    assumptions_echo: {
+      revenue_change_percent: round2(revenueChangePercent),
+      gross_margin_change_points: round2(marginChangePoints),
+      fixed_cost_delta_monthly: round2(fixedCostDelta),
+      payroll_delta_monthly: round2(payrollDelta),
+      other_cost_delta_monthly: round2(otherCostDelta),
+      debt_service_delta_monthly: round2(debtServiceDelta),
+      one_time_cash_outlay: round2(oneTimeCashOutlay),
+    },
+    confidence_level: 'Depends on supplied assumptions',
+    truth_boundary: 'Systemia only performed arithmetic on the supplied assumptions. It did not infer demand, customer behavior, financing approval, valuation, legal consequences, tax consequences, competitor response, staffing performance, or market outcomes.',
   };
 }
 
@@ -231,18 +376,46 @@ export async function executeRemoteOpsRpc(rpc, pricingFetch) {
       });
     }
 
+    if (tool === 'simulate_business_scenario') {
+      try {
+        const simulation = simulateRemoteOpsBusinessScenario(args);
+        const payload = {
+          ok: true,
+          product: 'Systemia Remote Ops',
+          simulation_type: simulation.decision_type,
+          modeled: true,
+          model_type: simulation.model_type,
+          simulation,
+          external_action_taken: false,
+          production_mutation_enabled: false,
+          truth_boundary: simulation.truth_boundary,
+        };
+        return rpcResult(id, {
+          content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
+          structuredContent: payload,
+          isError: false,
+        });
+      } catch (error) {
+        return rpcError(id, -32602, error instanceof Error ? error.message : 'invalid_business_scenario');
+      }
+    }
+
     if (tool === 'get_decision_lab_capabilities') {
       const payload = {
         ok: true,
         product: 'Systemia Remote Ops',
-        version: 'systemia-remote-ops-yard-v0.1.0',
+        version: 'systemia-remote-ops-yard-v0.2.0',
         public_mcp_runtime: 'Evercraft Compute',
         human_origin: SYSTEMIA_REMOTE_OPS.human_origin,
         lanes: [
-          { decision_type: 'pricing', state: 'live_public_simulation', mcp_runnable: true, tool: 'simulate_pricing_change' },
-          { decision_type: 'hiring', state: 'public_experience_not_yet_runnable_by_mcp', mcp_runnable: false },
-          { decision_type: 'expansion', state: 'public_experience_not_yet_runnable_by_mcp', mcp_runnable: false },
-          { decision_type: 'strategic_transaction', state: 'decision_lab_discovery_only', mcp_runnable: false },
+          { decision_type: 'pricing', state: 'native_deterministic_simulation', mcp_runnable: true, tool: 'simulate_pricing_change' },
+          { decision_type: 'hiring_or_staffing', state: 'native_assumption_driven_simulation', mcp_runnable: true, tool: 'simulate_business_scenario' },
+          { decision_type: 'product_or_service', state: 'native_assumption_driven_simulation', mcp_runnable: true, tool: 'simulate_business_scenario' },
+          { decision_type: 'expansion', state: 'native_assumption_driven_simulation', mcp_runnable: true, tool: 'simulate_business_scenario' },
+          { decision_type: 'business_transaction', state: 'native_assumption_driven_simulation', mcp_runnable: true, tool: 'simulate_business_scenario' },
+          { decision_type: 'partnership_or_ownership', state: 'native_assumption_driven_simulation', mcp_runnable: true, tool: 'simulate_business_scenario' },
+          { decision_type: 'capital_purchase', state: 'native_assumption_driven_simulation', mcp_runnable: true, tool: 'simulate_business_scenario' },
+          { decision_type: 'startup', state: 'native_assumption_driven_simulation', mcp_runnable: true, tool: 'simulate_business_scenario' },
         ],
         production_mutation_enabled: false,
         external_action_taken: false,
@@ -394,7 +567,7 @@ export async function startSpecialistHandoffRuntime({
   const callGateway = gatewayFetch || ((action, publicId) =>
     defaultGatewayFetch(gatewayUrl, action, publicId));
   const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
-    defaultRemoteOpsPricingFetch(remoteOpsPricingUrl, payload));
+    Promise.resolve(simulateRemoteOpsPricing(payload)));
 
   const health = () => ({
     ok: true,
@@ -453,9 +626,10 @@ export async function startSpecialistHandoffRuntime({
             version: SYSTEMIA_REMOTE_OPS.version,
             transport: 'Streamable HTTP',
             tools: remoteOpsTools().map((tool) => tool.name),
-            pricing_simulation_state: 'live_public',
-            hiring_simulation_state: 'held_not_mcp_runnable',
-            expansion_simulation_state: 'held_not_mcp_runnable',
+            pricing_simulation_state: 'native_deterministic_simulation',
+            hiring_simulation_state: 'native_assumption_driven_simulation',
+            expansion_simulation_state: 'native_assumption_driven_simulation',
+            strategic_transaction_simulation_state: 'native_assumption_driven_simulation',
             production_mutation_enabled: false,
             runtime: 'Evercraft Compute',
             instance_id: instanceId,
