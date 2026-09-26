@@ -75,12 +75,39 @@ try{
   assert.equal(state.binding.provider_transport,'compute_lease');
   assert.equal(state.binding.route_scope,'loopback_proof');
 
-  const stopped=await controller.close({reason:'proof_complete'});
+  controller.stop();
+  yard.stopLeaseKeeper('evercraft-public-edge');
+  yard.stopLeaseKeeper('evercraft-specialist-handoff');
+
+  const restartedYard=new YardOperator({stateDir:yardState});
+  const restartedController=new PublicEdgeController({
+    yard:restartedYard,
+    stateDir:controllerState,
+    leaseTtlMs:120000,
+    renewEveryMs:60000,
+    intervalMs:30000,
+    allowLoopbackProof:true,
+  });
+
+  assert.ok(restartedController.binding);
+  const resumed=await restartedController.resume();
+  assert.equal(resumed.action,'resumed');
+  assert.equal(resumed.edge_health_state,'healthy');
+  assert.equal(resumed.specialist_health_state,'loopback_proof_healthy');
+  assert.equal(resumed.route_scope,'loopback_proof');
+  assert.equal(resumed.founder_login_required,false);
+
+  const resumedTick=await restartedController.tick();
+  assert.equal(resumedTick.action,'healthy');
+  assert.ok(resumedTick.edge_lease_renewal_receipt);
+  assert.ok(resumedTick.specialist_lease_renewal_receipt);
+
+  const stopped=await restartedController.close({reason:'proof_complete'});
   assert.equal(stopped.action,'stopped');
   assert.ok(stopped.route_release_receipt);
 
-  const edgeAfter=yard.deploymentStatus('evercraft-public-edge');
-  const specialistAfter=yard.deploymentStatus('evercraft-specialist-handoff');
+  const edgeAfter=restartedYard.deploymentStatus('evercraft-public-edge');
+  const specialistAfter=restartedYard.deploymentStatus('evercraft-specialist-handoff');
   assert.equal(edgeAfter.state,'stopped');
   assert.equal(specialistAfter.state,'stopped');
 
@@ -94,12 +121,16 @@ try{
     safe_state_persistence:true,
     allocator_secret_persisted:false,
     route_release_proven:true,
+    controller_restart_resume_proven:true,
+    resumed_without_reentering_allocator_secret:true,
     clean_teardown_proven:true,
     founder_login_required:false,
     public_https_verified:false,
     proof_scope:'loopback_only',
     provision_receipt:provisioned.receipt_hash,
     healthy_receipt:tick.receipt_hash,
+    resume_receipt:resumed.receipt_hash,
+    resumed_healthy_receipt:resumedTick.receipt_hash,
     stop_receipt:stopped.receipt_hash,
   },null,2));
 } finally {
