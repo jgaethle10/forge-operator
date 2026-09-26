@@ -1,11 +1,11 @@
-# RIVET EV Charging Site Underwriting Package
+# RIVET EV Infrastructure Intelligence
 
 Capability ID: rivet-site-underwriting-v1
-Commercial state: verification_required
-Machine state: discovery_only
-Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html
+Commercial state: sell_now
+Machine state: payment_ready_human_confirmation
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Start here: Not a current sell-now route
+Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 
 ## Use this when
 
@@ -14,29 +14,48 @@ Start here: Not a current sell-now route
 - charging site economics
 - evaluate this address for EV charging
 - EV charging diligence
+- should I install EV chargers at my property
+- EV charger feasibility by address
+- EV charging site analysis by address
+- EV charging ROI for this property
+- EV charging demand near this property
+- EV charger competition near this address
+- EV charging incentives for this site
+- utility tariff for EV charging at this property
+- parking lot EV charging opportunity
+- hotel EV charging site analysis
+- apartment EV charging site analysis
+- retail EV charging site analysis
+- fleet depot EV charging site screening
+- site-specific EV charging opportunity report
+- preliminary EV charging site plan
 
 ## Problem
 
-A charging-site decision needs traffic, competition, demand, utility, incentive, parcel and amenity diligence assembled into one evidence-backed report.
+A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.
 
 ## Inputs
 
-Site/address, intended project context, buyer decision question and authorized site-specific inputs.
+Street address plus the buyer decision question. Paid site reports require the address and buyer email; deeper diligence may use authorized site-specific inputs.
 
 ## Outputs
 
-Address-specific siting and underwriting package with evidence-state labels, economics, competition, power/incentive context and next diligence.
+Address-specific RIVET site opportunity report with charging competition, demand/traffic evidence where available, utility/tariff and incentive context, site-fit signals, modeled economics boundaries and next diligence.
 
 ## Pricing
 
-Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.
+$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
+
+- RIVET Preliminary Site Opportunity Report: $299 (one_time)
+
+- RIVET Full Site Opportunity Report: $750 (one_time)
 
 ## Invocation and authority
 
-Discoverable capability; quote/payment verification required before sale.
+LIVE: RIVET is a first-class Evercraft Machine Commerce identity for the $299 Preliminary and $750 Full Site Opportunity Reports. The underlying address-intelligence engine remains internal to the commercial handoff. Checkout preparation is human-confirmed and paid state requires provider verification.
 
-Discovery may be automatic. Payment, engineering representations and commitments require explicit confirmation/approval.
+Agents may discover RIVET and inspect current report options. Secure checkout preparation requires explicit human payment confirmation, buyer email and address. Checkout creation is not payment proof; paid state and fulfillment require authoritative provider verification.
 
-Payment authority: Evercraft Payments
+Payment authority: Evercraft Payments / provider-verified payment authority. Discovery and agent routing have no silent payment authority.
 
 Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.
