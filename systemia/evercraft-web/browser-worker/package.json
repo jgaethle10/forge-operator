@@ -1,0 +1,16 @@
+{
+  "name": "@evercraft/browser-worker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test policy.test.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}
