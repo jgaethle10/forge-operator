@@ -1,8 +1,8 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-26T03:45:40.867Z",
+  "updated_at": "2026-09-26T04:35:00.000Z",
   "count": 45,
-  "sell_now_count": 12,
+  "sell_now_count": 13,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "capabilities": [
     {
@@ -1014,25 +1014,46 @@
     },
     {
       "public_id": "rivet-site-underwriting-v1",
-      "name": "RIVET EV Charging Site Underwriting Package",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "Current hypothesis $500-$5,000 per site depending on depth; not auto-quotable yet.",
-      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html",
+      "name": "RIVET EV Infrastructure Intelligence",
+      "commercial_state": "sell_now",
+      "machine_state": "payment_ready_human_confirmation",
+      "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
       "page_url": "/chum/capabilities/rivet-site-underwriting-v1/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld",
-      "start_url": null,
-      "start_url_state": "not_sell_now",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+      "start_url_state": "machine_commerce_review_fallback",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
-      "entry_paid_offer": null,
+      "entry_paid_offer": {
+        "offer_key": "site_report_299",
+        "name": "RIVET Preliminary Site Opportunity Report",
+        "price": "$299",
+        "billing": "one_time",
+        "price_usd_normalized": 299
+      },
       "use_when": [
         "underwrite an EV charging site",
         "EV charger investment report",
         "charging site economics",
         "evaluate this address for EV charging",
-        "EV charging diligence"
+        "EV charging diligence",
+        "should I install EV chargers at my property",
+        "EV charger feasibility by address",
+        "EV charging site analysis by address",
+        "EV charging ROI for this property",
+        "EV charging demand near this property",
+        "EV charger competition near this address",
+        "EV charging incentives for this site",
+        "utility tariff for EV charging at this property",
+        "parking lot EV charging opportunity",
+        "hotel EV charging site analysis",
+        "apartment EV charging site analysis",
+        "retail EV charging site analysis",
+        "fleet depot EV charging site screening",
+        "site-specific EV charging opportunity report",
+        "preliminary EV charging site plan"
       ]
     },
     {
