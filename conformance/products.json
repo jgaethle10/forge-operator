@@ -380,14 +380,17 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json",
       "doorway_state": "chum_public_mirror_source_ready",
-      "conformance_state": "machine_commerce_handoff_live_direct_checkout_canary_pending",
+      "conformance_state": "machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
       "provider_behavior_state": "not_run",
       "origin_canonical_url": "https://findmypart.base44.app/ibmi-rescue",
       "chum_mirror_state": "generated_public_primary_until_origin_verified",
       "machine_commerce_handoff_state": "live_verified",
       "machine_commerce_public_id": "ibmi-rescue-v1",
       "machine_commerce_tool": "prepare_quote_ready_service_handoff",
-      "live_canary_evidence": "GitHubActionsRun:36184321561"
+      "live_canary_evidence": "GitHubActionsRun:36211823272",
+      "buyer_route_state": "live_verified",
+      "backend_checkout_state": "synthetic_live_verified",
+      "payment_state": "unverified_until_provider_payment"
     },
     {
       "product_key": "infinite-classroom",
