@@ -112,7 +112,7 @@ function firstBrokenStage(stages, commercialState) {
   return null;
 }
 
-function repairFor({ broken, providerRows, radarRows, commerce, commercialState }) {
+function repairFor({ broken, providerRows, radarRows, commerce, commercialState, providerBridgeConfigured }) {
   if (broken === 'published') {
     return { priority: 'P0', action: 'publish_truthful_machine_surface', owner: 'CHUM' };
   }
@@ -125,8 +125,14 @@ function repairFor({ broken, providerRows, radarRows, commerce, commercialState 
   if (broken === 'provider_pickup') {
     const completed = providerRows.filter((row) => row.status === 'completed').length;
     const blocked = providerRows.filter((row) => row.status === 'blocked').length;
-    if (!providerRows.length || blocked > 0 && completed === 0) {
+    if (!providerBridgeConfigured) {
       return { priority: 'P0', action: 'restore_authorized_provider_probe_bridge_then_run_brand_blind_probe', owner: 'MISSILE_LOCK' };
+    }
+    if (!providerRows.length) {
+      return { priority: commercialState === 'sell_now' ? 'P1' : 'P2', action: 'schedule_brand_blind_probe_for_unmeasured_product', owner: 'MISSILE_LOCK' };
+    }
+    if (blocked > 0 && completed === 0) {
+      return { priority: 'P0', action: 'resolve_provider_probe_block_then_reprobe', owner: 'MISSILE_LOCK' };
     }
     return { priority: 'P1', action: 'repair_answer_doors_schema_crosslinks_and_registry_presence_then_reprobe', owner: 'CHUM+MISSILE_LOCK' };
   }
@@ -200,6 +206,7 @@ export function buildFireControl({
       radarRows,
       commerce: commerceRow,
       commercialState: offer.commercial_state,
+      providerBridgeConfigured: probes?.bridge_configured === true,
     });
 
     return {
@@ -215,6 +222,13 @@ export function buildFireControl({
       evidence: {
         crawler_surface_count: radarRows.length,
         crawler_fetch_observed_count: radarRows.filter((row) => row.last_observed_crawler_fetch).length,
+        provider_probe_state: !probes?.bridge_configured
+          ? 'bridge_unavailable'
+          : !providerRows.length
+            ? 'unmeasured'
+            : providerRows.some((row) => row.status === 'completed')
+              ? 'measured'
+              : 'blocked',
         provider_probe_count: providerRows.length,
         provider_probe_completed: providerRows.filter((row) => row.status === 'completed').length,
         provider_pickup_count: providerRows.filter((row) => row.evaluation?.pickup_observed).length,

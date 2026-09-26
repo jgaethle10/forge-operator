@@ -112,3 +112,45 @@ test('Fire Control fails forward to crawl attention when no crawler fetch is obs
   assert.equal(row.first_broken_stage, 'crawler_observed');
   assert.equal(row.next_action.action, 'promote_surface_in_hot_queue_and_measure_crawler_fetch');
 });
+
+
+test('Fire Control treats an unmeasured product as probe work, not a broken bridge', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes = {
+    schema: 'evercraft.chum.cross-llm-run-receipt.v1',
+    bridge_configured: true,
+    results: [
+      { product_key: 'forensiscope', status: 'completed', evaluation: { pickup_observed: true } }
+    ]
+  };
+  data.revenueEvents = [];
+
+  const receipt = buildFireControl({ root, ...data });
+  const rivet = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(rivet.evidence.provider_probe_state, 'unmeasured');
+  assert.equal(rivet.first_broken_stage, 'provider_pickup');
+  assert.equal(rivet.next_action.priority, 'P1');
+  assert.equal(rivet.next_action.action, 'schedule_brand_blind_probe_for_unmeasured_product');
+});
+
+test('Fire Control distinguishes a configured but blocked provider lane', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes = {
+    schema: 'evercraft.chum.cross-llm-run-receipt.v1',
+    bridge_configured: true,
+    results: [
+      { product_key: 'rivet', status: 'blocked', blocked_reason: 'provider_temporarily_unavailable' }
+    ]
+  };
+  data.revenueEvents = [];
+
+  const receipt = buildFireControl({ root, ...data });
+  const rivet = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(rivet.evidence.provider_probe_state, 'blocked');
+  assert.equal(rivet.next_action.priority, 'P0');
+  assert.equal(rivet.next_action.action, 'resolve_provider_probe_block_then_reprobe');
+});
