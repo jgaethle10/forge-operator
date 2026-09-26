@@ -797,15 +797,15 @@
         "resilient application identity across authorized network changes"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json",
       "human_confirmation_required": true,
-      "authority": "public product discovery and human-directed membership interaction",
+      "authority": "public product discovery, bounded read-only MCP capability inspection, and human-directed membership interaction",
       "boundaries": [
         "not a cellular carrier, ISP, SIM or eSIM service",
         "not 911 or PSAP integration",

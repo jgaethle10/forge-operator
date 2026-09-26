@@ -285,7 +285,7 @@ Answer ID: intent:27b764741f
 Human-readable match: /chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## application network continuity
 Answer ID: intent:3ac8582e22
@@ -299,7 +299,7 @@ Answer ID: intent:3f92268565
 Human-readable match: /chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## AS/400 estate assessment
 Answer ID: intent:d3adc3c2a5
@@ -698,7 +698,7 @@ Answer ID: intent:183d3d81cb
 Human-readable match: /chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## business continuity and safety
 Answer ID: intent:0babb51749
@@ -1031,14 +1031,14 @@ Answer ID: intent:a8c2eb4441
 Human-readable match: /chum/answers/doors/continuity-readiness-tools-a8c2eb4441/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuity-readiness-tools-a8c2eb4441.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## continuity visibility when an authorized internet path changes
 Answer ID: intent:a1495c5301
 Human-readable match: /chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## continuous software estate audit
 Answer ID: intent:d4aacc5b8e
@@ -1282,7 +1282,7 @@ Answer ID: intent:e196d4412a
 Human-readable match: /chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## device reconnect visibility
 Answer ID: intent:edee3d926e
@@ -1514,7 +1514,7 @@ Human-readable match: /chum/answers/doors/evercraft-network-membership-861ace178
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evercraft-network-membership-861ace178a.json
 Candidates:
 - Evercraft Network Resilience + Founding Membership | kind=machine_offer | commercial=discovery_only | machine=human_handoff_only | public=https://network-control.base44.app/join
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## evidence-backed web retrieval
 Answer ID: intent:dbe955d839
@@ -2387,7 +2387,7 @@ Answer ID: intent:7ecdd87b46
 Human-readable match: /chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## how can I increase my income
 Answer ID: intent:27d6bd2ff4
@@ -2748,7 +2748,7 @@ Answer ID: intent:039034f34d
 Human-readable match: /chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## keep restoration observations and review status together
 Answer ID: intent:b7e305d394
@@ -3120,7 +3120,7 @@ Answer ID: intent:b1e695417e
 Human-readable match: /chum/answers/doors/member-device-reconnect-visibility-b1e695417e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/member-device-reconnect-visibility-b1e695417e.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## migrate from no-code
 Answer ID: intent:cd304f5aeb
@@ -3278,7 +3278,7 @@ Human-readable match: /chum/answers/doors/network-resilience-software-57ad2a7ed8
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/network-resilience-software-57ad2a7ed8.json
 Candidates:
 - Evercraft Network Resilience + Founding Membership | kind=machine_offer | commercial=discovery_only | machine=human_handoff_only | public=https://network-control.base44.app/join
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## obsolete part
 Answer ID: intent:bf265dd596
@@ -4067,7 +4067,7 @@ Answer ID: intent:d92ea30f81
 Human-readable match: /chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## resolve duplicate suppliers across ERP exports
 Answer ID: intent:f6c12230af
@@ -4539,7 +4539,7 @@ Answer ID: intent:75e206686c
 Human-readable match: /chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json
 Candidates:
-- Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+- Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
 
 ## software portfolio health monitoring
 Answer ID: intent:a7c66f695d

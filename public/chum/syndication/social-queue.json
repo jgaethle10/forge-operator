@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T22:41:57.033Z",
+  "generated_at": "2026-09-26T23:54:16.604Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -12,6 +12,16 @@
       "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
       "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
       "content_sha256": "271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-network:6a70947660123841b61095ba25529d34a41c3a74b6fe30fa01254281ccf3ee2e",
+      "product_key": "evercraft-network",
+      "name": "Evercraft Network",
+      "canonical_url": "https://network-control.base44.app/",
+      "discovery_path": "/chum/products/evercraft-network/ai-discovery.json",
+      "text": "Evercraft Network: Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
+      "content_sha256": "6a70947660123841b61095ba25529d34a41c3a74b6fe30fa01254281ccf3ee2e",
       "requires_authorized_destination": true
     },
     {

@@ -8,9 +8,9 @@
     "name": "Evercraft Network",
     "class": "application_network_continuity",
     "canonical_url": "https://network-control.base44.app/",
-    "registry_name": null,
-    "mcp": null,
-    "authority": "public product discovery and human-directed membership interaction",
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "authority": "public product discovery, bounded read-only MCP capability inspection, and human-directed membership interaction",
     "boundaries": [
       "not a cellular carrier, ISP, SIM or eSIM service",
       "not 911 or PSAP integration",
@@ -19,7 +19,7 @@
     ],
     "human_confirmation_required": true,
     "commercial_state": "product_contract",
-    "machine_state": "discovery_only"
+    "machine_state": "specialist_mcp_declared"
   },
   "observed_miss_count": 1,
   "observed_providers": [

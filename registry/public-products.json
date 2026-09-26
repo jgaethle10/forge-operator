@@ -262,10 +262,10 @@
       "canonical_url": "https://network-control.base44.app/",
       "github_record": "./evercraft-network/README.md",
       "llms": "./evercraft-network/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {

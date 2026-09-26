@@ -543,8 +543,8 @@
       "mirror_path": "/chum/products/evercraft-network/",
       "llms_path": "/chum/products/evercraft-network/llms.txt",
       "discovery_path": "/chum/products/evercraft-network/ai-discovery.json",
-      "registry_name": "",
-      "mcp": "",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "class": "application_network_continuity",
       "intents": [
         "application network that reconnects across changing authorized internet paths",
@@ -561,11 +561,11 @@
         "continuity visibility when an authorized internet path changes",
         "resilient application identity across authorized network changes"
       ],
-      "authority": "public product discovery and human-directed membership interaction",
+      "authority": "public product discovery, bounded read-only MCP capability inspection, and human-directed membership interaction",
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
-      "content_sha256": "c359ab48efdb5e5d488390a518d49b1bd44f017796534b138b7aae29d4b54166",
+      "content_sha256": "6a70947660123841b61095ba25529d34a41c3a74b6fe30fa01254281ccf3ee2e",
       "updated_at": "2026-09-26T00:00:00.000Z"
     },
     {

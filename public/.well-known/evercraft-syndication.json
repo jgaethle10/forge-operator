@@ -259,9 +259,9 @@
       "mirror": "/chum/products/evercraft-network/",
       "llms": "/chum/products/evercraft-network/llms.txt",
       "discovery": "/chum/products/evercraft-network/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "c359ab48efdb5e5d488390a518d49b1bd44f017796534b138b7aae29d4b54166"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "6a70947660123841b61095ba25529d34a41c3a74b6fe30fa01254281ccf3ee2e"
     },
     {
       "product_key": "evercraft-physics-atlas",

@@ -30,8 +30,8 @@
     "machine_offer_entries": 45,
     "entries_with_pain_language": 98,
     "sell_now_machine_offers": 13,
-    "entries_with_declared_mcp": 60,
-    "callable_or_routable_entries": 41,
+    "entries_with_declared_mcp": 61,
+    "callable_or_routable_entries": 42,
     "suppressed_legacy_marketing_routes": 8
   },
   "entries": [
@@ -3176,14 +3176,14 @@
       "inputs": null,
       "outputs": null,
       "canonical_url": "https://network-control.base44.app/",
-      "registry_name": null,
-      "mcp": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
-        "preferred": "universal_machine_commerce",
+        "preferred": "specialist_mcp",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public product discovery and human-directed membership interaction",
+      "authority": "public product discovery, bounded read-only MCP capability inspection, and human-directed membership interaction",
       "boundaries": [
         "not a cellular carrier, ISP, SIM or eSIM service",
         "not 911 or PSAP integration",
@@ -3191,16 +3191,17 @@
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "discovery_only",
+      "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
       "source_refs": [
-        "public/.well-known/evercraft-products.json"
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
       ]
     },
     {

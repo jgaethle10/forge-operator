@@ -1314,8 +1314,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evercraft-network
 Product key: evercraft-network
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://network-control.base44.app/
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - application network that reconnects across changing authorized internet paths
 - network resilience software
@@ -1331,7 +1332,7 @@ Use when the user means:
 - continuity visibility when an authorized internet path changes
 - resilient application identity across authorized network changes
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Evercraft Physics Atlas
 Capability ID: product:evercraft-physics-atlas
