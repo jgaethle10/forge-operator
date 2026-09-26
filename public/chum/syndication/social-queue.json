@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T22:33:49.495Z",
+  "generated_at": "2026-09-26T22:41:57.033Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -92,6 +92,16 @@
       "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
       "content_sha256": "7514d1f105a7f94c134535f7aba22e3b455bef9b6f62a86bcc71e7527f0d287c",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "systemia-portfolio-sentinel:4f88a803078e5da429b59092f2a969df01830a9a44ecda841fcec9395c479b63",
+      "product_key": "systemia-portfolio-sentinel",
+      "name": "Systemia Portfolio Sentinel",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
+      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
+      "content_sha256": "4f88a803078e5da429b59092f2a969df01830a9a44ecda841fcec9395c479b63",
       "requires_authorized_destination": true
     },
     {
