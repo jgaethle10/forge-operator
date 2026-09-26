@@ -595,7 +595,13 @@ export async function startEvercraftComputeNode({
           edgeAdmission?.node_id === nodeId &&
           edgeAdmission?.device_fingerprint === fingerprint &&
           edgeAdmission?.private_key_exposed === false &&
-          edgeAdmission?.certificate_bytes_exposed === false
+          edgeAdmission?.certificate_bytes_exposed === false &&
+          publicEdgeCapability?.ready === true &&
+          publicEdgeCapability?.public_https === true &&
+          edgeAdmission?.base_domain === publicEdgeCapability?.base_domain &&
+          Number(edgeAdmission?.public_port) === Number(publicEdgeCapability?.public_port) &&
+          edgeAdmission?.certificate_fingerprint256 ===
+            publicEdgeCapability?.certificate_fingerprint256
         );
         if (!packetValid) {
           return send(res, 422, { error: 'field_enrollment_packet_not_ready' });
