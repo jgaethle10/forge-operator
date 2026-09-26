@@ -433,6 +433,23 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_rivet_report_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.public-edge.v1') {
+        const edgeHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-public-edge' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === job.result?.instance_id;
+        if (!edgeHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Evercraft public edge failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_route_provider_health_verified';
       } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
         const specialistHealthy =
           health.ok === true &&
@@ -1294,6 +1311,12 @@ export class YardOperator {
           Number(health.failed_count || 0) === 0 &&
           Number(health.held_count || 0) === 0 &&
           Number(health.service_count || 0) > 0;
+      } else if (record.receipt?.workload_class === 'systemia.public-edge.v1') {
+        ok =
+          health.ok === true &&
+          health.service === 'evercraft-public-edge' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === record.result?.instance_id;
       }
       return { ok, state: ok ? 'healthy' : 'degraded', health };
     } catch (error) {
