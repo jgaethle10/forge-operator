@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:24:22.586Z",
+  "updated_at": "2026-09-26T22:25:23.718Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,142 +11,57 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/portfolio-sentinel-v1/capability.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/portfolio-sentinel-v1/llms.txt",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T22:25:23.718Z",
       "priority": 80
     },
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T22:25:23.718Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "last_changed": "2026-09-26T22:25:23.718Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T22:24:22.586Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T22:25:23.718Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T22:25:23.718Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T22:25:23.718Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T22:25:23.718Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T22:25:23.718Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-26T22:25:23.192Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
       "url": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
@@ -282,18 +197,6 @@
     {
       "path": "/chum/capabilities.json",
       "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-26T22:24:22.586Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 80
     },
@@ -578,24 +481,6 @@
       "url": "/schema.jsonld",
       "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T22:18:13.898Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T22:18:13.898Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T22:18:13.898Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/answer.json",
