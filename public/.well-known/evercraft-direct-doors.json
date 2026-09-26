@@ -1,0 +1,59 @@
+{
+  "schema": "evercraft.direct-product-doors.v1",
+  "generated_at": "2026-09-25",
+  "routing_policy": {
+    "default": "specialist_direct_when_clear",
+    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable",
+    "universal_mcp": "io.github.jgaethle10/evercraft-machine-commerce"
+  },
+  "doors": [
+    {
+      "product": "ForensiScope",
+      "intent": "Long, oversized, or complex video/audio analysis, transcription, timelines, comparison, duplicate-segment review, and LLM-consumable evidence outputs.",
+      "registry_name": "io.github.jgaethle10/forensiscope",
+      "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "plugin_package": "plugins/forensiscope",
+      "state": "registry_published_direct_mcp_existing"
+    },
+    {
+      "product": "AliEV / RIVET",
+      "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
+      "registry_name": "io.github.jgaethle10/aliev",
+      "remote_mcp": "https://aliev.base44.app/functions/alievMcp",
+      "plugin_package": "plugins/aliev",
+      "state": "registry_published_direct_mcp_existing"
+    },
+    {
+      "product": "FindMyPart",
+      "intent": "Obsolete, discontinued, obscure, or hard-to-source machine, vehicle, and equipment part discovery.",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "remote_mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "plugin_package": "plugins/findmypart",
+      "state": "registry_published_direct_mcp_existing"
+    },
+    {
+      "product": "Systemia Website Audit",
+      "intent": "Website conversion, local SEO, performance, and practical-fix audit.",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "remote_mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "state": "registry_published_direct_mcp_existing"
+    },
+    {
+      "product": "Evercraft Web",
+      "intent": "Public URL retrieval, structured extraction, and bounded site inspection for AI agents.",
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "remote_mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "caveat": "Search and browser execution remain held until independently verified."
+    },
+    {
+      "product": "Systemia Remote Ops",
+      "intent": "Business decision simulation before acting, beginning with pricing changes.",
+      "registry_name": null,
+      "remote_mcp": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
+      "plugin_package": "plugins/systemia-remote-ops",
+      "state": "source_ready_deployment_unverified",
+      "caveat": "Do not publish to a registry or claim the direct MCP live until an independent public health and tools receipt passes."
+    }
+  ]
+}
