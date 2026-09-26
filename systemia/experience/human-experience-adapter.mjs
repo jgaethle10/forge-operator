@@ -192,14 +192,29 @@ function loadBrowserCoverage(rootDir) {
   const file = path.join(rootDir, 'artifacts/customer-gauntlet/latest.json');
   try {
     const receipt = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const generatedAt = receipt?.generated_at || null;
+    const generatedMs = Date.parse(generatedAt || '');
+    const ageMs = Number.isFinite(generatedMs) ? Math.max(0, Date.now() - generatedMs) : null;
+    const stale = ageMs === null || ageMs > 3 * 60 * 60 * 1000;
     return {
-      available: true,
+      available: !stale,
+      stale,
+      age_ms: ageMs,
       visual_browser_blocked: Number(receipt?.summary?.visual_browser_blocked || 0),
       sell_now_offers: Number(receipt?.summary?.sell_now_offers || 0),
-      generated_at: receipt?.generated_at || null
+      interactive_bridge_configured: receipt?.summary?.interactive_bridge_configured === true,
+      generated_at: generatedAt
     };
   } catch {
-    return { available: false, visual_browser_blocked: null, sell_now_offers: null, generated_at: null };
+    return {
+      available: false,
+      stale: null,
+      age_ms: null,
+      visual_browser_blocked: null,
+      sell_now_offers: null,
+      interactive_bridge_configured: null,
+      generated_at: null
+    };
   }
 }
 
@@ -312,7 +327,9 @@ export async function reconcile({ results, rootDir }) {
       role: 'browser_receipt_guard',
       code: 'owned_browser_visual_receipt_unavailable',
       severity: 'BLOCKED',
-      detail: 'Pixel-level beauty, clipping, focus order, and rendered interaction are not being claimed as passed because the owned customer-gauntlet browser receipt is unavailable.',
+      detail: browser.stale
+        ? 'Pixel-level beauty is not being claimed as passed because the latest owned Customer Gauntlet browser receipt is stale.'
+        : 'Pixel-level beauty, clipping, focus order, and rendered interaction are not being claimed as passed because the owned Customer Gauntlet browser receipt is unavailable.',
       metadata: {}
     });
   } else if (browser.visual_browser_blocked > 0) {
