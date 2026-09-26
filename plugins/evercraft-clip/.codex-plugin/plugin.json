@@ -1,0 +1,36 @@
+{
+  "name": "evercraft-clip",
+  "version": "0.1.0",
+  "description": "Use Evercraft Clip directly when a user wants to plan an Evercraft social-video production or distribution job from source media or a content brief.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft-clip",
+    "social-video",
+    "video-production",
+    "content-distribution",
+    "short-form-video",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Evercraft Clip",
+    "shortDescription": "Plan social-video production and distribution",
+    "longDescription": "Use Evercraft Clip directly when a user wants to plan an Evercraft social-video production or distribution job from source media or a content brief.",
+    "developerName": "Evercraft LLC",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+    "defaultPrompt": [
+      "Help me plan a social-video job from this source material and tell me the current Evercraft Clip execution boundary."
+    ]
+  }
+}
