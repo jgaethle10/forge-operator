@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T11:08:35.098Z",
+  "updated_at": "2026-09-26T11:10:46.956Z",
   "url_count": 2150,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "421812a5567759f6cad305467cb115544883f1eabd18297e9f4583d44cd48b67",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "6268656050a92522d251b27d83bcff848d7c4cef73ea0e62872750be25051eb7",
+      "last_changed": "2026-09-26T11:10:46.956Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -3627,8 +3627,8 @@
     },
     "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json": {
       "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
-      "content_sha256": "35710dda24a30c59e72ecaa48ba07546c0e91daf0c81e4ff30356ba4137db657",
-      "last_changed": "2026-09-26T05:00:53.896Z",
+      "content_sha256": "c7706413825a57854ecf65c09feb2d648186e3217076eda04c5d795aa7bfc16e",
+      "last_changed": "2026-09-26T11:10:46.956Z",
       "priority": 80
     },
     "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/llms.txt": {

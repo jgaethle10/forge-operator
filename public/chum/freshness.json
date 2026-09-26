@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T11:08:35.098Z",
+  "updated_at": "2026-09-26T11:10:46.956Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,47 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/",
-      "last_changed": "2026-09-26T11:08:35.098Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "last_changed": "2026-09-26T11:08:35.098Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
-      "last_changed": "2026-09-26T11:08:35.098Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "last_changed": "2026-09-26T11:08:35.098Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-26T11:08:35.098Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "last_changed": "2026-09-26T11:08:35.098Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
+      "last_changed": "2026-09-26T11:10:46.956Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "last_changed": "2026-09-26T11:10:46.956Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
+      "url": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
+      "last_changed": "2026-09-26T11:10:46.956Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T11:10:46.956Z",
+      "priority": 80
+    },
     {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/",
       "url": "/chum/capabilities/rivet-site-underwriting-v1/",
@@ -91,12 +73,6 @@
     {
       "path": "/chum/capabilities.json",
       "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-26T11:08:35.098Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T11:08:35.098Z",
       "priority": 80
     },
@@ -1129,12 +1105,6 @@
     {
       "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/",
       "url": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/",
-      "last_changed": "2026-09-26T05:00:53.896Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
-      "url": "/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json",
       "last_changed": "2026-09-26T05:00:53.896Z",
       "priority": 80
     },

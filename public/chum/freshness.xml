@@ -2,9 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-26T11:08:35.098Z</updated>
+<updated>2026-09-26T11:10:46.956Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:9dd10f51077b386a79bf37e8</id><title>/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json</title><updated>2026-09-26T11:10:46.956Z</updated><link href="/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T11:10:46.956Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:eb83745119ec6477154d52eb</id><title>/chum/capabilities/rivet-site-underwriting-v1/</title><updated>2026-09-26T11:08:35.098Z</updated><link href="/chum/capabilities/rivet-site-underwriting-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:ffa2b7889318716c664cde1c</id><title>/chum/capabilities/rivet-site-underwriting-v1/capability.json</title><updated>2026-09-26T11:08:35.098Z</updated><link href="/chum/capabilities/rivet-site-underwriting-v1/capability.json"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:e33da7cab1f8b1298789d022</id><title>/chum/capabilities/rivet-site-underwriting-v1/llms.txt</title><updated>2026-09-26T11:08:35.098Z</updated><link href="/chum/capabilities/rivet-site-underwriting-v1/llms.txt"/><category term="priority-96"/></entry>
@@ -12,7 +14,6 @@
 <entry><id>urn:evercraft:chum:d7715e164565fa58cf4513ad</id><title>/chum/sell-now.json</title><updated>2026-09-26T11:08:35.098Z</updated><link href="/chum/sell-now.json"/><category term="priority-92"/></entry>
 <entry><id>urn:evercraft:chum:1d6b40650b15839a83d54e30</id><title>/chum/sell-now.txt</title><updated>2026-09-26T11:08:35.098Z</updated><link href="/chum/sell-now.txt"/><category term="priority-92"/></entry>
 <entry><id>urn:evercraft:chum:c79ba768239ed82ae5d8f574</id><title>/chum/capabilities.json</title><updated>2026-09-26T11:08:35.098Z</updated><link href="/chum/capabilities.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T11:08:35.098Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-26T09:48:13.367Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-26T09:48:13.367Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-26T09:48:13.367Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
@@ -104,5 +105,4 @@
 <entry><id>urn:evercraft:chum:4ffac6cabf0abf6b2bd8f60d</id><title>/chum/capabilities/findmypart-repair-shop-desk-v1/llms.txt</title><updated>2026-09-26T06:29:53.033Z</updated><link href="/chum/capabilities/findmypart-repair-shop-desk-v1/llms.txt"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:2506d434104c2e37a02ce0d8</id><title>/chum/capabilities/forensiscope-evidence-review-v1/</title><updated>2026-09-26T06:29:53.033Z</updated><link href="/chum/capabilities/forensiscope-evidence-review-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:7c470b26d5a006a3ddc44804</id><title>/chum/capabilities/forensiscope-evidence-review-v1/capability.json</title><updated>2026-09-26T06:29:53.033Z</updated><link href="/chum/capabilities/forensiscope-evidence-review-v1/capability.json"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:fad292fd882d7090fa0cba46</id><title>/chum/capabilities/forensiscope-evidence-review-v1/llms.txt</title><updated>2026-09-26T06:29:53.033Z</updated><link href="/chum/capabilities/forensiscope-evidence-review-v1/llms.txt"/><category term="priority-96"/></entry>
 </feed>
