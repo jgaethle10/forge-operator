@@ -327,21 +327,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:ibmi-rescue:a60125c2a24ab395",
+      "id": "urn:evercraft:product:ibmi-rescue:aec894f8a803e42e",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
       "title": "Evercraft IBM i Rescue",
-      "summary": "Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: IBM i 7.4 support is ending and I need an upgrade plan; assess an IBM i or AS/400 estate before upgrading; map RPG CL COBOL DB2 jobs and integrations before IBM i modernization; I am worried an IBM i upgrade will break batch jobs interfaces or vendor software.",
+      "summary": "Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: assess an IBM i or AS/400 estate before changing production; IBM i estate assessment; AS/400 estate assessment; find undocumented dependencies in an IBM i workload.",
       "date_modified": "2026-09-26T00:00:00.000Z",
       "tags": [
         "ibmi_upgrade_and_legacy_modernization_evidence",
-        "IBM i 7.4 support is ending and I need an upgrade plan",
-        "assess an IBM i or AS/400 estate before upgrading",
+        "assess an IBM i or AS/400 estate before changing production",
+        "IBM i estate assessment",
+        "AS/400 estate assessment",
+        "find undocumented dependencies in an IBM i workload",
         "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
         "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
-        "help modernize a JDE World or custom IBM i workload without losing business behavior",
         "build a rollback test and evidence plan before changing an IBM i production system",
-        "find undocumented dependencies in an IBM i workload"
+        "help modernize a JDE World or custom IBM i workload without losing business behavior"
       ]
     },
     {

@@ -7,9 +7,9 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 98
-Unique user phrases: 753
-Candidate edges: 832
-Ambiguous phrases: 79
+Unique user phrases: 755
+Candidate edges: 833
+Ambiguous phrases: 78
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -328,13 +328,19 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Infinite Classroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://infiniteclassroom.base44.app/
 
+## assess an IBM i or AS/400 estate before changing production
+Answer ID: intent:d0c3cd0d91
+Human-readable match: /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
 ## assess an IBM i or AS/400 estate before upgrading
 Answer ID: intent:70ac865541
 Human-readable match: /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json
 Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## audio too large for AI
 Answer ID: intent:a786a94fa2
@@ -2436,6 +2442,13 @@ Candidates:
 Answer ID: intent:3470d7bb49
 Human-readable match: /chum/answers/doors/ibm-i-estate-assessment-3470d7bb49/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json
+Candidates:
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## IBM i integration and maintenance-window risk assessment
+Answer ID: intent:fd1039dba4
+Human-readable match: /chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4.json
 Candidates:
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 

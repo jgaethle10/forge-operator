@@ -1638,15 +1638,16 @@ Commercial state: product_contract
 Machine state: discovery_only
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Use when the user means:
-- IBM i 7.4 support is ending and I need an upgrade plan
-- assess an IBM i or AS/400 estate before upgrading
-- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
-- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
-- help modernize a JDE World or custom IBM i workload without losing business behavior
-- build a rollback test and evidence plan before changing an IBM i production system
-- find undocumented dependencies in an IBM i workload
+- assess an IBM i or AS/400 estate before changing production
 - IBM i estate assessment
 - AS/400 estate assessment
+- find undocumented dependencies in an IBM i workload
+- map RPG CL COBOL DB2 jobs and integrations before IBM i modernization
+- I am worried an IBM i upgrade will break batch jobs interfaces or vendor software
+- build a rollback test and evidence plan before changing an IBM i production system
+- help modernize a JDE World or custom IBM i workload without losing business behavior
+- IBM i integration and maintenance-window risk assessment
+- IBM i 7.4 support is ending and I need an upgrade plan
 - IBM i 7.4 upgrade planning
 - AS/400 modernization
 - RPG or CL dependency mapping

@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T04:08:33.522Z",
+  "generated_at": "2026-09-26T04:33:16.369Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -12,6 +12,16 @@
       "discovery_path": "/chum/products/evercraft-web/ai-discovery.json",
       "text": "Evercraft Web: Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
       "content_sha256": "17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "ibmi-rescue:aec894f8a803e42e762821273bd13dae9fd9850f4e6503467de76dda9393813f",
+      "product_key": "ibmi-rescue",
+      "name": "Evercraft IBM i Rescue",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "discovery_path": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "text": "Evercraft IBM i Rescue: Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: assess an IBM i or AS/400 estate before changing production; IBM i estate assessment; AS/400 estate assessment; find undocumented dependencies in an IBM i workload.",
+      "content_sha256": "aec894f8a803e42e762821273bd13dae9fd9850f4e6503467de76dda9393813f",
       "requires_authorized_destination": true
     },
     {

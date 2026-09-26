@@ -21,9 +21,9 @@
   },
   "summary": {
     "pain_index_entries": 98,
-    "unique_user_phrases": 753,
-    "mapped_candidate_edges": 832,
-    "ambiguous_phrases": 79,
+    "unique_user_phrases": 755,
+    "mapped_candidate_edges": 833,
+    "ambiguous_phrases": 78,
     "product_candidates": 53,
     "machine_offer_candidates": 45
   },
@@ -1088,13 +1088,36 @@
       ]
     },
     {
+      "answer_id": "intent:d0c3cd0d91",
+      "user_language": "assess an IBM i or AS/400 estate before changing production",
+      "normalized": "assess an ibm i or as 400 estate before changing production",
+      "relative_json": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91.json",
+      "relative_page": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:70ac865541",
       "user_language": "assess an IBM i or AS/400 estate before upgrading",
       "normalized": "assess an ibm i or as 400 estate before upgrading",
       "relative_json": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
       "relative_page": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "candidate_count": 2,
+      "candidate_count": 1,
       "candidates": [
         {
           "capability_id": "offer:ibmi-rescue-v1",
@@ -1105,18 +1128,6 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
-          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
-        },
-        {
-          "capability_id": "product:ibmi-rescue",
-          "kind": "product",
-          "product_key": "ibmi-rescue",
-          "public_id": null,
-          "name": "Evercraft IBM i Rescue",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
@@ -8286,6 +8297,29 @@
       "relative_json": "/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json",
       "relative_page": "/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:fd1039dba4",
+      "user_language": "IBM i integration and maintenance-window risk assessment",
+      "normalized": "ibm i integration and maintenance window risk assessment",
+      "relative_json": "/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4.json",
+      "relative_page": "/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4.json",
       "candidate_count": 1,
       "candidates": [
         {

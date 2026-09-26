@@ -36,7 +36,8 @@
         "paid state requires authoritative provider verification",
         "no production change or cutover is included in the public X-Ray or Proof Sprint",
         "Human buyer route reachability and backend checkout creation are live-verified with synthetic QA",
-        "Checkout creation is not payment proof; provider verification is still required before paid state or revenue claims"
+        "Checkout creation is not payment proof; provider verification is still required before paid state or revenue claims",
+        "unknown IBM i release is acceptable and must not be guessed from generic technology-use evidence"
       ]
     }
   ],

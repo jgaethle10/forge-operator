@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-26T04:08:33.522Z",
+  "updated_at": "2026-09-26T04:33:16.369Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "2f7587032bbc37f2389b6c0df935cdff31fb8741f4ee32d2555bf26c22b6a57b",
@@ -22,7 +22,7 @@
     "deck-capital-fit": "39c8283e5ffbe1bcf275493d91d2831d931ee8eee2cb4e29019e4396b33618b2",
     "evercraft-fantasy-intelligence": "d1fd70fddd202143e192ecd5705a97080a41b6cb78f3de75b67b10d5cbe7a64f",
     "evercraft-global-health-atlas": "40f78aac0ac61c73ec94dfe949978147ec7f2f4faa77f5b592030bb3f02fae08",
-    "ibmi-rescue": "a60125c2a24ab39561d8a7a3967caa669aaff43cd02f15a8992842f0e66c6bbe",
+    "ibmi-rescue": "aec894f8a803e42e762821273bd13dae9fd9850f4e6503467de76dda9393813f",
     "evercraft-network": "c359ab48efdb5e5d488390a518d49b1bd44f017796534b138b7aae29d4b54166",
     "evercraft-physics-atlas": "2e49fc83f75c3d72b98f6f070a2210da15ffbf4e76f58fd27890b667dfde68ce",
     "evercraft-property-services": "f697ccf24475576275249cd99089e6ec381dc9fde950b5d68c37a2032db44bc9",
