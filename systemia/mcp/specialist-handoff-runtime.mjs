@@ -582,6 +582,10 @@ export async function startSpecialistHandoffRuntime({
     device_fingerprint: identityAttestation?.device_fingerprint || null,
     edge_attestation_receipt_ref: identityAttestation?.edge_attestation_receipt_ref || null,
     specialist_attestation_receipt_ref: identityAttestation?.specialist_attestation_receipt_ref || null,
+    field_enrollment_bound: Boolean(identityAttestation?.field_enrollment_receipt_ref),
+    field_verified: Boolean(identityAttestation?.field_verified),
+    field_enrollment_receipt_ref: identityAttestation?.field_enrollment_receipt_ref || null,
+    public_edge_admission_receipt_ref: identityAttestation?.public_edge_admission_receipt_ref || null,
     checkout_enabled: false,
     payment_enabled: false,
     legacy_adapter: 'evercraft_machine_commerce_gateway',
@@ -728,11 +732,16 @@ export async function startSpecialistHandoffRuntime({
       deviceFingerprint,
       edgeAttestationReceipt,
       specialistAttestationReceipt,
+      fieldVerified = false,
+      fieldEnrollmentReceipt = '',
+      publicEdgeAdmissionReceipt = '',
       sameDeviceBinding = false,
     } = {}) {
       const fingerprint = String(deviceFingerprint || '').trim();
       const edgeReceipt = String(edgeAttestationReceipt || '').trim();
       const specialistReceipt = String(specialistAttestationReceipt || '').trim();
+      const fieldReceipt = String(fieldEnrollmentReceipt || '').trim();
+      const edgeAdmissionReceipt = String(publicEdgeAdmissionReceipt || '').trim();
       if (!/^sha256:[a-f0-9]{64}$/i.test(fingerprint)) {
         throw new Error('device_fingerprint_invalid');
       }
@@ -742,6 +751,14 @@ export async function startSpecialistHandoffRuntime({
       if (!/^([a-f0-9]{64}|sha256:[a-f0-9]{64})$/i.test(specialistReceipt)) {
         throw new Error('specialist_attestation_receipt_invalid');
       }
+      if (fieldVerified === true) {
+        if (!/^sha256:[a-f0-9]{64}$/i.test(fieldReceipt)) {
+          throw new Error('field_enrollment_receipt_invalid');
+        }
+        if (!/^sha256:[a-f0-9]{64}$/i.test(edgeAdmissionReceipt)) {
+          throw new Error('public_edge_admission_receipt_invalid');
+        }
+      }
       if (sameDeviceBinding !== true) {
         throw new Error('same_device_binding_required');
       }
@@ -749,6 +766,9 @@ export async function startSpecialistHandoffRuntime({
         device_fingerprint: fingerprint,
         edge_attestation_receipt_ref: edgeReceipt,
         specialist_attestation_receipt_ref: specialistReceipt,
+        field_verified: fieldVerified === true,
+        field_enrollment_receipt_ref: fieldVerified === true ? fieldReceipt : null,
+        public_edge_admission_receipt_ref: fieldVerified === true ? edgeAdmissionReceipt : null,
         same_device_binding: true,
         bound_at: new Date().toISOString(),
       };
