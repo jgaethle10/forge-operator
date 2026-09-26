@@ -93,3 +93,52 @@ assert.equal(linkBaseline.signals.length,0);
 assert.equal(linkBaseline.receipts[0].link_baseline_missing,true);
 assert.equal(linkBaseline.receipts[0].emitted_link_signals,0);
 assert.equal(linkBaseline.state.sources['listing-source'].known_links.length,1);
+
+
+const buyerSource = {
+  key:'ibmi-buyer',
+  name:'Example Manufacturing IBM i career evidence',
+  company:'Example Manufacturing',
+  url:'https://example.com/careers/ibmi',
+  allowed_hosts:['example.com'],
+  min_poll_minutes:5,
+  emit_on_first_seen:false,
+  emit_body_change_signal:false,
+  buyer_signal:true,
+  source_type:'official_company',
+};
+const buyerFetch = async () => ({
+  ok:true,
+  status:200,
+  text:async () => '<html><body><h1>IBM i Programmer</h1><p>Join our team. Maintain RPGLE, SQLRPGLE, CL and DB2 applications plus APIs.</p></body></html>',
+});
+const buyerScan = await scanLegacyRescuePublicSources({
+  sources:[buyerSource],
+  previousState:{sources:{}},
+  fetchImpl:buyerFetch,
+  now:new Date('2026-09-25T20:30:00Z'),
+});
+assert.equal(buyerScan.signals.length,0);
+assert.equal(buyerScan.buyer_signals.length,1);
+assert.equal(buyerScan.buyer_signals[0].technology_use_state,'observed_public_strong');
+assert.equal(buyerScan.buyer_signals[0].release_state,'unknown');
+assert.equal(buyerScan.buyer_signals[0].buying_intent_state,'unknown');
+assert.equal(buyerScan.buyer_signals[0].recommended_offer_key,'ibmi_estate_xray_250');
+assert.equal(buyerScan.receipts[0].buyer_signal_state,'research_candidate');
+
+// A hiring page mentioning IBM i 7.4 explicitly may route to the release-specific
+// diagnostic, but even then it does not prove buying intent.
+const v74BuyerFetch = async () => ({
+  ok:true,
+  status:200,
+  text:async () => '<html><body>IBM i 7.4 RPG IV CL DB2 developer wanted. Upgrade and modernization work.</body></html>',
+});
+const v74BuyerScan = await scanLegacyRescuePublicSources({
+  sources:[{...buyerSource,key:'ibmi-buyer-74',url:'https://example.com/careers/ibmi-74'}],
+  previousState:{sources:{}},
+  fetchImpl:v74BuyerFetch,
+  now:new Date('2026-09-25T20:31:00Z'),
+});
+assert.equal(v74BuyerScan.buyer_signals[0].observed_release,'7.4');
+assert.equal(v74BuyerScan.buyer_signals[0].recommended_offer_key,'ibmi_74_deadline_xray_250');
+assert.equal(v74BuyerScan.buyer_signals[0].buying_intent_state,'unknown');
