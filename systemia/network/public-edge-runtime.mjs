@@ -179,13 +179,25 @@ export async function startPublicEdgeRuntime({
       origin=`http://127.0.0.1:${address.port}`;
     }else{
       const requested=safeLabel(input.requested_hostname||deploymentId);
-      const suffix=sha(deploymentReceiptHash).replace(/^sha256:/,'').slice(0,10);
-      hostname=`${requested}-${suffix}.${normalizedDomain}`;
+      const stableHostname=input.stable_hostname===true;
+      if(stableHostname){
+        hostname=`${requested}.${normalizedDomain}`;
+        const existing=[...leases.values()].find((item)=>item.hostname===hostname);
+        if(existing){
+          if(existing.deployment_id!==deploymentId){
+            throw new Error('stable_public_hostname_already_leased');
+          }
+          await releaseRouteLease(existing.lease_id,'stable_hostname_replaced');
+        }
+      }else{
+        const suffix=sha(deploymentReceiptHash).replace(/^sha256:/,'').slice(0,10);
+        hostname=`${requested}-${suffix}.${normalizedDomain}`;
+      }
       const portSuffix=Number(tlsActualPort)===443?'':`:${tlsActualPort}`;
       origin=`https://${hostname}${portSuffix}`;
     }
 
-    const lease={...base,origin,hostname,proxy_server:proxyServer};
+    const lease={...base,origin,hostname,stable_hostname:input.stable_hostname===true,proxy_server:proxyServer};
     const publicLease={...base,origin,hostname};
     publicLease.receipt_hash=sha(publicLease);
     lease.receipt_hash=publicLease.receipt_hash;
