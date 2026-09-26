@@ -30,6 +30,12 @@ const TARGETS=new Map([
     description:'Site continuity and connectivity-outage dependency analysis with prioritized resilience planning and human-controlled service handoff.',
     version:'1.0.0',
   }],
+  ['systemia-remote-ops',{
+    registry_name:'io.github.jgaethle10/systemia-remote-ops',
+    title:'Systemia Remote Ops',
+    description:'Read-only business decision simulation and routing, with live modeled pricing analysis and clearly held boundaries for hiring, expansion, and strategic transactions.',
+    version:'1.0.0',
+  }],
 ]);
 
 function cleanHttps(value){
