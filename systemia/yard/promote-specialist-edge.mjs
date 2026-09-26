@@ -40,7 +40,9 @@ export function validateExternalCanary(receipt){
     receipt.public_https_verified!==true ||
     receipt.mcp_initialize_verified!==true ||
     receipt.mcp_tools_list_verified!==true ||
-    receipt.read_only_authority_verified!==true
+    receipt.read_only_authority_verified!==true ||
+    receipt.identity_attestation_verified!==true ||
+    receipt.same_device_binding!==true
   ){
     throw new Error('external_canary_not_verified');
   }
@@ -59,14 +61,29 @@ export function validateExternalCanary(receipt){
   const origin=cleanHttpsOrigin(receipt.origin);
   const instanceId=String(receipt.instance_id||'').trim();
   const deploymentReceipt=String(receipt.deployment_receipt_ref||'').trim();
+  const deviceFingerprint=String(receipt.device_fingerprint||'').trim();
+  const edgeAttestationReceipt=String(receipt.edge_attestation_receipt_ref||'').trim();
+  const specialistAttestationReceipt=String(receipt.specialist_attestation_receipt_ref||'').trim();
   if(!instanceId) throw new Error('external_canary_instance_id_missing');
   if(!/^sha256:[a-f0-9]{64}$/i.test(deploymentReceipt)){
     throw new Error('external_canary_deployment_receipt_invalid');
+  }
+  if(!/^sha256:[a-f0-9]{64}$/i.test(deviceFingerprint)){
+    throw new Error('external_canary_device_fingerprint_invalid');
+  }
+  if(!/^([a-f0-9]{64}|sha256:[a-f0-9]{64})$/i.test(edgeAttestationReceipt)){
+    throw new Error('external_canary_edge_attestation_receipt_invalid');
+  }
+  if(!/^([a-f0-9]{64}|sha256:[a-f0-9]{64})$/i.test(specialistAttestationReceipt)){
+    throw new Error('external_canary_specialist_attestation_receipt_invalid');
   }
   return {
     origin,
     instance_id:instanceId,
     deployment_receipt_ref:deploymentReceipt,
+    device_fingerprint:deviceFingerprint,
+    edge_attestation_receipt_ref:edgeAttestationReceipt,
+    specialist_attestation_receipt_ref:specialistAttestationReceipt,
     observed_at:String(receipt.observed_at||new Date().toISOString()),
   };
 }
@@ -117,6 +134,11 @@ export function promoteSpecialistSpecs(specs,receipt){
       origin:verified.origin,
       instance_id:verified.instance_id,
       deployment_receipt_ref:verified.deployment_receipt_ref,
+      device_fingerprint:verified.device_fingerprint,
+      edge_attestation_receipt_ref:verified.edge_attestation_receipt_ref,
+      specialist_attestation_receipt_ref:verified.specialist_attestation_receipt_ref,
+      identity_attestation_verified:true,
+      same_device_binding:true,
       observed_at:verified.observed_at,
       promotion_scope:'public_execution_only',
       registry_publication_proven:false,
