@@ -179,3 +179,10 @@ Registered workers may declare bounded artifacts with an artifact ID, SHA-256 id
 The coordinator retrieves granted artifacts through the authenticated lease before release, streams them while recomputing SHA-256, verifies the byte count, stores them under its own artifact-return root, and rehydrates the result with a coordinator-local path. Durable idempotency replay can re-grant an existing content-addressed artifact after a NodeSeed restart without re-running the software adapter. Missing or corrupt durable artifacts fail closed.
 
 ForensiScope uses this lane for prepared audio artifacts so distributed media reconciliation does not depend on a shared filesystem or a remote worker path.
+
+
+## Failure classification
+
+NodeSeed pool failures are classified before retry or quarantine decisions. Transport failures and node-service failures may quarantine capacity for the current run and can be retried on remaining eligible nodes. Expired or invalid leases disable only that leased node for the current run without asserting that the underlying device is unhealthy. Deterministic workload rejection, including an idempotency-key conflict, is non-retryable and does not poison otherwise healthy capacity. Integrity failures fail closed and quarantine the affected node.
+
+Pool receipts expose failure_class, retryable, node_quarantined, and node_disabled_for_run on failed assignments and events. Node summaries distinguish healthy_at_end from available_at_end so lease exhaustion is not mislabeled as hardware or runtime failure.
