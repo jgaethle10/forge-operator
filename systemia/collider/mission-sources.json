@@ -24,6 +24,12 @@
       "path": "../../artifacts/remote-device-trust-watch/mission-snapshot.json",
       "required": true,
       "stale_after_seconds": 900
+    },
+    {
+      "source_key": "evercraft-public-specialist-edge",
+      "path": "../../artifacts/public-edge-activation-watch/field-mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
     }
   ]
 }
