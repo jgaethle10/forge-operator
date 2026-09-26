@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "seasonally",
+  "name": "Season & Story",
+  "aliases": [
+    "Seasonally"
+  ],
+  "class": "seasonal_family_household_companion",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+  "intents": [
+    "seasonal family activities",
+    "seasonal recipes for my family",
+    "turn this recipe into a grocery list",
+    "family seasonal traditions",
+    "local seasonal events and adventures",
+    "compare grocery basket prices near me",
+    "cheapest groceries for this recipe"
+  ],
+  "authority": "public product discovery; household actions are account-bound",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "live Kroger retailer-price retrieval is held until legitimate server credentials and a real bounded source proof exist",
+    "do not claim Seasonally currently finds the cheapest local grocery basket",
+    "retailer SKU price evidence and grocery-term-to-product matching are separate evidence states",
+    "promotion eligibility and cross-package unit normalization are not proven",
+    "private household data is not public",
+    "public runtime hostname remains unresolved in the discovery inventory"
+  ],
+  "commercial": null,
+  "machine_commerce_handoff": null,
+  "registry_name": null,
+  "mcp": null,
+  "source": "CHUM public mirror",
+  "evidence_state": "source_build_and_regressions_passed_2026_09_26_live_retailer_source_held"
+}
