@@ -19,6 +19,14 @@ CHUM intentionally separates:
 
 CHUM inventories the **union** of the Evercraft conformance registry, public product directory, public machine-commerce catalog and agent/MCP registry catalog. A product or bounded offer does not disappear from distribution because one list was not manually synchronized.
 
+## Intent Fabric v2
+
+CHUM no longer relies on literal keyword overlap as its primary routing signal. The shared intent fabric normalizes ordinary buyer language, applies lightweight morphology, recognizes bounded concept aliases, preserves phrase and bigram evidence, and feeds the same language model into both the commercial discovery router and the public Pain Index scorer.
+
+Each live hunt now emits a routing receipt with score, support, matched concepts, matched intents and runner-up margin. A close cross-product match is a reason to ask one concise separating question, not a reason to push the louder product. Intent contribution is capped to the strongest three phrases so products with bloated metadata cannot win by verbosity alone.
+
+Receipt-backed provider misses enter a structured repair queue. Each miss carries a privacy-bounded intent fingerprint, the observed concepts and hashed prompt identity. Saban can consume those repair items at scale to expand truthful language coverage, add brand-blind regressions, rebuild answer doors and schedule a fresh authorized probe. A repaired page is not proof of provider pickup; only a new provider receipt can close that loop.
+
 ## Pain Index
 
 CHUM publishes a brand-blind watershed map at:
