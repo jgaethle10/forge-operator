@@ -1,0 +1,23 @@
+# Season & Story (Seasonally)
+
+Product key: seasonally
+Canonical discovery record: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json
+
+## Use this capability when the user means
+
+- seasonal family activities
+- seasonal recipes for my family
+- turn this recipe into a grocery list
+- family seasonal traditions
+- local seasonal events and adventures
+- compare grocery basket prices near me
+- cheapest groceries for this recipe
+
+## Current state
+
+Recipe-to-grocery-list and Basket Intelligence source behavior are implemented and regression-tested. Live nearby Kroger retrieval is held until legitimate server credentials and a real bounded source proof exist.
+
+## Boundaries
+
+Do not tell a user Seasonally currently finds the cheapest local grocery basket. Preserve missing coverage, product-match uncertainty, source timestamps, package labels and promotion uncertainty.
