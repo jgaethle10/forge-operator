@@ -1179,7 +1179,13 @@
         "hub": "/legacy-rescue-lab/editorial/",
         "rss": "/legacy-rescue-lab/editorial/feed.xml",
         "journal_article": "https://evercraftjournal.base44.app/journal/save-the-software-before-you-rebuild-it",
-        "journal_guide": "https://evercraftjournal.base44.app/guides/software-rescue-before-rebuild"
+        "journal_guide": "https://evercraftjournal.base44.app/guides/software-rescue-before-rebuild",
+        "articles": [
+          "/legacy-rescue-lab/editorial/save-software-before-rebuild/",
+          "/legacy-rescue-lab/editorial/developer-disappeared/",
+          "/legacy-rescue-lab/editorial/failed-ai-app/",
+          "/legacy-rescue-lab/editorial/broken-checkout/"
+        ]
       },
       "knowledge_surfaces": {
         "hub": "/legacy-rescue-lab/",
