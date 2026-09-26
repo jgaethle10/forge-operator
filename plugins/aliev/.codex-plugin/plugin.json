@@ -1,0 +1,35 @@
+{
+  "name": "aliev",
+  "version": "0.1.0",
+  "description": "Direct EV charging site intelligence by address.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://aliev.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "aliev",
+    "rivet",
+    "ev-infrastructure",
+    "site-analysis",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "AliEV / RIVET",
+    "shortDescription": "Evaluate EV charging opportunity by property",
+    "longDescription": "Use AliEV directly when a user wants property-specific EV charging intelligence such as nearby competition, demand and traffic context, utility or tariff context, incentives, site fit, economics, or preliminary planning inputs.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://aliev.base44.app/",
+    "defaultPrompt": [
+      "Evaluate whether EV charging could make sense at a specific property and clearly separate observed, public, inferred, and modeled evidence."
+    ]
+  }
+}
