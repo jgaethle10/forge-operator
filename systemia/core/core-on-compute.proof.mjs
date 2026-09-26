@@ -7,6 +7,9 @@ import { startNodeSeed } from '../compute/node-seed.mjs';
 import { YardOperator } from '../yard/operator.mjs';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const residentConfig = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'systemia/core/resident-services.json'), 'utf8'));
+const expectedCoreServiceCount = Array.isArray(residentConfig.services) ? residentConfig.services.length : 0;
+assert.ok(expectedCoreServiceCount > 0);
 
 async function waitForPath(target, timeoutMs = 15000, intervalMs = 200) {
   const deadline = Date.now() + timeoutMs;
@@ -112,7 +115,7 @@ try {
   assert.equal(core.receipt.runtime_fabric, 'Evercraft Compute');
   assert.equal(core.receipt.health_verification, 'healthy');
   assert.equal(core.receipt.route_verification, 'private_core_health_verified');
-  assert.equal(core.result.supervised_service_count, 5);
+  assert.equal(core.result.supervised_service_count, expectedCoreServiceCount);
   assert.ok(core.management.receipt_binding_hash);
   assert.equal(core.discovery.selected_node_id, 'core-compute-proof-node');
   assert.ok(core.discovery.receipt_hash);
@@ -123,7 +126,7 @@ try {
   assert.equal(route.ok, true);
   assert.equal(route.state, 'healthy');
   assert.equal(route.health.running, true);
-  assert.equal(route.health.service_count, 5);
+  assert.equal(route.health.service_count, expectedCoreServiceCount);
   assert.equal(route.health.failed_count, 0);
   assert.equal(route.health.held_count, 0);
   assert.equal(route.health.deployment_receipt, core.receipt.receipt_hash);
@@ -167,7 +170,7 @@ try {
     schema: 'evercraft.systemia.core-on-compute-resident-proof.v1',
     runtime: 'Evercraft Compute',
     deployment_surface: 'Yard Operator',
-    core_supervised_services: 5,
+    core_supervised_services: expectedCoreServiceCount,
     private_workspace_verified: true,
     capacity_endpoint_supplied_manually: false,
     automatic_capacity_discovery_verified: true,
