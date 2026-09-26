@@ -172,7 +172,10 @@
         ],
         "observed_on": "2026-09-25"
       },
-      "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified"
+      "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified",
+      "machine_commerce_public_id": "evercraft-clip-social-video-v1",
+      "machine_commerce_handoff_state": "verification_required_checkout_not_verified",
+      "machine_commerce_tool": "get_offer"
     },
     {
       "product_key": "evercraft-containment",
