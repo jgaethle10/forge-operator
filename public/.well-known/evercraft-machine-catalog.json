@@ -696,8 +696,9 @@
       "public_url": "https://network-control.base44.app/join",
       "public_url_source": "source_catalog",
       "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
-      "invocation_status": "SOURCE-WIRED: Network specialist MCP tools and agent gateway are prepared for read-only capability discovery, public presence and human handoff. Production verification is still required before claiming the v1.2.0 MCP surface is live.",
-      "catalog_version": "2026-09-24.4"
+      "invocation_status": "LIVE READ-ONLY MCP VERIFIED: production initialize and tools/list exposed get_network_capabilities, get_network_presence, and prepare_network_handoff; get_network_capabilities was executed successfully as a read-only call on 2026-09-26. Presence and handoff execution are not yet canaried. Billing remains not live.",
+      "catalog_version": "2026-09-26.network-mcp-verified",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
     },
     {
       "public_id": "evercraft-web-browser-agent-v1",
