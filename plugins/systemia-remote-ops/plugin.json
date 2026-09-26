@@ -1,7 +1,7 @@
 {
   "name": "systemia-remote-ops",
   "version": "0.1.0",
-  "description": "Direct business decision simulation through Systemia Remote Ops.",
+  "description": "Simulate business decisions before acting",
   "author": {
     "name": "Evercraft LLC"
   },
@@ -18,5 +18,6 @@
   ],
   "skills": "./skills/",
   "mcpServers": "./mcp.json",
-  "releaseState": "SOURCE_READY_DEPLOYMENT_UNVERIFIED"
+  "releaseState": "SOURCE_READY_DEPLOYMENT_UNVERIFIED",
+  "publicOriginState": "deployment_unverified"
 }
