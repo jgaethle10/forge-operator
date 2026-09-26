@@ -145,6 +145,7 @@ jobs:
           set -euo pipefail
           node systemia/yard/promote-specialist-edge.mjs             --receipt artifacts/evercraft-public-edge-canary.json             --out artifacts/direct-door-promotion-receipt.json
           node scripts/generate-direct-plugin-packages.mjs
+          node scripts/generate-mcp-registry-candidates.mjs
           node systemia/chum/build-capability-mirror.mjs
           npm run direct:check
 
@@ -153,7 +154,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             public/chum
+          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             distribution/mcp-registry-candidates             public/chum
           if git diff --cached --quiet; then
             echo "Discovery already reflects this verified public edge."
             exit 0
