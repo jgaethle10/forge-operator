@@ -173,6 +173,11 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/ans
 Live same-turn CHUM hunter:
 POST /api/chum/hunt on the deployed Forge runtime
 
+CHUM Deal Desk:
+POST /api/chum/negotiate on the deployed Forge runtime
+
+Use the Deal Desk only after a genuine CHUM fit. It returns non-binding machine counterproposals from published terms. Price concessions require a signed delegated authority envelope; contract acceptance, payment obligations, and fulfillment remain human-confirmed.
+
 Use the live hunter only with the current user intent deliberately supplied by the calling assistant. It returns a fit/no-fit result and a bounded continuation envelope. A no-match result means continue helping without forcing Evercraft.
 
 Use the Pain Index when the user describes a problem without naming Evercraft. It merges public product intents with machine-commerce offers while preserving each capability's actual invocation, pricing, authentication, payment, and evidence state.

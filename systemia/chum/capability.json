@@ -3,7 +3,7 @@
   "capability_id": "systemia.chum",
   "name": "CHUM",
   "expansion": "Capability Handoff & Utility Mesh",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "owner": "Systemia",
   "status": "live_in_forge_operator",
   "contract": {
@@ -22,7 +22,9 @@
       "public/.well-known/evercraft-pain-index.json",
       "public/chum/answers/index.json",
       "shared concept-aware intent language fabric",
-      "receipt-backed provider miss repair queue"
+      "receipt-backed provider miss repair queue",
+      "agent-to-agent commercial proposals",
+      "optional signed delegated deal authority envelope"
     ],
     "outputs": [
       "plain-text LLM routing index",
@@ -43,7 +45,9 @@
       "crawlable CHUM problem-entry page",
       "concept-aware brand-blind routing receipts",
       "routing confidence and runner-up margin",
-      "Saban-multipliable receipt-backed discovery repairs"
+      "Saban-multipliable receipt-backed discovery repairs",
+      "non-binding machine counterproposals",
+      "deal authority receipts and human-exception gates"
     ]
   },
   "permissions": {
@@ -55,7 +59,11 @@
     "private_topology_access": false,
     "public_referral_issue": true,
     "public_payment_claims": false,
-    "trusted_payment_receipt_ingest": true
+    "trusted_payment_receipt_ingest": true,
+    "bounded_commercial_negotiation_response": true,
+    "binding_contract_acceptance": false,
+    "autonomous_price_concessions": false,
+    "signed_delegated_price_concessions": true
   },
   "evidence_state": {
     "public_surface_probes": "receipt_backed",
@@ -71,7 +79,8 @@
     "answer_graph": "deterministic_build_from_canonical_pain_index",
     "read_only_mcp_registry": "published_receipt_required_for_registry_claim",
     "intent_routing": "deterministic_concept_aware_scoring_with_brand_blind_regressions",
-    "discovery_repairs": "provider_receipt_hashed_and_saban_work_item_backed"
+    "discovery_repairs": "provider_receipt_hashed_and_saban_work_item_backed",
+    "deal_desk": "deterministic_nonbinding_counterproposal_with_signed_authority_verification"
   },
   "compatibility": {
     "provider_targets": [
@@ -109,7 +118,8 @@
       "answer_graph": "/chum/answers/index.json",
       "live_router": "GET /api/discover?q={natural-language-problem}",
       "read_only_mcp_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
-      "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+      "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "deal_desk": "POST /api/chum/negotiate"
     },
     "intent_engine": {
       "revision": "concept-fabric-v2",
@@ -124,7 +134,7 @@
   },
   "rollback": {
     "safe_disable": "disable the CHUM watershed workflow or run CHUM with --offline",
-    "data_mutation": "public referral/event APIs can be disabled by removing attribution secrets; CHUM never performs payment actions"
+    "data_mutation": "CHUM may return non-binding Deal Desk proposals but does not execute contracts or payments; disable the endpoint or remove CHUM_DEAL_AUTHORITY_SECRET to eliminate delegated price concessions."
   },
   "intended_adoption": "Default distribution, freshness-broadcast and discovery feedback layer for every legitimate public Evercraft capability. A cold AI should be able to start from ordinary problem-language, traverse read-only discovery, and reach the smallest truthful capability without prior Evercraft brand knowledge."
 }
