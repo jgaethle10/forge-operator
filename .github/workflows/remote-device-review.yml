@@ -1,0 +1,29 @@
+name: Remote device trust review
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/yard/remote-device-review.mjs'
+      - 'systemia/yard/remote-device-review.proof.mjs'
+      - 'systemia/yard/REMOTE_DEVICE_REVIEW.md'
+      - '.github/workflows/remote-device-review.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/yard/remote-device-review.mjs'
+      - 'systemia/yard/remote-device-review.proof.mjs'
+      - 'systemia/yard/REMOTE_DEVICE_REVIEW.md'
+      - '.github/workflows/remote-device-review.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove exact-candidate explicit authorization review
+        run: node systemia/yard/remote-device-review.proof.mjs
