@@ -102,6 +102,15 @@ function eventsForOffer(events, offer, productKeys) {
   );
 }
 
+function verifiedRevenueByCurrency(events) {
+  const totals = {};
+  for (const event of paymentEvents(events)) {
+    const currency = clean(event.currency).toUpperCase() || 'UNKNOWN';
+    totals[currency] = Number(totals[currency] || 0) + Number(event.amount_cents ?? event.amount ?? 0);
+  }
+  return totals;
+}
+
 function firstBrokenStage(stages, commercialState) {
   if (!stages.published) return 'published';
   if (!stages.announced) return 'announced';
@@ -261,7 +270,7 @@ export function buildFireControl({
         money_funnel_state: moneyRow?.funnel_state || 'no_attributed_traffic',
         revenue_event_count: offerEvents.length,
         provider_verified_payment_count: paidEvents.length,
-        provider_verified_revenue_amount: paidEvents.reduce((sum, event) => sum + Number(event.amount || 0), 0),
+        provider_verified_revenue_by_currency: verifiedRevenueByCurrency(paidEvents),
       },
     };
   });
