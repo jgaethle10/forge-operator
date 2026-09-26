@@ -119,3 +119,28 @@ export function coverageReceipt(rows=[]){
     jurisdiction_count:jurisdictions.length
   };
 }
+
+
+if (process.argv[1] && import.meta.url === new URL('file://' + process.argv[1]).href) {
+  const queue=buildNationalSessionWorkQueue();
+  const emit=process.argv.includes('--emit');
+  if(emit){
+    process.stdout.write(JSON.stringify({
+      schema:'evercraft.rivet.session-sprawl-queue.v1',
+      mission_id:'rivet-us-session-sprawl-001',
+      generated_at:new Date().toISOString(),
+      work_units:queue
+    },null,2)+'\n');
+  }else{
+    process.stdout.write(JSON.stringify({
+      schema:'evercraft.rivet.session-sprawl-summary.v1',
+      mission_id:'rivet-us-session-sprawl-001',
+      jurisdictions:US_SESSION_JURISDICTIONS.length,
+      public_source_lanes:SESSION_SOURCE_LANES.length,
+      national_partner_lanes:NATIONAL_PARTNER_LANES.length,
+      jurisdiction_lane_work_units:US_SESSION_JURISDICTIONS.length*SESSION_SOURCE_LANES.length,
+      total_work_units:queue.length,
+      canonical_entity:SESSION_ACCEPTANCE.canonical_entity
+    },null,2)+'\n');
+  }
+}
