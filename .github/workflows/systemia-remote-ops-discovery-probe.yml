@@ -1,0 +1,98 @@
+name: Systemia Remote Ops discovery probe
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "29 * * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/mcp/specialist-handoff-runtime.mjs"
+      - "systemia/yard/remote-ops-specialist.proof.mjs"
+      - "registry/systemia-remote-ops/**"
+      - "public/chum/products/systemia-remote-ops/**"
+      - "chum-probes/probe-suite.json"
+      - ".github/workflows/systemia-remote-ops-discovery-probe.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: systemia-remote-ops-discovery-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate brand-blind probe contracts
+        run: node scripts/validate-chum-probes.mjs
+
+      - name: Rotate one Systemia business-decision attack
+        id: probe
+        env:
+          CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
+          CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
+          NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
+          NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          CASES=(
+            business-simulator-startup-001
+            business-simulator-pricing-002
+            business-simulator-expansion-003
+            business-simulator-transaction-004
+          )
+          PROVIDERS=(chatgpt claude gemini copilot perplexity grok)
+
+          HOUR="$(date -u +%s)"
+          HOUR="$((HOUR / 3600))"
+          CASE_ID="${CASES[$((HOUR % ${#CASES[@]}))]}"
+
+          if { [ -n "${CHUM_PROBE_BRIDGE_URL:-}" ] && [ -n "${CHUM_PROBE_BRIDGE_TOKEN:-}" ]; } || { [ -n "${NEXUS_PROBE_BRIDGE_URL:-}" ] && [ -n "${NEXUS_PROBE_BRIDGE_TOKEN:-}" ]; }; then
+            PROVIDER="${PROVIDERS[$((HOUR % ${#PROVIDERS[@]}))]}"
+            echo "Consumer bridge configured; probing Systemia case $CASE_ID against $PROVIDER."
+          else
+            PROVIDER="generic_agent"
+            echo "Consumer bridge not configured; measuring Systemia case $CASE_ID with generic-agent machine client."
+          fi
+
+          CHUM_PROBE_PROVIDERS="$PROVIDER"           CHUM_PROBE_CASES="$CASE_ID"           CHUM_REQUIRE_PROBE_BRIDGE=false           npm run chum:providers
+
+          node <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('artifacts/chum/provider-probe-latest.json','utf8'));
+          const summary={
+            schema:'evercraft.systemia-remote-ops.focused-probe-summary.v1',
+            case_id:process.env.CASE_ID || null,
+            measurement_state:r.measurement_state || 'unknown',
+            bridge_configured:Boolean(r.bridge_configured),
+            completed:r.summary?.completed || 0,
+            blocked:r.summary?.blocked || 0,
+            failed:r.summary?.failed || 0,
+            pickup_observed:r.summary?.pickup_observed || 0,
+            expected_product_mentions:r.summary?.expected_product_mentions || 0,
+            expected_host_citations:r.summary?.expected_host_citations || 0,
+            control_false_positives:r.summary?.control_false_positives || 0,
+          };
+          console.log(JSON.stringify(summary));
+          NODE
+
+      - name: Upload Systemia probe receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-remote-ops-discovery-probe
+          path: artifacts/chum/provider-probe-latest.*
+          if-no-files-found: warn
+          retention-days: 30
