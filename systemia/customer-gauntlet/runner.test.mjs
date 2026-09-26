@@ -11,8 +11,12 @@ assert.ok(personas.personas.some(p=>p.tests.includes('duplicate_charge_guard')))
 assert.ok(personas.personas.some(p=>p.tests.includes('delivery')));
 assert.ok(personas.personas.some(p=>p.tests.includes('tab_order')));
 assert.equal(policy.rules.third_party_test_engines_allowed,false);
+assert.equal(policy.rules.external_browser_saas_allowed,false);
+assert.equal(policy.rules.owned_protocol_executor_required,true);
+assert.equal(policy.rules.blocked_lane_never_counts_as_pass,true);
 assert.equal(policy.rules.live_payment_by_default,false);
 assert.equal(policy.rules.quarantine_on_p0,true);
 assert.ok(policy.severity.P0.includes('duplicate_charge'));
 assert.ok(policy.severity.P0.includes('payment_verified_but_no_entitlement'));
+assert.ok(policy.severity.P1.includes('unsafe_transport'));
 console.log('CUSTOMER_GAUNTLET_CONTRACT_PASS');
