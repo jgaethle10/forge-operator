@@ -114,7 +114,8 @@
     "test:chum-provider-miss-ingest": "node tests/chum-provider-miss-ingest.test.mjs",
     "proof:saban-fallen": "node systemia/saban/multiplier.mjs --software fallen-production --inventory systemia/saban/fixtures/fallen-production-job.json --agents 16 --workers 4 --execute --reconcile",
     "chum:crawler-radar": "node systemia/chum/crawler-radar.mjs",
-    "test:chum-crawler-radar": "node tests/chum-crawler-radar.test.mjs"
+    "test:chum-crawler-radar": "node tests/chum-crawler-radar.test.mjs",
+    "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
