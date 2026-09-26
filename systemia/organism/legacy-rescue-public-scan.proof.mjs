@@ -141,4 +141,5 @@ const v74BuyerScan = await scanLegacyRescuePublicSources({
 });
 assert.equal(v74BuyerScan.buyer_signals[0].observed_release,'7.4');
 assert.equal(v74BuyerScan.buyer_signals[0].recommended_offer_key,'ibmi_74_deadline_xray_250');
+assert(v74BuyerScan.buyer_signals[0].score >= 75);
 assert.equal(v74BuyerScan.buyer_signals[0].buying_intent_state,'unknown');
