@@ -255,11 +255,14 @@ export async function listRemoteDeviceTrustCandidates({
   const broker = clean(brokerDeploymentId);
   if (!broker) throw new Error('broker deployment id is required');
 
-  const operator = yard || new YardOperator({
-    stateDir: path.resolve(String(yardStateDir || '')),
-  });
-  if (!yard && !clean(yardStateDir)) {
-    throw new Error('yard state directory is required');
+  let operator = yard;
+  if (!operator) {
+    if (!clean(yardStateDir)) {
+      throw new Error('yard state directory is required');
+    }
+    operator = new YardOperator({
+      stateDir: path.resolve(String(yardStateDir)),
+    });
   }
 
   const result = await listPendingRemoteDeviceReviews({
