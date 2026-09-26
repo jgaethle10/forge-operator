@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T06:26:56.295Z",
+  "updated_at": "2026-09-26T06:28:32.250Z",
   "url_count": 2150,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "a327dac9148ab8f43c99951dac8898c464660fe117f064cb969eb7de422c230f",
-      "last_changed": "2026-09-26T06:26:56.295Z",
+      "content_sha256": "c22e6e62d6899fe80c3ab0169918850f3d8c58694cbb88c04a69647051665682",
+      "last_changed": "2026-09-26T06:28:32.250Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -3681,8 +3681,8 @@
     },
     "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/answer.json": {
       "path": "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/answer.json",
-      "content_sha256": "cb742ee16f82985039556e260e06cf3ce8f2ea57c7887bb2c0310f35579fa3f4",
-      "last_changed": "2026-09-26T06:17:00.838Z",
+      "content_sha256": "a149333ade87973c798ff53deb3f97554c9b4b6ffe0bc53f233f885bc33b0a53",
+      "last_changed": "2026-09-26T06:28:32.250Z",
       "priority": 80
     },
     "/chum/answers/observed/i-run-a-small-business-with-devices-that-may-reconnect-through-different-authorized--f78f955798/llms.txt": {
