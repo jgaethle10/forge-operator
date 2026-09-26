@@ -506,6 +506,16 @@
         "result": "Systemia Portfolio Sentinel",
         "match_score": 36,
         "source": "Evercraft Machine Commerce live gateway"
+      },
+      "machine_commerce_handoff_tool": "prepare_portfolio_sentinel_pilot_handoff",
+      "handoff_canary_evidence": {
+        "observed_on": "2026-09-26",
+        "result": "pass",
+        "transport": "Streamable HTTP MCP",
+        "payment_obligation_created": false,
+        "monitoring_started": false,
+        "repository_access_granted": false,
+        "production_authority_granted": false
       }
     },
     {
