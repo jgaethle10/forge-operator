@@ -266,7 +266,16 @@
       "invocation": {
         "mode": "discovery_only",
         "url": null
-      }
+      },
+      "capability_families": [
+        "application_network_continuity",
+        "civilian_air_relay_planning",
+        "attested_edge_compute_placement"
+      ],
+      "evidence_refs": [
+        "systemia/network/air-relay-proof.mjs",
+        "systemia/network/nodeseed-placement-label-proof.mjs"
+      ]
     },
     {
       "product_key": "evercraft-physics-atlas",
