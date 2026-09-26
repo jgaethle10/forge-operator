@@ -1,0 +1,42 @@
+{
+  "schema": "evercraft.rivet.session-coverage-baseline.v1",
+  "mission_id": "rivet-us-session-sprawl-001",
+  "as_of": "2026-09-26T21:30:00Z",
+  "scope": "US-only rows added/verified during the active session-sprawl strike",
+  "accepted_site_period_rows": 285,
+  "spatially_usable_sites": 16,
+  "observed_sessions_represented": 26540,
+  "jurisdictions": [
+    "Seattle, Washington, US",
+    "Cary, North Carolina, US",
+    "New York City, New York, US"
+  ],
+  "jurisdiction_count": 3,
+  "source_families": [
+    {
+      "id": "seattle-evcrow-2018",
+      "rows": 12,
+      "sites": 1,
+      "sessions": 1421,
+      "status": "INGESTED",
+      "precision": "block-level spatial anchor"
+    },
+    {
+      "id": "cary-official-public-sessions",
+      "rows": 264,
+      "sites": 6,
+      "sessions": 20142,
+      "status": "INGESTED",
+      "precision": "address-geocoded"
+    },
+    {
+      "id": "nyc-plugnyc-2026-08",
+      "rows": 9,
+      "sites": 9,
+      "sessions": 4977,
+      "status": "INGESTED",
+      "precision": "facility-address geocoded"
+    }
+  ],
+  "evidence_rule": "Counts are observed source sessions. Inventory, AADT and modeled utilization are excluded from this receipt."
+}
