@@ -91,7 +91,7 @@ function phraseNegated(norm, phrase) {
   if (!p) return false;
   const escaped = escapeRegExp(p).replace(/\\ /g, '\\s+');
   const negation = '(?:dont\\s+need|do\\s+not\\s+need|dont\\s+want|do\\s+not\\s+want|not\\s+looking\\s+for|not\\s+interested\\s+in|anything\\s+but|except|avoid)';
-  const pattern = new RegExp('\\b' + negation + '(?:\\s+[a-z0-9]+){0,3}\\s+' + escaped + '\\b', 'i');
+  const pattern = new RegExp('\\b' + negation + '(?:\\s+[a-z0-9]+){0,1}\\s+' + escaped + '\\b', 'i');
   return pattern.test(norm);
 }
 
