@@ -533,6 +533,14 @@
         "payment_obligation_created": false,
         "production_authority_granted": false,
         "synthetic_record_state_after_test": "declined"
+      },
+      "official_registry_evidence": {
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "published_server_version": "1.3.2",
+        "publisher_result": "success",
+        "workflow_run_id": 36276826078,
+        "public_search_index_version_at_last_check": "1.2.2",
+        "evidence_boundary": "Publisher success proves Registry publication. Search-index visibility may lag and is tracked separately."
       }
     },
     {
