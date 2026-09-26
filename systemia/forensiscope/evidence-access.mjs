@@ -93,6 +93,7 @@ export function issueEvidenceAccessToken({
   return {
     schema: 'evercraft.forensiscope.evidence-access-grant.v1',
     access_token: `${TOKEN_PREFIX}.${payloadPart}.${sig}`,
+    grant_id: payload.nonce,
     evidence_ref: ref,
     scopes: normalizedScopes,
     issued_at_unix: payload.iat,
@@ -158,6 +159,7 @@ export function verifyEvidenceAccessToken(accessToken, {
     schema: 'evercraft.forensiscope.evidence-access-verification.v1',
     verified: true,
     evidence_ref: ref,
+    grant_id: payload.nonce,
     required_scope: scope,
     scopes: [...payload.scopes],
     subject: payload.sub || null,
