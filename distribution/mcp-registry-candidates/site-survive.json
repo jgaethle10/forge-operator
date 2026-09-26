@@ -1,18 +1,14 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.jgaethle10/site-survive",
-  "title": "Site-Survive Rapid Audit",
-  "description": "Site continuity and connectivity-disruption dependency mapping with bounded human handoff.",
-  "version": "0.1.0",
-  "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
-  "repository": {
-    "url": "https://github.com/jgaethle10/forge-operator",
-    "source": "github"
-  },
-  "remotes": [
-    {
-      "type": "streamable-http",
-      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp"
-    }
-  ]
+  "schema": "evercraft.mcp-registry-candidate.v1",
+  "product": "Site-Survive Rapid Audit",
+  "slug": "site-survive",
+  "publication_state": "waiting_public_https_verification",
+  "desired_registry_name": "io.github.jgaethle10/site-survive",
+  "registry_publication_proven": false,
+  "public_execution_verified": false,
+  "source_state": "yard_runtime_proven_public_route_pending",
+  "source_public_origin_state": "https_route_unbound",
+  "source_canary": null,
+  "manifest": null,
+  "release_rule": "Candidate preparation never proves registry publication. Materialization into mcp-registry/ and publication remain governed by Systemia release authorization and the official MCP Registry publisher."
 }
