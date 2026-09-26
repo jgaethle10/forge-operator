@@ -1,0 +1,42 @@
+name: ForensiScope evidence service
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/forensiscope/evidence-service.mjs'
+      - 'systemia/forensiscope/mcp-http.mjs'
+      - 'systemia/forensiscope/mcp-protocol.mjs'
+      - 'systemia/forensiscope/agent-gateway.mjs'
+      - 'systemia/forensiscope/evidence-access.mjs'
+      - 'systemia/forensiscope/evidence-service.evercraft.compute.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/forensiscope-evidence-service-proof.mjs'
+      - '.github/workflows/forensiscope-evidence-service.yml'
+  push:
+    branches:
+      - main
+      - systemia/saban-forensiscope-v2
+    paths:
+      - 'systemia/forensiscope/evidence-service.mjs'
+      - 'systemia/forensiscope/mcp-http.mjs'
+      - 'systemia/forensiscope/mcp-protocol.mjs'
+      - 'systemia/forensiscope/agent-gateway.mjs'
+      - 'systemia/forensiscope/evidence-access.mjs'
+      - 'systemia/forensiscope/evidence-service.evercraft.compute.json'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/yard/forensiscope-evidence-service-proof.mjs'
+      - '.github/workflows/forensiscope-evidence-service.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove receipt-bound ForensiScope evidence service
+        run: node systemia/yard/forensiscope-evidence-service-proof.mjs
