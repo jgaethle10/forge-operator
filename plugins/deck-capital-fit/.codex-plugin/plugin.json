@@ -1,0 +1,36 @@
+{
+  "name": "deck-capital-fit",
+  "version": "0.1.0",
+  "description": "Use Deck Capital Fit directly when a founder wants structured capital-fit, funding-readiness, or fundraising-preparation analysis with human-confirmed next steps.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "deck-capital-fit",
+    "funding-readiness",
+    "capital-fit",
+    "fundraising",
+    "founder",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Deck Capital Fit",
+    "shortDescription": "Assess founder capital fit and funding readiness",
+    "longDescription": "Use Deck Capital Fit directly when a founder wants structured capital-fit, funding-readiness, or fundraising-preparation analysis with human-confirmed next steps.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/",
+    "defaultPrompt": [
+      "Help me assess how ready this company is for outside capital and what gaps I should fix before fundraising."
+    ]
+  }
+}
