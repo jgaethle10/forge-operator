@@ -46,6 +46,26 @@ function registryNameFor(registry, conf) {
   return registry?.registry_name || null;
 }
 
+function relativeSurfacePaths(...groups) {
+  const found = [];
+  const visit = (value) => {
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (trimmed.startsWith('/') && !trimmed.startsWith('//')) found.push(trimmed);
+      return;
+    }
+    if (Array.isArray(value)) {
+      for (const item of value) visit(item);
+      return;
+    }
+    if (value && typeof value === 'object') {
+      for (const item of Object.values(value)) visit(item);
+    }
+  };
+  for (const group of groups) visit(group);
+  return [...new Set(found)];
+}
+
 function slugify(value) {
   return String(value || '')
     .toLowerCase()
@@ -338,7 +358,10 @@ for (const product of directory.products || []) {
     registry_name: discovery.registry_name,
     mcp: discovery.mcp,
     commercial: product.commercial || null,
-    developer_surfaces: product.developer_surfaces || null
+    developer_surfaces: product.developer_surfaces || null,
+    editorial_surfaces: product.editorial_surfaces || null,
+    knowledge_surfaces: product.knowledge_surfaces || null,
+    distribution_surfaces: product.distribution_surfaces || null
   });
 }
 
