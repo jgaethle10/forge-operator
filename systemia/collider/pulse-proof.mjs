@@ -33,7 +33,14 @@ assert.ok(health.last_cycle_key);
 assert.ok(health.last_coverage_receipt_key);
 
 const pulse = buildKaidancePulse({
-  health,
+  health: {
+    ...health,
+    safe_holds: [
+      { category: 'remote_device_trust', count: 2 },
+      { category: 'private_mission_name', count: 99 },
+      { category: 'remote_device_trust', count: 1 },
+    ],
+  },
   deployment: {
     receipt: {
       capacity_node_id: 'evercraft-node-7',
@@ -55,6 +62,9 @@ assert.equal(pulse.state, 'healthy');
 assert.equal(pulse.cycle_number, 1);
 assert.equal(pulse.compute_node_id, 'evercraft-node-7');
 assert.equal(pulse.continuity.action, 'healthy');
+assert.deepEqual(pulse.safe_holds, [
+  { category: 'remote_device_trust', count: 3 },
+]);
 assert.equal(pulse.field_attestation.state, 'not_verified');
 assert.equal(assertPulsePrivacy(pulse), true);
 
@@ -63,6 +73,7 @@ assert.ok(!raw.includes('private:evidence:must-not-leak'));
 assert.ok(!raw.includes('pulse-proof-private-ref'));
 assert.ok(!raw.includes('private-host'));
 assert.ok(!raw.includes('must-not-leak'));
+assert.ok(!raw.includes('private_mission_name'));
 
 const attested = buildKaidancePulse({
   health,
@@ -85,6 +96,8 @@ console.log(JSON.stringify({
   private_paths_redacted: true,
   allocator_credentials_redacted: true,
   field_attestation_defaults_unverified: true,
+  allowlisted_safe_holds_exposed: pulse.safe_holds,
+  unknown_hold_categories_redacted: true,
 }, null, 2));
 
 fs.rmSync(root, { recursive: true, force: true });

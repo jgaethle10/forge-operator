@@ -178,6 +178,12 @@ export class KaidanceRuntime {
       mission_fabric_report_receipt: this.lastMissionFabricReport?.receipt_hash || null,
       mission_fabric_degraded_required_sources:
         this.lastMissionFabricReport?.degraded_required_sources?.length ?? null,
+      safe_holds: Array.isArray(this.lastMissionFabricReport?.safe_holds)
+        ? this.lastMissionFabricReport.safe_holds.map((row) => ({
+            category: String(row.category || ''),
+            count: Number(row.count || 0),
+          }))
+        : [],
     };
   }
 

@@ -36,6 +36,12 @@ fs.writeFileSync(configPath, JSON.stringify({
       required: true,
       stale_after_seconds: 900,
     },
+    {
+      source_key: 'remote-device-trust',
+      path: 'sources/trust.json',
+      required: false,
+      stale_after_seconds: 900,
+    },
   ],
 }, null, 2));
 
@@ -59,17 +65,29 @@ fs.writeFileSync(path.join(sources, 'node001.json'), JSON.stringify({
   evidence_refs: ['node001:issue:175'],
 }, null, 2));
 
+fs.writeFileSync(path.join(sources, 'trust.json'), JSON.stringify({
+  schema: 'evercraft.kaidance.mission-snapshot.v1',
+  snapshot_ref: 'trust-proof',
+  observed_at: '2026-09-25T06:29:45Z',
+  counts: { scanned: 2, changed: 1, admitted: 0, held: 1 },
+  safe_hold: { category: 'remote_device_trust', count: 2 },
+  evidence_refs: ['sha256:' + '1'.repeat(64)],
+}, null, 2));
+
 const healthy = aggregateMissionSnapshotsFromConfig({
   configPath,
   allowedRoot: root,
   now,
 });
-assert.equal(healthy.snapshot.counts.scanned, 11);
-assert.equal(healthy.snapshot.counts.changed, 3);
+assert.equal(healthy.snapshot.counts.scanned, 13);
+assert.equal(healthy.snapshot.counts.changed, 4);
 assert.equal(healthy.snapshot.counts.admitted, 1);
-assert.equal(healthy.snapshot.counts.held, 2);
+assert.equal(healthy.snapshot.counts.held, 3);
 assert.equal(healthy.report.degraded_required_sources.length, 0);
-assert.equal(healthy.report.accepted_count, 2);
+assert.equal(healthy.report.accepted_count, 3);
+assert.deepEqual(healthy.report.safe_holds, [
+  { category: 'remote_device_trust', count: 2 },
+]);
 
 let clock = now;
 const runtime = new KaidanceRuntime({
@@ -82,12 +100,15 @@ const runtime = new KaidanceRuntime({
 });
 const cycle = await runtime.runOnce(clock);
 assert.equal(cycle.ok, true);
-assert.equal(cycle.cycle.counts.scanned, 11);
-assert.equal(cycle.cycle.counts.changed, 3);
+assert.equal(cycle.cycle.counts.scanned, 13);
+assert.equal(cycle.cycle.counts.changed, 4);
 assert.equal(cycle.cycle.counts.admitted, 1);
-assert.equal(cycle.cycle.counts.held, 2);
+assert.equal(cycle.cycle.counts.held, 3);
 assert.equal(cycle.health.mission_fabric_enabled, true);
 assert.equal(cycle.health.mission_fabric_degraded_required_sources, 0);
+assert.deepEqual(cycle.health.safe_holds, [
+  { category: 'remote_device_trust', count: 2 },
+]);
 
 console.log(JSON.stringify({
   ok: true,
@@ -96,6 +117,7 @@ console.log(JSON.stringify({
   multiple_missions_aggregated: true,
   kaidance_consumed_fabric_directly: true,
   aggregate_counts: cycle.cycle.counts,
+  safe_holds: cycle.health.safe_holds,
   degraded_required_sources_after_fix: cycle.health.mission_fabric_degraded_required_sources,
 }, null, 2));
 

@@ -112,6 +112,12 @@ export function evaluatePendingDeviceTrustWatch({
         admitted: 0,
         held: hasPending ? 1 : 0,
       },
+      safe_hold: hasPending
+        ? {
+            category: 'remote_device_trust',
+            count: rows.length,
+          }
+        : null,
       evidence_refs: [
         ...evidenceRefs,
         `trust-watch-state:sha256:${sha(state)}`,

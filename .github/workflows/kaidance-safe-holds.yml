@@ -1,0 +1,43 @@
+name: KAIDANCE safe hold categories
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/pending-device-trust-watch.mjs'
+      - 'systemia/organism/pending-device-trust-watch.proof.mjs'
+      - 'systemia/collider/mission-fabric.mjs'
+      - 'systemia/collider/mission-fabric.proof.mjs'
+      - 'systemia/collider/runtime.mjs'
+      - 'systemia/collider/pulse.mjs'
+      - 'systemia/collider/pulse-proof.mjs'
+      - 'systemia/collider/PULSE.md'
+      - '.github/workflows/kaidance-safe-holds.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/organism/pending-device-trust-watch.mjs'
+      - 'systemia/organism/pending-device-trust-watch.proof.mjs'
+      - 'systemia/collider/mission-fabric.mjs'
+      - 'systemia/collider/mission-fabric.proof.mjs'
+      - 'systemia/collider/runtime.mjs'
+      - 'systemia/collider/pulse.mjs'
+      - 'systemia/collider/pulse-proof.mjs'
+      - 'systemia/collider/PULSE.md'
+      - '.github/workflows/kaidance-safe-holds.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove trust-watch hold hint
+        run: node systemia/organism/pending-device-trust-watch.proof.mjs
+      - name: Prove mission-fabric safe hold aggregation
+        run: node systemia/collider/mission-fabric.proof.mjs
+      - name: Prove safe KAIDANCE pulse redaction
+        run: node systemia/collider/pulse-proof.mjs
