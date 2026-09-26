@@ -1,21 +1,10 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-26T19:03:42.456Z",
+  "generated_at": "2026-09-26T19:32:19.342Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
   "surfaces": [
-    {
-      "path": "/chum/products/forensiscope/",
-      "score": 246,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
     {
       "path": "/chum/products/forensiscope/ai-conformance.json",
       "score": 246,
@@ -52,6 +41,17 @@
     {
       "path": "/chum/intents/forensiscope-evidence-review-v1/",
       "score": 243,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/forensiscope/",
+      "score": 239,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",

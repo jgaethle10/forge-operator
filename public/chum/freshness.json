@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T19:03:47.635Z",
+  "updated_at": "2026-09-26T19:32:19.568Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,34 +11,60 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T19:32:19.568Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T19:32:19.568Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T19:03:47.635Z",
+      "last_changed": "2026-09-26T19:32:19.568Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-26T19:32:19.568Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T19:32:19.568Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T19:03:47.635Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T19:03:42.679Z",
+      "last_changed": "2026-09-26T19:32:19.568Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T19:03:42.679Z",
+      "last_changed": "2026-09-26T19:32:19.568Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T19:32:19.568Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-26T19:32:19.568Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T19:03:42.679Z",
+      "last_changed": "2026-09-26T19:32:19.568Z",
       "priority": 80
     },
     {
@@ -129,12 +155,6 @@
       "path": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json",
       "url": "/chum/answers/observed/my-app-loses-continuity-when-a-device-moves-between-wi-fi-and-cellular-or-another-in-c27d94a857/answer.json",
       "last_changed": "2026-09-26T18:05:44.640Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-26T17:36:56.320Z",
       "priority": 80
     },
     {

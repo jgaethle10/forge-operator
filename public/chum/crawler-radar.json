@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-26T19:03:42.456Z",
+  "generated_at": "2026-09-26T19:32:19.342Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 146,
   "surface_count": 2152,
-  "strike_now_count": 1932,
+  "strike_now_count": 1922,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -20,409 +20,6 @@
     "no_unsolicited_human_outreach": true
   },
   "surfaces": [
-    {
-      "path": "/chum/products/forensiscope/",
-      "product_key": "forensiscope",
-      "score": 246,
-      "urgency": "strike_now",
-      "crawl_priority": 154,
-      "last_changed": "2026-09-25T19:09:08.195Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "chatgpt",
-          "observed_at": "2026-09-25T06:15:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-chatgpt-forensiscope-round1.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-24T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope-round2.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-24T17:36:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope.json"
-        },
-        {
-          "provider": "gemini",
-          "observed_at": "2026-09-25T03:57:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-24T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-24T17:32:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope.json"
-        },
-        {
-          "provider": "google",
-          "observed_at": "2026-09-25T15:05:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
-        },
-        {
-          "provider": "chatgpt",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
-        },
-        {
-          "provider": "claude",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
-        },
-        {
-          "provider": "google",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
-        },
-        {
-          "provider": "grok",
-          "observed_at": "2026-09-26T00:00:00.000Z",
-          "source": "user_observed_result",
-          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:38.456Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-4a7b7d9b338edede.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:54.236Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-82b157aeff53011a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:55.813Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9928e6f2fa260a9f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:36.446Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9f99737254b5bf63.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:24.373Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-a722a1daf33c0e57.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:52.743Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-b9be2e56a31265b0.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:39.220Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:25.403Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:43.264Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-131b5a719549d780.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:39.502Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:27:32.557Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:40.310Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-6963498ac835d46b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:55.812Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-73e38d7976d98f28.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:57.573Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-806f92de7b76211b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:04:03.395Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-f842a2eac40f29fb.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:24.197Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-2289dc9bb0f93351.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:27.895Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-3e2b4a06e21b8b38.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:16.405Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-5f84f40dd2894a9b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:42.819Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-7f91e77095994fda.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:39.667Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-827b6032753aba59.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:42.132Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-9b78b3a0f2e7a041.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:28.657Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f00ea05a659879c6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:42.002Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-23812aa6bd66a521.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:30.831Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-51d7c4d0a01ed4a3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:26.942Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-56e1954da2d16ed6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:44.406Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7e899ddec39146c4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:18.077Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7fc237882ff6719a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:29.717Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb278119a182123a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:44.436Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb68696f7878f831.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:31.168Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-13e53e43a2cad6a9.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:19.389Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-2a3aba99dd707eda.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:47.518Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-63d4023f09439f9c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:28.659Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-8b7d8706e7f20310.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:33.160Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-c85a1e890add6d7b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:43.771Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-e9fea66b7f9369c8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:46.585Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-fcd22b130ee2c01f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:34.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-254cb2ac6c5c4ee6.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:49.672Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-52b521d7d268dab5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:10:44.981Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-553b78fa21c5213b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:38:56.873Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-573f84090c267731.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:30.284Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-6282fd1c34aa70b3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:32.539Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-9b0e0ac5962b4e91.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:48.658Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-dc1a8cc58d4b771e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:20.553Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-e7d8aed7eb79fcf0.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:45.414Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-f91a788cdb69de7e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:23.010Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-225a78d8d2672480.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:11:53.541Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-64d0823652d552c7.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:37.572Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-65434bb069819b64.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:36.469Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-95107e5c5e37e976.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:26:52.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-9b8e724440411498.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:22:34.169Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-b5b4a1e6bd7cea18.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:03:51.012Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-db75de925a12a1be.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
     {
       "path": "/chum/products/forensiscope/ai-conformance.json",
       "product_key": "forensiscope",
@@ -1639,6 +1236,409 @@
       "urgency": "strike_now",
       "crawl_priority": 158,
       "last_changed": "2026-09-25T06:50:26.447Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-25T06:15:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-chatgpt-forensiscope-round1.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-24T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope-round2.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-24T17:36:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-claude-forensiscope.json"
+        },
+        {
+          "provider": "gemini",
+          "observed_at": "2026-09-25T03:57:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-24T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-24T17:32:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-24-grok-forensiscope.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-25T15:05:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
+        },
+        {
+          "provider": "chatgpt",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json"
+        },
+        {
+          "provider": "claude",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json"
+        },
+        {
+          "provider": "google",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json"
+        },
+        {
+          "provider": "grok",
+          "observed_at": "2026-09-26T00:00:00.000Z",
+          "source": "user_observed_result",
+          "evidence_ref": "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:38.456Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-4a7b7d9b338edede.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:54.236Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-82b157aeff53011a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:55.813Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9928e6f2fa260a9f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:36.446Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-9f99737254b5bf63.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:24.373Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-a722a1daf33c0e57.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:52.743Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-b9be2e56a31265b0.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:39.220Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:25.403Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:43.264Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-131b5a719549d780.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:39.502Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-48b85398f2d4d762.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:27:32.557Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-66de4543224ad27b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:40.310Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-6963498ac835d46b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:55.812Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-73e38d7976d98f28.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:57.573Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-806f92de7b76211b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:04:03.395Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-f842a2eac40f29fb.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:24.197Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-2289dc9bb0f93351.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:27.895Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-3e2b4a06e21b8b38.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:16.405Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-5f84f40dd2894a9b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:42.819Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-7f91e77095994fda.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:39.667Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-827b6032753aba59.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:42.132Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-9b78b3a0f2e7a041.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:28.657Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-001-f00ea05a659879c6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:42.002Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-23812aa6bd66a521.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:30.831Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-51d7c4d0a01ed4a3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:26.942Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-56e1954da2d16ed6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:44.406Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7e899ddec39146c4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:18.077Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-7fc237882ff6719a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:29.717Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb278119a182123a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:44.436Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-large-file-002-fb68696f7878f831.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:31.168Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-13e53e43a2cad6a9.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:19.389Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-2a3aba99dd707eda.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:47.518Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-63d4023f09439f9c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:28.659Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-8b7d8706e7f20310.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:33.160Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-c85a1e890add6d7b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:43.771Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-e9fea66b7f9369c8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:46.585Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-overflow-multi-hour-003-fcd22b130ee2c01f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:34.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-254cb2ac6c5c4ee6.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:49.672Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-52b521d7d268dab5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:10:44.981Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-553b78fa21c5213b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:38:56.873Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-573f84090c267731.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:30.284Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-6282fd1c34aa70b3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:32.539Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-9b0e0ac5962b4e91.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:48.658Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-dc1a8cc58d4b771e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:20.553Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-e7d8aed7eb79fcf0.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:45.414Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-f91a788cdb69de7e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:23.010Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-225a78d8d2672480.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:11:53.541Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-64d0823652d552c7.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:37.572Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-65434bb069819b64.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:36.469Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-95107e5c5e37e976.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:52.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-9b8e724440411498.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:22:34.169Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-b5b4a1e6bd7cea18.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:03:51.012Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-video-rag-006-db75de925a12a1be.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/forensiscope/",
+      "product_key": "forensiscope",
+      "score": 239,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-09-25T19:09:08.195Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
