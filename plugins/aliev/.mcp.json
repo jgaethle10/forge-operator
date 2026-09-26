@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aliev": {
+      "type": "http",
+      "url": "https://aliev.base44.app/functions/alievMcp"
+    }
+  }
+}
