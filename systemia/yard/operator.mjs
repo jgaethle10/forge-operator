@@ -837,6 +837,62 @@ export class YardOperator {
     return next;
   }
 
+  publicRouteProviderClient(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.public-edge.v1') {
+      throw new Error('deployment is not an Evercraft public edge');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('public edge service is unavailable');
+    }
+
+    const serviceBase =
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}`;
+
+    return {
+      capabilities: async () => {
+        const response = await request(`${serviceBase}/public-route-capabilities`, {
+          method: 'POST',
+          body: JSON.stringify({ token: secret.token }),
+        });
+        const { receipt: _receipt, ok: _ok, ...capabilities } = response;
+        return capabilities;
+      },
+      createLease: async (route) => {
+        const response = await request(`${serviceBase}/public-route-leases`, {
+          method: 'POST',
+          body: JSON.stringify({
+            token: secret.token,
+            route,
+          }),
+        });
+        const { receipt: computeReceipt, ok: _ok, ...lease } = response;
+        return {
+          ...lease,
+          compute_management_receipt_hash: computeReceipt?.receipt_hash || null,
+        };
+      },
+      releaseLease: async (routeLeaseId, reason = 'operator_requested') => {
+        const response = await request(
+          `${serviceBase}/public-route-leases/${encodeURIComponent(routeLeaseId)}/release`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              token: secret.token,
+              reason,
+            }),
+          }
+        );
+        return {
+          ...response,
+          compute_management_receipt_hash: response.receipt?.receipt_hash || null,
+        };
+      },
+    };
+  }
+
   deploymentStatus(deploymentId) {
     if (this.deployments.has(deploymentId)) return this.deployments.get(deploymentId);
     const file = path.join(this.stateDir, `${this.#safeId(deploymentId)}.json`);
