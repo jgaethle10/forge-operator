@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:58:02.744Z",
+  "updated_at": "2026-09-26T04:08:27.801Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,202 +11,51 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/evercraft-web/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/ai-conformance.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/ai-discovery.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/llms.txt",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T04:08:27.801Z",
       "priority": 80
     },
     {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T04:08:27.801Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "last_changed": "2026-09-26T04:08:27.801Z",
       "priority": 80
     },
     {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T04:08:27.801Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T04:08:27.801Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T04:08:27.801Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T04:08:27.801Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T04:08:27.801Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
       "url": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
@@ -394,12 +243,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T03:58:02.744Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-26T03:58:02.744Z",
@@ -440,24 +283,6 @@
       "url": "/schema.jsonld",
       "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T03:57:56.595Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T03:57:56.595Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T03:57:56.595Z",
-      "priority": 80
     },
     {
       "path": "/.well-known/evercraft-products.json",
