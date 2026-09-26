@@ -64,13 +64,25 @@
     "node_class": "physical_linux",
     "provider_key": "evercraft-owned",
     "workload_classes": [
-      "systemia.chum-public-origin.v1"
+      "systemia.chum-public-origin.v1",
+      "systemia.specialist-handoff-mcp.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
       "mode": "read_only_static_discovery",
       "public_route_requires_independent_verification": true,
       "verified_origin_receipt": "/.well-known/evercraft-runtime-origin.json"
+    },
+    "specialist_handoff": {
+      "workload_class": "systemia.specialist-handoff-mcp.v1",
+      "mode": "read_only_mcp_handoff",
+      "public_route_requires_independent_verification": true,
+      "health_path": "/health",
+      "mcp_paths": [
+        "/mcp/ibmi-rescue",
+        "/mcp/foundry-app-escape",
+        "/mcp/site-survive"
+      ]
     }
   },
   "release_gates": [
