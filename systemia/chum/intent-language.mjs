@@ -78,32 +78,12 @@ export function tokenize(value='') {
 function phrasePresent(norm, phrase) {
   const p = normalizeText(phrase);
   if (!p) return false;
-  if (p.includes(' ')) return (` ${norm} `).includes(` ${p} `);
+  if (p.includes(' ')) return (' ' + norm + ' ').includes(' ' + p + ' ');
   return new Set(norm.split(' ')).has(p);
 }
 
 function escapeRegExp(value) {
-  return String(value).replace(/[.*+?^\${}()|[\]\\]/g, '\\function phrasePresent(norm, phrase) {
-  const p = normalizeText(phrase);
-  if (!p) return false;
-  if (p.includes(' ')) return (` ${norm} `).includes(` ${p} `);
-  return new Set(norm.split(' ')).has(p);
-}
-
-export function conceptsForText(value='') {
-  const norm = normalizeText(value);
-  const found = [];
-  for (const [concept, aliases] of Object.entries(CONCEPT_ALIASES)) {
-    let strongest = null;
-    for (const alias of aliases) {
-      if (phrasePresent(norm, alias)) {
-        if (!strongest || normalizeText(alias).split(' ').length > normalizeText(strongest).split(' ').length) strongest = alias;
-      }
-    }
-    if (strongest) found.push({ concept, evidence: strongest });
-  }
-  return found;
-}');
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function phraseNegated(norm, phrase) {
@@ -111,7 +91,7 @@ function phraseNegated(norm, phrase) {
   if (!p) return false;
   const escaped = escapeRegExp(p).replace(/\\ /g, '\\s+');
   const negation = '(?:not|no|without|except|avoid|dont\\s+need|do\\s+not\\s+need|not\\s+looking\\s+for|anything\\s+but)';
-  const pattern = new RegExp(`\\b${negation}(?:\\s+[a-z0-9]+){0,3}\\s+${escaped}\\b`, 'i');
+  const pattern = new RegExp('\\b' + negation + '(?:\\s+[a-z0-9]+){0,3}\\s+' + escaped + '\\b', 'i');
   return pattern.test(norm);
 }
 
@@ -125,9 +105,7 @@ function detectConcepts(value='') {
     for (const alias of aliases) {
       if (!phrasePresent(norm, alias)) continue;
       if (phraseNegated(norm, alias)) {
-        if (!strongestNegative || normalizeText(alias).split(' ').length > normalizeText(strongestNegative).split(' ').length) {
-          strongestNegative = alias;
-        }
+        if (!strongestNegative || normalizeText(alias).split(' ').length > normalizeText(strongestNegative).split(' ').length) strongestNegative = alias;
       } else if (!strongestPositive || normalizeText(alias).split(' ').length > normalizeText(strongestPositive).split(' ').length) {
         strongestPositive = alias;
       }
@@ -164,7 +142,7 @@ export function intentSignature(value='') {
 export function compareIntent(query, candidate) {
   const q = typeof query === 'string' ? intentSignature(query) : query;
   const c = typeof candidate === 'string' ? intentSignature(candidate) : candidate;
-  if (!q?.norm || !c?.norm) return { score:0, token_overlap:0, concept_overlap:0, phrase_bonus:0, matched_concepts:[] };
+  if (!q?.norm || !c?.norm) return { score:0, token_overlap:0, concept_overlap:0, phrase_bonus:0, matched_concepts:[], contradicted_concepts:[] };
 
   let tokenOverlap = 0;
   for (const token of q.token_set) if (c.token_set.has(token)) tokenOverlap += 1;
@@ -173,17 +151,15 @@ export function compareIntent(query, candidate) {
   for (const concept of q.concept_set) if (c.concept_set.has(concept)) matchedConcepts.push(concept);
 
   const contradictedConcepts = [];
-  for (const concept of q.negated_concept_set || []) {
-    if (c.concept_set.has(concept)) contradictedConcepts.push(concept);
-  }
+  for (const concept of q.negated_concept_set || []) if (c.concept_set.has(concept)) contradictedConcepts.push(concept);
 
   let phraseBonus = 0;
   if (q.norm.length >= 8 && c.norm.length >= 8 && (q.norm.includes(c.norm) || c.norm.includes(q.norm))) phraseBonus += 24;
 
   const qBigrams = new Set();
-  for (let i=0;i<q.tokens.length-1;i++) qBigrams.add(`${q.tokens[i]} ${q.tokens[i+1]}`);
+  for (let i=0;i<q.tokens.length-1;i++) qBigrams.add(q.tokens[i] + ' ' + q.tokens[i+1]);
   let bigramOverlap = 0;
-  for (let i=0;i<c.tokens.length-1;i++) if (qBigrams.has(`${c.tokens[i]} ${c.tokens[i+1]}`)) bigramOverlap += 1;
+  for (let i=0;i<c.tokens.length-1;i++) if (qBigrams.has(c.tokens[i] + ' ' + c.tokens[i+1])) bigramOverlap += 1;
 
   const score = tokenOverlap * 4 + matchedConcepts.length * 11 + bigramOverlap * 5 + phraseBonus - contradictedConcepts.length * 40;
   return {
