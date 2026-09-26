@@ -154,6 +154,35 @@
         "measured_acquisition_only"
       ],
       "repair_recipe_id": "money-radar-funnel-trust-regression"
+    },
+    {
+      "invariant_id": "sell-now-human-start-uses-universal-buyer-frontage",
+      "severity": "high",
+      "type": "file_contract",
+      "file": "systemia/chum/start-corridor.mjs",
+      "required_literals": [
+        "DEFAULT_BUYER_FRONTAGE_ORIGIN",
+        "export function buyerFrontageUrl",
+        "return 'universal_buyer_frontage'"
+      ],
+      "forbidden_patterns": [
+        "const origin = configuredChumPublicOrigin\\(publicOrigin\\);[\\s\\S]{0,300}return origin \\+ '/api/chum/go/'"
+      ],
+      "repair_recipe_id": "restore-universal-buyer-frontage"
+    },
+    {
+      "invariant_id": "money-radar-private-payment-export-uses-oidc",
+      "severity": "critical",
+      "type": "file_contract",
+      "file": ".github/workflows/chum-watershed.yml",
+      "required_literals": [
+        "id-token: write",
+        "machineCommercePaymentExport",
+        "audience=evercraft-chum-payment-export",
+        "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
+        "CHUM_ATTRIBUTION_EXPORT_TOKEN"
+      ],
+      "repair_recipe_id": "restore-money-radar-oidc-payment-export"
     }
   ]
 }
