@@ -12,6 +12,26 @@ function isWithin(root, target) {
   return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
 }
 
+function realpathIfExisting(value) {
+  const resolved = path.resolve(String(value));
+  if (!fs.existsSync(resolved)) return resolved;
+  return fs.realpathSync.native
+    ? fs.realpathSync.native(resolved)
+    : fs.realpathSync(resolved);
+}
+
+function admittedRealRoots(rootDir, additionalRoots) {
+  return allowedMediaRoots(rootDir, additionalRoots)
+    .map(realpathIfExisting);
+}
+
+function boundedMaxBytes(value) {
+  const fallback = 64 * 1024 * 1024 * 1024;
+  const parsed = Number(value ?? process.env.FORENSISCOPE_MAX_SOURCE_BYTES ?? fallback);
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  return Math.floor(parsed);
+}
+
 export function hashFile(file) {
   const hash = crypto.createHash('sha256');
   const fd = fs.openSync(file, 'r');
@@ -50,7 +70,9 @@ export function allowedMediaRoots(rootDir = process.cwd(), additionalRoots = [])
 export function validateAuthorizedMediaSource(raw, {
   rootDir = process.cwd(),
   requireExisting = true,
-  additionalRoots = []
+  additionalRoots = [],
+  maxBytes = null,
+  rejectSymlinkSource = true
 } = {}) {
   const source = raw?.source || raw?.authorized_source || {};
   const authorization = raw?.authorization || {};
@@ -61,32 +83,52 @@ export function validateAuthorizedMediaSource(raw, {
   if (!source.path) throw new Error('ForensiScope source.path is required.');
 
   const resolvedPath = path.resolve(String(source.path));
-  const roots = allowedMediaRoots(rootDir, additionalRoots);
-  if (!roots.some((root) => isWithin(root, resolvedPath))) {
-    throw new Error('ForensiScope source path is outside admitted media roots.');
-  }
-
-  const extension = path.extname(resolvedPath).toLowerCase();
-  if (!MEDIA_EXTENSIONS.has(extension)) {
-    throw new Error(`Unsupported ForensiScope media extension: ${extension || '(none)'}`);
-  }
+  const roots = admittedRealRoots(rootDir, additionalRoots);
 
   if (requireExisting && !fs.existsSync(resolvedPath)) {
     throw new Error('ForensiScope source media does not exist.');
   }
 
-  const stat = requireExisting ? fs.statSync(resolvedPath) : null;
+  const lstat = requireExisting ? fs.lstatSync(resolvedPath) : null;
+  if (lstat?.isSymbolicLink() && rejectSymlinkSource) {
+    throw new Error('ForensiScope source symlinks are not admitted.');
+  }
+
+  const canonicalPath = requireExisting
+    ? realpathIfExisting(resolvedPath)
+    : resolvedPath;
+
+  if (!roots.some((root) => isWithin(root, canonicalPath))) {
+    throw new Error('ForensiScope source path is outside admitted media roots.');
+  }
+
+  const extension = path.extname(canonicalPath).toLowerCase();
+  if (!MEDIA_EXTENSIONS.has(extension)) {
+    throw new Error(`Unsupported ForensiScope media extension: ${extension || '(none)'}`);
+  }
+
+  const stat = requireExisting ? fs.statSync(canonicalPath) : null;
   if (stat && !stat.isFile()) throw new Error('ForensiScope source must be a file.');
 
-  const observedHash = requireExisting ? hashFile(resolvedPath) : null;
+  const sourceByteLimit = boundedMaxBytes(maxBytes);
+  if (stat && stat.size > sourceByteLimit) {
+    throw new Error(
+      `ForensiScope source exceeds admitted byte limit (${stat.size} > ${sourceByteLimit}).`
+    );
+  }
+
+  const observedHash = requireExisting ? hashFile(canonicalPath) : null;
   if (source.sha256 && observedHash !== source.sha256) {
     throw new Error('ForensiScope source hash does not match the authorized manifest.');
   }
 
   return {
-    path: resolvedPath,
+    path: canonicalPath,
+    requested_path: resolvedPath,
     extension,
     size_bytes: stat?.size ?? null,
+    max_source_bytes: sourceByteLimit,
+    symlink_source_rejected: rejectSymlinkSource === true,
     sha256: observedHash || source.sha256 || null,
     authorization: {
       confirmed: true,
