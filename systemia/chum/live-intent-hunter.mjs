@@ -4,6 +4,13 @@ import { rankPain } from './pain-index-lib.mjs';
 const MACHINE_COMMERCE_GATEWAY =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 
+// Pain-index scores and machine-catalog scores are intentionally produced by
+// different rankers and are not numerically commensurate. For strong generic
+// problem/intelligence queries, prefer the curated pain-language signal unless
+// the user explicitly asks for a commercial output or transaction surface.
+const COMMERCIAL_CONTINUATION_PATTERN = /\b(buy|purchase|checkout|price|pricing|quote|paid|report|underwrite|underwriting|diligence|roi|investment|site plan|preliminary|full report)\b/i;
+const GENERIC_PROBLEM_OFFER_CALIBRATION = 0.5;
+
 function clampLimit(value) {
   const n = Number(value);
   if (!Number.isFinite(n)) return 3;
@@ -216,7 +223,7 @@ export function huntLiveIntent({
   }
 
   const max = clampLimit(limit);
-  const offerMatches = rankDiscoveryCandidates(catalog, directory, q, {
+  const rawOfferMatches = rankDiscoveryCandidates(catalog, directory, q, {
     limit: max,
     minimumScore
   }).map(projectOfferMatch);
@@ -224,6 +231,18 @@ export function huntLiveIntent({
   const painMatches = rankPain(painIndex, q, max)
     .filter(({ score }) => Number(score) >= minimumScore)
     .map(({ entry, score }) => projectPainMatch(entry, Number(score)));
+
+  const strongestPainScore = Number(painMatches[0]?.score || 0);
+  const strongProblemSignal = strongestPainScore >= Math.max(24, Number(minimumScore) * 3);
+  const explicitCommercialContinuation = COMMERCIAL_CONTINUATION_PATTERN.test(q);
+  const offerMatches = !explicitCommercialContinuation && strongProblemSignal
+    ? rawOfferMatches.map((match) => ({
+        ...match,
+        raw_score: Number(match.score || 0),
+        score: Number((Number(match.score || 0) * GENERIC_PROBLEM_OFFER_CALIBRATION).toFixed(3)),
+        score_calibration: 'problem_first_v1'
+      }))
+    : rawOfferMatches;
 
   const ranked = dedupe([...painMatches, ...offerMatches])
     .sort((a, b) => Number(b.score || 0) - Number(a.score || 0))
@@ -235,7 +254,7 @@ export function huntLiveIntent({
 
   return {
     schema: 'evercraft.chum.live-intent-hunt.v1',
-    engine_revision: 'concept-fabric-v2',
+    engine_revision: 'concept-fabric-v3',
     matched: Boolean(top),
     state,
     provider: normalized(provider) || 'unknown',
@@ -248,6 +267,10 @@ export function huntLiveIntent({
     routing_confidence: routingConfidence,
     routing_receipt: top ? {
       score: Number(top.score || 0),
+      raw_score: Number(top.raw_score || top.score || 0),
+      score_calibration: top.score_calibration || 'none',
+      explicit_commercial_continuation: explicitCommercialContinuation,
+      strong_problem_signal: strongProblemSignal,
       support: Number(top.support || 0),
       matched_intents: top.matched_intents || [],
       matched_concepts: top.matched_concepts || [],
