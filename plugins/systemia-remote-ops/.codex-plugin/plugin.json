@@ -33,6 +33,7 @@
       "I am considering a business decision and want to simulate the likely tradeoffs before I act."
     ]
   },
-  "releaseState": "SOURCE_READY_DEPLOYMENT_UNVERIFIED",
-  "publicOriginState": "deployment_unverified"
+  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "pendingRuntimePath": "/mcp/systemia-remote-ops",
+  "publicOriginState": "https_route_unbound"
 }
