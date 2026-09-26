@@ -1,0 +1,36 @@
+{
+  "name": "roasted",
+  "version": "0.1.0",
+  "description": "Use ROASTED directly when a user wants a fast text pressure test, critique, roast, or sharper feedback with human-confirmed checkout for paid execution.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "roasted",
+    "text-critique",
+    "pressure-test",
+    "writing-feedback",
+    "copy-review",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "ROASTED",
+    "shortDescription": "Pressure-test and sharpen text",
+    "longDescription": "Use ROASTED directly when a user wants a fast text pressure test, critique, roast, or sharper feedback with human-confirmed checkout for paid execution.",
+    "developerName": "Evercraft LLC",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+    "defaultPrompt": [
+      "Pressure-test this text and make the weak spots obvious without pretending a paid result exists before payment is verified."
+    ]
+  }
+}
