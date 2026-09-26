@@ -56,7 +56,8 @@
       "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
       "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval.",
       "capability_public_ids": [
-        "aliev-site-opportunity-snapshot-v1"
+        "aliev-site-opportunity-snapshot-v1",
+        "rivet-site-underwriting-v1"
       ]
     },
     {
