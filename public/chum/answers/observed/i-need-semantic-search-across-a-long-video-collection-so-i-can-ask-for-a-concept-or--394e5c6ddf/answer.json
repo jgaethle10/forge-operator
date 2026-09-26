@@ -35,6 +35,7 @@
     "checkout_is_payment_proof": false
   },
   "source_refs": [
+    "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-254cb2ac6c5c4ee6.json",
     "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-52b521d7d268dab5.json",
     "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-553b78fa21c5213b.json",
     "conformance/provider-observations/auto-generic_agent-media-semantic-search-004-573f84090c267731.json",
