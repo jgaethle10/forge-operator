@@ -58,7 +58,9 @@ jobs:
         run: npm run test:chum-ard-strike
 
       - name: Prove Fire Control contract
-        run: npm run test:chum-fire-control
+        run: |
+          npm run test:chum-money-radar
+          npm run test:chum-fire-control
 
       - name: Build adaptive crawler radar
         continue-on-error: true
@@ -137,6 +139,16 @@ jobs:
         continue-on-error: true
         run: npm run chum:mcp
 
+      - name: Measure authoritative payment funnel
+        id: money_radar
+        if: always()
+        continue-on-error: true
+        env:
+          CHUM_ATTRIBUTION_EXPORT_URL: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_URL }}
+          CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_TOKEN }}
+          CHUM_MONEY_RADAR_STRICT: "false"
+        run: npm run chum:money-radar
+
       - name: Run discovery-to-revenue Fire Control
         id: fire_control
         if: always()
@@ -146,6 +158,10 @@ jobs:
         if: always()
         shell: bash
         run: |
+          if [ -f artifacts/chum/money-radar-latest.md ]; then
+            cat artifacts/chum/money-radar-latest.md >> "$GITHUB_STEP_SUMMARY"
+            echo >> "$GITHUB_STEP_SUMMARY"
+          fi
           if [ -f artifacts/chum/fire-control-latest.md ]; then
             cat artifacts/chum/fire-control-latest.md >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -163,6 +179,8 @@ jobs:
             artifacts/chum/provider-probe-latest.*
             artifacts/chum/ard-strike-latest.*
             artifacts/chum/crawler-radar-latest.json
+            artifacts/chum/money-radar-latest.*
+            artifacts/chum/revenue-events.ndjson
             artifacts/chum/fire-control-latest.*
             artifacts/saban-revenue/latest.*
           if-no-files-found: warn

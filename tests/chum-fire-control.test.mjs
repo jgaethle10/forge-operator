@@ -53,6 +53,14 @@ function fixture() {
         { public_id: 'rivet-v1', valid: true }
       ]
     },
+    moneyRadar: {
+      schema: 'evercraft.chum.money-radar.v1',
+      measurement_state: 'measured',
+      products: [
+        { public_id: 'forensiscope-v1', product_key: 'forensiscope', landings: 2, checkout_starts: 1, verified_payments: 1, funnel_state: 'paid' },
+        { public_id: 'rivet-v1', product_key: 'rivet', landings: 0, checkout_starts: 0, verified_payments: 0, funnel_state: 'no_attributed_traffic' }
+      ]
+    },
     revenueEvents: [
       { schema: 'evercraft.revenue-event.v1', public_id: 'forensiscope-v1', stage: 'paid', provider_verified: true, amount: 299 }
     ]
@@ -73,7 +81,7 @@ test('Fire Control closes the funnel only with provider-verified payment', () =>
 
   const forensiscope = receipt.offers.find((row) => row.public_id === 'forensiscope-v1');
   assert.equal(forensiscope.first_broken_stage, null);
-  assert.equal(forensiscope.evidence.provider_verified_revenue_amount, 299);
+  assert.deepEqual(forensiscope.evidence.provider_verified_revenue_by_currency, { UNKNOWN: 299 });
 
   const rivet = receipt.offers.find((row) => row.public_id === 'rivet-v1');
   assert.equal(rivet.first_broken_stage, 'provider_pickup');
@@ -153,4 +161,48 @@ test('Fire Control distinguishes a configured but blocked provider lane', () => 
   assert.equal(rivet.evidence.provider_probe_state, 'blocked');
   assert.equal(rivet.next_action.priority, 'P0');
   assert.equal(rivet.next_action.action, 'resolve_provider_probe_block_then_reprobe');
+});
+
+
+test('Fire Control makes a missing authoritative payment feed a P0 after discovery and commerce are healthy', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes.results = [
+    { product_key: 'forensiscope', status: 'completed', evaluation: { pickup_observed: true } },
+    { product_key: 'rivet', status: 'completed', evaluation: { pickup_observed: true } }
+  ];
+  data.moneyRadar = {
+    schema: 'evercraft.chum.money-radar.v1',
+    measurement_state: 'blocked_source_not_configured',
+    products: []
+  };
+  data.revenueEvents = [];
+
+  const receipt = buildFireControl({ root, ...data });
+  const row = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(row.first_broken_stage, 'payment_measurement_ready');
+  assert.equal(row.next_action.priority, 'P0');
+  assert.equal(row.next_action.action, 'restore_authoritative_payment_receipt_feed');
+});
+
+test('Fire Control routes checkout dropoff to Money Radar without claiming a payment failure cause', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes.results = [
+    { product_key: 'forensiscope', status: 'completed', evaluation: { pickup_observed: true } },
+    { product_key: 'rivet', status: 'completed', evaluation: { pickup_observed: true } }
+  ];
+  data.moneyRadar.products = [
+    { public_id: 'forensiscope-v1', product_key: 'forensiscope', landings: 2, checkout_starts: 1, verified_payments: 1, funnel_state: 'paid' },
+    { public_id: 'rivet-v1', product_key: 'rivet', landings: 4, checkout_starts: 2, verified_payments: 0, funnel_state: 'checkout_started_no_verified_payment' }
+  ];
+  data.revenueEvents = data.revenueEvents.filter((event) => event.public_id !== 'rivet-v1');
+
+  const receipt = buildFireControl({ root, ...data });
+  const row = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(row.first_broken_stage, 'provider_verified_payment');
+  assert.equal(row.next_action.priority, 'P1');
+  assert.equal(row.next_action.action, 'inspect_checkout_to_payment_dropoff_with_authoritative_receipts');
 });
