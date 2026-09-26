@@ -6,7 +6,8 @@ const suite = readJson('chum-probes/probe-suite.json');
 const matrix = readJson('chum-probes/provider-matrix.json');
 
 const bridgeUrl = String(process.env.CHUM_PROBE_BRIDGE_URL || process.env.NEXUS_PROBE_BRIDGE_URL || '').replace(/\/$/, '');
-const bridgeToken = String(process.env.CHUM_PROBE_BRIDGE_TOKEN || process.env.NEXUS_PROBE_BRIDGE_TOKEN || '');
+const configuredBridgeToken = String(process.env.CHUM_PROBE_BRIDGE_TOKEN || process.env.NEXUS_PROBE_BRIDGE_TOKEN || '');
+const bridgeOidcAudience = String(process.env.CHUM_PROBE_BRIDGE_OIDC_AUDIENCE || 'evercraft-chum-provider-bridge');
 const genericAgentSearchUrl = String(process.env.CHUM_GENERIC_AGENT_SEARCH_URL || 'https://neuronto.com/search').trim();
 const requestedProviders = String(process.env.CHUM_PROBE_PROVIDERS || '')
   .split(',')
@@ -27,6 +28,27 @@ const timeoutMs = 45000;
 const genericAgentTimeoutMs = 20000;
 const requireBridge = process.env.CHUM_REQUIRE_PROBE_BRIDGE === 'true' || process.argv.includes('--require-bridge');
 
+async function resolveBridgeToken() {
+  if (configuredBridgeToken) return configuredBridgeToken;
+  if (!bridgeUrl) return '';
+  const requestUrl = String(process.env.ACTIONS_ID_TOKEN_REQUEST_URL || '').trim();
+  const requestToken = String(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN || '').trim();
+  if (!requestUrl || !requestToken) return '';
+  const target = new URL(requestUrl);
+  target.searchParams.set('audience', bridgeOidcAudience);
+  const response = await fetch(target, {
+    headers: {
+      authorization: `Bearer ${requestToken}`,
+      accept: 'application/json',
+      'user-agent': 'Evercraft-CHUM-Provider-Probes/1.0'
+    }
+  });
+  if (!response.ok) return '';
+  const body = await response.json().catch(() => ({}));
+  return String(body?.value || '');
+}
+
+const bridgeToken = await resolveBridgeToken();
 const normalize = (value) => String(value || '').toLowerCase();
 const sha256 = (value) => crypto.createHash('sha256').update(String(value || '')).digest('hex');
 

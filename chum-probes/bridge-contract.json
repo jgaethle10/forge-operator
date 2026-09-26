@@ -49,9 +49,14 @@
     "health_endpoint": "GET /v1/probe/health",
     "auth": [
       "Static Evercraft bridge token when CHUM_PROBE_BRIDGE_INBOUND_TOKEN is configured.",
-      "Ephemeral GitHub Actions token verified against the forge-operator workflow run identity."
+      "GitHub Actions OIDC token signed by token.actions.githubusercontent.com with the configured audience, exact forge-operator repository, refs/heads/main, run ID, commit SHA, and approved event claims."
     ],
     "provider_adapter_env": "CHUM_<PROVIDER>_PROBE_ADAPTER_URL + CHUM_<PROVIDER>_PROBE_ADAPTER_TOKEN",
-    "receipt_sanitization": "The broker hashes adapter receipts and session references; raw provider cookies, auth headers, session tokens, and raw adapter receipts are not returned."
+    "receipt_sanitization": "The broker hashes adapter receipts and session references; raw provider cookies, auth headers, session tokens, and raw adapter receipts are not returned.",
+    "github_oidc": {
+      "issuer": "https://token.actions.githubusercontent.com",
+      "default_audience": "evercraft-chum-provider-bridge",
+      "workflow_requirement": "id-token: write is required only when a workflow is configured to call the bridge without a static bridge token."
+    }
   }
 }

@@ -18,6 +18,18 @@ type ProbeBridgeOptions = {
   fetchImpl?: FetchLike;
 };
 
+type OidcCache = {
+  expiresAt: number;
+  issuer: string;
+  jwksUri: string;
+  keys: any[];
+};
+
+let githubOidcCache: OidcCache | null = null;
+
+const GITHUB_OIDC_ISSUER = 'https://token.actions.githubusercontent.com';
+const GITHUB_OIDC_CONFIG = `${GITHUB_OIDC_ISSUER}/.well-known/openid-configuration`;
+
 function sha256(value: unknown): string {
   return crypto.createHash('sha256').update(String(value ?? '')).digest('hex');
 }
@@ -67,11 +79,85 @@ function adapterConfig(provider: string, env: EnvLike) {
   };
 }
 
+function decodeJwtPart(value: string): any {
+  return JSON.parse(Buffer.from(value, 'base64url').toString('utf8'));
+}
+
+function oidcAudience(env: EnvLike): string {
+  return String(env.CHUM_PROBE_BRIDGE_OIDC_AUDIENCE || 'evercraft-chum-provider-bridge').trim();
+}
+
+async function githubOidcKeys(fetchImpl: FetchLike): Promise<OidcCache> {
+  if (fetchImpl === fetch && githubOidcCache && githubOidcCache.expiresAt > Date.now()) {
+    return githubOidcCache;
+  }
+
+  const configResponse = await fetchImpl(GITHUB_OIDC_CONFIG, {
+    headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM-Provider-Bridge/1.0' }
+  });
+  if (!configResponse.ok) throw new Error('github_oidc_configuration_unavailable');
+  const config = await configResponse.json() as any;
+  if (String(config?.issuer || '') !== GITHUB_OIDC_ISSUER) throw new Error('github_oidc_issuer_mismatch');
+
+  const jwksUri = safeHttpsUrl(config?.jwks_uri);
+  if (!jwksUri || new URL(jwksUri).hostname !== 'token.actions.githubusercontent.com') {
+    throw new Error('github_oidc_jwks_uri_invalid');
+  }
+
+  const jwksResponse = await fetchImpl(jwksUri, {
+    headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM-Provider-Bridge/1.0' }
+  });
+  if (!jwksResponse.ok) throw new Error('github_oidc_jwks_unavailable');
+  const jwks = await jwksResponse.json() as any;
+  const cache = {
+    expiresAt: Date.now() + 5 * 60 * 1000,
+    issuer: GITHUB_OIDC_ISSUER,
+    jwksUri,
+    keys: Array.isArray(jwks?.keys) ? jwks.keys : []
+  };
+  if (fetchImpl === fetch) githubOidcCache = cache;
+  return cache;
+}
+
+async function verifyGithubOidcToken(token: string, env: EnvLike, fetchImpl: FetchLike): Promise<any> {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('github_oidc_token_malformed');
+
+  const header = decodeJwtPart(parts[0]);
+  const claims = decodeJwtPart(parts[1]);
+  if (header?.alg !== 'RS256' || !header?.kid) throw new Error('github_oidc_token_header_invalid');
+
+  const oidc = await githubOidcKeys(fetchImpl);
+  const jwk = oidc.keys.find((key: any) => key?.kid === header.kid && key?.kty === 'RSA');
+  if (!jwk) throw new Error('github_oidc_signing_key_not_found');
+
+  const publicKey = crypto.createPublicKey({ key: jwk, format: 'jwk' });
+  const validSignature = crypto.verify(
+    'RSA-SHA256',
+    Buffer.from(`${parts[0]}.${parts[1]}`),
+    publicKey,
+    Buffer.from(parts[2], 'base64url')
+  );
+  if (!validSignature) throw new Error('github_oidc_signature_invalid');
+
+  const now = Math.floor(Date.now() / 1000);
+  if (String(claims?.iss || '') !== GITHUB_OIDC_ISSUER) throw new Error('github_oidc_claim_issuer_invalid');
+  if (!Number.isFinite(Number(claims?.exp)) || Number(claims.exp) < now - 30) throw new Error('github_oidc_token_expired');
+  if (claims?.nbf != null && Number(claims.nbf) > now + 30) throw new Error('github_oidc_token_not_yet_valid');
+
+  const expectedAudience = oidcAudience(env);
+  const audiences = Array.isArray(claims?.aud) ? claims.aud.map(String) : [String(claims?.aud || '')];
+  if (!audiences.includes(expectedAudience)) throw new Error('github_oidc_audience_invalid');
+
+  return claims;
+}
+
 export function providerBridgeHealth(env: EnvLike = process.env) {
   return {
     schema: 'evercraft.chum.provider-bridge-health.v1',
     service: 'CHUM authorized provider bridge',
-    github_actions_auth_enabled: String(env.CHUM_PROBE_BRIDGE_GITHUB_AUTH || 'true').toLowerCase() !== 'false',
+    github_actions_oidc_enabled: String(env.CHUM_PROBE_BRIDGE_GITHUB_OIDC || 'true').toLowerCase() !== 'false',
+    github_actions_oidc_audience: oidcAudience(env),
     static_token_configured: Boolean(String(env.CHUM_PROBE_BRIDGE_INBOUND_TOKEN || '').trim()),
     providers: CONSUMER_PROBE_PROVIDERS.map((provider) => ({
       provider,
@@ -102,8 +188,8 @@ export async function authenticateProviderBridgeRequest(
     return { ok: true, mode: 'static_token' };
   }
 
-  const githubAuthEnabled = String(env.CHUM_PROBE_BRIDGE_GITHUB_AUTH || 'true').toLowerCase() !== 'false';
-  if (!githubAuthEnabled) return { ok: false, status: 401, error: 'bridge_auth_failed' };
+  const oidcEnabled = String(env.CHUM_PROBE_BRIDGE_GITHUB_OIDC || 'true').toLowerCase() !== 'false';
+  if (!oidcEnabled) return { ok: false, status: 401, error: 'bridge_auth_failed' };
 
   const expectedRepository = String(env.CHUM_PROBE_BRIDGE_GITHUB_REPOSITORY || 'jgaethle10/forge-operator').trim();
   const repository = String(input.repository || '').trim();
@@ -113,28 +199,26 @@ export async function authenticateProviderBridgeRequest(
     return { ok: false, status: 401, error: 'invalid_github_actions_identity_headers' };
   }
 
-  const response = await fetchImpl(`https://api.github.com/repos/${expectedRepository}/actions/runs/${runId}`, {
-    headers: {
-      accept: 'application/vnd.github+json',
-      authorization: `Bearer ${token}`,
-      'user-agent': 'Evercraft-CHUM-Provider-Bridge/1.0',
-      'x-github-api-version': '2022-11-28'
+  try {
+    const claims = await verifyGithubOidcToken(token, env, fetchImpl);
+    const allowedEvents = new Set(['push', 'schedule', 'workflow_dispatch']);
+    if (
+      String(claims?.repository || '') !== expectedRepository ||
+      String(claims?.ref || '') !== 'refs/heads/main' ||
+      String(claims?.sha || '').toLowerCase() !== sha ||
+      String(claims?.run_id || '') !== runId ||
+      !allowedEvents.has(String(claims?.event_name || ''))
+    ) {
+      return { ok: false, status: 401, error: 'github_actions_oidc_identity_mismatch' };
     }
-  });
-  if (!response.ok) return { ok: false, status: 401, error: 'github_actions_token_verification_failed' };
-
-  const run = await response.json() as any;
-  const allowedEvents = new Set(['push', 'schedule', 'workflow_dispatch']);
-  if (
-    String(run?.repository?.full_name || '') !== expectedRepository ||
-    String(run?.head_sha || '').toLowerCase() !== sha ||
-    String(run?.head_branch || '') !== 'main' ||
-    !allowedEvents.has(String(run?.event || ''))
-  ) {
-    return { ok: false, status: 401, error: 'github_actions_run_identity_mismatch' };
+    return { ok: true, mode: 'github_actions_oidc', run_id: runId };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 401,
+      error: error instanceof Error ? error.message : 'github_actions_oidc_verification_failed'
+    };
   }
-
-  return { ok: true, mode: 'github_actions_token', run_id: runId };
 }
 
 function validateProbe(body: any): { provider: ConsumerProbeProvider; surface: 'consumer_chat'; prompt: string } {

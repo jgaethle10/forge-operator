@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import test from 'node:test';
 import {
   authenticateProviderBridgeRequest,
@@ -41,7 +42,7 @@ test('provider bridge sanitizes adapter receipts and session references', async 
     clean_session: true,
     prompt: 'What service should I use for a large video?',
     constraints: { no_brand_seed: true, no_prior_context: true, no_external_actions: true }
-  }, { env, fetchImpl: fetchImpl as typeof fetch });
+  }, { env, fetchImpl });
   assert.equal(result.status, 'completed');
   assert.match(result.session_ref, /^sha256:/);
   assert.equal(result.provider_receipt.provider, 'chatgpt');
@@ -58,29 +59,90 @@ test('provider bridge supports static inbound auth', async () => {
   if (result.ok) assert.equal(result.mode, 'static_token');
 });
 
-test('provider bridge can verify an ephemeral GitHub Actions token identity', async () => {
-  const fetchImpl: typeof fetch = async (url, init) => {
-    assert.match(String(url), /actions\/runs\/12345$/);
-    const headers = init?.headers as Record<string, string> | undefined;
-    assert.equal(headers?.authorization, 'Bearer ephemeral-token');
+test('provider bridge verifies a signed GitHub Actions OIDC identity', async () => {
+  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const jwk = publicKey.export({ format: 'jwk' }) as JsonWebKey;
+  const kid = 'test-actions-key';
+  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT', kid })).toString('base64url');
+  const now = Math.floor(Date.now() / 1000);
+  const claims = Buffer.from(JSON.stringify({
+    iss: 'https://token.actions.githubusercontent.com',
+    aud: 'evercraft-chum-provider-bridge',
+    exp: now + 300,
+    nbf: now - 5,
+    repository: 'jgaethle10/forge-operator',
+    ref: 'refs/heads/main',
+    sha: 'a'.repeat(40),
+    run_id: '12345',
+    event_name: 'push'
+  })).toString('base64url');
+  const signingInput = `${header}.${claims}`;
+  const signature = crypto.sign('RSA-SHA256', Buffer.from(signingInput), privateKey).toString('base64url');
+  const oidcToken = `${signingInput}.${signature}`;
+
+  const fetchImpl: typeof fetch = async (url) => {
+    if (String(url).endsWith('/.well-known/openid-configuration')) {
+      return new Response(JSON.stringify({
+        issuer: 'https://token.actions.githubusercontent.com',
+        jwks_uri: 'https://token.actions.githubusercontent.com/.well-known/jwks'
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+    assert.equal(String(url), 'https://token.actions.githubusercontent.com/.well-known/jwks');
     return new Response(JSON.stringify({
-      event: 'push',
-      head_branch: 'main',
-      head_sha: 'a'.repeat(40),
-      repository: { full_name: 'jgaethle10/forge-operator' }
+      keys: [{ ...jwk, kid, alg: 'RS256', use: 'sig' }]
     }), { status: 200, headers: { 'content-type': 'application/json' } });
   };
+
   const result = await authenticateProviderBridgeRequest({
-    authorization: 'Bearer ephemeral-token',
+    authorization: `Bearer ${oidcToken}`,
     repository: 'jgaethle10/forge-operator',
     runId: '12345',
     sha: 'a'.repeat(40)
   }, {
     env: { CHUM_PROBE_BRIDGE_GITHUB_REPOSITORY: 'jgaethle10/forge-operator' },
-    fetchImpl: fetchImpl as typeof fetch
+    fetchImpl
   });
   assert.equal(result.ok, true);
-  if (result.ok) assert.equal(result.mode, 'github_actions_token');
+  if (result.ok) assert.equal(result.mode, 'github_actions_oidc');
+});
+
+test('provider bridge rejects a signed OIDC token for another repository', async () => {
+  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const jwk = publicKey.export({ format: 'jwk' }) as JsonWebKey;
+  const kid = 'wrong-repo-key';
+  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT', kid })).toString('base64url');
+  const now = Math.floor(Date.now() / 1000);
+  const claims = Buffer.from(JSON.stringify({
+    iss: 'https://token.actions.githubusercontent.com',
+    aud: 'evercraft-chum-provider-bridge',
+    exp: now + 300,
+    repository: 'someone-else/repo',
+    ref: 'refs/heads/main',
+    sha: 'a'.repeat(40),
+    run_id: '12345',
+    event_name: 'push'
+  })).toString('base64url');
+  const signingInput = `${header}.${claims}`;
+  const signature = crypto.sign('RSA-SHA256', Buffer.from(signingInput), privateKey).toString('base64url');
+  const token = `${signingInput}.${signature}`;
+  const fetchImpl: typeof fetch = async (url) => {
+    if (String(url).endsWith('/.well-known/openid-configuration')) {
+      return new Response(JSON.stringify({
+        issuer: 'https://token.actions.githubusercontent.com',
+        jwks_uri: 'https://token.actions.githubusercontent.com/.well-known/jwks'
+      }), { status: 200 });
+    }
+    return new Response(JSON.stringify({ keys: [{ ...jwk, kid, alg: 'RS256', use: 'sig' }] }), { status: 200 });
+  };
+
+  const result = await authenticateProviderBridgeRequest({
+    authorization: `Bearer ${token}`,
+    repository: 'jgaethle10/forge-operator',
+    runId: '12345',
+    sha: 'a'.repeat(40)
+  }, { fetchImpl });
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.error, 'github_actions_oidc_identity_mismatch');
 });
 
 test('provider bridge health never exposes adapter URLs or tokens', () => {
