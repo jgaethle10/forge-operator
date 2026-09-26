@@ -37,6 +37,9 @@ function verifiedReceipt(overrides={}){
     device_fingerprint:'sha256:'+'b'.repeat(64),
     edge_attestation_receipt_ref:'c'.repeat(64),
     specialist_attestation_receipt_ref:'d'.repeat(64),
+    field_enrollment_verified:true,
+    field_enrollment_receipt_ref:'sha256:'+'e'.repeat(64),
+    public_edge_admission_receipt_ref:'sha256:'+'f'.repeat(64),
     public_https_verified:true,
     certificate_validation:'system_default_trust_store',
     mcp_initialize_verified:true,
@@ -49,7 +52,7 @@ function verifiedReceipt(overrides={}){
   };
 }
 
-test('verified external canary promotes exactly the three Yard specialists without claiming registry publication',()=>{
+test('verified external canary promotes exactly the four Yard specialists without claiming registry publication',()=>{
   const specs=pendingFixture();
   const nonTargetsBefore=new Map(
     specs.products
@@ -76,6 +79,9 @@ test('verified external canary promotes exactly the three Yard specialists witho
     assert.equal(product.public_edge_canary.device_fingerprint,'sha256:'+'b'.repeat(64));
     assert.equal(product.public_edge_canary.edge_attestation_receipt_ref,'c'.repeat(64));
     assert.equal(product.public_edge_canary.specialist_attestation_receipt_ref,'d'.repeat(64));
+    assert.equal(product.public_edge_canary.field_enrollment_verified,true);
+    assert.equal(product.public_edge_canary.field_enrollment_receipt_ref,'sha256:'+'e'.repeat(64));
+    assert.equal(product.public_edge_canary.public_edge_admission_receipt_ref,'sha256:'+'f'.repeat(64));
   }
 
   for(const [slug,before] of nonTargetsBefore){
