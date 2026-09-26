@@ -1,55 +1,73 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
-const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
-const doors = readJson('public/.well-known/evercraft-direct-doors.json');
+const readJson=(p)=>JSON.parse(fs.readFileSync(p,'utf8'));
+const specs=readJson('distribution/direct-plugin-specs.json');
+const publicDoors=readJson('public/.well-known/evercraft-direct-doors.json');
+const distributionDoors=readJson('distribution/direct-product-doors.json');
 
-assert.equal(doors.schema, 'evercraft.direct-product-doors.v1');
-assert.equal(doors.routing_policy.default, 'specialist_direct_when_clear');
-assert.equal(doors.routing_policy.fallback, 'evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable');
+assert.equal(publicDoors.schema,'evercraft.direct-product-doors.v1');
+assert.equal(publicDoors.generated_from,'distribution/direct-plugin-specs.json');
+assert.deepEqual(publicDoors.routing_policy,specs.routing_policy);
+assert.deepEqual(distributionDoors,publicDoors);
 
-const byProduct = new Map(doors.doors.map((door) => [door.product, door]));
+const specByName=new Map(specs.products.map(p=>[p.name,p]));
+const doorByName=new Map(publicDoors.doors.map(d=>[d.product,d]));
 
-for (const product of ['ForensiScope', 'AliEV / RIVET', 'FindMyPart', 'Systemia Website Audit', 'Evercraft Web', 'Systemia Remote Ops']) {
-  assert.ok(byProduct.has(product), 'missing direct door: ' + product);
+assert.equal(doorByName.size,specByName.size,'door count must equal canonical product spec count');
+
+for(const [name,p] of specByName){
+  const door=doorByName.get(name);
+  assert.ok(door,'missing direct door: '+name);
+  assert.equal(door.intent,p.intent,name+': intent drift');
+  assert.equal(door.registry_name,p.registry_name,name+': registry drift');
+  assert.equal(door.remote_mcp,p.mcp_url,name+': MCP URL drift');
+  assert.equal(door.plugin_package,'plugins/'+p.slug,name+': plugin package drift');
+  assert.equal(door.state,p.state,name+': state drift');
+  assert.equal(door.truth_boundary,p.truth_boundary,name+': truth-boundary drift');
+
+  for(const rel of [
+    'plugin.json',
+    'mcp.json',
+    '.mcp.json',
+    '.codex-plugin/plugin.json',
+    'skills/'+p.slug+'-direct/SKILL.md'
+  ]){
+    assert.ok(fs.existsSync('plugins/'+p.slug+'/'+rel),name+': missing '+rel);
+  }
+
+  const plugin=readJson('plugins/'+p.slug+'/plugin.json');
+  assert.equal(plugin.name,p.slug,name+': plugin name drift');
+
+  const mcp=readJson('plugins/'+p.slug+'/mcp.json');
+  const server=Object.values(mcp.mcpServers||{})[0];
+  assert.ok(server,name+': missing MCP server config');
+  assert.equal(server.url,p.mcp_url,name+': plugin MCP URL drift');
+
+  const codex=readJson('plugins/'+p.slug+'/.codex-plugin/plugin.json');
+  assert.equal(codex.interface?.displayName,p.name,name+': display name drift');
+  assert.equal(codex.interface?.websiteURL,p.website_url,name+': website drift');
+
+  if(p.state==='registry_published_direct_mcp_existing'){
+    assert.match(p.registry_name,/^io\.github\.jgaethle10\//,name+': registry-backed product must have official namespace');
+  }else{
+    assert.equal(p.registry_name,null,name+': held product must not claim registry publication');
+    assert.ok(plugin.releaseState,name+': held product must expose releaseState');
+    assert.ok(codex.releaseState,name+': held Codex plugin must expose releaseState');
+  }
 }
 
-for (const product of ['ForensiScope', 'AliEV / RIVET', 'FindMyPart']) {
-  const door = byProduct.get(product);
-  assert.equal(door.state, 'registry_published_direct_mcp_existing');
-  assert.match(door.registry_name, /^io\.github\.jgaethle10\//);
-  assert.match(door.remote_mcp, /^https:\/\//);
-  assert.ok(door.plugin_package);
-  assert.ok(fs.existsSync(door.plugin_package + '/plugin.json'), 'missing plugin manifest for ' + product);
-  assert.ok(fs.existsSync(door.plugin_package + '/mcp.json'), 'missing MCP config for ' + product);
-  assert.ok(fs.existsSync(door.plugin_package + '/.mcp.json'), 'missing Codex MCP config for ' + product);
-  assert.ok(fs.existsSync(door.plugin_package + '/.codex-plugin/plugin.json'), 'missing Codex plugin manifest for ' + product);
+const aiDiscovery=fs.readFileSync('AI-DISCOVERY.md','utf8');
+assert.match(aiDiscovery,/direct-door-first routing model/i);
+assert.match(aiDiscovery,/universal Evercraft router exists for ambiguity/i);
+assert.match(aiDiscovery,/evercraft-direct-doors\.json/i);
 
-  const mcp = readJson(door.plugin_package + '/mcp.json');
-  const server = Object.values(mcp.mcpServers || {})[0];
-  assert.equal(server.url, door.remote_mcp, 'plugin MCP URL drift for ' + product);
-}
+const suiteSkill=fs.readFileSync('plugins/evercraft-ai-suite/skills/evercraft-ai-router/SKILL.md','utf8');
+assert.match(suiteSkill,/dedicated Evercraft specialist plugin or MCP/i);
+assert.match(suiteSkill,/fallback when no dedicated specialist is available/i);
 
-const remoteOps = byProduct.get('Systemia Remote Ops');
-assert.equal(remoteOps.state, 'source_ready_deployment_unverified');
-assert.equal(remoteOps.registry_name, null);
-assert.ok(fs.existsSync('plugins/systemia-remote-ops/plugin.json'));
-assert.ok(fs.existsSync('plugins/systemia-remote-ops/mcp.json'));
-
-const publicCopy = fs.readFileSync('public/.well-known/evercraft-direct-doors.json', 'utf8');
-const distributionCopy = fs.readFileSync('distribution/direct-product-doors.json', 'utf8');
-assert.equal(publicCopy, distributionCopy, 'direct-door public and distribution copies drifted');
-
-const aiDiscovery = fs.readFileSync('AI-DISCOVERY.md', 'utf8');
-assert.match(aiDiscovery, /direct-door-first routing model/i);
-assert.match(aiDiscovery, /universal Evercraft router exists for ambiguity/i);
-
-const suiteSkill = fs.readFileSync('plugins/evercraft-ai-suite/skills/evercraft-ai-router/SKILL.md', 'utf8');
-assert.match(suiteSkill, /dedicated Evercraft specialist plugin or MCP/i);
-assert.match(suiteSkill, /fallback when no dedicated specialist is available/i);
-
-console.log('DIRECT_PRODUCT_DOORS_PASS', {
-  direct_doors: doors.doors.length,
-  registry_backed_specialists: doors.doors.filter((d) => d.state === 'registry_published_direct_mcp_existing').length,
-  remote_ops_state: remoteOps.state
-});
+console.log('DIRECT_PRODUCT_DOORS_PASS',JSON.stringify({
+  direct_doors:publicDoors.doors.length,
+  registry_backed_specialists:specs.products.filter(p=>p.state==='registry_published_direct_mcp_existing').length,
+  held:specs.products.filter(p=>p.state!=='registry_published_direct_mcp_existing').map(p=>p.slug)
+}));
