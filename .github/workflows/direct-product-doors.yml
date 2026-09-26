@@ -22,6 +22,8 @@ on:
       - 'scripts/record-mcp-registry-publication.mjs'
       - 'tests/record-mcp-registry-publication.test.mjs'
       - 'distribution/mcp-registry-publication-receipts/**'
+      - '.github/workflows/direct-product-doors.yml'
+      - 'tests/mcp-registry-field-gate.test.mjs'
       - 'package.json'
   pull_request:
     paths:
@@ -31,6 +33,20 @@ on:
       - 'plugins/**'
       - 'scripts/generate-direct-plugin-packages.mjs'
       - 'tests/direct-product-doors.test.mjs'
+      - 'tests/chum-direct-specialist-routing.test.mjs'
+      - 'systemia/chum/build-capability-mirror.mjs'
+      - 'distribution/mcp-registry-candidates/**'
+      - 'scripts/generate-mcp-registry-candidates.mjs'
+      - 'tests/mcp-registry-candidates.test.mjs'
+      - 'systemia/yard/promote-specialist-edge.mjs'
+      - 'tests/promote-specialist-edge.test.mjs'
+      - 'scripts/materialize-mcp-registry-candidates.mjs'
+      - 'tests/materialize-mcp-registry-candidates.test.mjs'
+      - 'scripts/record-mcp-registry-publication.mjs'
+      - 'tests/record-mcp-registry-publication.test.mjs'
+      - 'distribution/mcp-registry-publication-receipts/**'
+      - '.github/workflows/direct-product-doors.yml'
+      - 'tests/mcp-registry-field-gate.test.mjs'
       - 'package.json'
 
 permissions:
@@ -43,6 +59,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Validate direct specialist doors
         run: npm run direct:check
