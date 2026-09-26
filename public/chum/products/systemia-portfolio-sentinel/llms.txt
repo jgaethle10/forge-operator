@@ -5,7 +5,10 @@ Aliases: Portfolio Sentinel, Evercraft Portfolio Sentinel, Software Estate Senti
 Canonical product: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-conformance.json
-Universal Evercraft Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+## Related product layers
+
+- Portfolio Sentinel machine capability: Machine Commerce exposes problem-first matching and the current commercial boundary while customer monitoring remains authorization-scoped. · /chum/capabilities/portfolio-sentinel-v1/
 
 ## Use this capability when the user means
 
@@ -26,13 +29,19 @@ Universal Evercraft Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.ba
 - monitor LLM discovery pages and agent endpoints
 - detect product URL workflow and deployment regressions
 
+## Authority
+
+public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority
+
 ## Commercial state
 
 - Status: commercial_pilot
-- Offer: Systemia Portfolio Sentinel Commercial Pilot · Custom quote
-- Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
+- Offer: Systemia Portfolio Sentinel Commercial Pilot · Custom quote · offer_key: portfolio_sentinel_commercial_pilot
+- Pricing: Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.
+- Machine Commerce human handoff state: discovery_live_human_onboarding.
+- Payment state: No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.
 
-## Authority and boundaries
+## Boundaries
 
 - public discovery creates no access to private repositories, credentials, customer data or internal topology
 - customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked
@@ -40,4 +49,8 @@ Universal Evercraft Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.ba
 - production changes, payment actions and external communications remain separately gated
 - customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified
 
-Evercraft's internal runtime proof does not automatically prove a customer deployment. Customer execution becomes live only after onboarding and a verified first cycle.
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

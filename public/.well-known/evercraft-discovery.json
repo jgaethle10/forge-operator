@@ -2,7 +2,7 @@
   "schema": "evercraft.discovery-watershed.v3",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25",
+  "updated_at": "2026-09-26",
   "purpose": "One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.",
   "start_here": {
     "human_directory": "/ai",
@@ -27,7 +27,12 @@
     "intent_router": "/api/discover?q={natural-language-problem}",
     "revenue_router": "/api/revenue-watershed",
     "schema": "/schema.jsonld",
-    "openapi": "/openapi.json"
+    "openapi": "/openapi.json",
+    "syndication": "/.well-known/evercraft-syndication.json",
+    "rss": "/feed.xml",
+    "json_feed": "/feed.json",
+    "opensearch": "/opensearch.xml",
+    "syndication_hub": "/chum/syndication/"
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -47,5 +52,13 @@
     "coordinator": "CHUM",
     "mechanism": "IndexNow",
     "semantics": "Healthy public capability pages are announced for freshness. Submission is not proof of indexing, recommendation, citation or conversion."
+  },
+  "syndication": {
+    "schema": "evercraft.syndication.v1",
+    "policy": "One truthful canonical product record is fanned out into standard discovery formats. Material changes may be queued for authorized social publishing, with dedupe by content hash.",
+    "rss": "/feed.xml",
+    "json_feed": "/feed.json",
+    "hub": "/chum/syndication/",
+    "manifest": "/.well-known/evercraft-syndication.json"
   }
 }

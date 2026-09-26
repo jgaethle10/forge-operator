@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 96,
+    "pain_index_entries": 97,
     "unique_user_phrases": 729,
-    "mapped_candidate_edges": 788,
-    "ambiguous_phrases": 59,
-    "product_candidates": 52,
+    "mapped_candidate_edges": 804,
+    "ambiguous_phrases": 75,
+    "product_candidates": 53,
     "machine_offer_candidates": 44
   },
   "doors": [
@@ -380,7 +380,7 @@
       "relative_json": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
       "relative_page": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -391,6 +391,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -3400,7 +3412,7 @@
       "relative_json": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
       "relative_page": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -3413,6 +3425,18 @@
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
         }
       ]
     },
@@ -3423,7 +3447,7 @@
       "relative_json": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
       "relative_page": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -3434,6 +3458,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -4010,7 +4046,7 @@
       "relative_json": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
       "relative_page": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -4023,6 +4059,18 @@
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
         }
       ]
     },
@@ -4033,7 +4081,7 @@
       "relative_json": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
       "relative_page": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -4044,6 +4092,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -5702,7 +5762,7 @@
       "relative_json": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
       "relative_page": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -5713,6 +5773,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -8698,7 +8770,7 @@
       "relative_json": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
       "relative_page": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -8709,6 +8781,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -10127,7 +10211,7 @@
       "relative_json": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
       "relative_page": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -10138,6 +10222,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -10150,7 +10246,7 @@
       "relative_json": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
       "relative_page": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -10163,6 +10259,18 @@
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
         }
       ]
     },
@@ -10173,7 +10281,7 @@
       "relative_json": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
       "relative_page": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -10184,6 +10292,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -10576,7 +10696,7 @@
       "relative_json": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
       "relative_page": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -10587,6 +10707,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -10772,7 +10904,7 @@
       "relative_json": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
       "relative_page": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -10783,6 +10915,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -14457,7 +14601,7 @@
       "relative_json": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
       "relative_page": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -14468,6 +14612,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -14503,7 +14659,7 @@
       "relative_json": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
       "relative_page": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -14514,6 +14670,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -15113,7 +15281,7 @@
       "relative_json": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
       "relative_page": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -15124,6 +15292,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
@@ -16415,7 +16595,7 @@
       "relative_json": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
       "relative_page": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:portfolio-sentinel-v1",
@@ -16426,6 +16606,18 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:systemia-portfolio-sentinel",
+          "kind": "product",
+          "product_key": "systemia-portfolio-sentinel",
+          "public_id": null,
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }

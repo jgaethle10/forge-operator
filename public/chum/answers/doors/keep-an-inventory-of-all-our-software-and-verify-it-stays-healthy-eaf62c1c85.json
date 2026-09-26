@@ -7,7 +7,7 @@
   "user_language": "keep an inventory of all our software and verify it stays healthy",
   "normalized": "keep an inventory of all our software and verify it stays healthy",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
-  "candidate_count": 1,
+  "candidate_count": 2,
   "candidates": [
     {
       "capability_id": "offer:portfolio-sentinel-v1",
@@ -30,6 +30,34 @@
       "invocation_status": "LIVE for public machine discovery and deterministic problem matching through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after scoped onboarding and authorization. No discovery call grants private access or production-mutation authority.",
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": []
+    },
+    {
+      "capability_id": "product:systemia-portfolio-sentinel",
+      "kind": "product",
+      "product_key": "systemia-portfolio-sentinel",
+      "public_id": null,
+      "name": "Systemia Portfolio Sentinel",
+      "problem": null,
+      "pricing": "Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.",
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "pain_page": "/chum/products/systemia-portfolio-sentinel/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority",
+      "boundaries": [
+        "public discovery creates no access to private repositories, credentials, customer data or internal topology",
+        "customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked",
+        "findings are operational evidence and diagnostics, not a security certification, compliance attestation or uptime guarantee",
+        "production changes, payment actions and external communications remain separately gated",
+        "customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified"
+      ]
     }
   ],
   "routing_policy": {

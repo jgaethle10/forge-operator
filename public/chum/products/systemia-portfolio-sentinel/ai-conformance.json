@@ -32,7 +32,7 @@
   ],
   "commercial": {
     "status": "commercial_pilot",
-    "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+    "pricing": "Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.",
     "offers": [
       {
         "offer_key": "portfolio_sentinel_commercial_pilot",
@@ -48,14 +48,27 @@
       "state": "discovery_live_human_onboarding"
     }
   },
-  "provider_behavior_state": "not_run",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": {
+    "machine_capability": {
+      "name": "Portfolio Sentinel machine capability",
+      "relationship": "commercial_machine_discovery_and_handoff",
+      "public_surface": "/chum/capabilities/portfolio-sentinel-v1/",
+      "description": "Machine Commerce exposes problem-first matching and the current commercial boundary while customer monitoring remains authorization-scoped."
+    }
+  },
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": "portfolio-sentinel-v1",
   "machine_commerce_tool": "get_offer",
   "live_canary_evidence": {
     "observed_on": "2026-09-26",
     "query": "software portfolio health monitoring",
-    "match_score": 36,
     "result": "Systemia Portfolio Sentinel",
+    "match_score": 36,
     "source": "Evercraft Machine Commerce live gateway"
   }
 }

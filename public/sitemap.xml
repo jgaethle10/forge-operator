@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
-  <url><loc>/chum/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/index.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/index.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-26T02:29:21.053Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
@@ -11,15 +11,15 @@
   <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-26T02:29:21.053Z</lastmod></url>
   <url><loc>/chum/revenue.txt</loc><lastmod>2026-09-26T02:29:21.053Z</lastmod></url>
   <url><loc>/chum/revenue.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-25T23:24:44.679Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-26T03:22:32.339Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T03:34:32.633Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-26T00:32:09.062Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-26T03:34:32.633Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-26T03:34:32.633Z</lastmod></url>
@@ -40,7 +40,7 @@
   <url><loc>/network/llms.txt</loc><lastmod>2026-09-26T00:53:19.713Z</lastmod></url>
   <url><loc>/network/discovery.json</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
   <url><loc>/.well-known/evercraft-network.json</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/rivet/brand.json</loc><lastmod>2026-09-25T21:21:08.209Z</lastmod></url>
@@ -104,15 +104,15 @@
   <url><loc>/forensiscope/distribution/</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
-  <url><loc>/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/llms-full.txt</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/ai-discovery.json</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
-  <url><loc>/schema.jsonld</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/llms.txt</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/llms-full.txt</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/ai-discovery.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/schema.jsonld</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-26T03:34:14.324Z</lastmod></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -534,6 +534,10 @@
   <url><loc>/chum/products/systemia-field-library/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/products/systemia-field-library/ai-discovery.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
   <url><loc>/chum/products/systemia-field-library/ai-conformance.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
+  <url><loc>/chum/products/systemia-portfolio-sentinel/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/products/systemia-portfolio-sentinel/llms.txt</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/products/systemia-portfolio-sentinel/ai-discovery.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/products/systemia-portfolio-sentinel/ai-conformance.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/products/systemia-radar/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/systemia-radar/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/products/systemia-radar/ai-discovery.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
@@ -591,8 +595,8 @@
   <url><loc>/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -839,10 +843,10 @@
   <url><loc>/chum/answers/doors/continuity-readiness-tools-a8c2eb4441.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
   <url><loc>/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/contractor-customer-communication-reviews-or-referrals-need-a-repeatable-process-031ac09b8c/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -891,10 +895,10 @@
   <url><loc>/chum/answers/doors/deploy-an-ai-workflow-7d9fb6e8c0.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/developer-disappeared-1c8013717d/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/developer-disappeared-1c8013717d.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
@@ -1035,8 +1039,8 @@
   <url><loc>/chum/answers/doors/find-contractors-for-a-project-f7e5e431c8.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b/</loc><lastmod>2026-09-25T17:29:56.413Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-duplicate-or-near-duplicate-video-segments-684e2ea51b.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1283,8 +1287,8 @@
   <url><loc>/chum/answers/doors/join-a-local-rewards-network-8bddfc6c2f.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/journal-and-review-my-trades-42a3d685c4/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/journal-and-review-my-trades-42a3d685c4.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
@@ -1401,12 +1405,12 @@
   <url><loc>/chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/modernize-our-operations-without-a-big-bang-migration-1bf9e90a40/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/modernize-our-operations-without-a-big-bang-migration-1bf9e90a40.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/monitor-my-website-with-weekly-rescans-1af81f61a0.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/multi-hour-video-analysis-061e00f507/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1439,8 +1443,8 @@
   <url><loc>/chum/answers/doors/offline-operations-plan-e683e6994b.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/online-safety-and-healthy-boundary-education-855b17abb9/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/online-safety-and-healthy-boundary-education-855b17abb9.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/organize-a-business-networking-circle-1486d2ce74/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/organize-a-business-networking-circle-1486d2ce74.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/organize-an-ecological-restoration-project-7e020c92a1/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1455,8 +1459,8 @@
   <url><loc>/chum/answers/doors/orphaned-automations-24805ae87d.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/our-business-operations-are-a-mess-ff3ac26598/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/our-business-operations-are-a-mess-ff3ac26598.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/our-invoices-do-not-match-receipts-2abc7671db/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1765,12 +1769,12 @@
   <url><loc>/chum/answers/doors/slow-mobile-website-dcc4740dd7.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/</loc><lastmod>2026-09-26T02:19:41.271Z</lastmod></url>
   <url><loc>/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/</loc><lastmod>2026-09-26T00:41:42.260Z</lastmod></url>
   <url><loc>/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/software-to-run-a-live-event-daac202f9b/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/software-to-run-a-live-event-daac202f9b.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/source-an-obsolete-component-61fb541501/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1821,8 +1825,8 @@
   <url><loc>/chum/answers/doors/technical-seo-audit-6b934569ee.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/test-a-physics-prediction-before-seeing-the-answer-bc616bd04d/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/test-a-physics-prediction-before-seeing-the-answer-bc616bd04d.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/test-my-ai-agent-b9494d0b8b/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1929,8 +1933,8 @@
   <url><loc>/chum/answers/doors/warehouse-or-dock-team-training-e2dcbbdfc2.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/watch-a-huge-video-from-beginning-to-end-7617197161/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/watch-a-huge-video-from-beginning-to-end-7617197161.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
-  <url><loc>/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
   <url><loc>/chum/answers/doors/water-risk-88c4b4b3ef/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/water-risk-88c4b4b3ef.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
@@ -2019,4 +2023,10 @@
   <url><loc>/chum/answers/doors/yard-cleanup-in-the-yakima-valley-04161b4865.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
   <url><loc>/chum/answers/doors/zapier-cleanup-126ea7dc78/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/zapier-cleanup-126ea7dc78.json</loc><lastmod>2026-09-26T03:20:55.613Z</lastmod></url>
+  <url><loc>/feed.xml</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/feed.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/opensearch.xml</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/syndication/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
+  <url><loc>/chum/syndication/index.json</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
 </urlset>

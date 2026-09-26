@@ -607,6 +607,19 @@
       }
     },
     {
+      "product_key": "systemia-portfolio-sentinel",
+      "name": "Systemia Portfolio Sentinel",
+      "class": "continuous_software_portfolio_integrity_monitoring",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "github_record": "./systemia-portfolio-sentinel/README.md",
+      "llms": "./systemia-portfolio-sentinel/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "systemia-radar",
       "name": "Systemia Radar",
       "class": "website_scan_competitor_monitoring_and_reporting",

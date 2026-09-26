@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<ShortName>Evercraft</ShortName>
+<Description>Discover Evercraft products by natural-language problem.</Description>
+<InputEncoding>UTF-8</InputEncoding>
+<Url type="application/json" template="/api/discover?q={searchTerms}"/>
+</OpenSearchDescription>

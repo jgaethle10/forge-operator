@@ -38,7 +38,7 @@
   ],
   "commercial": {
     "status": "commercial_pilot",
-    "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+    "pricing": "Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.",
     "offers": [
       {
         "offer_key": "portfolio_sentinel_commercial_pilot",
@@ -62,6 +62,10 @@
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
   "relationships": {
     "machine_capability": {
       "name": "Portfolio Sentinel machine capability",

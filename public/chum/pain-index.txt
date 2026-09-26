@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 96
-Product entries: 52
+Entries: 97
+Product entries: 53
 Machine-offer entries: 44
 Sell-now machine offers: 12
 
@@ -1799,6 +1799,33 @@ Use when the user means:
 - contractor customer communication reviews or referrals need a repeatable process
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Systemia Portfolio Sentinel
+Capability ID: product:systemia-portfolio-sentinel
+Product key: systemia-portfolio-sentinel
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+Pricing: Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.
+Use when the user means:
+- monitor my software portfolio for broken products
+- continuously audit all of our apps repositories and public URLs
+- tell me when one of our software products breaks
+- software portfolio health monitoring
+- software estate integrity monitoring
+- detect broken deployments and stale workflows
+- watch GitHub Actions and public product doors for failures
+- find drift across our apps APIs workflows and discovery surfaces
+- open repair work automatically when software breaks
+- continuous software estate audit
+- AI product portfolio watchdog
+- monitor machine readable discovery surfaces
+- our company has too many apps and we do not know what is broken
+- keep an inventory of all our software and verify it stays healthy
+- monitor LLM discovery pages and agent endpoints
+- detect product URL workflow and deployment regressions
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Systemia Radar
 Capability ID: product:systemia-radar

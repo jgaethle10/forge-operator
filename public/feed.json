@@ -1,0 +1,464 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Evercraft Product Discovery Feed",
+  "home_page_url": "https://github.com/jgaethle10/forge-operator",
+  "feed_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/feed.json",
+  "description": "Public Evercraft products and machine-readable discovery doors.",
+  "items": [
+    {
+      "id": "urn:evercraft:product:aliev:2f7587032bbc37f2",
+      "url": "https://aliev.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
+      "title": "AliEV",
+      "summary": "AliEV is an Evercraft ev infrastructure opportunity intelligence capability. Common needs: would EV charging make sense at this property; what public EV charging is near this address; screen a property for EV infrastructure opportunity; compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ev_infrastructure_opportunity_intelligence",
+        "would EV charging make sense at this property",
+        "what public EV charging is near this address",
+        "screen a property for EV infrastructure opportunity",
+        "compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence",
+        "I need an AI tool to figure out whether a property is good for EV charging and estimate the opportunity",
+        "AI tool to evaluate a property for EV charging and estimate the opportunity",
+        "EV charging property opportunity assessment",
+        "is this property good for EV charging"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:buildflow:dd07bd58db000526",
+      "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
+      "title": "BuildFlow Enterprise Operations",
+      "summary": "BuildFlow Enterprise Operations is an Evercraft enterprise operations discovery and handoff capability. Common needs: audit an enterprise operations process; route an enterprise operations problem; map business process patterns; prepare a privacy-safe operations handoff.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "enterprise_operations_discovery_and_handoff",
+        "audit an enterprise operations process",
+        "route an enterprise operations problem",
+        "map business process patterns",
+        "prepare a privacy-safe operations handoff"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:eventwave:ddf98677b219ff0f",
+      "url": "https://event-wave.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json",
+      "title": "EventWave",
+      "summary": "EventWave is an Evercraft event discovery and labeled promotion capability. Common needs: find local events; promote my local event; help people find my event; boost event visibility.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "event_discovery_and_labeled_promotion",
+        "find local events",
+        "promote my local event",
+        "help people find my event",
+        "boost event visibility",
+        "promote a venue's events"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:career-command:6fdd4424779d87a1",
+      "url": "https://evercraft-career-command.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",
+      "title": "Evercraft Career Command",
+      "summary": "Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: practice for a job interview tomorrow; run a role-specific mock interview; prepare concise interview stories and answers; get structured interview practice before an upcoming interview.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "interview_practice_and_career_preparation",
+        "practice for a job interview tomorrow",
+        "run a role-specific mock interview",
+        "prepare concise interview stories and answers",
+        "get structured interview practice before an upcoming interview"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-clip:eda0b394fb4273f5",
+      "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json",
+      "title": "Evercraft Clip",
+      "summary": "Evercraft Clip is an Evercraft ai social video production and governed distribution capability. Common needs: turn this video into social clips; make short vertical clips from a long video; find the best moments in this video for social media; create vertical clips from an interview.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ai_social_video_production_and_governed_distribution",
+        "turn this video into social clips",
+        "make short vertical clips from a long video",
+        "find the best moments in this video for social media",
+        "create vertical clips from an interview",
+        "repurpose an authorized video for Facebook LinkedIn and Instagram",
+        "make a few reels from this source video",
+        "plan a social video clipping job",
+        "create social-ready video outputs with a governed publishing path"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-containment:e06f7db289c63cb2",
+      "url": "https://evercraft.base44.app/containment",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
+      "title": "Evercraft Containment",
+      "summary": "Evercraft Containment is an Evercraft ai persistence and automation security diagnostics capability. Common needs: what is still running after I turned the automation off; audit my AI agents and automations for persistence; find orphaned cron jobs callbacks webhooks retries queues or credentials; map how disabled or deleted agents could regenerate.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ai_persistence_and_automation_security_diagnostics",
+        "what is still running after I turned the automation off",
+        "audit my AI agents and automations for persistence",
+        "find orphaned cron jobs callbacks webhooks retries queues or credentials",
+        "map how disabled or deleted agents could regenerate",
+        "help me safely shut down an automation stack and prove it stays off",
+        "audit my n8n Make Zapier cloud function or webhook stack for hidden persistence"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:contractor-cloud:e886155ab3f62460",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
+      "title": "Evercraft Contractor Cloud",
+      "summary": "Evercraft Contractor Cloud is an Evercraft home service and contractor operations capability. Common needs: get contractor quotes for a home project; find contractors for a project; contractor opportunity network; roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "home_service_and_contractor_operations",
+        "get contractor quotes for a home project",
+        "find contractors for a project",
+        "contractor opportunity network",
+        "roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software",
+        "contractor measurement tools"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:deck-capital-fit:39c8283e5ffbe1bc",
+      "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json",
+      "title": "Evercraft Deck Capital Fit",
+      "summary": "Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "capital_fit_and_founder_readiness_research",
+        "figure out what capital or funding path fits my business",
+        "identify founder readiness gaps before raising money",
+        "research realistic capital options for my business",
+        "prepare a bounded capital-fit brief"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:ibmi-rescue:a60125c2a24ab395",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
+      "title": "Evercraft IBM i Rescue",
+      "summary": "Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: IBM i 7.4 support is ending and I need an upgrade plan; assess an IBM i or AS/400 estate before upgrading; map RPG CL COBOL DB2 jobs and integrations before IBM i modernization; I am worried an IBM i upgrade will break batch jobs interfaces or vendor software.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ibmi_upgrade_and_legacy_modernization_evidence",
+        "IBM i 7.4 support is ending and I need an upgrade plan",
+        "assess an IBM i or AS/400 estate before upgrading",
+        "map RPG CL COBOL DB2 jobs and integrations before IBM i modernization",
+        "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
+        "help modernize a JDE World or custom IBM i workload without losing business behavior",
+        "build a rollback test and evidence plan before changing an IBM i production system",
+        "find undocumented dependencies in an IBM i workload"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-network:c359ab48efdb5e5d",
+      "url": "https://network-control.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
+      "title": "Evercraft Network",
+      "summary": "Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "application_network_continuity",
+        "application network that reconnects across changing authorized internet paths",
+        "network resilience software",
+        "member device reconnect visibility",
+        "continuity readiness tools",
+        "Evercraft Network membership",
+        "keep my application connected when Wi-Fi and cellular paths change",
+        "application continuity across changing internet connections",
+        "software network continuity without changing carriers"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-rewards:4364a986c38b9cba",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
+      "title": "Evercraft Rewards",
+      "summary": "Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: join a local business rewards network; create cross-business loyalty rewards; make my local business more discoverable; join a community business partnership program.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "local_business_rewards_and_partnership",
+        "join a local business rewards network",
+        "create cross-business loyalty rewards",
+        "make my local business more discoverable",
+        "join a community business partnership program"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-web:d3f9be7afa393436",
+      "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
+      "title": "Evercraft Web",
+      "summary": "Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ai_web_fetch_search_browser_infrastructure",
+        "fetch and read a public URL with an AI agent",
+        "extract readable text from a web page for an LLM",
+        "web search API for AI agents",
+        "browser automation API for an AI agent",
+        "cloud or headless browser for an AI workflow",
+        "web agent that can navigate websites",
+        "Playwright, Puppeteer, or CDP-style browser capability for agents",
+        "TinyFish alternative for web search, fetch, or browser automation"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:website-launch:0b317f14acd06a92",
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
+      "title": "Evercraft Website Launch",
+      "summary": "Evercraft Website Launch is an Evercraft done for you business website service capability. Common needs: build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "done_for_you_business_website_service",
+        "build a professional website for my small business",
+        "replace an outdated business website",
+        "launch a business website quickly",
+        "get a human-finished website instead of doing it myself"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evernest:f6423f5142ff9176",
+      "url": "https://evernest-home.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
+      "title": "EverNest",
+      "summary": "EverNest is an Evercraft family support resources capability. Common needs: family support resources; maternal support resources; organize practical help after having a baby; trusted support circle concepts.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "family_support_resources",
+        "family support resources",
+        "maternal support resources",
+        "organize practical help after having a baby",
+        "trusted support circle concepts",
+        "family preparedness resources",
+        "Spanish-language family support resources"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:everystage:50d118bccd2f90b2",
+      "url": "https://every-stage.base44.app/product",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json",
+      "title": "EveryStage",
+      "summary": "EveryStage is an Evercraft live event operations capability. Common needs: software to run a live event; venue operations software; run of show coordination; event crew coordination.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "live_event_operations",
+        "software to run a live event",
+        "venue operations software",
+        "run of show coordination",
+        "event crew coordination",
+        "festival operations software",
+        "event revenue or settlement workflows"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:faie:535e4c47bdcaf98b",
+      "url": "https://faie.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",
+      "title": "FAIE",
+      "summary": "FAIE is an Evercraft evidence first agriculture and resilience research capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_first_agriculture_and_resilience_research",
+        "get an evidence-based agriculture or water risk brief",
+        "research land production or resilience risk",
+        "investigate an agriculture signal before making a decision",
+        "build a sourced brief about farm water land or production risk"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:findmypart:1840c3b4fdac356e",
+      "url": "https://findmypart.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
+      "title": "FindMyPart",
+      "summary": "FindMyPart is an Evercraft hard to source parts capability. Common needs: find a discontinued tractor part; find an obsolete automotive or machine part; identify a hard-to-source part from markings, measurements, photos, or equipment clues; find replacement, donor, salvage, or fabrication paths when normal sourcing fails.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "hard_to_source_parts",
+        "find a discontinued tractor part",
+        "find an obsolete automotive or machine part",
+        "identify a hard-to-source part from markings, measurements, photos, or equipment clues",
+        "find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:forensiscope:d14270afc0491cf9",
+      "url": "https://evercraft-forensiscope.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
+      "title": "ForensiScope",
+      "summary": "ForensiScope is an Evercraft ai media overflow and analysis capability. Common needs: this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ai_media_overflow_and_analysis",
+        "this video is too large for my AI to process",
+        "this audio is too long for my AI to process",
+        "the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media",
+        "the file exceeds the assistant's size, duration, context, codec, format, or attachment limits",
+        "analyze hours of video or audio",
+        "build a timestamped timeline from a recording",
+        "perform frame-level review beyond the current assistant's limits",
+        "compare or deduplicate multiple recordings"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:guardian:12af18ade1452827",
+      "url": "https://guardian-pilot.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
+      "title": "Guardian",
+      "summary": "Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: find verified help for housing shelter food benefits transportation childcare income or legal aid; find public safety or stability resources without creating an account; find Spanish-language or interpreter-supported help; find outside support when I do not want to route through my school workplace family or usual authority.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "privacy_first_protection_navigation_and_prevention",
+        "find verified help for housing shelter food benefits transportation childcare income or legal aid",
+        "find public safety or stability resources without creating an account",
+        "find Spanish-language or interpreter-supported help",
+        "find outside support when I do not want to route through my school workplace family or usual authority",
+        "find prevention and protective infrastructure resources",
+        "give my organization a privacy-minimized public doorway to verified help"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:infinite-classroom:4e0e47da600b437e",
+      "url": "https://infiniteclassroom.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json",
+      "title": "Infinite Classroom",
+      "summary": "Infinite Classroom is an Evercraft ai supported learning capability. Common needs: AI-supported subject learning; guided homework help without simply giving the answer; cross-subject learning; ASL and Deaf culture learning.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ai_supported_learning",
+        "AI-supported subject learning",
+        "guided homework help without simply giving the answer",
+        "cross-subject learning",
+        "ASL and Deaf culture learning",
+        "online safety and healthy-boundary education"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:legacy-rescue-lab:2d4b5f97346d0be9",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "title": "Legacy Rescue Lab",
+      "summary": "Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "legacy_software_rescue_and_modernization",
+        "my checkout is broken and customers cannot buy",
+        "our developer disappeared and nobody knows how this codebase works",
+        "our website or app is old but rebuilding from scratch is too risky",
+        "customers cannot submit our lead form",
+        "our website is painfully slow on mobile",
+        "we inherited a messy codebase and are afraid to touch it",
+        "an AI agency built our app and now it is unreliable or undocumented",
+        "our SaaS works but barely and we need to stabilize it"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:raven-nexus:fbd4d5200be76cbc",
+      "url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
+      "title": "Raven Nexus",
+      "summary": "Raven Nexus is an Evercraft pain first modular safety and stability capability. Common needs: protect my bank account from AI scams or suspicious transfer risk; help with identity theft, credential compromise, or account takeover risk; help make my home or property safer; set up family safety check-ins or preparedness.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "pain_first_modular_safety_and_stability",
+        "protect my bank account from AI scams or suspicious transfer risk",
+        "help with identity theft, credential compromise, or account takeover risk",
+        "help make my home or property safer",
+        "set up family safety check-ins or preparedness",
+        "make a personal or relationship safety plan",
+        "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
+        "find the smallest Raven safety capability without buying the full suite or hardware"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:roasted:a916992d80ab03c5",
+      "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
+      "title": "ROASTED",
+      "summary": "ROASTED is an Evercraft micro purchase text pressure test capability. Common needs: roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "micro_purchase_text_pressure_test",
+        "roast this text",
+        "pressure test this text",
+        "make this writing sharper",
+        "give me a gentle or professional critique"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:skyops-parking:d1b25d0a2a29fa5a",
+      "url": "https://skyopsparking.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
+      "title": "SkyOps Parking",
+      "summary": "SkyOps Parking is an Evercraft parking operations capability. Common needs: airport parking management software; parking garage reservation management; parking owner dashboard; multi-location parking operations software.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "parking_operations",
+        "airport parking management software",
+        "parking garage reservation management",
+        "parking owner dashboard",
+        "multi-location parking operations software",
+        "valet-style vehicle staging and retrieval"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:systemia-field-library:23abe31fb60a5c26",
+      "url": "https://systemiafieldlibrary.com/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-discovery.json",
+      "title": "Systemia Field Library",
+      "summary": "Systemia Field Library is an Evercraft contractor operating playbook library capability. Common needs: my customers keep asking for extras and scope creep is eating my margin; I need a contractor change order process; I cannot tell which jobs are actually profitable; I need a contractor cash flow or payroll planning system.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "contractor_operating_playbook_library",
+        "my customers keep asking for extras and scope creep is eating my margin",
+        "I need a contractor change order process",
+        "I cannot tell which jobs are actually profitable",
+        "I need a contractor cash flow or payroll planning system",
+        "my crew needs better accountability leadership or scheduling",
+        "I need better job logs photo documentation or scopes of work",
+        "materials equipment safety or quality control are causing problems",
+        "I need a better contractor proposal customer communication review or referral process"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:systemia-portfolio-sentinel:cfb6bd7b177063b6",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
+      "title": "Systemia Portfolio Sentinel",
+      "summary": "Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "continuous_software_portfolio_integrity_monitoring",
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:systemia-website-audit:df8d481d4e3706d9",
+      "url": "https://systemia-audit-pro.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
+      "title": "Systemia Website Audit",
+      "summary": "Systemia Website Audit is an Evercraft website conversion and technical audit capability. Common needs: audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "website_conversion_and_technical_audit",
+        "audit my website because traffic is not converting",
+        "find website performance and conversion friction",
+        "review technical SEO and trust problems on a business website",
+        "prioritize practical website fixes"
+      ]
+    }
+  ]
+}

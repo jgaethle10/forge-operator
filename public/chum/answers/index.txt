@@ -6,10 +6,10 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 96
+Pain-index entries: 97
 Unique user phrases: 729
-Candidate edges: 788
-Ambiguous phrases: 59
+Candidate edges: 804
+Ambiguous phrases: 75
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -122,6 +122,7 @@ Human-readable match: /chum/answers/doors/ai-product-portfolio-watchdog-aa813adc
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## AI scam draining my bank account
 Answer ID: intent:5ee1d51386
@@ -1004,6 +1005,7 @@ Human-readable match: /chum/answers/doors/continuous-software-estate-audit-d4aac
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## continuously audit all of our apps repositories and public URLs
 Answer ID: intent:e7a5b5df9a
@@ -1011,6 +1013,7 @@ Human-readable match: /chum/answers/doors/continuously-audit-all-of-our-apps-rep
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## contractor cash flow payroll timing or receivables are causing stress
 Answer ID: intent:c9c2d9c21a
@@ -1187,6 +1190,7 @@ Human-readable match: /chum/answers/doors/detect-broken-deployments-and-stale-wo
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## detect product URL workflow and deployment regressions
 Answer ID: intent:e97f52aaf2
@@ -1194,6 +1198,7 @@ Human-readable match: /chum/answers/doors/detect-product-url-workflow-and-deploy
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## developer disappeared
 Answer ID: intent:1c8013717d
@@ -1694,6 +1699,7 @@ Human-readable match: /chum/answers/doors/find-drift-across-our-apps-apis-workfl
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## find duplicate or near-duplicate video segments
 Answer ID: intent:684e2ea51b
@@ -2574,6 +2580,7 @@ Human-readable match: /chum/answers/doors/keep-an-inventory-of-all-our-software-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## keep my application connected when networks change
 Answer ID: intent:fb6ce2df55
@@ -2993,6 +3000,7 @@ Human-readable match: /chum/answers/doors/monitor-llm-discovery-pages-and-agent-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## monitor machine readable discovery surfaces
 Answer ID: intent:34c97933ea
@@ -3000,6 +3008,7 @@ Human-readable match: /chum/answers/doors/monitor-machine-readable-discovery-sur
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## monitor my software portfolio for broken products
 Answer ID: intent:cf2df3fbbf
@@ -3007,6 +3016,7 @@ Human-readable match: /chum/answers/doors/monitor-my-software-portfolio-for-brok
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## monitor my website with weekly rescans
 Answer ID: intent:1af81f61a0
@@ -3127,6 +3137,7 @@ Human-readable match: /chum/answers/doors/open-repair-work-automatically-when-so
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## organize a business networking circle
 Answer ID: intent:1486d2ce74
@@ -3184,6 +3195,7 @@ Human-readable match: /chum/answers/doors/our-company-has-too-many-apps-and-we-d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## our developer disappeared and nobody knows how this codebase works
 Answer ID: intent:8ef4b1465c
@@ -4279,6 +4291,7 @@ Human-readable match: /chum/answers/doors/software-estate-integrity-monitoring-a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## software network continuity without changing carriers
 Answer ID: intent:75e206686c
@@ -4293,6 +4306,7 @@ Human-readable match: /chum/answers/doors/software-portfolio-health-monitoring-a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## software to run a live event
 Answer ID: intent:daac202f9b
@@ -4476,6 +4490,7 @@ Human-readable match: /chum/answers/doors/tell-me-when-one-of-our-software-produ
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## test a physics prediction before seeing the answer
 Answer ID: intent:bc616bd04d
@@ -4859,6 +4874,7 @@ Human-readable match: /chum/answers/doors/watch-github-actions-and-public-produc
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## water risk
 Answer ID: intent:88c4b4b3ef

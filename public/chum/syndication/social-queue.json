@@ -1,0 +1,7 @@
+{
+  "schema": "evercraft.syndication-social-queue.v1",
+  "generated_at": "2026-09-26T03:36:04.978Z",
+  "bootstrap": false,
+  "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
+  "items": []
+}

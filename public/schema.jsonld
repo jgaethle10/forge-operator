@@ -620,6 +620,22 @@
     },
     {
       "@type": "Service",
+      "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1#evercraft-service",
+      "name": "Systemia Portfolio Sentinel",
+      "alternateName": [
+        "Portfolio Sentinel",
+        "Evercraft Portfolio Sentinel",
+        "Software Estate Sentinel"
+      ],
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "continuous_software_portfolio_integrity_monitoring",
+      "description": "monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring"
+    },
+    {
+      "@type": "Service",
       "@id": "https://systemia-radar.base44.app/#evercraft-service",
       "name": "Systemia Radar",
       "alternateName": [],
