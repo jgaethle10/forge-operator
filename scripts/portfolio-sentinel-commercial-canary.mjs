@@ -109,6 +109,34 @@ for (const intent of PROBES) {
   checks.push({ kind: 'mcp_match_offer', status: response.status, content_type: response.headers.get('content-type'), contains_sentinel: true });
 }
 
+{
+  const rpc = {
+    jsonrpc: '2.0',
+    id: 2,
+    method: 'tools/call',
+    params: {
+      name: 'prepare_portfolio_sentinel_pilot_handoff',
+      arguments: {
+        source: 'portfolio-sentinel-commercial-canary'
+      }
+    }
+  };
+  const { response, text } = await read(MCP, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'accept': 'application/json, text/event-stream'
+    },
+    body: JSON.stringify(rpc)
+  });
+  ensure(response.ok, `Sentinel MCP handoff returned HTTP ${response.status}`);
+  ensure(text.includes(PUBLIC_ID) && text.includes('handoff_url'), 'Sentinel MCP handoff is missing product or review URL');
+  ensure(text.includes('"payment_obligation_created": false') || text.includes('\\\"payment_obligation_created\\\": false'), 'Sentinel handoff did not prove zero payment obligation');
+  ensure(text.includes('"monitoring_started": false') || text.includes('\\\"monitoring_started\\\": false'), 'Sentinel handoff did not prove monitoring remains stopped');
+  ensure(text.includes('"repository_access_granted": false') || text.includes('\\\"repository_access_granted\\\": false'), 'Sentinel handoff did not prove repository access remains ungranted');
+  checks.push({ kind: 'mcp_pilot_handoff', status: response.status, content_type: response.headers.get('content-type'), safe_handoff_verified: true });
+}
+
 for (const file of [
   'public/.well-known/evercraft-products.json',
   'public/.well-known/evercraft-machine-catalog.json',
