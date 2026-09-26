@@ -21,7 +21,7 @@
       "machine_state": "specialist_mcp_declared",
       "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
       "pain_page": "/chum/products/evercraft-clip/",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-clip",
       "direct_mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
       "machine_review_url": null,
       "machine_offer_url": null,

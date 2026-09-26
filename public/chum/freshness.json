@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:36:07.913Z",
+  "updated_at": "2026-09-26T03:38:10.646Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,292 +11,392 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 100
     },
     {
-      "path": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/products/evercraft-clip/",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 94
     },
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/products/evercraft-clip/ai-conformance.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 94
     },
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/products/evercraft-clip/ai-discovery.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 94
     },
     {
-      "path": "/chum/products/systemia-portfolio-sentinel/llms.txt",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/chum/products/evercraft-clip/llms.txt",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/ai-conformance.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/llms.txt",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 94
     },
     {
       "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 90
     },
     {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 86
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 88
     },
     {
-      "path": "/llms.txt",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 86
     },
     {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 84
     },
     {
       "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 84
     },
     {
-      "path": "/chum/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 80
     },
     {
       "path": "/chum/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 80
     },
     {
       "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 80
     },
     {
       "path": "/chum/syndication/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 80
     },
     {
       "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 80
     },
     {
-      "path": "/ai-discovery.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 60
-    },
-    {
       "path": "/feed.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 60
     },
     {
       "path": "/feed.xml",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 60
-    },
-    {
-      "path": "/opensearch.xml",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "last_changed": "2026-09-26T03:38:10.646Z",
       "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "url": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "url": "/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "url": "/chum/answers/doors/create-vertical-clips-from-an-interview-581ed49621.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "url": "/chum/answers/doors/find-the-best-moments-in-this-video-for-social-media-8376f76e39.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "url": "/chum/answers/doors/make-a-few-reels-from-this-source-video-42a0ecd903.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "url": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "url": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "url": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "url": "/chum/answers/doors/repurpose-an-authorized-video-for-facebook-linkedin-and-instagram-c491148baf.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "url": "/chum/answers/doors/repurpose-this-video-for-facebook-linkedin-and-instagram-44b4fb615e.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "url": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "url": "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json",
+      "url": "/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "url": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/evercraft-clip/",
+      "url": "/chum/products/evercraft-clip/",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/ai-conformance.json",
+      "url": "/chum/products/evercraft-clip/ai-conformance.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/ai-discovery.json",
+      "url": "/chum/products/evercraft-clip/ai-discovery.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-clip/llms.txt",
+      "url": "/chum/products/evercraft-clip/llms.txt",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/",
+      "url": "/chum/products/legacy-rescue-lab/",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/ai-conformance.json",
+      "url": "/chum/products/legacy-rescue-lab/ai-conformance.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "url": "/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/legacy-rescue-lab/llms.txt",
+      "url": "/chum/products/legacy-rescue-lab/llms.txt",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-09-26T03:38:10.646Z",
+      "priority": 60
+    },
     {
       "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
       "url": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
@@ -514,38 +614,14 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 86
-    },
-    {
       "path": "/llms.txt",
       "url": "/llms.txt",
       "last_changed": "2026-09-26T03:36:07.913Z",
       "priority": 86
     },
     {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 84
-    },
-    {
       "path": "/.well-known/evercraft-discovery.json",
       "url": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
       "last_changed": "2026-09-26T03:36:07.913Z",
       "priority": 84
     },
@@ -562,32 +638,8 @@
       "priority": 80
     },
     {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/answers/index.txt",
       "url": "/chum/answers/index.txt",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
       "last_changed": "2026-09-26T03:36:07.913Z",
       "priority": 80
     },
@@ -598,32 +650,8 @@
       "priority": 80
     },
     {
-      "path": "/chum/syndication/",
-      "url": "/chum/syndication/",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 80
-    },
-    {
       "path": "/ai-discovery.json",
       "url": "/ai-discovery.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-09-26T03:36:07.913Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
       "last_changed": "2026-09-26T03:36:07.913Z",
       "priority": 60
     },
@@ -656,12 +684,6 @@
       "url": "/chum/strike/index.json",
       "last_changed": "2026-09-26T03:34:32.633Z",
       "priority": 80
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-26T03:34:14.324Z",
-      "priority": 88
     },
     {
       "path": "/chum/products/ibmi-rescue/llms.txt",
@@ -1662,138 +1684,6 @@
     {
       "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
       "url": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "url": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "url": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
-      "url": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-property-opportunity-assessment-a113925b8a.json",
-      "url": "/chum/answers/doors/ev-charging-property-opportunity-assessment-a113925b8a.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "url": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "url": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-ce5de7047c.json",
-      "url": "/chum/answers/doors/ev-charging-site-ce5de7047c.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
-      "url": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json",
-      "url": "/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
-      "url": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "url": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/event-crew-coordination-6ba6b17829.json",
-      "url": "/chum/answers/doors/event-crew-coordination-6ba6b17829.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/event-revenue-or-settlement-workflows-d80538da98.json",
-      "url": "/chum/answers/doors/event-revenue-or-settlement-workflows-d80538da98.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "url": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
-      "url": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
-      "url": "/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
-      "url": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/explore-global-public-health-data-with-sources-9a4c719029.json",
-      "url": "/chum/answers/doors/explore-global-public-health-data-with-sources-9a4c719029.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46.json",
-      "url": "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/explore-space-missions-and-observatories-with-evidence-838794817f.json",
-      "url": "/chum/answers/doors/explore-space-missions-and-observatories-with-evidence-838794817f.json",
-      "last_changed": "2026-09-26T03:20:55.613Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/explore-wastewater-or-genomic-surveillance-f9c0c21366.json",
-      "url": "/chum/answers/doors/explore-wastewater-or-genomic-surveillance-f9c0c21366.json",
       "last_changed": "2026-09-26T03:20:55.613Z",
       "priority": 160
     }

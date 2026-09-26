@@ -47,9 +47,22 @@
     "payment_state": "Product offer is published for discovery and human handoff. Product-specific direct checkout and paid state remain receipt-gated until independently verified."
   },
   "developer_surfaces": null,
-  "editorial_surfaces": null,
-  "knowledge_surfaces": null,
-  "distribution_surfaces": null,
+  "editorial_surfaces": {
+    "hub": "/legacy-rescue-lab/editorial/",
+    "rss": "/legacy-rescue-lab/editorial/feed.xml",
+    "journal_article": "https://evercraftjournal.base44.app/journal/save-the-software-before-you-rebuild-it",
+    "journal_guide": "https://evercraftjournal.base44.app/guides/software-rescue-before-rebuild"
+  },
+  "knowledge_surfaces": {
+    "hub": "/legacy-rescue-lab/",
+    "llms": "/legacy-rescue-lab/llms.txt",
+    "discovery": "/legacy-rescue-lab/discovery.json",
+    "answer_graph": "/chum/answers/"
+  },
+  "distribution_surfaces": {
+    "hub": "/legacy-rescue-lab/distribution/",
+    "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
+  },
   "relationships": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,

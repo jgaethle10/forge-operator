@@ -40,6 +40,127 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:callproof-vault:671b133f5b4608b3",
+      "url": "https://call-proof-vault.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/ai-discovery.json",
+      "title": "CallProof Vault",
+      "summary": "CallProof Vault is an Evercraft unwanted call and text evidence organization capability. Common needs: organize my robocall evidence; make an FCC complaint packet; help me document spam calls; prepare my FTC call evidence.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "unwanted_call_and_text_evidence_organization",
+        "organize my robocall evidence",
+        "make an FCC complaint packet",
+        "help me document spam calls",
+        "prepare my FTC call evidence",
+        "track repeated unwanted calls or texts",
+        "build a factual unwanted-call incident timeline"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:christmas-lights-usa:a52fa93223db53bb",
+      "url": "https://christmas-lights-usa-38c82eb8.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json",
+      "title": "Christmas Lights USA",
+      "summary": "Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "holiday_lighting_marketplace_and_project_planning",
+        "estimate a professional Christmas light project",
+        "find holiday light installers near me",
+        "submit a Christmas light installation request",
+        "join a holiday lighting installer marketplace",
+        "buy a Christmas light installation lead",
+        "plan professional holiday lighting for my property"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:chronosport:008dbcab5ec75019",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/chronosport/ai-discovery.json",
+      "title": "Chronosport",
+      "summary": "Chronosport is an Evercraft provenance first sports history and fair play archive capability. Common needs: research sports history with sources; find a historical sports event; trace teams athletes seasons venues and results; study how sports rules changed over time.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "provenance_first_sports_history_and_fair_play_archive",
+        "research sports history with sources",
+        "find a historical sports event",
+        "trace teams athletes seasons venues and results",
+        "study how sports rules changed over time",
+        "audit the source trail behind a sports result",
+        "explore fair play or officiating evidence without unsupported accusations"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:coda-y-codigo:c7cafd4ce7bbc653",
+      "url": "https://codaycodigo.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/ai-discovery.json",
+      "title": "Coda y Código",
+      "summary": "Coda y Código is an Evercraft multilingual frontline workforce training capability. Common needs: bilingual workforce training for frontline employees; Spanish and English job training for a crew; freight operations workforce training; bilingual field supervisor training.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "multilingual_frontline_workforce_training",
+        "bilingual workforce training for frontline employees",
+        "Spanish and English job training for a crew",
+        "freight operations workforce training",
+        "bilingual field supervisor training",
+        "warehouse or dock team training",
+        "buy workforce training seats for my company",
+        "verify a Coda y Código training completion record"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:daytrade-lens:5a0556429f8cd9e9",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/daytrade-lens/ai-discovery.json",
+      "title": "DayTrade Lens",
+      "summary": "DayTrade Lens is an Evercraft paper trading risk discipline and journaling capability. Common needs: practice day trading without risking real money; paper trade before using real capital; build better trading risk discipline; journal and review my trades.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "paper_trading_risk_discipline_and_journaling",
+        "practice day trading without risking real money",
+        "paper trade before using real capital",
+        "build better trading risk discipline",
+        "journal and review my trades",
+        "review whether I am revenge trading or tilting",
+        "practice position sizing and setup quality",
+        "find a trading journal with behavioral coaching"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:ecoledger:55ed80e629dbeee9",
+      "url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-discovery.json",
+      "title": "EcoLedger",
+      "summary": "EcoLedger is an Evercraft ecological restoration evidence ledger capability. Common needs: organize an ecological restoration project; track restoration baselines photos and measurements; build an evidence record for habitat restoration work; review ecological restoration project progress.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "ecological_restoration_evidence_ledger",
+        "organize an ecological restoration project",
+        "track restoration baselines photos and measurements",
+        "build an evidence record for habitat restoration work",
+        "review ecological restoration project progress",
+        "keep restoration observations and review status together",
+        "explore an ecological restoration evidence library"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:eps-estimate-engine:e8cc08c323a0ef52",
+      "url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
+      "title": "EPS Field-Service Estimate Engine",
+      "summary": "EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "contractor_estimate_and_margin_modeling",
+        "estimate this service job",
+        "build a contractor estimate from this scope",
+        "what should this job cost",
+        "turn these measurements into an estimate",
+        "give me a rough customer range",
+        "calculate margin and price for this job"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:eventwave:ddf98677b219ff0f",
       "url": "https://event-wave.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json",
@@ -71,7 +192,24 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evercraft-clip:eda0b394fb4273f5",
+      "id": "urn:evercraft:product:evercraft-circles:4b927f30fcedd982",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-circles/ai-discovery.json",
+      "title": "Evercraft Circles",
+      "summary": "Evercraft Circles is an Evercraft trusted professional network and referral roster capability. Common needs: build a trusted professional referral network; organize a business networking circle; find a trusted professional through relationship paths; build a professional roster instead of a social feed.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "trusted_professional_network_and_referral_roster",
+        "build a trusted professional referral network",
+        "organize a business networking circle",
+        "find a trusted professional through relationship paths",
+        "build a professional roster instead of a social feed",
+        "track referrals and professional introductions",
+        "join a founding professional networking beta"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-clip:1b596a6dfc0ab50c",
       "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json",
       "title": "Evercraft Clip",
@@ -123,6 +261,23 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:evercraft-cosmos-atlas:dd81f1bf62e16ae9",
+      "url": "https://evercraft-cosmos-atlas.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
+      "title": "Evercraft Cosmos Atlas",
+      "summary": "Evercraft Cosmos Atlas is an Evercraft evidence led astronomy and space learning capability. Common needs: learn astronomy with sources; study planets stars galaxies and black holes; understand how astronomers know what they know; explore space missions and observatories with evidence.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_led_astronomy_and_space_learning",
+        "learn astronomy with sources",
+        "study planets stars galaxies and black holes",
+        "understand how astronomers know what they know",
+        "explore space missions and observatories with evidence",
+        "learn how signals become astronomical inferences",
+        "study planetary defense or cosmic motion"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:deck-capital-fit:39c8283e5ffbe1bc",
       "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json",
@@ -135,6 +290,40 @@
         "identify founder readiness gaps before raising money",
         "research realistic capital options for my business",
         "prepare a bounded capital-fit brief"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-fantasy-intelligence:d1fd70fddd202143",
+      "url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
+      "title": "Evercraft Fantasy Intelligence",
+      "summary": "Evercraft Fantasy Intelligence is an Evercraft fantasy football decision intelligence capability. Common needs: fantasy football start sit help; fantasy waiver decision; fantasy lineup decision; fantasy injury impact.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "fantasy_football_decision_intelligence",
+        "fantasy football start sit help",
+        "fantasy waiver decision",
+        "fantasy lineup decision",
+        "fantasy injury impact",
+        "game-day fantasy brief"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-global-health-atlas:40f78aac0ac61c73",
+      "url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json",
+      "title": "Evercraft Global Health Atlas",
+      "summary": "Evercraft Global Health Atlas is an Evercraft evidence labeled public health intelligence atlas capability. Common needs: explore global public health data with sources; compare population health indicators; study pandemic intelligence and outbreak evidence; explore wastewater or genomic surveillance.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_labeled_public_health_intelligence_atlas",
+        "explore global public health data with sources",
+        "compare population health indicators",
+        "study pandemic intelligence and outbreak evidence",
+        "explore wastewater or genomic surveillance",
+        "study One Health signals",
+        "research disease evidence with uncertainty attached",
+        "find public health data blind spots"
       ]
     },
     {
@@ -172,6 +361,42 @@
         "keep my application connected when Wi-Fi and cellular paths change",
         "application continuity across changing internet connections",
         "software network continuity without changing carriers"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-physics-atlas:2e49fc83f75c3d72",
+      "url": "https://evercraft-physics-atlas.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-discovery.json",
+      "title": "Evercraft Physics Atlas",
+      "summary": "Evercraft Physics Atlas is an Evercraft evidence led physics learning capability. Common needs: learn physics interactively; study mechanics gravity or thermodynamics; learn electromagnetism waves or optics; explore relativity quantum nuclear or particle physics.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_led_physics_learning",
+        "learn physics interactively",
+        "study mechanics gravity or thermodynamics",
+        "learn electromagnetism waves or optics",
+        "explore relativity quantum nuclear or particle physics",
+        "test a physics prediction before seeing the answer",
+        "connect physical models to evidence"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-property-services:f697ccf244755762",
+      "url": "https://evercraftpropertyservices.com/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json",
+      "title": "Evercraft Property Services",
+      "summary": "Evercraft Property Services is an Evercraft local property services and estimate intake capability. Common needs: yard cleanup in the Yakima Valley; lawn care or recurring property maintenance; trimming or pruning; landscaping refresh.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "local_property_services_and_estimate_intake",
+        "yard cleanup in the Yakima Valley",
+        "lawn care or recurring property maintenance",
+        "trimming or pruning",
+        "landscaping refresh",
+        "sprinkler repair startup or seasonal blowout",
+        "property cleanout or debris removal",
+        "rental turnover property support",
+        "get a property service estimate in Central Washington"
       ]
     },
     {
@@ -221,6 +446,39 @@
         "replace an outdated business website",
         "launch a business website quickly",
         "get a human-finished website instead of doing it myself"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-wildlife-atlas:4b09b4f72fd3bb9c",
+      "url": "https://wildlife-atlas.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
+      "title": "Evercraft Wildlife Atlas",
+      "summary": "Evercraft Wildlife Atlas is an Evercraft evidence first wildlife ecology learning capability. Common needs: learn about a wildlife species with sources; compare habitats migration and conservation evidence; study ecological relationships and food webs; explore wildlife conservation with uncertainty attached.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_first_wildlife_ecology_learning",
+        "learn about a wildlife species with sources",
+        "compare habitats migration and conservation evidence",
+        "study ecological relationships and food webs",
+        "explore wildlife conservation with uncertainty attached",
+        "find evidence-backed information about wolves whales salmon birds or other species"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evermaps:9bf37832497e4653",
+      "url": "https://evermaps.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json",
+      "title": "EverMaps",
+      "summary": "EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "public_safe_geospatial_evidence_projection",
+        "map this evidence for me",
+        "show lifeline coverage for this place",
+        "give me map-ready heat or smoke action sites",
+        "show historical river geometry",
+        "return public-safe geospatial evidence",
+        "plot verified infrastructure coverage"
       ]
     },
     {
@@ -307,6 +565,40 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:global-energy-atlas:854362691c81125e",
+      "url": "https://energy-atlas.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/ai-discovery.json",
+      "title": "Global Energy Atlas",
+      "summary": "Global Energy Atlas is an Evercraft evidence first energy systems education capability. Common needs: compare electricity mixes between regions; learn how an energy system works; compare energy flows and grid systems; study historical changes in electricity generation.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_first_energy_systems_education",
+        "compare electricity mixes between regions",
+        "learn how an energy system works",
+        "compare energy flows and grid systems",
+        "study historical changes in electricity generation",
+        "show sourced energy data and provenance",
+        "teach me about regional power systems"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:globalstat:cdc1995f5f3e6b75",
+      "url": "https://global-stat-pulse.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json",
+      "title": "GlobalStat",
+      "summary": "GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "country_comparison_and_evidence_intelligence",
+        "compare these countries on this metric",
+        "give me sourced country intelligence",
+        "which countries lead on this domain and why",
+        "show me the evidence behind this country score",
+        "reconcile conflicting country data",
+        "country benchmark with sources"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:guardian:12af18ade1452827",
       "url": "https://guardian-pilot.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
@@ -340,7 +632,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:legacy-rescue-lab:2d4b5f97346d0be9",
+      "id": "urn:evercraft:product:legacy-rescue-lab:32a05c864aff5d86",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
       "title": "Legacy Rescue Lab",
@@ -356,6 +648,22 @@
         "we inherited a messy codebase and are afraid to touch it",
         "an AI agency built our app and now it is unreliable or undocumented",
         "our SaaS works but barely and we need to stabilize it"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:little-red-book-export-qa:41790c3c11ab59a2",
+      "url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",
+      "title": "Little Red Studio Book Export QA",
+      "summary": "Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "book_export_preflight_and_cover_geometry_qa",
+        "check if my book is ready for KDP",
+        "validate my cover dimensions",
+        "audit this paperback export",
+        "is my book file ready to publish",
+        "check page count and cover DPI"
       ]
     },
     {
@@ -408,6 +716,56 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:space-dudz:7140044e6ebfa24d",
+      "url": "https://space-dudz.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/ai-discovery.json",
+      "title": "Space Dudz",
+      "summary": "Space Dudz is an Evercraft retro space streetwear storefront capability. Common needs: shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "retro_space_streetwear_storefront",
+        "shop retro space streetwear",
+        "find psychedelic space graphic tees",
+        "buy space hoodies or apparel",
+        "shop space gifts and accessories",
+        "find kids space clothes from Baby-Rangers"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:systemia-atlas-freight:6bfe2dc835668f6e",
+      "url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-discovery.json",
+      "title": "Systemia Atlas Freight Load Exception Intelligence",
+      "summary": "Systemia Atlas Freight Load Exception Intelligence is an Evercraft freight load exception and document intelligence capability. Common needs: what is wrong with this load; audit this freight load for exceptions; check this carrier and load paperwork; find missing POD or rate mismatches.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "freight_load_exception_and_document_intelligence",
+        "what is wrong with this load",
+        "audit this freight load for exceptions",
+        "check this carrier and load paperwork",
+        "find missing POD or rate mismatches",
+        "summarize freight risk on this shipment",
+        "what recoverable charges or detention issues exist"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:systemia-decision-lab:ce2cb23db8bcd968",
+      "url": "https://systemiadecisionlab.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/ai-discovery.json",
+      "title": "Systemia Decision Lab",
+      "summary": "Systemia Decision Lab is an Evercraft owner workforce decision intelligence capability. Common needs: should I hire an employee; hire vs outsource; hire vs automate; should I promote or restructure instead of hiring.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "owner_workforce_decision_intelligence",
+        "should I hire an employee",
+        "hire vs outsource",
+        "hire vs automate",
+        "should I promote or restructure instead of hiring",
+        "what role actually solves this business problem",
+        "compare the real cost of hiring before adding payroll"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:systemia-field-library:23abe31fb60a5c26",
       "url": "https://systemiafieldlibrary.com/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-discovery.json",
@@ -446,6 +804,23 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:systemia-radar:df0b52267481445c",
+      "url": "https://systemia-radar.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json",
+      "title": "Systemia Radar",
+      "summary": "Systemia Radar is an Evercraft website scan competitor monitoring and reporting capability. Common needs: scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "website_scan_competitor_monitoring_and_reporting",
+        "scan my website for problems",
+        "compare my website against competitors",
+        "show where my competitors are beating my website",
+        "create a website competitor comparison report",
+        "monitor my website with weekly rescans",
+        "track website audit changes over time"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:systemia-website-audit:df8d481d4e3706d9",
       "url": "https://systemia-audit-pro.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
@@ -458,6 +833,72 @@
         "find website performance and conversion friction",
         "review technical SEO and trust problems on a business website",
         "prioritize practical website fixes"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:talent-atlas:779fa476e46deac2",
+      "url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/ai-discovery.json",
+      "title": "Talent Atlas",
+      "summary": "Talent Atlas is an Evercraft evidence backed talent profile and opportunity mapping capability. Common needs: evaluate this candidate from the evidence; build a talent profile from this portfolio; what roles fit this person's demonstrated skills; find gaps in this candidate's proof.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_backed_talent_profile_and_opportunity_mapping",
+        "evaluate this candidate from the evidence",
+        "build a talent profile from this portfolio",
+        "what roles fit this person's demonstrated skills",
+        "find gaps in this candidate's proof",
+        "turn this athlete or creator evidence into an opportunity dossier",
+        "map this person's capabilities to opportunities"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:forensic-record:1dbaa5c21cc56a7a",
+      "url": "https://filescompanion.com/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensic-record/ai-discovery.json",
+      "title": "The Forensic Record",
+      "summary": "The Forensic Record is an Evercraft source linked public record research archive capability. Common needs: search source-linked Epstein court records; verify an Epstein-related claim against public records; trace a name place or document through Epstein-related records; study the legal process in Epstein-related public records.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "source_linked_public_record_research_archive",
+        "search source-linked Epstein court records",
+        "verify an Epstein-related claim against public records",
+        "trace a name place or document through Epstein-related records",
+        "study the legal process in Epstein-related public records",
+        "review source-linked survivor or witness testimony",
+        "separate documented evidence allegations and commentary in Epstein records"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:thoughtdrop:37ef5fc88bd5cf17",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/thoughtdrop",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/thoughtdrop/ai-discovery.json",
+      "title": "Thoughtdrop by Evercraft",
+      "summary": "Thoughtdrop by Evercraft is an Evercraft anonymous inbox and micro purchase reveal capability. Common needs: create an anonymous inbox; let friends send anonymous messages; reveal an anonymous message; make an anonymous feedback profile.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "anonymous_inbox_and_micro_purchase_reveal",
+        "create an anonymous inbox",
+        "let friends send anonymous messages",
+        "reveal an anonymous message",
+        "make an anonymous feedback profile"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:towi-research:02233744de7f7bf6",
+      "url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-discovery.json",
+      "title": "TOWI Evidence-Controlled Research Brief",
+      "summary": "TOWI Evidence-Controlled Research Brief is an Evercraft evidence controlled research and validation capability. Common needs: research this question with sources; build me an evidence brief; validate this claim independently; make me a decision grade research report.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "evidence_controlled_research_and_validation",
+        "research this question with sources",
+        "build me an evidence brief",
+        "validate this claim independently",
+        "make me a decision grade research report",
+        "map the evidence for this issue",
+        "give me a sourced validation memo"
       ]
     }
   ]

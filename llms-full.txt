@@ -1133,6 +1133,7 @@ Boundaries:
 Product key: evercraft-clip
 Canonical: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-clip
 Invocation: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json
@@ -1689,6 +1690,10 @@ Product key: legacy-rescue-lab
 Aliases: Evercraft Legacy Rescue Lab, Legacy Rescue, Software Rescue, Website Rescue, App Rescue
 Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 Machine state: discovery_only
+Editorial hub: /legacy-rescue-lab/editorial/
+Editorial RSS: /legacy-rescue-lab/editorial/feed.xml
+Knowledge mesh: /legacy-rescue-lab/
+Distribution pack: /legacy-rescue-lab/distribution/
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json
 Use when the user says or means:

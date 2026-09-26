@@ -596,7 +596,7 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
-        "registry_name": null
+        "registry_name": "io.github.jgaethle10/evercraft-clip"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json",

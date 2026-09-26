@@ -2809,7 +2809,7 @@
       "inputs": null,
       "outputs": null,
       "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-clip",
       "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
       "routing": {
         "preferred": "specialist_mcp",
@@ -2835,7 +2835,8 @@
       "payment_authority": null,
       "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
       "source_refs": [
-        "public/.well-known/evercraft-products.json"
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
       ]
     },
     {

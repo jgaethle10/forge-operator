@@ -52,9 +52,22 @@
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "developer_surfaces": null,
-  "editorial_surfaces": null,
-  "knowledge_surfaces": null,
-  "distribution_surfaces": null,
+  "editorial_surfaces": {
+    "hub": "/legacy-rescue-lab/editorial/",
+    "rss": "/legacy-rescue-lab/editorial/feed.xml",
+    "journal_article": "https://evercraftjournal.base44.app/journal/save-the-software-before-you-rebuild-it",
+    "journal_guide": "https://evercraftjournal.base44.app/guides/software-rescue-before-rebuild"
+  },
+  "knowledge_surfaces": {
+    "hub": "/legacy-rescue-lab/",
+    "llms": "/legacy-rescue-lab/llms.txt",
+    "discovery": "/legacy-rescue-lab/discovery.json",
+    "answer_graph": "/chum/answers/"
+  },
+  "distribution_surfaces": {
+    "hub": "/legacy-rescue-lab/distribution/",
+    "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
+  },
   "relationships": null,
   "source": "CHUM public mirror",
   "mirror": {

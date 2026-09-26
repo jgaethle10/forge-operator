@@ -5,6 +5,10 @@ Aliases: Evercraft Legacy Rescue Lab, Legacy Rescue, Software Rescue, Website Re
 Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json
+Editorial hub: /legacy-rescue-lab/editorial/
+Editorial RSS: /legacy-rescue-lab/editorial/feed.xml
+Knowledge mesh: /legacy-rescue-lab/
+Distribution pack: /legacy-rescue-lab/distribution/
 
 ## Use this capability when the user means
 
