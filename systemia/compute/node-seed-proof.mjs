@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { startNodeSeed } from './node-seed.mjs';
+import { verifyNodeAttestation } from './device-identity.mjs';
 import { discoverCapacityBeacons } from './capacity-beacon.mjs';
 import { YardOperator } from '../yard/operator.mjs';
 
@@ -52,6 +53,24 @@ try {
   assert.equal(capacity.body.runtime, 'Evercraft Compute');
   assert.equal(capacity.body.allocation_auth, 'bearer');
   assert.deepEqual(capacity.body.placement_labels, ['ground', 'gateway']);
+
+  const nonce = 'nodeseed-placement-proof-001';
+  const attested = await raw(`${seed.endpoint}/v1/attest`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${allocatorToken}`,
+    },
+    body: JSON.stringify({ nonce }),
+  });
+  assert.equal(attested.status, 200);
+  const verifiedAttestation = verifyNodeAttestation({
+    attestation: attested.body.attestation,
+    expectedNonce: nonce,
+    expectedNodeId: 'proof-nodeseed',
+  });
+  assert.equal(verifiedAttestation.ok, true);
+  assert.deepEqual(verifiedAttestation.placement_labels, ['gateway', 'ground']);
 
   const unauthorized = await raw(`${seed.endpoint}/v1/leases`, {
     method: 'POST',
@@ -104,6 +123,7 @@ try {
     private_core_origin_created: true,
     beacon_contains_credentials: false,
     placement_labels_preserved: true,
+    placement_labels_attested: true,
     named_cloud_required: false,
   }, null, 2));
 } finally {
