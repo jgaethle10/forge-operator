@@ -223,3 +223,15 @@ Canonical library:
 https://systemiafieldlibrary.com/
 
 The MCP exposes public problem-to-playbook routing only. Paid playbook contents and PDFs remain gated.
+
+<!-- EVERCRAFT_SYNDICATION_START -->
+## Evercraft syndication and discovery feeds
+
+- RSS product feed: /feed.xml
+- JSON Feed: /feed.json
+- OpenSearch description: /opensearch.xml
+- Syndication manifest: /.well-known/evercraft-syndication.json
+- Crawlable syndication hub: /chum/syndication/
+
+These surfaces expose the same truthful product catalog in additional standard formats. Publication is not proof of third-party indexing, recommendation, citation, or social-network posting.
+<!-- EVERCRAFT_SYNDICATION_END -->
