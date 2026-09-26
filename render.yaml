@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: evercraft-public-origin
+    runtime: docker
+    branch: main
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeployTrigger: checksPass
+    renderSubdomainPolicy: enabled
+    maxShutdownDelaySeconds: 60
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PUBLIC_BASE_URL
+        fromService:
+          type: web
+          name: evercraft-public-origin
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: CHUM_PUBLIC_ORIGIN
+        fromService:
+          type: web
+          name: evercraft-public-origin
+          envVarKey: RENDER_EXTERNAL_URL
