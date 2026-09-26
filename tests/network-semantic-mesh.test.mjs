@@ -6,7 +6,8 @@ const expected=[
   'wifi-cellular-transition',
   'device-reconnect-visibility',
   'business-connectivity-resilience',
-  'household-connectivity-resilience'
+  'household-connectivity-resilience',
+  'civilian-air-relay'
 ];
 
 const mesh=JSON.parse(fs.readFileSync('public/network/mesh/index.json','utf8'));
@@ -36,6 +37,10 @@ if(!llms.includes('Shared truth boundary')) fail('mesh llms boundary missing');
 
 const rootLlms=fs.readFileSync('public/network/llms.txt','utf8');
 if(!rootLlms.includes('/network/mesh/')) fail('Network llms guide missing semantic mesh');
+if(!rootLlms.includes('/network/mesh/civilian-air-relay/')) fail('Network llms guide missing Air Relay route');
+const airHtml=fs.readFileSync('public/network/mesh/civilian-air-relay/index.html','utf8');
+if(!airHtml.includes('not field verified') && !airHtml.includes('field-unverified')) fail('Air Relay field boundary missing');
+if(!airHtml.includes('does not perform autonomous flight control')) fail('Air Relay flight-control boundary missing');
 
 const sitemap=fs.readFileSync('public/sitemap.xml','utf8');
 for(const route of ['/network/mesh/','/network/mesh/index.json','/network/mesh/llms.txt',...expected.map(s=>'/network/mesh/'+s+'/')]){
