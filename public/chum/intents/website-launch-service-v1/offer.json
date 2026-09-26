@@ -44,8 +44,8 @@
   "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
   "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=website-launch-service-v1",
-  "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
-  "start_url_state": "machine_commerce_review_fallback",
+  "start_url": "https://instant-website-builder-usa-6feac193.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=website-launch-service-v1",
+  "start_url_state": "direct_human_buyer_destination",
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "safety": {
     "fit_required": true,

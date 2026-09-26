@@ -59,8 +59,8 @@
   "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, all three bounded tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1",
   "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1",
-  "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1",
-  "start_url_state": "machine_commerce_review_fallback",
+  "start_url": "https://findmypart.base44.app/ibmi-rescue?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=ibmi-rescue-v1",
+  "start_url_state": "direct_human_buyer_destination",
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "safety": {
     "fit_required": true,

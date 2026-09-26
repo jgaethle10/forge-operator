@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T20:52:10.178Z",
+  "updated_at": "2026-09-26T20:52:14.399Z",
   "url_count": 2201,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -27,8 +27,8 @@
     },
     "/chum/revenue.html": {
       "path": "/chum/revenue.html",
-      "content_sha256": "1e5f3114e72bef98e0f499b22053d6b98f2ab381a53fdc974092bc838badee91",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "3fb151921159d96c8dda361f1a0c6582bd7b4428dd379240edcda731f5c12ea5",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 90
     },
     "/chum/capabilities/": {
@@ -39,38 +39,38 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "1509c1eb1444e8d65ec2c68c91a86acf9e82b848bccf151372d21fc891fc0d32",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "124cc55f1a7c8124c6f5ec5c407be5dbe5d52ecbd6dd86ab7b2ca12c420d4fac",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
       "path": "/chum/sell-now.html",
-      "content_sha256": "8c6629e0e9349801369db4131e04253d64c5493b8fc609580e276fd36b6af3ff",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "ba4e6eff16446795f273d7b328cc90745121e57e37dba6943c8d258b65d15266",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 92
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "d7eba74ed437524c29d4c73446ff94068ccfde2f8bc8c7f224ca1ef2b27a3cec",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "856605939dc5455133d5b625f9d5a2d77cdf3b4e8a5b1dbe5c2e1b311e20f576",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "e25d2a3dabfa2607589225265f63c7a123db469320d6a7003e5389eec295d96a",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "2a1cfdc010d497dfd580da682acb1384dc8062a49a41880f2ccbf1077b155dc9",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
       "path": "/chum/revenue.txt",
-      "content_sha256": "a08435d85db0c610c6d1277f1250ce8590b061c945bd6a513bd16ab909c908a7",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "e88982072336adf91917a92948282f1d4626abcffb9de96dbbcc860212c185b8",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 90
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "a34c56c82d8fcab5baf4848d5cb392e5856f4005f15bc9c96baffca5f65576d7",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "b0d1262e0222758fed615f1a5c4b00f451166ada269bfff7d6e32fc34c3f062a",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 90
     },
     "/chum/pain-index.json": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "5010fe4dc6f85d9967cdae59e903f5617eb28326d94bf9a8ff0d2305c2a08dc7",
-      "last_changed": "2026-09-26T20:52:10.178Z",
+      "content_sha256": "db47ebf0d3a71e752a9732dd340a3e09e36d38ccf345aac83b26f2a1c7edb49a",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -891,26 +891,26 @@
     },
     "/chum/intents/aliev-site-opportunity-snapshot-v1/": {
       "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "content_sha256": "9732e99fd0b1fa673a02fd87c70a845c0d5fb827d634541d74b9f873c0bcd976",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "f16a4009cdba9e584040b036f045612e4fa0205c5105474281053d834eacd910",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
-      "content_sha256": "8f685dd28a28f02100ba3b173cc3a16857be10827232aa457af9683628fed934",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "3f451e2c6c0df2f4c75a6cd0001aff4fba8a97e490425fe073dde8fe0c2275c1",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
-      "content_sha256": "dc5b08d4de107314f4e89623fa50e556e717e72bb15c959ed833a08aed4396c7",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "68f2d7a117b2cbc7be6fe46837dbd4d1c742226a05eeedc2bce1053e43582bd8",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "content_sha256": "f515f8ec1f136750d76a3be7530e3273d2135f258e5eff8fe0578f975a635fa4",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "8c215f3aac3c7e22cb2830ade6a64510323907c6bcc8a6af43e01678db620461",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld": {
@@ -921,26 +921,26 @@
     },
     "/chum/intents/audit-center-website-audit-machine-v1/": {
       "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "content_sha256": "1403521d648d102b728405fc08fe44a6457b1b33e813d6d58808ef234c6d0a6e",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "508d6e242fe279b122fd7361a01f0e1a6ade0d235fffa6a33c1757fae912e190",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
-      "content_sha256": "df4b0a45e69a96fbfedbd0b916500641d6784f1539bf9d78f5f61238b613b0c3",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "71c4e7d9b2a2804b8c4f74d7b6510f6a016261782915fe0747997b0b60598c05",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
-      "content_sha256": "38673d1f2db1e80753493daad19e39c6e8344b77a413e72d75f89ed56ad8d32a",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "458fb7155fa799a12f45680dd7ee403e9d386d7363c8460ea47186dac0ca6738",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "content_sha256": "191a652d41776d564d23dab256846828379a11f3c3d672115668a949f7f32cbe",
-      "last_changed": "2026-09-26T15:08:19.376Z",
+      "content_sha256": "17ec2b70ddb93080873194a94c9f7a9f22c14ad10000115ea017ce8944781537",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld": {
@@ -1191,26 +1191,26 @@
     },
     "/chum/intents/career-command-interview-practice-machine-v1/": {
       "path": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "content_sha256": "d4e274609648329fb3255bd2beffff7dbada6d6a25a00a78bdcc4d8d7be989bd",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "8b073d6374f443b46f19ac5a221cf401c8cb064c6b3f247692584aef115971ed",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/": {
       "path": "/chum/capabilities/career-command-interview-practice-machine-v1/",
-      "content_sha256": "651c2051ce072de4d8a74d5527ec4e00acb73060886b458285a593c344a1a23f",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "ba4d3860ccd8ed535882ea4ba232a3e562eeb43e565f7038b2f749fead1c7cdf",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt": {
       "path": "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
-      "content_sha256": "368b31e76fd56a3d032a218c1b5e333f400a499f475031ee6fca736488532e32",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "4b35b50b6d0ee9573524c288961dec13b371b24475cf0fc116d89906734735b3",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json": {
       "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "content_sha256": "2983c2f5a5c83ee2441c9e4ead107b661392312b7a0061ecc2832f774dff06fc",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "7779513562d4cc2aee67a99c5c989ff278cecbeb444899436af0141c40aea8b3",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/schema.jsonld": {
@@ -1401,26 +1401,26 @@
     },
     "/chum/intents/eventwave-paid-promotion-v1/": {
       "path": "/chum/intents/eventwave-paid-promotion-v1/",
-      "content_sha256": "7e7fdba1f3dc1219608523b81ab2650dd2b767f4ba0fa40f3fb7a5160fc8def8",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "4bfbdf99d3e9c96475344ce284edfcd4a8151bb3b9727ae2bd041e1d4cb0d39a",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/": {
       "path": "/chum/capabilities/eventwave-paid-promotion-v1/",
-      "content_sha256": "a152c2372cb4ef28c3990c1cb74dfdfb46cf90d34f770599870fa9f03aab8de8",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "44a71d845af525a02346c6136ce86f13de934cc65fc22a7aa042637aac5f40f0",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/llms.txt": {
       "path": "/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
-      "content_sha256": "3cb50025c1f8461a9fff4a9c825ead7b428bfb8bbb701a4aa654f1f7052c4ff1",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "26d26187217ec7c8024b0245f033cf38c0c11bc46d63d2796d5d499e15e65623",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/capability.json": {
       "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
-      "content_sha256": "9d63e6f6b8c4941487e53e82e18afc5bcd8c3f871433d5eb7754a9ef18402231",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "7e6ba2f86cde46761bfe1a0663a84cf48fbbfccb6ae3ed3e089955c896d14d39",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld": {
@@ -1551,26 +1551,26 @@
     },
     "/chum/intents/faie-signal-brief-v1/": {
       "path": "/chum/intents/faie-signal-brief-v1/",
-      "content_sha256": "91d3a3c4f927d05c4554eda443a816a62f1e0d67544686ac846e3f43f0d0c5fe",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "ff6e565fa2839c1962e8aff262cae0d1c9ada8eaff6dd4fc01b08f84f7635387",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/faie-signal-brief-v1/": {
       "path": "/chum/capabilities/faie-signal-brief-v1/",
-      "content_sha256": "09436a69eac11b3f418bbc4b949ea278ce412fb6f2b1f8ec5af7c409cbfe8d0d",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "18ebb2494f71a4ce4d60c87704011d837e5474247922d16b6618a7c29e6acdf3",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/llms.txt": {
       "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "content_sha256": "62f13508a07d2660456b52b246471de5f06404d9573ac9b858335342d502b9b0",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "660939ae962e871323e9f8202e8332d53e55bb6c39ce5b9d7c658d0814dd2281",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/capability.json": {
       "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "content_sha256": "ec58547929792ed488638ed2b516719c6f74a121e9d66bacc88d9f30401a03b2",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "295cb2fcbbe87890e7ac7976f5d20931e6fbd8926ffdb6c9591a287429afefb0",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/schema.jsonld": {
@@ -1581,26 +1581,26 @@
     },
     "/chum/intents/findmypart-paid-hunt-v1/": {
       "path": "/chum/intents/findmypart-paid-hunt-v1/",
-      "content_sha256": "31462166471df0e382d5739c299bbbbc4f06185696afe4be17812ff0b2ef3bcf",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "6a157c9e33098a0cbbe82a205c97959bbcb95a32d6e62ab44fe8e66d43347a03",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/": {
       "path": "/chum/capabilities/findmypart-paid-hunt-v1/",
-      "content_sha256": "b2d2adc4daf8a9fefcd70cf90359ae78324e89297fa39f74f780c60f549122e0",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "572e625b8118353d5a11a2a31b6c87b596ef5d924661edfe54e519fcbd150dc3",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/llms.txt": {
       "path": "/chum/capabilities/findmypart-paid-hunt-v1/llms.txt",
-      "content_sha256": "71d042f834c0175ecb9818df2f8efd284a2348620106764756230fc97fbee34f",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "4ccdf4556a6b413fc189d72a98e61d02c38ca32521ae636ac1e6122c485dee04",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/capability.json": {
       "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
-      "content_sha256": "016f768c98929c831f30afdc69a032f7c9bbad53a6831ae1db8492301309bfbb",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "dbca75308db828628ac35ac8692eb00558f460673bae7a787f7dd46d8f102b63",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld": {
@@ -1761,26 +1761,26 @@
     },
     "/chum/intents/ibmi-rescue-v1/": {
       "path": "/chum/intents/ibmi-rescue-v1/",
-      "content_sha256": "ec0569eb52feb69eded3d27637894cbe1823634d8b85e2315774166f21970220",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "56ed3944bfbbdde0df6628bea800d83d88b12a2824b5821c19c6f9d45fdc91a8",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/ibmi-rescue-v1/": {
       "path": "/chum/capabilities/ibmi-rescue-v1/",
-      "content_sha256": "3e8bbd4222a8e97fa72640d597bf0b460d58334d3ada187479e65b00464f050c",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "07d7c8b1542cbdf86f2f3bce97e6c7b0c66c991f25d782ccd0bf1f8d9cbbc742",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/llms.txt": {
       "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "content_sha256": "2c9f997dc856f530f550ca6fbbab85532ee9816b9e9699619a002c7e9125d565",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "5813f8ffaed3a6a4928b4038726db27b62b5e44b6be6553fdcafa72e11e2b653",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/capability.json": {
       "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "content_sha256": "c5ecb903e34418bb86d1da1734c407a380e34a391d50033f42ad7fe3568c157a",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "c862cdb2ab560f0a7cc2661625301a030c3b5e5e13c53e885c984164f5a3a4bc",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/schema.jsonld": {
@@ -1941,26 +1941,26 @@
     },
     "/chum/intents/rivet-site-underwriting-v1/": {
       "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "content_sha256": "abf143f055790a9edf3311f590526bfb6385f388abc948304ce0a52803a7a301",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "a666dec5b5b85c0e9930eadd14b5c6b6af2a342420918dcffc9af2b1ef9416df",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/rivet-site-underwriting-v1/": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/",
-      "content_sha256": "2629a91c1a4c0e68c0bab37a39bdb45c35e0fd02949f762dee969b9262b9c908",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "0c054eb0b010400566e2c5b09fb03450713e88cae5b828b4c4ff8f630b8b3b5e",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/llms.txt": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
-      "content_sha256": "a9b35b1121624e07b5eaeb24249f7bb89da8155fecb5fdeec197deeb24c3b21d",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "91c0a4a4925d404d599d584002f4fcb7dcda9ea6a4049ed9fcdeee4f4565e76e",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/capability.json": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "content_sha256": "b890e1861353f9dc80be59dffff53f50fd21b463b6e683e86fb24f39bb4f76f0",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "a5ea19fc750df1984a623de5f8eedda92458c24e5a53faec924558324b4d3890",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld": {
@@ -1971,26 +1971,26 @@
     },
     "/chum/intents/roasted-text-pressure-test-machine-v1/": {
       "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "content_sha256": "b412b1466cd87c455f018a56c44c74ea9b1ea878eabde3922f5aa5baf804830b",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "0969ec888932c2b2384c33ec7574701172361e3849b42025521c7fe68ad66ad9",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
-      "content_sha256": "56547e81ffab890490c627a035ccbbc8c0ce7d580a7738bd07190951a54ce841",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "1650a4097478c122abbca41498d512291ddbf3c85a1cb54c14b790da138782d8",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
-      "content_sha256": "2fe8d955ab2801c08079af3aafb543bc30dbc2d9aa89b768abd95a1ffa4c3dc1",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "6105d1418bc4c3d22c03b8d39ed114fb691616e9cd683f99624b0166b634f50f",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "content_sha256": "d3eb5d4f991580e74d77adf74a1c45a92120029d69289542a7dad68097f99634",
-      "last_changed": "2026-09-26T06:32:31.395Z",
+      "content_sha256": "757536b3222f179284e846fcf73eb5e8559532ca638c7c9387372995a09b289a",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld": {
@@ -2151,26 +2151,26 @@
     },
     "/chum/intents/website-launch-service-v1/": {
       "path": "/chum/intents/website-launch-service-v1/",
-      "content_sha256": "fa00dc216ca94935d1dd56d8a5f91d74756dc915608e701928cae4b5e57331d5",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "e9fdef834006ee7e5b6a96726044decca816e8b4a1a59de5e90a96fb186db2fc",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 98
     },
     "/chum/capabilities/website-launch-service-v1/": {
       "path": "/chum/capabilities/website-launch-service-v1/",
-      "content_sha256": "22d9f52d73b03b9ccc90de5091d06d96fb0aea8f11c0bedf1410311fc977a565",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "7956ee319d42d06d6f22208a2bf347a2866a7b4af8c18024dee51f79a5373c66",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/website-launch-service-v1/llms.txt": {
       "path": "/chum/capabilities/website-launch-service-v1/llms.txt",
-      "content_sha256": "3fcbd1328775966268d11f6f3f67c4d51c737b320ab5354701df0a7e7e78343e",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "cb85c24ac9e52727d45fc6d7dcdcaa334474133701ea326d498f01324a39653a",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/website-launch-service-v1/capability.json": {
       "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "content_sha256": "7d315d606c2feba49053d89df67c2615c3f33a8728b73b3d1038bfbad642412d",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "736e7b53c6cf69cee39b7e721495bc85c4a4fc8f42be86805dc73a9c08584a66",
+      "last_changed": "2026-09-26T20:52:14.399Z",
       "priority": 96
     },
     "/chum/capabilities/website-launch-service-v1/schema.jsonld": {

@@ -11,7 +11,7 @@ Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
 Preferred agent route: direct specialist
 Direct MCP: https://aliev.base44.app/functions/alievMcp
 Official MCP Registry name: io.github.jgaethle10/aliev
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1
+Start here: https://aliev.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=aliev-site-opportunity-snapshot-v1
 Machine state: payment_ready_human_confirmation
 Use this when:
 - is this site good for EV charging
@@ -32,7 +32,7 @@ Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?vi
 Preferred agent route: direct specialist
 Direct MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
 Official MCP Registry name: io.github.jgaethle10/systemia-website-audit
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1
+Start here: https://systemia-audit-pro.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=audit-center-website-audit-machine-v1
 Machine state: payment_ready
 Use this when:
 - why is my website not getting leads
@@ -57,7 +57,7 @@ Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGat
 Preferred agent route: direct specialist
 Direct MCP: https://evercraft-career-command.base44.app/functions/careerMcp
 Official MCP Registry name: io.github.jgaethle10/career-command
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
+Start here: https://evercraft-career-command.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=career-command-interview-practice-machine-v1
 Machine state: payment_ready
 Use this when:
 - help me prepare for this interview
@@ -96,7 +96,7 @@ Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=d
 Preferred agent route: direct specialist
 Direct MCP: https://event-wave.base44.app/functions/eventWaveMcp
 Official MCP Registry name: io.github.jgaethle10/eventwave
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1
+Start here: https://event-wave.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=eventwave-paid-promotion-v1
 Machine state: payment_ready
 Use this when:
 - promote my event on EventWave
@@ -119,7 +119,7 @@ Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
 Preferred agent route: direct specialist
 Direct MCP: https://faie.base44.app/functions/faieMcp
 Official MCP Registry name: io.github.jgaethle10/faie
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
+Start here: https://faie.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=faie-signal-brief-v1
 Machine state: payment_ready
 Use this when:
 - research this land or water question
@@ -136,7 +136,7 @@ Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=
 Preferred agent route: direct specialist
 Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
 Official MCP Registry name: io.github.jgaethle10/findmypart
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1
+Start here: https://findmypart.base44.app/?offer=quick-hunt&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=findmypart-paid-hunt-v1
 Machine state: payment_ready
 Use this when:
 - find a hard-to-source part
@@ -165,7 +165,7 @@ Capability ID: ibmi-rescue-v1
 Price: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Preferred agent route: universal fallback
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
+Start here: https://findmypart.base44.app/ibmi-rescue?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=ibmi-rescue-v1
 Machine state: human_handoff_ready
 Use this when:
 - IBM i estate assessment before changing production
@@ -189,7 +189,7 @@ Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919a
 Preferred agent route: direct specialist
 Direct MCP: https://aliev.base44.app/functions/alievMcp
 Official MCP Registry name: io.github.jgaethle10/aliev
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
+Start here: https://rivet.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=rivet-site-underwriting-v1
 Machine state: payment_ready_human_confirmation
 Use this when:
 - underwrite an EV charging site
@@ -221,7 +221,7 @@ Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roast
 Preferred agent route: direct specialist
 Direct MCP: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
 Official MCP Registry name: io.github.jgaethle10/roasted
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1
+Start here: https://get-roasted-hub.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=roasted-text-pressure-test-machine-v1
 Machine state: payment_ready
 Use this when:
 - roast this text
@@ -257,7 +257,7 @@ Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/we
 Preferred agent route: direct specialist
 Direct MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
 Official MCP Registry name: io.github.jgaethle10/website-launch
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1
+Start here: https://instant-website-builder-usa-6feac193.base44.app/?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=website-launch-service-v1
 Machine state: payment_ready
 Use this when:
 - build me a business website

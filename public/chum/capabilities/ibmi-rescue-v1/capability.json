@@ -55,8 +55,8 @@
   "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1",
-  "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1",
-  "start_url_state": "machine_commerce_review_fallback",
+  "start_url": "https://findmypart.base44.app/ibmi-rescue?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=ibmi-rescue-v1",
+  "start_url_state": "direct_human_buyer_destination",
   "entry_paid_offer": {
     "offer_key": "ibmi_estate_xray_250",
     "name": "IBM i Estate X-Ray",

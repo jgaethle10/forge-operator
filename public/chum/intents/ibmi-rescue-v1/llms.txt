@@ -5,7 +5,7 @@ Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Up
 Commercial state: sell_now
 Machine state: human_handoff_ready
 Public capability: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
+Start here: https://findmypart.base44.app/ibmi-rescue?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=ibmi-rescue-v1
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
