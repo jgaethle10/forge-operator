@@ -12,6 +12,9 @@ export function resolveTriggerModePolicy(eventName) {
       supported: false,
       require_consumer_bridge: false,
       accept_machine_only_measurement: false,
+      allow_blocked_provider_measurement: false,
+      provider_probe_scope: 'none',
+      ard_submit: false,
       broadcast_discovery: false,
       reason: 'unsupported_trigger_mode'
     };
@@ -23,6 +26,9 @@ export function resolveTriggerModePolicy(eventName) {
     supported: true,
     require_consumer_bridge: false,
     accept_machine_only_measurement: true,
+    allow_blocked_provider_measurement: event === 'push',
+    provider_probe_scope: event === 'push' ? 'rotating_single_machine_case' : 'full_suite',
+    ard_submit: event !== 'push',
     broadcast_discovery: event !== 'schedule',
     reason: event === 'schedule'
       ? 'scheduled_health_measurement_without_forcing_consumer_chat_authorization'
@@ -45,6 +51,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       `supported=${result.supported ? 'true' : 'false'}`,
       `require_consumer_bridge=${result.require_consumer_bridge ? 'true' : 'false'}`,
       `accept_machine_only_measurement=${result.accept_machine_only_measurement ? 'true' : 'false'}`,
+      `allow_blocked_provider_measurement=${result.allow_blocked_provider_measurement ? 'true' : 'false'}`,
+      `provider_probe_scope=${result.provider_probe_scope}`,
+      `ard_submit=${result.ard_submit ? 'true' : 'false'}`,
       `broadcast_discovery=${result.broadcast_discovery ? 'true' : 'false'}`
     ].join('\n') + '\n');
   }
