@@ -20,8 +20,10 @@
     "source_tree_writable": false
   },
   "supervised_workflows": [
+    "portfolio-sentinel",
     "legacy-rescue-opportunity-watch",
     "node001-field-certification-watch",
+    "remote-device-trust-watch",
     "kaidance-mission-publisher"
   ],
   "security": {
