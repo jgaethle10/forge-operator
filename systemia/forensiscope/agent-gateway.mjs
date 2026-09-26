@@ -16,7 +16,38 @@ const TOOL_SCOPES = Object.freeze({
   forensiscope_get_duplicate_relationships: 'duplicates'
 });
 
-const EVIDENCE_REF_PATTERN = '^forensiscope-evidence:sha256:[a-f0-9]{64}' + ' = Object.freeze({
+const EVIDENCE_REF_PATTERN =
+  '^forensiscope-evidence:sha256:[a-f0-9]{64}' + '$';
+const PROVENANCE_REF_PATTERN =
+  '^forensiscope-provenance:sha256:[a-f0-9]{64}' + '$';
+
+const VERIFY_TOOL = Object.freeze({
+  name: 'forensiscope_verify_analysis',
+  description:
+    'Verify a completed ForensiScope analysis provenance manifest against its immutable evidence reference without returning transcript content.',
+  inputSchema: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['evidence_ref', 'provenance_ref', 'access_token'],
+    properties: {
+      evidence_ref: {
+        type: 'string',
+        pattern: EVIDENCE_REF_PATTERN
+      },
+      provenance_ref: {
+        type: 'string',
+        pattern: PROVENANCE_REF_PATTERN
+      },
+      access_token: {
+        type: 'string',
+        minLength: 64,
+        'x-mcp-header': 'Evidence-Access'
+      }
+    }
+  }
+});
+
+const COMPARE_TOOL = Object.freeze({
   name: 'forensiscope_compare_evidence',
   description:
     'Compare two completed authorized ForensiScope evidence sets for decoded visual matches and perceptual near-matches.',
