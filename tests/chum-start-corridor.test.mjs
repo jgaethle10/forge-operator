@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  buyerFrontageUrl,
   configuredChumPublicOrigin,
   directHumanBuyerUrl,
   humanStartState,
@@ -26,14 +27,21 @@ assert.match(direct, /campaign=buyer-frontage/);
 assert.match(direct, /ec_surface=test_surface/);
 assert.match(direct, /ec_public_id=career-command-interview-practice-machine-v1/);
 
+const frontage = buyerFrontageUrl(offer, { surface: 'test_surface' });
+assert.match(frontage, /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/career-command-interview-practice-machine-v1\?/);
+assert.match(frontage, /src=chum/);
+assert.match(frontage, /campaign=buyer-frontage/);
+assert.match(frontage, /ec_surface=test_surface/);
+assert.match(frontage, /ec_public_id=career-command-interview-practice-machine-v1/);
+
 assert.equal(
-  humanStartUrl(offer, { publicOrigin: '', surface: 'test_surface' }),
-  direct,
-  'when Forge origin is unavailable, use the clean verified product buyer destination before exposing machine plumbing'
+  humanStartUrl(offer, { surface: 'test_surface' }),
+  frontage,
+  'all sell-now offers enter through the universal Evercraft buyer frontage before any downstream product or machine route'
 );
 assert.equal(
-  humanStartState(offer, { publicOrigin: '' }),
-  'direct_human_buyer_destination'
+  humanStartState(offer),
+  'universal_buyer_frontage'
 );
 
 const rivet = {
@@ -41,46 +49,44 @@ const rivet = {
   commercial_state: 'sell_now'
 };
 assert.match(
-  humanStartUrl(rivet, { publicOrigin: '' }),
-  /^https:\/\/rivet\.base44\.app\//
+  humanStartUrl(rivet, { surface: 'test_surface' }),
+  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/rivet-site-underwriting-v1\?/
 );
 
 const handoffOnly = {
   public_id: 'foundry-app-escape-audit-v1',
   commercial_state: 'sell_now'
 };
-assert.equal(
-  humanStartUrl(handoffOnly, { publicOrigin: '' }),
-  machineReviewUrl(handoffOnly.public_id),
-  'handoff-only services without a verified clean buyer app retain the human-readable Machine Commerce review page'
+assert.match(
+  humanStartUrl(handoffOnly, { surface: 'test_surface' }),
+  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/foundry-app-escape-audit-v1\?/,
+  'fixed-price human-handoff services use the same trustworthy buyer frontage instead of exposing Machine Commerce plumbing'
 );
 assert.equal(
-  humanStartState(handoffOnly, { publicOrigin: '' }),
-  'machine_commerce_review_fallback'
+  humanStartState(handoffOnly),
+  'universal_buyer_frontage'
 );
 
-const live = humanStartUrl(offer, {
-  publicOrigin: 'https://forge.evercraft.example/some/path',
-  surface: 'test_surface'
+const badFrontage = humanStartUrl(offer, {
+  surface: 'test_surface',
+  frontageOrigin: 'http://not-secure.example'
 });
 assert.equal(
-  live,
-  'https://forge.evercraft.example/api/chum/go/career-command-interview-practice-machine-v1?surface=test_surface'
-);
-assert.equal(
-  humanStartState(offer, { publicOrigin: 'https://forge.evercraft.example' }),
-  'tracked_chum_handoff_configured_origin'
+  badFrontage,
+  direct,
+  'if the universal frontage origin is invalid, the corridor still falls back to a clean product buyer destination before machine plumbing'
 );
 
 assert.equal(
-  humanStartUrl({ ...offer, commercial_state: 'discovery_only' }, { publicOrigin: 'https://forge.evercraft.example' }),
+  humanStartUrl({ ...offer, commercial_state: 'discovery_only' }),
   null
 );
 
 console.log(JSON.stringify({
   ok: true,
-  direct_human_buyer_destination: true,
-  rivet_clean_buyer_frontage: true,
-  machine_review_is_last_fallback: true,
-  tracked_corridor_requires_configured_https_origin: true
+  universal_buyer_frontage: true,
+  downstream_direct_human_buyer_destination_preserved: true,
+  rivet_universal_frontage: true,
+  fixed_price_handoff_universal_frontage: true,
+  machine_review_is_last_fallback: true
 }));
