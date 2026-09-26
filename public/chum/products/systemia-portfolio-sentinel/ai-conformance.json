@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Portfolio Sentinel",
+  "product_key": "systemia-portfolio-sentinel",
+  "aliases": [
+    "Portfolio Sentinel",
+    "Evercraft Portfolio Sentinel",
+    "Software Estate Sentinel"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "public discovery creates no access to private repositories, credentials, customer data or internal topology",
+    "customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked",
+    "findings are operational evidence and diagnostics, not a security certification, compliance attestation or uptime guarantee",
+    "production changes, payment actions and external communications remain separately gated",
+    "customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified"
+  ],
+  "commercial": {
+    "status": "commercial_pilot",
+    "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+    "offers": [
+      {
+        "offer_key": "portfolio_sentinel_commercial_pilot",
+        "name": "Systemia Portfolio Sentinel Commercial Pilot",
+        "price": "Custom quote",
+        "billing": "pilot"
+      }
+    ],
+    "payment_state": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
+    "machine_commerce_handoff": {
+      "public_id": "portfolio-sentinel-v1",
+      "tool": "get_offer",
+      "state": "discovery_live_human_onboarding"
+    }
+  },
+  "provider_behavior_state": "not_run",
+  "machine_commerce_public_id": "portfolio-sentinel-v1",
+  "machine_commerce_tool": "get_offer",
+  "live_canary_evidence": {
+    "observed_on": "2026-09-26",
+    "query": "software portfolio health monitoring",
+    "match_score": 36,
+    "result": "Systemia Portfolio Sentinel",
+    "source": "Evercraft Machine Commerce live gateway"
+  }
+}
