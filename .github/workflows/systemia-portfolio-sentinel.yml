@@ -1,0 +1,104 @@
+name: Systemia Portfolio Sentinel
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/organism/portfolio-sentinel**"
+      - "systemia/core/resident-services.json"
+      - "systemia/collider/mission-sources.json"
+      - "public/.well-known/evercraft-products.json"
+      - "public/.well-known/evercraft-capabilities.json"
+      - "package.json"
+      - ".github/workflows/**"
+  pull_request:
+    paths:
+      - "systemia/organism/portfolio-sentinel**"
+      - "systemia/core/resident-services.json"
+      - "systemia/collider/mission-sources.json"
+      - "package.json"
+      - ".github/workflows/systemia-portfolio-sentinel.yml"
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: systemia-portfolio-sentinel
+  cancel-in-progress: true
+
+jobs:
+  sentinel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Restore Sentinel state
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/portfolio-sentinel/state.json
+          key: portfolio-sentinel-state-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            portfolio-sentinel-state-${{ runner.os }}-
+
+      - name: Prove Sentinel contract
+        run: node systemia/organism/portfolio-sentinel.proof.mjs
+
+      - name: Run live portfolio integrity cycle
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PORTFOLIO_SENTINEL_GITHUB_OWNER: jgaethle10
+        run: node systemia/organism/portfolio-sentinel-runner.mjs --max-urls 24
+
+      - name: Save Sentinel state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/portfolio-sentinel/state.json
+          key: portfolio-sentinel-state-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Upload Sentinel receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-sentinel-receipts
+          path: |
+            artifacts/portfolio-sentinel/latest.json
+            artifacts/portfolio-sentinel/mission-snapshot.json
+            artifacts/portfolio-sentinel/repair-queue.json
+            artifacts/portfolio-sentinel/inventory.json
+            artifacts/portfolio-sentinel/admission.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Write Sentinel summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Systemia Portfolio Sentinel"
+            echo
+            echo "Cadence: 5 minutes"
+            echo "Coverage: products + URLs + GitHub + workflows + Systemia resident services + machine discovery"
+            echo "Production mutation: human-gated"
+            echo
+            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/repair-queue.json; do
+              if [ -f "$FILE" ]; then
+                echo "### $FILE"
+                echo '~~~json'
+                cat "$FILE"
+                echo '~~~'
+              fi
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

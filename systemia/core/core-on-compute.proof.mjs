@@ -8,6 +8,15 @@ import { YardOperator } from '../yard/operator.mjs';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+async function waitForPath(target, timeoutMs = 15000, intervalMs = 200) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (fs.existsSync(target)) return true;
+    await sleep(intervalMs);
+  }
+  return fs.existsSync(target);
+}
+
 async function freeUdpPort() {
   const socket = dgram.createSocket('udp4');
   await new Promise((resolve, reject) => {
@@ -103,7 +112,7 @@ try {
   assert.equal(core.receipt.runtime_fabric, 'Evercraft Compute');
   assert.equal(core.receipt.health_verification, 'healthy');
   assert.equal(core.receipt.route_verification, 'private_core_health_verified');
-  assert.equal(core.result.supervised_service_count, 4);
+  assert.equal(core.result.supervised_service_count, 5);
   assert.ok(core.management.receipt_binding_hash);
   assert.equal(core.discovery.selected_node_id, 'core-compute-proof-node');
   assert.ok(core.discovery.receipt_hash);
@@ -114,7 +123,7 @@ try {
   assert.equal(route.ok, true);
   assert.equal(route.state, 'healthy');
   assert.equal(route.health.running, true);
-  assert.equal(route.health.service_count, 4);
+  assert.equal(route.health.service_count, 5);
   assert.equal(route.health.failed_count, 0);
   assert.equal(route.health.held_count, 0);
   assert.equal(route.health.deployment_receipt, core.receipt.receipt_hash);
@@ -122,6 +131,10 @@ try {
   const workspace = path.join(coreRoot, 'workspace');
   assert.equal(
     fs.existsSync(path.join(workspace, 'legacy-rescue-watch', 'mission-snapshot.json')),
+    true
+  );
+  assert.equal(
+    await waitForPath(path.join(workspace, 'portfolio-sentinel', 'mission-snapshot.json')),
     true
   );
   assert.equal(
@@ -154,7 +167,7 @@ try {
     schema: 'evercraft.systemia.core-on-compute-resident-proof.v1',
     runtime: 'Evercraft Compute',
     deployment_surface: 'Yard Operator',
-    core_supervised_services: 4,
+    core_supervised_services: 5,
     private_workspace_verified: true,
     capacity_endpoint_supplied_manually: false,
     automatic_capacity_discovery_verified: true,
