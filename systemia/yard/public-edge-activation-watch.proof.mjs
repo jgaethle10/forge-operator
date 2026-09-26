@@ -117,6 +117,7 @@ try{
   assert.ok(activated.device_fingerprint);
   assert.ok(activated.edge_attestation_receipt);
   assert.ok(activated.specialist_attestation_receipt);
+  assert.ok(activated.specialist_identity_binding_receipt);
   assert.equal(activated.founder_action_required,false);
 
   const stateFile=path.join(stateDir,'public-edge-activation-watch.json');
@@ -171,6 +172,7 @@ try{
     placement_label_filtering:true,
     device_identity_attested:true,
     same_device_binding:true,
+    compute_identity_binding_receipt:true,
     controller_restart_resume:true,
     allocator_authority_persisted:false,
     clean_route_release:true,
