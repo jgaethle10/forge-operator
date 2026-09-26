@@ -73,6 +73,7 @@ export async function startForensiScopeEvidenceService({
 
   const instanceId = 'forensiscope-evidence-' + crypto.randomBytes(12).toString('hex');
   const startedAt = new Date().toISOString();
+  let deploymentReceipt = deploymentReceiptRef || null;
 
   const runtime = {
     endpoint: null,
@@ -90,9 +91,17 @@ export async function startForensiScopeEvidenceService({
         starts_analysis_jobs: false,
         checkout_or_payment: false,
         evidence_access_required: true,
-        deployment_receipt_bound: Boolean(deploymentReceiptRef),
-        deployment_receipt_ref: deploymentReceiptRef || null
+        deployment_receipt_bound: Boolean(deploymentReceipt),
+        deployment_receipt_ref: deploymentReceipt || null
       };
+    },
+    setDeploymentReceipt(receiptRef) {
+      const next = String(receiptRef || '').trim();
+      if (!/^sha256:[a-f0-9]{64}$/.test(next)) {
+        throw new Error('ForensiScope evidence service requires a valid deployment receipt ref.');
+      }
+      deploymentReceipt = next;
+      return runtime.health();
     },
     async close() {
       if (!server.listening) return;
