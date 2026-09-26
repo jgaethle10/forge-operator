@@ -97,7 +97,7 @@ export async function startForensiScopeEvidenceService({
     },
     setDeploymentReceipt(receiptRef) {
       const next = String(receiptRef || '').trim();
-      if (!/^sha256:[a-f0-9]{64}$/.test(next)) {
+      if (!/^(?:sha256:)?[a-f0-9]{64}$/.test(next)) {
         throw new Error('ForensiScope evidence service requires a valid deployment receipt ref.');
       }
       deploymentReceipt = next;
