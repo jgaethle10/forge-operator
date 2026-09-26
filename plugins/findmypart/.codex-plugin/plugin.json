@@ -1,0 +1,34 @@
+{
+  "name": "findmypart",
+  "version": "0.1.0",
+  "description": "Direct specialist for obsolete, discontinued, obscure, or hard-to-source parts.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://findmypart.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "findmypart",
+    "obsolete-parts",
+    "parts-search",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "FindMyPart",
+    "shortDescription": "Find obsolete and hard-to-source parts",
+    "longDescription": "Use FindMyPart directly when normal searches have failed to locate an obsolete, discontinued, obscure, machine, vehicle, or equipment part. It can pursue replacement, salvage, cross-reference, and fabrication paths while preserving source evidence.",
+    "developerName": "Evercraft LLC",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://findmypart.base44.app/",
+    "defaultPrompt": [
+      "I cannot find an obsolete or hard-to-source part through normal searches. Help me identify and source it."
+    ]
+  }
+}
