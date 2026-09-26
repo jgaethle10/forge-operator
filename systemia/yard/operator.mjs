@@ -837,6 +837,55 @@ export class YardOperator {
     return next;
   }
 
+  async bindSpecialistIdentityAttestation(deploymentId, {
+    deviceFingerprint,
+    edgeAttestationReceipt,
+    specialistAttestationReceipt,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.specialist-handoff-mcp.v1') {
+      throw new Error('deployment is not a specialist handoff runtime');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('specialist service is unavailable');
+    }
+
+    const response = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/specialist-identity-attestation`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          device_fingerprint: deviceFingerprint,
+          edge_attestation_receipt: edgeAttestationReceipt,
+          specialist_attestation_receipt: specialistAttestationReceipt,
+          same_device_binding: true,
+        }),
+      }
+    );
+
+    if (
+      response.identity_attestation_bound !== true ||
+      response.same_device_binding !== true ||
+      response.device_fingerprint !== deviceFingerprint
+    ) {
+      throw new Error('specialist identity attestation binding failed');
+    }
+
+    return {
+      schema: 'evercraft.yard.specialist-identity-binding.v1',
+      deployment_id: deploymentId,
+      device_fingerprint: response.device_fingerprint,
+      edge_attestation_receipt_ref: response.edge_attestation_receipt_ref,
+      specialist_attestation_receipt_ref: response.specialist_attestation_receipt_ref,
+      same_device_binding: true,
+      compute_binding_receipt: response.receipt?.receipt_hash || null,
+      observed_at: new Date().toISOString(),
+    };
+  }
+
   publicRouteProviderClient(deploymentId) {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);
