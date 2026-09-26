@@ -29,6 +29,7 @@ export class PublicEdgeActivationWatcher {
     leaseTtlMs=3600000,
     renewEveryMs=1800000,
     intervalMs=300000,
+    allowLoopbackProof=false,
   }={}){
     if(!stateDir) throw new Error('public_edge_watch_state_dir_required');
     if(!/^[a-f0-9]{40}$/i.test(String(releaseRef||''))){
@@ -50,6 +51,7 @@ export class PublicEdgeActivationWatcher {
     this.leaseTtlMs=Math.max(60000,Number(leaseTtlMs||3600000));
     this.renewEveryMs=Math.max(30000,Number(renewEveryMs||1800000));
     this.intervalMs=Math.max(10000,Number(intervalMs||300000));
+    this.allowLoopbackProof=Boolean(allowLoopbackProof);
     this.yard=new YardOperator({stateDir:path.join(this.stateDir,'yard')});
     this.controller=new PublicEdgeController({
       yard:this.yard,
@@ -57,7 +59,7 @@ export class PublicEdgeActivationWatcher {
       leaseTtlMs:this.leaseTtlMs,
       renewEveryMs:this.renewEveryMs,
       intervalMs:Math.min(this.intervalMs,60000),
-      allowLoopbackProof:false,
+      allowLoopbackProof:this.allowLoopbackProof,
     });
     this.timer=null;
     this.inFlight=false;
