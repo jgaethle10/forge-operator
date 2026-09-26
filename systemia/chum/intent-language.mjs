@@ -1,5 +1,5 @@
 const STOP_WORDS = new Set([
-  'a','an','and','are','as','at','be','been','being','but','by','can','could','did','do','does','for','from','get','give','had','has','have','help','how','i','if','in','into','is','it','make','me','my','need','of','on','or','our','please','should','that','the','their','them','this','to','use','want','we','what','when','where','which','who','why','will','with','without','would','you','your'
+  'a','an','and','are','as','at','be','been','being','but','by','can','could','did','do','does','for','from','get','give','had','has','have','help','how','i','if','in','into','is','it','make','me','my','need','of','on','or','our','please','should','that','the','their','them','this','to','use','want','we','what','when','where','which','who','why','will','with','without','would','you','your','not','no','dont'
 ]);
 
 const CONCEPT_ALIASES = {
@@ -82,6 +82,14 @@ function phrasePresent(norm, phrase) {
   return new Set(norm.split(' ')).has(p);
 }
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^\${}()|[\]\\]/g, '\\function phrasePresent(norm, phrase) {
+  const p = normalizeText(phrase);
+  if (!p) return false;
+  if (p.includes(' ')) return (` ${norm} `).includes(` ${p} `);
+  return new Set(norm.split(' ')).has(p);
+}
+
 export function conceptsForText(value='') {
   const norm = normalizeText(value);
   const found = [];
@@ -95,18 +103,61 @@ export function conceptsForText(value='') {
     if (strongest) found.push({ concept, evidence: strongest });
   }
   return found;
+}');
+}
+
+function phraseNegated(norm, phrase) {
+  const p = normalizeText(phrase);
+  if (!p) return false;
+  const escaped = escapeRegExp(p).replace(/\\ /g, '\\s+');
+  const negation = '(?:not|no|without|except|avoid|dont\\s+need|do\\s+not\\s+need|not\\s+looking\\s+for|anything\\s+but)';
+  const pattern = new RegExp(`\\b${negation}(?:\\s+[a-z0-9]+){0,3}\\s+${escaped}\\b`, 'i');
+  return pattern.test(norm);
+}
+
+function detectConcepts(value='') {
+  const norm = normalizeText(value);
+  const positive = [];
+  const negated = [];
+  for (const [concept, aliases] of Object.entries(CONCEPT_ALIASES)) {
+    let strongestPositive = null;
+    let strongestNegative = null;
+    for (const alias of aliases) {
+      if (!phrasePresent(norm, alias)) continue;
+      if (phraseNegated(norm, alias)) {
+        if (!strongestNegative || normalizeText(alias).split(' ').length > normalizeText(strongestNegative).split(' ').length) {
+          strongestNegative = alias;
+        }
+      } else if (!strongestPositive || normalizeText(alias).split(' ').length > normalizeText(strongestPositive).split(' ').length) {
+        strongestPositive = alias;
+      }
+    }
+    if (strongestPositive) positive.push({ concept, evidence: strongestPositive });
+    else if (strongestNegative) negated.push({ concept, evidence: strongestNegative });
+  }
+  return { positive, negated };
+}
+
+export function conceptsForText(value='') {
+  return detectConcepts(value).positive;
+}
+
+export function negatedConceptsForText(value='') {
+  return detectConcepts(value).negated;
 }
 
 export function intentSignature(value='') {
   const norm = normalizeText(value);
   const tokens = [...new Set(tokenize(norm))];
-  const concepts = conceptsForText(norm);
+  const detected = detectConcepts(norm);
   return {
     norm,
     tokens,
     token_set: new Set(tokens),
-    concepts,
-    concept_set: new Set(concepts.map((item)=>item.concept))
+    concepts: detected.positive,
+    concept_set: new Set(detected.positive.map((item)=>item.concept)),
+    negated_concepts: detected.negated,
+    negated_concept_set: new Set(detected.negated.map((item)=>item.concept))
   };
 }
 
@@ -121,6 +172,11 @@ export function compareIntent(query, candidate) {
   const matchedConcepts = [];
   for (const concept of q.concept_set) if (c.concept_set.has(concept)) matchedConcepts.push(concept);
 
+  const contradictedConcepts = [];
+  for (const concept of q.negated_concept_set || []) {
+    if (c.concept_set.has(concept)) contradictedConcepts.push(concept);
+  }
+
   let phraseBonus = 0;
   if (q.norm.length >= 8 && c.norm.length >= 8 && (q.norm.includes(c.norm) || c.norm.includes(q.norm))) phraseBonus += 24;
 
@@ -129,13 +185,14 @@ export function compareIntent(query, candidate) {
   let bigramOverlap = 0;
   for (let i=0;i<c.tokens.length-1;i++) if (qBigrams.has(`${c.tokens[i]} ${c.tokens[i+1]}`)) bigramOverlap += 1;
 
-  const score = tokenOverlap * 4 + matchedConcepts.length * 11 + bigramOverlap * 5 + phraseBonus;
+  const score = tokenOverlap * 4 + matchedConcepts.length * 11 + bigramOverlap * 5 + phraseBonus - contradictedConcepts.length * 40;
   return {
     score,
     token_overlap: tokenOverlap,
     concept_overlap: matchedConcepts.length,
     phrase_bonus: phraseBonus,
     bigram_overlap: bigramOverlap,
-    matched_concepts: matchedConcepts
+    matched_concepts: matchedConcepts,
+    contradicted_concepts: contradictedConcepts
   };
 }
