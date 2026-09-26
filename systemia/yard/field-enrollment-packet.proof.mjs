@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { YardOperator } from './operator.mjs';
 
@@ -9,6 +10,29 @@ const root=fs.mkdtempSync(path.join(os.tmpdir(),'field-enrollment-packet-proof-'
 const computeRoot=path.join(root,'compute');
 const yardState=path.join(root,'yard');
 const token='field-packet-proof-allocator-secret';
+const tlsDir=path.join(root,'tls');
+fs.mkdirSync(tlsDir,{recursive:true});
+const tlsKey=path.join(tlsDir,'edge.key.pem');
+const tlsCert=path.join(tlsDir,'edge.cert.pem');
+execFileSync('openssl',[
+  'req','-x509','-newkey','rsa:2048','-nodes',
+  '-keyout',tlsKey,
+  '-out',tlsCert,
+  '-days','10',
+  '-subj','/CN=*.edge.evercraft.test',
+  '-addext','subjectAltName=DNS:*.edge.evercraft.test',
+],{stdio:'ignore'});
+
+const previous={
+  domain:process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN,
+  key:process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH,
+  cert:process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH,
+  port:process.env.EVERCRAFT_PUBLIC_EDGE_PORT,
+};
+process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN='edge.evercraft.test';
+process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH=tlsKey;
+process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH=tlsCert;
+process.env.EVERCRAFT_PUBLIC_EDGE_PORT='443';
 
 const seed=await startNodeSeed({
   root:computeRoot,
@@ -24,6 +48,8 @@ try{
   const capacity=await fetch(seed.endpoint+'/v1/capacity').then(r=>r.json());
   assert.equal(capacity.attestation_supported,true);
   assert.ok(/^sha256:[a-f0-9]{64}$/i.test(capacity.device_fingerprint));
+  assert.equal(capacity.capacity_hint.services.public_edge.ready,true);
+  assert.equal(capacity.capacity_hint.services.public_edge.public_https,true);
 
   const evidence={
     schema:'evercraft.node001.field-evidence.v1',
@@ -64,9 +90,9 @@ try{
     public_edge_configuration_valid:true,
     base_domain:'edge.evercraft.test',
     public_port:443,
-    certificate_fingerprint256:'AA:BB:CC',
+    certificate_fingerprint256:capacity.capacity_hint.services.public_edge.certificate_fingerprint256,
     certificate_valid_from:new Date(Date.now()-60_000).toISOString(),
-    certificate_valid_to:new Date(Date.now()+7*86400000).toISOString(),
+    certificate_valid_to:capacity.capacity_hint.services.public_edge.certificate_valid_to,
     certificate_days_remaining:7,
     wildcard_hostname_match:true,
     private_key_exposed:false,
@@ -162,5 +188,13 @@ try{
   },null,2));
 }finally{
   await seed.close();
+  if(previous.domain===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN;
+  else process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN=previous.domain;
+  if(previous.key===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH;
+  else process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH=previous.key;
+  if(previous.cert===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH;
+  else process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH=previous.cert;
+  if(previous.port===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_PORT;
+  else process.env.EVERCRAFT_PUBLIC_EDGE_PORT=previous.port;
   fs.rmSync(root,{recursive:true,force:true});
 }
