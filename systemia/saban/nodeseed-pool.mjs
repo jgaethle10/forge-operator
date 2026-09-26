@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { once } from 'node:events';
 import { discoverCapacityBeacons } from '../compute/capacity-beacon.mjs';
 import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 
@@ -272,8 +273,140 @@ async function releaseNode(node, options = {}) {
   }
 }
 
+async function fetchPortableArtifact(node, artifact, options = {}) {
+  const root = options.artifactReturnRoot
+    ? path.resolve(String(options.artifactReturnRoot))
+    : null;
+  if (!root) return null;
+
+  const expectedHash = String(artifact?.sha256 || '');
+  const digest = expectedHash.replace(/^sha256:/, '').toLowerCase();
+  if (!/^[a-f0-9]{64}$/.test(digest)) {
+    throw new Error('portable_artifact_digest_invalid');
+  }
+  const extension = /^\.[a-z0-9]{1,8}$/.test(
+    String(artifact.extension || '.bin').toLowerCase()
+  )
+    ? String(artifact.extension || '.bin').toLowerCase()
+    : '.bin';
+  fs.mkdirSync(root, { recursive: true, mode: 0o700 });
+  const target = path.join(root, `${digest}${extension}`);
+
+  if (
+    fs.existsSync(target) &&
+    fs.statSync(target).isFile() &&
+    hashFile(target) === expectedHash &&
+    (
+      artifact.size_bytes == null ||
+      Number(fs.statSync(target).size) === Number(artifact.size_bytes)
+    )
+  ) {
+    return {
+      ...artifact,
+      path: target,
+      returned_from_nodeseed: true,
+      deduplicated_download: true
+    };
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(),
+    options.assignmentTimeoutMs || 120000
+  );
+  const temp = `${target}.${process.pid}.${crypto.randomBytes(4).toString('hex')}.partial`;
+
+  try {
+    const response = await fetch(
+      `${node.endpoint}/v1/leases/${node.lease_id}/artifacts/${digest}`,
+      {
+        signal: controller.signal,
+        headers: {
+          authorization: `Bearer ${node.lease_token}`
+        }
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`${response.status}:portable_artifact_download_failed`);
+    }
+
+    const advertisedHash = String(response.headers.get('x-evercraft-sha256') || '');
+    if (advertisedHash && advertisedHash !== expectedHash) {
+      throw new Error('portable_artifact_header_hash_mismatch');
+    }
+
+    const hash = crypto.createHash('sha256');
+    let bytes = 0;
+    const stream = fs.createWriteStream(temp, { mode: 0o600 });
+    try {
+      for await (const chunk of response.body || []) {
+        const buffer = Buffer.from(chunk);
+        bytes += buffer.length;
+        if (
+          artifact.size_bytes != null &&
+          bytes > Number(artifact.size_bytes)
+        ) {
+          throw new Error('portable_artifact_size_exceeded');
+        }
+        hash.update(buffer);
+        if (!stream.write(buffer)) await once(stream, 'drain');
+      }
+      stream.end();
+      await once(stream, 'finish');
+    } catch (error) {
+      stream.destroy();
+      fs.rmSync(temp, { force: true });
+      throw error;
+    }
+
+    const observedHash = `sha256:${hash.digest('hex')}`;
+    if (observedHash !== expectedHash) {
+      fs.rmSync(temp, { force: true });
+      throw new Error('portable_artifact_hash_mismatch');
+    }
+    if (
+      artifact.size_bytes != null &&
+      bytes !== Number(artifact.size_bytes)
+    ) {
+      fs.rmSync(temp, { force: true });
+      throw new Error('portable_artifact_size_mismatch');
+    }
+
+    fs.renameSync(temp, target);
+    return {
+      ...artifact,
+      path: target,
+      returned_from_nodeseed: true,
+      deduplicated_download: false
+    };
+  } finally {
+    clearTimeout(timer);
+    fs.rmSync(temp, { force: true });
+  }
+}
+
+function rehydrateArtifactRefs(value, byId) {
+  if (Array.isArray(value)) {
+    return value.map((entry) => rehydrateArtifactRefs(entry, byId));
+  }
+  if (!value || typeof value !== 'object') return value;
+
+  const next = {};
+  for (const [key, entry] of Object.entries(value)) {
+    next[key] = rehydrateArtifactRefs(entry, byId);
+  }
+  const artifact = next.artifact_id ? byId.get(String(next.artifact_id)) : null;
+  if (artifact) {
+    next.path = artifact.path;
+    next.artifact_sha256 = artifact.sha256;
+    next.portable = true;
+    next.returned_from_nodeseed = true;
+  }
+  return next;
+}
+
 async function executeAssignment(node, software, assignment, checkpoint, options = {}) {
-  return requestJson(
+  const response = await requestJson(
     `${node.endpoint}/v1/jobs`,
     {
       method: 'POST',
@@ -291,6 +424,21 @@ async function executeAssignment(node, software, assignment, checkpoint, options
     },
     options.assignmentTimeoutMs || 120000
   );
+
+  const returnedArtifacts = [];
+  for (const artifact of response.artifacts || []) {
+    const returned = await fetchPortableArtifact(node, artifact, options);
+    if (returned) returnedArtifacts.push(returned);
+  }
+
+  if (returnedArtifacts.length) {
+    const byId = new Map(
+      returnedArtifacts.map((artifact) => [String(artifact.artifact_id), artifact])
+    );
+    response.result = rehydrateArtifactRefs(response.result, byId);
+  }
+  response.artifacts = returnedArtifacts;
+  return response;
 }
 
 export async function resolveNodeSeedPool({
@@ -428,6 +576,7 @@ export async function runNodeSeedAssignmentPool({
   assignmentTimeoutMs = 120000,
   requestedTtlMs = 300000,
   leaseRenewalIntervalMs = null,
+  artifactReturnRoot = null,
   resourceProfile = null,
   stageAuthorizedSources = false,
   prepareAssignment = null,
@@ -481,7 +630,8 @@ export async function runNodeSeedAssignmentPool({
     timeoutMs,
     assignmentTimeoutMs,
     requestedTtlMs,
-    leaseRenewalIntervalMs
+    leaseRenewalIntervalMs,
+    artifactReturnRoot
   };
 
   const leased = [];
@@ -620,7 +770,9 @@ export async function runNodeSeedAssignmentPool({
           failover,
           checkpoint: response.checkpoint || null,
           result: response.result,
-          compute_receipt: response.receipt || null
+          compute_receipt: response.receipt || null,
+          deduplicated: response.deduplicated === true,
+          artifacts: response.artifacts || []
         };
 
         await emit({
@@ -725,6 +877,10 @@ export async function runNodeSeedAssignmentPool({
       renewed: renewalEvents.filter((event) => event.type === 'lease.renewed').length,
       failed: renewalEvents.filter((event) => event.type === 'lease.renewal.failed').length
     },
+    portable_artifacts: results.reduce(
+      (count, row) => count + Number(row?.artifacts?.length || 0),
+      0
+    ),
     results,
     failures
   };
