@@ -601,7 +601,9 @@ export async function startEvercraftComputeNode({
           edgeAdmission?.base_domain === publicEdgeCapability?.base_domain &&
           Number(edgeAdmission?.public_port) === Number(publicEdgeCapability?.public_port) &&
           edgeAdmission?.certificate_fingerprint256 ===
-            publicEdgeCapability?.certificate_fingerprint256
+            publicEdgeCapability?.certificate_fingerprint256 &&
+          nodePlacementLabels.includes('public-edge') &&
+          nodePlacementLabels.includes('gateway')
         );
         if (!packetValid) {
           return send(res, 422, { error: 'field_enrollment_packet_not_ready' });
