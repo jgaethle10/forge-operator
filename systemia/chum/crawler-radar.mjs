@@ -21,6 +21,7 @@ const CRAWLERS = [
 const DISCOVERY_PREFIXES = [
   '/chum/',
   '/forensiscope/',
+  '/rivet/',
   '/.well-known/',
   '/llms',
   '/ai',
