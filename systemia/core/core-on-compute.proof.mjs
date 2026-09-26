@@ -178,9 +178,11 @@ try {
     'public-edge-activation-watch.json'
   );
   assert.equal(await waitForPath(edgeWatchState),true);
-  const edgeWatch=JSON.parse(fs.readFileSync(edgeWatchState,'utf8'));
+  const edgeWatchRaw=fs.readFileSync(edgeWatchState,'utf8');
+  const edgeWatch=JSON.parse(edgeWatchRaw);
   assert.equal(edgeWatch.release_ref,'e101fa959836ae9c26b52c0ebf6185a1f9957e92');
   assert.equal(edgeWatch.allocator_authority_persisted,false);
+  assert.equal(edgeWatchRaw.includes(allocatorToken),false);
 
   const rawHealth = JSON.stringify(route.health);
   assert.ok(!rawHealth.includes(allocatorToken));
