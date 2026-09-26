@@ -9,6 +9,8 @@ on:
       - main
     paths:
       - "systemia/chum/llm-hunter.mjs"
+      - "systemia/chum/fire-control.mjs"
+      - "tests/chum-fire-control.test.mjs"
       - "systemia/saban/revenue-swarm.mjs"
       - "tests/saban-revenue-swarm.test.mjs"
       - "public/chum/revenue.json"
@@ -55,6 +57,15 @@ jobs:
       - name: Prove federated ARD strike contracts
         run: npm run test:chum-ard-strike
 
+      - name: Prove Fire Control contract
+        run: npm run test:chum-fire-control
+
+      - name: Build adaptive crawler radar
+        continue-on-error: true
+        env:
+          CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
+        run: npm run chum:crawler-radar
+
       - name: Verify sell-now commerce doors
         continue-on-error: true
         run: npm run chum:commerce-canary
@@ -86,7 +97,8 @@ jobs:
               CHUM_PROBE_CASES="$CASE_ID" npm run chum:providers
             fi
           else
-            echo "Authorized provider bridge is not configured; direct provider attack is blocked, not faked."
+            echo "Authorized provider bridge is not configured; writing a blocked probe receipt instead of faking pickup."
+            npm run chum:providers
           fi
 
       - name: Strike federated ARD discovery
@@ -114,6 +126,19 @@ jobs:
         continue-on-error: true
         run: npm run chum:mcp
 
+      - name: Run discovery-to-revenue Fire Control
+        id: fire_control
+        if: always()
+        run: npm run chum:fire-control
+
+      - name: Write Fire Control summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f artifacts/chum/fire-control-latest.md ]; then
+            cat artifacts/chum/fire-control-latest.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Upload hunter receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -126,5 +151,7 @@ jobs:
             artifacts/chum/commerce-canary-latest.*
             artifacts/chum/provider-probe-latest.*
             artifacts/chum/ard-strike-latest.*
+            artifacts/chum/crawler-radar-latest.json
+            artifacts/chum/fire-control-latest.*
             artifacts/saban-revenue/latest.*
           if-no-files-found: warn
