@@ -106,6 +106,7 @@ try{
   assert.ok(activation.receipt.device_fingerprint);
   assert.ok(activation.receipt.edge_attestation_receipt);
   assert.ok(activation.receipt.specialist_attestation_receipt);
+  assert.ok(activation.receipt.specialist_identity_binding_receipt);
   assert.equal(activation.receipt.founder_login_required,false);
   assert.equal(activation.receipt.selected_endpoint_exposed,false);
   assert.equal(activation.receipt.allocator_token_exposed,false);
@@ -141,6 +142,7 @@ try{
     device_identity_attested:true,
     same_device_binding:true,
     public_health_attestation_bound:true,
+    compute_identity_binding_receipt:true,
     allocator_secret_exposed:false,
     selected_endpoint_exposed:false,
     founder_login_required:false,
