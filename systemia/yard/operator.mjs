@@ -199,6 +199,53 @@ export class YardOperator {
     return enrollment;
   }
 
+  privateCapacityAuthorities() {
+    const allocatorTokens = {};
+    const sources = {};
+    let recordCount = 0;
+
+    for (const name of fs.readdirSync(this.stateDir)) {
+      if (!name.endsWith('.json') || name.startsWith('.')) continue;
+      const file = path.join(this.stateDir, name);
+      let record;
+      try {
+        record = JSON.parse(fs.readFileSync(file, 'utf8'));
+      } catch {
+        continue;
+      }
+      if (
+        !record?.deployment_id ||
+        record?.state !== 'ready' ||
+        !record?.receipt?.capacity_node_id
+      ) continue;
+
+      const secret = this.#loadLeaseSecret(record.deployment_id);
+      const authority = String(secret?.allocator_token || '').trim();
+      const endpoint = String(secret?.capacity_endpoint || '').trim();
+      if (!authority || !endpoint) continue;
+
+      const nodeId = String(record.receipt.capacity_node_id);
+      if (!allocatorTokens[nodeId]) {
+        allocatorTokens[nodeId] = authority;
+        sources[nodeId] = {
+          deployment_id: record.deployment_id,
+          deployment_receipt: record.receipt?.receipt_hash || null,
+          capacity_endpoint_hash: `sha256:${sha(endpoint)}`,
+        };
+      }
+      recordCount += 1;
+    }
+
+    return {
+      schema: 'evercraft.yard.private-capacity-authorities.v1',
+      allocatorTokens,
+      sources,
+      source_record_count: recordCount,
+      authority_persisted_by_caller: false,
+      observed_at: new Date().toISOString(),
+    };
+  }
+
   async enrollFieldDeviceFromCapacity({
     capacityEndpoint,
     allocatorToken = '',
