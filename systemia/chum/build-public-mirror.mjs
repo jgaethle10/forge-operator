@@ -421,6 +421,7 @@ const sitemapStatic = [
   '/network/mesh/device-reconnect-visibility/',
   '/network/mesh/business-connectivity-resilience/',
   '/network/mesh/household-connectivity-resilience/',
+  '/network/mesh/civilian-air-relay/',
   '/network/llms.txt',
   '/network/discovery.json',
   '/.well-known/evercraft-network.json',
