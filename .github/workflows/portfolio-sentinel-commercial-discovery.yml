@@ -1,0 +1,61 @@
+name: Portfolio Sentinel commercial discovery canary
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/portfolio-sentinel-commercial-canary.mjs"
+      - "public/.well-known/evercraft-products.json"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - "registry/catalog.json"
+      - "conformance/products.json"
+      - "public/chum/**"
+      - "AI-DISCOVERY.md"
+      - ".github/workflows/portfolio-sentinel-commercial-discovery.yml"
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-sentinel-commercial-discovery
+  cancel-in-progress: true
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run brand-blind commercial discovery canary
+        run: node scripts/portfolio-sentinel-commercial-canary.mjs
+
+      - name: Upload discovery receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-sentinel-commercial-discovery
+          path: artifacts/portfolio-sentinel-commercial-canary/latest.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Write receipt summary
+        if: always()
+        shell: bash
+        run: |
+          echo "## Portfolio Sentinel commercial discovery canary" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f artifacts/portfolio-sentinel-commercial-canary/latest.json ]; then
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            cat artifacts/portfolio-sentinel-commercial-canary/latest.json >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
