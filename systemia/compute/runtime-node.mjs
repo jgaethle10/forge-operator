@@ -13,6 +13,7 @@ import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs'
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
+import { startForensiScopeEvidenceService } from '../forensiscope/evidence-service.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -216,6 +217,7 @@ export async function startEvercraftComputeNode({
     'systemia.kaidance-collider.v1',
     'systemia.chum-public-origin.v1',
     'systemia.remote-capacity-broker.v1',
+    'systemia.forensiscope-evidence-query.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -624,6 +626,67 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result,
             receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.forensiscope-evidence-query.v1') {
+          const stateRoot = path.resolve(String(body.input?.state_root || ''));
+          if (!stateRoot || !isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'forensiscope_state_outside_admitted_root' });
+          }
+
+          const serviceHost = String(body.input?.host || '127.0.0.1');
+          const loopbackService =
+            serviceHost === '127.0.0.1' ||
+            serviceHost === '::1' ||
+            serviceHost === 'localhost';
+          if (!loopbackService && body.input?.allow_public_bind !== true) {
+            return send(res, 403, { error: 'explicit_public_bind_authority_required' });
+          }
+
+          const runtime = await startForensiScopeEvidenceService({
+            stateRoot,
+            host: serviceHost,
+            port: Number(body.input?.port || 0),
+            deploymentReceiptRef: body.input?.deployment_receipt_ref || null
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.endpoint,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/v1/health',
+            public_mcp_path: '/mcp',
+            instance_id: runtime.instanceId,
+            raw_media_intake: false,
+            starts_analysis_jobs: false,
+            checkout_or_payment: false,
+            scoped_evidence_access_required: true
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt
           });
         }
 
