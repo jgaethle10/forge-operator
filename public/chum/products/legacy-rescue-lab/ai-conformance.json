@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Legacy Rescue Lab",
+  "product_key": "legacy-rescue-lab",
+  "aliases": [
+    "Evercraft Legacy Rescue Lab",
+    "Legacy Rescue",
+    "Software Rescue",
+    "Website Rescue",
+    "App Rescue"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "grok"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "public-surface diagnostics use ordinary non-intrusive browsing and observation only; no credential bypass, exploitation, destructive actions, or unauthorized load testing",
+    "private repositories, admin panels, credentials, customer data, staging systems, and production systems require explicit authorization and defined scope",
+    "a Rescue Scan reports observed evidence and prioritized repair hypotheses; it does not claim hidden root cause without supporting evidence",
+    "production repair, deployment, migration, or cutover is outside the Rescue Scan and requires a separately authorized Rescue Sprint or project",
+    "security-sensitive findings are handled responsibly and are not published with exploit instructions",
+    "discovery and matching create no payment obligation; paid state requires authoritative provider verification",
+    "direct public checkout is not represented as live until an independent canary verifies the product-specific payment route"
+  ],
+  "commercial": {
+    "status": "offer_contract_published_human_handoff_ready_direct_checkout_unverified",
+    "offers": [
+      {
+        "name": "Legacy Rescue Scan",
+        "price": "$299 one-time",
+        "offer_key": "legacy_rescue_scan_299"
+      }
+    ],
+    "credit_policy": "100% of the $299 Legacy Rescue Scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
+    "payment_state": "Product offer is published for discovery and human handoff. Product-specific direct checkout and paid state remain receipt-gated until independently verified."
+  },
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}
