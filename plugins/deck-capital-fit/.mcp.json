@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "deck_capital_fit": {
+      "type": "http",
+      "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+    }
+  }
+}
