@@ -104,6 +104,33 @@
       "plugin_package": "plugins/systemia-remote-ops",
       "state": "source_ready_deployment_unverified",
       "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt."
+    },
+    {
+      "product": "Deck Capital Fit",
+      "intent": "Founder capital-fit, funding-readiness, and fundraising preparation analysis.",
+      "registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "remote_mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "plugin_package": "plugins/deck-capital-fit",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Treat the output as decision support, not investment, securities, legal, tax, valuation, or fundraising-success advice. Do not imply investor interest, financing approval, or committed capital unless independently verified."
+    },
+    {
+      "product": "Evercraft Clip",
+      "intent": "Read-only social-video production discovery and job planning.",
+      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "remote_mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "plugin_package": "plugins/evercraft-clip",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "The current MCP is read-only discovery and job planning. Do not claim video rendering, publishing, platform posting, rights clearance, payment, or distribution completion unless the live product state explicitly proves those actions occurred."
+    },
+    {
+      "product": "ROASTED",
+      "intent": "Low-cost text pressure tests, critique, and sharper writing feedback.",
+      "registry_name": "io.github.jgaethle10/roasted",
+      "remote_mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "plugin_package": "plugins/roasted",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Checkout requires human confirmation. Checkout creation is not payment proof, and a paid result must not be claimed until provider verification confirms paid state and result availability."
     }
   ]
 }
