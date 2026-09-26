@@ -9,6 +9,7 @@ const contract=(sabanRegistry.software||[]).find(item=>item.software_id==='rivet
 assert.ok(contract,'RIVET session-sprawl Saban contract must exist');
 assert.equal(contract.assignment_strategy,'role_item_cartesian');
 assert.ok(Array.isArray(contract.roles)&&contract.roles.length>0);
+assert.equal(contract.quality?.require_all_roles,true,'Saban contract must require every acquisition role');
 
 const jurisdictionAndPartnerWork=buildNationalSessionWorkQueue().length;
 const sourceWork=(sourceRegistry.sources||[]).length;
