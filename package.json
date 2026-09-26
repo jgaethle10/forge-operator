@@ -68,7 +68,7 @@
     "test:saban-revenue": "node tests/saban-revenue-swarm.test.mjs",
     "test:openai-plugin-submission": "node scripts/validate-openai-plugin-submission.mjs",
     "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs",
-    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan && npm run proof:legacy-rescue-link-discovery && npm run proof:legacy-rescue-strike-admission",
+    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan && npm run proof:legacy-rescue-link-discovery && npm run proof:legacy-rescue-strike-admission && npm run proof:ibmi-direct-buyer-signal",
     "test:chum-surfaces": "npm run chum:mirror && node systemia/chum/discovery-surfaces.test.mjs",
     "test:ibmi-rescue-discovery": "node tests/ibmi-rescue-discovery.test.mjs",
     "run:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch-runner.mjs",
@@ -125,7 +125,8 @@
     "proof:portfolio-sentinel": "node systemia/organism/portfolio-sentinel.proof.mjs",
     "run:portfolio-sentinel": "node systemia/organism/portfolio-sentinel-runner.mjs",
     "scan:portfolio-sentinel:offline": "node systemia/organism/portfolio-sentinel-runner.mjs --offline",
-    "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs"
+    "proof:forensiscope-security": "node systemia/forensiscope/security-proof.mjs",
+    "proof:ibmi-direct-buyer-signal": "node systemia/organism/ibmi-direct-buyer-signal.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
