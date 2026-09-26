@@ -79,6 +79,25 @@ jobs:
       - name: Prove human experience contracts
         run: node --test systemia/experience/human-experience-adapter.test.mjs
 
+      - name: Restore latest owned Customer Gauntlet receipt
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -u
+          TMP_DIR="$(mktemp -d)"
+          RUN_ID="$(gh run list --workflow customer-gauntlet.yml --branch main --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty' 2>/dev/null || true)"
+          if [ -n "$RUN_ID" ]; then
+            if gh run download "$RUN_ID" --name customer-gauntlet-receipts --dir "$TMP_DIR"; then
+              RECEIPT="$(find "$TMP_DIR" -type f -name latest.json | head -n 1)"
+              if [ -n "$RECEIPT" ]; then
+                mkdir -p artifacts/customer-gauntlet
+                cp "$RECEIPT" artifacts/customer-gauntlet/latest.json
+              fi
+            fi
+          fi
+
       - name: Run Saban human experience swarm
         if: always()
         run: node systemia/saban/multiplier.mjs --software human-experience --auto --execute --reconcile --state artifacts/saban-multiplier/human-experience-state.json
@@ -113,6 +132,7 @@ jobs:
             artifacts/portfolio-sentinel/repair-memory.json
             artifacts/human-experience/latest.json
             artifacts/saban-multiplier/human-experience-latest.json
+            artifacts/customer-gauntlet/latest.json
           if-no-files-found: error
           retention-days: 14
 
