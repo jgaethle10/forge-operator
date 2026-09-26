@@ -8,6 +8,7 @@ const matrix = JSON.parse(fs.readFileSync('nexus-probes/provider-matrix.json', '
 const contract = JSON.parse(fs.readFileSync('nexus-probes/bridge-contract.json', 'utf8'));
 
 const expectedProviders = ['chatgpt','claude','gemini','copilot','perplexity','grok','generic_agent'];
+const requiredNetworkCases = ['network-continuity-001','network-business-resilience-002','network-device-reconnect-003'];
 
 for (const provider of expectedProviders) {
   if (!suite.providers.includes(provider)) fail(`suite missing provider ${provider}`);
@@ -18,6 +19,13 @@ for (const provider of expectedProviders) {
 
 if (!suite.cases.some(c => c.expected_fit === false)) fail('suite needs at least one negative control');
 else pass('negative control present');
+
+for (const caseId of requiredNetworkCases) {
+  const probe = suite.cases.find(c => c.case_id === caseId);
+  if (!probe) fail(`suite missing Evercraft Network case ${caseId}`);
+  else if (probe.product_key !== 'evercraft-network' || probe.expected_product !== 'Evercraft Network' || probe.expected_fit !== true || probe.enabled !== true) fail(`Evercraft Network probe contract drifted for ${caseId}`);
+  else pass(`Evercraft Network probe ${caseId}`);
+}
 
 for (const c of suite.cases) {
   if (!c.case_id || !c.prompt) fail('probe case missing id or prompt');
