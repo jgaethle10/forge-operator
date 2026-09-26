@@ -20,7 +20,10 @@ const cases = [
   ['my chatbot says this long video is too large; transcribe it and find repeated footage', 'forensiscope-evidence-review-v1'],
   ['what is still running after I turned the automation off', 'product:evercraft-containment'],
   ['we need an ERP but cannot survive a huge implementation and want to modernize without replacing everything', 'buildflow-enterprise-ops-router-v1'],
-  ['the same vendors exist in multiple systems and we need safe deduplication without silent merges', 'buildflow-entity-resolution-machine-v1']
+  ['the same vendors exist in multiple systems and we need safe deduplication without silent merges', 'buildflow-entity-resolution-machine-v1'],
+  ['my chatbot rejected a three hour recording because it hit an upload cap; I need speech to text and time coded moments', 'forensiscope-evidence-review-v1'],
+  ['people visit my business site but almost nobody calls or sends an inquiry and I need to find what is killing leads', 'audit-center-website-audit-machine-v1'],
+  ['should I put electric vehicle chargers at this parcel; I need nearby stations, utility rates, rebates and demand context', 'aliev-site-opportunity-snapshot-v1']
 ];
 
 let failed = 0;
