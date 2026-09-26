@@ -1106,6 +1106,22 @@ export async function startEvercraftComputeNode({
             allowPrivateUpstream: body.input?.allow_private_upstream === true,
             defaultLeaseTtlMs: Number(body.input?.default_lease_ttl_ms || 3600000),
           });
+          const runtimeHealth = runtime.health();
+          if (mode === 'wildcard_https') {
+            const admitted =
+              publicEdgeCapability?.ready === true &&
+              publicEdgeCapability?.public_https === true &&
+              runtimeHealth.public_https === true &&
+              runtimeHealth.base_domain === publicEdgeCapability.base_domain &&
+              Number(runtimeHealth.public_listen_port) === Number(publicEdgeCapability.public_port) &&
+              runtimeHealth.tls_admission?.certificate_fingerprint256 ===
+                publicEdgeCapability.certificate_fingerprint256;
+            if (!admitted) {
+              await runtime.close();
+              return send(res, 422, { error: 'public_edge_runtime_admission_drift' });
+            }
+          }
+
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
             lease_id: body.lease_id,
@@ -1119,6 +1135,10 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             service_url: null,
             local_url: runtime.controlUrl,
+            admitted_edge_certificate_fingerprint256:
+              mode === 'wildcard_https'
+                ? runtimeHealth.tls_admission?.certificate_fingerprint256 || null
+                : null,
             health_path: `/v1/services/${serviceId}/health`,
             public_route_provider: true,
             route_protocol: 'evercraft.public-route.v1',
@@ -1182,6 +1202,7 @@ export async function startEvercraftComputeNode({
               '/mcp/ibmi-rescue',
               '/mcp/foundry-app-escape',
               '/mcp/site-survive',
+              '/mcp/systemia-remote-ops',
             ],
             read_only_specialist_handoff: true,
           };
