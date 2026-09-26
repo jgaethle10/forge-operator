@@ -187,6 +187,7 @@ export class SystemiaCoreResidentSupervisor {
       observed_at: this.clock().toISOString(),
       service_count: rows.length,
       healthy_count: rows.filter((x) => ['running', 'healthy', 'idle'].includes(x.status)).length,
+      disabled_count: rows.filter((x) => x.status === 'disabled').length,
       held_count: rows.filter((x) => x.status === 'held').length,
       failed_count: rows.filter((x) => x.status === 'failed').length,
       deployment_receipt: this.deploymentReceipt,
@@ -228,6 +229,20 @@ export class SystemiaCoreResidentSupervisor {
     try {
       args = resolveArgs(config, this.env);
     } catch (error) {
+      if (
+        config.optional_when_unconfigured === true &&
+        error.code === 'required_environment_binding_missing'
+      ) {
+        const receipt = this.#receipt('cycle.disabled', {
+          service_key: config.service_key,
+          reason: 'optional_environment_not_configured',
+        });
+        state.status = 'disabled';
+        state.hold_reason = 'optional_environment_not_configured';
+        state.last_receipt_hash = receipt.receipt_hash;
+        this.#persistHealth();
+        return;
+      }
       const receipt = this.#receipt('cycle.held', {
         service_key: config.service_key,
         reason: error.code || 'argument_resolution_failed',
@@ -310,6 +325,20 @@ export class SystemiaCoreResidentSupervisor {
     try {
       args = resolveArgs(config, this.env);
     } catch (error) {
+      if (
+        config.optional_when_unconfigured === true &&
+        error.code === 'required_environment_binding_missing'
+      ) {
+        const receipt = this.#receipt('resident.disabled', {
+          service_key: config.service_key,
+          reason: 'optional_environment_not_configured',
+        });
+        state.status = 'disabled';
+        state.hold_reason = 'optional_environment_not_configured';
+        state.last_receipt_hash = receipt.receipt_hash;
+        this.#persistHealth();
+        return;
+      }
       const receipt = this.#receipt('resident.held', {
         service_key: config.service_key,
         reason: error.code || 'argument_resolution_failed',
