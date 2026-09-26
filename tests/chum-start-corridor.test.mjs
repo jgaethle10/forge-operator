@@ -34,7 +34,7 @@ const live = humanStartUrl(offer, {
 });
 assert.equal(
   live,
-  'https://forge.evercraft.example/api/chum/go/career-command-interview-practice-machine-v1?surface=test_surface'
+  'https://forge.evercraft.example/chum/buy/career-command-interview-practice-machine-v1?surface=test_surface'
 );
 assert.equal(
   humanStartState(offer, { publicOrigin: 'https://forge.evercraft.example' }),

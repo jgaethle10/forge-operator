@@ -37,6 +37,11 @@ jobs:
           CUSTOMER_GAUNTLET_REQUIRE_NEXUS: "false"
           CUSTOMER_GAUNTLET_SANDBOX_PURCHASE: "false"
         run: node systemia/customer-gauntlet/runner.mjs
+      - name: Run Saban Lennox formation
+        env:
+          CUSTOMER_GAUNTLET_SABAN_WORKERS: "12"
+          CUSTOMER_GAUNTLET_SANDBOX_PURCHASE: "false"
+        run: node systemia/customer-gauntlet/saban-runner.mjs
       - name: Upload receipts
         if: always()
         uses: actions/upload-artifact@v4

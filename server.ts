@@ -9,10 +9,9 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { renderOwnedOfferDoor } from './systemia/chum/owned-offer-door.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
-import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
-import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 
 dotenv.config();
 
@@ -164,8 +163,6 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb' }));
-registerRivetReportGateway(app);
-registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
@@ -177,10 +174,6 @@ const CHUM_DISCOVERY_LINKS = [
   '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
   '</openapi.json>; rel="service-desc"; type="application/json"',
   '</sitemap.xml>; rel="sitemap"; type="application/xml"',
-  '</feed.xml>; rel="alternate"; type="application/rss+xml"; title="Evercraft Product Discovery RSS"',
-  '</feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Product Discovery JSON Feed"',
-  '</opensearch.xml>; rel="search"; type="application/opensearchdescription+xml"; title="Evercraft Search"',
-  '</.well-known/evercraft-syndication.json>; rel="service-desc"; type="application/json"; title="Evercraft Syndication Manifest"',
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
   '</chum/hot/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Hot Discovery Queue"',
@@ -196,9 +189,6 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/llms.txt' ||
     pathname === '/llms-full.txt' ||
     pathname === '/openapi.json' ||
-    pathname === '/feed.xml' ||
-    pathname === '/feed.json' ||
-    pathname === '/opensearch.xml' ||
     pathname.startsWith('/.well-known/') ||
     pathname.startsWith('/chum/') ||
     pathname.startsWith('/forensiscope/') ||
@@ -465,6 +455,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumRevenueText: '/chum/revenue.txt',
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
+      chumOfferDoor: { method: 'GET', path: '/chum/buy/{publicId}' },
       chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
     },
@@ -731,6 +722,34 @@ app.get('/api/revenue-watershed', rateLimit(240, 60 * 60 * 1000), (_req: Request
   }
 });
 
+app.get('/chum/buy/:publicId', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const publicId = String(req.params.publicId || '').trim();
+  const surface = String(req.query.surface || 'chum_owned_offer_door').trim().toLowerCase().slice(0, 64);
+  try {
+    const offer = findChumOffer(publicId);
+    if (!offer?.public_id) {
+      res.status(404).type('text/plain').send('Unknown public Evercraft offer.');
+      return;
+    }
+    if (offer.commercial_state !== 'sell_now') {
+      res.status(409).type('text/plain').send('This Evercraft capability is discoverable but is not currently a sell-now offer.');
+      return;
+    }
+    const continuePath = '/api/chum/go/' + encodeURIComponent(offer.public_id)
+      + '?surface=' + encodeURIComponent(surface || 'chum_owned_offer_door');
+    const origin = requestOrigin(req);
+    const canonicalUrl = origin
+      ? origin + '/chum/buy/' + encodeURIComponent(offer.public_id)
+      : '/chum/buy/' + encodeURIComponent(offer.public_id);
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.type('html').send(renderOwnedOfferDoor({ offer, continuePath, canonicalUrl }));
+  } catch (error) {
+    res.status(400).type('text/plain').send(
+      error instanceof Error ? error.message : 'Unable to open this Evercraft offer.'
+    );
+  }
+});
 app.get('/api/chum/attribution', (_req: Request, res: Response) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.json({
@@ -739,6 +758,7 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
     durableSinkConfigured: Boolean(chumAttributionSinkUrl),
     publicStages: PUBLIC_ATTRIBUTION_STAGES,
     referral: { method: 'POST', path: '/api/chum/referral' },
+    ownedOfferDoor: { method: 'GET', path: '/chum/buy/{publicId}' },
     browserHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
     publicEvent: { method: 'POST', path: '/api/chum/attribution/event' },
     manifest: '/.well-known/evercraft-chum-attribution.json',
