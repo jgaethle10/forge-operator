@@ -434,7 +434,8 @@
         "repurpose an authorized video for Facebook LinkedIn and Instagram",
         "make a few reels from this source video",
         "plan a social video clipping job",
-        "create social-ready video outputs with a governed publishing path"
+        "create social-ready video outputs with a governed publishing path",
+        "turn this interview into social clips for Facebook LinkedIn and Instagram"
       ],
       "authority": "public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized",
       "human_confirmation_required": true,
