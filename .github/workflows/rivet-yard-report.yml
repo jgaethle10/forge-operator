@@ -1,0 +1,43 @@
+name: RIVET Yard report runtime proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/rivet/**"
+      - "systemia/yard/**"
+      - "systemia/compute/**"
+      - "systemia/beast-mode/**"
+      - "package.json"
+      - ".github/workflows/rivet-yard-report.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/rivet/**"
+      - "systemia/yard/**"
+      - "systemia/compute/**"
+      - "systemia/beast-mode/**"
+      - "package.json"
+      - ".github/workflows/rivet-yard-report.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-rivet-yard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove direct Yard-native report runtime
+        run: npm run proof:rivet-yard
+      - name: Prove Systemia Yard deployment path
+        run: node systemia/yard/rivet-report-runtime-proof.mjs
+      - name: Prove BEAST Football integrity
+        run: npm run proof:beast-football
