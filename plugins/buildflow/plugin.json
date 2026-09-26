@@ -1,0 +1,22 @@
+{
+  "name": "buildflow",
+  "version": "0.1.0",
+  "description": "Route enterprise operations and migration problems safely",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "buildflow",
+    "erp",
+    "migration",
+    "enterprise-operations",
+    "procurement",
+    "governed-agents",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
