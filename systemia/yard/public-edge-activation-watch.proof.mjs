@@ -112,6 +112,11 @@ try{
   assert.equal(activated.route_scope,'loopback_proof');
   assert.equal(activated.route_verified,false);
   assert.equal(activated.selected_node_id,'watch-edge-node');
+  assert.equal(activated.identity_attestation_required,true);
+  assert.equal(activated.identity_verified,true);
+  assert.ok(activated.device_fingerprint);
+  assert.ok(activated.edge_attestation_receipt);
+  assert.ok(activated.specialist_attestation_receipt);
   assert.equal(activated.founder_action_required,false);
 
   const stateFile=path.join(stateDir,'public-edge-activation-watch.json');
@@ -164,6 +169,8 @@ try{
     automatic_activation:true,
     selected_node:'watch-edge-node',
     placement_label_filtering:true,
+    device_identity_attested:true,
+    same_device_binding:true,
     controller_restart_resume:true,
     allocator_authority_persisted:false,
     clean_route_release:true,
