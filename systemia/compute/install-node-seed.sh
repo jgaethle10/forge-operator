@@ -42,17 +42,15 @@ chmod 0750 "${STATE_ROOT}" "${ENV_DIR}"
 chown -R evercraft:evercraft "${STATE_ROOT}"
 
 rm -rf "${INSTALL_ROOT:?}/"*
-mkdir -p   "${INSTALL_ROOT}/systemia/compute"   "${INSTALL_ROOT}/systemia/collider"   "${INSTALL_ROOT}/systemia/core/bootstrap"
+mkdir -p "${INSTALL_ROOT}"
 
-for file in node-seed.mjs runtime-node.mjs capacity-beacon.mjs device-identity.mjs field-preflight.mjs field-certify.mjs field-offline-check.mjs; do
-  install -m 0644 "${SOURCE_ROOT}/systemia/compute/${file}"     "${INSTALL_ROOT}/systemia/compute/${file}"
-done
-
-for file in kernel.mjs runtime.mjs; do
-  install -m 0644 "${SOURCE_ROOT}/systemia/collider/${file}"     "${INSTALL_ROOT}/systemia/collider/${file}"
-done
-
-install -m 0644   "${SOURCE_ROOT}/systemia/core/bootstrap/private-origin.mjs"   "${INSTALL_ROOT}/systemia/core/bootstrap/private-origin.mjs"
+# NodeSeed has grown into the Evercraft Compute substrate and runtime-node.mjs
+# intentionally composes multiple Systemia resident workloads. Copy the reviewed
+# Systemia code tree as one immutable field bundle so a newly installed node
+# cannot advertise workload classes whose modules were omitted by the installer.
+cp -a "${SOURCE_ROOT}/systemia" "${INSTALL_ROOT}/systemia"
+find "${INSTALL_ROOT}/systemia" -type d -exec chmod 0755 {} +
+find "${INSTALL_ROOT}/systemia" -type f -exec chmod 0644 {} +
 
 ALLOCATOR_TOKEN="${EVERCRAFT_ALLOCATOR_TOKEN:-}"
 if [[ -z "${ALLOCATOR_TOKEN}" ]]; then
@@ -69,13 +67,32 @@ if [[ -z "${ADVERTISE_HOST}" ]]; then
 fi
 
 NODE_ID="${EVERCRAFT_NODE_ID:-evercraft-$(hostname -s)}"
+NODE_LABELS="${EVERCRAFT_NODE_LABELS:-}"
 
 umask 077
 cat > "${ENV_FILE}" <<EOF
 EVERCRAFT_ALLOCATOR_TOKEN=${ALLOCATOR_TOKEN}
 EVERCRAFT_ADVERTISE_HOST=${ADVERTISE_HOST}
 EVERCRAFT_NODE_ID=${NODE_ID}
+EVERCRAFT_NODE_LABELS=${NODE_LABELS}
 EOF
+
+# Public-edge configuration is opt-in. If the host is already provisioned with
+# a wildcard domain and local certificate paths, persist only those references.
+# Certificate/key bytes remain on the node and are never printed or copied into
+# receipts.
+if [[ -n "${EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN:-}" ]]; then
+  printf 'EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN=%s\n' "${EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN}" >> "${ENV_FILE}"
+fi
+if [[ -n "${EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH:-}" ]]; then
+  printf 'EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH=%s\n' "${EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH}" >> "${ENV_FILE}"
+fi
+if [[ -n "${EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH:-}" ]]; then
+  printf 'EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH=%s\n' "${EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH}" >> "${ENV_FILE}"
+fi
+if [[ -n "${EVERCRAFT_PUBLIC_EDGE_PORT:-}" ]]; then
+  printf 'EVERCRAFT_PUBLIC_EDGE_PORT=%s\n' "${EVERCRAFT_PUBLIC_EDGE_PORT}" >> "${ENV_FILE}"
+fi
 chmod 0600 "${ENV_FILE}"
 
 cat > "${UNIT_FILE}" <<EOF
