@@ -1,10 +1,9 @@
 {
   "schema": "evercraft.direct-product-doors.v1",
-  "generated_at": "2026-09-25",
+  "generated_from": "distribution/direct-plugin-specs.json",
   "routing_policy": {
     "default": "specialist_direct_when_clear",
-    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable",
-    "universal_mcp": "io.github.jgaethle10/evercraft-machine-commerce"
+    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable"
   },
   "doors": [
     {
@@ -13,7 +12,8 @@
       "registry_name": "io.github.jgaethle10/forensiscope",
       "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
       "plugin_package": "plugins/forensiscope",
-      "state": "registry_published_direct_mcp_existing"
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it."
     },
     {
       "product": "AliEV / RIVET",
@@ -21,7 +21,8 @@
       "registry_name": "io.github.jgaethle10/aliev",
       "remote_mcp": "https://aliev.base44.app/functions/alievMcp",
       "plugin_package": "plugins/aliev",
-      "state": "registry_published_direct_mcp_existing"
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval."
     },
     {
       "product": "FindMyPart",
@@ -29,22 +30,71 @@
       "registry_name": "io.github.jgaethle10/findmypart",
       "remote_mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
       "plugin_package": "plugins/findmypart",
-      "state": "registry_published_direct_mcp_existing"
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Use the live FindMyPart MCP for current hunt, pricing, checkout, status, and evidence state. Never invent inventory, compatibility, supplier availability, or a successful purchase."
     },
     {
       "product": "Systemia Website Audit",
-      "intent": "Website conversion, local SEO, performance, and practical-fix audit.",
+      "intent": "Website conversion, local SEO, performance, and practical-fix auditing.",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
       "remote_mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
-      "state": "registry_published_direct_mcp_existing"
+      "plugin_package": "plugins/systemia-website-audit",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Do not fabricate audit findings before the audit runs. Checkout preparation is not payment proof, and payment does not imply completed fulfillment until the product verifier confirms it."
+    },
+    {
+      "product": "Career Command",
+      "intent": "Interview practice and career preparation.",
+      "registry_name": "io.github.jgaethle10/career-command",
+      "remote_mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "plugin_package": "plugins/career-command",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Keep guidance user-controlled. Do not claim guaranteed hiring outcomes, employer endorsement, or access to private employer systems."
+    },
+    {
+      "product": "EventWave",
+      "intent": "Event discovery, event promotion, and venue visibility.",
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "remote_mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "plugin_package": "plugins/eventwave",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled."
+    },
+    {
+      "product": "FAIE",
+      "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
+      "registry_name": "io.github.jgaethle10/faie",
+      "remote_mcp": "https://faie.base44.app/functions/faieMcp",
+      "plugin_package": "plugins/faie",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
+    },
+    {
+      "product": "BuildFlow Enterprise Operations",
+      "intent": "Enterprise operations capability discovery, routing, migration/process pain, and privacy-preserving human handoff.",
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "remote_mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "plugin_package": "plugins/buildflow",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Do not send private customer records through public discovery. A handoff does not grant private-system access, execute business actions, create checkout, or prove deployment."
     },
     {
       "product": "Evercraft Web",
       "intent": "Public URL retrieval, structured extraction, and bounded site inspection for AI agents.",
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "remote_mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "plugin_package": "plugins/evercraft-web",
       "state": "registry_published_direct_mcp_existing",
-      "caveat": "Search and browser execution remain held until independently verified."
+      "truth_boundary": "Public fetch and bounded site inspection are the live-verified primitives. Do not claim search, browser automation, authenticated browsing, or broader network access is live until the MCP reports those gates passed."
+    },
+    {
+      "product": "Website Launch",
+      "intent": "Business website planning and launch assistance.",
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "remote_mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "plugin_package": "plugins/website-launch",
+      "state": "registry_published_direct_mcp_existing",
+      "truth_boundary": "Do not claim a website was purchased, deployed, published, or transferred until live tool state proves it. Paid and publishing actions remain human-confirmed."
     },
     {
       "product": "Systemia Remote Ops",
@@ -53,7 +103,7 @@
       "remote_mcp": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
       "plugin_package": "plugins/systemia-remote-ops",
       "state": "source_ready_deployment_unverified",
-      "caveat": "Do not publish to a registry or claim the direct MCP live until an independent public health and tools receipt passes."
+      "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt."
     }
   ]
 }
