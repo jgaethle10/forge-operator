@@ -173,6 +173,10 @@ const CHUM_DISCOVERY_LINKS = [
   '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
   '</openapi.json>; rel="service-desc"; type="application/json"',
   '</sitemap.xml>; rel="sitemap"; type="application/xml"',
+  '</feed.xml>; rel="alternate"; type="application/rss+xml"; title="Evercraft Product Discovery RSS"',
+  '</feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Product Discovery JSON Feed"',
+  '</opensearch.xml>; rel="search"; type="application/opensearchdescription+xml"; title="Evercraft Search"',
+  '</.well-known/evercraft-syndication.json>; rel="service-desc"; type="application/json"; title="Evercraft Syndication Manifest"',
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
   '</chum/hot/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Hot Discovery Queue"',
@@ -188,6 +192,9 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/llms.txt' ||
     pathname === '/llms-full.txt' ||
     pathname === '/openapi.json' ||
+    pathname === '/feed.xml' ||
+    pathname === '/feed.json' ||
+    pathname === '/opensearch.xml' ||
     pathname.startsWith('/.well-known/') ||
     pathname.startsWith('/chum/') ||
     pathname.startsWith('/forensiscope/') ||
