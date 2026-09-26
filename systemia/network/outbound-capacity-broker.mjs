@@ -889,7 +889,8 @@ export async function startOutboundCapacityBroker({
 
         const allocatorRoute =
           (req.method === 'POST' && route === '/v1/leases') ||
-          (req.method === 'POST' && route === '/v1/attest');
+          (req.method === 'POST' && route === '/v1/attest') ||
+          (req.method === 'POST' && route === '/v1/field-enrollment-packet');
         if (allocatorRoute && sha(bearer(req)) !== node.control_token_hash) {
           return send(res, 401, { error: 'remote_allocator_auth_required' });
         }
