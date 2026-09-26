@@ -25,6 +25,8 @@ Public-mode controls:
 
 - public HTTP(S) targets only
 - DNS/IP validation for the initial target and every browser network request
+- Chromium is forced through an Evercraft-owned loopback outbound proxy that resolves, validates, then connects to the exact vetted public IP, closing the DNS-rebinding/TOCTOU gap
+- destination ports are limited to 80/443
 - blocks loopback, private, link-local, carrier-grade NAT, documentation, multicast and reserved targets
 - strips outbound Cookie and Authorization headers
 - fresh browser context per job
