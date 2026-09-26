@@ -30,6 +30,12 @@ const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.tr
 const machineCommerceGatewayUrl =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const buyerFrontageOrigin =
+  process.env.EVERCRAFT_BUYER_FRONTAGE_ORIGIN?.trim() ||
+  'https://evercraft-ai-suite-08c4d2b8.base44.app';
+const machineCommerceAcquisitionUrl =
+  process.env.EVERCRAFT_MACHINE_COMMERCE_ACQUISITION_URL?.trim() ||
+  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition';
 const crawlerRadarStore = createCrawlerRadarStore({
   maxEvents: Number(process.env.CHUM_CRAWLER_RADAR_MAX_EVENTS || 5000),
   persistPath: process.env.CHUM_CRAWLER_OBSERVATION_PATH?.trim() || '',
@@ -388,6 +394,7 @@ function publicOfferProjection(offer: any) {
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: offer.confirmation,
     public_url: offer.public_url,
+    buyer_frontage_url: offer?.public_id ? chumBuyerFrontageUrl(offer.public_id, 'revenue_watershed') : null,
     payment_authority: offer.payment_authority,
     invocation_status: offer.invocation_status,
     catalog_version: offer.catalog_version,
@@ -408,6 +415,69 @@ function chumHumanReviewUrl(publicId: string): string {
   target.searchParams.set('view', 'service');
   target.searchParams.set('public_id', publicId);
   return target.toString();
+}
+
+function chumBuyerFrontageUrl(publicId: string, surface = 'chum_public_surface'): string {
+  const base = new URL(buyerFrontageOrigin);
+  if (base.protocol !== 'https:') {
+    throw new Error('Evercraft buyer frontage origin must use HTTPS.');
+  }
+  const target = new URL('/buy/' + encodeURIComponent(publicId), base.origin);
+  target.searchParams.set('src', 'chum');
+  target.searchParams.set('campaign', 'buyer-frontage');
+  target.searchParams.set('ec_surface', String(surface || 'chum_public_surface').slice(0, 64));
+  target.searchParams.set('ec_public_id', publicId);
+  return target.toString();
+}
+
+function chumAcquisitionSource(req: Request, providerClaim = 'unknown'): string {
+  const explicit = String(providerClaim || '').trim().toLowerCase();
+  if (explicit && explicit !== 'unknown') return explicit.slice(0, 80);
+  try {
+    const host = req.get('referer') ? new URL(String(req.get('referer'))).hostname.toLowerCase() : '';
+    if (host.includes('chatgpt.com') || host.includes('openai.com')) return 'chatgpt';
+    if (host.includes('claude.ai') || host.includes('anthropic.com')) return 'claude';
+    if (host.includes('gemini.google.com')) return 'gemini';
+    if (host.includes('perplexity.ai')) return 'perplexity';
+    if (/google\.|bing\.|duckduckgo\.|yahoo\./.test(host)) return 'search';
+    return host ? 'referral' : 'direct';
+  } catch {
+    return 'direct';
+  }
+}
+
+async function persistPublicChumAcquisition(args: {
+  eventType: 'pain_view' | 'buyer_view' | 'cta_click';
+  publicId: string;
+  source: string;
+  campaign?: string;
+  landingUrl?: string;
+  destinationUrl?: string;
+}) {
+  const target = new URL(machineCommerceAcquisitionUrl);
+  if (target.protocol !== 'https:') {
+    throw new Error('Evercraft acquisition endpoint must use HTTPS.');
+  }
+  const response = await fetch(target, {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      'user-agent': 'Evercraft-CHUM-Acquisition/1.0',
+    },
+    body: JSON.stringify({
+      event_type: args.eventType,
+      offer_id: args.publicId,
+      source: args.source,
+      campaign: args.campaign || 'buyer-frontage',
+      landing_url: args.landingUrl || '',
+      destination_url: args.destinationUrl || '',
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(`Evercraft acquisition endpoint returned HTTP ${response.status}`);
+  }
+  return { persisted: true, state: 'machine_commerce_acquisition' };
 }
 
 async function persistChumAttributionEvent(event: unknown) {
@@ -765,6 +835,13 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
     schema: 'evercraft.chum.attribution.v1',
     configured: Boolean(chumAttributionSecret),
     durableSinkConfigured: Boolean(chumAttributionSinkUrl),
+    publicAcquisitionLedger: {
+      configured: true,
+      endpoint: machineCommerceAcquisitionUrl,
+      stages: ['landing', 'offer_view', 'continue_clicked', 'checkout_started'],
+      paymentAuthority: false,
+    },
+    buyerFrontageOrigin,
     publicStages: PUBLIC_ATTRIBUTION_STAGES,
     referral: { method: 'POST', path: '/api/chum/referral' },
     browserHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
@@ -798,16 +875,17 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       return;
     }
 
+    const targetUrl = chumBuyerFrontageUrl(offer.public_id, surface);
     const issued = issueReferralToken({
       productKey: offer.product_key || offer.public_id,
       publicId: offer.public_id,
       providerClaim,
       surface,
-      targetUrl: offer.public_url,
+      targetUrl,
       intent,
     }, chumAttributionSecret);
 
-    const landing = new URL(offer.public_url);
+    const landing = new URL(targetUrl);
     landing.searchParams.set('ec_ref', issued.token);
     landing.searchParams.set('ec_source', 'chum');
 
@@ -858,10 +936,26 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
       return;
     }
 
-    const targetUrl = chumHumanReviewUrl(offer.public_id);
+    const targetUrl = chumBuyerFrontageUrl(offer.public_id, surface);
     const landing = new URL(targetUrl);
     landing.searchParams.set('ec_source', 'chum');
     landing.searchParams.set('ec_surface', surface);
+
+    const acquisitionSource = chumAcquisitionSource(req, providerClaim);
+    const currentOrigin = requestOrigin(req);
+    const currentUrl = currentOrigin ? currentOrigin + req.originalUrl : req.originalUrl;
+    try {
+      await persistPublicChumAcquisition({
+        eventType: 'pain_view',
+        publicId: offer.public_id,
+        source: acquisitionSource,
+        campaign: 'buyer-frontage',
+        landingUrl: currentUrl,
+        destinationUrl: landing.toString(),
+      });
+    } catch (error) {
+      console.warn('CHUM public acquisition persistence failed:', error);
+    }
 
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
