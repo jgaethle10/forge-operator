@@ -101,6 +101,11 @@ try{
   assert.equal(activation.receipt.route_scope,'loopback_proof');
   assert.equal(activation.receipt.route_verified,false);
   assert.equal(activation.receipt.provider_transport,'compute_lease');
+  assert.equal(activation.receipt.identity_attestation_required,true);
+  assert.equal(activation.receipt.identity_verified,true);
+  assert.ok(activation.receipt.device_fingerprint);
+  assert.ok(activation.receipt.edge_attestation_receipt);
+  assert.ok(activation.receipt.specialist_attestation_receipt);
   assert.equal(activation.receipt.founder_login_required,false);
   assert.equal(activation.receipt.selected_endpoint_exposed,false);
   assert.equal(activation.receipt.allocator_token_exposed,false);
@@ -125,6 +130,8 @@ try{
     selected_edge_node:'edge-node',
     provider_transport:'compute_lease',
     controller_health_verified:true,
+    device_identity_attested:true,
+    same_device_binding:true,
     allocator_secret_exposed:false,
     selected_endpoint_exposed:false,
     founder_login_required:false,
