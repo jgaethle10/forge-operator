@@ -23,6 +23,8 @@ COPY --from=build /app/systemia/chum/attribution.ts ./systemia/chum/attribution.
 COPY --from=build /app/systemia/chum/live-intent-hunter.mjs ./systemia/chum/live-intent-hunter.mjs
 COPY --from=build /app/systemia/chum/crawler-radar.mjs ./systemia/chum/crawler-radar.mjs
 COPY --from=build /app/systemia/media-studio ./systemia/media-studio
+COPY --from=build /app/systemia/rivet ./systemia/rivet
+COPY --from=build /app/systemia/beast-mode ./systemia/beast-mode
 COPY --from=build /app/registry ./registry
 COPY --from=build /app/dist ./dist
 

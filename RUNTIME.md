@@ -30,6 +30,10 @@ A commit-addressed image is also published for every main-branch release. Yard O
 - `CHUM_ATTRIBUTION_SINK_URL` - HTTPS durable attribution receipt sink.
 - `CHUM_ATTRIBUTION_SINK_TOKEN` - optional bearer token used by Forge when writing attribution receipts.
 - `CHUM_ATTRIBUTION_INGEST_TOKEN` - trusted backend token for payment-verified and fulfilled attribution events.
+- `SYSTEMIA_MACHINE_KEY` - private Systemia machine authority used by the RIVET Yard gateway to request the AliEV commercial snapshot.
+- `RIVET_REPORT_GATEWAY_TOKEN` - private server-to-server bearer token required to invoke the RIVET Yard report gateway.
+- `ALIEV_YARD_SOURCE_URL` - optional override for the AliEV snapshot source endpoint.
+- `RIVET_REPORT_STATE_DIR` - optional runtime state directory for RIVET report receipts.
 
 If `FORGE_CHECKOUT_URL` is absent, Forge does not display or advertise an active checkout. Pricing remains human-gated.
 
@@ -58,3 +62,8 @@ Public AI endpoints are rate-limited in-process to reduce accidental or abusive 
 The lightweight public discovery lane can run as `systemia.chum-public-origin.v1` on Evercraft Compute. This resident service is intentionally read-only and serves the public CHUM/LLM/crawler surfaces without exposing private Systemia topology.
 
 A local healthy service does not become `CHUM_PUBLIC_ORIGIN` by inference. Yard must independently verify a public HTTPS route against both the resident instance ID and the bound deployment receipt. The resulting sanitized runtime-origin receipt can then activate Crawl Pressure's live-byte verification and IndexNow broadcast path.
+
+
+## RIVET Yard report gateway
+
+When both `SYSTEMIA_MACHINE_KEY` and `RIVET_REPORT_GATEWAY_TOKEN` are configured, Forge exposes `POST /api/rivet/reports` as an authenticated server-to-server compatibility edge for the migrating RIVET UI. `GET /api/rivet/report-health` reports only safe configuration state. The gateway fails closed when either secret is absent and does not grant customer or payment authority. Base44 remains a temporary UI/data/auth compatibility client until the live Yard route and fresh-report canary are independently verified.
