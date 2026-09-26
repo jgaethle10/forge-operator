@@ -70,7 +70,7 @@
     "test:saban-revenue": "node tests/saban-revenue-swarm.test.mjs",
     "test:openai-plugin-submission": "node scripts/validate-openai-plugin-submission.mjs",
     "test:chum-start-corridor": "node tests/chum-start-corridor.test.mjs",
-    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan && npm run proof:legacy-rescue-link-discovery && npm run proof:legacy-rescue-strike-admission && npm run proof:ibmi-direct-buyer-signal",
+    "proof:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch.proof.mjs && npm run proof:legacy-rescue-public-scan && npm run proof:legacy-rescue-link-discovery && npm run proof:legacy-rescue-strike-admission && npm run proof:ibmi-direct-buyer-signal && npm run proof:ibmi-direct-buyer-queue",
     "test:chum-surfaces": "npm run chum:mirror && node systemia/chum/discovery-surfaces.test.mjs",
     "test:ibmi-rescue-discovery": "node tests/ibmi-rescue-discovery.test.mjs",
     "run:legacy-rescue-watch": "node systemia/organism/legacy-rescue-watch-runner.mjs",
@@ -170,7 +170,8 @@
     "proof:yard-remote-ops": "node systemia/yard/remote-ops-specialist.proof.mjs",
     "proof:public-edge-field-admit": "node systemia/compute/public-edge-field-admit.proof.mjs",
     "proof:field-enrollment-packet": "node systemia/yard/field-enrollment-packet.proof.mjs",
-    "test:public-route-field-preflight": "node --test tests/public-route-field-preflight.test.mjs"
+    "test:public-route-field-preflight": "node --test tests/public-route-field-preflight.test.mjs",
+    "proof:ibmi-direct-buyer-queue": "node systemia/organism/ibmi-direct-buyer-queue.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
