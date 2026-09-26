@@ -278,7 +278,7 @@
       "category": "Business",
       "website_url": "https://systemia-remote-ops.base44.app/",
       "registry_name": null,
-      "mcp_url": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
+      "mcp_url": null,
       "state": "source_ready_deployment_unverified",
       "default_prompt": "I am considering a business decision and want to simulate the likely tradeoffs before I act.",
       "keywords": [
@@ -291,7 +291,9 @@
       ],
       "intent": "Business decision simulation before acting, beginning with pricing changes.",
       "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt.",
-      "capability_public_ids": []
+      "capability_public_ids": [],
+      "candidate_mcp_url": "https://systemia-remote-ops.base44.app/functions/systemiaRemoteOpsMcp",
+      "public_origin_state": "deployment_unverified"
     },
     {
       "slug": "deck-capital-fit",
@@ -376,8 +378,8 @@
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "registry_name": null,
-      "mcp_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/ibmiRescueMcp",
-      "state": "deployment_canary_pending",
+      "mcp_url": null,
+      "state": "yard_runtime_proven_public_route_pending",
       "default_prompt": "Assess this IBM i or AS/400 estate before an upgrade or modernization and preserve unknowns instead of guessing.",
       "keywords": [
         "ibmi",
@@ -390,10 +392,13 @@
         "mcp"
       ],
       "intent": "IBM i or AS/400 estate assessment, dependency mapping, upgrade-risk review, modernization proof, and rollback/test planning.",
-      "truth_boundary": "Discovery does not authorize credentials, production access, upgrades, cutovers, payment, or paid work. The direct MCP is read-only offer/handoff until independently verified otherwise.",
+      "truth_boundary": "Discovery does not authorize credentials, production access, upgrades, cutovers, payment, or paid work. The read-only Yard runtime is proven locally, but no remote MCP may be advertised until an independent public HTTPS route is verified.",
       "capability_public_ids": [
         "ibmi-rescue-v1"
-      ]
+      ],
+      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "runtime_path": "/mcp/ibmi-rescue",
+      "public_origin_state": "https_route_unbound"
     },
     {
       "slug": "foundry-app-escape",
@@ -403,8 +408,8 @@
       "category": "Business",
       "website_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
       "registry_name": null,
-      "mcp_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp",
-      "state": "deployment_canary_pending",
+      "mcp_url": null,
+      "state": "yard_runtime_proven_public_route_pending",
       "default_prompt": "Audit this app for portability, lock-in, dependency, migration, and rollback risk without changing production.",
       "keywords": [
         "foundry",
@@ -415,10 +420,13 @@
         "mcp"
       ],
       "intent": "App portability, vendor-lock-in, dependency, security, reconstruction, migration, and rollback analysis.",
-      "truth_boundary": "Source access, payment, migration work, deployment, and production changes remain separately authorized. The direct MCP is read-only offer/handoff until independently verified otherwise.",
+      "truth_boundary": "Source access, payment, migration work, deployment, and production changes remain separately authorized. The read-only Yard runtime is proven locally, but no remote MCP may be advertised until an independent public HTTPS route is verified.",
       "capability_public_ids": [
         "foundry-app-escape-audit-v1"
-      ]
+      ],
+      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "runtime_path": "/mcp/foundry-app-escape",
+      "public_origin_state": "https_route_unbound"
     },
     {
       "slug": "site-survive",
@@ -428,8 +436,8 @@
       "category": "Business",
       "website_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
       "registry_name": null,
-      "mcp_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp",
-      "state": "deployment_canary_pending",
+      "mcp_url": null,
+      "state": "yard_runtime_proven_public_route_pending",
       "default_prompt": "Show me which parts of this site-dependent operation fail first during a realistic connectivity outage and what to prioritize.",
       "keywords": [
         "site-survive",
@@ -440,10 +448,13 @@
         "mcp"
       ],
       "intent": "Site continuity, internet-outage dependency analysis, and prioritized operational resilience planning.",
-      "truth_boundary": "The direct MCP does not create payment, perform the paid resilience audit, change networks, or guarantee continuity. It is read-only offer/handoff until independently verified otherwise.",
+      "truth_boundary": "The direct runtime does not create payment, perform the paid resilience audit, change networks, or guarantee continuity. The read-only Yard runtime is proven locally, but no remote MCP may be advertised until an independent public HTTPS route is verified.",
       "capability_public_ids": [
         "site-survive-rapid-audit-v1"
-      ]
+      ],
+      "runtime_workload_class": "systemia.specialist-handoff-mcp.v1",
+      "runtime_path": "/mcp/site-survive",
+      "public_origin_state": "https_route_unbound"
     }
   ]
 }
