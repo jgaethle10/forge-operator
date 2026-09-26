@@ -1,0 +1,38 @@
+{
+  "name": "faie",
+  "version": "0.1.0",
+  "description": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://faie.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "faie",
+    "agriculture",
+    "water",
+    "land",
+    "resilience",
+    "production-risk",
+    "evidence",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "FAIE",
+    "shortDescription": "Build evidence briefs for agriculture and resilience decisions",
+    "longDescription": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://faie.base44.app/",
+    "defaultPrompt": [
+      "Build me a sourced evidence brief for an agriculture, water, land-resilience, or production-risk decision."
+    ]
+  }
+}
