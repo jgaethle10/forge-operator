@@ -32,7 +32,7 @@ export function humanStartUrl(offer, {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
   const origin = configuredChumPublicOrigin(publicOrigin);
   if (!origin) return machineReviewUrl(offer.public_id, gateway);
-  return origin + '/api/chum/go/' + encodeURIComponent(String(offer.public_id))
+  return origin + '/chum/buy/' + encodeURIComponent(String(offer.public_id))
     + '?surface=' + encodeURIComponent(String(surface || 'chum_public_surface'));
 }
 
