@@ -65,6 +65,7 @@ jobs:
             artifacts/legacy-rescue-watch/mission-snapshot.json
             artifacts/legacy-rescue-watch/radar-input.json
             artifacts/legacy-rescue-watch/strike-admission.json
+            artifacts/legacy-rescue-watch/buyer-signals.json
             artifacts/legacy-rescue-watch/public-scan.json
             artifacts/legacy-rescue-watch/signals.json
           if-no-files-found: warn
@@ -85,7 +86,7 @@ jobs:
             echo "Private-system access: explicit authorization required"
             echo "Production mutation: explicit authorization required"
             echo
-            for FILE in               artifacts/legacy-rescue-watch/public-scan.json               artifacts/legacy-rescue-watch/latest.json               artifacts/legacy-rescue-watch/strike-admission.json               artifacts/legacy-rescue-watch/mission-snapshot.json; do
+            for FILE in               artifacts/legacy-rescue-watch/public-scan.json               artifacts/legacy-rescue-watch/latest.json               artifacts/legacy-rescue-watch/strike-admission.json               artifacts/legacy-rescue-watch/buyer-signals.json               artifacts/legacy-rescue-watch/mission-snapshot.json; do
               if [ -f "$FILE" ]; then
                 echo
                 echo "### $FILE"
