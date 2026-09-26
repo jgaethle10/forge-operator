@@ -24,6 +24,20 @@
       }
     },
     {
+      "service_key": "remote-device-trust-watch",
+      "mode": "cycle",
+      "manifest": "systemia/organism/pending-device-trust-watch.workflow.json",
+      "executable": "systemia/organism/pending-device-trust-watch-runner.mjs",
+      "cadence_seconds": 300,
+      "env_args": {
+        "--yard-state": "SYSTEMIA_YARD_STATE_DIR"
+      },
+      "optional_env_args": {
+        "--broker-deployment": "SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID",
+        "--out": "SYSTEMIA_REMOTE_DEVICE_TRUST_WATCH_OUT_DIR"
+      }
+    },
+    {
       "service_key": "kaidance-mission-publisher",
       "mode": "resident",
       "manifest": "systemia/organism/mission-publisher.workflow.json",
