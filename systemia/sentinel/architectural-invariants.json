@@ -1,0 +1,115 @@
+{
+  "schema": "evercraft.portfolio-sentinel.architectural-invariants.v1",
+  "version": "2026-09-26.1",
+  "purpose": "Permanent architectural laws learned from prior production/distribution failures. Sentinel evaluates these before health can be considered trustworthy.",
+  "invariants": [
+    {
+      "invariant_id": "chum-consumer-bridge-is-coverage-not-machine-health",
+      "severity": "high",
+      "type": "file_contract",
+      "file": ".github/workflows/chum-watershed.yml",
+      "required_literals": [
+        "CHUM_REQUIRE_PROBE_BRIDGE: ${{ steps.trigger_policy.outputs.require_consumer_bridge }}",
+        "machine_only_measured)",
+        "consumer-chat measurement remains separately authorization-gated."
+      ],
+      "forbidden_patterns": [
+        "CHUM_REQUIRE_PROBE_BRIDGE:\\s*\\$\\{\\{\\s*\\(github\\.event_name\\s*==\\s*'schedule'",
+        "machine_only_measured\\)[\\s\\S]{0,220}github\\.event_name[\\s\\S]{0,220}FAILED=1"
+      ],
+      "repair_recipe_id": "chum-provider-health-policy-drift"
+    },
+    {
+      "invariant_id": "sentinel-fail-closed-on-critical-high",
+      "severity": "critical",
+      "type": "file_contract",
+      "file": "systemia/organism/portfolio-sentinel-runner.mjs",
+      "required_literals": [
+        "activeFindings.filter((row) => ['critical', 'high'].includes(row.severity))",
+        "if (!healthy && args.enforceHealth) process.exitCode = 1;"
+      ],
+      "repair_recipe_id": "sentinel-health-gate-drift"
+    },
+    {
+      "invariant_id": "forge-runtime-imports-covered-by-docker",
+      "severity": "critical",
+      "type": "docker_runtime_import_coverage",
+      "entrypoint": "server.ts",
+      "dockerfile": "Dockerfile",
+      "import_prefix": "./systemia/",
+      "repair_recipe_id": "docker-runtime-import-coverage"
+    },
+    {
+      "invariant_id": "retired-specialist-mcp-doors-stay-retired",
+      "severity": "high",
+      "type": "file_contract",
+      "file": ".github/workflows/evercraft-mcp-canary.yml",
+      "required_literals": [
+        "ibmi-rescue-v1",
+        "foundry-app-escape-audit-v1",
+        "site-survive-rapid-audit-v1",
+        "prepare_quote_ready_service_handoff"
+      ],
+      "forbidden_literals": [
+        "functions/ibmiRescueMcp",
+        "functions/foundryAppEscapeMcp",
+        "functions/siteSurviveMcp"
+      ],
+      "repair_recipe_id": "retired-mcp-door-regression"
+    },
+    {
+      "invariant_id": "aliev-rivet-intent-boundary-regression-protected",
+      "severity": "high",
+      "type": "file_contract",
+      "file": "tests/chum-live-intent-hunter.test.mjs",
+      "required_literals": [
+        "assert.equal(genericEv.match.product_key, 'aliev');",
+        "assert.equal(genericEv.routing_receipt.ranking_mode, 'problem_first');",
+        "assert.equal(commercialEv.match.public_id, 'rivet-site-underwriting-v1');",
+        "assert.equal(commercialEv.routing_receipt.explicit_commercial_continuation, true);"
+      ],
+      "repair_recipe_id": "aliev-rivet-routing-regression"
+    },
+    {
+      "invariant_id": "sell-now-static-continuation-contract",
+      "severity": "high",
+      "type": "sell_now_catalog_contract",
+      "file": "public/.well-known/evercraft-machine-catalog.json",
+      "required_fields": [
+        "public_id",
+        "name",
+        "problem",
+        "commercial_state",
+        "machine_state",
+        "pricing",
+        "public_url",
+        "payment_authority",
+        "confirmation"
+      ],
+      "require_nonempty_offers": true,
+      "repair_recipe_id": "sell-now-continuation-contract"
+    },
+    {
+      "invariant_id": "trigger-mode-policy-single-source",
+      "severity": "high",
+      "type": "file_contract",
+      "file": ".github/workflows/chum-watershed.yml",
+      "required_literals": [
+        "node systemia/sentinel/trigger-mode-policy.mjs",
+        "steps.trigger_policy.outputs.require_consumer_bridge",
+        "steps.trigger_policy.outputs.provider_probe_scope",
+        "steps.trigger_policy.outputs.ard_submit",
+        "steps.trigger_policy.outputs.allow_blocked_provider_measurement",
+        "steps.trigger_policy.outputs.broadcast_discovery"
+      ],
+      "repair_recipe_id": "trigger-mode-policy-drift",
+      "occurrence_limits": [
+        {
+          "literal": "${{ github.event_name }}",
+          "min": 2,
+          "max": 2
+        }
+      ]
+    }
+  ]
+}

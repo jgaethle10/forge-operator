@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { admitGoalPlan, createGoalState } from './goal-runtime.mjs';
+import { evaluateArchitecturalInvariants } from '../sentinel/architectural-invariants.mjs';
 
 export const PORTFOLIO_SENTINEL = Object.freeze({
   schema: 'evercraft.systemia.workflow.v1',
@@ -150,7 +151,8 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
       workflows: [],
       resident_services: [],
       package_scripts: [],
-      canonical_urls: []
+      canonical_urls: [],
+      architectural_invariants: []
     }
   };
 
@@ -365,6 +367,34 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
     }));
   }
 
+  const invariantResult = evaluateArchitecturalInvariants({ rootDir: root });
+  report.inventory.architectural_invariants = invariantResult.checks || [];
+  for (const check of invariantResult.checks || []) {
+    addCheck(
+      report,
+      `architectural-invariant:${check.invariant_id}`,
+      check.ok,
+      check.ok ? 'architectural invariant satisfied' : `${check.violation_count} violation(s)`,
+      ['repo:systemia/sentinel/architectural-invariants.json']
+    );
+  }
+  for (const row of invariantResult.violations || []) {
+    addFinding(report, makeFinding({
+      code: 'architectural_invariant_violation',
+      severity: row.severity || 'high',
+      subject: row.invariant_id,
+      detail: row.detail,
+      evidence_refs: row.evidence_refs || ['repo:systemia/sentinel/architectural-invariants.json'],
+      repair_mode: 'recipe_bound_repair',
+      human_gate_required: true,
+      metadata: {
+        invariant_id: row.invariant_id,
+        repair_recipe_id: row.repair_recipe_id || null,
+        ...(row.metadata || {})
+      }
+    }));
+  }
+
   const mirrorKeys = new Set(listDirNames(root, 'public/chum/products'));
   const mirrored = report.inventory.products.filter((product) => mirrorKeys.has(product.product_key)).length;
   report.inventory.discovery_mirror_coverage = {
@@ -377,7 +407,8 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
   report.scanned = report.checks.length +
     report.inventory.products.length +
     report.inventory.workflows.length +
-    report.inventory.resident_services.length;
+    report.inventory.resident_services.length +
+    report.inventory.architectural_invariants.length;
   report.findings.sort((a, b) =>
     ['critical', 'high', 'medium', 'low', 'info'].indexOf(a.severity) -
     ['critical', 'high', 'medium', 'low', 'info'].indexOf(b.severity) ||
@@ -430,7 +461,8 @@ export function buildPortfolioRepairQueue(findings = [], delta = {}) {
       repair_command: row.repair_command || null,
       human_gate_required: row.human_gate_required,
       assigned_agents: row.human_gate_required ? ['human-approved-operator'] : ['systemia-organism', 'saban'],
-      evidence_refs: row.evidence_refs
+      evidence_refs: row.evidence_refs,
+      repair_recipe: row.repair_recipe || null
     }))
     .slice(0, 200);
 }
