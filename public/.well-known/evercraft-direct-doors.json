@@ -131,6 +131,33 @@
       "plugin_package": "plugins/roasted",
       "state": "registry_published_direct_mcp_existing",
       "truth_boundary": "Checkout requires human confirmation. Checkout creation is not payment proof, and a paid result must not be claimed until provider verification confirms paid state and result availability."
+    },
+    {
+      "product": "Evercraft IBM i Rescue",
+      "intent": "IBM i or AS/400 estate assessment, dependency mapping, upgrade-risk review, modernization proof, and rollback/test planning.",
+      "registry_name": null,
+      "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/ibmiRescueMcp",
+      "plugin_package": "plugins/ibmi-rescue",
+      "state": "deployment_canary_pending",
+      "truth_boundary": "Discovery does not authorize credentials, production access, upgrades, cutovers, payment, or paid work. The direct MCP is read-only offer/handoff until independently verified otherwise."
+    },
+    {
+      "product": "Evercraft Foundry App Escape Audit",
+      "intent": "App portability, vendor-lock-in, dependency, security, reconstruction, migration, and rollback analysis.",
+      "registry_name": null,
+      "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp",
+      "plugin_package": "plugins/foundry-app-escape",
+      "state": "deployment_canary_pending",
+      "truth_boundary": "Source access, payment, migration work, deployment, and production changes remain separately authorized. The direct MCP is read-only offer/handoff until independently verified otherwise."
+    },
+    {
+      "product": "Site-Survive Rapid Audit",
+      "intent": "Site continuity, internet-outage dependency analysis, and prioritized operational resilience planning.",
+      "registry_name": null,
+      "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp",
+      "plugin_package": "plugins/site-survive",
+      "state": "deployment_canary_pending",
+      "truth_boundary": "The direct MCP does not create payment, perform the paid resilience audit, change networks, or guarantee continuity. It is read-only offer/handoff until independently verified otherwise."
     }
   ]
 }
