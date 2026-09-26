@@ -137,6 +137,40 @@ try {
     )
   );
 
+  const syntheticOrigin = 'https://forensiscope-proof.example';
+  const eligibleDeployment = structuredClone(loopbackDeployment);
+  eligibleDeployment.public_route = {
+    ...eligibleDeployment.public_route,
+    origin: syntheticOrigin,
+    scope: 'public_https',
+    verified: true,
+    service: 'forensiscope-evidence-query',
+    deployment_receipt_hash: eligibleDeployment.receipt.receipt_hash,
+    instance_id: eligibleDeployment.result.instance_id
+  };
+  const eligibleCanary = {
+    ...loopbackCanary,
+    origin: syntheticOrigin,
+    scope: 'public_https',
+    verified: true,
+    deployment_receipt_hash: eligibleDeployment.receipt.receipt_hash,
+    initialize_or_discover_ok: true,
+    tools_list_ok: true,
+    scoped_access_enforced: true,
+    raw_media_tools_exposed: false,
+    checkout_tools_exposed: false
+  };
+  const eligibleCutover = evaluateForensiScopePublicCutover({
+    deployment: eligibleDeployment,
+    canary: eligibleCanary
+  });
+  assert.equal(eligibleCutover.eligible, true);
+  assert.deepEqual(eligibleCutover.blockers, []);
+  assert.equal(
+    eligibleCutover.migration_action,
+    'public_mcp_origin_may_be_updated_with_receipt'
+  );
+
   await yard.stopDeployment('forensiscope-evidence-query-proof', {
     reason: 'proof_complete'
   });
@@ -154,7 +188,8 @@ try {
     analysis_admission: false,
     checkout_or_payment: false,
     public_https_verified: false,
-    public_cutover_blocked_until_https_and_canary: true
+    public_cutover_blocked_until_https_and_canary: true,
+    cutover_policy_positive_path_proved: true
   }));
 } finally {
   try { await seed.close(); } catch {}
