@@ -38,6 +38,8 @@ const HIRING_PATTERNS = [
   /\bposition\b/i,
   /\bapply\b/i,
   /\bhiring\b/i,
+  /\bseeking\b/i,
+  /\bwanted\b/i,
   /\bjoin\s+(?:our|the)\s+team\b/i,
 ];
 
