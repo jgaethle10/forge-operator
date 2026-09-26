@@ -137,6 +137,9 @@ function augmentDiscovery(file) {
     syndication: '/.well-known/evercraft-syndication.json',
     rss: '/feed.xml',
     json_feed: '/feed.json',
+    commercial_intent_rss: '/chum/commercial/feed.xml',
+    commercial_intent_json: '/chum/commercial/feed.json',
+    segmented_sitemap_index: '/chum/sitemaps/index.xml',
     opensearch: '/opensearch.xml',
     syndication_hub: '/chum/syndication/'
   };
@@ -145,6 +148,9 @@ function augmentDiscovery(file) {
     policy: 'One truthful canonical product record is fanned out into standard discovery formats. Material changes may be queued for authorized social publishing, with dedupe by content hash.',
     rss: '/feed.xml',
     json_feed: '/feed.json',
+    commercial_intent_rss: '/chum/commercial/feed.xml',
+    commercial_intent_json: '/chum/commercial/feed.json',
+    segmented_sitemap_index: '/chum/sitemaps/index.xml',
     hub: '/chum/syndication/',
     manifest: '/.well-known/evercraft-syndication.json'
   };
