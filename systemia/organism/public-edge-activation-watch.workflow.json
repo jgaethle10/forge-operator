@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "public-edge-activation-watch",
+  "mission_key": "evercraft-public-specialist-edge",
+  "runtime": "systemia-organism+collider",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "runner": "systemia/organism/public-edge-activation-watch-runner.mjs",
+  "proof": "systemia/organism/public-edge-activation-watch.proof.mjs",
+  "notification_policy": {
+    "chat_scheduler": false,
+    "notify_only_on_material_change": true
+  },
+  "authority": {
+    "discover_authorized_capacity": "autonomous",
+    "allocate_bounded_compute_lease": "autonomous_with_existing_allocator_authority",
+    "deploy_read_only_specialist_runtime": "autonomous",
+    "deploy_public_edge": "autonomous_after_node_tls_admission",
+    "bind_public_route": "autonomous_after_receipt_and_instance_match",
+    "renew_leases": "autonomous",
+    "external_https_promotion": "external_canary_required",
+    "registry_publication": "systemia_release_policy",
+    "founder_login_required": false,
+    "payment_authority": false
+  },
+  "outputs": {
+    "cycle_report": "artifacts/public-edge-activation-watch/latest.json",
+    "mission_snapshot": "artifacts/public-edge-activation-watch/mission-snapshot.json",
+    "safe_state": "artifacts/public-edge-activation-watch/runtime/public-edge-activation-watch.json"
+  },
+  "private_runtime_inputs": {
+    "allocator_authority": "EVERCRAFT_ALLOCATOR_TOKEN or EVERCRAFT_ALLOCATOR_TOKENS_JSON",
+    "release_ref": "EVERCRAFT_RELEASE_REF or current git HEAD",
+    "discovery": "Evercraft capacity beacons",
+    "persistence_root": "EVERCRAFT_PUBLIC_EDGE_STATE_DIR optional"
+  },
+  "collider": {
+    "heartbeat_seconds": 300,
+    "mission_snapshot_schema": "evercraft.kaidance.mission-snapshot.v1",
+    "material_change_only": true
+  },
+  "promotion_policy": {
+    "direct_mcp_promotion_requires_external_canary": true,
+    "official_registry_publication_requires_release_policy": true,
+    "no_base44_public_edge": true,
+    "no_founder_auth_loop": true
+  }
+}
