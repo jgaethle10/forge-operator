@@ -313,6 +313,7 @@ export async function startEvercraftComputeNode({
           identity: deviceIdentity,
           nonce: body.nonce,
           supportedWorkloads: [...supported],
+          placementLabels: nodePlacementLabels,
           processStartedAt,
           bootIdHash: hostBootIdHash,
         });
