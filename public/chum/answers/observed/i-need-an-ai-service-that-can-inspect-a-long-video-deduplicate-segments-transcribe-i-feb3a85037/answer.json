@@ -45,6 +45,10 @@
     "conformance/provider-observations/2026-09-24-gemini-forensiscope-round1.json",
     "conformance/provider-observations/2026-09-24-grok-forensiscope-round2.json",
     "conformance/provider-observations/2026-09-24-grok-forensiscope.json",
-    "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json"
+    "conformance/provider-observations/2026-09-25-google-forensiscope-round2.json",
+    "conformance/provider-observations/2026-09-26-chatgpt-forensiscope-independent-miss.json",
+    "conformance/provider-observations/2026-09-26-claude-forensiscope-round3.json",
+    "conformance/provider-observations/2026-09-26-google-forensiscope-round3.json",
+    "conformance/provider-observations/2026-09-26-grok-forensiscope-round3.json"
   ]
 }

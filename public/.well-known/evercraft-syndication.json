@@ -390,7 +390,7 @@
       "discovery": "/chum/products/forensiscope/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/forensiscope",
       "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
-      "content_sha256": "d14270afc0491cf94b1490ce7dc17ea0f1d1ab315bf336b13c739ef5567736ee"
+      "content_sha256": "0ac701c60a6fa591e8b7c52e8c959d29b47ddefe49fe2a99896bfacf126820d8"
     },
     {
       "product_key": "global-energy-atlas",

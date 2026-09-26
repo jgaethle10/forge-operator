@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T04:33:16.369Z",
+  "generated_at": "2026-09-26T16:21:20.036Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -12,6 +12,16 @@
       "discovery_path": "/chum/products/evercraft-web/ai-discovery.json",
       "text": "Evercraft Web: Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
       "content_sha256": "17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "forensiscope:0ac701c60a6fa591e8b7c52e8c959d29b47ddefe49fe2a99896bfacf126820d8",
+      "product_key": "forensiscope",
+      "name": "ForensiScope",
+      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "discovery_path": "/chum/products/forensiscope/ai-discovery.json",
+      "text": "ForensiScope: ForensiScope is an Evercraft ai media overflow and analysis capability. Common needs: this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits.",
+      "content_sha256": "0ac701c60a6fa591e8b7c52e8c959d29b47ddefe49fe2a99896bfacf126820d8",
       "requires_authorized_destination": true
     },
     {

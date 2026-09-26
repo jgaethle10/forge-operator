@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
   <url><loc>/chum/</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
-  <url><loc>/chum/index.json</loc><lastmod>2026-09-26T03:58:02.744Z</lastmod></url>
+  <url><loc>/chum/index.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-26T15:08:19.376Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-26T15:08:19.376Z</lastmod></url>
   <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-26T15:08:19.376Z</lastmod></url>
@@ -19,7 +19,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-26T15:10:21.089Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T16:21:13.460Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-26T15:10:21.620Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-26T16:21:13.460Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-26T16:21:13.460Z</lastmod></url>
@@ -481,8 +481,10 @@
   <url><loc>/chum/products/forensic-record/ai-conformance.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
   <url><loc>/chum/products/forensiscope/</loc><lastmod>2026-09-25T19:09:08.195Z</lastmod></url>
   <url><loc>/chum/products/forensiscope/llms.txt</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
-  <url><loc>/chum/products/forensiscope/ai-discovery.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
-  <url><loc>/chum/products/forensiscope/ai-conformance.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
+  <url><loc>/chum/products/forensiscope/ai-discovery.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
+  <url><loc>/chum/products/forensiscope/ai-conformance.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
+  <url><loc>/forensiscope/long-video-deduplication-transcription/</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
+  <url><loc>/forensiscope/long-video-deduplication-transcription/llms.txt</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
   <url><loc>/chum/products/global-energy-atlas/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/products/global-energy-atlas/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/products/global-energy-atlas/ai-discovery.json</loc><lastmod>2026-09-26T00:44:36.244Z</lastmod></url>
@@ -603,7 +605,7 @@
   <url><loc>/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/answer.json</loc><lastmod>2026-09-26T15:12:40.638Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-a-web-tool-my-ai-agent-can-use-to-fetch-and-read-public-urls-with-source-deta-519bda3805/llms.txt</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json</loc><lastmod>2026-09-25T15:37:23.452Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/answer.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-i-feb3a85037/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-semantic-search-across-a-long-video-collection-so-i-can-ask-for-a-concept-or--394e5c6ddf/answer.json</loc><lastmod>2026-09-26T15:12:40.638Z</lastmod></url>
@@ -2148,10 +2150,10 @@
   <url><loc>/chum/answers/doors/yard-cleanup-in-the-yakima-valley-04161b4865.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
   <url><loc>/chum/answers/doors/zapier-cleanup-126ea7dc78/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/zapier-cleanup-126ea7dc78.json</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
-  <url><loc>/feed.xml</loc><lastmod>2026-09-26T04:33:16.534Z</lastmod></url>
-  <url><loc>/feed.json</loc><lastmod>2026-09-26T04:33:16.534Z</lastmod></url>
+  <url><loc>/feed.xml</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
+  <url><loc>/feed.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
   <url><loc>/opensearch.xml</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-09-26T04:33:16.534Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
   <url><loc>/chum/syndication/</loc><lastmod>2026-09-26T04:08:33.695Z</lastmod></url>
-  <url><loc>/chum/syndication/index.json</loc><lastmod>2026-09-26T04:33:16.534Z</lastmod></url>
+  <url><loc>/chum/syndication/index.json</loc><lastmod>2026-09-26T16:21:20.165Z</lastmod></url>
 </urlset>
