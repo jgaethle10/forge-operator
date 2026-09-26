@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.legacy-rescue-public-sources.v1",
   "workflow_key": "legacy-rescue-opportunity-watch",
-  "rule": "Public sources only. This monitor detects material page changes; it does not infer buyer intent, award state, qualification, or authorization.",
+  "rule": "Public sources only. This monitor detects material page changes and evidence-bound direct-buyer technology signals. Technology use never implies buyer intent, exact release, upgrade need, award state, qualification, or authorization.",
   "sources": [
     {
       "key": "ibm-i-74-lifecycle",
@@ -107,6 +107,46 @@
         "system"
       ],
       "max_discovered_links": 100
+    },
+    {
+      "key": "sierra-pacific-ibmi-career",
+      "name": "Sierra Pacific Industries IBM i career evidence",
+      "company": "Sierra Pacific Industries",
+      "url": "https://www.spi-ind.com/Careers/Details/4089409242026",
+      "allowed_hosts": [
+        "www.spi-ind.com"
+      ],
+      "enabled": true,
+      "min_poll_minutes": 360,
+      "emit_on_first_seen": false,
+      "emit_body_change_signal": false,
+      "buyer_signal": true,
+      "source_type": "official_company",
+      "urgency": 72,
+      "buyer_access": 54,
+      "proofability": 92,
+      "evidence_quality": 100,
+      "days_to_cash": 66
+    },
+    {
+      "key": "loren-cook-ibmi-career",
+      "name": "Loren Cook Company IBM i career evidence",
+      "company": "Loren Cook Company",
+      "url": "https://lorencook.com/employment/ibm-i-iseries-as400-programmer/",
+      "allowed_hosts": [
+        "lorencook.com"
+      ],
+      "enabled": true,
+      "min_poll_minutes": 360,
+      "emit_on_first_seen": false,
+      "emit_body_change_signal": false,
+      "buyer_signal": true,
+      "source_type": "official_company",
+      "urgency": 70,
+      "buyer_access": 58,
+      "proofability": 94,
+      "evidence_quality": 100,
+      "days_to_cash": 68
     }
   ]
 }
