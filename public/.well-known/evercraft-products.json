@@ -993,7 +993,8 @@
       "knowledge_surfaces": {
         "hub": "/forensiscope/mesh/",
         "index": "/forensiscope/mesh/index.json",
-        "llms": "/forensiscope/mesh/llms.txt"
+        "llms": "/forensiscope/mesh/llms.txt",
+        "combined_workflow": "/forensiscope/long-video-deduplication-transcription/"
       },
       "distribution_surfaces": {
         "hub": "/forensiscope/distribution/",
