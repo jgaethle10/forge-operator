@@ -78,3 +78,16 @@ test('Money Radar reports an explicit blocked state when no authoritative source
   assert.equal(receipt.measurement_state, 'blocked_source_not_configured');
   assert.equal(receipt.source.configured, false);
 });
+
+
+test('Money Radar blocks an unauthenticated remote receipt source', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const { receipt } = await buildMoneyRadar({
+    root,
+    sourceUrl: 'https://payments.example.test/export',
+    sourceToken: '',
+  });
+
+  assert.equal(receipt.measurement_state, 'blocked_source_auth_missing');
+  assert.equal(receipt.source.fetched, false);
+});
