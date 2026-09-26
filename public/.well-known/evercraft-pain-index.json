@@ -1442,8 +1442,15 @@
       "boundaries": [],
       "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
-      "pricing": "$250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.",
+      "pricing": "$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.",
       "offers": [
+        {
+          "offer_key": "ibmi_estate_xray_250",
+          "name": "IBM i Estate X-Ray",
+          "price": "$250",
+          "billing": "one_time",
+          "checkout": "human_handoff"
+        },
         {
           "offer_key": "ibmi_74_deadline_xray_250",
           "name": "IBM i 7.4 Deadline X-Ray",
@@ -1462,7 +1469,7 @@
       "human_confirmation_required": true,
       "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service until the product-specific route is independently live-verified.",
-      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
+      "invocation_status": "LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, all three bounded tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]

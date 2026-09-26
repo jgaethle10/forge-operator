@@ -23,20 +23,15 @@
   "boundaries": [
     "support transition does not mean a system automatically stops working",
     "a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified",
+    "the public product-specific checkout route remains unverified until an external canary passes",
     "checkout creation is not payment proof",
     "paid state requires authoritative provider verification",
     "no production change or cutover is included in the public X-Ray or Proof Sprint",
-    "Human buyer route is externally reachable and backend checkout creation is verified with synthetic QA; paid state still requires provider verification",
-    "Discovery and checkout creation do not authorize production change or prove customer revenue"
+    "Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending"
   ],
   "commercial": {
-    "status": "sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
+    "status": "sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending",
     "offers": [
-      {
-        "name": "IBM i Estate X-Ray",
-        "price": "$250 one-time",
-        "offer_key": "ibmi_estate_xray_250"
-      },
       {
         "name": "IBM i 7.4 Deadline X-Ray",
         "price": "$250 one-time",
@@ -48,7 +43,7 @@
         "offer_key": "ibmi_upgrade_proof_sprint_1500"
       }
     ],
-    "payment_state": "Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation has been independently verified with synthetic QA. Paid state still requires authoritative provider verification.",
+    "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live",
     "machine_commerce_handoff": {
       "state": "live_verified",
       "public_id": "ibmi-rescue-v1",
@@ -56,7 +51,7 @@
       "tool": "prepare_quote_ready_service_handoff",
       "checkout_created": false,
       "payment_created": false,
-      "evidence": "GitHub Actions live canary verifies offer discovery, human handoff, human buyer route reachability, and synthetic backend checkout creation with zero payment."
+      "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
     }
   },
   "machine_commerce_handoff": {
@@ -66,7 +61,7 @@
     "tool": "prepare_quote_ready_service_handoff",
     "checkout_created": false,
     "payment_created": false,
-    "evidence": "GitHub Actions live canary verifies offer discovery, human handoff, human buyer route reachability, and synthetic backend checkout creation with zero payment."
+    "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
   },
   "registry_name": null,
   "mcp": null,

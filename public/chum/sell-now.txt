@@ -140,7 +140,7 @@ LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/p
 
 ## Evercraft IBM i Rescue
 Capability ID: ibmi-rescue-v1
-Price: $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
+Price: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
 Machine state: human_handoff_ready

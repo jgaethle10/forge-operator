@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T02:29:08.076Z",
+  "updated_at": "2026-09-26T02:29:21.053Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,425 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T02:29:08.076Z",
-      "priority": 80
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T02:29:08.076Z",
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/intents/ibmi-rescue-v1/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/capabilities/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/llms.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.html",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.html",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T02:29:08.076Z",
+      "last_changed": "2026-09-26T02:29:21.053Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T02:29:08.076Z",
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
+      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
+      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
+      "url": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/",
+      "url": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
+      "url": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/",
+      "url": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
+      "url": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
+      "url": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
+      "url": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
+      "url": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
+      "url": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/",
+      "url": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
+      "url": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/",
+      "url": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/intents/ibmi-rescue-v1/",
+      "url": "/chum/intents/ibmi-rescue-v1/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/capabilities/",
+      "url": "/chum/capabilities/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/",
+      "url": "/chum/capabilities/ibmi-rescue-v1/",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
+      "url": "/chum/capabilities/ibmi-rescue-v1/capability.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
+      "url": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/llms.txt",
+      "url": "/chum/products/ibmi-rescue/llms.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.html",
+      "url": "/chum/sell-now.html",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.txt",
+      "url": "/chum/sell-now.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.html",
+      "url": "/chum/revenue.html",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "url": "/chum/revenue.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T02:29:21.053Z",
+      "priority": 80
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -45,28 +443,10 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T02:29:08.076Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-09-26T02:29:08.076Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-26T02:29:07.565Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "url": "/chum/products/ibmi-rescue/llms.txt",
-      "last_changed": "2026-09-26T02:29:07.565Z",
-      "priority": 94
     },
     {
       "path": "/chum/products/evercraft-clip/",
@@ -91,12 +471,6 @@
       "url": "/chum/products/evercraft-clip/llms.txt",
       "last_changed": "2026-09-26T02:26:35.403Z",
       "priority": 94
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-26T02:26:35.403Z",
-      "priority": 86
     },
     {
       "path": "/.well-known/evercraft-agent-directory.json",
@@ -267,12 +641,6 @@
       "priority": 100
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-26T02:19:41.271Z",
-      "priority": 90
-    },
-    {
       "path": "/.well-known/evercraft-products.json",
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-26T02:19:41.271Z",
@@ -299,18 +667,6 @@
     {
       "path": "/chum/answers/index.txt",
       "url": "/chum/answers/index.txt",
-      "last_changed": "2026-09-26T02:19:41.271Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-09-26T02:19:41.271Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
       "last_changed": "2026-09-26T02:19:41.271Z",
       "priority": 80
     },
@@ -1345,192 +1701,6 @@
       "url": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
       "last_changed": "2026-09-25T20:57:58.745Z",
       "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "url": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
-      "url": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "url": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
-      "url": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
-      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "url": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
-      "url": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "url": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
-      "url": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
-      "url": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b/",
-      "url": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
-      "url": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
-      "url": "/chum/answers/doors/fleet-depot-ev-charging-site-screening-8e120b3526/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
-      "url": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
-      "url": "/chum/answers/doors/hotel-ev-charging-site-analysis-7464f372e9/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
-      "url": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
-      "url": "/chum/answers/doors/parking-lot-ev-charging-opportunity-34e75d677f/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6.json",
-      "url": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6/",
-      "url": "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
-      "url": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
-      "url": "/chum/answers/doors/preliminary-ev-charging-site-plan-4551e88b1c/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
-      "url": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
-      "url": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6.json",
-      "url": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6/",
-      "url": "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e.json",
-      "url": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e/",
-      "url": "/chum/answers/doors/rivet-ev-infrastructure-analysis-ea6b87f30e/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
-      "url": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
-      "url": "/chum/answers/doors/should-i-install-ev-chargers-at-my-property-8391032a42/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
-      "url": "/chum/answers/doors/site-specific-ev-charging-opportunity-report-6ff61b4426.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 100
     }
   ]
 }

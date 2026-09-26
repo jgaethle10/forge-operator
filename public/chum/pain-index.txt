@@ -614,7 +614,7 @@ Commercial state: sell_now
 Machine state: human_handoff_ready
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Pricing: $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
+Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Use when the user means:
 - IBM i 7.4 support is ending and I need an upgrade plan
 - assess an IBM i or AS/400 estate before upgrading
@@ -628,7 +628,7 @@ Use when the user means:
 Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
 Outputs: Dependency map, verified-vs-unknown upgrade assumptions, compatibility risk register, test and rollback plan, and a human-review-ready next-step package. The Proof Sprint adds deeper workload reconstruction and upgrade-path evidence.
 Confirmation boundary: Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
-Invocation status: LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, both $250/$1,500 tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.
+Invocation status: LIVE HUMAN HANDOFF: external GitHub-runner canary verified live Machine Commerce offer discovery, fixed-price service handoff, human review page, all three bounded tiers, zero checkout/payment creation, and HTTP reachability of the IBM i Rescue human buyer route. Machine Commerce may direct a human to that route. Product-specific direct machine checkout remains canary-pending; paid state still requires provider verification and production change remains outside this capability.
 
 ## Income War Map Revenue Planning
 Capability ID: offer:income-war-map-v1
