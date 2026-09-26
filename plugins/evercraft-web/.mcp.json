@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "evercraft_web": {
+      "type": "http",
+      "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
+    }
+  }
+}
