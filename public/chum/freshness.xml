@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-26T00:45:08.005Z</updated>
+<updated>2026-09-26T00:48:02.423Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T00:45:08.005Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T00:48:02.423Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:982fed532f26ca5cf78bb274</id><title>/chum/products/forensiscope/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/forensiscope/ai-conformance.json"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:a741198944d9ab528a06d03f</id><title>/chum/products/forensiscope/ai-discovery.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/forensiscope/ai-discovery.json"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:ed3a911f8159e7f0e67d2599</id><title>/chum/products/aliev/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/aliev/ai-conformance.json"/><category term="priority-94"/></entry>
