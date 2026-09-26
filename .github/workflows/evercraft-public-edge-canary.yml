@@ -92,6 +92,7 @@ jobs:
             local tool_a="$3"
             local tool_b="$4"
             local tool_c="${5:-}"
+            local tool_d="${6:-}"
 
             init="$(curl --fail --silent --show-error --max-time 20               -H 'content-type: application/json'               --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"evercraft-external-canary","version":"1"}}}'               "${SPECIALIST_ORIGIN%/}$path")"
             printf '%s' "$init" | jq -e --arg server "$server" '
@@ -100,11 +101,12 @@ jobs:
             ' >/dev/null
 
             tools="$(curl --fail --silent --show-error --max-time 20               -H 'content-type: application/json'               --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'               "${SPECIALIST_ORIGIN%/}$path")"
-            printf '%s' "$tools" | jq -e --arg a "$tool_a" --arg b "$tool_b" --arg c "$tool_c" '
+            printf '%s' "$tools" | jq -e --arg a "$tool_a" --arg b "$tool_b" --arg c "$tool_c" --arg d "$tool_d" '
               [.result.tools[].name] as $names |
               ($names | index($a)) != null and
               ($names | index($b)) != null and
               (($c == "") or (($names | index($c)) != null)) and
+              (($d == "") or (($names | index($d)) != null)) and
               ([.result.tools[] | select(.annotations.readOnlyHint != true or .annotations.destructiveHint != false)] | length) == 0
             ' >/dev/null
           }
@@ -120,9 +122,11 @@ jobs:
           device_fingerprint="$(printf '%s' "$health" | jq -r '.device_fingerprint')"
           edge_attestation_receipt="$(printf '%s' "$health" | jq -r '.edge_attestation_receipt_ref')"
           specialist_attestation_receipt="$(printf '%s' "$health" | jq -r '.specialist_attestation_receipt_ref')"
+          field_enrollment_receipt="$(printf '%s' "$health" | jq -r '.field_enrollment_receipt_ref')"
+          public_edge_admission_receipt="$(printf '%s' "$health" | jq -r '.public_edge_admission_receipt_ref')"
           observed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-          jq -n             --arg origin "$SPECIALIST_ORIGIN"             --arg instance "$instance_id"             --arg deployment "$deployment_receipt"             --arg device "$device_fingerprint"             --arg edge_attestation "$edge_attestation_receipt"             --arg specialist_attestation "$specialist_attestation_receipt"             --arg observed "$observed_at"             '{
+          jq -n             --arg origin "$SPECIALIST_ORIGIN"             --arg instance "$instance_id"             --arg deployment "$deployment_receipt"             --arg device "$device_fingerprint"             --arg edge_attestation "$edge_attestation_receipt"             --arg specialist_attestation "$specialist_attestation_receipt"             --arg field_enrollment "$field_enrollment_receipt"             --arg public_edge_admission "$public_edge_admission_receipt"             --arg observed "$observed_at"             '{
               schema:"evercraft.public-edge.external-canary.v1",
               verified:true,
               state:"public_https_verified",
@@ -136,6 +140,9 @@ jobs:
               device_fingerprint:$device,
               edge_attestation_receipt_ref:$edge_attestation,
               specialist_attestation_receipt_ref:$specialist_attestation,
+              field_enrollment_verified:true,
+              field_enrollment_receipt_ref:$field_enrollment,
+              public_edge_admission_receipt_ref:$public_edge_admission,
               public_https_verified:true,
               certificate_validation:"system_default_trust_store",
               mcp_initialize_verified:true,
