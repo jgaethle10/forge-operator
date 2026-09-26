@@ -31,3 +31,5 @@ jobs:
         run: bash -n systemia/compute/install-local-organism-user.sh
       - name: Prove current-stack local organism and restart continuity
         run: node systemia/compute/local-organism.proof.mjs
+      - name: Prove optional RIVET resident report capacity
+        run: node systemia/compute/local-organism-rivet.proof.mjs

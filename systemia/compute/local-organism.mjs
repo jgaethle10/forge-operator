@@ -75,6 +75,7 @@ export async function startLocalOrganism({
   graceSeconds = 90,
   remoteBrokerUrl = '',
   remoteAdmissionRetryMs = 5_000,
+  rivetSourceUrl = process.env.ALIEV_YARD_SOURCE_URL || '',
 } = {}) {
   if (!root) throw new Error('root is required');
   if (!/^[a-f0-9]{40}$/i.test(String(releaseRef || ''))) {
@@ -87,6 +88,7 @@ export async function startLocalOrganism({
   const yardState = path.join(controlRoot, 'yard');
   const kaidanceRoot = path.join(computeRoot, 'services', 'kaidance');
   const coreRoot = path.join(computeRoot, 'services', 'systemia-core');
+  const rivetRoot = path.join(computeRoot, 'services', 'rivet-report-runtime');
   const secretFile = path.join(organismRoot, '.secrets', 'allocator-token');
   const allocatorToken = loadOrCreateSecret(secretFile);
 
@@ -105,6 +107,7 @@ export async function startLocalOrganism({
   const yard = new YardOperator({ stateDir: yardState });
   let kaidance = null;
   let core = null;
+  let rivet = null;
   let remoteAdmission = null;
 
   try {
@@ -159,9 +162,42 @@ export async function startLocalOrganism({
       renewEveryMs: 1_800_000,
     });
 
+    const rivetConfigured = Boolean(
+      String(process.env.SYSTEMIA_MACHINE_KEY || '').trim() &&
+      String(process.env.RIVET_YARD_TEAM_TOKEN || '').trim()
+    );
+    if (rivetConfigured) {
+      rivet = await yard.deployRelease({
+        deploymentId: 'rivet-report-local-resident',
+        releaseRef,
+        workloadClass: 'systemia.rivet-report-runtime.v1',
+        capacityEndpoint: seed.endpoint,
+        allocatorToken,
+        input: {
+          state_root: rivetRoot,
+          ...(String(rivetSourceUrl || '').trim()
+            ? { source_url: String(rivetSourceUrl).trim() }
+            : {}),
+        },
+        rollbackTarget: 'local-organism:rivet-report-previous',
+        leaseTtlMs: 3_600_000,
+      });
+      yard.startLeaseKeeper('rivet-report-local-resident', {
+        ttlMs: 3_600_000,
+        renewEveryMs: 1_800_000,
+      });
+    }
+
     const kaidanceRoute = await yard.verifyRoute('kaidance-local-resident');
     const coreRoute = await yard.verifyRoute('systemia-core-local-resident');
-    if (!kaidanceRoute.ok || !coreRoute.ok) {
+    const rivetRoute = rivet
+      ? await yard.verifyRoute('rivet-report-local-resident')
+      : null;
+    const rivetLocalHealthy = !rivet || (
+      rivetRoute?.state === 'public_route_unbound' &&
+      rivetRoute?.local_health_ok === true
+    );
+    if (!kaidanceRoute.ok || !coreRoute.ok || !rivetLocalHealthy) {
       throw new Error('local organism route verification failed');
     }
 
@@ -214,6 +250,13 @@ export async function startLocalOrganism({
         supervised_service_count: coreRoute.health.service_count,
         state: coreRoute.state,
       },
+      rivet_report_runtime: {
+        configured: Boolean(rivet),
+        deployment_receipt: rivet?.receipt?.receipt_hash || null,
+        state: rivetRoute?.state || 'not_configured',
+        local_health_ok: rivetRoute?.local_health_ok === true,
+        public_ingress: false,
+      },
       remote_admission: {
         configured: Boolean(String(remoteBrokerUrl || '').trim()),
         state: remoteAdmission?.status().connected ? 'connected' :
@@ -239,19 +282,27 @@ export async function startLocalOrganism({
       yard,
       kaidance,
       core,
+      rivet,
       pulse,
       receipt,
       enrollment_request: enrollmentRequest,
       remote_admission: remoteAdmission,
       health: async () => {
-        const [kaidanceHealth, coreHealth] = await Promise.all([
+        const [kaidanceHealth, coreHealth, rivetHealth] = await Promise.all([
           yard.verifyRoute('kaidance-local-resident'),
           yard.verifyRoute('systemia-core-local-resident'),
+          rivet
+            ? yard.verifyRoute('rivet-report-local-resident')
+            : Promise.resolve(null),
         ]);
+        const rivetHealthy = !rivet || (
+          rivetHealth?.state === 'public_route_unbound' &&
+          rivetHealth?.local_health_ok === true
+        );
         return {
           schema: 'evercraft.local-organism-health.v1',
           node_id: seed.node_id,
-          ok: kaidanceHealth.ok && coreHealth.ok,
+          ok: kaidanceHealth.ok && coreHealth.ok && rivetHealthy,
           kaidance: {
             ok: kaidanceHealth.ok,
             state: kaidanceHealth.state,
@@ -259,6 +310,13 @@ export async function startLocalOrganism({
           systemia_core: {
             ok: coreHealth.ok,
             state: coreHealth.state,
+          },
+          rivet_report_runtime: {
+            configured: Boolean(rivet),
+            ok: rivetHealthy,
+            state: rivetHealth?.state || 'not_configured',
+            local_health_ok: rivetHealth?.local_health_ok === true,
+            public_ingress: false,
           },
           remote_admission: remoteAdmission
             ? remoteAdmission.status()
@@ -282,8 +340,16 @@ export async function startLocalOrganism({
         if (remoteAdmission) {
           try { await remoteAdmission.close(); } catch {}
         }
+        if (rivet) yard.stopLeaseKeeper('rivet-report-local-resident');
         yard.stopLeaseKeeper('systemia-core-local-resident');
         yard.stopContinuityKeeper('kaidance-local-resident');
+        if (rivet) {
+          try {
+            await yard.stopDeployment('rivet-report-local-resident', {
+              reason: 'local_organism_shutdown',
+            });
+          } catch {}
+        }
         try {
           await yard.stopDeployment('systemia-core-local-resident', {
             reason: 'local_organism_shutdown',
@@ -300,6 +366,13 @@ export async function startLocalOrganism({
   } catch (error) {
     if (remoteAdmission) {
       try { await remoteAdmission.close(); } catch {}
+    }
+    if (rivet) {
+      try {
+        await yard.stopDeployment('rivet-report-local-resident', {
+          reason: 'local_organism_start_failed',
+        });
+      } catch {}
     }
     if (core) {
       try {
@@ -343,6 +416,7 @@ if (isCli) {
     kaidance_state: organism.pulse.state,
     kaidance_field_attestation: organism.pulse.field_attestation.state,
     systemia_core_state: organism.receipt.systemia_core.state,
+    rivet_report_runtime: organism.receipt.rivet_report_runtime,
     remote_admission: organism.remote_admission
       ? organism.remote_admission.status()
       : {
