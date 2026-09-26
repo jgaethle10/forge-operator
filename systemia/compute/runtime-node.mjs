@@ -163,6 +163,14 @@ function boundedLeaseTtl(value, fallback) {
   return Math.max(30_000, Math.min(86_400_000, Math.floor(requested)));
 }
 
+function normalizePlacementLabels(values = []) {
+  const input = Array.isArray(values) ? values : String(values || '').split(',');
+  return [...new Set(input
+    .map((value) => String(value || '').trim().toLowerCase())
+    .filter((value) => /^[a-z0-9][a-z0-9._-]{0,63}$/.test(value))
+  )].slice(0, 32);
+}
+
 export async function startEvercraftComputeNode({
   nodeId = 'evercraft-compute-local',
   root,
@@ -171,6 +179,7 @@ export async function startEvercraftComputeNode({
   leaseTtlMs = 30_000,
   allocatorToken = '',
   deviceIdentity = null,
+  placementLabels = [],
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -183,6 +192,7 @@ export async function startEvercraftComputeNode({
     throw new Error('deviceIdentity node_id must match Compute nodeId');
   }
   const allowedRoot = path.resolve(root);
+  const nodePlacementLabels = normalizePlacementLabels(placementLabels);
   const processStartedAt = new Date(Date.now() - process.uptime() * 1000).toISOString();
   const hostBootIdHash = bootIdHash();
   const chain = new ReceiptChain(nodeId);
@@ -258,6 +268,7 @@ export async function startEvercraftComputeNode({
           node_id: nodeId,
           runtime: 'Evercraft Compute',
           supported_workloads: [...supported],
+          placement_labels: nodePlacementLabels,
           resident_services: services.size,
         });
       }
@@ -269,6 +280,7 @@ export async function startEvercraftComputeNode({
           runtime: 'Evercraft Compute',
           platform: `${process.platform}/${process.arch}`,
           supported_workloads: [...supported],
+          placement_labels: nodePlacementLabels,
           allocation: 'explicit_lease',
           allocation_auth: allocatorTokenHash ? 'bearer' : 'loopback_only',
           resident_services_supported: true,
@@ -1226,6 +1238,7 @@ export async function startEvercraftComputeNode({
     node_id: nodeId,
     endpoint,
     allowed_root: allowedRoot,
+    placement_labels: nodePlacementLabels,
     close: async () => {
       clearInterval(leaseMonitor);
       for (const serviceId of [...services.keys()]) {
