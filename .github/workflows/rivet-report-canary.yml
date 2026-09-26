@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - "systemia/rivet/**"
+      - "systemia/compute/**"
+      - "systemia/yard/**"
       - "package.json"
       - ".github/workflows/rivet-report-canary.yml"
   workflow_dispatch:
@@ -18,4 +20,5 @@ jobs:
         with:
           node-version: 22
       - run: npm run proof:rivet-yard
+      - run: node systemia/yard/rivet-resident-runtime.proof.mjs
       - run: npm run proof:beast-football
