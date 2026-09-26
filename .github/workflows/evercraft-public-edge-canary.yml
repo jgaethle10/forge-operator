@@ -1,6 +1,14 @@
 name: Evercraft Public Edge External Canary
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/network/public-edge-runtime.mjs'
+      - 'systemia/network/public-edge-tls.mjs'
+      - 'systemia/mcp/specialist-handoff-runtime.mjs'
+      - 'systemia/yard/public-edge-controller.mjs'
+      - '.github/workflows/evercraft-public-edge-canary.yml'
   workflow_dispatch:
   schedule:
     - cron: '17 * * * *'
