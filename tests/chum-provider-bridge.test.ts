@@ -74,7 +74,8 @@ test('provider bridge verifies a signed GitHub Actions OIDC identity', async () 
     ref: 'refs/heads/main',
     sha: 'a'.repeat(40),
     run_id: '12345',
-    event_name: 'push'
+    event_name: 'push',
+    workflow_ref: 'jgaethle10/forge-operator/.github/workflows/chum-watershed.yml@refs/heads/main'
   })).toString('base64url');
   const signingInput = `${header}.${claims}`;
   const signature = crypto.sign('RSA-SHA256', Buffer.from(signingInput), privateKey).toString('base64url');
@@ -120,7 +121,8 @@ test('provider bridge rejects a signed OIDC token for another repository', async
     ref: 'refs/heads/main',
     sha: 'a'.repeat(40),
     run_id: '12345',
-    event_name: 'push'
+    event_name: 'push',
+    workflow_ref: 'someone-else/repo/.github/workflows/chum-watershed.yml@refs/heads/main'
   })).toString('base64url');
   const signingInput = `${header}.${claims}`;
   const signature = crypto.sign('RSA-SHA256', Buffer.from(signingInput), privateKey).toString('base64url');

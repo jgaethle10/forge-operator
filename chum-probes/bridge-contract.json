@@ -56,7 +56,21 @@
     "github_oidc": {
       "issuer": "https://token.actions.githubusercontent.com",
       "default_audience": "evercraft-chum-provider-bridge",
-      "workflow_requirement": "id-token: write is required only when a workflow is configured to call the bridge without a static bridge token."
+      "workflow_requirement": "id-token: write is required only when a workflow is configured to call the bridge without a static bridge token.",
+      "workflow_allowlist": [
+        "jgaethle10/forge-operator/.github/workflows/chum-watershed.yml@refs/heads/main",
+        "jgaethle10/forge-operator/.github/workflows/chum-llm-hunter.yml@refs/heads/main"
+      ],
+      "enforced_claims": [
+        "issuer",
+        "audience",
+        "repository",
+        "ref=refs/heads/main",
+        "sha",
+        "run_id",
+        "event_name",
+        "workflow_ref"
+      ]
     }
   }
 }

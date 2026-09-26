@@ -192,6 +192,14 @@ export async function authenticateProviderBridgeRequest(
   if (!oidcEnabled) return { ok: false, status: 401, error: 'bridge_auth_failed' };
 
   const expectedRepository = String(env.CHUM_PROBE_BRIDGE_GITHUB_REPOSITORY || 'jgaethle10/forge-operator').trim();
+  const configuredWorkflowRefs = String(env.CHUM_PROBE_BRIDGE_ALLOWED_WORKFLOW_REFS || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const allowedWorkflowRefs = new Set(configuredWorkflowRefs.length ? configuredWorkflowRefs : [
+    `${expectedRepository}/.github/workflows/chum-watershed.yml@refs/heads/main`,
+    `${expectedRepository}/.github/workflows/chum-llm-hunter.yml@refs/heads/main`
+  ]);
   const repository = String(input.repository || '').trim();
   const runId = String(input.runId || '').trim();
   const sha = String(input.sha || '').trim().toLowerCase();
@@ -207,7 +215,8 @@ export async function authenticateProviderBridgeRequest(
       String(claims?.ref || '') !== 'refs/heads/main' ||
       String(claims?.sha || '').toLowerCase() !== sha ||
       String(claims?.run_id || '') !== runId ||
-      !allowedEvents.has(String(claims?.event_name || ''))
+      !allowedEvents.has(String(claims?.event_name || '')) ||
+      !allowedWorkflowRefs.has(String(claims?.workflow_ref || ''))
     ) {
       return { ok: false, status: 401, error: 'github_actions_oidc_identity_mismatch' };
     }
