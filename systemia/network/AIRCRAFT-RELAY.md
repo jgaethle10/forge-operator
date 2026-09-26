@@ -82,3 +82,16 @@ Run:
     npm run proof:aircraft-relay
 
 The proof verifies forecast data-ferry planning, verified live-relay overlap, payload capacity, deadline handling, explicit aircraft participation, avionics isolation, and the boundary between predicted and verified connectivity.
+
+
+## Transient contact queue
+
+Forecast planning and packet release are deliberately separate.
+
+The transient contact queue may hold an authenticated bundle against a predicted contact window, but it will not release that bundle until the contact record is upgraded to verified, remains explicitly authorized, has evidence, is currently open, and has enough modeled transfer capacity for the bundle.
+
+A successful handoff must then be marked with a receipt reference. Released bundles do not become ready again, which preserves the existing Evercraft replay-resistance doctrine at the scheduling layer.
+
+Run:
+
+    npm run proof:transient-contact-queue
