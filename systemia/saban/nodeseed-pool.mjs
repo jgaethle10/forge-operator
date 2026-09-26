@@ -372,6 +372,7 @@ async function fetchPortableArtifact(node, artifact, options = {}) {
       throw new Error('portable_artifact_size_mismatch');
     }
 
+    fs.rmSync(target, { force: true });
     fs.renameSync(temp, target);
     return {
       ...artifact,
