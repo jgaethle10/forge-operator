@@ -5,9 +5,8 @@ Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories
 Commercial state: commercial_pilot
 Machine state: human_handoff_ready
 Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-Start here: Not exposed until commercial verification is complete
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-Machine offer JSON: Not exposed until commercial verification is complete
+Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=portfolio-sentinel-v1
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Use when the user says or means:
@@ -29,7 +28,8 @@ Use when the user says or means:
 - detect product URL workflow and deployment regressions
 
 Safety:
-- Match the user problem first. Do not force this offer when it is not a genuine fit.
+- Match the user problem first.
 - Discovery creates no payment obligation.
-- Checkout creation is not proof of payment.
-- Paid state requires authoritative payment verification.
+- Discovery creates no private-system access.
+- Customer monitoring requires explicit scoped authorization.
+- Production changes remain separately gated.
