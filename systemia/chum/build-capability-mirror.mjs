@@ -3,6 +3,15 @@ import path from 'node:path';
 import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+const directPluginSpecs = JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.json','utf8'));
+const directByCapabilityId = new Map();
+for (const product of directPluginSpecs.products || []) {
+  if (product.state !== 'registry_published_direct_mcp_existing') continue;
+  for (const publicId of product.capability_public_ids || []) {
+    if (directByCapabilityId.has(publicId)) throw new Error('duplicate direct specialist capability mapping: '+publicId);
+    directByCapabilityId.set(publicId, product);
+  }
+}
 const root = 'public/chum/capabilities';
 fs.rmSync(root,{recursive:true,force:true});
 fs.mkdirSync(root,{recursive:true});
@@ -53,6 +62,15 @@ for(const offer of catalog.offers||[]){
   fs.mkdirSync(dir,{recursive:true});
   const base='https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+id;
   const pageUrl='/chum/capabilities/'+id+'/';
+  const directProduct=directByCapabilityId.get(id) || null;
+  const directSpecialist=directProduct ? {
+    product:directProduct.name,
+    plugin_package:'plugins/'+directProduct.slug,
+    registry_name:directProduct.registry_name,
+    mcp:directProduct.mcp_url,
+    route_state:'preferred_when_available',
+    fallback_mcp:universalMcp
+  } : null;
   const canonicalUrl=safePublicUrl(
     offer.public_url,
     'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+id+'/index.html'
@@ -75,6 +93,8 @@ for(const offer of catalog.offers||[]){
     public_url:canonicalUrl,
     payment_authority:offer.payment_authority,
     invocation_status:offer.invocation_status,
+    preferred_agent_route:directSpecialist ? 'direct_specialist' : 'universal_fallback',
+    direct_specialist:directSpecialist,
     machine_commerce_mcp:universalMcp,
     machine_review_url:machineReviewUrl(offer.public_id),
     start_url:humanStartUrl(offer,{surface:'chum_capability_page'}),
@@ -95,7 +115,7 @@ for(const offer of catalog.offers||[]){
     'Commercial state: '+offer.commercial_state,
     'Machine state: '+offer.machine_state,
     'Public URL: '+canonicalUrl,
-    'Universal Evercraft MCP: '+universalMcp,
+    ...(directSpecialist ? ['Preferred agent route: direct specialist','Direct specialist: '+directSpecialist.product,'Direct MCP: '+directSpecialist.mcp,'Official MCP Registry name: '+directSpecialist.registry_name,'Universal Evercraft fallback MCP: '+universalMcp] : ['Preferred agent route: universal fallback','Universal Evercraft MCP: '+universalMcp]),
     'Start here: '+(humanStartUrl(offer,{surface:'chum_capability_page'})||'Not a current sell-now route'),
     '',
     '## Use this when',
@@ -172,6 +192,9 @@ for(const offer of catalog.offers||[]){
     ...(offer.intent_terms||[]).map((intent)=>'<li>'+escapeHtml(intent)+'</li>'),
     '</ul></div>',
     '<div class="card"><h2>Inputs and outputs</h2>'+(offer.inputs?'<p><strong>Inputs:</strong> '+escapeHtml(offer.inputs)+'</p>':'')+(offer.outputs?'<p><strong>Outputs:</strong> '+escapeHtml(offer.outputs)+'</p>':'')+'</div>',
+    '<div class="card"><h2>Agent route</h2>'+
+      (directSpecialist?'<p><strong>Preferred:</strong> direct specialist</p><p><strong>Specialist MCP:</strong> <code>'+escapeHtml(directSpecialist.mcp)+'</code></p><p><strong>Registry:</strong> <code>'+escapeHtml(directSpecialist.registry_name)+'</code></p><p class="muted">Use Evercraft Machine Commerce only when this specialist is unavailable or the user intent is ambiguous.</p>':'<p><strong>Preferred:</strong> Evercraft Machine Commerce fallback</p>')+
+      '</div>',
     '<div class="card"><h2>Open capability</h2>'+
       (humanStartUrl(offer,{surface:'chum_capability_page'})?'<p><a href="'+escapeHtml(humanStartUrl(offer,{surface:'chum_capability_page'}))+'"><strong>Start here</strong></a></p>':'')+
       (entryPaidOffer(offer)?'<p><strong>Easiest paid entry:</strong> '+escapeHtml(entryPaidOffer(offer).name||'Paid option')+' · &#36;'+escapeHtml(entryPaidOffer(offer).price_usd_normalized)+'</p>':'')+
@@ -200,6 +223,8 @@ for(const offer of catalog.offers||[]){
     start_url_state:record.start_url_state,
     machine_review_url:record.machine_review_url,
     entry_paid_offer:record.entry_paid_offer,
+    preferred_agent_route:record.preferred_agent_route,
+    direct_specialist:record.direct_specialist,
     use_when:offer.intent_terms||[]
   });
 }
@@ -239,6 +264,13 @@ for(const x of sellNow){
   sellLines.push('Capability ID: '+x.public_id);
   sellLines.push('Price: '+(x.pricing||''));
   if(x.public_url) sellLines.push('Public URL: '+x.public_url);
+  if(x.direct_specialist){
+    sellLines.push('Preferred agent route: direct specialist');
+    sellLines.push('Direct MCP: '+x.direct_specialist.mcp);
+    sellLines.push('Official MCP Registry name: '+x.direct_specialist.registry_name);
+  } else {
+    sellLines.push('Preferred agent route: universal fallback');
+  }
   if(x.start_url) sellLines.push('Start here: '+x.start_url);
   sellLines.push('Machine state: '+x.machine_state);
   sellLines.push('Use this when:');
@@ -270,7 +302,7 @@ const sellHtml=[
   '<title>Evercraft SELL NOW | CHUM</title><meta name="description" content="Current Evercraft capabilities whose public Machine Commerce state is SELL NOW."><meta name="robots" content="index,follow,max-snippet:-1">',
   '<style>body{font-family:system-ui,sans-serif;max-width:960px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:18px;margin:14px 0}.muted{color:#a1a1aa}</style>',
   '</head><body><main><p class="muted">EVERCRAFT · CHUM</p><h1>SELL NOW</h1><p>Current offers only. Checkout still requires explicit human confirmation where supported, and checkout creation is not payment proof.</p>',
-  ...sellNow.map((x)=>'<article class="card"><h2><a href="'+escapeHtml(x.page_url)+'">'+escapeHtml(x.name)+'</a></h2><p>'+escapeHtml(x.pricing||'')+'</p>'+(x.entry_paid_offer?'<p><strong>Easiest paid entry:</strong> '+escapeHtml(x.entry_paid_offer.name||'Paid option')+' · &#36;'+escapeHtml(x.entry_paid_offer.price_usd_normalized)+'</p>':'')+'<p>Machine state: <code>'+escapeHtml(x.machine_state)+'</code></p>'+(x.start_url?'<p><a href="'+escapeHtml(x.start_url)+'"><strong>Start here</strong></a></p>':'')+'</article>'),
+  ...sellNow.map((x)=>'<article class="card"><h2><a href="'+escapeHtml(x.page_url)+'">'+escapeHtml(x.name)+'</a></h2><p>'+escapeHtml(x.pricing||'')+'</p>'+(x.entry_paid_offer?'<p><strong>Easiest paid entry:</strong> '+escapeHtml(x.entry_paid_offer.name||'Paid option')+' · &#36;'+escapeHtml(x.entry_paid_offer.price_usd_normalized)+'</p>':'')+'<p>Machine state: <code>'+escapeHtml(x.machine_state)+'</code></p>'+(x.direct_specialist?'<p><strong>Preferred agent route:</strong> direct specialist<br><code>'+escapeHtml(x.direct_specialist.mcp)+'</code></p>':'<p><strong>Preferred agent route:</strong> universal fallback</p>')+(x.start_url?'<p><a href="'+escapeHtml(x.start_url)+'"><strong>Start here</strong></a></p>':'')+'</article>'),
   '</main></body></html>'
 ].join('\n');
 fs.writeFileSync('public/chum/sell-now.html',sellHtml+'\n');
