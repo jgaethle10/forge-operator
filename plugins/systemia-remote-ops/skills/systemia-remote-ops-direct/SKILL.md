@@ -1,12 +1,12 @@
 ---
 name: systemia-remote-ops-direct
-description: Use Systemia Remote Ops directly for consequential business decision simulation.
+description: Simulate business decisions before acting
 ---
 
 # Systemia Remote Ops Direct
 
-Use this skill when a founder or operator wants to simulate a consequential business decision before changing the real business. If this specialist is available, do not route an obvious Systemia Remote Ops request through the universal Evercraft catalog first.
+Use this skill when the user's intent clearly matches this specialist: Business decision simulation before acting, beginning with pricing changes.
 
-Pricing simulation is the first public executable lane. Hiring, expansion, acquisitions, partnerships, capital purchases, and sale scenarios must remain labeled according to the live MCP state. Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result.
+This specialist package is staged only. Do not route users to it directly until a verified public MCP origin exists. Keep using the universal Evercraft fallback meanwhile.
 
-Publication of this plugin remains held until the dedicated Systemia Remote Ops MCP receives an independent live deployment receipt.
+Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt.
