@@ -197,7 +197,7 @@
       "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
       "github_record": "./evercraft-clip/README.md",
       "llms": "./evercraft-clip/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-clip",
       "invocation": {
         "mode": "mcp",
         "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
@@ -266,7 +266,16 @@
       "invocation": {
         "mode": "discovery_only",
         "url": null
-      }
+      },
+      "capability_families": [
+        "application_network_continuity",
+        "civilian_air_relay_planning",
+        "attested_edge_compute_placement"
+      ],
+      "evidence_refs": [
+        "systemia/network/air-relay-proof.mjs",
+        "systemia/network/nodeseed-placement-label-proof.mjs"
+      ]
     },
     {
       "product_key": "evercraft-physics-atlas",
