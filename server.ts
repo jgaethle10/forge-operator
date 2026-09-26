@@ -10,6 +10,7 @@ import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
+import { createAttributionReceiptStore } from './systemia/chum/attribution-receipt-store.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
@@ -27,12 +28,23 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+const chumAttributionExportToken =
+  process.env.CHUM_ATTRIBUTION_EXPORT_TOKEN?.trim() ||
+  chumAttributionIngestToken;
+const chumAttributionReceiptPath =
+  process.env.CHUM_ATTRIBUTION_RECEIPT_PATH?.trim() ||
+  path.resolve(__dirname, '.data', 'chum-attribution-events.ndjson');
 const machineCommerceGatewayUrl =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 const crawlerRadarStore = createCrawlerRadarStore({
   maxEvents: Number(process.env.CHUM_CRAWLER_RADAR_MAX_EVENTS || 5000),
   persistPath: process.env.CHUM_CRAWLER_OBSERVATION_PATH?.trim() || '',
+});
+const attributionReceiptStore = createAttributionReceiptStore({
+  persistPath: chumAttributionReceiptPath,
+  maxEvents: Number(process.env.CHUM_ATTRIBUTION_RECEIPT_MAX_EVENTS || 50000),
+  maxBytes: Number(process.env.CHUM_ATTRIBUTION_RECEIPT_MAX_BYTES || 10 * 1024 * 1024),
 });
 
 const firstPartyRoutingPath = path.resolve(__dirname, 'registry', 'first-party-routing.json');
@@ -411,29 +423,63 @@ function chumHumanReviewUrl(publicId: string): string {
 }
 
 async function persistChumAttributionEvent(event: unknown) {
-  if (!chumAttributionSinkUrl) {
-    return { persisted: false, state: 'sink_not_configured' };
+  let local;
+  try {
+    local = attributionReceiptStore.append(event);
+  } catch (error) {
+    local = {
+      persisted: false,
+      state: 'receipt_store_failed',
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 
-  const target = new URL(chumAttributionSinkUrl);
-  if (target.protocol !== 'https:') {
-    throw new Error('CHUM attribution sink must use HTTPS.');
+  let sink = { persisted: false, state: 'sink_not_configured' as string, error: null as string | null };
+
+  if (chumAttributionSinkUrl) {
+    try {
+      const target = new URL(chumAttributionSinkUrl);
+      if (target.protocol !== 'https:') {
+        throw new Error('CHUM attribution sink must use HTTPS.');
+      }
+
+      const response = await fetch(target, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          ...(chumAttributionSinkToken ? { authorization: `Bearer ${chumAttributionSinkToken}` } : {}),
+        },
+        body: JSON.stringify(event),
+      });
+
+      if (!response.ok) {
+        throw new Error(`CHUM attribution sink returned HTTP ${response.status}`);
+      }
+
+      sink = { persisted: true, state: 'receipt_forwarded', error: null };
+    } catch (error) {
+      sink = {
+        persisted: false,
+        state: 'sink_forward_failed',
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
   }
 
-  const response = await fetch(target, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      ...(chumAttributionSinkToken ? { authorization: `Bearer ${chumAttributionSinkToken}` } : {}),
-    },
-    body: JSON.stringify(event),
-  });
-
-  if (!response.ok) {
-    throw new Error(`CHUM attribution sink returned HTTP ${response.status}`);
+  if (!local.persisted && !sink.persisted) {
+    throw new Error(local.error || sink.error || 'CHUM attribution event could not be persisted.');
   }
 
-  return { persisted: true, state: 'receipt_forwarded' };
+  return {
+    persisted: Boolean(local.persisted || sink.persisted),
+    state: local.persisted && sink.persisted
+      ? 'receipt_stored_and_forwarded'
+      : local.persisted
+        ? 'receipt_stored_first_party'
+        : 'receipt_forwarded_only',
+    local,
+    sink,
+  };
 }
 
 
@@ -765,6 +811,8 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
     schema: 'evercraft.chum.attribution.v1',
     configured: Boolean(chumAttributionSecret),
     durableSinkConfigured: Boolean(chumAttributionSinkUrl),
+    firstPartyReceiptStore: attributionReceiptStore.status(),
+    trustedExportConfigured: Boolean(chumAttributionExportToken),
     publicStages: PUBLIC_ATTRIBUTION_STAGES,
     referral: { method: 'POST', path: '/api/chum/referral' },
     browserHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
@@ -776,6 +824,37 @@ app.get('/api/chum/attribution', (_req: Request, res: Response) => {
       publicCallersCanAssertPayment: false,
       providerClaimIsPickupProof: false,
       verifiedRevenueRequiresTrustedPaymentEvidence: true,
+    },
+  });
+});
+
+app.get('/api/chum/attribution/export', rateLimit(60, 60 * 60 * 1000), (req: Request, res: Response) => {
+  if (!chumAttributionExportToken) {
+    res.status(503).json({ success: false, error: 'Trusted CHUM attribution export is not configured.' });
+    return;
+  }
+
+  const authorization = String(req.headers.authorization || '');
+  if (authorization !== `Bearer ${chumAttributionExportToken}`) {
+    res.status(401).json({ success: false, error: 'Unauthorized.' });
+    return;
+  }
+
+  const since = String(req.query.since || '').trim();
+  const limit = Math.max(1, Math.min(Number(req.query.limit || 5000) || 5000, 50000));
+  const events = attributionReceiptStore.read({ since, limit });
+
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  res.json({
+    schema: 'evercraft.chum.attribution-export.v1',
+    exported_at: new Date().toISOString(),
+    events,
+    store: attributionReceiptStore.status(),
+    doctrine: {
+      authenticated_private_export: true,
+      checkout_is_not_payment: true,
+      payment_requires_trusted_evidence: true,
     },
   });
 });
@@ -941,8 +1020,8 @@ app.post('/api/chum/attribution/event', rateLimit(240, 60 * 60 * 1000), async (r
 });
 
 app.post('/api/chum/attribution/trusted-event', rateLimit(120, 60 * 60 * 1000), async (req: Request, res: Response) => {
-  if (!chumAttributionSecret || !chumAttributionIngestToken || !chumAttributionSinkUrl) {
-    res.status(503).json({ success: false, error: 'Trusted CHUM attribution ingestion is not fully configured.' });
+  if (!chumAttributionSecret || !chumAttributionIngestToken) {
+    res.status(503).json({ success: false, error: 'Trusted CHUM attribution ingestion is not configured.' });
     return;
   }
 
