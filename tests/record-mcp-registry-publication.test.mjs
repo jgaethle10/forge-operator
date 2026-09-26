@@ -33,6 +33,10 @@ function makeRoot({canary=true,remoteMismatch=false}={}){
         verified:true,
         registry_publication_proven:false,
         deployment_receipt_ref:'sha256:'+'a'.repeat(64),
+        device_fingerprint:'sha256:'+'b'.repeat(64),
+        field_enrollment_verified:true,
+        field_enrollment_receipt_ref:'sha256:'+'c'.repeat(64),
+        public_edge_admission_receipt_ref:'sha256:'+'d'.repeat(64),
       } : null,
     });
     const manifestPath='mcp-registry/'+slug+'.json';
@@ -118,6 +122,31 @@ test('publication recorder refuses products without the external execution canar
 test('publication recorder refuses a registry manifest pointing somewhere other than the verified MCP',()=>{
   const root=makeRoot({remoteMismatch:true});
   try{
+    assert.throws(
+      ()=>execFileSync(process.execPath,[
+        script,
+        '--manifests-file','published.txt',
+        '--workflow-run-id','123456',
+        '--release-sha','b'.repeat(40),
+      ],{cwd:root,stdio:'pipe'}),
+      /Command failed/
+    );
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+
+test('publication recorder refuses a canary without field enrollment proof',()=>{
+  const root=makeRoot();
+  try{
+    const specsPath=path.join(root,'distribution/direct-plugin-specs.json');
+    const specs=JSON.parse(fs.readFileSync(specsPath,'utf8'));
+    for(const product of specs.products){
+      product.public_edge_canary.field_enrollment_verified=false;
+      product.public_edge_canary.field_enrollment_receipt_ref=null;
+      product.public_edge_canary.public_edge_admission_receipt_ref=null;
+    }
+    fs.writeFileSync(specsPath,JSON.stringify(specs,null,2)+'\n');
+
     assert.throws(
       ()=>execFileSync(process.execPath,[
         script,
