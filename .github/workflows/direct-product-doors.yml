@@ -1,0 +1,36 @@
+name: Direct Product Doors
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'distribution/direct-plugin-specs.json'
+      - 'distribution/direct-product-doors.json'
+      - 'public/.well-known/evercraft-direct-doors.json'
+      - 'plugins/**'
+      - 'scripts/generate-direct-plugin-packages.mjs'
+      - 'tests/direct-product-doors.test.mjs'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'distribution/direct-plugin-specs.json'
+      - 'distribution/direct-product-doors.json'
+      - 'public/.well-known/evercraft-direct-doors.json'
+      - 'plugins/**'
+      - 'scripts/generate-direct-plugin-packages.mjs'
+      - 'tests/direct-product-doors.test.mjs'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  direct-doors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate direct specialist doors
+        run: npm run direct:check
