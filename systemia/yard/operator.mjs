@@ -935,6 +935,9 @@ export class YardOperator {
     deviceFingerprint,
     edgeAttestationReceipt,
     specialistAttestationReceipt,
+    fieldVerified = false,
+    fieldEnrollmentReceipt = '',
+    publicEdgeAdmissionReceipt = '',
   } = {}) {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);
@@ -955,6 +958,9 @@ export class YardOperator {
           device_fingerprint: deviceFingerprint,
           edge_attestation_receipt: edgeAttestationReceipt,
           specialist_attestation_receipt: specialistAttestationReceipt,
+          field_verified: fieldVerified === true,
+          field_enrollment_receipt: fieldEnrollmentReceipt,
+          public_edge_admission_receipt: publicEdgeAdmissionReceipt,
           same_device_binding: true,
         }),
       }
@@ -963,7 +969,9 @@ export class YardOperator {
     if (
       response.identity_attestation_bound !== true ||
       response.same_device_binding !== true ||
-      response.device_fingerprint !== deviceFingerprint
+      response.device_fingerprint !== deviceFingerprint ||
+      (fieldVerified === true && response.field_verified !== true) ||
+      (fieldVerified === true && response.field_enrollment_bound !== true)
     ) {
       throw new Error('specialist identity attestation binding failed');
     }
@@ -974,6 +982,9 @@ export class YardOperator {
       device_fingerprint: response.device_fingerprint,
       edge_attestation_receipt_ref: response.edge_attestation_receipt_ref,
       specialist_attestation_receipt_ref: response.specialist_attestation_receipt_ref,
+      field_verified: response.field_verified === true,
+      field_enrollment_receipt_ref: response.field_enrollment_receipt_ref || null,
+      public_edge_admission_receipt_ref: response.public_edge_admission_receipt_ref || null,
       same_device_binding: true,
       compute_binding_receipt: response.receipt?.receipt_hash || null,
       observed_at: new Date().toISOString(),
