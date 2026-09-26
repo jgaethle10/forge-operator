@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/yard/**'
       - 'systemia/compute/**'
+      - 'systemia/network/**'
+      - 'systemia/mcp/**'
       - 'systemia/core/bootstrap/**'
       - '.github/workflows/yard-operator.yml'
   push:
@@ -13,6 +15,8 @@ on:
     paths:
       - 'systemia/yard/**'
       - 'systemia/compute/**'
+      - 'systemia/network/**'
+      - 'systemia/mcp/**'
       - 'systemia/core/bootstrap/**'
       - '.github/workflows/yard-operator.yml'
 
