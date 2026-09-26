@@ -81,7 +81,7 @@ test('Fire Control closes the funnel only with provider-verified payment', () =>
 
   const forensiscope = receipt.offers.find((row) => row.public_id === 'forensiscope-v1');
   assert.equal(forensiscope.first_broken_stage, null);
-  assert.equal(forensiscope.evidence.provider_verified_revenue_amount, 299);
+  assert.deepEqual(forensiscope.evidence.provider_verified_revenue_by_currency, { UNKNOWN: 299 });
 
   const rivet = receipt.offers.find((row) => row.public_id === 'rivet-v1');
   assert.equal(rivet.first_broken_stage, 'provider_pickup');
