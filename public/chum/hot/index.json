@@ -2,9 +2,351 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T19:35:58.578Z",
-  "purpose": "High-priority public discovery surfaces for crawler fan-out. Priority is an internal crawl-order hint, not a ranking or recommendation claim.",
+  "updated_at": "2026-09-26T19:42:38.469Z",
+  "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
+    {
+      "path": "/chum/commercial/",
+      "url": "/chum/commercial/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
+      "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
+      "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
+      "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/",
+      "url": "/chum/commercial/audit-center-website-audit-machine-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/index.json",
+      "url": "/chum/commercial/audit-center-website-audit-machine-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/audit-center-website-audit-machine-v1/llms.txt",
+      "url": "/chum/commercial/audit-center-website-audit-machine-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/",
+      "url": "/chum/commercial/career-command-interview-practice-machine-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/index.json",
+      "url": "/chum/commercial/career-command-interview-practice-machine-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/career-command-interview-practice-machine-v1/llms.txt",
+      "url": "/chum/commercial/career-command-interview-practice-machine-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/",
+      "url": "/chum/commercial/deck-capital-fit-sprint-machine-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/index.json",
+      "url": "/chum/commercial/deck-capital-fit-sprint-machine-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/deck-capital-fit-sprint-machine-v1/llms.txt",
+      "url": "/chum/commercial/deck-capital-fit-sprint-machine-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/",
+      "url": "/chum/commercial/eventwave-paid-promotion-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
+      "url": "/chum/commercial/eventwave-paid-promotion-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
+      "url": "/chum/commercial/eventwave-paid-promotion-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/",
+      "url": "/chum/commercial/faie-signal-brief-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "url": "/chum/commercial/faie-signal-brief-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "url": "/chum/commercial/faie-signal-brief-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/feed.json",
+      "url": "/chum/commercial/feed.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/feed.xml",
+      "url": "/chum/commercial/feed.xml",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/",
+      "url": "/chum/commercial/findmypart-paid-hunt-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/index.json",
+      "url": "/chum/commercial/findmypart-paid-hunt-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
+      "url": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/",
+      "url": "/chum/commercial/foundry-app-escape-audit-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/index.json",
+      "url": "/chum/commercial/foundry-app-escape-audit-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/foundry-app-escape-audit-v1/llms.txt",
+      "url": "/chum/commercial/foundry-app-escape-audit-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/",
+      "url": "/chum/commercial/ibmi-rescue-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "url": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "url": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/index.json",
+      "url": "/chum/commercial/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/llms.txt",
+      "url": "/chum/commercial/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/",
+      "url": "/chum/commercial/rivet-site-underwriting-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/index.json",
+      "url": "/chum/commercial/rivet-site-underwriting-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/rivet-site-underwriting-v1/llms.txt",
+      "url": "/chum/commercial/rivet-site-underwriting-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/",
+      "url": "/chum/commercial/roasted-text-pressure-test-machine-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/index.json",
+      "url": "/chum/commercial/roasted-text-pressure-test-machine-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/roasted-text-pressure-test-machine-v1/llms.txt",
+      "url": "/chum/commercial/roasted-text-pressure-test-machine-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/",
+      "url": "/chum/commercial/site-survive-rapid-audit-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/index.json",
+      "url": "/chum/commercial/site-survive-rapid-audit-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/site-survive-rapid-audit-v1/llms.txt",
+      "url": "/chum/commercial/site-survive-rapid-audit-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/",
+      "url": "/chum/commercial/website-launch-service-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/index.json",
+      "url": "/chum/commercial/website-launch-service-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/commercial/website-launch-service-v1/llms.txt",
+      "url": "/chum/commercial/website-launch-service-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "priority": 108,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/sitemaps/index.xml",
+      "url": "/chum/sitemaps/index.xml",
+      "priority": 108,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/sitemaps/machine.xml",
+      "url": "/chum/sitemaps/machine.xml",
+      "priority": 108,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "url": "/chum/sitemaps/products.xml",
+      "priority": 108,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/sitemaps/sell-now.xml",
+      "url": "/chum/sitemaps/sell-now.xml",
+      "priority": 108,
+      "last_changed": "2026-09-26T19:35:58.578Z"
+    },
+    {
+      "path": "/chum/sell-now.html",
+      "url": "/chum/sell-now.html",
+      "priority": 92,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "priority": 92,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
+    {
+      "path": "/chum/sell-now.txt",
+      "url": "/chum/sell-now.txt",
+      "priority": 92,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "priority": 90,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
+    {
+      "path": "/chum/revenue.html",
+      "url": "/chum/revenue.html",
+      "priority": 90,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "url": "/chum/revenue.txt",
+      "priority": 90,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "priority": 84,
+      "last_changed": "2026-09-26T15:08:19.376Z"
+    },
     {
       "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
       "url": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
@@ -860,348 +1202,6 @@
     {
       "path": "/chum/answers/doors/conversion-problems-272215f37a.json",
       "url": "/chum/answers/doors/conversion-problems-272215f37a.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "url": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json",
-      "url": "/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "url": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
-      "url": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "url": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
-      "url": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/cross-business-rewards-c465e82da6.json",
-      "url": "/chum/answers/doors/cross-business-rewards-c465e82da6.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/cross-subject-learning-32bd20f557.json",
-      "url": "/chum/answers/doors/cross-subject-learning-32bd20f557.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
-      "url": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/deduplicate-a-large-document-set-0b64258cb8.json",
-      "url": "/chum/answers/doors/deduplicate-a-large-document-set-0b64258cb8.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/deploy-an-ai-workflow-7d9fb6e8c0.json",
-      "url": "/chum/answers/doors/deploy-an-ai-workflow-7d9fb6e8c0.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
-      "url": "/chum/answers/doors/design-a-plan-to-close-these-data-gaps-454b5eb8ab.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
-      "url": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "url": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "url": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json",
-      "url": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
-      "url": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/estimate-ev-charging-opportunity-a920fb36c4.json",
-      "url": "/chum/answers/doors/estimate-ev-charging-opportunity-a920fb36c4.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a.json",
-      "url": "/chum/answers/doors/estimate-the-ev-charging-opportunity-for-this-property-ef6e7e2d6a.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "url": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
-      "url": "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
-      "url": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
-      "url": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "url": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
-      "url": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
-      "url": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/",
-      "url": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
-      "url": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "url": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
-      "url": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
-      "url": "/chum/answers/doors/ev-charging-diligence-91e2eec236.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236/",
-      "url": "/chum/answers/doors/ev-charging-diligence-91e2eec236/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "url": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
-      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "url": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
-      "url": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-property-opportunity-assessment-a113925b8a.json",
-      "url": "/chum/answers/doors/ev-charging-property-opportunity-assessment-a113925b8a.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "url": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
-      "url": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "url": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
-      "url": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-ce5de7047c.json",
-      "url": "/chum/answers/doors/ev-charging-site-ce5de7047c.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
-      "url": "/chum/answers/doors/ev-infrastructure-intelligence-for-a-specific-address-f9a1407d7b.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json",
-      "url": "/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
-      "url": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/",
-      "url": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "url": "/chum/answers/doors/evaluate-this-candidate-from-the-evidence-1a2808f3be.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/event-crew-coordination-6ba6b17829.json",
-      "url": "/chum/answers/doors/event-crew-coordination-6ba6b17829.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/event-revenue-or-settlement-workflows-d80538da98.json",
-      "url": "/chum/answers/doors/event-revenue-or-settlement-workflows-d80538da98.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "url": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
-      "url": "/chum/answers/doors/evidence-timeline-review-2e05014564.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
-      "url": "/chum/answers/doors/explore-an-ecological-restoration-evidence-library-07360762f8.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
-      "url": "/chum/answers/doors/explore-fair-play-or-officiating-evidence-without-unsupported-accusations-91fc9aeac0.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-global-public-health-data-with-sources-9a4c719029.json",
-      "url": "/chum/answers/doors/explore-global-public-health-data-with-sources-9a4c719029.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46.json",
-      "url": "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46.json",
       "priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z"
     }
