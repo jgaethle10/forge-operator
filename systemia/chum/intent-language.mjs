@@ -27,6 +27,7 @@ const CONCEPT_ALIASES = {
   seo: ['seo','search visibility','local search','technical seo'],
   performance: ['performance','slow site','page speed','core web vitals'],
 
+  social_clip: ['social clip','social clips','vertical clip','vertical clips','short clip','short clips','video clipping','clipping job','reels','social media clips','repurpose video','facebook linkedin instagram'],
   interview: ['interview','job interview','mock interview','interview practice'],
   career: ['career','job search','resume','role specific','role-specific'],
 
