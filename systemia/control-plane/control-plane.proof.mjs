@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {
   admitMission,
   assertControlPlane,
+  listRemoteDeviceTrustCandidates,
   machineInventory,
+  prepareRemoteDeviceTrustChange,
 } from './control-plane.mjs';
 
 const inventory = machineInventory(process.cwd());
@@ -87,6 +89,89 @@ assert.equal(deploy.hold, 'human_gate_unresolved');
 assert.equal(plan.goal_snapshot.status, 'ready');
 assert.ok(plan.goal.blockers.includes('Human gate unresolved for deploy-release.'));
 
+
+
+const trustReview = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Review attested pending remote devices without changing trust.',
+    tasks: [
+      {
+        work_key: 'review-pending-device',
+        work_type: 'trust_review',
+      }
+    ]
+  }
+});
+assert.equal(trustReview.dispatch[0].specialist_component, 'yard-operator');
+assert.equal(trustReview.dispatch[0].hold, null);
+assert.equal(trustReview.dispatch[0].human_gate_required, false);
+
+const trustChange = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Authorize a pending remote device.',
+    tasks: [
+      {
+        work_key: 'authorize-pending-device',
+        work_type: 'trust_change',
+      }
+    ]
+  }
+});
+assert.equal(trustChange.dispatch[0].specialist_component, 'yard-operator');
+assert.equal(trustChange.dispatch[0].human_gate_required, true);
+assert.equal(trustChange.dispatch[0].hold, 'human_gate_unresolved');
+assert.equal(trustChange.receipt.human_holds.length, 1);
+
+const candidateFingerprint = 'sha256:' + 'a'.repeat(64);
+const candidateReceipt = 'sha256:' + '1'.repeat(64);
+const fakeYard = {
+  async listPendingRemoteDevices(id) {
+    assert.equal(id, 'broker-proof');
+    return {
+      schema: 'evercraft.yard.pending-remote-devices.v1',
+      broker_deployment_id: id,
+      count: 1,
+      pending: [
+        {
+          node_id: 'chromebook-proof',
+          device_fingerprint: candidateFingerprint,
+          request_receipt_hash: candidateReceipt,
+          identity_attested: true,
+          authority_granted: false,
+        }
+      ],
+      observed_at: '2026-09-26T02:10:00Z',
+    };
+  }
+};
+
+const candidates = await listRemoteDeviceTrustCandidates({
+  yard: fakeYard,
+  brokerDeploymentId: 'broker-proof',
+});
+assert.equal(candidates.authority, 'read_only');
+assert.equal(candidates.trust_change_executed, false);
+assert.equal(candidates.count, 1);
+assert.ok(candidates.candidates[0].candidate_ref.startsWith('candidate:sha256:'));
+assert.ok(!JSON.stringify(candidates).includes(candidateFingerprint));
+
+const preparedTrustChange = prepareRemoteDeviceTrustChange({
+  brokerDeploymentId: 'broker-proof',
+  candidateRef: candidates.candidates[0].candidate_ref,
+});
+assert.equal(
+  preparedTrustChange.schema,
+  'evercraft.systemia.remote-device-trust-change-plan.v1'
+);
+assert.equal(preparedTrustChange.impact, 'trust_boundary');
+assert.equal(preparedTrustChange.human_gate_required, true);
+assert.equal(preparedTrustChange.explicit_candidate_confirmation_required, true);
+assert.equal(preparedTrustChange.explicit_approval_reference_required, true);
+assert.equal(preparedTrustChange.executable_by_control_plane, false);
+assert.ok(!JSON.stringify(preparedTrustChange).includes(candidateFingerprint));
+
 const unsupported = admitMission({
   rootDir: process.cwd(),
   request: {
@@ -115,5 +200,10 @@ console.log(JSON.stringify({
   human_holds: plan.receipt.human_holds.length,
   admitted_public_products: inventory.summary.admitted_public_products,
   unsupported_scale_fail_closed: unsupported.receipt.admitted === false,
+  trust_review_read_only: candidates.authority === 'read_only',
+  trust_change_forced_human_gate: trustChange.dispatch[0].hold === 'human_gate_unresolved',
+  trust_change_control_plane_execution_disabled:
+    preparedTrustChange.executable_by_control_plane === false,
+  raw_device_fingerprint_redacted: !JSON.stringify(candidates).includes(candidateFingerprint),
   systemia_authority_preserved: true
 }, null, 2));
