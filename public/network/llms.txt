@@ -39,6 +39,12 @@ source-wired pending independent production verification
 Machine-readable Network manifest:
 /network/discovery.json
 
+Semantic problem mesh:
+/network/mesh/
+
+Semantic mesh LLM guide:
+/network/mesh/llms.txt
+
 Well-known Network manifest:
 /.well-known/evercraft-network.json
 
