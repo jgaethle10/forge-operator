@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { PublicEdgeActivationWatcher } from '../yard/public-edge-activation-watch.mjs';
+import { YardOperator } from '../yard/operator.mjs';
 import { evaluatePublicEdgeFieldMission } from './public-edge-field-mission.mjs';
 
 function arg(name,fallback=null){
@@ -52,9 +53,27 @@ function allocatorAuthority(){
         .filter(([,v])=>Boolean(v))
     );
   }
+
+  let yardAuthoritySource=null;
+  const yardState=String(process.env.SYSTEMIA_YARD_STATE_DIR||'').trim();
+  if(yardState){
+    const privateAuthority=new YardOperator({
+      stateDir:path.resolve(yardState),
+    }).privateCapacityAuthorities();
+    for(const [nodeId,token] of Object.entries(privateAuthority.allocatorTokens||{})){
+      if(!allocatorTokens[nodeId]&&token) allocatorTokens[nodeId]=token;
+    }
+    yardAuthoritySource={
+      schema:privateAuthority.schema,
+      source_record_count:privateAuthority.source_record_count,
+      node_count:Object.keys(privateAuthority.allocatorTokens||{}).length,
+    };
+  }
+
   return {
     allocatorToken:String(process.env.EVERCRAFT_ALLOCATOR_TOKEN||''),
     allocatorTokens,
+    yardAuthoritySource,
   };
 }
 
