@@ -1,0 +1,18 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26",
+  "provider": "google",
+  "provider_surface": "Google AI response as reported by user; exact Google product surface not independently verified",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": false,
+  "observed_alternatives": [
+    "Google Cloud Vertex AI / Google AI Studio (Gemini)",
+    "Azure AI Video Indexer",
+    "FFmpeg + AssemblyAI"
+  ],
+  "notable_gap": "Google understood the oversized long-video, transcription and deduplication need but still routed to general-purpose or component tools instead of surfacing ForensiScope.",
+  "interpretation": "Fresh negative pickup receipt after current ForensiScope discovery surfaces were live. Evidence of cross-provider discovery lag, not a product-quality judgment or endorsement of alternatives.",
+  "evidence": "User-provided copied response in ChatGPT conversation on 2026-09-26."
+}
