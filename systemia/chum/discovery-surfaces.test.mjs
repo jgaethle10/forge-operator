@@ -2,8 +2,11 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
 const directory = JSON.parse(fs.readFileSync('public/.well-known/evercraft-products.json','utf8'));
+const conformance = JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
+const conformanceByKey = new Map((conformance.products || []).map((row) => [row.product_key, row]));
 const robots = fs.readFileSync('public/robots.txt','utf8');
 const indexHtml = fs.readFileSync('public/chum/index.html','utf8');
+const llmsFull = fs.readFileSync('public/llms-full.txt','utf8');
 
 for (const token of [
   'OAI-SearchBot','ChatGPT-User','GPTBot',
@@ -29,6 +32,14 @@ for (const product of directory.products || []) {
   }
 
   const html = fs.readFileSync(`${root}/index.html`,'utf8');
+  const discovery = JSON.parse(fs.readFileSync(`${root}/ai-discovery.json`,'utf8'));
+  const conf = conformanceByKey.get(key);
+  const registryPublicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
+  if (conf?.mcp_registry?.name && !registryPublicationState.startsWith('published')) {
+    assert.equal(discovery.registry_name, null, `${key} exposed an unverified Official MCP Registry identity`);
+    assert.ok(!html.includes('Official MCP Registry name:'), `${key} labeled a staged registry identity as official`);
+    assert.ok(!llmsFull.includes(`Official MCP Registry: ${conf.mcp_registry.name}`), `${key} leaked a staged registry identity into llms-full`);
+  }
   assert.ok(html.includes('name="robots"'), `${key} product page missing crawler metadata`);
   assert.ok(html.includes('./llms.txt'), `${key} product page missing llms.txt link`);
   assert.ok(html.includes('./ai-discovery.json'), `${key} product page missing discovery JSON link`);

@@ -32,6 +32,14 @@ const catalogByKey = new Map((catalog.products || []).map(p => [
   p.product_key || String(p.registry_name || '').split('/').pop(), p
 ]));
 
+function registryNameFor(registry, conf) {
+  const publicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
+  if (conf?.mcp_registry?.name) {
+    return publicationState.startsWith('published') ? conf.mcp_registry.name : null;
+  }
+  return registry?.registry_name || null;
+}
+
 function renderReadme(p) {
   const c = conformanceByKey.get(p.product_key);
   const r = catalogByKey.get(p.product_key);
@@ -116,7 +124,7 @@ const products = approved.map(p => {
     canonical_url: p.canonical_url,
     conformance: Boolean(c),
     mcp_declared: Boolean(r?.mcp),
-    registry_name: r?.registry_name || c?.mcp_registry?.name || null,
+    registry_name: registryNameFor(r, c),
     invocation: r?.mcp ? {mode:'mcp',url:r.mcp} : r?.http_router ? {mode:'bounded_http',url:r.http_router} : {mode:'discovery_only',url:null},
     readme_exists: fs.existsSync(readme),
     llms_exists: fs.existsSync(llms)
