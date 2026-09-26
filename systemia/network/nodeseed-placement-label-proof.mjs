@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { startNodeSeed } from '../compute/node-seed.mjs';
+import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 import { runNodeSeedAssignmentPool } from '../saban/nodeseed-pool.mjs';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-placement-label-proof-'));
@@ -57,6 +58,26 @@ function assignment(id) {
 try {
   assert.deepEqual(ground.placement_labels, ['ground', 'gateway']);
   assert.deepEqual(air.placement_labels, ['air_relay', 'temporary']);
+
+  const nonce = 'placement-air-nonce-0001';
+  const attestationResponse = await fetch(`${air.endpoint}/v1/attest`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${allocatorToken}`
+    },
+    body: JSON.stringify({ nonce })
+  });
+  assert.equal(attestationResponse.status, 200);
+  const attestationBody = await attestationResponse.json();
+  const verifiedAttestation = verifyNodeAttestation({
+    attestation: attestationBody.attestation,
+    expectedNonce: nonce,
+    expectedNodeId: 'placement-air'
+  });
+  assert.equal(verifiedAttestation.ok, true);
+  assert.deepEqual(verifiedAttestation.placement_labels, ['air_relay', 'temporary']);
+  assert.equal(verifiedAttestation.field_claim, false);
 
   const airOnly = await runNodeSeedAssignmentPool({
     software: 'chum',
@@ -117,6 +138,8 @@ try {
       required_label_filters_capacity: true,
       forbidden_label_filters_capacity: true,
       placement_receipts_preserve_labels: true,
+      placement_labels_bound_to_signed_node_attestation: true,
+      placement_labels_do_not_self_certify_field_status: true,
       generic_scheduler_not_drone_specific: true
     },
     air_node: airOnly.nodes[0],
