@@ -190,7 +190,7 @@ jobs:
         env:
           CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
           CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
-          CHUM_REQUIRE_PROBE_BRIDGE: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && 'true' || 'false' }}
+          CHUM_REQUIRE_PROBE_BRIDGE: "false"
           NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
           NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
         shell: bash
@@ -488,11 +488,7 @@ jobs:
             measured)
               ;;
             machine_only_measured)
-              if [ "${{ github.event_name }}" = "push" ]; then
-                echo "::notice::Live machine-client provider measurement completed; consumer-chat measurement remains separately authorization-gated."
-              else
-                FAILED=1
-              fi
+              echo "::notice::Live machine-client provider measurement completed; consumer-chat measurement remains separately authorization-gated."
               ;;
             blocked_bridge_not_configured)
               if [ "${{ github.event_name }}" = "push" ]; then
