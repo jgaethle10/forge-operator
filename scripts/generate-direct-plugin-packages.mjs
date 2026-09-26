@@ -4,6 +4,20 @@ import path from 'node:path';
 const root=process.cwd();
 const specs=JSON.parse(fs.readFileSync(path.join(root,'distribution/direct-plugin-specs.json'),'utf8'));
 const checkOnly=process.argv.includes('--check');
+const LIVE_DIRECT_STATES=new Set([
+  'registry_published_direct_mcp_existing',
+  'public_https_verified_registry_pending',
+]);
+function isDirectLive(p){
+  return LIVE_DIRECT_STATES.has(p.state) &&
+    typeof p.mcp_url==='string' &&
+    p.mcp_url.startsWith('https://');
+}
+function isRegistryPublished(p){
+  return p.state==='registry_published_direct_mcp_existing' &&
+    typeof p.registry_name==='string' &&
+    p.registry_name.startsWith('io.github.jgaethle10/');
+}
 
 function stable(obj){ return JSON.stringify(obj,null,2)+'\n'; }
 function ensureDir(file){ fs.mkdirSync(path.dirname(file),{recursive:true}); }
@@ -14,7 +28,7 @@ function write(file,content){
 }
 
 function packageFiles(p){
-  const live=p.state==='registry_published_direct_mcp_existing' && typeof p.mcp_url==='string' && p.mcp_url.startsWith('https://');
+  const live=isDirectLive(p);
   const plugin={
     name:p.slug,
     version:'0.1.0',
@@ -27,6 +41,7 @@ function packageFiles(p){
     skills:'./skills/',
     mcpServers:'./mcp.json'
   };
+  if(live && !isRegistryPublished(p)) plugin.registryState='PENDING';
   if(!live){
     plugin.releaseState=p.state.toUpperCase();
     if(p.runtime_path) plugin.pendingRuntimePath=p.runtime_path;
@@ -59,6 +74,7 @@ function packageFiles(p){
       defaultPrompt:[p.default_prompt]
     }
   };
+  if(live && !isRegistryPublished(p)) codex.registryState='PENDING';
   if(!live){
     codex.releaseState=p.state.toUpperCase();
     if(p.runtime_path) codex.pendingRuntimePath=p.runtime_path;
@@ -97,8 +113,9 @@ function buildDoorIndex(){
     doors:specs.products.map(p=>({
       product:p.name,
       intent:p.intent,
-      registry_name:p.registry_name,
-      remote_mcp:(p.state==='registry_published_direct_mcp_existing' ? p.mcp_url : null),
+      registry_name:isRegistryPublished(p) ? p.registry_name : null,
+      registry_state:isRegistryPublished(p) ? 'published' : (isDirectLive(p) ? 'pending' : 'not_published'),
+      remote_mcp:isDirectLive(p) ? p.mcp_url : null,
       runtime_path:p.runtime_path||null,
       runtime_workload_class:p.runtime_workload_class||null,
       public_origin_state:p.public_origin_state||null,
@@ -126,7 +143,7 @@ for(const p of specs.products){
     if(fs.existsSync(mcpPath)){
       const mcp=JSON.parse(fs.readFileSync(mcpPath,'utf8'));
       const servers=Object.values(mcp.mcpServers||{});
-      const live=p.state==='registry_published_direct_mcp_existing';
+      const live=isDirectLive(p);
       if(live){
         const server=servers[0];
         if(!server||server.url!==p.mcp_url) problems.push(p.slug+': MCP URL drift');
@@ -154,7 +171,11 @@ for(const file of ['distribution/direct-product-doors.json','public/.well-known/
         const d=currentMap.get(p.name);
         if(!d) problems.push(file+': missing door '+p.name);
         else {
-          const expectedMcp=p.state==='registry_published_direct_mcp_existing'?p.mcp_url:null;
+          const expectedMcp=isDirectLive(p)?p.mcp_url:null;
+          const expectedRegistry=isRegistryPublished(p)?p.registry_name:null;
+          const expectedRegistryState=isRegistryPublished(p)?'published':(isDirectLive(p)?'pending':'not_published');
+          if((d.registry_name||null)!==(expectedRegistry||null)) problems.push(file+': registry drift '+p.name);
+          if((d.registry_state||null)!==expectedRegistryState) problems.push(file+': registry state drift '+p.name);
           if(d.remote_mcp!==expectedMcp) problems.push(file+': MCP drift '+p.name);
           if((d.runtime_path||null)!==(p.runtime_path||null)) problems.push(file+': runtime path drift '+p.name);
           if((d.public_origin_state||null)!==(p.public_origin_state||null)) problems.push(file+': public origin state drift '+p.name);
@@ -173,12 +194,15 @@ if(checkOnly){
   }
   console.log('DIRECT_PLUGIN_FACTORY_PASS',JSON.stringify({
     products:specs.products.length,
-    registry_backed:specs.products.filter(p=>p.state==='registry_published_direct_mcp_existing').length,
-    held:specs.products.filter(p=>p.state!=='registry_published_direct_mcp_existing').map(p=>p.slug)
+    direct_live:specs.products.filter(isDirectLive).length,
+    registry_backed:specs.products.filter(isRegistryPublished).length,
+    registry_pending:specs.products.filter(p=>isDirectLive(p)&&!isRegistryPublished(p)).map(p=>p.slug),
+    held:specs.products.filter(p=>!isDirectLive(p)).map(p=>p.slug)
   }));
 } else {
   console.log('DIRECT_PLUGIN_FACTORY_GENERATED',JSON.stringify({
     products:specs.products.length,
-    registry_backed:specs.products.filter(p=>p.state==='registry_published_direct_mcp_existing').length
+    direct_live:specs.products.filter(isDirectLive).length,
+    registry_backed:specs.products.filter(isRegistryPublished).length
   }));
 }
