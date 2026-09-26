@@ -19,12 +19,16 @@ OpenAPI: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgen
 - plan a social-video clipping job
 - create social-ready video outputs with a governed publishing path
 
-## Current limits
-- public MCP is discovery/planning only
+## Production Engine V2
+- public MCP is read-only discovery and Creative Director planning
+- creative styles: clean, bold, documentary, property
+- caption modes: source-grounded burned-in cues, hook-only, none
+- platform-native grounded copy: Facebook, LinkedIn, Instagram
 - 35 MiB current customer server source ceiling
 - up to 3 customer clips
 - 8-45 seconds per customer clip
 - 720x1280 MP4 H.264/AAC customer output
+- ForensiScope is recommended upstream for oversized, long, deduplicated, or full-timeline media; no automatic private-media transfer is claimed
 - Facebook, LinkedIn and Instagram code paths exist
 - TikTok is not verified
 
