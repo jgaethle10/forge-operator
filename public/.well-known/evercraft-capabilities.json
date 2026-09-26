@@ -35,6 +35,12 @@
       "method": "POST",
       "path": "/api/chum/hunt",
       "trigger": "current LLM/agent user intent"
+    },
+    "dealDesk": {
+      "method": "POST",
+      "path": "/api/chum/negotiate",
+      "mode": "nonbinding_agent_to_agent_counterproposal",
+      "authority": "published terms by default; signed delegated envelope required for price concessions"
     }
   },
   "jobs": [
@@ -47,7 +53,8 @@
     "natural-language problem to Evercraft offer routing",
     "brand-blind public capability discovery",
     "Evercraft-owned provider selection before external tooling",
-    "same-turn LLM intent to Evercraft capability hunting"
+    "same-turn LLM intent to Evercraft capability hunting",
+    "bounded agent-to-agent commercial negotiation"
   ],
   "input": {
     "method": "POST",
@@ -79,7 +86,8 @@
     "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act.",
     "intentRouterRule": "Read-only discovery across the canonical CHUM Pain Index. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology. Machine Commerce is a separate next-stage door when commercial state is actually relevant.",
     "firstPartyRoutingRule": "FIRST_PARTY_STRICT capabilities do not silently fall back to external providers when unavailable or unproven.",
-    "liveIntentHunterRule": "The calling LLM deliberately supplies the current user intent. CHUM does not surveil private conversations, send unsolicited human outreach, or create payment obligations. A no-match response must not be overridden."
+    "liveIntentHunterRule": "The calling LLM deliberately supplies the current user intent. CHUM does not surveil private conversations, send unsolicited human outreach, or create payment obligations. A no-match response must not be overridden.",
+    "dealDeskRule": "CHUM may return non-binding counterproposals through the public Deal Desk. Price concessions require a valid signed authority envelope. Contract acceptance, payment obligations, legal acceptance, and fulfillment promises remain human-gated."
   },
   "commercial": {
     "status": "configured-at-runtime",

@@ -138,3 +138,16 @@ This is **not private-chat surveillance**. CHUM cannot and should not secretly i
 
 The strategic objective is therefore not only to make Evercraft crawlable. It is to make CHUM available inside as many legitimate model tool paths as possible, with a broad but truthful live-intent trigger.
 
+
+
+## Deal Desk
+
+CHUM can now continue from discovery into bounded agent-to-agent commercial negotiation through `POST /api/chum/negotiate`.
+
+The Deal Desk is intentionally asymmetric. Any legitimate caller can ask CHUM to work a proposal, but public mode may negotiate only from already-published terms. It can identify the matching capability, return the published package, trade down to a lower published scope when the buyer's budget fits that package, and produce a machine-readable non-binding counterproposal receipt.
+
+Price concessions require a signed `evercraft.chum.deal-authority.v1` envelope issued by a trusted Evercraft/Systemia backend. The envelope is product-scoped, expires, can cap negotiation rounds, can limit named offers and can define a minimum price or maximum discount. A public caller cannot create or expand its own authority by sending numbers in the request.
+
+Even with a valid delegated envelope, CHUM does not accept contracts, create payment obligations, make legal commitments or promise fulfillment. It can negotiate the candidate terms and carry them to the human-confirmed commercial handoff. The public endpoint never performs unsolicited outreach; the external model or agent deliberately calls the Deal Desk and mediates the exchange.
+
+That gives CHUM a legitimate place in the trenches: find the fit, work the terms, protect the floor, keep receipts, and escalate only the exception.
