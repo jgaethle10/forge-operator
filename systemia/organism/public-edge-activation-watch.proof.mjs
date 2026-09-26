@@ -42,7 +42,7 @@ try{
   ));
   assert.equal(first.ok,true);
   assert.equal(first.action,'hold');
-  assert.equal(first.reason,'no_edge_ready_compute_node');
+  assert.equal(first.reason,'no_compute_capacity_discovered');
   assert.equal(first.founder_action_required,false);
   assert.equal(first.public_https_verified,false);
   assert.equal(first.material_change,true);
@@ -64,7 +64,7 @@ try{
   ));
   assert.equal(second.ok,true);
   assert.equal(second.action,'hold');
-  assert.equal(second.reason,'no_edge_ready_compute_node');
+  assert.equal(second.reason,'no_compute_capacity_discovered');
   assert.equal(second.founder_action_required,false);
   assert.equal(second.material_change,false);
 
