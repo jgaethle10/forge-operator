@@ -291,6 +291,81 @@
       "intent": "Business decision simulation before acting, beginning with pricing changes.",
       "truth_boundary": "Simulation output is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, or operational result. Publication remains held until the dedicated MCP receives an independent live deployment receipt.",
       "capability_public_ids": []
+    },
+    {
+      "slug": "deck-capital-fit",
+      "name": "Deck Capital Fit",
+      "short_description": "Assess founder capital fit and funding readiness",
+      "long_description": "Use Deck Capital Fit directly when a founder wants structured capital-fit, funding-readiness, or fundraising-preparation analysis with human-confirmed next steps.",
+      "category": "Business",
+      "website_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/",
+      "registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "mcp_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Help me assess how ready this company is for outside capital and what gaps I should fix before fundraising.",
+      "keywords": [
+        "deck-capital-fit",
+        "funding-readiness",
+        "capital-fit",
+        "fundraising",
+        "founder",
+        "mcp"
+      ],
+      "intent": "Founder capital-fit, funding-readiness, and fundraising preparation analysis.",
+      "truth_boundary": "Treat the output as decision support, not investment, securities, legal, tax, valuation, or fundraising-success advice. Do not imply investor interest, financing approval, or committed capital unless independently verified.",
+      "capability_public_ids": [
+        "deck-capital-fit-sprint-machine-v1"
+      ]
+    },
+    {
+      "slug": "evercraft-clip",
+      "name": "Evercraft Clip",
+      "short_description": "Plan social-video production and distribution",
+      "long_description": "Use Evercraft Clip directly when a user wants to plan an Evercraft social-video production or distribution job from source media or a content brief.",
+      "category": "Productivity",
+      "website_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "mcp_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Help me plan a social-video job from this source material and tell me the current Evercraft Clip execution boundary.",
+      "keywords": [
+        "evercraft-clip",
+        "social-video",
+        "video-production",
+        "content-distribution",
+        "short-form-video",
+        "mcp"
+      ],
+      "intent": "Read-only social-video production discovery and job planning.",
+      "truth_boundary": "The current MCP is read-only discovery and job planning. Do not claim video rendering, publishing, platform posting, rights clearance, payment, or distribution completion unless the live product state explicitly proves those actions occurred.",
+      "capability_public_ids": [
+        "evercraft-clip-social-video-v1"
+      ]
+    },
+    {
+      "slug": "roasted",
+      "name": "ROASTED",
+      "short_description": "Pressure-test and sharpen text",
+      "long_description": "Use ROASTED directly when a user wants a fast text pressure test, critique, roast, or sharper feedback with human-confirmed checkout for paid execution.",
+      "category": "Productivity",
+      "website_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "registry_name": "io.github.jgaethle10/roasted",
+      "mcp_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "state": "registry_published_direct_mcp_existing",
+      "default_prompt": "Pressure-test this text and make the weak spots obvious without pretending a paid result exists before payment is verified.",
+      "keywords": [
+        "roasted",
+        "text-critique",
+        "pressure-test",
+        "writing-feedback",
+        "copy-review",
+        "mcp"
+      ],
+      "intent": "Low-cost text pressure tests, critique, and sharper writing feedback.",
+      "truth_boundary": "Checkout requires human confirmation. Checkout creation is not payment proof, and a paid result must not be claimed until provider verification confirms paid state and result availability.",
+      "capability_public_ids": [
+        "roasted-text-pressure-test-machine-v1"
+      ]
     }
   ]
 }
