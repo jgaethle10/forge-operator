@@ -144,6 +144,7 @@ npm run proof:saban-portfolio-archaeology
 npm run proof:saban-nodeseed-multiplier
 npm run proof:saban-nodeseed-pool
 npm run proof:forensiscope-security
+npm run proof:forensiscope-artifact-return
 npm run proof:forensiscope-distributed
 ```
 
@@ -169,3 +170,12 @@ Distributed NodeSeed pools actively renew supported capacity leases while work i
 ## ForensiScope source boundary
 
 ForensiScope authorized-source admission resolves canonical filesystem paths before containment checks. Existing media sources must remain inside admitted real roots, direct symlink sources are rejected, parent-directory symlink escapes are blocked, source SHA-256 identity is enforced, and a configurable source byte ceiling is applied before execution. These controls do not enable public machine intake; that remains a separate verification gate.
+
+
+## Portable artifact return
+
+Registered workers may declare bounded artifacts with an artifact ID, SHA-256 identity, size, extension, and media type. NodeSeed validates that the produced file is inside the lease-scoped worker artifact root, verifies its digest and byte count, copies it into a private content-addressed store, and removes the node-local path from the durable worker receipt.
+
+The coordinator retrieves granted artifacts through the authenticated lease before release, streams them while recomputing SHA-256, verifies the byte count, stores them under its own artifact-return root, and rehydrates the result with a coordinator-local path. Durable idempotency replay can re-grant an existing content-addressed artifact after a NodeSeed restart without re-running the software adapter. Missing or corrupt durable artifacts fail closed.
+
+ForensiScope uses this lane for prepared audio artifacts so distributed media reconciliation does not depend on a shared filesystem or a remote worker path.
