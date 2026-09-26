@@ -65,6 +65,7 @@ try {
   assert.equal(health.starts_analysis_jobs, false);
   assert.equal(health.checkout_or_payment, false);
   assert.equal(health.evidence_access_required, true);
+  assert.equal(health.privacy_safe_access_audit_receipts, true);
 
   const mcpResponse = await fetch(deployment.result.local_url + '/mcp', {
     method: 'POST',
