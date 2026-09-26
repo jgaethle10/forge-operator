@@ -15,6 +15,10 @@ assert.ok(product.intents.includes('software portfolio health monitoring'));
 assert.equal(product.commercial?.status, 'commercial_pilot');
 assert.match(String(product.commercial?.pricing || ''), /custom quote/i);
 assert.equal(product.commercial?.machine_commerce_handoff?.public_id, 'portfolio-sentinel-v1');
+assert.equal(product.commercial?.machine_commerce_handoff?.handoff_tool, 'prepare_portfolio_sentinel_pilot_handoff');
+assert.equal(product.commercial?.machine_commerce_handoff?.request_tool, 'submit_portfolio_sentinel_pilot_request');
+assert.equal(product.commercial?.machine_commerce_handoff?.state, 'live_human_confirmed_pilot_request');
+assert.equal(product.commercial?.pilot_request?.required_human_confirmation, true);
 assert.equal(product.human_confirmation_required, true);
 assert.ok(product.boundaries.some((row) => /private repositories/i.test(row)));
 assert.ok(product.boundaries.some((row) => /first receipt-backed cycle/i.test(row)));
@@ -40,6 +44,14 @@ assert.equal(conf.doorway_state, 'machine_commerce_live');
 assert.equal(conf.conformance_state, 'live_match_canary_passed');
 assert.equal(conf.provider_behavior_state, 'not_run');
 assert.equal(conf.live_canary_evidence?.match_score, 36);
+assert.equal(conf.machine_commerce_handoff_tool, 'prepare_portfolio_sentinel_pilot_handoff');
+assert.equal(conf.machine_commerce_request_tool, 'submit_portfolio_sentinel_pilot_request');
+assert.equal(conf.pilot_request_canary_evidence?.result, 'pass');
+assert.equal(conf.pilot_request_canary_evidence?.explicit_confirmation_gate_verified, true);
+assert.equal(conf.pilot_request_canary_evidence?.monitoring_started, false);
+assert.equal(conf.pilot_request_canary_evidence?.repository_access_granted, false);
+assert.equal(conf.pilot_request_canary_evidence?.payment_obligation_created, false);
+assert.equal(conf.pilot_request_canary_evidence?.production_authority_granted, false);
 
 for (const file of [
   'registry/systemia-portfolio-sentinel/README.md',
