@@ -71,7 +71,8 @@ for (const intent of PROBES) {
   const { response, text } = await read(url, { headers: { accept: 'text/html' } });
   ensure(response.ok, `service page returned HTTP ${response.status}`);
   ensure(text.includes(NAME), 'service page does not name Sentinel');
-  checks.push({ kind: 'service_page', status: response.status, indexed: /index,\s*follow/i.test(text) || /robots/i.test(text) });
+  ensure(text.includes('Request a commercial pilot') && text.includes('sentinel-submit'), 'service page does not expose the Sentinel pilot request form');
+  checks.push({ kind: 'service_page', status: response.status, indexed: /index,\s*follow/i.test(text) || /robots/i.test(text), pilot_form: true });
 }
 
 {
@@ -135,6 +136,47 @@ for (const intent of PROBES) {
   ensure(text.includes('"monitoring_started": false') || text.includes('\\\"monitoring_started\\\": false'), 'Sentinel handoff did not prove monitoring remains stopped');
   ensure(text.includes('"repository_access_granted": false') || text.includes('\\\"repository_access_granted\\\": false'), 'Sentinel handoff did not prove repository access remains ungranted');
   checks.push({ kind: 'mcp_pilot_handoff', status: response.status, content_type: response.headers.get('content-type'), safe_handoff_verified: true });
+}
+
+{
+  const rpc = {
+    jsonrpc: '2.0',
+    id: 3,
+    method: 'tools/list',
+    params: {}
+  };
+  const { response, text } = await read(MCP, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'accept': 'application/json, text/event-stream'
+    },
+    body: JSON.stringify(rpc)
+  });
+  ensure(response.ok, `MCP tools/list returned HTTP ${response.status}`);
+  ensure(text.includes('submit_portfolio_sentinel_pilot_request'), 'MCP tools/list does not expose the Sentinel pilot request tool');
+  checks.push({ kind: 'mcp_tools_list', status: response.status, submit_tool: true });
+}
+
+{
+  const { response, text } = await read(GATEWAY, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    },
+    body: JSON.stringify({
+      action: 'prepare_portfolio_sentinel_pilot_request',
+      idempotency_key: 'sentinel-canary-unconfirmed',
+      name: 'Sentinel Canary',
+      email: 'sentinel-canary@example.invalid',
+      human_confirmed: false,
+      source: 'synthetic_qa'
+    })
+  });
+  ensure(response.status === 409, `unconfirmed Sentinel pilot request returned HTTP ${response.status}, expected 409`);
+  ensure(text.includes('explicit_human_confirmation_required'), 'Sentinel pilot request confirmation gate did not fail closed');
+  checks.push({ kind: 'pilot_request_confirmation_gate', status: response.status, blocked_without_confirmation: true });
 }
 
 for (const file of [
