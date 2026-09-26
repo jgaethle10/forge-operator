@@ -14,10 +14,12 @@ fs.mkdirSync(outside, { recursive: true });
 const good = path.join(admitted, 'authorized.wav');
 const escaped = path.join(outside, 'outside.wav');
 const link = path.join(admitted, 'symlink.wav');
+const linkedDirectory = path.join(admitted, 'linked-outside');
 
 fs.writeFileSync(good, Buffer.from('RIFF0000WAVEproof'));
 fs.writeFileSync(escaped, Buffer.from('RIFF0000WAVEoutside'));
 fs.symlinkSync(escaped, link);
+fs.symlinkSync(outside, linkedDirectory, 'dir');
 
 const authorization = {
   confirmed: true,
@@ -53,6 +55,20 @@ try {
       maxBytes: 1024
     }),
     /symlinks are not admitted|outside admitted media roots/
+  );
+
+  assert.throws(
+    () => validateAuthorizedMediaSource({
+      source: {
+        path: path.join(linkedDirectory, 'outside.wav'),
+        sha256: hashFile(escaped)
+      },
+      authorization
+    }, {
+      rootDir,
+      maxBytes: 1024
+    }),
+    /outside admitted media roots/
   );
 
   assert.throws(
@@ -105,6 +121,7 @@ try {
     status: 'pass',
     canonical_path_enforced: true,
     direct_symlink_rejected: true,
+    parent_directory_symlink_escape_rejected: true,
     symlink_escape_rejected: true,
     source_hash_enforced: true,
     source_byte_limit_enforced: true,
