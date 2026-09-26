@@ -19,15 +19,23 @@
       "canonical_url": "https://aliev.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "reference_implementation",
+      "doorway_state": "mcp_registry_live",
+      "conformance_state": "mcp_registry_live_receipt_backed",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://aliev.base44.app/llms.txt",
       "origin_conformance_url": "https://aliev.base44.app/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
       "chum_mirror_state": "generated_public_fallback",
       "openapi_state": "not_declared_until_independently_live_verified",
-      "openapi_note": "The previously declared root /openapi.json returned HTML rather than a verified OpenAPI document on the 2026-09-24 CHUM canary. AliEV discovery and invocation remain available through CHUM mirrors and the verified MCP."
+      "openapi_note": "The previously declared root /openapi.json returned HTML rather than a verified OpenAPI document on the 2026-09-24 CHUM canary. AliEV discovery and invocation remain available through CHUM mirrors and the verified MCP.",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/aliev",
+        "version": "1.0.5",
+        "publication_state": "published_receipt_backed",
+        "receipt": "conformance/registry-publications/2026-09-26-aliev-1.0.5.json",
+        "published_at_utc": "2026-09-26T00:47:31Z"
+      },
+      "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified"
     },
     {
       "product_key": "buildflow",

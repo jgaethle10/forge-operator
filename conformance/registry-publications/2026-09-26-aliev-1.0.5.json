@@ -1,0 +1,22 @@
+{
+  "schema": "evercraft.registry-publication.receipt.v1",
+  "product_key": "aliev",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/aliev",
+  "version": "1.0.5",
+  "workflow_run_id": 36206079196,
+  "workflow_name": "Publish MCP Registry manifests",
+  "head_sha": "617bb2ee8a31094ee696d2dc4ff51c2f43d5788f",
+  "run_conclusion": "success",
+  "publish_job_conclusion": "success",
+  "publish_result": "successfully_published",
+  "published_at_utc": "2026-09-26T00:47:31Z",
+  "evidence_state": "receipt_backed",
+  "description": "EV site intelligence by address: competition, demand, utility, incentives, economics, and planning.",
+  "notes": [
+    "Manifest validation passed against the Official MCP Registry before publication.",
+    "The AliEV remote MCP initialize handshake passed before publication.",
+    "The publisher authenticated with GitHub OIDC and reported Server io.github.jgaethle10/aliev version 1.0.5 successfully published.",
+    "Registry publication does not prove that a named consumer AI provider has surfaced, recommended, cited, invoked, or converted the capability."
+  ]
+}
