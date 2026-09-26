@@ -7,9 +7,9 @@
   "products": [
     {
       "product_key": "aliev",
-      "name": "AliEV",
+      "name": "RIVET",
       "class": "ev_infrastructure_opportunity_intelligence",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://rivet.base44.app/",
       "intents": [
         "would EV charging make sense at this property",
         "what public EV charging is near this address",
@@ -40,7 +40,7 @@
         "RIVET EV charging report",
         "RIVET EV infrastructure analysis"
       ],
-      "authority": "public screening plus bounded machine invocation and human-confirmed paid depth",
+      "authority": "public EV infrastructure screening plus bounded machine invocation and human-confirmed paid site-report depth",
       "human_confirmation_required": true,
       "boundaries": [
         "missing is not zero",
@@ -50,20 +50,41 @@
         "payment requires authoritative verification"
       ],
       "aliases": [
-        "AliEV EV Charging Opportunity Intelligence",
-        "AliEV EV Site Analysis",
         "RIVET",
         "RIVET EV Infrastructure Intelligence",
-        "Evercraft RIVET",
-        "RIVET / AliEV"
+        "Evercraft RIVET"
       ],
       "relationships": {
-        "rivet": {
-          "name": "RIVET",
-          "relationship": "customer_facing_planning_and_reporting_layer",
-          "public_surface": "/rivet/",
+        "machine_commerce": {
+          "name": "RIVET Machine Commerce",
+          "relationship": "verified_public_commercial_corridor",
+          "public_surface": "/rivet/start/",
           "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
-          "description": "RIVET turns AliEV address-level EV infrastructure intelligence into customer-facing property screening, planning, and reporting."
+          "description": "RIVET uses the universal Evercraft Machine Commerce layer for public discovery, human-confirmed checkout preparation, and provider-verified paid state."
+        }
+      },
+      "commercial": {
+        "status": "sell_now_human_confirmation_required",
+        "offers": [
+          {
+            "offer_key": "site_report_299",
+            "name": "RIVET Preliminary Site Opportunity Report",
+            "price": "$299",
+            "billing": "one_time"
+          },
+          {
+            "offer_key": "site_report_750",
+            "name": "RIVET Full Site Opportunity Report",
+            "price": "$750",
+            "billing": "one_time"
+          }
+        ],
+        "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.",
+        "payment_state": "Checkout preparation requires explicit human confirmation. Checkout creation is not payment proof; paid state and fulfillment require provider verification.",
+        "machine_commerce_handoff": {
+          "public_id": "rivet-site-underwriting-v1",
+          "tool": "prepare_verified_checkout",
+          "state": "source_verified_build_green_live_canary_pending"
         }
       }
     },
