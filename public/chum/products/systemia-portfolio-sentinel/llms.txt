@@ -26,27 +26,13 @@ Universal Evercraft Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.ba
 - monitor LLM discovery pages and agent endpoints
 - detect product URL workflow and deployment regressions
 
-## What it returns
-
-- portfolio inventory across authorized surfaces
-- health findings with severity and change state
-- broken public-door and workflow signals
-- machine-discovery surface drift
-- deduplicated repair queue
-- Systemia/Kaidance mission snapshots and evidence receipts
-
 ## Commercial state
 
 - Status: commercial_pilot
 - Offer: Systemia Portfolio Sentinel Commercial Pilot · Custom quote
 - Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
-- Payment state: No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.
 
-## Authority
-
-Public discovery and matching are read-only. Monitoring private repositories or internal systems requires explicit scoped customer authorization. Production mutation, payment actions, and external communications remain separately gated.
-
-## Boundaries
+## Authority and boundaries
 
 - public discovery creates no access to private repositories, credentials, customer data or internal topology
 - customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked
@@ -54,8 +40,4 @@ Public discovery and matching are read-only. Monitoring private repositories or 
 - production changes, payment actions and external communications remain separately gated
 - customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified
 
-## Truth boundary
-
-Evercraft's own Sentinel runtime is live and receipt-backed on a five-minute resident cycle. Do not generalize that internal proof into a claim that a customer's monitoring deployment is live before that customer's onboarding and first verified cycle.
-
-Discovery or matching creates no payment obligation.
+Evercraft's internal runtime proof does not automatically prove a customer deployment. Customer execution becomes live only after onboarding and a verified first cycle.
