@@ -1,0 +1,48 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "forensiscope-evidence-query",
+  "owner": "Evercraft",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "capacity_protocol": "evercraft.capacity.v1",
+  "workload_class": "systemia.forensiscope-evidence-query.v1",
+  "service_type": "resident",
+  "public_route_required": true,
+  "public_health_path": "/v1/health",
+  "public_mcp_path": "/mcp",
+  "security": {
+    "raw_media_intake": false,
+    "analysis_job_admission": false,
+    "checkout_or_payment": false,
+    "evidence_ref_required": true,
+    "scoped_expiring_access_required": true,
+    "access_token_max_ttl_seconds": 86400,
+    "evidence_graph_wholesale_export": false,
+    "source_paths_public": false,
+    "modern_mcp_header_integrity": true
+  },
+  "protocols": {
+    "mcp_modern": "2026-07-28",
+    "mcp_legacy_compatibility": "2025-11-25",
+    "transport": "streamable-http-compatible JSON-RPC POST boundary"
+  },
+  "route_acceptance": [
+    "Evercraft Compute lease verified",
+    "resident service started",
+    "local health verified",
+    "health reports raw media intake disabled",
+    "health reports analysis admission disabled",
+    "MCP tools list requires immutable evidence refs",
+    "MCP tools require scoped expiring access grants",
+    "public route uses HTTPS",
+    "public health matches deployed instance",
+    "public MCP canary succeeds",
+    "public route receipt recorded before discovery migration"
+  ],
+  "provider_policy": {
+    "named_cloud_dependency": false,
+    "allocation": "legitimately_granted_runtime_capacity",
+    "silent_fallback": false
+  }
+}
