@@ -19,7 +19,6 @@
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
-  "releaseState": "DEPLOYMENT_CANARY_PENDING",
   "interface": {
     "displayName": "Evercraft Foundry App Escape Audit",
     "shortDescription": "Audit portability and migration risk in builder-tied apps",
@@ -33,5 +32,8 @@
     "defaultPrompt": [
       "Audit this app for portability, lock-in, dependency, migration, and rollback risk without changing production."
     ]
-  }
+  },
+  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "pendingRuntimePath": "/mcp/foundry-app-escape",
+  "publicOriginState": "https_route_unbound"
 }
