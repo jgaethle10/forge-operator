@@ -82,3 +82,16 @@ npm run proof:process-restart-recovery
 ```
 
 This is stronger than object reload, but still not a physical power-loss certification.
+
+
+## Air Relay v1
+
+Evercraft Network can model an authorized civilian airborne node as a temporary relay in the same evidence-gated fabric used by NodeSeed and Saban.
+
+Run the software proof:
+
+    npm run proof:air-relay
+
+The planner admits only documented civilian purposes, requires verified links plus explicit flight authorization and safe operating state, and keeps infrastructure-avoidance estimates labeled as modeled. It does not perform flight control or claim that planned radio paths have been field verified.
+
+See AIR-RELAY.md for the contract and truth boundary.
