@@ -293,6 +293,18 @@ export class YardOperator {
     };
   }
 
+  async refreshFieldEnrollmentFromDeployment(deploymentId) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    return await this.enrollFieldDeviceFromCapacity({
+      capacityEndpoint: secret.capacity_endpoint,
+      allocatorToken: secret.allocator_token || '',
+      expectedNodeId: record.receipt?.capacity_node_id || '',
+      expectedDeviceFingerprint: record.receipt?.capacity_device_fingerprint || '',
+    });
+  }
+
   async attestDeployment(deploymentId, { maxAgeMs = 60_000 } = {}) {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);
