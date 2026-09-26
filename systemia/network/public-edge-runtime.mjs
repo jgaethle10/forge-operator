@@ -107,6 +107,7 @@ export async function startPublicEdgeRuntime({
   });
 
   let tlsServer=null;
+  let tlsActualPort=null;
   const normalizedDomain=String(baseDomain||'').trim().toLowerCase().replace(/^\.+|\.+$/g,'');
   if(mode==='wildcard_https'){
     if(!normalizedDomain) throw new Error('public_edge_base_domain_required');
@@ -123,6 +124,8 @@ export async function startPublicEdgeRuntime({
       tlsServer.once('error',reject);
       tlsServer.listen(publicPort,publicHost,resolve);
     });
+    const tlsAddress=tlsServer.address();
+    tlsActualPort=typeof tlsAddress==='object'&&tlsAddress?tlsAddress.port:publicPort;
   }
 
   const releaseLease=async(leaseId,reason='released')=>{
@@ -157,6 +160,7 @@ export async function startPublicEdgeRuntime({
           public_https:mode==='wildcard_https',
           base_domain:mode==='wildcard_https'?normalizedDomain:null,
           tls_admission:mode==='wildcard_https'?admission.tls:null,
+          public_listen_port:mode==='wildcard_https'?tlsActualPort:null,
         });
       }
 
@@ -215,7 +219,8 @@ export async function startPublicEdgeRuntime({
           const requested=safeLabel(body.requested_hostname||deploymentId);
           const suffix=sha(deploymentReceiptHash).replace(/^sha256:/,'').slice(0,10);
           hostname=`${requested}-${suffix}.${normalizedDomain}`;
-          origin=`https://${hostname}`;
+          const portSuffix=Number(tlsActualPort)===443?'':`:${tlsActualPort}`;
+          origin=`https://${hostname}${portSuffix}`;
         }
 
         const lease={...base,origin,hostname,proxy_server:proxyServer};
@@ -266,6 +271,7 @@ export async function startPublicEdgeRuntime({
     public_https:mode==='wildcard_https',
     base_domain:mode==='wildcard_https'?normalizedDomain:null,
     tls_admission:mode==='wildcard_https'?admission.tls:null,
+    public_listen_port:mode==='wildcard_https'?tlsActualPort:null,
   });
 
   return {
