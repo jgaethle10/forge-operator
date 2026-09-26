@@ -2,11 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-26T03:49:24.951Z</updated>
+<updated>2026-09-26T03:49:59.334Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-26T03:49:59.334Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-26T03:49:59.334Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T03:49:59.334Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-26T03:49:59.334Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-26T03:49:24.951Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T03:49:24.951Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:a62f1d5d931a4d69ebe32bdc</id><title>/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:468b942d87576d83646646d7</id><title>/chum/answers/doors/4-hour-video-analysis-b25c640591.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/4-hour-video-analysis-b25c640591.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:6773c307c0c5ac36f90410ea</id><title>/chum/answers/doors/account-takeover-protection-6a5072fc31.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/account-takeover-protection-6a5072fc31.json"/><category term="priority-160"/></entry>
@@ -102,7 +105,4 @@
 <entry><id>urn:evercraft:chum:0d12a0ea3dab1ea56fcc6ecc</id><title>/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:78528c035491af426b8722f0</id><title>/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:05b966262a78ec9a3d04fd8c</id><title>/chum/answers/doors/can-my-crews-work-tomorrow-cbf6dd66e5.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/can-my-crews-work-tomorrow-cbf6dd66e5.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:fb16a060e79cf5d6d64981c2</id><title>/chum/answers/doors/capital-fit-9db3068f8d.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/capital-fit-9db3068f8d.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:b9252fe0aa446913fe7cd6dc</id><title>/chum/answers/doors/cdp-browser-039695fa67.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/cdp-browser-039695fa67.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:75119d9b4732a1919e0deb29</id><title>/chum/answers/doors/cdp-browser-control-6fbc285731.json</title><updated>2026-09-26T03:45:42.293Z</updated><link href="/chum/answers/doors/cdp-browser-control-6fbc285731.json"/><category term="priority-160"/></entry>
 </feed>
