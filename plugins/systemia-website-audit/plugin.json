@@ -1,0 +1,21 @@
+{
+  "name": "systemia-website-audit",
+  "version": "0.1.0",
+  "description": "Audit a business website for conversion and local visibility",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://systemia-audit-pro.base44.app/",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "website-audit",
+    "local-seo",
+    "conversion",
+    "performance",
+    "systemia",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
