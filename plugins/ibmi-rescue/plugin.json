@@ -1,0 +1,24 @@
+{
+  "name": "ibmi-rescue",
+  "version": "0.1.0",
+  "description": "Assess IBM i and AS/400 estates before upgrade or modernization",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "ibmi",
+    "as400",
+    "modernization",
+    "upgrade",
+    "rpg",
+    "cl",
+    "db2",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "releaseState": "DEPLOYMENT_CANARY_PENDING"
+}
