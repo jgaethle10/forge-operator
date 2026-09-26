@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { runLocalLennox } from './lennox-engine.mjs';
+import { closeOwnedBrowserEngine, runOwnedBrowserLennox } from './browser-engine.mjs';
 
 const catalogPath='public/.well-known/evercraft-machine-catalog.json';
 const personasPath='systemia/customer-gauntlet/personas.json';
@@ -15,6 +16,7 @@ const gateway=String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY || 'https://
 const bridgeUrl=String(process.env.RAVEN_NEXUS_CUSTOMER_BRIDGE_URL || '').replace(/\/$/,'');
 const bridgeToken=String(process.env.RAVEN_NEXUS_CUSTOMER_BRIDGE_TOKEN || '');
 const requireInteractive=String(process.env.CUSTOMER_GAUNTLET_REQUIRE_NEXUS || 'false')==='true';
+const requireBrowser=String(process.env.CUSTOMER_GAUNTLET_REQUIRE_BROWSER || 'false')==='true';
 const allowSandboxPurchase=String(process.env.CUSTOMER_GAUNTLET_SANDBOX_PURCHASE || 'false')==='true';
 const timeoutMs=20000;
 const sha=v=>crypto.createHash('sha256').update(String(v||'')).digest('hex');
@@ -84,27 +86,48 @@ async function runBridgeLennox(offer,persona){
 
 async function runInteractive(offer,persona,{reviewUrl,buyerUrl}={}){
   const local=await runLocalLennox({offer,persona,reviewUrl,buyerUrl,timeoutMs});
+  const browser=await runOwnedBrowserLennox({offer,persona,reviewUrl,buyerUrl,timeoutMs});
   const bridge=await runBridgeLennox(offer,persona);
   const findings=[
     ...(Array.isArray(local.findings)?local.findings:[]),
+    ...(Array.isArray(browser?.findings)?browser.findings:[]),
     ...(Array.isArray(bridge?.findings)?bridge.findings:[])
   ];
   const blockedChecks=new Set(local.blocked_checks||[]);
+  for(const completed of browser?.checks_completed||[]) blockedChecks.delete(completed);
+  for(const blocked of browser?.blocked_checks||[]) blockedChecks.add(blocked);
   for(const completed of bridge?.checks_completed||[]) blockedChecks.delete(completed);
   for(const blocked of bridge?.blocked_checks||[]) blockedChecks.add(blocked);
+  const severe=findings.some(f=>f.severity==='P0'||f.severity==='P1');
+  const browserCompleted=String(browser?.status||'').startsWith('COMPLETED');
+  const status=severe
+    ? 'COMPLETED_WITH_FINDINGS'
+    : browserCompleted || local?.owned_execution
+      ? 'COMPLETED_PARTIAL'
+      : 'BLOCKED';
   return {
-    status:bridge?.status || local.status,
-    engine:bridge ? 'raven_nexus_lennox_hybrid_v1' : local.engine,
+    status,
+    engine:bridge
+      ? 'raven_nexus_lennox_browser_bridge_hybrid_v1'
+      : browserCompleted
+        ? 'raven_nexus_lennox_owned_browser_v1'
+        : local.engine,
     owned_execution:true,
     local,
+    browser,
     bridge,
     findings,
     checks_completed:[...new Set([
       ...(local.checks_completed||[]),
+      ...(browser?.checks_completed||[]),
       ...(bridge?.checks_completed||[])
     ])],
     blocked_checks:[...blockedChecks],
-    interactive_depth:bridge?'owned_browser_bridge_plus_protocol':'owned_protocol'
+    interactive_depth:bridge
+      ? 'owned_browser_plus_bridge_plus_protocol'
+      : browserCompleted
+        ? 'owned_browser_plus_protocol'
+        : 'owned_protocol'
   };
 }
 
@@ -124,17 +147,17 @@ for(const offer of offers){
   if(obviousFailure(review)) findings.push({code:'broken_cta',severity:severity('broken_cta'),stage:'review',detail:`HTTP ${review.status}`});
   if(continuation?.mode==='direct_checkout_capable' && (!buyerUrl || obviousFailure(buyer))) findings.push({code:'dead_checkout',severity:severity('dead_checkout'),stage:'buyer',detail:buyerUrl?`HTTP ${buyer?.status}`:'buyer_url_missing'});
 
-  const personaResults=[];
-  for(const persona of personas.personas){
-    personaResults.push({persona_id:persona.id,...await runInteractive(offer,persona,{reviewUrl:reviewUrl.toString(),buyerUrl})});
-  }
+  const personaResults=await Promise.all(personas.personas.map(async persona => ({
+    persona_id:persona.id,
+    ...await runInteractive(offer,persona,{reviewUrl:reviewUrl.toString(),buyerUrl})
+  })));
   for(const p of personaResults){
     for(const f of Array.isArray(p.findings)?p.findings:[]) findings.push({...f,persona_id:p.persona_id,severity:f.severity||severity(f.code)});
   }
 
   const highest=findings.some(f=>f.severity==='P0')?'P0':findings.some(f=>f.severity==='P1')?'P1':findings.length?'P2':null;
   const interactiveBlocked=personaResults.every(p=>p.status==='BLOCKED');
-  const visualBlocked=personaResults.filter(p=>(p.blocked_checks||[]).some(x=>['pixel_visual_diff','visual_clipping','javascript_console_errors','keyboard_tab_order'].includes(x))).length;
+  const visualBlocked=personaResults.filter(p=>(p.blocked_checks||[]).some(x=>['rendered_screenshot_capture','visual_clipping','javascript_console_errors','keyboard_tab_order','broken_image_scan','blank_state_scan','rendered_brand_metadata'].includes(x))).length;
   const paymentBlocked=personaResults.filter(p=>(p.blocked_checks||[]).includes('provider_payment_verification')).length;
   const fulfillmentBlocked=personaResults.filter(p=>(p.blocked_checks||[]).includes('fulfillment_verification')).length;
   results.push({
@@ -145,6 +168,8 @@ for(const offer of offers){
     disposition:highest==='P0'?'QUARANTINE':highest==='P1'?'REPAIR_REQUIRED':'OPEN'
   });
 }
+
+await closeOwnedBrowserEngine();
 
 const receipt={
   schema:'evercraft.customer-gauntlet.receipt.v1',
@@ -164,6 +189,10 @@ const receipt={
     quarantined:results.filter(r=>r.disposition==='QUARANTINE').length,
     owned_protocol_executor:true,
     interactive_bridge_configured:Boolean(bridgeUrl&&bridgeToken),
+    owned_browser_required:requireBrowser,
+    owned_browser_available:results.some(r=>r.interactive.personas.some(p=>p.browser?.available===true)),
+    owned_browser_completed:results.reduce((n,r)=>n+r.interactive.personas.filter(p=>String(p.browser?.status||'').startsWith('COMPLETED')).length,0),
+    browser_screenshots_captured:results.reduce((n,r)=>n+r.interactive.personas.filter(p=>Boolean(p.browser?.screenshot_ref)).length,0),
     interactive_blocked:results.filter(r=>r.interactive.blocked).length,
     local_lennox_completed:results.reduce((n,r)=>n+r.interactive.personas.filter(p=>p.local?.owned_execution===true).length,0),
     visual_browser_blocked:results.reduce((n,r)=>n+r.interactive.visual_blocked,0),
@@ -185,6 +214,9 @@ fs.writeFileSync(outDir+'/latest.md',[
   `Quarantined: ${receipt.summary.quarantined}`,
   `Owned Lennox protocol executor: ${receipt.summary.owned_protocol_executor}`,
   `Interactive Raven Nexus browser bridge configured: ${receipt.summary.interactive_bridge_configured}`,
+  `Owned headless browser available: ${receipt.summary.owned_browser_available}`,
+  `Owned browser persona runs: ${receipt.summary.owned_browser_completed}`,
+  `Browser screenshots captured: ${receipt.summary.browser_screenshots_captured}`,
   `Local Lennox persona runs: ${receipt.summary.local_lennox_completed}`,
   `Visual/browser checks still blocked: ${receipt.summary.visual_browser_blocked}`,
   `Sandbox payment checks blocked: ${receipt.summary.sandbox_payment_blocked}`,
@@ -194,4 +226,4 @@ fs.writeFileSync(outDir+'/latest.md',[
   '> BLOCKED is never treated as PASS. Automated runs do not perform live charges.',''
 ].join('\n'));
 console.log(JSON.stringify(receipt.summary));
-if(receipt.summary.quarantined>0 || receipt.summary.repair_required>0 || (requireInteractive && receipt.summary.interactive_blocked>0)) process.exit(1);
+if(receipt.summary.quarantined>0 || receipt.summary.repair_required>0 || (requireInteractive && receipt.summary.interactive_blocked>0) || (requireBrowser && receipt.summary.visual_browser_blocked>0)) process.exit(1);
