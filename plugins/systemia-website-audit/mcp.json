@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "systemia_website_audit": {
+      "type": "http",
+      "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
+    }
+  }
+}
