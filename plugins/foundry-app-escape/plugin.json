@@ -18,5 +18,7 @@
   ],
   "skills": "./skills/",
   "mcpServers": "./mcp.json",
-  "releaseState": "DEPLOYMENT_CANARY_PENDING"
+  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "pendingRuntimePath": "/mcp/foundry-app-escape",
+  "publicOriginState": "https_route_unbound"
 }
