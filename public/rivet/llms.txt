@@ -35,9 +35,15 @@ RIVET turns location data into confident EV infrastructure decisions. It is an a
 ## Public machine routes
 
 RIVET public surface: /rivet/
+Current report options: /rivet/start/
+Current offer manifest: /rivet/start/offer.json
 RIVET capability: /chum/capabilities/rivet-site-underwriting-v1/
 Machine-readable discovery: /rivet/discovery.json
 Canonical brand manifest: /rivet/brand.json
+
+## Current commercial continuation
+
+Read current pricing and availability from /rivet/start/offer.json at request time. The current public report corridor requires explicit human confirmation before checkout preparation. Checkout creation is not proof of payment, and paid state requires provider verification.
 
 ## Knowledge mesh
 
