@@ -195,21 +195,32 @@ export function rankDiscoveryCandidates(machineCatalog, productDirectory, query,
   const directoryProducts = Array.isArray(productDirectory?.products) ? productDirectory.products : [];
   for (const row of [...commercial, ...directory]) {
     const identity = familyIdentity(row, directoryProducts);
+    const inferredProductKey = !row.product_key && identity.startsWith('product:')
+      ? identity.slice('product:'.length)
+      : null;
+    const candidate = inferredProductKey
+      ? {
+          ...row,
+          product_key: inferredProductKey,
+          product_key_source: 'derived_from_public_directory_name_or_host'
+        }
+      : row;
+
     const prior = byIdentity.get(identity);
     if (!prior) {
-      byIdentity.set(identity, row);
+      byIdentity.set(identity, candidate);
       continue;
     }
-    const rowIsMachine = row.source === 'machine_catalog';
+    const rowIsMachine = candidate.source === 'machine_catalog';
     const priorIsMachine = prior.source === 'machine_catalog';
     if (
       (rowIsMachine && !priorIsMachine) ||
       (rowIsMachine === priorIsMachine && (
-        row.score > prior.score ||
-        (row.score === prior.score && row.support > prior.support)
+        candidate.score > prior.score ||
+        (candidate.score === prior.score && candidate.support > prior.support)
       ))
     ) {
-      byIdentity.set(identity, row);
+      byIdentity.set(identity, candidate);
     }
   }
 
