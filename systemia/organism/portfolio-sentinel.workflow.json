@@ -15,7 +15,8 @@
     "repair_queue": "artifacts/portfolio-sentinel/repair-queue.json",
     "inventory": "artifacts/portfolio-sentinel/inventory.json",
     "admission": "artifacts/portfolio-sentinel/admission.json",
-    "state": "artifacts/portfolio-sentinel/state.json"
+    "state": "artifacts/portfolio-sentinel/state.json",
+    "repair_memory": "artifacts/portfolio-sentinel/repair-memory.json"
   },
   "coverage": [
     "public product directory",
@@ -26,7 +27,11 @@
     "GitHub Actions local references",
     "Systemia resident service manifests and executables",
     "machine-discovery surfaces",
-    "CHUM product mirror coverage"
+    "CHUM product mirror coverage",
+    "architectural invariant registry",
+    "trigger-mode policy simulation",
+    "learned repair recipe registry",
+    "production runtime import coverage"
   ],
   "authority": {
     "public_read": "autonomous",
@@ -35,6 +40,9 @@
     "safe_internal_repair": "bounded_allowlist_only",
     "production_mutation": "human_gate",
     "payment_mutation": "human_gate",
-    "external_outreach": "human_gate"
+    "external_outreach": "human_gate",
+    "architectural_invariant_enforcement": "autonomous",
+    "repair_recipe_selection": "autonomous",
+    "code_changing_recipe_execution": "human_gate"
   }
 }
