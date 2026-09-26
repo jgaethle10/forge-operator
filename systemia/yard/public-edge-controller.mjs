@@ -275,6 +275,7 @@ export class PublicEdgeController {
       ],
       requiredPlacementLabels,
       requiredServiceCapabilities: ['public_edge'],
+      requireAttestation: requireIdentityAttestation === true,
       discovery,
       endpointTimeoutMs,
     });
