@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/evercraft-machine-commerce",
   "title": "Evercraft Machine Commerce",
-  "description": "Problem-first Evercraft routing with human-confirmed checkout and provider-verified payment.",
-  "version": "1.2.1",
+  "description": "Problem-first Evercraft routing for commercial capabilities, including Systemia Portfolio Sentinel software-estate monitoring, with safe human handoff and verified checkout where supported.",
+  "version": "1.2.2",
   "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
   "remotes": [
     {
