@@ -35,3 +35,5 @@ jobs:
         run: node systemia/yard/public-edge-specialist.proof.mjs
       - name: Prove wildcard TLS routing on Evercraft public edge
         run: node systemia/yard/public-edge-tls.proof.mjs
+      - name: Prove persistent public edge controller lifecycle
+        run: node systemia/yard/public-edge-controller.proof.mjs
