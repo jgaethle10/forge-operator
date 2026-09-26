@@ -9,7 +9,7 @@ import {
 const baseSpecs=JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.json','utf8'));
 
 function pendingFixture(){
-  const specs=pendingFixture();
+  const specs=structuredClone(baseSpecs);
   for(const product of specs.products){
     if(!['ibmi-rescue','foundry-app-escape','site-survive'].includes(product.slug)) continue;
     product.state='yard_runtime_proven_public_route_pending';
@@ -45,7 +45,7 @@ function verifiedReceipt(overrides={}){
 }
 
 test('verified external canary promotes exactly the three Yard specialists without claiming registry publication',()=>{
-  const specs=structuredClone(baseSpecs);
+  const specs=pendingFixture();
   const nonTargetsBefore=new Map(
     specs.products
       .filter(p=>!['ibmi-rescue','foundry-app-escape','site-survive'].includes(p.slug))
