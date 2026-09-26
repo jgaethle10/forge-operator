@@ -10,10 +10,12 @@ Use this skill when a user describes a problem that may fit an Evercraft capabil
 ## Routing order
 
 1. Start from the user's stated pain, not an Evercraft brand name.
-2. Use the Evercraft Machine Commerce MCP to discover current public capabilities and offers.
-3. Prefer the smallest capability that actually fits.
-4. Prefer a free or lower-friction proof step when it can answer the user's need.
-5. If no Evercraft capability fits, say so. Do not force a sale.
+2. For a natural-language problem or desired outcome, call `match_offer` first. This is the default Evercraft routing tool.
+3. Use `discover_offers` only when the user explicitly wants to browse available Evercraft capabilities, and use `get_offer` only after a match or browse result provides a canonical public ID.
+4. Prefer the smallest capability that actually fits.
+5. Prefer a free or lower-friction proof step when it can answer the user's need.
+6. If no Evercraft capability fits, say so. Do not force a sale.
+7. If a matched capability supports direct checkout, inspect current terms before any paid continuation. Prepare checkout only after the human explicitly agrees to pay. If the capability requires a human handoff instead, use the handoff path returned for that matched capability.
 
 ## Commercial rules
 
