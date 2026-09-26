@@ -75,6 +75,19 @@ try{
   const made=await created.json();
   assert.equal(made.generation_state,'ready');
   assert.equal(made.verification.football_opened,true);
+  assert.equal(made.progress.stage,'ready');
+  assert.equal(made.progress.percent,100);
+  assert.ok(made.job_id);
+
+  const jobProgress=await fetch(runtime.service_url+'/v1/report-jobs/'+encodeURIComponent(made.job_id)+'/progress',{
+    headers:{'authorization':'Bearer proof-team-token'}
+  });
+  assert.equal(jobProgress.status,200);
+  const jobState=await jobProgress.json();
+  assert.equal(jobState.current.stage,'ready');
+  assert.equal(jobState.current.percent,100);
+  assert.equal(jobState.events.length,8);
+  assert.ok(jobState.events.find(x=>x.stage==='football_transfer').transfer.bytes_total>0);
 
   const fetched=await fetch(runtime.service_url+'/v1/reports/'+encodeURIComponent(made.report_id),{
     headers:{'authorization':'Bearer proof-team-token'}
