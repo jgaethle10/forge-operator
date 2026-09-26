@@ -3,7 +3,7 @@ name: IBM i Rescue Machine Commerce canary
 on:
   workflow_dispatch:
   schedule:
-    - cron: "23 */6 * * *"
+    - cron: "23 13 * * *"
 
 permissions:
   contents: read
