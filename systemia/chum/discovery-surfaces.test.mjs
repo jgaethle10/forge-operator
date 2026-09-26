@@ -6,6 +6,7 @@ const conformance = JSON.parse(fs.readFileSync('conformance/products.json','utf8
 const conformanceByKey = new Map((conformance.products || []).map((row) => [row.product_key, row]));
 const robots = fs.readFileSync('public/robots.txt','utf8');
 const indexHtml = fs.readFileSync('public/chum/index.html','utf8');
+const llmsFull = fs.readFileSync('public/llms-full.txt','utf8');
 
 for (const token of [
   'OAI-SearchBot','ChatGPT-User','GPTBot',
@@ -37,6 +38,7 @@ for (const product of directory.products || []) {
   if (conf?.mcp_registry?.name && !registryPublicationState.startsWith('published')) {
     assert.equal(discovery.registry_name, null, `${key} exposed an unverified Official MCP Registry identity`);
     assert.ok(!html.includes('Official MCP Registry name:'), `${key} labeled a staged registry identity as official`);
+    assert.ok(!llmsFull.includes(`Official MCP Registry: ${conf.mcp_registry.name}`), `${key} leaked a staged registry identity into llms-full`);
   }
   assert.ok(html.includes('name="robots"'), `${key} product page missing crawler metadata`);
   assert.ok(html.includes('./llms.txt'), `${key} product page missing llms.txt link`);
