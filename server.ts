@@ -11,6 +11,8 @@ import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES }
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
+import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
+import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 
 dotenv.config();
 
@@ -162,6 +164,8 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb' }));
+registerRivetReportGateway(app);
+registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
