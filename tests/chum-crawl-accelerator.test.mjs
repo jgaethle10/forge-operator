@@ -2,11 +2,32 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { buildCrawlPressure, crawlPriority } from '../systemia/chum/crawl-accelerator.mjs';
+import { buildCrawlPressure, crawlPriority, selectHotDiscoveryEntries } from '../systemia/chum/crawl-accelerator.mjs';
 
 assert.equal(crawlPriority('/chum/commercial/rivet-site-underwriting-v1/'), 112);
 assert.equal(crawlPriority('/chum/sitemaps/sell-now.xml'), 108);
 assert.equal(crawlPriority('/chum/answers/doors/example/'), 100);
+
+const saturated = Object.fromEntries([
+  ...Array.from({ length: 250 }, (_, i) => [
+    '/chum/answers/doors/high-' + i + '/',
+    { path: '/chum/answers/doors/high-' + i + '/', priority: 160, last_changed: '2026-09-26T18:00:00.000Z' }
+  ]),
+  ['/chum/commercial/commercial-cold-start/', {
+    path: '/chum/commercial/commercial-cold-start/',
+    priority: 112,
+    last_changed: '2026-09-26T19:00:00.000Z'
+  }],
+  ['/chum/sitemaps/sell-now.xml', {
+    path: '/chum/sitemaps/sell-now.xml',
+    priority: 108,
+    last_changed: '2026-09-26T19:00:00.000Z'
+  }]
+]);
+const saturatedHot = selectHotDiscoveryEntries(saturated, 200);
+assert.equal(saturatedHot.length, 200);
+assert.ok(saturatedHot.some((row) => row.path === '/chum/commercial/commercial-cold-start/'));
+assert.ok(saturatedHot.some((row) => row.path === '/chum/sitemaps/sell-now.xml'));
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-crawl-pressure-'));
 const publicRoot = path.join(root, 'public');
