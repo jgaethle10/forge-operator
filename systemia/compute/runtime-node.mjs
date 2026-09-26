@@ -385,14 +385,22 @@ export async function startEvercraftComputeNode({
         throw new Error('saban_artifact_store_integrity_failed');
       }
 
+      const rawArtifactId = String(descriptor.artifact_id || observedHash);
+      const artifactId = /^[a-zA-Z0-9._:-]{1,128}$/.test(rawArtifactId)
+        ? rawArtifactId
+        : observedHash;
+      const rawMediaType = String(descriptor.media_type || 'application/octet-stream');
+      const mediaType = /^[a-zA-Z0-9.+-]+\/[a-zA-Z0-9.+-]+$/.test(rawMediaType)
+        ? rawMediaType
+        : 'application/octet-stream';
       const portable = {
         schema: 'evercraft.saban.portable-artifact.v1',
-        artifact_id: String(descriptor.artifact_id || observedHash),
+        artifact_id: artifactId,
         kind: descriptor.kind || null,
         sha256: observedHash,
         size_bytes: stat.size,
         extension,
-        media_type: descriptor.media_type || 'application/octet-stream',
+        media_type: mediaType,
         portable: true
       };
       manifest.push(portable);
