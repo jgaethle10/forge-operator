@@ -519,6 +519,20 @@
         "monitoring_started": false,
         "repository_access_granted": false,
         "production_authority_granted": false
+      },
+      "machine_commerce_request_tool": "submit_portfolio_sentinel_pilot_request",
+      "pilot_request_canary_evidence": {
+        "observed_on": "2026-09-26",
+        "result": "pass",
+        "transport": "Streamable HTTP MCP",
+        "explicit_confirmation_gate_verified": true,
+        "service_review_form_verified": true,
+        "private_record_persistence_verified": true,
+        "monitoring_started": false,
+        "repository_access_granted": false,
+        "payment_obligation_created": false,
+        "production_authority_granted": false,
+        "synthetic_record_state_after_test": "declined"
       }
     },
     {
