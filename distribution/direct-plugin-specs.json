@@ -367,6 +367,83 @@
       "capability_public_ids": [
         "roasted-text-pressure-test-machine-v1"
       ]
+    },
+    {
+      "slug": "ibmi-rescue",
+      "name": "Evercraft IBM i Rescue",
+      "short_description": "Assess IBM i and AS/400 estates before upgrade or modernization",
+      "long_description": "Use IBM i Rescue directly for estate assessment, dependency mapping, upgrade-risk review, modernization planning, rollback evidence, and bounded human handoff.",
+      "category": "Business",
+      "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "registry_name": null,
+      "mcp_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/ibmiRescueMcp",
+      "state": "deployment_canary_pending",
+      "default_prompt": "Assess this IBM i or AS/400 estate before an upgrade or modernization and preserve unknowns instead of guessing.",
+      "keywords": [
+        "ibmi",
+        "as400",
+        "modernization",
+        "upgrade",
+        "rpg",
+        "cl",
+        "db2",
+        "mcp"
+      ],
+      "intent": "IBM i or AS/400 estate assessment, dependency mapping, upgrade-risk review, modernization proof, and rollback/test planning.",
+      "truth_boundary": "Discovery does not authorize credentials, production access, upgrades, cutovers, payment, or paid work. The direct MCP is read-only offer/handoff until independently verified otherwise.",
+      "capability_public_ids": [
+        "ibmi-rescue-v1"
+      ]
+    },
+    {
+      "slug": "foundry-app-escape",
+      "name": "Evercraft Foundry App Escape Audit",
+      "short_description": "Audit portability and migration risk in builder-tied apps",
+      "long_description": "Use Foundry App Escape directly when a founder or operator needs a portability, dependency, security, reconstruction, migration, or rollback map for an app tied to a builder-specific runtime.",
+      "category": "Business",
+      "website_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+      "registry_name": null,
+      "mcp_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp",
+      "state": "deployment_canary_pending",
+      "default_prompt": "Audit this app for portability, lock-in, dependency, migration, and rollback risk without changing production.",
+      "keywords": [
+        "foundry",
+        "app-portability",
+        "vendor-lock-in",
+        "migration",
+        "reconstruction",
+        "mcp"
+      ],
+      "intent": "App portability, vendor-lock-in, dependency, security, reconstruction, migration, and rollback analysis.",
+      "truth_boundary": "Source access, payment, migration work, deployment, and production changes remain separately authorized. The direct MCP is read-only offer/handoff until independently verified otherwise.",
+      "capability_public_ids": [
+        "foundry-app-escape-audit-v1"
+      ]
+    },
+    {
+      "slug": "site-survive",
+      "name": "Site-Survive Rapid Audit",
+      "short_description": "Map site failure points before connectivity disruption",
+      "long_description": "Use Site-Survive directly when a site-dependent business needs to understand which operational dependencies fail first during internet or connectivity disruption and wants a prioritized continuity map.",
+      "category": "Business",
+      "website_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+      "registry_name": null,
+      "mcp_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/siteSurviveMcp",
+      "state": "deployment_canary_pending",
+      "default_prompt": "Show me which parts of this site-dependent operation fail first during a realistic connectivity outage and what to prioritize.",
+      "keywords": [
+        "site-survive",
+        "business-continuity",
+        "internet-outage",
+        "resilience",
+        "offline-operations",
+        "mcp"
+      ],
+      "intent": "Site continuity, internet-outage dependency analysis, and prioritized operational resilience planning.",
+      "truth_boundary": "The direct MCP does not create payment, perform the paid resilience audit, change networks, or guarantee continuity. It is read-only offer/handoff until independently verified otherwise.",
+      "capability_public_ids": [
+        "site-survive-rapid-audit-v1"
+      ]
     }
   ]
 }
