@@ -79,6 +79,8 @@ function commandIrreversible(method, route) {
   const path = String(route || '');
   if (verb === 'GET') return false;
   if (path === '/v1/attest') return false;
+  if (path === '/v1/field-enrollment-packet') return false;
+  if (/^\/v1\/services\/[^/]+\/public-route-capabilities$/.test(path)) return false;
   if (/^\/v1\/leases\/[^/]+\/renew$/.test(path)) return false;
   if (/^\/v1\/services\/[^/]+\/checkpoint$/.test(path)) return false;
   if (/^\/v1\/services\/[^/]+\/deployment-receipt$/.test(path)) return false;
