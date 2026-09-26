@@ -105,6 +105,29 @@ export class YardPublicRouteBroker {
     if(!record.result?.instance_id) throw new Error('resident_instance_id_unavailable');
 
     const offer=await this.capabilities();
+
+    if(
+      offer?.https_required===true &&
+      record.receipt?.workload_class==='systemia.specialist-handoff-mcp.v1'
+    ){
+      const preflight=await this.yard.verifyRoute(deploymentId);
+      const health=preflight?.health||null;
+      const fieldReady=Boolean(
+        preflight?.state==='public_route_unbound' &&
+        preflight?.local_health_ok===true &&
+        health?.identity_attestation_bound===true &&
+        health?.same_device_binding===true &&
+        health?.field_enrollment_bound===true &&
+        health?.field_verified===true &&
+        /^sha256:[a-f0-9]{64}$/i.test(String(health?.device_fingerprint||'')) &&
+        /^sha256:[a-f0-9]{64}$/i.test(String(health?.field_enrollment_receipt_ref||'')) &&
+        /^sha256:[a-f0-9]{64}$/i.test(String(health?.public_edge_admission_receipt_ref||''))
+      );
+      if(!fieldReady){
+        throw new Error('production_specialist_field_preflight_failed');
+      }
+    }
+
     const requestId='route_'+randomBytes(10).toString('hex');
     const routeRequest={
       request_id:requestId,
