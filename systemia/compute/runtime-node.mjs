@@ -1238,6 +1238,7 @@ export async function startEvercraftComputeNode({
     node_id: nodeId,
     endpoint,
     allowed_root: allowedRoot,
+    placement_labels: nodePlacementLabels,
     close: async () => {
       clearInterval(leaseMonitor);
       for (const serviceId of [...services.keys()]) {
