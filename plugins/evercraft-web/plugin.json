@@ -1,0 +1,21 @@
+{
+  "name": "evercraft-web",
+  "version": "0.1.0",
+  "description": "Fetch and inspect public web content for AI agents",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft-web",
+    "web-fetch",
+    "site-inspection",
+    "web-agent",
+    "evidence-receipts",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
