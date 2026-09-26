@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/aliev",
   "title": "RIVET / AliEV EV Charging Site Intelligence",
-  "description": "Address-level EV site screening for demand, competition, utility, incentives, and economics.",
-  "version": "1.0.4",
+  "description": "EV site intelligence by address: competition, demand, utility, incentives, economics, and planning.",
+  "version": "1.0.5",
   "websiteUrl": "https://aliev.base44.app/",
   "remotes": [
     {
