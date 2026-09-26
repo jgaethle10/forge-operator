@@ -22,19 +22,71 @@ async function requestJson(url,options={}){
   return body;
 }
 
+function validateProviderClient(client){
+  if(!client) return null;
+  for(const name of ['capabilities','createLease','releaseLease']){
+    if(typeof client[name]!=='function'){
+      throw new Error('route_provider_client_missing_'+name);
+    }
+  }
+  return client;
+}
+
 export class YardPublicRouteBroker {
-  constructor({yard,providerEndpoint,providerToken='',allowLoopbackProof=false}={}){
+  constructor({
+    yard,
+    providerEndpoint='',
+    providerToken='',
+    providerClient=null,
+    allowLoopbackProof=false,
+  }={}){
     if(!yard) throw new Error('yard_operator_required');
     this.yard=yard;
-    this.providerEndpoint=normalizeEndpoint(providerEndpoint);
+    this.providerClient=validateProviderClient(providerClient);
+    this.providerEndpoint=this.providerClient?null:normalizeEndpoint(providerEndpoint);
     this.providerToken=String(providerToken||'');
     this.allowLoopbackProof=Boolean(allowLoopbackProof);
   }
 
-  async capabilities(){
+  async #capabilities(){
+    if(this.providerClient) return await this.providerClient.capabilities();
     const headers=this.providerToken?{authorization:`Bearer ${this.providerToken}`}:{};
-    const offer=await requestJson(this.providerEndpoint+'/v1/public-route/capabilities',{headers});
-    if(offer?.protocol!=='evercraft.public-route.v1') throw new Error('public_route_protocol_mismatch');
+    return await requestJson(
+      this.providerEndpoint+'/v1/public-route/capabilities',
+      {headers}
+    );
+  }
+
+  async #createLease(route){
+    if(this.providerClient) return await this.providerClient.createLease(route);
+    const headers=this.providerToken?{authorization:`Bearer ${this.providerToken}`}:{};
+    return await requestJson(this.providerEndpoint+'/v1/public-route/leases',{
+      method:'POST',
+      headers,
+      body:JSON.stringify(route),
+    });
+  }
+
+  async #releaseLease(routeLeaseId,reason){
+    if(this.providerClient){
+      return await this.providerClient.releaseLease(routeLeaseId,reason);
+    }
+    const headers=this.providerToken?{authorization:`Bearer ${this.providerToken}`}:{};
+    return await requestJson(
+      this.providerEndpoint+'/v1/public-route/leases/'+encodeURIComponent(routeLeaseId)+'/release',
+      {
+        method:'POST',
+        headers,
+        body:JSON.stringify({reason}),
+      }
+    );
+  }
+
+  async capabilities(){
+    const offer=await this.#capabilities();
+    if(offer?.protocol!=='evercraft.public-route.v1'){
+      throw new Error('public_route_protocol_mismatch');
+    }
     if(offer?.https_required!==true && this.allowLoopbackProof!==true){
       throw new Error('public_route_provider_must_require_https');
     }
@@ -50,30 +102,21 @@ export class YardPublicRouteBroker {
 
     const offer=await this.capabilities();
     const requestId='route_'+randomBytes(10).toString('hex');
-    const headers=this.providerToken?{authorization:`Bearer ${this.providerToken}`}:{};
-    const lease=await requestJson(this.providerEndpoint+'/v1/public-route/leases',{
-      method:'POST',
-      headers,
-      body:JSON.stringify({
-        request_id:requestId,
-        deployment_id:deploymentId,
-        workload_class:record.receipt?.workload_class||null,
-        deployment_receipt_hash:record.receipt?.receipt_hash||null,
-        instance_id:record.result.instance_id,
-        upstream_origin:record.result.local_url,
-        requested_hostname:String(requestedHostname||'').trim()||null,
-        requested_ttl_ms:Math.max(60000,Math.min(86400000,Number(ttlMs||3600000))),
-      }),
-    });
+    const routeRequest={
+      request_id:requestId,
+      deployment_id:deploymentId,
+      workload_class:record.receipt?.workload_class||null,
+      deployment_receipt_hash:record.receipt?.receipt_hash||null,
+      instance_id:record.result.instance_id,
+      upstream_origin:record.result.local_url,
+      requested_hostname:String(requestedHostname||'').trim()||null,
+      requested_ttl_ms:Math.max(60000,Math.min(86400000,Number(ttlMs||3600000))),
+    };
+    const lease=await this.#createLease(routeRequest);
 
     const releaseBadLease=async(reason)=>{
       if(!lease?.lease_id) return;
-      try{
-        await requestJson(
-          this.providerEndpoint+'/v1/public-route/leases/'+encodeURIComponent(lease.lease_id)+'/release',
-          {method:'POST',headers,body:JSON.stringify({reason})}
-        );
-      }catch{}
+      try{ await this.#releaseLease(lease.lease_id,reason); }catch{}
     };
 
     if(lease?.protocol!=='evercraft.public-route.v1') {
@@ -110,7 +153,10 @@ export class YardPublicRouteBroker {
       workload_class:record.receipt?.workload_class||null,
       provider:offer.provider||null,
       provider_protocol:offer.protocol,
+      provider_transport:this.providerClient?'compute_lease':'http_provider',
       route_lease_id:lease.lease_id||null,
+      route_lease_receipt_hash:lease.receipt_hash||null,
+      provider_management_receipt_hash:lease.compute_management_receipt_hash||null,
       origin:verified.origin,
       route_scope:verified.scope,
       route_verified:verified.verified,
@@ -125,22 +171,19 @@ export class YardPublicRouteBroker {
   async releaseBinding(binding,{reason='operator_requested'}={}){
     const leaseId=String(binding?.route_lease_id||'').trim();
     if(!leaseId) throw new Error('route_lease_id_required');
-    const headers=this.providerToken?{authorization:`Bearer ${this.providerToken}`}:{};
-    const released=await requestJson(
-      this.providerEndpoint+'/v1/public-route/leases/'+encodeURIComponent(leaseId)+'/release',
-      {
-        method:'POST',
-        headers,
-        body:JSON.stringify({reason:String(reason||'operator_requested')}),
-      }
-    );
+    const releaseReason=String(reason||'operator_requested');
+    const released=await this.#releaseLease(leaseId,releaseReason);
     const body={
       schema:'evercraft.yard.public-route-release.v1',
       route_lease_id:leaseId,
       deployment_id:binding?.deployment_id||null,
       origin:binding?.origin||null,
       released:released?.released===true,
-      reason:String(reason||'operator_requested'),
+      reason:releaseReason,
+      provider_management_receipt_hash:
+        released?.compute_management_receipt_hash||
+        released?.receipt?.receipt_hash||
+        null,
       released_at:new Date().toISOString(),
     };
     return {...body,receipt_hash:sha(body)};
