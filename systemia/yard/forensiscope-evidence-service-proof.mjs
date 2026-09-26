@@ -5,6 +5,7 @@ import path from 'node:path';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { YardOperator } from './operator.mjs';
 import { evaluateForensiScopePublicCutover } from '../forensiscope/public-cutover.mjs';
+import { canaryForensiScopePublicMcp } from '../forensiscope/public-mcp-canary.mjs';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'forensiscope-yard-proof-'));
 const computeRoot = path.join(root, 'compute');
@@ -108,20 +109,31 @@ try {
   assert.equal(loopback.service, 'forensiscope-evidence-query');
 
   const loopbackDeployment = yard.deploymentStatus('forensiscope-evidence-query-proof');
+  const loopbackCanary = await canaryForensiScopePublicMcp({
+    origin: deployment.result.local_url,
+    deploymentReceiptHash: deployment.receipt.receipt_hash,
+    allowLoopbackProof: true
+  });
+  assert.equal(loopbackCanary.schema, 'evercraft.forensiscope.public-mcp-canary.v1');
+  assert.equal(loopbackCanary.scope, 'loopback_proof');
+  assert.equal(loopbackCanary.verified, false);
+  assert.equal(loopbackCanary.health_ok, true);
+  assert.equal(loopbackCanary.initialize_or_discover_ok, true);
+  assert.equal(loopbackCanary.tools_list_ok, true);
+  assert.equal(loopbackCanary.scoped_access_declared, true);
+  assert.equal(loopbackCanary.scoped_access_enforced, true);
+  assert.equal(loopbackCanary.raw_media_tools_exposed, false);
+  assert.equal(loopbackCanary.checkout_tools_exposed, false);
+
   const blockedCutover = evaluateForensiScopePublicCutover({
     deployment: loopbackDeployment,
-    canary: null
+    canary: loopbackCanary
   });
   assert.equal(blockedCutover.eligible, false);
   assert.equal(blockedCutover.migration_action, 'keep_existing_public_mcp_origin');
   assert.ok(
     blockedCutover.blockers.some((entry) =>
       entry.code === 'public_https_route_not_verified'
-    )
-  );
-  assert.ok(
-    blockedCutover.blockers.some((entry) =>
-      entry.code === 'mcp_canary_missing'
     )
   );
 
@@ -137,6 +149,7 @@ try {
     deployment_receipt_bound: true,
     local_mcp_tools_list_verified: true,
     scoped_evidence_access_declared: true,
+    loopback_mcp_canary_passed: true,
     raw_media_intake: false,
     analysis_admission: false,
     checkout_or_payment: false,
