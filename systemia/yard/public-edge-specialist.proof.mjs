@@ -111,6 +111,14 @@ try{
   assert.equal(routeStatus.ok,false);
   assert.equal(routeStatus.state,'public_route_unbound');
 
+  const beforeRelease=await fetch(edge.result.local_url+'/health').then(r=>r.json());
+  assert.equal(beforeRelease.active_routes,1);
+  const released=await broker.releaseBinding(binding,{reason:'proof_complete'});
+  assert.equal(released.schema,'evercraft.yard.public-route-release.v1');
+  assert.equal(released.released,true);
+  const afterRelease=await fetch(edge.result.local_url+'/health').then(r=>r.json());
+  assert.equal(afterRelease.active_routes,0);
+
   await yard.stopDeployment('specialist-behind-public-edge-proof',{reason:'proof_complete'});
   await yard.stopDeployment('evercraft-public-edge-proof',{reason:'proof_complete'});
 
@@ -133,6 +141,7 @@ try{
     edge_deployment_receipt:edge.receipt.receipt_hash,
     specialist_deployment_receipt:specialist.receipt.receipt_hash,
     route_binding_receipt:binding.receipt_hash,
+    route_release_receipt:released.receipt_hash,
   },null,2));
 } finally {
   await node.close();
