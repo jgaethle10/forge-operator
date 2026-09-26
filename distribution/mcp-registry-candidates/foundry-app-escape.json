@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jgaethle10/foundry-app-escape",
+  "title": "Evercraft Foundry App Escape Audit",
+  "description": "Portability, dependency, security, reconstruction, migration and rollback audit for builder-tied applications.",
+  "version": "0.1.0",
+  "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+  "repository": {
+    "url": "https://github.com/jgaethle10/forge-operator",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/functions/foundryEscapeMcp"
+    }
+  ]
+}
