@@ -116,7 +116,8 @@
     "chum:crawler-radar": "node systemia/chum/crawler-radar.mjs",
     "test:chum-crawler-radar": "node tests/chum-crawler-radar.test.mjs",
     "test:lennox-engine": "node systemia/customer-gauntlet/lennox-engine.test.mjs",
-    "test:network-discovery": "node tests/network-discovery.test.mjs"
+    "test:network-discovery": "node tests/network-discovery.test.mjs",
+    "verify:public-origin": "node scripts/verify-public-origin.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
