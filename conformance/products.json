@@ -143,6 +143,35 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "evercraft-clip",
+      "name": "Evercraft Clip",
+      "class": "ai_social_video_production_and_governed_distribution",
+      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "llms_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms",
+      "doorway_state": "public_gateway_and_mcp_runtime_canary_passed",
+      "conformance_state": "runtime_mcp_canary_passed_registry_publication_staged",
+      "provider_behavior_state": "not_run",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-clip",
+        "version": "0.1.0",
+        "publication_state": "staged_not_published"
+      },
+      "origin_llms_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json",
+      "chum_mirror_state": "generated_public_fallback",
+      "runtime_canary": {
+        "remote": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+        "initialize": "pass",
+        "tools_list": "pass",
+        "tools": [
+          "get_clip_capabilities",
+          "plan_clip_job"
+        ],
+        "observed_on": "2026-09-25"
+      }
+    },
+    {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
       "class": "agent_persistence_diagnostic",
