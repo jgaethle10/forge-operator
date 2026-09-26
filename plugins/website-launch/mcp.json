@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "website_launch": {
+      "type": "http",
+      "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
+    }
+  }
+}
