@@ -8,6 +8,8 @@ on:
       - "systemia/compute/runtime-node.mjs"
       - "systemia/yard/browser-worker-proof.mjs"
       - "systemia/yard/browser-public-route-proof.mjs"
+      - "systemia/yard/browser-edge-attachment.mjs"
+      - "systemia/yard/browser-edge-attachment.proof.mjs"
       - "systemia/yard/operator.mjs"
       - "package.json"
       - ".github/workflows/evercraft-browser-worker.yml"
@@ -56,3 +58,5 @@ jobs:
         run: node systemia/yard/browser-worker-proof.mjs
       - name: Prove Browser through Evercraft public edge
         run: node systemia/yard/browser-public-route-proof.mjs
+      - name: Prove Browser attaches to shared Evercraft edge
+        run: node systemia/yard/browser-edge-attachment.proof.mjs
