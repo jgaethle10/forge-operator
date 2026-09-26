@@ -213,11 +213,22 @@ export async function runOwnedBrowserLennox({
       };
       const interactive = [...document.querySelectorAll('a[href],button,input,select,textarea,[role="button"],[tabindex]')].filter(visible);
       const images = [...document.images].filter(visible);
+      const hasHorizontalScroller = element => {
+        let node = element.parentElement;
+        while (node && node !== document.body) {
+          const style = getComputedStyle(node);
+          const overflowX = style.overflowX;
+          if ((overflowX === 'auto' || overflowX === 'scroll') && node.scrollWidth > node.clientWidth + 2) return true;
+          node = node.parentElement;
+        }
+        return false;
+      };
       const clipped = interactive.filter(element => {
         const rect = element.getBoundingClientRect();
-        // Vertical position is normal page scrolling, not clipping. Only count
-        // controls that escape the horizontal customer viewport.
-        return rect.left < -2 || rect.right > innerWidth + 2;
+        // Vertical position is ordinary page scrolling. Controls intentionally
+        // living in an overflow-x scroller are also not clipped defects.
+        const escapesViewport = rect.left < -2 || rect.right > innerWidth + 2;
+        return escapesViewport && !hasHorizontalScroller(element);
       });
       const docWidth = Math.max(
         document.documentElement?.scrollWidth || 0,
@@ -236,6 +247,24 @@ export async function runOwnedBrowserLennox({
       };
     });
   } catch {}
+
+  const screenshotDir = path.join(rootDir, 'artifacts', 'customer-gauntlet', 'screenshots');
+  fs.mkdirSync(screenshotDir, { recursive: true });
+  const screenshotPath = path.join(
+    screenshotDir,
+    `${slug(offer?.public_id || offer?.name)}--${slug(persona?.id)}--${sessionId.slice(0,8)}.jpg`
+  );
+  let screenshotRef = null;
+  let screenshotError = null;
+  try {
+    // Capture the untouched first viewport before keyboard traversal mutates any
+    // nested scroll container or moves the page.
+    await page.screenshot({ path: screenshotPath, type: 'jpeg', quality: 68, fullPage: false });
+    screenshotRef = path.relative(rootDir, screenshotPath).replaceAll('\\','/');
+  } catch (error) {
+    screenshotError = error instanceof Error ? error.message : String(error);
+  }
+
 
   const focusOrder = [];
   if (dom?.interactive_count > 0) {
@@ -257,24 +286,6 @@ export async function runOwnedBrowserLennox({
     }
   }
 
-  const screenshotDir = path.join(rootDir, 'artifacts', 'customer-gauntlet', 'screenshots');
-  fs.mkdirSync(screenshotDir, { recursive: true });
-  const screenshotPath = path.join(
-    screenshotDir,
-    `${slug(offer?.public_id || offer?.name)}--${slug(persona?.id)}--${sessionId.slice(0,8)}.jpg`
-  );
-  let screenshotRef = null;
-  let screenshotError = null;
-  try {
-    // Keyboard traversal can legitimately scroll the document. Visual receipts
-    // should start from the customer's initial viewport, not the last focused control.
-    await page.evaluate(() => window.scrollTo(0,0)).catch(() => {});
-    await page.waitForTimeout(80).catch(() => {});
-    await page.screenshot({ path: screenshotPath, type: 'jpeg', quality: 68, fullPage: false });
-    screenshotRef = path.relative(rootDir, screenshotPath).replaceAll('\\','/');
-  } catch (error) {
-    screenshotError = error instanceof Error ? error.message : String(error);
-  }
 
   const snapshot = {
     ...(dom || {}),
