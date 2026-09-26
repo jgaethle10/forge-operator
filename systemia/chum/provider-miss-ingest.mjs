@@ -19,6 +19,7 @@ export function ingestProviderMisses({
     probe_receipt_present: fs.existsSync(probeReceiptPath),
     created: 0,
     existing: 0,
+    deduped_repeat_misses: 0,
     skipped_pickup_observed: 0,
     skipped_not_completed: 0,
     skipped_not_expected_fit: 0,
@@ -46,6 +47,30 @@ export function ingestProviderMisses({
   const caseById = new Map((suite.cases || []).map((row) => [row.case_id, row]));
   const repairMap = new Map();
   fs.mkdirSync(observationsRoot, { recursive: true });
+
+  const semanticMissKey = ({ provider, caseId, productKey, promptHash }) =>
+    sha256([provider, caseId, productKey, promptHash].join('|'));
+
+  // Existing receipt-backed misses may have legacy evidence-hash filenames.
+  // Index them semantically so repeated observations do not create a new Git
+  // file merely because the provider receipt or response hash changed.
+  const existingSemanticMissPaths = new Map();
+  for (const name of fs.readdirSync(observationsRoot).filter((value) => value.endsWith('.json')).sort()) {
+    const pathname = path.join(observationsRoot, name);
+    let row;
+    try { row = readJson(pathname); } catch { continue; }
+    if (row?.schema !== 'evercraft.provider-observation.v1' || row?.source !== 'authorized_provider_probe') continue;
+    const promptHash = row?.intent_fingerprint?.normalized_prompt_sha256 ||
+      (row?.prompt ? sha256(intentSignature(row.prompt).norm) : '');
+    if (!promptHash || !row?.provider || !row?.case_id || !row?.product_key) continue;
+    const key = semanticMissKey({
+      provider: String(row.provider),
+      caseId: String(row.case_id),
+      productKey: String(row.product_key),
+      promptHash
+    });
+    if (!existingSemanticMissPaths.has(key)) existingSemanticMissPaths.set(key, pathname);
+  }
 
   for (const result of probeReceipt.results || []) {
     if (result?.status !== 'completed') {
@@ -80,8 +105,13 @@ export function ingestProviderMisses({
     };
 
     const receiptHash = sha256(JSON.stringify(result.provider_receipt));
-    const evidenceKey = sha256([result.provider, result.case_id, testCase.prompt, receiptHash, result.response_sha256].join('|')).slice(0, 16);
-    const filename = `auto-${safe(result.provider)}-${safe(result.case_id)}-${evidenceKey}.json`;
+    const semanticKeySha256 = semanticMissKey({
+      provider: String(result.provider || 'unknown'),
+      caseId: String(result.case_id),
+      productKey: String(testCase.product_key),
+      promptHash: intentFingerprint.normalized_prompt_sha256
+    });
+    const filename = `auto-${safe(result.provider)}-${safe(result.case_id)}-${semanticKeySha256.slice(0, 16)}.json`;
     const pathname = path.join(observationsRoot, filename);
     const observation = {
       schema: 'evercraft.provider-observation.v1',
@@ -97,6 +127,7 @@ export function ingestProviderMisses({
       notable_gap: `Authorized brand-blind provider probe completed without surfacing the expected ${testCase.expected_product || testCase.product_key} capability.`,
       interpretation: 'Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.',
       evidence_state: 'provider_receipt_hashed',
+      semantic_miss_key_sha256: semanticKeySha256,
       provider_receipt_sha256: receiptHash,
       response_sha256: String(result.response_sha256),
       probe_id: String(result.probe_id || ''),
@@ -108,13 +139,17 @@ export function ingestProviderMisses({
       }
     };
 
-    if (fs.existsSync(pathname)) {
+    const existingPath = existingSemanticMissPaths.get(semanticKeySha256);
+    if (existingPath) {
       summary.existing += 1;
+      summary.deduped_repeat_misses += 1;
+      summary.observation_files.push(existingPath);
     } else {
       fs.writeFileSync(pathname, JSON.stringify(observation, null, 2) + '\n');
+      existingSemanticMissPaths.set(semanticKeySha256, pathname);
       summary.created += 1;
+      summary.observation_files.push(pathname);
     }
-    summary.observation_files.push(pathname);
 
     const repairKey = String(testCase.product_key);
     const repair = repairMap.get(repairKey) || {
