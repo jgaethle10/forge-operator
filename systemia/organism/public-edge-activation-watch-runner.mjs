@@ -174,10 +174,13 @@ function missionSnapshot(result,previous){
     snapshot_ref:'public-edge-activation-watch:'+String(result.sequence||0),
     observed_at:result.observed_at,
     counts:{
-      scanned:Number(result.discovered_count||0),
+      scanned:Math.max(
+        Number(result.discovered_count||0),
+        materialChange||healthy||held?1:0
+      ),
       changed:materialChange?1:0,
-      admitted:healthy?1:0,
-      held:held?1:0,
+      admitted:healthy&&materialChange?1:0,
+      held:held&&materialChange?1:0,
     },
     evidence_refs:[
       result.receipt_hash,
