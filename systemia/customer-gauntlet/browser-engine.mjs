@@ -62,6 +62,15 @@ export function evaluateRenderedSnapshot(snapshot = {}, persona = {}) {
     });
   }
 
+  if (snapshot.rendered_not_found === true) {
+    findings.push({
+      code: 'rendered_not_found',
+      severity: 'P1',
+      stage: 'rendered_route',
+      detail: 'Rendered customer surface shows a Page Not Found state even though the HTTP response may be successful.'
+    });
+  }
+
   if (Number(snapshot.broken_image_count || 0) > 0) {
     findings.push({
       code: 'broken_image',
@@ -243,7 +252,8 @@ export async function runOwnedBrowserLennox({
         broken_image_count: images.filter(image => image.complete && image.naturalWidth === 0).length,
         clipped_interactive_count: clipped.length,
         horizontal_overflow_px: Math.max(0, docWidth - innerWidth),
-        placeholder_copy: /\blorem ipsum\b|\bTODO\b|coming soon|under construction|replace me/i.test(text.slice(0,20000))
+        placeholder_copy: /\blorem ipsum\b|\bTODO\b|coming soon|under construction|replace me/i.test(text.slice(0,20000)),
+        rendered_not_found: /\b404\b.{0,80}\bpage not found\b|\bpage not found\b.{0,160}\bcould not be found\b/i.test(text.slice(0,12000))
       };
     });
   } catch {}
