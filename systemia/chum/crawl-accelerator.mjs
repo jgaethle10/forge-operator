@@ -69,26 +69,47 @@ function resolveVerifiedOrigin(root, explicitOrigin) {
   return { origin: null, source: 'not_configured' };
 }
 
+export function selectHotDiscoveryEntries(entries, limit = 200) {
+  const rows = Object.values(entries || {});
+  const sortHot = (a, b) => {
+    const byPriority = Number(b.priority || 0) - Number(a.priority || 0);
+    if (byPriority) return byPriority;
+    const byTime = String(b.last_changed || '').localeCompare(String(a.last_changed || ''));
+    return byTime || String(a.path || '').localeCompare(String(b.path || ''));
+  };
+  const coldStartFrontage = rows
+    .filter((entry) => {
+      const p = String(entry.path || '');
+      return p.includes('/chum/commercial/') ||
+        p.includes('/chum/sitemaps/') ||
+        p.includes('/chum/sell-now') ||
+        p.includes('/chum/revenue') ||
+        p.includes('/.well-known/evercraft-machine-catalog') ||
+        p.includes('/.well-known/evercraft-pain-index');
+    })
+    .sort(sortHot)
+    .slice(0, Math.min(80, Math.max(1, Number(limit) || 200)));
+
+  const selected = new Map(coldStartFrontage.map((entry) => [entry.path, entry]));
+  for (const entry of rows.slice().sort(sortHot)) {
+    if (selected.size >= limit) break;
+    if (!selected.has(entry.path)) selected.set(entry.path, entry);
+  }
+  return [...selected.values()].slice(0, limit);
+}
+
 function writeHotDiscoveryHub({ publicRoot, state, origin }) {
   const dir = path.join(publicRoot, 'chum', 'hot');
   fs.mkdirSync(dir, { recursive: true });
 
-  const hot = Object.values(state.entries)
-    .slice()
-    .sort((a, b) => {
-      const byPriority = Number(b.priority || 0) - Number(a.priority || 0);
-      if (byPriority) return byPriority;
-      const byTime = String(b.last_changed).localeCompare(String(a.last_changed));
-      return byTime || String(a.path).localeCompare(String(b.path));
-    })
-    .slice(0, 200);
+  const hot = selectHotDiscoveryEntries(state.entries, 200);
 
   const json = {
     schema: 'evercraft.chum.hot-discovery.v1',
     provider: 'Evercraft LLC',
     coordinator: 'CHUM',
     updated_at: state.updated_at,
-    purpose: 'High-priority public discovery surfaces for crawler fan-out. Priority is an internal crawl-order hint, not a ranking or recommendation claim.',
+    purpose: 'High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.',
     surfaces: hot.map((entry) => ({
       path: entry.path,
       url: origin ? origin + entry.path : entry.path,
