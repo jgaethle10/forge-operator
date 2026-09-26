@@ -68,21 +68,24 @@ export function normalizePublicHttpUrl(input) {
   if (!['http:','https:'].includes(url.protocol)) throw new Error('unsupported_url_scheme');
   if (!url.hostname) throw new Error('missing_hostname');
   if (url.username || url.password) throw new Error('embedded_credentials_not_allowed');
+
+  const effectivePort = url.port || (url.protocol === 'https:' ? '443' : '80');
+  if (!['80','443'].includes(effectivePort)) throw new Error('unsupported_port');
   return url;
 }
 
-export async function assertPublicHttpUrl(input) {
-  const url = input instanceof URL ? input : normalizePublicHttpUrl(input);
-  const literalVersion = net.isIP(url.hostname);
+export async function resolvePublicHost(hostname) {
+  const host = String(hostname || '').replace(/^\[|\]$/g,'');
+  const literalVersion = net.isIP(host);
 
   if (literalVersion) {
-    if (isNonPublicIp(url.hostname)) throw new Error('private_or_reserved_target');
-    return url;
+    if (isNonPublicIp(host)) throw new Error('private_or_reserved_target');
+    return [{address:host,family:literalVersion}];
   }
 
   let addresses;
   try {
-    addresses = await dns.lookup(url.hostname, { all: true, verbatim: true });
+    addresses = await dns.lookup(host, { all: true, verbatim: true });
   } catch {
     throw new Error('dns_resolution_failed');
   }
@@ -91,6 +94,12 @@ export async function assertPublicHttpUrl(input) {
   for (const row of addresses) {
     if (isNonPublicIp(row.address)) throw new Error('private_or_reserved_target');
   }
+  return addresses;
+}
+
+export async function assertPublicHttpUrl(input) {
+  const url = input instanceof URL ? input : normalizePublicHttpUrl(input);
+  await resolvePublicHost(url.hostname);
   return url;
 }
 
