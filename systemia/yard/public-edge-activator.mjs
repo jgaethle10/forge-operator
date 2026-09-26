@@ -41,6 +41,7 @@ export async function activatePublicSpecialistEdge({
     ],
     requiredPlacementLabels,
     requiredServiceCapabilities:productionMode?['public_edge']:[],
+    requireAttestation:true,
     discovery,
     endpointTimeoutMs,
   });
