@@ -61,6 +61,39 @@ function loadJson(file, fallback) {
   }
 }
 
+function loadHumanExperienceFindings(rootDir) {
+  const relative = 'artifacts/human-experience/latest.json';
+  const receipt = loadJson(path.join(rootDir, relative), null);
+  if (!receipt || !Array.isArray(receipt.findings)) {
+    return { receipt: null, findings: [] };
+  }
+
+  const severityMap = { P0: 'critical', P1: 'high', P2: 'medium', BLOCKED: 'medium' };
+  const findings = receipt.findings.map((row) => makeFinding({
+    code: `human_experience_${clean(row.code) || 'finding'}`,
+    severity: severityMap[clean(row.severity).toUpperCase()] || 'medium',
+    subject: clean(row.product_name || row.product_key || row.url || 'Evercraft public portfolio'),
+    detail: clean(row.detail || 'Human-experience inspection produced a finding.'),
+    evidence_refs: [
+      `artifact:${relative}`,
+      ...(row.url ? [`url:${row.url}`] : [])
+    ],
+    repair_mode: clean(row.severity).toUpperCase() === 'BLOCKED'
+      ? 'verify_external_dependency'
+      : 'systemia_repair',
+    human_gate_required: false,
+    metadata: {
+      source: 'saban-human-experience',
+      human_experience_severity: clean(row.severity).toUpperCase() || null,
+      role: row.role || null,
+      product_key: row.product_key || null,
+      finding_code: row.code || null
+    }
+  }));
+
+  return { receipt, findings };
+}
+
 function headers(token = '') {
   return {
     'user-agent': 'Evercraft-Systemia-Portfolio-Sentinel/1.0',
@@ -288,9 +321,10 @@ async function main() {
   const observedAt = new Date();
 
   const local = inspectLocalPortfolio({ rootDir });
-  const findings = [...local.findings];
+  const humanExperience = loadHumanExperienceFindings(rootDir);
+  const findings = [...local.findings, ...humanExperience.findings];
   const network = { url_probes: [], github: null };
-  let scanned = local.scanned;
+  let scanned = local.scanned + Number(humanExperience.receipt?.summary?.surfaces || 0);
 
   if (!args.offline) {
     const publicScan = await scanPublicUrls(local.inventory.canonical_urls, args.maxUrls, observedAt);
@@ -379,11 +413,15 @@ async function main() {
       resolved: delta.resolved.length,
       repair_queue: repairQueue.length,
       blocking_findings: activeFindings.filter((row) => ['critical', 'high'].includes(row.severity)).length,
-      matched_repair_recipes: activeFindings.filter((row) => row.repair_recipe?.recipe_id).length
+      matched_repair_recipes: activeFindings.filter((row) => row.repair_recipe?.recipe_id).length,
+      human_experience_surfaces: Number(humanExperience.receipt?.summary?.surfaces || 0),
+      human_experience_findings: Number(humanExperience.receipt?.summary?.findings || 0),
+      human_experience_browser_blocked: humanExperience.receipt?.summary?.browser_visual_blocked ?? null
     },
     inventory: {
       ...local.inventory,
-      github: network.github
+      github: network.github,
+      human_experience: humanExperience.receipt?.summary || null
     },
     local_checks: local.checks,
     network,
@@ -401,6 +439,8 @@ async function main() {
       bounded_failed_workflow_retry: args.autoHeal ? 'autonomous' : 'disabled',
       architectural_invariants: 'enforced_before_green',
       repair_recipe_memory: recipeRegistryResult.ok ? 'loaded' : 'invalid',
+      human_experience_gate: 'saban_static_evidence_plus_owned_browser_receipts',
+      blocked_human_experience_never_counts_as_pass: true,
       production_mutation_requires_human_gate: true,
       payment_mutation_requires_human_gate: true,
       external_outreach_requires_human_gate: true
