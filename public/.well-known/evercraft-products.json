@@ -593,7 +593,7 @@
         "continuity visibility when an authorized internet path changes",
         "resilient application identity across authorized network changes"
       ],
-      "authority": "public product discovery and human-directed membership interaction",
+      "authority": "public product discovery, bounded read-only MCP capability inspection, and human-directed membership interaction",
       "human_confirmation_required": true,
       "boundaries": [
         "not a cellular carrier, ISP, SIM or eSIM service",
