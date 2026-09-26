@@ -73,10 +73,14 @@ try{
   assert.equal(snapshot2.counts.changed,0);
   assert.equal(snapshot2.counts.held,1);
 
-  const stateText=fs.existsSync(path.join(state,'public-edge-activation-watch.json'))
-    ? fs.readFileSync(path.join(state,'public-edge-activation-watch.json'),'utf8')
-    : '';
-  assert.equal(stateText.includes('allocator'),false);
+  const stateFile=path.join(state,'public-edge-activation-watch.json');
+  const persistedState=fs.existsSync(stateFile)
+    ? JSON.parse(fs.readFileSync(stateFile,'utf8'))
+    : {};
+  assert.equal(persistedState.allocator_authority_persisted,false);
+  assert.equal(Object.hasOwn(persistedState,'allocatorToken'),false);
+  assert.equal(Object.hasOwn(persistedState,'allocatorTokens'),false);
+  assert.equal(persistedState.selected_endpoint,null);
 
   console.log(JSON.stringify({
     ok:true,
