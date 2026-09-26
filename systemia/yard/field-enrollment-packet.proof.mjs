@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { YardOperator } from './operator.mjs';
 
@@ -10,6 +11,9 @@ const root=fs.mkdtempSync(path.join(os.tmpdir(),'field-enrollment-packet-proof-'
 const computeRoot=path.join(root,'compute');
 const yardState=path.join(root,'yard');
 const token='field-packet-proof-allocator-secret';
+const digest=(value)=>'sha256:'+createHash('sha256').update(
+  typeof value==='string'?value:JSON.stringify(value)
+).digest('hex');
 const tlsDir=path.join(root,'tls');
 fs.mkdirSync(tlsDir,{recursive:true});
 const tlsKey=path.join(tlsDir,'edge.key.pem');
@@ -81,10 +85,10 @@ try{
     schema:'evercraft.node001.field-evidence-candidate.v1',
     ready_for_yard_enrollment:true,
     evidence,
-    evidence_digest:'sha256:'+'4'.repeat(64),
+    evidence_digest:digest(evidence),
     generated_at:new Date().toISOString(),
   };
-  const edgeAdmission={
+  const edgeAdmissionBody={
     schema:'evercraft.node001.public-edge-field-candidate.v1',
     node_id:capacity.node_id,
     device_fingerprint:capacity.device_fingerprint,
@@ -115,7 +119,10 @@ try{
     public_reachability_verified:false,
     external_canary_required:true,
     observed_at:new Date().toISOString(),
-    receipt_hash:'sha256:'+'5'.repeat(64),
+  };
+  const edgeAdmission={
+    ...edgeAdmissionBody,
+    receipt_hash:digest(edgeAdmissionBody),
   };
 
   fs.writeFileSync(
