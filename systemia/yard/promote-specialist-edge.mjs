@@ -81,12 +81,25 @@ export function promoteSpecialistSpecs(specs,receipt){
 
   for(const product of specs.products||[]){
     if(!PROMOTABLE_SLUGS.has(product.slug)) continue;
-    if(product.state==='registry_published_direct_mcp_existing') continue;
     const runtimePath=String(product.runtime_path||'').trim();
     if(!runtimePath.startsWith('/mcp/')){
       throw new Error('promotable_product_runtime_path_invalid:'+product.slug);
     }
     const mcpUrl=verified.origin+runtimePath;
+
+    if(product.state==='registry_published_direct_mcp_existing'){
+      if(product.mcp_url!==mcpUrl){
+        throw new Error('published_registry_remote_change_requires_versioned_republication:'+product.slug);
+      }
+      promoted.push({
+        slug:product.slug,
+        mcp_url:product.mcp_url,
+        registry_state:'published',
+        state:'already_registry_published',
+      });
+      continue;
+    }
+
     const before=JSON.stringify({
       state:product.state,
       mcp_url:product.mcp_url,
