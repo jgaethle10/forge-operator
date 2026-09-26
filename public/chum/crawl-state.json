@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T23:47:28.106Z",
+  "updated_at": "2026-09-26T23:54:11.216Z",
   "url_count": 2221,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -135,14 +135,14 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "9cb20dae922c7512d506c27ea13dc5d940a9d0eb4f740e4530072c45c1af1706",
-      "last_changed": "2026-09-26T23:47:27.552Z",
+      "content_sha256": "6e59d6d91818c986311bf6c4281c1bd837f17f38fe20467e3fbe9979cf77eaab",
+      "last_changed": "2026-09-26T23:54:11.216Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "e7d6225d8b19995ec74a8037289fe31fee40c7954ac15b89176f624b88d9ff18",
-      "last_changed": "2026-09-26T23:47:28.106Z",
+      "content_sha256": "f794abc46f1b15657f1ff4a7edca4d56701bc2b2b95f1ebf0521dc8dc18d395d",
+      "last_changed": "2026-09-26T23:54:11.216Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "2800ca86563475dc5ec3c57d4fe75cb7edf16aec701aacfc59e56998543266d8",
-      "last_changed": "2026-09-26T23:47:28.106Z",
+      "content_sha256": "374c7e64bedd9c9b90428c222c001c48203ffadb11cfc85e436365e3a19fa514",
+      "last_changed": "2026-09-26T23:54:11.216Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "e566276ce6cd47cd230a2a5cb171e5f543378e855053b7c60f6e0839c9a5fc1e",
-      "last_changed": "2026-09-26T23:47:28.106Z",
+      "content_sha256": "1eea7c240b7d0ceb134810c1fadf4c79df0572c12270dbf0b1ad361c4fbe4842",
+      "last_changed": "2026-09-26T23:54:11.216Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "1b3454e3397a81a576685b3e86b53a5b1049a35e98ca4cbe6cb2cb9ca5f87461",
-      "last_changed": "2026-09-26T23:47:28.106Z",
+      "content_sha256": "35ef8c936ea3159f2d312ac055137aa37c78ac114707663696610f26c4e46adc",
+      "last_changed": "2026-09-26T23:54:11.216Z",
       "priority": 80
     },
     "/chum/commercial/": {
@@ -237,8 +237,8 @@
     },
     "/network/": {
       "path": "/network/",
-      "content_sha256": "89a4e810171b2c470ddea8612299872937890abbb954831bde21e56613db0993",
-      "last_changed": "2026-09-26T00:53:19.713Z",
+      "content_sha256": "ea0fe34889c1dd60e99038dae4fc13bfd77db0dd56b94dc53d3ff226c8a72878",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/network/mesh/": {
@@ -249,62 +249,62 @@
     },
     "/network/mesh/index.json": {
       "path": "/network/mesh/index.json",
-      "content_sha256": "0bdb073f2773eccd8f8789e58fe58e075daaed8e233ebe02b44a1f914666fe35",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "content_sha256": "54b6948d953163db2ae3b5c187e24bdabc4af2637ee643a62dd69b911c1ae992",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/network/mesh/llms.txt": {
       "path": "/network/mesh/llms.txt",
-      "content_sha256": "bdee9eefc81c35e4f50e8561b9b998cde6c5ce6b1c317c8c7824e82cb6a865d4",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "content_sha256": "f2f0d6b97f152d4db12698024ffc38b9133b282a4786e09133393d78ae638b37",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 86
     },
     "/network/mesh/application-continuity/": {
       "path": "/network/mesh/application-continuity/",
-      "content_sha256": "5322ec22b60354996282058b50afa0466148ae08a9bcd7305cf1eb3520022899",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "content_sha256": "575f4fa90281b7119993f645027152f197b3f3c87eb7353a770708a31645ca67",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/network/mesh/wifi-cellular-transition/": {
       "path": "/network/mesh/wifi-cellular-transition/",
-      "content_sha256": "9aad61b46600eba3c739fddaf3a30f2790c0170e411b417c226bf491460e1542",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "content_sha256": "427f1c67c11b15143345671f0fd4a4fa78eb81ef116237a0e023434650f9343a",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/network/mesh/device-reconnect-visibility/": {
       "path": "/network/mesh/device-reconnect-visibility/",
-      "content_sha256": "1b0da8e9678be87e68eb851a1a2ca99852986ebb7d54ddb09885851f1d230eab",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "content_sha256": "5b37305c898fea01023ddae475641bde387c85f43e9b3b1c12c465ad78aa3533",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/network/mesh/business-connectivity-resilience/": {
       "path": "/network/mesh/business-connectivity-resilience/",
-      "content_sha256": "675d2f86175909e4db28e1e6b7921231f6df4d4853f90c50b6c737f05ae1299e",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "content_sha256": "193bf3462639606c7ac6fc98c789bbac24954aec67b49de784a22e7d8745910c",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/network/mesh/household-connectivity-resilience/": {
       "path": "/network/mesh/household-connectivity-resilience/",
-      "content_sha256": "38e01756589384c812a8d3cfab8359ce3b4c83ff95ccb5e8e19a8cfe733d3403",
-      "last_changed": "2026-09-26T00:54:25.375Z",
+      "content_sha256": "09eac7593acad0e579c75418aeb717fe6ed1e9791c4421f1574a8f477282c217",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/network/llms.txt": {
       "path": "/network/llms.txt",
-      "content_sha256": "e55959b07bd72ef53df1a1325d82525f10494f0103ce4dfd5141bd59deca417a",
-      "last_changed": "2026-09-26T00:53:19.713Z",
+      "content_sha256": "dd46a07ef1a446bc2663c5b35ee81616429b8e51016ade985289c63a84b3e4c8",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 86
     },
     "/network/discovery.json": {
       "path": "/network/discovery.json",
-      "content_sha256": "d496cb227bb171b768fc88cd43ec8e7a3b72269e7cbc6f50f55a7788fb0f3ff3",
-      "last_changed": "2026-09-26T00:41:42.260Z",
+      "content_sha256": "93b62c3378f7d6e6ba698eaa2505b465df98d6801baabff6139a55bd133e279d",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 60
     },
     "/.well-known/evercraft-network.json": {
       "path": "/.well-known/evercraft-network.json",
-      "content_sha256": "d496cb227bb171b768fc88cd43ec8e7a3b72269e7cbc6f50f55a7788fb0f3ff3",
-      "last_changed": "2026-09-26T00:41:42.260Z",
+      "content_sha256": "93b62c3378f7d6e6ba698eaa2505b465df98d6801baabff6139a55bd133e279d",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 84
     },
     "/.well-known/evercraft-pain-index.json": {
@@ -753,14 +753,14 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "0010567d00cab199c61165f0bf6f5f44a3d9a130168678dddb19c82d6852ed4a",
-      "last_changed": "2026-09-26T22:41:24.683Z",
+      "content_sha256": "65a5d84a265c8a226e4e885d8a0c5764b2cf1fcf7e24bb27805275defe53f6e2",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "8b7d58ef0036831bebbe1a809a55b0a9c51552a846e6c61056314c0bb23a7543",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "ad066717b054d8f871ab4d654208683d1e0263ca3598296112988c343a903e7e",
+      "last_changed": "2026-09-26T23:54:10.681Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {

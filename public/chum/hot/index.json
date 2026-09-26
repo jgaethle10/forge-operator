@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T23:47:28.106Z",
+  "updated_at": "2026-09-26T23:54:11.216Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -345,7 +345,7 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-26T23:44:54.286Z"
+      "last_changed": "2026-09-26T23:54:10.681Z"
     },
     {
       "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
