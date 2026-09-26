@@ -2,7 +2,7 @@
   "schema": "evercraft.customer-gauntlet.policy.v2",
   "control_plane": "Systemia",
   "multiplication": "Saban",
-  "customer_execution": "Raven Nexus Lennox nodes with mandatory owned protocol executor and optional deeper owned browser/CDP lane",
+  "customer_execution": "Raven Nexus Lennox nodes with mandatory owned protocol executor and owned headless browser lane; optional deeper authenticated bridge remains bounded",
   "discovery_source": "CHUM",
   "runtime": "Yard / Evercraft Compute",
   "rules": {
@@ -21,7 +21,8 @@
     "browser_visual_state_must_be_explicit": true,
     "payment_state_must_be_explicit": true,
     "fulfillment_state_must_be_explicit": true,
-    "blocked_lane_never_counts_as_pass": true
+    "blocked_lane_never_counts_as_pass": true,
+    "owned_headless_browser_required_in_ci": true
   },
   "severity": {
     "P0": [
@@ -43,13 +44,19 @@
       "severe_brand_mismatch",
       "unsafe_transport",
       "browser_runtime_failure",
-      "concurrent_customer_path_failure"
+      "concurrent_customer_path_failure",
+      "rendered_blank_state"
     ],
     "P2": [
       "weak_copy",
       "metadata_problem",
       "minor_visual_defect",
-      "slow_nonblocking_step"
+      "slow_nonblocking_step",
+      "visual_clipping",
+      "broken_image",
+      "javascript_runtime_error",
+      "javascript_console_error",
+      "keyboard_focus_failure"
     ]
   }
 }
