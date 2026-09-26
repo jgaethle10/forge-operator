@@ -119,6 +119,7 @@ export async function activatePublicSpecialistEdge({
     requestedHostname,
     edgeRollbackTarget:'systemia:auto-edge-previous',
     specialistRollbackTarget:'systemia:auto-specialist-previous',
+    requireIdentityAttestation:true,
   });
 
   controller.start({immediate:false});
