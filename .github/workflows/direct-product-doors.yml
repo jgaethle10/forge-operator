@@ -10,6 +10,8 @@ on:
       - 'plugins/**'
       - 'scripts/generate-direct-plugin-packages.mjs'
       - 'tests/direct-product-doors.test.mjs'
+      - 'tests/chum-direct-specialist-routing.test.mjs'
+      - 'systemia/chum/build-capability-mirror.mjs'
       - 'package.json'
   pull_request:
     paths:
