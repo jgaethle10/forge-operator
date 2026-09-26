@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {
   buyerFrontageUrl,
@@ -81,6 +82,24 @@ assert.equal(
   humanStartUrl({ ...offer, commercial_state: 'discovery_only' }),
   null
 );
+
+const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json', 'utf8'));
+const everySellNow = (catalog.offers || []).filter((row) => row?.commercial_state === 'sell_now');
+assert.equal(everySellNow.length, 13);
+for (const row of everySellNow) {
+  const url = humanStartUrl(row, { surface: 'catalog_regression' });
+  assert.match(
+    url,
+    new RegExp('^https://evercraft-ai-suite-08c4d2b8\\.base44\\.app/buy/' + row.public_id.replace(/[.*+?^$()|[\\]{}]/g, '\\assert.equal(
+  humanStartUrl({ ...offer, commercial_state: 'discovery_only' }),
+  null
+);
+
+') + '\\?'),
+    row.public_id + ' must enter through the universal buyer frontage'
+  );
+  assert.equal(humanStartState(row), 'universal_buyer_frontage');
+}
 
 console.log(JSON.stringify({
   ok: true,
