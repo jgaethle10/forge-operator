@@ -17,6 +17,11 @@ on:
       - 'tests/mcp-registry-candidates.test.mjs'
       - 'systemia/yard/promote-specialist-edge.mjs'
       - 'tests/promote-specialist-edge.test.mjs'
+      - 'scripts/materialize-mcp-registry-candidates.mjs'
+      - 'tests/materialize-mcp-registry-candidates.test.mjs'
+      - 'scripts/record-mcp-registry-publication.mjs'
+      - 'tests/record-mcp-registry-publication.test.mjs'
+      - 'distribution/mcp-registry-publication-receipts/**'
       - 'package.json'
   pull_request:
     paths:
