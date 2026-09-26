@@ -145,6 +145,19 @@ function discoveryConfig(){
   };
 }
 
+function node001ActivationAdmitted(mission){
+  return Boolean(
+    mission?.schema==='evercraft.node001.field-mission-state.v1' &&
+    mission?.status==='complete' &&
+    mission?.human_field_action_required===false &&
+    Array.isArray(mission?.completed_steps) &&
+    mission.completed_steps.includes('yard_enrollment_verified') &&
+    mission.completed_steps.includes('live_identity_attested') &&
+    mission.completed_steps.includes('kaidance_field_pulse_verified') &&
+    mission.completed_steps.includes('continuity_receipt_verified')
+  );
+}
+
 function missionSnapshot(result,previous){
   const action=String(result.action||'hold');
   const healthy=action==='activated'||action==='healthy';
@@ -240,16 +253,27 @@ const watcher=new PublicEdgeActivationWatcher({
   allowLoopbackProof:false,
 });
 
+const node001Mission=readJsonIfExists(node001MissionFile);
 let result;
 try{
-  result=await watcher.tick();
+  if(node001ActivationAdmitted(node001Mission)){
+    result=await watcher.tick();
+  }else{
+    result=watcher.hold('node001_field_certification_incomplete',{
+      dependency_issue_ref:'github:issue:175',
+      node001_status:node001Mission?.status||'missing',
+      authorized_field_action_required:
+        node001Mission?.human_field_action_required!==false,
+      production_activation_attempted:false,
+    });
+  }
 }finally{
   watcher.stop();
 }
 
 const snapshot=missionSnapshot(result,previous);
 const fieldMission=evaluatePublicEdgeFieldMission({
-  node001Mission:readJsonIfExists(node001MissionFile),
+  node001Mission,
   edgeWatch:result,
   externalCanary:readJsonIfExists(externalCanaryFile),
   directPluginSpecs:readJsonIfExists(directSpecsFile),
