@@ -175,7 +175,18 @@
       "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified",
       "machine_commerce_public_id": "evercraft-clip-social-video-v1",
       "machine_commerce_handoff_state": "verification_required_checkout_not_verified",
-      "machine_commerce_tool": "get_offer"
+      "machine_commerce_tool": "get_offer",
+      "runtime_generation": "clip_production_engine_v2",
+      "runtime_gateway_schema": "evercraft.clip.agent.capabilities.v2",
+      "runtime_mcp_server_version": "2.0.0",
+      "runtime_capabilities": [
+        "creative_direction_clean_bold_documentary_property",
+        "source_grounded_caption_cues",
+        "platform_native_facebook_linkedin_instagram_copy",
+        "style_aware_vertical_rendering",
+        "forensiscope_overflow_recommendation_without_automatic_media_transfer"
+      ],
+      "next_registry_manifest_version": "0.2.0_staged_pending_publication_receipt"
     },
     {
       "product_key": "evercraft-containment",
