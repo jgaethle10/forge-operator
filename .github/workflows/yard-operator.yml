@@ -47,3 +47,7 @@ jobs:
         run: node systemia/yard/public-edge-activator.proof.mjs
       - name: Prove persistent public edge activation watch
         run: node systemia/yard/public-edge-activation-watch.proof.mjs
+      - name: Prove private Yard authority edge bootstrap
+        run: node systemia/yard/public-edge-private-yard-authority.proof.mjs
+      - name: Prove authenticated field enrollment packet
+        run: node systemia/yard/field-enrollment-packet.proof.mjs
