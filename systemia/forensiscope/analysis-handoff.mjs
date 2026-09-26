@@ -73,6 +73,8 @@ export function issueForensiScopeAnalysisHandoff({
     source_sha256: analysisReceipt.source?.sha256 || null,
     access: {
       token: access.access_token,
+      grant_id: access.grant_id,
+      revocable: true,
       scopes: access.scopes,
       issued_at_unix: access.issued_at_unix,
       expires_at_unix: access.expires_at_unix
