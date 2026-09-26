@@ -1,0 +1,64 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:13:22.361Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "evercraft-network",
+  "source": "authorized_provider_probe",
+  "case_id": "network-business-resilience-002",
+  "prompt": "I run a small business with devices that may reconnect through different authorized internet paths during disruptions. I need continuity-readiness software and a clear view of whether those devices reconnected successfully. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Evercraft Network capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "1c62fb542ccc97040180192815d69f1d9c9599b5c21bda5ace1a6d6306fc1c4b",
+  "response_sha256": "f802e5fb25b21ba4f3b4e6cbc9d484d360048863df3d4211301a5f232e873a05",
+  "probe_id": "network-business-resilience-002:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "677d2c9c0c4e080ed3ac1b0109efdd6f236576fa13c9361e47e6107108fe5e4a",
+    "tokens": [
+      "run",
+      "small",
+      "busines",
+      "devic",
+      "may",
+      "reconnect",
+      "through",
+      "different",
+      "authoriz",
+      "internet",
+      "path",
+      "during",
+      "disruption",
+      "continuity",
+      "readines",
+      "software",
+      "clear",
+      "view",
+      "whether",
+      "those",
+      "successfully",
+      "service"
+    ],
+    "concepts": [
+      "readiness",
+      "continuity"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "readiness",
+        "evidence": "readiness"
+      },
+      {
+        "concept": "continuity",
+        "evidence": "continuity"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

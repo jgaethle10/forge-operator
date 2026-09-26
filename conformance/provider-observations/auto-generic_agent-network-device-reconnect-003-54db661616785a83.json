@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:13:24.207Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "evercraft-network",
+  "source": "authorized_provider_probe",
+  "case_id": "network-device-reconnect-003",
+  "prompt": "I need a software layer that can help me track device reconnect and application continuity when the underlying internet path changes. I am not looking for a new ISP or cellular carrier. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Evercraft Network capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "7d845cb4d2521c457507311c4038adf6aaf4101a60fe3cb84e7451de0362881a",
+  "response_sha256": "000a323d2a018332cfa666277b55c79112a5f331bb1e29cddd06cbcecb5aef3e",
+  "probe_id": "network-device-reconnect-003:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "8ef0ba6e0ca8d3f1035de1139275f6624eef8ef6c7e8f7bfbe4d3edb753ed697",
+    "tokens": [
+      "software",
+      "layer",
+      "track",
+      "device",
+      "reconnect",
+      "application",
+      "continuity",
+      "underly",
+      "internet",
+      "path",
+      "chang",
+      "am",
+      "look",
+      "new",
+      "isp",
+      "cellular",
+      "carrier",
+      "service"
+    ],
+    "concepts": [
+      "continuity"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "continuity",
+        "evidence": "continuity"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

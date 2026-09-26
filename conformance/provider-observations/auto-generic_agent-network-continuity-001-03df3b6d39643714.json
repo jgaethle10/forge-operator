@@ -1,0 +1,68 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:13:20.448Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "evercraft-network",
+  "source": "authorized_provider_probe",
+  "case_id": "network-continuity-001",
+  "prompt": "My app loses continuity when a device moves between Wi-Fi and cellular or another internet connection I am already authorized to use. I want software that helps preserve application identity and gives me reconnect visibility without changing carriers. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Evercraft Network capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "95602e53cb469bc2514c62e00419de4a1153e18901aaa48756ee1efd7a741033",
+  "response_sha256": "315fc7a79ff117897b10a8ec192db19b8fc3c084d8f88380e9e0754fb0c353b0",
+  "probe_id": "network-continuity-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "6d0a49338a3ac427ad1527564d49b9b923ec4d36968c47e600544dc9eba1675e",
+    "tokens": [
+      "app",
+      "lose",
+      "continuity",
+      "device",
+      "move",
+      "between",
+      "wi",
+      "fi",
+      "cellular",
+      "another",
+      "internet",
+      "connection",
+      "am",
+      "already",
+      "authoriz",
+      "software",
+      "help",
+      "preserve",
+      "application",
+      "identity",
+      "give",
+      "reconnect",
+      "visibility",
+      "chang",
+      "carrier",
+      "service"
+    ],
+    "concepts": [
+      "promotion",
+      "continuity"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "promotion",
+        "evidence": "visibility"
+      },
+      {
+        "concept": "continuity",
+        "evidence": "continuity"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:12:38.868Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "forensiscope",
+  "source": "authorized_provider_probe",
+  "case_id": "media-agent-tool-007",
+  "prompt": "My AI agent needs a tool it can hand a long video job to when the normal chat session cannot ingest or retain the whole source. I need transcription, timeline search and evidence-linked results through an agent-friendly interface. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_forensiscope": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected ForensiScope capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "11d46db3f5f058f100679f69601e57f20c6993c5c383434372e6af18d797e820",
+  "response_sha256": "502c39fe67ed326afc6e0dc01ec5dc6f517ce760c8b0819fee35a3d1ae883d31",
+  "probe_id": "media-agent-tool-007:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "ce2c7d83a38ecb513d2808de83693e47a1eaf5d8902debc07e2b13237a759b53",
+    "tokens": [
+      "ai",
+      "agent",
+      "need",
+      "tool",
+      "hand",
+      "long",
+      "video",
+      "job",
+      "normal",
+      "chat",
+      "session",
+      "cannot",
+      "ingest",
+      "retain",
+      "whole",
+      "source",
+      "transcription",
+      "timeline",
+      "search",
+      "evidence",
+      "link",
+      "result",
+      "through",
+      "friendly",
+      "interface",
+      "service"
+    ],
+    "concepts": [
+      "media",
+      "overflow",
+      "transcript",
+      "timeline",
+      "evidence",
+      "agent_tool"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "media",
+        "evidence": "video"
+      },
+      {
+        "concept": "overflow",
+        "evidence": "cannot ingest"
+      },
+      {
+        "concept": "transcript",
+        "evidence": "transcription"
+      },
+      {
+        "concept": "timeline",
+        "evidence": "timeline"
+      },
+      {
+        "concept": "evidence",
+        "evidence": "evidence"
+      },
+      {
+        "concept": "agent_tool",
+        "evidence": "ai agent"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

@@ -34,6 +34,7 @@
     "checkout_is_payment_proof": false
   },
   "source_refs": [
+    "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json",
     "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json",
     "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json",
     "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json",

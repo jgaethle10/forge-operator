@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:12:44.975Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "findmypart",
+  "source": "authorized_provider_probe",
+  "case_id": "hard-part-001",
+  "prompt": "I need a discontinued machine part that normal suppliers cannot find. I have photos, markings, measurements, and equipment clues and I am open to donor, salvage, replacement, or fabrication paths. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected FindMyPart capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "b477befcdf21f173618de8bcffff4f35f110a9807af99172d5283500a0cf0265",
+  "response_sha256": "b90fa13d06ad298dfc43ffe81f47ad72deac4a927f86b23afb44edc5e6e3dd97",
+  "probe_id": "hard-part-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "9f48d79857337385e1ad66bcdcdebf31b5b4fdf840f99590ba2ad310f0511815",
+    "tokens": [
+      "discontinu",
+      "machine",
+      "part",
+      "normal",
+      "supplier",
+      "cannot",
+      "find",
+      "photo",
+      "marking",
+      "measurement",
+      "equipment",
+      "clue",
+      "am",
+      "open",
+      "donor",
+      "salvage",
+      "replacement",
+      "fabrication",
+      "path",
+      "service"
+    ],
+    "concepts": [
+      "hard_part",
+      "salvage"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "hard_part",
+        "evidence": "machine part"
+      },
+      {
+        "concept": "salvage",
+        "evidence": "salvage"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

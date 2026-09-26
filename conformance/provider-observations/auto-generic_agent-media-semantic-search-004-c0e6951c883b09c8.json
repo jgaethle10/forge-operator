@@ -1,0 +1,76 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:12:32.335Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "forensiscope",
+  "source": "authorized_provider_probe",
+  "case_id": "media-semantic-search-004",
+  "prompt": "I need semantic search across a long video collection so I can ask for a concept or event and get the matching timestamped moments instead of searching filenames or exact transcript words. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_forensiscope": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected ForensiScope capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "bdfd077220ed8353a2ca5d30cdd1f02157a559680758ae0b29e349465062cdf4",
+  "response_sha256": "99cd873b435ee2ac8abcbdf0abcc849c2a60066c9b0c3ce65704861558c61c64",
+  "probe_id": "media-semantic-search-004:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "8011d93db35f56ad30e5a14c7b2c8082ca38f3f5e3e9d18073e5172907f4a65d",
+    "tokens": [
+      "semantic",
+      "search",
+      "acros",
+      "long",
+      "video",
+      "collection",
+      "so",
+      "ask",
+      "concept",
+      "event",
+      "match",
+      "timestamp",
+      "moment",
+      "instead",
+      "filenam",
+      "exact",
+      "transcript",
+      "word",
+      "service"
+    ],
+    "concepts": [
+      "media",
+      "transcript",
+      "timeline",
+      "semantic_search",
+      "event"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "media",
+        "evidence": "video"
+      },
+      {
+        "concept": "transcript",
+        "evidence": "transcript"
+      },
+      {
+        "concept": "timeline",
+        "evidence": "timestamped"
+      },
+      {
+        "concept": "semantic_search",
+        "evidence": "semantic search"
+      },
+      {
+        "concept": "event",
+        "evidence": "event"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

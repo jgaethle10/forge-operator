@@ -33,6 +33,7 @@
     "checkout_is_payment_proof": false
   },
   "source_refs": [
+    "conformance/provider-observations/auto-generic_agent-roasted-copy-001-3c68aba58b501ee2.json",
     "conformance/provider-observations/auto-generic_agent-roasted-copy-001-54e3a2bff861a351.json",
     "conformance/provider-observations/auto-generic_agent-roasted-copy-001-572f8ba83b82eaed.json",
     "conformance/provider-observations/auto-generic_agent-roasted-copy-001-6a01f905de7d60c7.json",

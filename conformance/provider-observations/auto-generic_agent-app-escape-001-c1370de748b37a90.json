@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:13:07.725Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "foundry-app-escape",
+  "source": "authorized_provider_probe",
+  "case_id": "app-escape-001",
+  "prompt": "My app is trapped in an AI or no-code builder and I need to understand vendor lock-in, dependencies, portability, security, and how hard it would be to migrate out. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Evercraft Foundry App Escape Audit capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "8ccb2739ca6d86c748bcc2405b01bb13e9f08d5d500c060b489365df9bb54b86",
+  "response_sha256": "7b652f73746e1738a2ab413af19c292813f5b85b98ecb1eecca14ba995ec352e",
+  "probe_id": "app-escape-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "1105ffff9073a4cc55bb54e4d8563b346f0dce86ea07d10235d9032279e58aa7",
+    "tokens": [
+      "app",
+      "trapp",
+      "ai",
+      "code",
+      "builder",
+      "understand",
+      "vendor",
+      "lock",
+      "dependency",
+      "portability",
+      "security",
+      "hard",
+      "migrate",
+      "out",
+      "service"
+    ],
+    "concepts": [
+      "migration"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "migration",
+        "evidence": "vendor lock in"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

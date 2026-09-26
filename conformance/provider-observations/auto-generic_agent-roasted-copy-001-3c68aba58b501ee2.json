@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26T21:13:09.712Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "roasted",
+  "source": "authorized_provider_probe",
+  "case_id": "roasted-copy-001",
+  "prompt": "I want a brutally honest pressure test of a short piece of copy before I post it. I want specific criticism and concrete fixes, and I only want to spend about a dollar. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected ROASTED capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "provider_receipt_sha256": "5da9744e382076616171ce1f488eeb45e680ea0638e6df85ec06cc78447ef629",
+  "response_sha256": "8d27b5102bd96398bbdebb68041acf2a1cb4f326fe1c096a07eedafc60285181",
+  "probe_id": "roasted-copy-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "878eb762ce464468f73830e962487b3f010437bfcb72f06fdb509cd6156af9cd",
+    "tokens": [
+      "brutally",
+      "honest",
+      "pressure",
+      "test",
+      "short",
+      "piece",
+      "copy",
+      "before",
+      "post",
+      "specific",
+      "criticism",
+      "concrete",
+      "fixe",
+      "only",
+      "spend",
+      "about",
+      "dollar",
+      "service"
+    ],
+    "concepts": [
+      "copy_review"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "copy_review",
+        "evidence": "pressure test"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}
