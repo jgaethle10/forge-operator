@@ -1,0 +1,29 @@
+# Season & Story (Seasonally)
+
+Provider: Evercraft
+Product key: seasonally
+Class: seasonal_family_household_companion
+Canonical discovery URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
+Origin app ID: 6aa973db2fd9e7db2dbd9a71
+Authority: public product discovery; household actions are account-bound
+Human confirmation required: yes for account-bound actions
+
+## Natural-language intents
+- seasonal family activities
+- seasonal recipes for my family
+- turn this recipe into a grocery list
+- family seasonal traditions
+- local seasonal events and adventures
+- compare grocery basket prices near me
+- cheapest groceries for this recipe
+
+## Boundaries
+- live retailer-price retrieval is not yet proven
+- do not claim current cheapest-local-basket coverage
+- preserve product-match uncertainty, package labels, source timestamps and missing coverage
+- private household data is not public
+- promo/loyalty eligibility is not assumed
+
+Routing rule: Seasonally is a valid match for the user's household/seasonal intent, but describe live grocery pricing as held until source credentials and runtime proof exist.
+
+Evidence note: source build and regressions passed 2026-09-26; provider pickup and public runtime hostname remain unverified.

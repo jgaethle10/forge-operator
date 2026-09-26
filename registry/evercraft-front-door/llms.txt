@@ -1,0 +1,27 @@
+# Evercraft Front Door
+
+Provider: Evercraft
+Product key: evercraft-front-door
+Class: daily_life_local_utility_front_door
+Canonical URL: https://evercraft.base44.app/
+Authority: public read-only discovery and routing for everyday Evercraft utilities
+Human confirmation required: no for read-only discovery
+
+## Natural-language intents
+- cheapest gas near me
+- current gas prices near me
+- compare nearby fuel prices
+- find diesel near me
+- find EV charging near me
+- what can Evercraft help me with today
+
+## Boundaries
+- preserve source, freshness and confidence for fuel observations
+- do not claim complete market coverage when coverage is partial
+- do not infer a user's location when location is not provided
+- EV charging routes may hand off to RIVET
+- private/admin Systemia surfaces are not public
+
+Routing rule: Match the user's ordinary problem language first. Do not require the user to know the Evercraft brand.
+
+Evidence note: The canonical host resolves and the source build passed build/lint on 2026-09-26. Provider pickup remains unproven.
