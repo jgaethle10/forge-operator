@@ -11,7 +11,7 @@ const baseSpecs=JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.jso
 function pendingFixture(){
   const specs=structuredClone(baseSpecs);
   for(const product of specs.products){
-    if(!['ibmi-rescue','foundry-app-escape','site-survive'].includes(product.slug)) continue;
+    if(!['ibmi-rescue','foundry-app-escape','site-survive','systemia-remote-ops'].includes(product.slug)) continue;
     product.state='yard_runtime_proven_public_route_pending';
     product.registry_name=null;
     product.mcp_url=null;
@@ -53,12 +53,12 @@ test('verified external canary promotes exactly the three Yard specialists witho
   const specs=pendingFixture();
   const nonTargetsBefore=new Map(
     specs.products
-      .filter(p=>!['ibmi-rescue','foundry-app-escape','site-survive'].includes(p.slug))
+      .filter(p=>!['ibmi-rescue','foundry-app-escape','site-survive','systemia-remote-ops'].includes(p.slug))
       .map(p=>[p.slug,JSON.stringify(p)])
   );
 
   const result=promoteSpecialistSpecs(specs,verifiedReceipt());
-  assert.equal(result.receipt.promoted.length,3);
+  assert.equal(result.receipt.promoted.length,4);
   assert.equal(result.receipt.registry_publication_proven,false);
   assert.equal(result.receipt.public_origin,'https://specialists.evercraft.example');
 
@@ -115,7 +115,7 @@ test('Base44 can never satisfy the Evercraft public-edge promotion gate',()=>{
 
 test('registry publication cannot be inferred from a public execution canary',()=>{
   const result=promoteSpecialistSpecs(pendingFixture(),verifiedReceipt());
-  for(const slug of ['ibmi-rescue','foundry-app-escape','site-survive']){
+  for(const slug of ['ibmi-rescue','foundry-app-escape','site-survive','systemia-remote-ops']){
     const product=result.specs.products.find(p=>p.slug===slug);
     assert.equal(product.registry_name,null);
     assert.notEqual(product.state,'registry_published_direct_mcp_existing');
@@ -127,14 +127,14 @@ test('already-published specialist remains idempotent on the same verified origi
   const specs=pendingFixture();
   const first=promoteSpecialistSpecs(specs,verifiedReceipt());
   for(const product of first.specs.products){
-    if(!['ibmi-rescue','foundry-app-escape','site-survive'].includes(product.slug)) continue;
+    if(!['ibmi-rescue','foundry-app-escape','site-survive','systemia-remote-ops'].includes(product.slug)) continue;
     product.state='registry_published_direct_mcp_existing';
     product.registry_name='io.github.jgaethle10/'+product.slug;
     product.public_edge_canary.registry_publication_proven=true;
   }
   const second=promoteSpecialistSpecs(first.specs,verifiedReceipt());
   assert.equal(second.receipt.changed,0);
-  assert.equal(second.receipt.promoted.length,3);
+  assert.equal(second.receipt.promoted.length,4);
   assert.ok(second.receipt.promoted.every(row=>row.state==='already_registry_published'));
 });
 
@@ -142,7 +142,7 @@ test('published registry remote cannot silently move to a different public edge'
   const specs=pendingFixture();
   const first=promoteSpecialistSpecs(specs,verifiedReceipt());
   for(const product of first.specs.products){
-    if(!['ibmi-rescue','foundry-app-escape','site-survive'].includes(product.slug)) continue;
+    if(!['ibmi-rescue','foundry-app-escape','site-survive','systemia-remote-ops'].includes(product.slug)) continue;
     product.state='registry_published_direct_mcp_existing';
     product.registry_name='io.github.jgaethle10/'+product.slug;
     product.public_edge_canary.registry_publication_proven=true;
