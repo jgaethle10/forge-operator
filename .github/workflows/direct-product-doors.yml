@@ -12,6 +12,11 @@ on:
       - 'tests/direct-product-doors.test.mjs'
       - 'tests/chum-direct-specialist-routing.test.mjs'
       - 'systemia/chum/build-capability-mirror.mjs'
+      - 'distribution/mcp-registry-candidates/**'
+      - 'scripts/generate-mcp-registry-candidates.mjs'
+      - 'tests/mcp-registry-candidates.test.mjs'
+      - 'systemia/yard/promote-specialist-edge.mjs'
+      - 'tests/promote-specialist-edge.test.mjs'
       - 'package.json'
   pull_request:
     paths:
