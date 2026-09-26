@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-09-26T04:58:12.321Z",
+  "updated_at": "2026-09-26T15:08:17.894Z",
   "count": 13,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",
@@ -52,7 +52,7 @@
       "name": "Systemia Website Audit",
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
-      "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
       "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
       "page_url": "/chum/capabilities/audit-center-website-audit-machine-v1/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
@@ -62,10 +62,15 @@
       "start_url_state": "machine_commerce_review_fallback",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
       "entry_paid_offer": {
-        "name": "Complete Audit",
-        "price": "$500",
+        "offer_key": "quick",
+        "name": "Quick Win Audit",
+        "price": "$49",
+        "price_usd": 49,
         "billing": "one_time",
-        "price_usd_normalized": 500
+        "fulfillment": "automatic",
+        "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+        "upgrade_credit": "$49",
+        "price_usd_normalized": 49
       },
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {

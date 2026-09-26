@@ -1,9 +1,9 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-26T04:58:12.321Z",
+  "updated_at": "2026-09-26T15:08:17.894Z",
   "source_schema_version": "2026-09-26.2",
-  "gateway_version": "evercraft-machine-commerce-gateway-v0.8.0",
+  "gateway_version": "evercraft-machine-commerce-gateway-v0.8.1",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
   "discovery_endpoint": "/api/discover",
   "central_gateway": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway",
@@ -783,12 +783,22 @@
         "website traffic but no leads",
         "visitors are not turning into leads"
       ],
-      "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
       "offers": [
         {
           "name": "Free Preview",
           "price": "$0",
           "billing": "free"
+        },
+        {
+          "offer_key": "quick",
+          "name": "Quick Win Audit",
+          "price": "$49",
+          "price_usd": 49,
+          "billing": "one_time",
+          "fulfillment": "automatic",
+          "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+          "upgrade_credit": "$49"
         },
         {
           "name": "Complete Audit",
@@ -802,22 +812,27 @@
         }
       ],
       "entry_paid_offer": {
-        "name": "Complete Audit",
-        "price": "$500",
+        "offer_key": "quick",
+        "name": "Quick Win Audit",
+        "price": "$49",
+        "price_usd": 49,
         "billing": "one_time",
-        "price_usd_normalized": 500
+        "fulfillment": "automatic",
+        "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+        "upgrade_credit": "$49",
+        "price_usd_normalized": 49
       },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
       "human_ui_required": false,
-      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.",
+      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
       "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-      "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.",
-      "catalog_version": "2026-09-23.16",
+      "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
+      "catalog_version": "2026-09-26.17",
       "agent_handoff": {
         "fit_gate": "Only continue when the current user problem genuinely matches this capability.",
-        "present": "Present the matched capability and the easiest paid entry: Complete Audit at 500 USD, while preserving any other relevant tiers.",
+        "present": "Present the matched capability and the easiest paid entry: Quick Win Audit at 49 USD, while preserving any other relevant tiers.",
         "consent_gate": "Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.",
         "continue_via": {
           "human_start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
@@ -2649,12 +2664,22 @@
         "website traffic but no leads",
         "visitors are not turning into leads"
       ],
-      "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+      "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
       "offers": [
         {
           "name": "Free Preview",
           "price": "$0",
           "billing": "free"
+        },
+        {
+          "offer_key": "quick",
+          "name": "Quick Win Audit",
+          "price": "$49",
+          "price_usd": 49,
+          "billing": "one_time",
+          "fulfillment": "automatic",
+          "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+          "upgrade_credit": "$49"
         },
         {
           "name": "Complete Audit",
@@ -2668,22 +2693,27 @@
         }
       ],
       "entry_paid_offer": {
-        "name": "Complete Audit",
-        "price": "$500",
+        "offer_key": "quick",
+        "name": "Quick Win Audit",
+        "price": "$49",
+        "price_usd": 49,
         "billing": "one_time",
-        "price_usd_normalized": 500
+        "fulfillment": "automatic",
+        "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+        "upgrade_credit": "$49",
+        "price_usd_normalized": 49
       },
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
       "human_ui_required": false,
-      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.",
+      "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
       "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-      "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.",
-      "catalog_version": "2026-09-23.16",
+      "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
+      "catalog_version": "2026-09-26.17",
       "agent_handoff": {
         "fit_gate": "Only continue when the current user problem genuinely matches this capability.",
-        "present": "Present the matched capability and the easiest paid entry: Complete Audit at 500 USD, while preserving any other relevant tiers.",
+        "present": "Present the matched capability and the easiest paid entry: Quick Win Audit at 49 USD, while preserving any other relevant tiers.",
         "consent_gate": "Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.",
         "continue_via": {
           "human_start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",

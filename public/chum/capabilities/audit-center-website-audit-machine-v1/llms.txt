@@ -37,13 +37,15 @@ Website/domain. Business name, city, industry and Google Business Profile contex
 
 ## Outputs
 
-Observed website findings, deterministic category scores and breakdowns, prioritized audit findings, deeper fix plan/report for paid tier, and remediation scope for Audit + Patch.
+Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.
 
 ## Pricing
 
-Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
+Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 
 - Free Preview: $0 (free)
+
+- Quick Win Audit: $49 (one_time)
 
 - Complete Audit: $500 (one_time)
 
@@ -51,9 +53,9 @@ Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 
 ## Invocation and authority
 
-LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.
+SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.
 
-The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.
+The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.
 
 Payment authority: Systemia Audit Center / Stripe, provider-verified
 

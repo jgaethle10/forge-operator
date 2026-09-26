@@ -20,15 +20,25 @@
     "visitors are not turning into leads"
   ],
   "inputs": "Website/domain. Business name, city, industry and Google Business Profile context improve local and trust checks.",
-  "outputs": "Observed website findings, deterministic category scores and breakdowns, prioritized audit findings, deeper fix plan/report for paid tier, and remediation scope for Audit + Patch.",
+  "outputs": "Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.",
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "pricing": "Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
+  "pricing": "Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.",
   "offers": [
     {
       "name": "Free Preview",
       "price": "$0",
       "billing": "free"
+    },
+    {
+      "offer_key": "quick",
+      "name": "Quick Win Audit",
+      "price": "$49",
+      "price_usd": 49,
+      "billing": "one_time",
+      "fulfillment": "automatic",
+      "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+      "upgrade_credit": "$49"
     },
     {
       "name": "Complete Audit",
@@ -42,10 +52,10 @@
     }
   ],
   "human_ui_required": false,
-  "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.",
+  "confirmation": "The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.",
   "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
   "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
-  "invocation_status": "LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.",
+  "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "Systemia Website Audit",
@@ -60,10 +70,15 @@
   "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
   "start_url_state": "machine_commerce_review_fallback",
   "entry_paid_offer": {
-    "name": "Complete Audit",
-    "price": "$500",
+    "offer_key": "quick",
+    "name": "Quick Win Audit",
+    "price": "$49",
+    "price_usd": 49,
     "billing": "one_time",
-    "price_usd_normalized": 500
+    "fulfillment": "automatic",
+    "scope": "Bounded homepage/public-web evidence snapshot, automated health score, and top five prioritized fixes.",
+    "upgrade_credit": "$49",
+    "price_usd_normalized": 49
   },
   "mirror": {
     "page": "/chum/capabilities/audit-center-website-audit-machine-v1/",

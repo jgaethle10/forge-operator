@@ -23,7 +23,7 @@ Human confirmation remains required at irreversible financial or authority bound
 ## Current machine-commerce offer graph
 
 Catalog version: 2026-09-26.2
-Gateway version: evercraft-machine-commerce-gateway-v0.8.0
+Gateway version: evercraft-machine-commerce-gateway-v0.8.1
 Current public offers: 45
 Current sell-now offers: 13
 
@@ -265,10 +265,10 @@ Use when the user says or means:
 Public ID: audit-center-website-audit-machine-v1
 Problem: A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.
 Machine state: payment_ready
-Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
+Pricing: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
 Human UI required: false
-Confirmation: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.
+Confirmation: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.
 Payment authority: Systemia Audit Center / Stripe, provider-verified
 Use when the user says or means:
 - why is my website not getting leads

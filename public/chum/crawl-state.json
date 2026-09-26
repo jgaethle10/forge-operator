@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T13:54:30.916Z",
+  "updated_at": "2026-09-26T15:08:19.376Z",
   "url_count": 2150,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -27,62 +27,62 @@
     },
     "/chum/revenue.html": {
       "path": "/chum/revenue.html",
-      "content_sha256": "97cd60e9744383b4fa3506caf421e8207e46838ffc559540540bdeba4a058652",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "1e5f3114e72bef98e0f499b22053d6b98f2ab381a53fdc974092bc838badee91",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 90
     },
     "/chum/capabilities/": {
       "path": "/chum/capabilities/",
-      "content_sha256": "ffe021c24be486f1e8a3207b34e785f2da6e1bef6ae98aaea9e51ed8c14f5124",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "81c6f484c7345bfea405459f0e95d8a26cd9ea3c93f82461b3cd5f9ed5cf01f0",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 96
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "9351c8167edd4aec5e2f596813bb7f1909ce30f0b80f65629cb447719992497f",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "1509c1eb1444e8d65ec2c68c91a86acf9e82b848bccf151372d21fc891fc0d32",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
       "path": "/chum/sell-now.html",
-      "content_sha256": "73553c8131998c7abb0778c65ae428488c2cd1ae8fb1261bff5a9a550323b3a0",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "8c6629e0e9349801369db4131e04253d64c5493b8fc609580e276fd36b6af3ff",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 92
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "67360c204ba37e6adc3b85a5289f325ad8efcaebbb46f92ccc49e9812de0babe",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "d7eba74ed437524c29d4c73446ff94068ccfde2f8bc8c7f224ca1ef2b27a3cec",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "f0fd7e8a878438bb6bcebb2e0e70ead1c65eaf7463e9299f88188e07209ac8b0",
-      "last_changed": "2026-09-26T11:08:35.098Z",
+      "content_sha256": "e25d2a3dabfa2607589225265f63c7a123db469320d6a7003e5389eec295d96a",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
       "path": "/chum/revenue.txt",
-      "content_sha256": "a99e00a3eb8803aaf0c5a454709267ca42a2bcd438ab011cdb34e36f615aa804",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "a08435d85db0c610c6d1277f1250ce8590b061c945bd6a513bd16ab909c908a7",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 90
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "4444891ab9742400d0b72a6a7d222d78b482a8c921af2079b2f89889e7614ca0",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "a34c56c82d8fcab5baf4848d5cb392e5856f4005f15bc9c96baffca5f65576d7",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 90
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "b0c53ccd267c2255898f89e74a9969be6d456a5452037d05a970618fe863fce8",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "93492277d28c33c9c21058d8fd110cc87153fa31629e5913ccb4d80a1ae99fe9",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "a0bbf8512d2bda5bd5ca248fc621824942af803225a39b3f40c6df48441a67c5",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "4f48c685a1a476141c01f86e888912e356b32b6473e1ad3c04b994677868005a",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 80
     },
     "/chum/answers/": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "54d8b4c26517a755f6f5dc3dd71a3514737ca0808689b15a0fc561e1a7b9bf78",
-      "last_changed": "2026-09-26T13:54:30.916Z",
+      "content_sha256": "b484c0cd7915144233784a01cba8b930272f272ecfc384e56c80758101258ea0",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -231,8 +231,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "b0c53ccd267c2255898f89e74a9969be6d456a5452037d05a970618fe863fce8",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "93492277d28c33c9c21058d8fd110cc87153fa31629e5913ccb4d80a1ae99fe9",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -621,8 +621,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "5a7fdf5ff4fb49cd117238361100e9d16775fa50996dc2e39436592f2dae72ef",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "8084732769a653bf90558687315589a8194827dd073e7ca54f8c57c0f3ada7a4",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -675,8 +675,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "2a0a061bb50512d39de7b9bc8075394cdff8f28e28a63aac22cc6bfb025f5e77",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "66283d9070920cff7fcac57db02712a6497626ec091012b24dfbcc26104dc8a9",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
@@ -861,26 +861,26 @@
     },
     "/chum/intents/audit-center-website-audit-machine-v1/": {
       "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "content_sha256": "344be05ee6681d2ff2a5129dbb637e059a27de5021a56c45107f8e361858aef5",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "1403521d648d102b728405fc08fe44a6457b1b33e813d6d58808ef234c6d0a6e",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 98
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
-      "content_sha256": "d40cc5aba2b5771e9f132fbf5f9b11b2d6a475a1a0bcfbc9ea29b04933728864",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "df4b0a45e69a96fbfedbd0b916500641d6784f1539bf9d78f5f61238b613b0c3",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
-      "content_sha256": "2fb6553065c78de45b0d048b6b044c71ae3828a13f2d9147a32dc9d954183b10",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "38673d1f2db1e80753493daad19e39c6e8344b77a413e72d75f89ed56ad8d32a",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "content_sha256": "6f8eeb50c79a1e3d8e0c24b67bcac565a6dbac700b8344413df2899bc2658da9",
-      "last_changed": "2026-09-26T06:29:53.033Z",
+      "content_sha256": "191a652d41776d564d23dab256846828379a11f3c3d672115668a949f7f32cbe",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld": {
@@ -4443,14 +4443,14 @@
     },
     "/chum/answers/doors/audit-my-website-30703ed3ed/": {
       "path": "/chum/answers/doors/audit-my-website-30703ed3ed/",
-      "content_sha256": "b673143536587877d3a2bf8fbe19d9b37314c1422ed2ed629fb2d214635da49b",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "f6b76ab265637378797fd308415edb783ffd34f126399aeb727b6d018dca3d60",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 160
     },
     "/chum/answers/doors/audit-my-website-30703ed3ed.json": {
       "path": "/chum/answers/doors/audit-my-website-30703ed3ed.json",
-      "content_sha256": "e4b8c660641dec421976309c92b00cdf32f7e05f890d52a51e85fb650a4e35b9",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "9bf1f698ddb9875b6b5ecaca170736d4c8895c463a053170091b82338e37a615",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 160
     },
     "/chum/answers/doors/audit-my-website-because-traffic-is-not-converting-149d02facc/": {
@@ -5151,14 +5151,14 @@
     },
     "/chum/answers/doors/check-my-local-seo-e8e838ec7c/": {
       "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c/",
-      "content_sha256": "dd69388b5e19da9d2fdb5fb492ce8d3ba5d1a1f71b77b1e607dd6a073d13f7f7",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "24076edf22b8a0b12e0ae89d35e7766ba5f489240487567315f710efdcf625a4",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 160
     },
     "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json": {
       "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
-      "content_sha256": "1ec95e12b1d9bc90da9529cd9d28ce15e523255f19fedc2a52538a8fbe9753e8",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "07b2ea9e0659fc9b957c2d9a0f133c36355527b2ae53535001566f9f9adabb29",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 160
     },
     "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe/": {
@@ -6759,14 +6759,14 @@
     },
     "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf/": {
       "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf/",
-      "content_sha256": "725c52b36be8ce0446aa629400cfab39cea2a73f8d2f1dc7c3b89a49a40e8baa",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "176b001a1551520b33c3d67b8690fdaa9fa8c3aa5dc796d75b285d5c4919017b",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 160
     },
     "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json": {
       "path": "/chum/answers/doors/find-conversion-problems-on-my-website-071e47ffaf.json",
-      "content_sha256": "afad58643bbcc16a458e543dae739ea8cf4762f1475e0f59da35f89b75783665",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "37e2799526b13ff953c592bbde27cbd83a6ec43a95929b0df147c4b7ff89ba68",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 160
     },
     "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/": {
@@ -9183,14 +9183,14 @@
     },
     "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7/": {
       "path": "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7/",
-      "content_sha256": "fbb648d804246bb58e063d4627c9cfde39e7bb3c2e76f3078140d893213d43c8",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "6cb9490bd231c84b5cf4f91fa68ef8d61f597a61bea27600b28ff85d854be0c0",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7.json": {
       "path": "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7.json",
-      "content_sha256": "545dc4bbfa7dff0f68099052dc47df7921eb7dd6aa50c2d1f3fd92f9011be13a",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "700e389af396b208b2d7ab1f2a1f7fc29251d1e97995cc3fe068a6e1993cfb0c",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/n8n-cleanup-18925f60fe/": {
@@ -9531,14 +9531,14 @@
     },
     "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52/": {
       "path": "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52/",
-      "content_sha256": "139bee6249d7b5bac213912ee586dccdb047036e5819340921cd9393d5056b70",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "fe8e7a5c0e6bd97f83f3fc6e5edb7b452d9095d8ce4c6738397d84dac508f9a6",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52.json": {
       "path": "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52.json",
-      "content_sha256": "c9e552e90fb2fbb969c4c6140de8962786a76f90d8a1b04d63b32dab7e37c32b",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "49e79da4375a1a5ed725c8dffeffc4107c0e1bc4a9ed0a34a5c47a27f743a73d",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/perform-frame-level-review-beyond-the-current-assistant-s-limits-878ff72db6/": {
@@ -10683,14 +10683,14 @@
     },
     "/chum/answers/doors/review-my-website-seo-65884ba156/": {
       "path": "/chum/answers/doors/review-my-website-seo-65884ba156/",
-      "content_sha256": "728ad5fc71520fccf64c43f66d4f886de5189ce37976820f0af676d069347685",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "f992ca0a697a6d44893c70025d40e57c1fa793eb724204101c902d0ba35d23b6",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/review-my-website-seo-65884ba156.json": {
       "path": "/chum/answers/doors/review-my-website-seo-65884ba156.json",
-      "content_sha256": "0e0c6b78cbe255578a058eb77951d664d1b0b16f1fe8025c7302e984e77e26f2",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "7bb34c22181c150291e53d6140f04b2476a4b9b27c2f9924c83719771b7fe0a3",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/review-source-linked-survivor-or-witness-testimony-dfe83c09a9/": {
@@ -11643,14 +11643,14 @@
     },
     "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/": {
       "path": "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/",
-      "content_sha256": "8bca6d2e41e4261d523fec47f7a04c5524d83a2f294e9338eb9e07be390fe1cb",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "5a0824c2c7db55c75b215dd670b7a1bf793952f7464882ce0f354cfed6f392df",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json": {
       "path": "/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json",
-      "content_sha256": "144f16e8a544bafe3738271077e285e0663b68218a41876ba7079eaeb4967ad4",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "b887b07dec94ac53e919911b8407c0bb5b4e43b2c8c91e82f5ab1addac10d066",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/": {
@@ -12291,14 +12291,14 @@
     },
     "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a/": {
       "path": "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a/",
-      "content_sha256": "eecf5610a08763d1b00509af0526d774837d57ded466a0b82fe1ca8f1420a60c",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "903105ccff65aad7e19fe8aea3c0ecbcc6a0c50b3d2af69e374a0917eed1bef8",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json": {
       "path": "/chum/answers/doors/visitors-are-not-turning-into-leads-ae35f23b1a.json",
-      "content_sha256": "7a9a84aae3d6b75805eb21b16d54b24231b6aa847a36a01d775b76b8622ad58f",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "fce89781541df1f93453267a5a766bbb54c58e0c1257510b5f3e34a2cee2c148",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/warehouse-or-dock-team-training-e2dcbbdfc2/": {
@@ -12531,14 +12531,14 @@
     },
     "/chum/answers/doors/website-traffic-but-no-leads-17912f57da/": {
       "path": "/chum/answers/doors/website-traffic-but-no-leads-17912f57da/",
-      "content_sha256": "f0145b22f60bb7e21a76776132a10e5433351e2f04669608dfeb329faf8bb8b6",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "e4261ccd63f390d3787bbeb8375c133c51d2dceda1e5b1abea9605bdd33b9192",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/website-traffic-but-no-leads-17912f57da.json": {
       "path": "/chum/answers/doors/website-traffic-but-no-leads-17912f57da.json",
-      "content_sha256": "04c38d27dc265be0fc9b577044e6d640854ec4fec56268df02b5bd454576b988",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "151f072b449a08624d99965010c85be0bde5e8275293ddd84dd376fa62517d48",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2/": {
@@ -12771,50 +12771,50 @@
     },
     "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812/": {
       "path": "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812/",
-      "content_sha256": "122eeb1e2fbab9ad74a50f6aa8d976813c4eda92bfa81433aece16bec2749184",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "bad9e634eca686a430f2aaff8f3e2b69b5a547fe51a61530483d6fad626d2389",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812.json": {
       "path": "/chum/answers/doors/why-is-my-contractor-website-not-ranking-e3ae48a812.json",
-      "content_sha256": "e8d856d93f0cf915879dc215e76014e75e6d56679146980b6116a8b1dc32ab85",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "e8dbb541f9bdf1a874b3f9c0513d510fe4651f018bf3793be233205ed742baa4",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f/": {
       "path": "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f/",
-      "content_sha256": "b9fe5c5b299864782077dca9396a2471cf0429e5fdb47e07453421db1fbe701c",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "ecb1b66697c535fd632be0eba06d7ec551c69034ed4e28d09adb5766960ca8fa",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f.json": {
       "path": "/chum/answers/doors/why-is-my-site-slow-on-mobile-b12495f37f.json",
-      "content_sha256": "20396a0aee6a0cee8511e190336702eb6012e1c1928c6337c462126207b4384c",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "ef29c5cf269283c6013d4391db3232a43aa63c45d430dfaf129c9761db267984",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf/": {
       "path": "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf/",
-      "content_sha256": "10a24bb4d73850c6903711578492f33d7fdfc669c1fd9b322026bf0bb8bfb851",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "ff69235a3898a9e88f6639a6cad7e2de6237313e9480785cf3824aafc7193098",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf.json": {
       "path": "/chum/answers/doors/why-is-my-website-not-converting-aa7c4f61cf.json",
-      "content_sha256": "ad1b1256e391162dd28a96417608c4bcbd5cea28f0a846a189dbe803aa26165a",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "c89aa9ac4cfcfc13bc40b1664645f8d82c66c48d2fc314890c91ec782fb056b3",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3/": {
       "path": "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3/",
-      "content_sha256": "e2b5bce1eb6adc646c2132f0266d2573b5800a1471fdc62802946e21c15200a4",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "9b114d6f53852ef43afed3b44f9dc74305a69be7e20d315e05434955307a017f",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3.json": {
       "path": "/chum/answers/doors/why-is-my-website-not-getting-leads-20aee4bfe3.json",
-      "content_sha256": "406f6678349d807baab0e622d015c07400a4ad5310164ec00628714197edd0ff",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "04827629e9fc24fc1990b7cdfc4b090226b6efbf8d8545e473753542d237085b",
+      "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
     "/chum/answers/doors/work-with-video-files-too-large-for-normal-chatbots-8fc5e34a95/": {

@@ -71,7 +71,7 @@ Commercial state: sell_now
 Machine state: payment_ready
 Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Pricing: Free preview. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
+Pricing: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Use when the user means:
 - why is my website not getting leads
 - audit my website
@@ -87,9 +87,9 @@ Use when the user means:
 - website traffic but no leads
 - visitors are not turning into leads
 Problem: A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.
-Outputs: Observed website findings, deterministic category scores and breakdowns, prioritized audit findings, deeper fix plan/report for paid tier, and remediation scope for Audit + Patch.
-Confirmation boundary: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout and provider-verified payment before fulfillment.
-Invocation status: LIVE on crawlable public host: https://systemia-audit-pro.base44.app/functions/auditAgentGateway with OpenAPI, llms guidance, and remote MCP at https://systemia-audit-pro.base44.app/functions/auditAgentMcp. Agents can inspect $500/$1,200 tiers, prepare checkout only after explicit human confirmation, and verified Stripe return automatically queues the supplied website into paid audit intake.
+Outputs: Free preview plus a machine-fulfilled $49 Quick Win Audit using observed public website evidence, deterministic scoring and the top five prioritized fixes; deeper fix plan/report for Complete Audit; remediation scope for Audit + Patch.
+Confirmation boundary: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.
+Invocation status: SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.
 
 ## BuildFlow Governed Agent Action Layer
 Capability ID: offer:buildflow-bounded-agent-action-v1
