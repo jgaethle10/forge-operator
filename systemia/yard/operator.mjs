@@ -416,6 +416,23 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_origin_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
+        const rivetHealthy =
+          health.ok === true &&
+          health.service === 'rivet-yard-report-runtime' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.schema === 'evercraft.rivet.yard-runtime-health.v1';
+        if (!rivetHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('RIVET Yard report runtime failed initial health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_rivet_report_runtime_health_verified';
       } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
         const brokerHealthy =
           health.ok === true &&
