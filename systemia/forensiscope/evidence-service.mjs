@@ -92,6 +92,7 @@ export async function startForensiScopeEvidenceService({
         checkout_or_payment: false,
         evidence_access_required: true,
         privacy_safe_access_audit_receipts: true,
+        immediate_access_revocation_enforced: true,
         deployment_receipt_bound: Boolean(deploymentReceipt),
         deployment_receipt_ref: deploymentReceipt || null
       };
