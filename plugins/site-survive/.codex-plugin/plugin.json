@@ -1,0 +1,37 @@
+{
+  "name": "site-survive",
+  "version": "0.1.0",
+  "description": "Use Site-Survive directly when a site-dependent business needs to understand which operational dependencies fail first during internet or connectivity disruption and wants a prioritized continuity map.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "site-survive",
+    "business-continuity",
+    "internet-outage",
+    "resilience",
+    "offline-operations",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "releaseState": "DEPLOYMENT_CANARY_PENDING",
+  "interface": {
+    "displayName": "Site-Survive Rapid Audit",
+    "shortDescription": "Map site failure points before connectivity disruption",
+    "longDescription": "Use Site-Survive directly when a site-dependent business needs to understand which operational dependencies fail first during internet or connectivity disruption and wants a prioritized continuity map.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+    "defaultPrompt": [
+      "Show me which parts of this site-dependent operation fail first during a realistic connectivity outage and what to prioritize."
+    ]
+  }
+}
