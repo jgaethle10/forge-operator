@@ -1,0 +1,11 @@
+{
+  "schema": "evercraft.legacy-rescue.social-pack.v1",
+  "product_key": "legacy-rescue-lab",
+  "canonical_article": "https://evercraftjournal.base44.app/journal/save-the-software-before-you-rebuild-it",
+  "captions": {
+    "linkedin": "When software starts breaking, the default answer is too often “rebuild it.” We built Legacy Rescue Lab around a different first question: what is actually broken, what still works, and can a bounded repair preserve the value already there? Broken checkout, abandoned codebase, failed AI-built app, fragile SaaS, risky migration. Start with evidence. The first commercial doorway is a $299 Legacy Rescue Scan. Direct product-specific checkout remains receipt-gated until independently verified.",
+    "facebook": "A broken checkout does not automatically mean you need a new website. A developer disappearing does not automatically mean the codebase is worthless. Legacy Rescue Lab starts with evidence: reproduce the failure, map what still works, protect private-system boundaries, and test the smallest responsible rescue before replacing the whole thing. Legacy Rescue Scan: $299 one-time, with the fee creditable toward an authorized Rescue Sprint started within 14 days."
+  },
+  "publication_state": "prepared_not_proof_of_posting",
+  "note": "Use only on Evercraft-appropriate social accounts after the canonical publication and account-specific release gates pass."
+}
