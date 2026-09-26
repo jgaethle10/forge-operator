@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 96,
-    "product_entries": 52,
+    "entries": 97,
+    "product_entries": 53,
     "machine_offer_entries": 44,
-    "entries_with_pain_language": 96,
+    "entries_with_pain_language": 97,
     "sell_now_machine_offers": 12,
     "entries_with_declared_mcp": 59,
     "callable_or_routable_entries": 38,
@@ -4480,6 +4480,80 @@
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
       "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:systemia-portfolio-sentinel",
+      "product_key": "systemia-portfolio-sentinel",
+      "kind": "product",
+      "name": "Systemia Portfolio Sentinel",
+      "class": "continuous_software_portfolio_integrity_monitoring",
+      "pain_phrases": [
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces",
+        "open repair work automatically when software breaks",
+        "continuous software estate audit",
+        "AI product portfolio watchdog",
+        "monitor machine readable discovery surfaces",
+        "our company has too many apps and we do not know what is broken",
+        "keep an inventory of all our software and verify it stays healthy",
+        "monitor LLM discovery pages and agent endpoints",
+        "detect product URL workflow and deployment regressions"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority",
+      "boundaries": [
+        "public discovery creates no access to private repositories, credentials, customer data or internal topology",
+        "customer monitoring begins only after explicit scoped authorization for the repositories, endpoints or systems being checked",
+        "findings are operational evidence and diagnostics, not a security certification, compliance attestation or uptime guarantee",
+        "production changes, payment actions and external communications remain separately gated",
+        "customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": {
+        "status": "commercial_pilot",
+        "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+        "offers": [
+          {
+            "offer_key": "portfolio_sentinel_commercial_pilot",
+            "name": "Systemia Portfolio Sentinel Commercial Pilot",
+            "price": "Custom quote",
+            "billing": "pilot"
+          }
+        ],
+        "payment_state": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
+        "machine_commerce_handoff": {
+          "public_id": "portfolio-sentinel-v1",
+          "tool": "get_offer",
+          "state": "discovery_live_human_onboarding"
+        }
+      },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any private-system connection, commercial commitment, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft Machine Commerce surface. Public matching is live; customer monitoring begins only after scoped onboarding and a verified first cycle.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
