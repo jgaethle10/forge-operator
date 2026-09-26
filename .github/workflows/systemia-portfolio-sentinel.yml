@@ -69,6 +69,7 @@ jobs:
         run: npm run test:sentinel-invariants
 
       - name: Run live portfolio integrity cycle
+        if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PORTFOLIO_SENTINEL_GITHUB_OWNER: jgaethle10
