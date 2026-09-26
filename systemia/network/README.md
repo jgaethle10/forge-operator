@@ -95,3 +95,21 @@ Run the software proof:
 The planner admits only documented civilian purposes, requires verified links plus explicit flight authorization and safe operating state, and keeps infrastructure-avoidance estimates labeled as modeled. It does not perform flight control or claim that planned radio paths have been field verified.
 
 See AIR-RELAY.md for the contract and truth boundary.
+
+
+## Aircraft Relay v1
+
+Evercraft Network can also model an explicitly participating civilian aircraft as transient future capacity.
+
+Aircraft Relay separates two states:
+
+- verified overlapping contact windows may form a live relay;
+- predicted operator-approved contact windows may form a forecast data-ferry plan only.
+
+Predicted contact never becomes a live route merely because an aircraft is scheduled to pass overhead. Aircraft participation must be explicit, flight-control access must remain disabled, and onboard networking must remain isolated from flight-critical avionics.
+
+Run:
+
+    npm run proof:aircraft-relay
+
+See AIRCRAFT-RELAY.md for the contact-window, store-and-forward, and truth-boundary contract.
