@@ -3,6 +3,8 @@ name: ForensiScope evidence service
 on:
   pull_request:
     paths:
+      - 'systemia/forensiscope/gateway-proof.mjs'
+      - 'systemia/forensiscope/gateway-proof.mjs'
       - 'systemia/forensiscope/evidence-service.mjs'
       - 'systemia/forensiscope/mcp-http.mjs'
       - 'systemia/forensiscope/mcp-protocol.mjs'
@@ -21,7 +23,7 @@ on:
   push:
     branches:
       - main
-      - systemia/saban-forensiscope-v2
+      - systemia/forensiscope-flagship-v4
     paths:
       - 'systemia/forensiscope/evidence-service.mjs'
       - 'systemia/forensiscope/mcp-http.mjs'
@@ -48,5 +50,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove ForensiScope evidence gateway security contracts
+        run: npm run proof:forensiscope-gateway
       - name: Prove receipt-bound ForensiScope evidence service
         run: node systemia/yard/forensiscope-evidence-service-proof.mjs
