@@ -27,8 +27,17 @@ const nodes = [
 
 const links = [
   {
+    from: 'field-a', to: 'edge-b', state: 'verified',
+    transport_id: 'existing_fixed_backbone',
+    infrastructure_class: 'fixed',
+    bandwidth_mbps: 80, latency_ms: 8,
+    offline_usable: true, bidirectional: true,
+    evidence: 'fixture:verified-fixed-link'
+  },
+  {
     from: 'field-a', to: 'air-01', state: 'verified',
     transport_id: 'authorized_ip_radio_a',
+    infrastructure_class: 'temporary_air',
     bandwidth_mbps: 120, latency_ms: 12,
     offline_usable: true, bidirectional: true,
     evidence: 'fixture:verified-link-a'
@@ -36,6 +45,7 @@ const links = [
   {
     from: 'air-01', to: 'edge-b', state: 'verified',
     transport_id: 'authorized_ip_radio_b',
+    infrastructure_class: 'temporary_air',
     bandwidth_mbps: 95, latency_ms: 15,
     offline_usable: true, bidirectional: true,
     evidence: 'fixture:verified-link-b'
@@ -62,25 +72,58 @@ const mission = {
   minimum_bandwidth_mbps: 25,
   maximum_link_latency_ms: 50,
   maximum_path_latency_ms: 100,
-  estimated_trench_meters_without_relay: 3200,
-  estimated_temporary_towers_without_relay: 1
+  infrastructure_counterfactual: {
+    evidence_state: 'modeled',
+    evidence_refs: ['fixture:counterfactual-design'],
+    trench_meters_without_relay: 3200,
+    temporary_towers_without_relay: 1
+  }
 };
 
-const plan = planAirRelay({ mission, nodes, links });
-assert.equal(plan.status, 'ROUTE_READY');
-assert.deepEqual(plan.selected.path, ['field-a', 'air-01', 'edge-b']);
-assert.equal(plan.selected.metrics.air_relay_count, 1);
-assert.equal(plan.selected.metrics.bottleneck_bandwidth_mbps, 95);
-assert.equal(plan.selected.metrics.latency_ms, 27);
-assert.equal(plan.selected.metrics.modeled_infrastructure.trench_meters_avoided, 3200);
-assert.equal(plan.selected.metrics.modeled_infrastructure.evidence_state, 'modeled');
-assert.ok(!plan.selected.path.includes('planned-air'));
-assert.equal(plan.truth_boundary.flight_control_performed, false);
+const balanced = planAirRelay({ mission, nodes, links });
+assert.equal(balanced.schema, 'evercraft.air-relay-plan.v2');
+assert.equal(balanced.status, 'ROUTE_READY');
+assert.equal(balanced.route_objective, 'balanced');
+assert.deepEqual(balanced.selected.path, ['field-a', 'edge-b']);
+assert.equal(balanced.selected.metrics.latency_ms, 8);
+assert.equal(balanced.selected.metrics.air_relay_count, 0);
+assert.equal(balanced.selection_basis.weighted_score_used, false);
 
+const infrastructureFirst = planAirRelay({
+  mission: { ...mission, route_objective: 'infrastructure_avoidance' },
+  nodes,
+  links
+});
+assert.equal(infrastructureFirst.status, 'ROUTE_READY');
+assert.deepEqual(infrastructureFirst.selected.path, ['field-a', 'air-01', 'edge-b']);
+assert.equal(infrastructureFirst.selected.metrics.air_relay_count, 1);
+assert.equal(infrastructureFirst.selected.metrics.bottleneck_bandwidth_mbps, 95);
+assert.equal(infrastructureFirst.selected.metrics.latency_ms, 27);
+assert.equal(
+  infrastructureFirst.selected.metrics.modeled_infrastructure.potential_trench_meters_avoided,
+  3200
+);
+assert.equal(
+  infrastructureFirst.selected.metrics.modeled_infrastructure.evidence_state,
+  'modeled_counterfactual'
+);
+assert.deepEqual(
+  infrastructureFirst.selected.metrics.modeled_infrastructure.evidence_refs,
+  ['fixture:counterfactual-design']
+);
+assert.equal('score' in infrastructureFirst.selected.metrics, false);
+assert.ok(!infrastructureFirst.selected.path.includes('planned-air'));
+assert.equal(infrastructureFirst.truth_boundary.flight_control_performed, false);
+assert.equal(infrastructureFirst.truth_boundary.ecological_impact_quantified, false);
+
+const airOnlyLinks = links.filter((link) => link.transport_id !== 'existing_fixed_backbone');
 const unauthorized = nodes.map((node) =>
   node.id === 'air-01' ? { ...node, flight_authorized: false } : node
 );
-assert.equal(planAirRelay({ mission, nodes: unauthorized, links }).status, 'NO_ROUTE');
+assert.equal(
+  planAirRelay({ mission, nodes: unauthorized, links: airOnlyLinks }).status,
+  'NO_ROUTE'
+);
 
 const denied = planAirRelay({
   mission: { ...mission, intent: 'weapon targeting relay' },
@@ -89,17 +132,30 @@ const denied = planAirRelay({
 });
 assert.equal(denied.status, 'POLICY_DENIED');
 
+const badObjective = planAirRelay({
+  mission: { ...mission, route_objective: 'magic-green-score' },
+  nodes,
+  links
+});
+assert.equal(badObjective.status, 'POLICY_DENIED');
+assert.equal(badObjective.reason, 'route_objective_not_supported');
+
 console.log(JSON.stringify({
-  schema: 'evercraft.air-relay-proof.v1',
+  schema: 'evercraft.air-relay-proof.v2',
   status: 'PASS',
   invariants: {
     civilian_purpose_allowlist_enforced: true,
     forbidden_intent_rejected: true,
     unauthorized_aircraft_rejected: true,
     unverified_links_rejected: true,
-    modeled_infrastructure_impact_labeled: true,
+    default_routing_uses_concrete_network_metrics: true,
+    infrastructure_avoidance_requires_explicit_objective: true,
+    no_blended_ecological_score: true,
+    modeled_infrastructure_is_counterfactual: true,
+    ecological_impact_not_claimed: true,
     flight_control_out_of_scope: true
   },
-  selected_route: plan.selected.path,
-  route_metrics: plan.selected.metrics
+  balanced_route: balanced.selected.path,
+  infrastructure_avoidance_route: infrastructureFirst.selected.path,
+  infrastructure_metrics: infrastructureFirst.selected.metrics.modeled_infrastructure
 }, null, 2));

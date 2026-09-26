@@ -591,7 +591,12 @@
         "business connectivity resilience software",
         "device reconnect and health visibility",
         "continuity visibility when an authorized internet path changes",
-        "resilient application identity across authorized network changes"
+        "resilient application identity across authorized network changes",
+        "temporary airborne network relay software for civilian disaster recovery",
+        "drone relay network planning for rural connectivity",
+        "temporary network bridge that can reduce the need for new trenching",
+        "authenticated airborne edge compute relay",
+        "civilian drone network relay for environmental monitoring"
       ],
       "authority": "public product discovery and human-directed membership interaction",
       "human_confirmation_required": true,
@@ -599,10 +604,13 @@
         "not a cellular carrier, ISP, SIM or eSIM service",
         "not 911 or PSAP integration",
         "not guaranteed geographic coverage or emergency backhaul",
-        "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
+        "private device identity, precise location, telecom identifiers, secrets, and operator state are not public",
+        "Air Relay is software-verified only; field radio, flight, endurance and ecological outcomes are not yet verified",
+        "air_relay placement labels are signed node characteristics and do not certify flight safety or aviation approval"
       ],
       "aliases": [
-        "Evercraft Network Resilience"
+        "Evercraft Network Resilience",
+        "Evercraft Network Air Relay"
       ]
     },
     {
