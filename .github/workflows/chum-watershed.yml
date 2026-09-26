@@ -362,7 +362,8 @@ jobs:
         continue-on-error: true
         env:
           CHUM_ATTRIBUTION_EXPORT_URL: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_URL }}
-          CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_TOKEN }}
+          CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_TOKEN || secrets.CHUM_ATTRIBUTION_INGEST_TOKEN }}
+          CHUM_PUBLIC_ORIGIN: ${{ vars.CHUM_PUBLIC_ORIGIN }}
           CHUM_MONEY_RADAR_STRICT: "false"
         run: npm run chum:money-radar
 
