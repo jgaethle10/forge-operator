@@ -8,7 +8,6 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
 const DIRECT_HUMAN_BUYER_DESTINATIONS = Object.freeze({
   'career-command-interview-practice-machine-v1': 'https://evercraft-career-command.base44.app/',
   'aliev-site-opportunity-snapshot-v1': 'https://aliev.base44.app/',
-  'rivet-site-underwriting-v1': 'https://rivet.base44.app/',
   'findmypart-paid-hunt-v1': 'https://findmypart.base44.app/?offer=quick-hunt',
   'audit-center-website-audit-machine-v1': 'https://systemia-audit-pro.base44.app/',
   'website-launch-service-v1': 'https://instant-website-builder-usa-6feac193.base44.app/',
