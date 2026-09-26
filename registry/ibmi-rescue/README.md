@@ -16,10 +16,11 @@ This page exists so humans, search systems, LLMs, and agents can understand the 
 
 ## Public offers
 
+- IBM i Estate X-Ray — $250 one-time
 - IBM i 7.4 Deadline X-Ray — $250 one-time
 - IBM i Upgrade Proof Sprint — $1,500 one-time
 
-The offers are active in Evercraft Payments. The product-specific public checkout route remains in canary-pending state and must not be represented as live until independently verified.
+The offers are active in Evercraft Payments. The human buyer route is externally reachable, and synthetic QA has independently verified backend checkout-session creation. No customer payment or revenue is implied by that verification.
 
 ## Public routes
 
@@ -38,10 +39,10 @@ Production access, production upgrade, cutover, credential use, or irreversible 
 
 ## Boundaries
 
-- Machine Commerce can surface the two bounded offers and a human review page without creating checkout or payment
+- Machine Commerce can surface the three bounded offers and a human review page without creating checkout or payment
 - support transition does not mean an IBM i system automatically stops working
 - direct-upgrade eligibility must be verified from the exact release, hardware, PTF, application, database, driver, integration, and vendor state
-- checkout creation is not payment proof
+- human buyer route reachability and checkout creation are verified, but checkout creation is not payment proof
 - paid state requires authoritative provider verification
 - no production change or cutover is included in the X-Ray or Proof Sprint
 - private customer source, credentials, datasets, job streams, topology, and vendor information are not public
