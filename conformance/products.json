@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "standard": "evercraft.cross-llm-conformance.v1",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-26",
   "baseline_providers": [
     "chatgpt",
     "claude",
@@ -475,6 +475,35 @@
       },
       "chum_mirror_state": "generated_public_fallback",
       "origin_llms_url": "https://systemiafieldlibrary.com/llms.txt"
+    },
+    {
+      "product_key": "systemia-portfolio-sentinel",
+      "name": "Systemia Portfolio Sentinel",
+      "class": "continuous_software_portfolio_integrity_monitoring",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
+      "doorway_state": "machine_commerce_live",
+      "conformance_state": "live_match_canary_passed",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback",
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_commerce_public_id": "portfolio-sentinel-v1",
+      "machine_commerce_tool": "get_offer",
+      "public_web_discovery_state": "source_published_general_web_pickup_not_yet_verified",
+      "runtime_evidence_state": {
+        "evercraft_internal_resident_cycle": "live_verified",
+        "cadence_seconds": 300,
+        "commercial_customer_execution": "authorization_and_onboarding_required"
+      },
+      "live_canary_evidence": {
+        "observed_on": "2026-09-26",
+        "query": "software portfolio health monitoring",
+        "result": "Systemia Portfolio Sentinel",
+        "match_score": 36,
+        "source": "Evercraft Machine Commerce live gateway"
+      }
     },
     {
       "product_key": "systemia-website-audit",
