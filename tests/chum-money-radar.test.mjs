@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { buildMoneyRadar } from '../systemia/chum/money-radar.mjs';
+import { buildMoneyRadar, firstPartyTrustedExportUrl } from '../systemia/chum/money-radar.mjs';
 
 function trusted(overrides = {}) {
   return {
@@ -188,4 +188,14 @@ test('Money Radar blocks an unauthenticated trusted payment receipt source', asy
 
   assert.equal(receipt.payment_measurement_state, 'blocked_source_auth_missing');
   assert.equal(receipt.source.payment.fetched, false);
+});
+
+
+test('Money Radar derives the private first-party export from the Forge public origin', () => {
+  assert.equal(
+    firstPartyTrustedExportUrl('https://forge.example.test/base/path'),
+    'https://forge.example.test/api/chum/attribution/export'
+  );
+  assert.equal(firstPartyTrustedExportUrl('http://forge.example.test'), '');
+  assert.equal(firstPartyTrustedExportUrl(''), '');
 });
