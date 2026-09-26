@@ -271,7 +271,25 @@ jobs:
           node systemia/chum/build-capability-mirror.mjs
           npm run direct:check
 
-          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             distribution/mcp-registry-candidates             distribution/mcp-registry-publication-receipts             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             plugins/systemia-remote-ops             public/chum
+          reconcile_paths=(
+            distribution/direct-plugin-specs.json
+            distribution/direct-product-doors.json
+            public/.well-known/evercraft-direct-doors.json
+            distribution/mcp-registry-candidates
+            distribution/mcp-registry-publication-receipts
+            plugins/ibmi-rescue
+            plugins/foundry-app-escape
+            plugins/site-survive
+            plugins/systemia-remote-ops
+            public/chum
+          )
+          existing_paths=()
+          for candidate in "${reconcile_paths[@]}"; do
+            [ -e "$candidate" ] && existing_paths+=("$candidate")
+          done
+          if [ "${#existing_paths[@]}" -gt 0 ]; then
+            git add -- "${existing_paths[@]}"
+          fi
 
           if git diff --cached --quiet; then
             echo "No Yard specialist registry state required reconciliation."
