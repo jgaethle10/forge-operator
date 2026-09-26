@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { YardOperator } from './operator.mjs';
+import { evaluateForensiScopePublicCutover } from '../forensiscope/public-cutover.mjs';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'forensiscope-yard-proof-'));
 const computeRoot = path.join(root, 'compute');
@@ -106,6 +107,24 @@ try {
   assert.equal(loopback.verified, false);
   assert.equal(loopback.service, 'forensiscope-evidence-query');
 
+  const loopbackDeployment = yard.deploymentStatus('forensiscope-evidence-query-proof');
+  const blockedCutover = evaluateForensiScopePublicCutover({
+    deployment: loopbackDeployment,
+    canary: null
+  });
+  assert.equal(blockedCutover.eligible, false);
+  assert.equal(blockedCutover.migration_action, 'keep_existing_public_mcp_origin');
+  assert.ok(
+    blockedCutover.blockers.some((entry) =>
+      entry.code === 'public_https_route_not_verified'
+    )
+  );
+  assert.ok(
+    blockedCutover.blockers.some((entry) =>
+      entry.code === 'mcp_canary_missing'
+    )
+  );
+
   await yard.stopDeployment('forensiscope-evidence-query-proof', {
     reason: 'proof_complete'
   });
@@ -121,7 +140,8 @@ try {
     raw_media_intake: false,
     analysis_admission: false,
     checkout_or_payment: false,
-    public_https_verified: false
+    public_https_verified: false,
+    public_cutover_blocked_until_https_and_canary: true
   }));
 } finally {
   try { await seed.close(); } catch {}
