@@ -556,7 +556,13 @@ const sitemapUrls = Array.from(new Set([
     product.page_url,
     `/chum/products/${product.product_key}/llms.txt`,
     `/chum/products/${product.product_key}/ai-discovery.json`,
-    `/chum/products/${product.product_key}/ai-conformance.json`
+    `/chum/products/${product.product_key}/ai-conformance.json`,
+    ...relativeSurfacePaths(
+      product.developer_surfaces,
+      product.editorial_surfaces,
+      product.knowledge_surfaces,
+      product.distribution_surfaces
+    )
   ]),
   ...(observedMissIndex.pages || []).flatMap((page) => [
     page.relative_html,
