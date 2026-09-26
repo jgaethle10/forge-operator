@@ -434,6 +434,29 @@ export async function startOutboundCapacityBroker({
         supported_workloads: node.capacity.supported_workloads,
         resident_services_supported: node.capacity.resident_services_supported,
         lease_renewal_supported: node.capacity.lease_renewal_supported,
+        placement_labels: Array.isArray(node.capacity.placement_labels)
+          ? [...node.capacity.placement_labels]
+          : [],
+        attestation_supported: node.capacity.attestation_supported === true,
+        device_fingerprint: node.capacity.device_fingerprint || null,
+        public_edge: node.capacity.capacity_hint?.services?.public_edge
+          ? {
+              configured:
+                node.capacity.capacity_hint.services.public_edge.configured === true,
+              ready:
+                node.capacity.capacity_hint.services.public_edge.ready === true,
+              public_https:
+                node.capacity.capacity_hint.services.public_edge.public_https === true,
+              base_domain:
+                node.capacity.capacity_hint.services.public_edge.base_domain || null,
+              public_port:
+                node.capacity.capacity_hint.services.public_edge.public_port || null,
+              certificate_fingerprint256:
+                node.capacity.capacity_hint.services.public_edge.certificate_fingerprint256 || null,
+              certificate_valid_to:
+                node.capacity.capacity_hint.services.public_edge.certificate_valid_to || null,
+            }
+          : null,
       } : null,
       queued_commands: node.queue.length,
       pending_commands: node.pending.size,
