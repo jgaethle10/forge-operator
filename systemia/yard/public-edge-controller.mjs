@@ -36,10 +36,22 @@ export class PublicEdgeController {
     this.intervalMs=Math.max(5000,Number(intervalMs||60000));
     this.allowLoopbackProof=Boolean(allowLoopbackProof);
     this.binding=null;
+    this.requestedHostname='';
     this.timer=null;
     this.inFlight=false;
     this.sequence=0;
     fs.mkdirSync(this.stateDir,{recursive:true,mode:0o700});
+    const persistedFile=this.#stateFile();
+    if(fs.existsSync(persistedFile)){
+      try{
+        const persisted=JSON.parse(fs.readFileSync(persistedFile,'utf8'));
+        if(persisted?.schema==='evercraft.yard.public-edge-controller-state.v1'){
+          this.binding=persisted.binding||null;
+          this.requestedHostname=String(persisted.requested_hostname||'');
+          this.sequence=Math.max(0,Number(persisted.sequence||0));
+        }
+      }catch{}
+    }
   }
 
   #stateFile(){
@@ -52,6 +64,7 @@ export class PublicEdgeController {
       edge_deployment_id:this.edgeDeploymentId,
       specialist_deployment_id:this.specialistDeploymentId,
       binding:this.binding,
+      requested_hostname:this.requestedHostname||null,
       allow_loopback_proof:this.allowLoopbackProof,
       sequence:this.sequence,
       updated_at:new Date().toISOString(),
@@ -104,6 +117,7 @@ export class PublicEdgeController {
     let edgeRecord=null;
     let specialistRecord=null;
     let broker=null;
+    this.requestedHostname=String(requestedHostname||'evercraft-specialists');
 
     try{
       edgeRecord=await this.yard.deployRelease({
@@ -150,7 +164,7 @@ export class PublicEdgeController {
         allowLoopbackProof:this.allowLoopbackProof,
       });
       this.binding=await broker.bindDeployment(this.specialistDeploymentId,{
-        requestedHostname,
+        requestedHostname:this.requestedHostname,
         ttlMs:this.leaseTtlMs,
       });
 
@@ -197,6 +211,87 @@ export class PublicEdgeController {
       }
       throw error;
     }
+  }
+
+  async resume({rebindIfNeeded=true}={}){
+    const edge=this.yard.deploymentStatus(this.edgeDeploymentId);
+    const specialist=this.yard.deploymentStatus(this.specialistDeploymentId);
+    if(!edge||!specialist) throw new Error('managed_deployment_state_missing');
+    if(edge.state!=='ready'||specialist.state!=='ready'){
+      throw new Error('managed_deployment_not_ready');
+    }
+
+    await Promise.all([
+      this.yard.renewDeploymentLease(this.edgeDeploymentId,{ttlMs:this.leaseTtlMs}),
+      this.yard.renewDeploymentLease(this.specialistDeploymentId,{ttlMs:this.leaseTtlMs}),
+    ]);
+
+    const broker=new YardPublicRouteBroker({
+      yard:this.yard,
+      providerClient:this.yard.publicRouteProviderClient(this.edgeDeploymentId),
+      allowLoopbackProof:this.allowLoopbackProof,
+    });
+
+    const routeHealth=async()=>{
+      if(!this.binding) return {ok:false,state:'binding_missing'};
+      if(this.binding.route_scope==='public_https'){
+        const route=await this.yard.verifyRoute(this.specialistDeploymentId);
+        return {ok:route.ok===true,state:route.state};
+      }
+      if(this.allowLoopbackProof&&this.binding.route_scope==='loopback_proof'){
+        try{
+          const health=await fetch(this.binding.origin+'/health').then(r=>r.json());
+          const ok=
+            health.ok===true &&
+            health.service==='specialist-handoff-mcp' &&
+            health.instance_id===specialist.result?.instance_id &&
+            health.deployment_receipt_ref===specialist.receipt?.receipt_hash;
+          return {ok,state:ok?'loopback_proof_healthy':'loopback_proof_mismatch'};
+        }catch{
+          return {ok:false,state:'loopback_proof_unreachable'};
+        }
+      }
+      return {ok:false,state:'route_scope_not_admitted'};
+    };
+
+    const edgeHealth=await this.yard.verifyRoute(this.edgeDeploymentId);
+    let specialistHealth=await routeHealth();
+
+    if((!this.binding||!specialistHealth.ok)&&rebindIfNeeded){
+      if(this.binding){
+        try{ await broker.releaseBinding(this.binding,{reason:'controller_resume_rebind'}); }catch{}
+      }
+      this.binding=await broker.bindDeployment(this.specialistDeploymentId,{
+        requestedHostname:this.requestedHostname||'evercraft-specialists',
+        ttlMs:this.leaseTtlMs,
+      });
+      specialistHealth=await routeHealth();
+    }
+
+    if(!edgeHealth.ok||!specialistHealth.ok){
+      throw new Error(
+        'controller_resume_health_failed:'+edgeHealth.state+':'+specialistHealth.state
+      );
+    }
+
+    this.yard.startLeaseKeeper(this.edgeDeploymentId,{
+      ttlMs:this.leaseTtlMs,
+      renewEveryMs:this.renewEveryMs,
+    });
+    this.yard.startLeaseKeeper(this.specialistDeploymentId,{
+      ttlMs:this.leaseTtlMs,
+      renewEveryMs:this.renewEveryMs,
+    });
+
+    return this.#result('resumed',{
+      edge_health_state:edgeHealth.state,
+      specialist_health_state:specialistHealth.state,
+      route_scope:this.binding.route_scope,
+      route_verified:this.binding.route_verified,
+      origin:this.binding.origin,
+      route_binding_receipt:this.binding.receipt_hash,
+      founder_login_required:false,
+    });
   }
 
   async tick(){
