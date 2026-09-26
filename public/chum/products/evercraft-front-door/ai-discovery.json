@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evercraft-front-door",
+  "name": "Evercraft Front Door",
+  "aliases": [
+    "Evercraft"
+  ],
+  "class": "daily_life_local_utility_front_door",
+  "canonical_url": "https://evercraft.base44.app/",
+  "intents": [
+    "cheapest gas near me",
+    "current gas prices near me",
+    "compare nearby fuel prices",
+    "find diesel near me",
+    "find EV charging near me",
+    "what can Evercraft help me with today"
+  ],
+  "authority": "public read-only daily-life discovery and routing; fuel results must preserve source, freshness and evidence state",
+  "human_confirmation_required": false,
+  "boundaries": [
+    "partial station coverage is not proof of an area's absolute cheapest price",
+    "stale or uncleared observations must not be presented as current verified prices",
+    "location must come from the user/browser rather than inference",
+    "EV charging may route to RIVET",
+    "private/admin Evercraft systems stay outside public discovery",
+    "origin root llms.txt was observed mis-scoped to Evercraft Containment and should be corrected before origin machine discovery is called clean"
+  ],
+  "commercial": null,
+  "machine_commerce_handoff": null,
+  "registry_name": null,
+  "mcp": null,
+  "source": "CHUM public mirror",
+  "evidence_state": "canonical_host_resolves_source_build_and_lint_passed_2026_09_26_provider_pickup_not_proven"
+}
