@@ -2,6 +2,14 @@ name: Systemia Remote Ops discovery probe
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "systemia/mcp/specialist-handoff-runtime.mjs"
+      - "systemia/yard/remote-ops-specialist.proof.mjs"
+      - "registry/systemia-remote-ops/**"
+      - "public/chum/products/systemia-remote-ops/**"
+      - "chum-probes/probe-suite.json"
+      - ".github/workflows/systemia-remote-ops-discovery-probe.yml"
   schedule:
     - cron: "29 * * * *"
   push:
