@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T03:58:02.586Z",
+  "generated_at": "2026-09-26T04:08:33.522Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -32,6 +32,16 @@
       "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
       "content_sha256": "ad3c02185845bb0b494ec4b3bdc48cfb7701210604c420ff90fdaf41a7dcaca1",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "systemia-remote-ops:4bd5d2337f0b808538ad426b24038a7fb23e26d23a1496147c47418e1c2a8664",
+      "product_key": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "discovery_path": "/chum/products/systemia-remote-ops/ai-discovery.json",
+      "text": "Systemia Remote Ops: Systemia Remote Ops is an Evercraft public capability. Common needs: I am thinking about starting a business and want to test the idea before I commit; simulate a business before I start it; business simulator for a new company; business digital twin for decision making.",
+      "content_sha256": "4bd5d2337f0b808538ad426b24038a7fb23e26d23a1496147c47418e1c2a8664",
       "requires_authorized_destination": true
     }
   ]

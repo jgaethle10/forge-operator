@@ -27,7 +27,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 53,
+  "product_count": 54,
   "products": [
     {
       "product_key": "aliev",
@@ -556,6 +556,17 @@
       "registry_name": null,
       "mcp": null,
       "content_sha256": "df0b52267481445cdb4bc2b446d0d26b6b25d0d83c1106763eeb3918722bcc02"
+    },
+    {
+      "product_key": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "mirror": "/chum/products/systemia-remote-ops/",
+      "llms": "/chum/products/systemia-remote-ops/llms.txt",
+      "discovery": "/chum/products/systemia-remote-ops/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "4bd5d2337f0b808538ad426b24038a7fb23e26d23a1496147c47418e1c2a8664"
     },
     {
       "product_key": "systemia-website-audit",

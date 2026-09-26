@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T04:08:27.801Z",
+  "updated_at": "2026-09-26T04:08:33.695Z",
   "url_count": 2089,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "5328f50e27c79879d50d0415b28d2e35799604a32eca7c3378ba878cb756874b",
-      "last_changed": "2026-09-26T04:08:27.801Z",
+      "content_sha256": "e589cf76bab6b429e284a82656ea01fd8f38824fd49877530d3bbc34125dfc20",
+      "last_changed": "2026-09-26T04:08:33.695Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -12513,14 +12513,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "8ed5b4a6be59549dd67a68c1d556e892480b426de181c2f86822927fbd51b5fd",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "content_sha256": "e2caea7908e593de68cd7414d03bc3ba850c8c4d92eb9bf97ed7499172b15ef2",
+      "last_changed": "2026-09-26T04:08:33.695Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "f0afd0730a188c71172014bedec5d787cf5d20932e8eb3fbede9bd1b39aafb9f",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "content_sha256": "6073c18f14c9a696e5b60fd191999bc485e9e76ad36366c3d51ef8ef8131eb47",
+      "last_changed": "2026-09-26T04:08:33.695Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -12531,20 +12531,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "852e8a204f70ca00f8968464bc6659b4702322cfc4cc1624338b7d45ef35f4b3",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "content_sha256": "4c536737e66a1eebd7d9ad3fa5d5eb9919fb7f5594eb328e5a1318f9691a6652",
+      "last_changed": "2026-09-26T04:08:33.695Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "d020c29eb9e39544059445b289059ada8762e6660d355bd62b652048323eaab9",
-      "last_changed": "2026-09-26T03:38:10.646Z",
+      "content_sha256": "0cd7cffc781d8d5ffc72d4fbb5d0380cfe892992c688c177803b49f05b6c43f8",
+      "last_changed": "2026-09-26T04:08:33.695Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "125b9385fff46ab46b995fe765403774f009fb6c4c4927c9ffdff11c994aa6dc",
-      "last_changed": "2026-09-26T03:58:02.744Z",
+      "content_sha256": "5f3082294dab2df8065c0d5e79d7d2767040c09d10e5f07f2f843354b356e27e",
+      "last_changed": "2026-09-26T04:08:33.695Z",
       "priority": 80
     }
   }

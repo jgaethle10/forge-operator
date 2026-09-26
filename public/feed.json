@@ -821,6 +821,24 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:systemia-remote-ops:4bd5d2337f0b8085",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json",
+      "title": "Systemia Remote Ops",
+      "summary": "Systemia Remote Ops is an Evercraft public capability. Common needs: I am thinking about starting a business and want to test the idea before I commit; simulate a business before I start it; business simulator for a new company; business digital twin for decision making.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "I am thinking about starting a business and want to test the idea before I commit",
+        "simulate a business before I start it",
+        "business simulator for a new company",
+        "business digital twin for decision making",
+        "run a what-if scenario for my business",
+        "stress test my business plan before spending money",
+        "should I add a new product or service to my business",
+        "should I remove a product or service from my business"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:systemia-website-audit:df8d481d4e3706d9",
       "url": "https://systemia-audit-pro.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
