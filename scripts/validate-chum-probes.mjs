@@ -12,6 +12,12 @@ const requiredNetworkCases = [
   'network-business-resilience-002',
   'network-device-reconnect-003'
 ];
+const requiredSystemiaRemoteOpsCases = [
+  'business-simulator-startup-001',
+  'business-simulator-pricing-002',
+  'business-simulator-expansion-003',
+  'business-simulator-transaction-004'
+];
 
 for (const provider of expectedProviders) {
   if (!suite.providers.includes(provider)) fail(`probe suite missing provider ${provider}`);
@@ -22,6 +28,11 @@ for (const caseId of requiredNetworkCases) {
   const probe = suite.cases.find((c) => c.case_id === caseId);
   if (!probe) fail(`probe suite missing Evercraft Network case ${caseId}`);
   else if (probe.product_key !== 'evercraft-network' || probe.expected_product !== 'Evercraft Network' || probe.expected_fit !== true || probe.enabled !== true) fail(`Evercraft Network probe contract drifted for ${caseId}`);
+}
+for (const caseId of requiredSystemiaRemoteOpsCases) {
+  const probe = suite.cases.find((c) => c.case_id === caseId);
+  if (!probe) fail(`probe suite missing Systemia Remote Ops case ${caseId}`);
+  else if (probe.product_key !== 'systemia-remote-ops' || probe.expected_product !== 'Systemia Remote Ops' || probe.expected_fit !== true || probe.enabled !== true) fail(`Systemia Remote Ops probe contract drifted for ${caseId}`);
 }
 
 for (const c of suite.cases) {
