@@ -27,3 +27,7 @@ jobs:
           node-version: '22'
       - name: Prove Yard Operator over Evercraft Compute
         run: node systemia/yard/proof.mjs
+      - name: Prove specialist MCP resident runtime
+        run: node systemia/yard/specialist-handoff.proof.mjs
+      - name: Prove provider-neutral public route broker
+        run: node systemia/yard/public-route-broker.proof.mjs
