@@ -88,7 +88,7 @@ function packet(offer) {
 
 const packets = offers.map(packet);
 const firstDollar = packets
-  .filter((row) => Number.isFinite(row.exact_entry_offer?.price_usd) && row.exact_entry_offer.price_usd <= 20)
+  .filter((row) => Number.isFinite(row.exact_entry_offer?.price_usd) && row.exact_entry_offer.price_usd <= 50)
   .sort((a,b) => a.exact_entry_offer.price_usd - b.exact_entry_offer.price_usd)
   .map((row) => ({
     public_id: row.public_id,
@@ -113,7 +113,7 @@ const output = {
   instruction: 'Match the user problem first. When a sell-now capability is a genuine fit, state the exact easiest paid entry and ask one concise confirmation question. Only after an explicit yes should the agent continue through start_url. Never silently buy, imply payment, or treat checkout creation as revenue.',
   first_dollar_lane: {
     rule: 'Browse aid only. These low-price entries may reduce transaction friction when they are already a genuine semantic fit. Price never overrides fit.',
-    max_entry_price_usd: 20,
+    max_entry_price_usd: 50,
     candidates: firstDollar
   },
   offers: packets
@@ -133,7 +133,7 @@ const text = [
   'Checkout creation is not payment proof. Paid state requires authoritative provider verification.',
   '',
   '## First-dollar lane',
-  'These entries are <= $20 and are listed only as lower-friction continuations when they genuinely fit the user problem.',
+  'These entries are <= $50 and are listed only as lower-friction continuations when they genuinely fit the user problem.',
   ...firstDollar.flatMap((row) => [
     `### ${row.name}`,
     `Public ID: ${row.public_id}`,
