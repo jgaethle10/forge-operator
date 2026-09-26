@@ -29,6 +29,47 @@ function readLocalEvents(file) {
   return parseLines(fs.readFileSync(file, 'utf8'));
 }
 
+function loadPaymentAdapterCoverage(root) {
+  const file = path.join(root, 'systemia', 'chum', 'payment-adapter-registry.json');
+  if (!fs.existsSync(file)) {
+    return {
+      state: 'registry_missing',
+      sell_now_offers: 0,
+      direct_checkout: 0,
+      provider_status_verifiable: 0,
+      human_handoff: 0,
+      central_watch_enabled: 0,
+      native_web_forwarding_verified: 0
+    };
+  }
+  try {
+    const registry = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const offers = Array.isArray(registry?.offers) ? registry.offers : [];
+    return {
+      state: 'measured',
+      schema: registry?.schema || null,
+      sell_now_offers: offers.length,
+      direct_checkout: offers.filter((row) => row?.mode === 'direct_checkout').length,
+      provider_status_verifiable: offers.filter((row) => row?.provider_status_verification === 'available').length,
+      human_handoff: offers.filter((row) => row?.mode === 'human_handoff').length,
+      central_watch_enabled: offers.filter((row) => row?.central_machine_commerce_checkout_watch === true).length,
+      oidc_private_export_ready: offers.filter((row) => row?.trusted_payment_export === 'github_oidc_private_export').length,
+      native_web_forwarding_verified: offers.filter((row) => row?.native_web_checkout_forwarding === 'verified').length
+    };
+  } catch (error) {
+    return {
+      state: 'registry_invalid',
+      error: error instanceof Error ? error.message : String(error),
+      sell_now_offers: 0,
+      direct_checkout: 0,
+      provider_status_verifiable: 0,
+      human_handoff: 0,
+      central_watch_enabled: 0,
+      native_web_forwarding_verified: 0
+    };
+  }
+}
+
 function validCurrency(value) {
   return /^[A-Z]{3}$/.test(clean(value).toUpperCase());
 }
@@ -120,6 +161,7 @@ export async function buildMoneyRadar({
 } = {}) {
   const artifactDir = path.join(root, 'artifacts', 'chum');
   const localFile = path.join(artifactDir, 'attribution-events.ndjson');
+  const paymentAdapterCoverage = loadPaymentAdapterCoverage(root);
   fs.mkdirSync(artifactDir, { recursive: true });
 
   let paymentKind = 'none';
@@ -264,6 +306,7 @@ export async function buildMoneyRadar({
     measurement_state: measurementState,
     acquisition_measurement_state: acquisitionMeasurementState,
     payment_measurement_state: paymentMeasurementState,
+    payment_adapter_coverage: paymentAdapterCoverage,
     source: {
       acquisition: {
         configured: acquisitionConfigured,
@@ -320,6 +363,7 @@ export async function buildMoneyRadar({
     `Overall measurement state: ${measurementState}`,
     `Acquisition measurement state: ${acquisitionMeasurementState}`,
     `Trusted payment measurement state: ${paymentMeasurementState}`,
+    `Payment adapter coverage: ${paymentAdapterCoverage.provider_status_verifiable || 0}/${paymentAdapterCoverage.sell_now_offers || 0} provider-status-verifiable; ${paymentAdapterCoverage.central_watch_enabled || 0} central checkout watches; ${paymentAdapterCoverage.human_handoff || 0} human-handoff offers; ${paymentAdapterCoverage.native_web_forwarding_verified || 0} native-web forwarding paths independently verified`,
     `Public acquisition source events: ${acquisitionEvents.length}`,
     `Trusted payment source events: ${paymentEvents.length}`,
     `Accepted events: ${accepted.length}`,
@@ -359,6 +403,7 @@ async function main() {
     continue_clicks: receipt.totals.continue_clicks,
     checkout_starts: receipt.totals.checkout_starts,
     verified_payments: receipt.totals.unique_verified_payments,
+    payment_adapter_coverage: receipt.payment_adapter_coverage,
   }));
 
   if (
