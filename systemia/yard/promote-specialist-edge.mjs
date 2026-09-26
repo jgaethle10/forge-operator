@@ -41,6 +41,7 @@ export function validateExternalCanary(receipt){
     receipt.public_https_verified!==true ||
     receipt.mcp_initialize_verified!==true ||
     receipt.mcp_tools_list_verified!==true ||
+    receipt.mcp_tool_calls_verified!==true ||
     receipt.read_only_authority_verified!==true ||
     receipt.identity_attestation_verified!==true ||
     receipt.same_device_binding!==true ||
@@ -151,6 +152,7 @@ export function promoteSpecialistSpecs(specs,receipt){
       specialist_attestation_receipt_ref:verified.specialist_attestation_receipt_ref,
       identity_attestation_verified:true,
       same_device_binding:true,
+      mcp_tool_calls_verified:true,
       field_enrollment_verified:true,
       field_enrollment_receipt_ref:verified.field_enrollment_receipt_ref,
       public_edge_admission_receipt_ref:verified.public_edge_admission_receipt_ref,
