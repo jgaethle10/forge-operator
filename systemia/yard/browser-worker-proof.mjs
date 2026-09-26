@@ -113,8 +113,9 @@ try {
   assert.equal(receiptRef, deployment.receipt.receipt_hash);
 
   const route = await yard.verifyRoute('evercraft-browser-proof');
-  assert.equal(route.ok, true);
-  assert.equal(route.state, 'healthy');
+  assert.equal(route.ok, false);
+  assert.equal(route.state, 'public_route_unbound');
+  assert.equal(route.local_health_ok, true);
   assert.equal(route.health.deployment_receipt_ref, deployment.receipt.receipt_hash);
 
   const invoked = await yard.invokeBrowser('evercraft-browser-proof', {
