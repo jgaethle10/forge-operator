@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T19:32:19.568Z",
+  "updated_at": "2026-09-26T19:32:26.399Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. Priority is an internal crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
