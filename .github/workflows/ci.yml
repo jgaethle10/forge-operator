@@ -72,6 +72,9 @@ jobs:
           docker run -d \
             --name forge-smoke \
             -e GEMINI_API_KEY=smoke-not-a-real-key \
+            -e CHUM_ATTRIBUTION_SECRET=smoke-attribution-secret-0123456789abcdef \
+            -e CHUM_ATTRIBUTION_INGEST_TOKEN=smoke-ingest-token \
+            -e CHUM_ATTRIBUTION_EXPORT_TOKEN=smoke-export-token \
             -p 3000:3000 \
             forge-operator:${{ github.sha }}
 
@@ -144,6 +147,22 @@ jobs:
           curl --fail --silent -A 'OAI-SearchBot/1.0' http://127.0.0.1:3000/forensiscope/ > /dev/null
           curl --fail --silent http://127.0.0.1:3000/api/chum/crawler-radar > /tmp/crawler-radar-runtime.json
 
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/chum/referral \
+            -H 'Content-Type: application/json' \
+            --data '{"publicId":"rivet-site-underwriting-v1","provider":"ci-smoke","surface":"ci"}' \
+            > /tmp/chum-referral.json
+          REFERRAL_TOKEN="$(node -p "JSON.parse(require('fs').readFileSync('/tmp/chum-referral.json','utf8')).referral_token")"
+          curl --fail --silent -X POST http://127.0.0.1:3000/api/chum/attribution/trusted-event \
+            -H 'Content-Type: application/json' \
+            -H 'Authorization: Bearer smoke-ingest-token' \
+            --data "$(node -e "process.stdout.write(JSON.stringify({referralToken:process.argv[1],stage:'payment_verified',payment:{authority:'ci-smoke',verification_ref:'pay_smoke_1',amount_cents:12345,currency:'USD'}}))" "$REFERRAL_TOKEN")" \
+            > /tmp/chum-trusted-payment.json
+          EXPORT_STATUS="$(curl --silent -o /tmp/chum-export-unauth.json -w '%{http_code}' http://127.0.0.1:3000/api/chum/attribution/export)"
+          test "$EXPORT_STATUS" = "401"
+          curl --fail --silent http://127.0.0.1:3000/api/chum/attribution/export \
+            -H 'Authorization: Bearer smoke-export-token' \
+            > /tmp/chum-export.json
+
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
@@ -171,6 +190,8 @@ jobs:
           const buildflowRoute = JSON.parse(fs.readFileSync('/tmp/buildflow-route.json','utf8'));
           const chumHeaders = fs.readFileSync('/tmp/chum-headers.txt','utf8');
           const crawlerRadar = JSON.parse(fs.readFileSync('/tmp/crawler-radar-runtime.json','utf8'));
+          const trustedPayment = JSON.parse(fs.readFileSync('/tmp/chum-trusted-payment.json','utf8'));
+          const attributionExport = JSON.parse(fs.readFileSync('/tmp/chum-export.json','utf8'));
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
@@ -186,6 +207,11 @@ jobs:
           if (crawlerRadar.event_count < 1) throw new Error('crawler radar did not observe the synthetic crawler request');
           if (!crawlerRadar.paths?.some((row) => row.path === '/forensiscope/' && row.crawler_families?.['openai-search'] >= 1)) throw new Error('crawler radar did not attribute OAI-SearchBot request to ForensiScope');
           if (crawlerRadar.privacy?.ip_recorded !== false || crawlerRadar.privacy?.visitor_identity_recorded !== false) throw new Error('crawler radar privacy boundary regressed');
+          if (trustedPayment.accepted !== true || trustedPayment.event?.stage !== 'payment_verified') throw new Error('trusted payment attribution smoke failed');
+          if (trustedPayment.event?.revenue?.verified !== true || trustedPayment.event?.revenue?.amount_cents !== 12345) throw new Error('trusted payment revenue evidence missing');
+          if (attributionExport.schema !== 'evercraft.chum.attribution-export.v1') throw new Error('private attribution export schema missing');
+          if (!attributionExport.events?.some((event) => event.event_id === trustedPayment.event.event_id && event.stage === 'payment_verified')) throw new Error('trusted payment receipt did not reach private export');
+          if (attributionExport.store?.event_count < 1) throw new Error('first-party attribution receipt vault is empty');
           if (capabilities.discovery?.liveIntentHunter?.path !== '/api/chum/hunt') throw new Error('live-intent hunter missing from capabilities');
           if (liveHunt.ok !== true || liveHunt.schema !== 'evercraft.chum.live-intent-hunt.v1') throw new Error('live-intent hunter response contract failed');
           if (liveHunt.matched !== true || liveHunt.match?.product_key !== 'forensiscope') throw new Error('live-intent hunter did not attack media overflow with ForensiScope');
