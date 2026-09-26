@@ -33,19 +33,19 @@
 <li><a href="./ai-conformance.json">AI conformance</a></li>
 </ul></div>
 <div class="card"><h2>Commercial state</h2>
-<p><strong>Status:</strong> sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending</p>
-<p><strong>Payment state:</strong> Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live</p>
+<p><strong>Status:</strong> sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified</p>
+<p><strong>Payment state:</strong> Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation is independently verified with synthetic QA. Paid state still requires authoritative provider verification.</p>
 </div>
 <div class="card"><h2>Authority and boundaries</h2>
 <p>public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization</p>
 <ul>
 <li>support transition does not mean a system automatically stops working</li>
 <li>a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified</li>
-<li>the public product-specific checkout route remains unverified until an external canary passes</li>
 <li>checkout creation is not payment proof</li>
 <li>paid state requires authoritative provider verification</li>
 <li>no production change or cutover is included in the public X-Ray or Proof Sprint</li>
-<li>Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending</li>
+<li>Human buyer route reachability and backend checkout creation are live-verified with synthetic QA</li>
+<li>Checkout creation is not payment proof; provider verification is still required before paid state or revenue claims</li>
 </ul></div>
 <p class="muted">Discovery and matching create no payment obligation. Human confirmation remains required where the product declares it, and checkout creation is not proof of payment.</p>
 </main></body></html>

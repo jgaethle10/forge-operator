@@ -490,6 +490,19 @@
       }
     },
     {
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "class": "legacy_software_rescue_and_modernization",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "github_record": "./legacy-rescue-lab/README.md",
+      "llms": "./legacy-rescue-lab/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "little-red-book-export-qa",
       "name": "Little Red Studio Book Export QA",
       "class": "book_export_preflight_and_cover_geometry_qa",

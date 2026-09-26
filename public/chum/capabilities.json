@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-26T02:29:19.815Z",
-  "count": 43,
+  "updated_at": "2026-09-26T03:20:54.359Z",
+  "count": 44,
   "sell_now_count": 12,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "capabilities": [
@@ -908,6 +908,40 @@
         "audit this paperback export",
         "is my book file ready to publish",
         "check page count and cover DPI"
+      ]
+    },
+    {
+      "public_id": "portfolio-sentinel-v1",
+      "name": "Systemia Portfolio Sentinel",
+      "commercial_state": "commercial_pilot",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "page_url": "/chum/capabilities/portfolio-sentinel-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/portfolio-sentinel-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "entry_paid_offer": null,
+      "use_when": [
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces",
+        "open repair work automatically when software breaks",
+        "continuous software estate audit",
+        "AI product portfolio watchdog",
+        "monitor machine readable discovery surfaces",
+        "our company has too many apps and we do not know what is broken",
+        "keep an inventory of all our software and verify it stays healthy",
+        "monitor LLM discovery pages and agent endpoints",
+        "detect product URL workflow and deployment regressions"
       ]
     },
     {

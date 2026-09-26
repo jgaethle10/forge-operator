@@ -1,0 +1,55 @@
+# Systemia Portfolio Sentinel
+
+Capability ID: portfolio-sentinel-v1
+Commercial state: commercial_pilot
+Machine state: human_handoff_ready
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Start here: Not a current sell-now route
+
+## Use this when
+
+- monitor my software portfolio for broken products
+- continuously audit all of our apps repositories and public URLs
+- tell me when one of our software products breaks
+- software portfolio health monitoring
+- software estate integrity monitoring
+- detect broken deployments and stale workflows
+- watch GitHub Actions and public product doors for failures
+- find drift across our apps APIs workflows and discovery surfaces
+- open repair work automatically when software breaks
+- continuous software estate audit
+- AI product portfolio watchdog
+- monitor machine readable discovery surfaces
+- our company has too many apps and we do not know what is broken
+- keep an inventory of all our software and verify it stays healthy
+- monitor LLM discovery pages and agent endpoints
+- detect product URL workflow and deployment regressions
+
+## Problem
+
+Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.
+
+## Inputs
+
+Authorized repositories, product/service inventory, public URLs, workflow metadata, machine-discovery surfaces and customer-defined monitoring boundaries. Private systems require explicit scoped authorization.
+
+## Outputs
+
+Current portfolio inventory, health findings, severity and change state, broken public-door/workflow detection, deduplicated repair queue, mission snapshots and evidence/receipt references.
+
+## Pricing
+
+Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
+
+- Systemia Portfolio Sentinel Commercial Pilot: Custom quote (pilot)
+
+## Invocation and authority
+
+LIVE for public machine discovery and deterministic problem matching through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after scoped onboarding and authorization. No discovery call grants private access or production-mutation authority.
+
+Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.
+
+Payment authority: No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

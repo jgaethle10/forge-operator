@@ -5,7 +5,7 @@
     "product_directory_schema": "evercraft.product-directory.v1",
     "product_directory_updated_at": "2026-09-25",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
-    "machine_catalog_source_generated_at": "2026-09-25T20:12:17.000Z",
+    "machine_catalog_source_generated_at": "2026-09-26T02:45:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
     "registry_updated_at": "2026-09-25"
   },
@@ -25,13 +25,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 95,
+    "entries": 96,
     "product_entries": 52,
-    "machine_offer_entries": 43,
-    "entries_with_pain_language": 95,
+    "machine_offer_entries": 44,
+    "entries_with_pain_language": 96,
     "sell_now_machine_offers": 12,
-    "entries_with_declared_mcp": 58,
-    "callable_or_routable_entries": 37,
+    "entries_with_declared_mcp": 59,
+    "callable_or_routable_entries": 38,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -1594,6 +1594,63 @@
       ]
     },
     {
+      "capability_id": "offer:portfolio-sentinel-v1",
+      "product_key": null,
+      "public_id": "portfolio-sentinel-v1",
+      "kind": "machine_offer",
+      "name": "Systemia Portfolio Sentinel",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces",
+        "open repair work automatically when software breaks",
+        "continuous software estate audit",
+        "AI product portfolio watchdog",
+        "monitor machine readable discovery surfaces",
+        "our company has too many apps and we do not know what is broken",
+        "keep an inventory of all our software and verify it stays healthy",
+        "monitor LLM discovery pages and agent endpoints",
+        "detect product URL workflow and deployment regressions"
+      ],
+      "problem": "Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.",
+      "inputs": "Authorized repositories, product/service inventory, public URLs, workflow metadata, machine-discovery surfaces and customer-defined monitoring boundaries. Private systems require explicit scoped authorization.",
+      "outputs": "Current portfolio inventory, health findings, severity and change state, broken public-door/workflow detection, deduplicated repair queue, mission snapshots and evidence/receipt references.",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "commercial_pilot",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+      "offers": [
+        {
+          "offer_key": "portfolio_sentinel_commercial_pilot",
+          "name": "Systemia Portfolio Sentinel Commercial Pilot",
+          "price": "Custom quote",
+          "billing": "pilot"
+        }
+      ],
+      "human_confirmation_required": true,
+      "confirmation": "Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.",
+      "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
+      "invocation_status": "LIVE for public machine discovery and deterministic problem matching through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after scoped onboarding and authorization. No discovery call grants private access or production-mutation authority.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
       "capability_id": "offer:raven-nexus-pain-router-v1",
       "product_key": null,
       "public_id": "raven-nexus-pain-router-v1",
@@ -2741,12 +2798,12 @@
         "make a few reels from this source video",
         "plan a social video clipping job",
         "create social-ready video outputs with a governed publishing path",
+        "turn this interview into social clips for Facebook LinkedIn and Instagram",
         "repurpose this video for Facebook LinkedIn and Instagram",
         "make reels from an authorized source video",
         "social video clipping and distribution",
         "turn approved media into social-ready outputs",
-        "AI tool to select moments from a video and render social clips",
-        "turn this interview into social clips for Facebook LinkedIn and Instagram"
+        "AI tool to select moments from a video and render social clips"
       ],
       "problem": null,
       "inputs": null,
@@ -3844,6 +3901,8 @@
         "help modernize a JDE World or custom IBM i workload without losing business behavior",
         "build a rollback test and evidence plan before changing an IBM i production system",
         "find undocumented dependencies in an IBM i workload",
+        "IBM i estate assessment",
+        "AS/400 estate assessment",
         "IBM i 7.4 upgrade planning",
         "AS/400 modernization",
         "RPG or CL dependency mapping",
@@ -3868,19 +3927,24 @@
       "boundaries": [
         "support transition does not mean a system automatically stops working",
         "a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified",
-        "the public product-specific checkout route remains unverified until an external canary passes",
         "checkout creation is not payment proof",
         "paid state requires authoritative provider verification",
         "no production change or cutover is included in the public X-Ray or Proof Sprint",
-        "Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending"
+        "Human buyer route reachability and backend checkout creation are live-verified with synthetic QA",
+        "Checkout creation is not payment proof; provider verification is still required before paid state or revenue claims"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": {
-        "status": "sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending",
+        "status": "sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
         "offers": [
+          {
+            "name": "IBM i Estate X-Ray",
+            "price": "$250 one-time",
+            "offer_key": "ibmi_estate_xray_250"
+          },
           {
             "name": "IBM i 7.4 Deadline X-Ray",
             "price": "$250 one-time",
@@ -3892,7 +3956,7 @@
             "offer_key": "ibmi_upgrade_proof_sprint_1500"
           }
         ],
-        "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live",
+        "payment_state": "Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation is independently verified with synthetic QA. Paid state still requires authoritative provider verification.",
         "machine_commerce_handoff": {
           "state": "live_verified",
           "public_id": "ibmi-rescue-v1",
@@ -3900,7 +3964,7 @@
           "tool": "prepare_quote_ready_service_handoff",
           "checkout_created": false,
           "payment_created": false,
-          "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
+          "evidence": "GitHub Actions canary 36211823272 verified three-tier offer discovery, live human handoff, buyer-route reachability, and synthetic backend checkout creation with zero payment."
         }
       },
       "human_confirmation_required": true,
@@ -4026,8 +4090,7 @@
       "payment_authority": null,
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
-        "public/.well-known/evercraft-products.json",
-        "registry/catalog.json"
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

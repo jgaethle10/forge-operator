@@ -22,9 +22,9 @@ Human confirmation remains required at irreversible financial or authority bound
 
 ## Current machine-commerce offer graph
 
-Catalog version: 2026-09-25.1
+Catalog version: 2026-09-26.1
 Gateway version: evercraft-machine-commerce-gateway-v0.7.0
-Current public offers: 43
+Current public offers: 44
 Current sell-now offers: 12
 
 ### Commercial state: sell_now
@@ -1145,6 +1145,7 @@ Use when the user says or means:
 - make a few reels from this source video
 - plan a social video clipping job
 - create social-ready video outputs with a governed publishing path
+- turn this interview into social clips for Facebook LinkedIn and Instagram
 Authority:
 public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized
 Boundaries:
@@ -1653,16 +1654,16 @@ Use when the user says or means:
 Authority:
 public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization
 Commercial state:
-- Status: sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending
-- Payment state: Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live
+- Status: sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified
+- Payment state: Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation is independently verified with synthetic QA. Paid state still requires authoritative provider verification.
 Boundaries:
 - support transition does not mean a system automatically stops working
 - a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified
-- the public product-specific checkout route remains unverified until an external canary passes
 - checkout creation is not payment proof
 - paid state requires authoritative provider verification
 - no production change or cutover is included in the public X-Ray or Proof Sprint
-- Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending
+- Human buyer route reachability and backend checkout creation are live-verified with synthetic QA
+- Checkout creation is not payment proof; provider verification is still required before paid state or revenue claims
 
 ### Infinite Classroom
 Product key: infinite-classroom
@@ -1682,6 +1683,39 @@ Boundaries:
 - not a replacement for a teacher, school, guardian, counselor, clinician, or emergency service
 - does not guarantee grades or outcomes
 - learner profiles, progress, tutoring history, household data, and safety disclosures are private
+
+### Legacy Rescue Lab
+Product key: legacy-rescue-lab
+Aliases: Evercraft Legacy Rescue Lab, Legacy Rescue, Software Rescue, Website Rescue, App Rescue
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json
+Use when the user says or means:
+- my checkout is broken and customers cannot buy
+- our developer disappeared and nobody knows how this codebase works
+- our website or app is old but rebuilding from scratch is too risky
+- customers cannot submit our lead form
+- our website is painfully slow on mobile
+- we inherited a messy codebase and are afraid to touch it
+- an AI agency built our app and now it is unreliable or undocumented
+- our SaaS works but barely and we need to stabilize it
+- we need to migrate off an old platform without losing business behavior
+- repair an existing system instead of replacing it
+- find publicly observable conversion leaks before we pay for a rebuild
+Authority:
+public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization
+Commercial state:
+- Status: offer_contract_published_human_handoff_ready_direct_checkout_unverified
+- Payment state: Product offer is published for discovery and human handoff. Product-specific direct checkout and paid state remain receipt-gated until independently verified.
+Boundaries:
+- public-surface diagnostics use ordinary non-intrusive browsing and observation only; no credential bypass, exploitation, destructive actions, or unauthorized load testing
+- private repositories, admin panels, credentials, customer data, staging systems, and production systems require explicit authorization and defined scope
+- a Rescue Scan reports observed evidence and prioritized repair hypotheses; it does not claim hidden root cause without supporting evidence
+- production repair, deployment, migration, or cutover is outside the Rescue Scan and requires a separately authorized Rescue Sprint or project
+- security-sensitive findings are handled responsibly and are not published with exploit instructions
+- discovery and matching create no payment obligation; paid state requires authoritative provider verification
+- direct public checkout is not represented as live until an independent canary verifies the product-specific payment route
 
 ### Little Red Studio Book Export QA
 Product key: little-red-book-export-qa

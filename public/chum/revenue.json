@@ -1,8 +1,8 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-26T02:29:19.815Z",
-  "source_schema_version": "2026-09-25.1",
+  "updated_at": "2026-09-26T03:20:54.359Z",
+  "source_schema_version": "2026-09-26.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.7.0",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
   "discovery_endpoint": "/api/discover",
@@ -17,7 +17,7 @@
     "private_topology_exposed": false
   },
   "sell_now_count": 12,
-  "discovery_count": 43,
+  "discovery_count": 44,
   "offers": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
@@ -2414,6 +2414,54 @@
       "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
       "start_url_state": "machine_commerce_review_fallback",
       "pain_page": "/chum/intents/site-survive-rapid-audit-v1/"
+    },
+    {
+      "public_id": "portfolio-sentinel-v1",
+      "name": "Systemia Portfolio Sentinel",
+      "problem": "Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.",
+      "intent_terms": [
+        "monitor my software portfolio for broken products",
+        "continuously audit all of our apps repositories and public URLs",
+        "tell me when one of our software products breaks",
+        "software portfolio health monitoring",
+        "software estate integrity monitoring",
+        "detect broken deployments and stale workflows",
+        "watch GitHub Actions and public product doors for failures",
+        "find drift across our apps APIs workflows and discovery surfaces",
+        "open repair work automatically when software breaks",
+        "continuous software estate audit",
+        "AI product portfolio watchdog",
+        "monitor machine readable discovery surfaces",
+        "our company has too many apps and we do not know what is broken",
+        "keep an inventory of all our software and verify it stays healthy",
+        "monitor LLM discovery pages and agent endpoints",
+        "detect product URL workflow and deployment regressions"
+      ],
+      "pricing": "Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.",
+      "offers": [
+        {
+          "offer_key": "portfolio_sentinel_commercial_pilot",
+          "name": "Systemia Portfolio Sentinel Commercial Pilot",
+          "price": "Custom quote",
+          "billing": "pilot"
+        }
+      ],
+      "entry_paid_offer": null,
+      "commercial_state": "commercial_pilot",
+      "machine_state": "human_handoff_ready",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "human_ui_required": false,
+      "confirmation": "Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.",
+      "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
+      "invocation_status": "LIVE for public machine discovery and deterministic problem matching through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after scoped onboarding and authorization. No discovery call grants private access or production-mutation authority.",
+      "catalog_version": "2026-09-26.1",
+      "agent_handoff": null,
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "pain_page": "/chum/intents/portfolio-sentinel-v1/"
     },
     {
       "public_id": "audit-center-website-audit-machine-v1",

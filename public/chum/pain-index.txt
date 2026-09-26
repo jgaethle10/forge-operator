@@ -2,9 +2,9 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 95
+Entries: 96
 Product entries: 52
-Machine-offer entries: 43
+Machine-offer entries: 44
 Sell-now machine offers: 12
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
@@ -684,6 +684,35 @@ Outputs: Page-count validity, cover-geometry validity, effective DPI, check time
 Confirmation boundary: QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.
 Invocation status: LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
 
+## Systemia Portfolio Sentinel
+Capability ID: offer:portfolio-sentinel-v1
+Commercial state: commercial_pilot
+Machine state: human_handoff_ready
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
+Use when the user means:
+- monitor my software portfolio for broken products
+- continuously audit all of our apps repositories and public URLs
+- tell me when one of our software products breaks
+- software portfolio health monitoring
+- software estate integrity monitoring
+- detect broken deployments and stale workflows
+- watch GitHub Actions and public product doors for failures
+- find drift across our apps APIs workflows and discovery surfaces
+- open repair work automatically when software breaks
+- continuous software estate audit
+- AI product portfolio watchdog
+- monitor machine readable discovery surfaces
+- our company has too many apps and we do not know what is broken
+- keep an inventory of all our software and verify it stays healthy
+- monitor LLM discovery pages and agent endpoints
+- detect product URL workflow and deployment regressions
+Problem: Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.
+Outputs: Current portfolio inventory, health findings, severity and change state, broken public-door/workflow detection, deduplicated repair queue, mission snapshots and evidence/receipt references.
+Confirmation boundary: Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.
+Invocation status: LIVE for public machine discovery and deterministic problem matching through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after scoped onboarding and authorization. No discovery call grants private access or production-mutation authority.
+
 ## Raven Nexus Modular Safety & Stability
 Capability ID: offer:raven-nexus-pain-router-v1
 Commercial state: verification_required
@@ -1138,12 +1167,12 @@ Use when the user means:
 - make a few reels from this source video
 - plan a social video clipping job
 - create social-ready video outputs with a governed publishing path
+- turn this interview into social clips for Facebook LinkedIn and Instagram
 - repurpose this video for Facebook LinkedIn and Instagram
 - make reels from an authorized source video
 - social video clipping and distribution
 - turn approved media into social-ready outputs
 - AI tool to select moments from a video and render social clips
-- turn this interview into social clips for Facebook LinkedIn and Instagram
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
@@ -1575,6 +1604,8 @@ Use when the user means:
 - help modernize a JDE World or custom IBM i workload without losing business behavior
 - build a rollback test and evidence plan before changing an IBM i production system
 - find undocumented dependencies in an IBM i workload
+- IBM i estate assessment
+- AS/400 estate assessment
 - IBM i 7.4 upgrade planning
 - AS/400 modernization
 - RPG or CL dependency mapping

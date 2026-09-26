@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-25T20:12:17.000Z",
+  "updated_at": "2026-09-26T02:45:00.000Z",
   "answer_id": "intent:ca1da8e065",
   "user_language": "IBM i 7.4 support is ending and I need an upgrade plan",
   "normalized": "ibm i 7 4 support is ending and i need an upgrade plan",
@@ -54,11 +54,11 @@
       "boundaries": [
         "support transition does not mean a system automatically stops working",
         "a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified",
-        "the public product-specific checkout route remains unverified until an external canary passes",
         "checkout creation is not payment proof",
         "paid state requires authoritative provider verification",
         "no production change or cutover is included in the public X-Ray or Proof Sprint",
-        "Machine Commerce human handoff is live-verified; product-specific direct checkout remains canary-pending"
+        "Human buyer route reachability and backend checkout creation are live-verified with synthetic QA",
+        "Checkout creation is not payment proof; provider verification is still required before paid state or revenue claims"
       ]
     }
   ],

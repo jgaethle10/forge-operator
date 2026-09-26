@@ -502,6 +502,24 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab#evercraft-service",
+      "name": "Legacy Rescue Lab",
+      "alternateName": [
+        "Evercraft Legacy Rescue Lab",
+        "Legacy Rescue",
+        "Software Rescue",
+        "Website Rescue",
+        "App Rescue"
+      ],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "legacy_software_rescue_and_modernization",
+      "description": "my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form"
+    },
+    {
+      "@type": "Service",
       "@id": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs#evercraft-service",
       "name": "Little Red Studio Book Export QA",
       "alternateName": [

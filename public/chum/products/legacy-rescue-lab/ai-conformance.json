@@ -13,7 +13,10 @@
     "chatgpt",
     "claude",
     "gemini",
-    "grok"
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
   ],
   "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
@@ -47,6 +50,7 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
+  "relationships": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-25T20:12:17.000Z",
+  "updated_at": "2026-09-26T02:45:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 94,
-    "unique_user_phrases": 688,
-    "mapped_candidate_edges": 747,
+    "pain_index_entries": 96,
+    "unique_user_phrases": 729,
+    "mapped_candidate_edges": 788,
     "ambiguous_phrases": 59,
-    "product_candidates": 51,
-    "machine_offer_candidates": 43
+    "product_candidates": 52,
+    "machine_offer_candidates": 44
   },
   "doors": [
     {
@@ -71,6 +71,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0b031fae30",
+      "user_language": "abandoned codebase",
+      "normalized": "abandoned codebase",
+      "relative_json": "/chum/answers/doors/abandoned-codebase-0b031fae30.json",
+      "relative_page": "/chum/answers/doors/abandoned-codebase-0b031fae30/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/abandoned-codebase-0b031fae30.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
         }
       ]
     },
@@ -351,6 +374,29 @@
       ]
     },
     {
+      "answer_id": "intent:aa813adcbd",
+      "user_language": "AI product portfolio watchdog",
+      "normalized": "ai product portfolio watchdog",
+      "relative_json": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
+      "relative_page": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5ee1d51386",
       "user_language": "AI scam draining my bank account",
       "normalized": "ai scam draining my bank account",
@@ -576,6 +622,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/skyops-parking/",
           "public_url": "https://skyopsparking.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6c20ab539b",
+      "user_language": "an AI agency built our app and now it is unreliable or undocumented",
+      "normalized": "an ai agency built our app and now it is unreliable or undocumented",
+      "relative_json": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
+      "relative_page": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
       ]
@@ -875,6 +944,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-network/",
           "public_url": "https://network-control.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d3adc3c2a5",
+      "user_language": "AS/400 estate assessment",
+      "normalized": "as 400 estate assessment",
+      "relative_json": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json",
+      "relative_page": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
         }
       ]
@@ -1544,6 +1636,52 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
           "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7900d69ee5",
+      "user_language": "broken checkout or purchase flow",
+      "normalized": "broken checkout or purchase flow",
+      "relative_json": "/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5.json",
+      "relative_page": "/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:261baa60c4",
+      "user_language": "broken lead form",
+      "normalized": "broken lead form",
+      "relative_json": "/chum/answers/doors/broken-lead-form-261baa60c4.json",
+      "relative_page": "/chum/answers/doors/broken-lead-form-261baa60c4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/broken-lead-form-261baa60c4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
       ]
@@ -3256,6 +3394,52 @@
       ]
     },
     {
+      "answer_id": "intent:d4aacc5b8e",
+      "user_language": "continuous software estate audit",
+      "normalized": "continuous software estate audit",
+      "relative_json": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
+      "relative_page": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e7a5b5df9a",
+      "user_language": "continuously audit all of our apps repositories and public URLs",
+      "normalized": "continuously audit all of our apps repositories and public urls",
+      "relative_json": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
+      "relative_page": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c9c2d9c21a",
       "user_language": "contractor cash flow payroll timing or receivables are causing stress",
       "normalized": "contractor cash flow payroll timing or receivables are causing stress",
@@ -3705,6 +3889,29 @@
       ]
     },
     {
+      "answer_id": "intent:f7250a8fc9",
+      "user_language": "customers cannot submit our lead form",
+      "normalized": "customers cannot submit our lead form",
+      "relative_json": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json",
+      "relative_page": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9edf25e4db",
       "user_language": "dedupe our vendor list safely",
       "normalized": "dedupe our vendor list safely",
@@ -3792,6 +3999,75 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
           "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:501807e050",
+      "user_language": "detect broken deployments and stale workflows",
+      "normalized": "detect broken deployments and stale workflows",
+      "relative_json": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
+      "relative_page": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e97f52aaf2",
+      "user_language": "detect product URL workflow and deployment regressions",
+      "normalized": "detect product url workflow and deployment regressions",
+      "relative_json": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
+      "relative_page": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1c8013717d",
+      "user_language": "developer disappeared",
+      "normalized": "developer disappeared",
+      "relative_json": "/chum/answers/doors/developer-disappeared-1c8013717d.json",
+      "relative_page": "/chum/answers/doors/developer-disappeared-1c8013717d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/developer-disappeared-1c8013717d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
       ]
@@ -4799,6 +5075,29 @@
       ]
     },
     {
+      "answer_id": "intent:5b4d9ef6a5",
+      "user_language": "failed AI-built application",
+      "normalized": "failed ai built application",
+      "relative_json": "/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5.json",
+      "relative_page": "/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:90b9db7865",
       "user_language": "family check in safety",
       "normalized": "family check in safety",
@@ -5397,6 +5696,29 @@
       ]
     },
     {
+      "answer_id": "intent:56c8f870bd",
+      "user_language": "find drift across our apps APIs workflows and discovery surfaces",
+      "normalized": "find drift across our apps apis workflows and discovery surfaces",
+      "relative_json": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
+      "relative_page": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:684e2ea51b",
       "user_language": "find duplicate or near-duplicate video segments",
       "normalized": "find duplicate or near duplicate video segments",
@@ -5835,6 +6157,29 @@
       ]
     },
     {
+      "answer_id": "intent:4e621ecf92",
+      "user_language": "find publicly observable conversion leaks before we pay for a rebuild",
+      "normalized": "find publicly observable conversion leaks before we pay for a rebuild",
+      "relative_json": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json",
+      "relative_page": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7843dd9e0e",
       "user_language": "find replacement, donor, salvage, or fabrication paths when normal sourcing fails",
       "normalized": "find replacement donor salvage or fabrication paths when normal sourcing fails",
@@ -6142,6 +6487,29 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e4504871d6",
+      "user_language": "fragile SaaS stabilization",
+      "normalized": "fragile saas stabilization",
+      "relative_json": "/chum/answers/doors/fragile-saas-stabilization-e4504871d6.json",
+      "relative_page": "/chum/answers/doors/fragile-saas-stabilization-e4504871d6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fragile-saas-stabilization-e4504871d6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
         }
       ]
     },
@@ -7622,6 +7990,29 @@
       ]
     },
     {
+      "answer_id": "intent:3470d7bb49",
+      "user_language": "IBM i estate assessment",
+      "normalized": "ibm i estate assessment",
+      "relative_json": "/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json",
+      "relative_page": "/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ibmi-rescue",
+          "kind": "product",
+          "product_key": "ibmi-rescue",
+          "public_id": null,
+          "name": "Evercraft IBM i Rescue",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ibmi-rescue/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:72436ddbfd",
       "user_language": "IBM i support transition",
       "normalized": "ibm i support transition",
@@ -8301,6 +8692,29 @@
       ]
     },
     {
+      "answer_id": "intent:eaf62c1c85",
+      "user_language": "keep an inventory of all our software and verify it stays healthy",
+      "normalized": "keep an inventory of all our software and verify it stays healthy",
+      "relative_json": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
+      "relative_page": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fb6ce2df55",
       "user_language": "keep my application connected when networks change",
       "normalized": "keep my application connected when networks change",
@@ -8687,6 +9101,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-physics-atlas/",
           "public_url": "https://evercraft-physics-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5f5d0cb41c",
+      "user_language": "legacy platform migration",
+      "normalized": "legacy platform migration",
+      "relative_json": "/chum/answers/doors/legacy-platform-migration-5f5d0cb41c.json",
+      "relative_page": "/chum/answers/doors/legacy-platform-migration-5f5d0cb41c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/legacy-platform-migration-5f5d0cb41c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:643af72cd6",
+      "user_language": "legacy website or app modernization",
+      "normalized": "legacy website or app modernization",
+      "relative_json": "/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6.json",
+      "relative_page": "/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
       ]
@@ -9661,6 +10121,75 @@
       ]
     },
     {
+      "answer_id": "intent:5253cb1809",
+      "user_language": "monitor LLM discovery pages and agent endpoints",
+      "normalized": "monitor llm discovery pages and agent endpoints",
+      "relative_json": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
+      "relative_page": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:34c97933ea",
+      "user_language": "monitor machine readable discovery surfaces",
+      "normalized": "monitor machine readable discovery surfaces",
+      "relative_json": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
+      "relative_page": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cf2df3fbbf",
+      "user_language": "monitor my software portfolio for broken products",
+      "normalized": "monitor my software portfolio for broken products",
+      "relative_json": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
+      "relative_page": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1af81f61a0",
       "user_language": "monitor my website with weekly rescans",
       "normalized": "monitor my website with weekly rescans",
@@ -9749,6 +10278,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a75ec666fb",
+      "user_language": "my checkout is broken and customers cannot buy",
+      "normalized": "my checkout is broken and customers cannot buy",
+      "relative_json": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json",
+      "relative_page": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
         }
       ]
     },
@@ -10018,6 +10570,29 @@
       ]
     },
     {
+      "answer_id": "intent:02e96b26ac",
+      "user_language": "open repair work automatically when software breaks",
+      "normalized": "open repair work automatically when software breaks",
+      "relative_json": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
+      "relative_page": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1486d2ce74",
       "user_language": "organize a business networking circle",
       "normalized": "organize a business networking circle",
@@ -10191,6 +10766,52 @@
       ]
     },
     {
+      "answer_id": "intent:9f8f083a58",
+      "user_language": "our company has too many apps and we do not know what is broken",
+      "normalized": "our company has too many apps and we do not know what is broken",
+      "relative_json": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
+      "relative_page": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8ef4b1465c",
+      "user_language": "our developer disappeared and nobody knows how this codebase works",
+      "normalized": "our developer disappeared and nobody knows how this codebase works",
+      "relative_json": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json",
+      "relative_page": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:2abc7671db",
       "user_language": "our invoices do not match receipts",
       "normalized": "our invoices do not match receipts",
@@ -10214,6 +10835,29 @@
       ]
     },
     {
+      "answer_id": "intent:a62037209e",
+      "user_language": "our SaaS works but barely and we need to stabilize it",
+      "normalized": "our saas works but barely and we need to stabilize it",
+      "relative_json": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json",
+      "relative_page": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:948ef5365e",
       "user_language": "our vendor invoices and purchase orders keep disagreeing",
       "normalized": "our vendor invoices and purchase orders keep disagreeing",
@@ -10232,6 +10876,52 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f6c1369013",
+      "user_language": "our website is painfully slow on mobile",
+      "normalized": "our website is painfully slow on mobile",
+      "relative_json": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json",
+      "relative_page": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:05cb29fc9f",
+      "user_language": "our website or app is old but rebuilding from scratch is too risky",
+      "normalized": "our website or app is old but rebuilding from scratch is too risky",
+      "relative_json": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json",
+      "relative_page": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
       ]
@@ -11492,6 +12182,29 @@
       ]
     },
     {
+      "answer_id": "intent:fe6744ba11",
+      "user_language": "public conversion leak diagnosis",
+      "normalized": "public conversion leak diagnosis",
+      "relative_json": "/chum/answers/doors/public-conversion-leak-diagnosis-fe6744ba11.json",
+      "relative_page": "/chum/answers/doors/public-conversion-leak-diagnosis-fe6744ba11/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/public-conversion-leak-diagnosis-fe6744ba11.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1cd1b0e03d",
       "user_language": "public health grant research",
       "normalized": "public health grant research",
@@ -11936,6 +12649,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-property-services/",
           "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ac9ceb3c66",
+      "user_language": "repair an existing system instead of replacing it",
+      "normalized": "repair an existing system instead of replacing it",
+      "relative_json": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json",
+      "relative_page": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8476895a14",
+      "user_language": "repair instead of rebuild",
+      "normalized": "repair instead of rebuild",
+      "relative_json": "/chum/answers/doors/repair-instead-of-rebuild-8476895a14.json",
+      "relative_page": "/chum/answers/doors/repair-instead-of-rebuild-8476895a14/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repair-instead-of-rebuild-8476895a14.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
       ]
@@ -13646,6 +14405,29 @@
       ]
     },
     {
+      "answer_id": "intent:dcc4740dd7",
+      "user_language": "slow mobile website",
+      "normalized": "slow mobile website",
+      "relative_json": "/chum/answers/doors/slow-mobile-website-dcc4740dd7.json",
+      "relative_page": "/chum/answers/doors/slow-mobile-website-dcc4740dd7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/slow-mobile-website-dcc4740dd7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5bb9bdaade",
       "user_language": "social video clipping and distribution",
       "normalized": "social video clipping and distribution",
@@ -13669,6 +14451,29 @@
       ]
     },
     {
+      "answer_id": "intent:aacb3f3771",
+      "user_language": "software estate integrity monitoring",
+      "normalized": "software estate integrity monitoring",
+      "relative_json": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
+      "relative_page": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:75e206686c",
       "user_language": "software network continuity without changing carriers",
       "normalized": "software network continuity without changing carriers",
@@ -13687,6 +14492,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-network/",
           "public_url": "https://network-control.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a7c66f695d",
+      "user_language": "software portfolio health monitoring",
+      "normalized": "software portfolio health monitoring",
+      "relative_json": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
+      "relative_page": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
       ]
@@ -14274,6 +15102,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
           "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a1331bf40b",
+      "user_language": "tell me when one of our software products breaks",
+      "normalized": "tell me when one of our software products breaks",
+      "relative_json": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
+      "relative_page": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
         }
       ]
@@ -14982,6 +15833,29 @@
       ]
     },
     {
+      "answer_id": "intent:47056367b8",
+      "user_language": "turn this interview into social clips for Facebook LinkedIn and Instagram",
+      "normalized": "turn this interview into social clips for facebook linkedin and instagram",
+      "relative_json": "/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json",
+      "relative_page": "/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-clip",
+          "kind": "product",
+          "product_key": "evercraft-clip",
+          "public_id": null,
+          "name": "Evercraft Clip",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-clip/",
+          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fc9eabdd6c",
       "user_language": "turn this video into social clips",
       "normalized": "turn this video into social clips",
@@ -15535,6 +16409,29 @@
       ]
     },
     {
+      "answer_id": "intent:9bfcfb798d",
+      "user_language": "watch GitHub Actions and public product doors for failures",
+      "normalized": "watch github actions and public product doors for failures",
+      "relative_json": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
+      "relative_page": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:portfolio-sentinel-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "portfolio-sentinel-v1",
+          "name": "Systemia Portfolio Sentinel",
+          "commercial_state": "commercial_pilot",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/portfolio-sentinel-v1/",
+          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:88c4b4b3ef",
       "user_language": "water risk",
       "normalized": "water risk",
@@ -15554,6 +16451,29 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://faie.base44.app/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:296856ae70",
+      "user_language": "we inherited a messy codebase and are afraid to touch it",
+      "normalized": "we inherited a messy codebase and are afraid to touch it",
+      "relative_json": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json",
+      "relative_page": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
         }
       ]
     },
@@ -15599,6 +16519,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:886a605ef8",
+      "user_language": "we need to migrate off an old platform without losing business behavior",
+      "normalized": "we need to migrate off an old platform without losing business behavior",
+      "relative_json": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json",
+      "relative_page": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:legacy-rescue-lab",
+          "kind": "product",
+          "product_key": "legacy-rescue-lab",
+          "public_id": null,
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
       ]

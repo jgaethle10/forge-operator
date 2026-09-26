@@ -667,8 +667,13 @@
       "registry_name": null,
       "mcp": null,
       "commercial": {
-        "status": "sell_now_machine_commerce_handoff_live_direct_checkout_canary_pending",
+        "status": "sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
         "offers": [
+          {
+            "name": "IBM i Estate X-Ray",
+            "price": "$250 one-time",
+            "offer_key": "ibmi_estate_xray_250"
+          },
           {
             "name": "IBM i 7.4 Deadline X-Ray",
             "price": "$250 one-time",
@@ -680,7 +685,7 @@
             "offer_key": "ibmi_upgrade_proof_sprint_1500"
           }
         ],
-        "payment_state": "Evercraft Payments offers active; product-specific public checkout route requires independent live verification before it is advertised as live",
+        "payment_state": "Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation is independently verified with synthetic QA. Paid state still requires authoritative provider verification.",
         "machine_commerce_handoff": {
           "state": "live_verified",
           "public_id": "ibmi-rescue-v1",
@@ -688,7 +693,7 @@
           "tool": "prepare_quote_ready_service_handoff",
           "checkout_created": false,
           "payment_created": false,
-          "evidence": "GitHub Actions canary 36184321561 observed live offer, service handoff, review page, both tiers, and zero payment creation."
+          "evidence": "GitHub Actions canary 36211823272 verified three-tier offer discovery, live human handoff, buyer-route reachability, and synthetic backend checkout creation with zero payment."
         }
       },
       "developer_surfaces": null

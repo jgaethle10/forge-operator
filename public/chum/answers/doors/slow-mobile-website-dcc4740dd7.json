@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-26T02:45:00.000Z",
+  "answer_id": "intent:dcc4740dd7",
+  "user_language": "slow mobile website",
+  "normalized": "slow mobile website",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:legacy-rescue-lab",
+      "kind": "product",
+      "product_key": "legacy-rescue-lab",
+      "public_id": null,
+      "name": "Legacy Rescue Lab",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "pain_page": "/chum/products/legacy-rescue-lab/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization",
+      "boundaries": [
+        "public-surface diagnostics use ordinary non-intrusive browsing and observation only; no credential bypass, exploitation, destructive actions, or unauthorized load testing",
+        "private repositories, admin panels, credentials, customer data, staging systems, and production systems require explicit authorization and defined scope",
+        "a Rescue Scan reports observed evidence and prioritized repair hypotheses; it does not claim hidden root cause without supporting evidence",
+        "production repair, deployment, migration, or cutover is outside the Rescue Scan and requires a separately authorized Rescue Sprint or project",
+        "security-sensitive findings are handled responsibly and are not published with exploit instructions",
+        "discovery and matching create no payment obligation; paid state requires authoritative provider verification",
+        "direct public checkout is not represented as live until an independent canary verifies the product-specific payment route"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}
