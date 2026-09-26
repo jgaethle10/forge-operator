@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-26T00:41:36.293Z",
+  "generated_at": "2026-09-26T00:43:21.970Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9,8 +9,8 @@
   },
   "observation_count": 0,
   "negative_provider_pickup_receipts": 7,
-  "surface_count": 1866,
-  "strike_now_count": 1820,
+  "surface_count": 1886,
+  "strike_now_count": 1836,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
