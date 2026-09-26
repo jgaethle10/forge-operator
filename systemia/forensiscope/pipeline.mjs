@@ -12,6 +12,7 @@ import { admitMultiplicationRequest } from '../saban/admission.mjs';
 import { executeDistributedMultiplicationPlan } from '../saban/distributed-executor.mjs';
 import { validateAuthorizedMediaSource } from './authorized-source.mjs';
 import { persistEvidenceGraph } from './evidence-store.mjs';
+import { persistForensiScopeProvenance } from './provenance.mjs';
 
 function probeDurationSeconds(sourcePath) {
   const result = spawnSync('ffprobe', [
@@ -182,7 +183,7 @@ export async function runForensiScopeAnalysis({
     execution.reconciliation.transcription?.text || ''
   ).length;
 
-  return {
+  const analysisReceipt = {
     schema: 'evercraft.forensiscope.analysis-receipt.v1',
     status: 'ready',
     job_id: resolvedJobId,
@@ -251,4 +252,14 @@ export async function runForensiScopeAnalysis({
       checkout_or_payment_created: false
     }
   };
+
+  const provenance = persistForensiScopeProvenance({
+    analysisReceipt,
+    graph: execution.reconciliation.evidence_graph,
+    rootDir
+  });
+  analysisReceipt.result.provenance_ref = provenance.provenance_ref;
+  analysisReceipt.result.provenance_digest = provenance.provenance_digest;
+
+  return analysisReceipt;
 }
