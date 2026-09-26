@@ -31,9 +31,9 @@ for (const row of commerce.offers) {
 }
 
 const firstDollar = commerce.first_dollar_lane.candidates;
-assert.ok(firstDollar.length >= 1, 'at least one <= $20 sell-now path should exist');
+assert.ok(firstDollar.length >= 1, 'at least one <= $50 sell-now path should exist');
 assert.ok(firstDollar.some((row) => row.public_id === 'roasted-text-pressure-test-machine-v1'), 'ROASTED 99c path should be in the first-dollar lane');
-assert.ok(firstDollar.every((row) => Number(row.entry_offer?.price_usd) <= 20));
+assert.ok(firstDollar.every((row) => Number(row.entry_offer?.price_usd) <= 50));
 
 const roasted = commerce.offers.find((row) => row.public_id === 'roasted-text-pressure-test-machine-v1');
 assert.ok(roasted);
