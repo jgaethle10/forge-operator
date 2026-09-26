@@ -129,6 +129,26 @@ try {
   assert.equal(agent.device_fingerprint, remoteSeed.device_fingerprint);
   assert.equal(agent.status().public_ingress, false);
 
+  const safeInventory=await yard.listRemoteCapacityNodes(
+    'remote-capacity-broker-proof'
+  );
+  assert.equal(safeInventory.schema,'evercraft.yard.remote-capacity-nodes.v1');
+  assert.equal(safeInventory.count,1);
+  assert.equal(safeInventory.nodes[0].node_id,remoteSeed.node_id);
+  assert.equal(
+    safeInventory.nodes[0].device_fingerprint,
+    remoteSeed.device_fingerprint
+  );
+  assert.equal(safeInventory.nodes[0].connected,true);
+  assert.equal(
+    JSON.stringify(safeInventory).includes(remoteAllocatorToken),
+    false
+  );
+  assert.equal(
+    JSON.stringify(safeInventory).includes('control_token'),
+    false
+  );
+
   const grant = await yard.remoteCapacityGrant(
     'remote-capacity-broker-proof',
     remoteSeed.node_id,
@@ -193,6 +213,8 @@ try {
     loopback_route_is_proof_only: true,
     control_grant_requires_private_compute_lease: true,
     control_grant_not_persisted_in_public_deployment_record: true,
+    safe_connected_capacity_inventory:true,
+    safe_inventory_exposes_no_control_token:true,
     private_node_opens_public_ingress: false,
     yard_remote_deployment_through_broker_workload: true,
     secure_envelope_schema: 'evercraft.secure-envelope.v1',
