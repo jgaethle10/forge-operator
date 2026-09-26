@@ -13,6 +13,14 @@ function arg(name, fallback = null) {
 }
 function has(name) { return process.argv.includes(name); }
 
+function parsePlacementLabels(value) {
+  return [...new Set(String(value || '')
+    .split(',')
+    .map((label) => label.trim().toLowerCase())
+    .filter(Boolean)
+  )];
+}
+
 function firstLanIpv4() {
   for (const rows of Object.values(os.networkInterfaces())) {
     for (const row of rows || []) {
@@ -29,6 +37,7 @@ export async function startNodeSeed({
   port = 42420,
   advertiseHost,
   allocatorToken = '',
+  placementLabels = [],
   announce = true,
   announceAddress = '239.42.24.42',
   announcePort = 42424,
@@ -49,6 +58,7 @@ export async function startNodeSeed({
     port,
     allocatorToken,
     deviceIdentity,
+    placementLabels,
   });
 
   const actualPort = Number(new URL(compute.endpoint).port);
@@ -78,6 +88,7 @@ export async function startNodeSeed({
     endpoint,
     root: resolvedRoot,
     allocation_auth: allocatorToken ? 'bearer' : 'loopback_only',
+    placement_labels: compute.placement_labels || placementLabels,
     device_fingerprint: deviceIdentity.fingerprint,
     beacon: announce ? {
       schema: 'evercraft.capacity.beacon.v1',
@@ -126,6 +137,9 @@ if (isCli) {
     port: Number(arg('--port', '42420')),
     advertiseHost: arg('--advertise-host', null),
     allocatorToken,
+    placementLabels: parsePlacementLabels(
+      arg('--labels', process.env.EVERCRAFT_NODE_LABELS || '')
+    ),
     announce: !has('--no-announce'),
     announceAddress: arg('--announce-address', '239.42.24.42'),
     announcePort: Number(arg('--announce-port', '42424')),
@@ -136,6 +150,7 @@ if (isCli) {
     node_id: seed.node_id,
     endpoint: seed.endpoint,
     allocation_auth: seed.allocation_auth,
+    placement_labels: seed.placement_labels || [],
     device_fingerprint: seed.device_fingerprint,
     beacon: seed.beacon ? { address: seed.beacon.address, port: seed.beacon.port } : null,
     named_cloud_required: false,

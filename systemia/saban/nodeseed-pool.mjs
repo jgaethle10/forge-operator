@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { discoverCapacityBeacons } from '../compute/capacity-beacon.mjs';
+import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 
 async function requestJson(url, options = {}, timeoutMs = 5000) {
   const controller = new AbortController();
@@ -146,10 +147,56 @@ async function inspectNode(endpoint, options = {}) {
     throw new Error('node_does_not_support_registered_saban_assignments');
   }
 
+  const placementLabels = Array.isArray(capacity.placement_labels)
+    ? capacity.placement_labels.map((value) => String(value).trim().toLowerCase())
+    : [];
+
+  let attestation = null;
+  if (options.requireAttestation === true) {
+    const nonce = crypto.randomBytes(18).toString('hex');
+    const allocatorToken = tokenFor(endpoint, options);
+    const headers = allocatorToken
+      ? { authorization: `Bearer ${allocatorToken}` }
+      : {};
+    const body = await requestJson(
+      `${endpoint}/v1/attest`,
+      {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ nonce })
+      },
+      options.timeoutMs || 3000
+    );
+    const verified = verifyNodeAttestation({
+      attestation: body.attestation,
+      expectedNonce: nonce,
+      expectedNodeId: capacity.node_id
+    });
+    if (!verified.ok) {
+      throw new Error(`node_attestation_failed:${verified.reason}`);
+    }
+    const signedLabels = [...(verified.placement_labels || [])]
+      .map((value) => String(value).trim().toLowerCase())
+      .sort();
+    const advertisedLabels = [...placementLabels].sort();
+    if (JSON.stringify(signedLabels) !== JSON.stringify(advertisedLabels)) {
+      throw new Error('placement_label_attestation_mismatch');
+    }
+    attestation = {
+      verified: true,
+      device_fingerprint: verified.device_fingerprint,
+      placement_labels: signedLabels,
+      observed_at: verified.observed_at,
+      field_claim: verified.field_claim
+    };
+  }
+
   return {
     endpoint,
     node_id: capacity.node_id,
     capacity_hint: capacity.capacity_hint || null,
+    placement_labels: placementLabels,
+    attestation,
     allocation_auth: capacity.allocation_auth || null,
     supported_workloads: capacity.supported_workloads
   };
@@ -223,7 +270,8 @@ export async function resolveNodeSeedPool({
   discoveryOptions = {},
   allocatorToken = '',
   allocatorTokens = {},
-  timeoutMs = 3000
+  timeoutMs = 3000,
+  requireAttestation = false
 } = {}) {
   let resolved = endpoints.map(normalizeEndpoint).filter(Boolean);
 
@@ -238,7 +286,12 @@ export async function resolveNodeSeedPool({
 
   for (const endpoint of resolved) {
     try {
-      const node = await inspectNode(endpoint, { timeoutMs });
+      const node = await inspectNode(endpoint, {
+        timeoutMs,
+        allocatorToken,
+        allocatorTokens,
+        requireAttestation
+      });
       nodes.push(node);
     } catch (error) {
       rejected.push({
@@ -264,35 +317,55 @@ function pickNode(nodes, cursor) {
 function meetsResourceProfile(node, profile = null) {
   if (!profile) return { eligible: true, reason: null };
   const hint = node.capacity_hint;
-  if (!hint) {
-    return profile.require_capacity_hint === true
-      ? { eligible: false, reason: 'capacity_hint_required' }
-      : { eligible: true, reason: null };
+  if (!hint && profile.require_capacity_hint === true) {
+    return { eligible: false, reason: 'capacity_hint_required' };
   }
 
-  const minCpu = Number(profile.minimum_node_cpu_units || 0);
-  const minMemory = Number(profile.minimum_node_memory_mb || 0);
-  if (minCpu && Number(hint.cpu_units || 0) < minCpu) {
-    return { eligible: false, reason: 'insufficient_cpu_capacity' };
-  }
-  if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
-    return { eligible: false, reason: 'insufficient_memory_capacity' };
-  }
+  if (hint) {
+    const minCpu = Number(profile.minimum_node_cpu_units || 0);
+    const minMemory = Number(profile.minimum_node_memory_mb || 0);
+    if (minCpu && Number(hint.cpu_units || 0) < minCpu) {
+      return { eligible: false, reason: 'insufficient_cpu_capacity' };
+    }
+    if (minMemory && Number(hint.memory_mb || 0) < minMemory) {
+      return { eligible: false, reason: 'insufficient_memory_capacity' };
+    }
 
-  for (const executable of profile.required_executables || []) {
-    if (hint.executables?.[executable] !== true) {
-      return {
-        eligible: false,
-        reason: `missing_required_executable:${executable}`
-      };
+    for (const executable of profile.required_executables || []) {
+      if (hint.executables?.[executable] !== true) {
+        return {
+          eligible: false,
+          reason: `missing_required_executable:${executable}`
+        };
+      }
+    }
+
+    for (const service of profile.required_services || []) {
+      if (hint.services?.[service] !== true) {
+        return {
+          eligible: false,
+          reason: `missing_required_service:${service}`
+        };
+      }
     }
   }
 
-  for (const service of profile.required_services || []) {
-    if (hint.services?.[service] !== true) {
+  const labels = new Set((node.placement_labels || []).map(String));
+  for (const label of profile.required_node_labels || []) {
+    const normalized = String(label || '').trim().toLowerCase();
+    if (!labels.has(normalized)) {
       return {
         eligible: false,
-        reason: `missing_required_service:${service}`
+        reason: `missing_required_node_label:${label}`
+      };
+    }
+  }
+  for (const label of profile.forbidden_node_labels || []) {
+    const normalized = String(label || '').trim().toLowerCase();
+    if (labels.has(normalized)) {
+      return {
+        eligible: false,
+        reason: `forbidden_node_label:${label}`
       };
     }
   }
@@ -335,13 +408,20 @@ export async function runNodeSeedAssignmentPool({
     throw new Error('assignments are required');
   }
 
+  const placementSensitive = Boolean(
+    resourceProfile?.require_node_attestation === true ||
+    (resourceProfile?.required_node_labels || []).length ||
+    (resourceProfile?.forbidden_node_labels || []).length
+  );
+
   const resolved = await resolveNodeSeedPool({
     endpoints,
     discover,
     discoveryOptions,
     allocatorToken,
     allocatorTokens,
-    timeoutMs
+    timeoutMs,
+    requireAttestation: placementSensitive
   });
 
   if (!resolved.nodes.length) {
@@ -547,6 +627,10 @@ export async function runNodeSeedAssignmentPool({
       node_id: node.node_id,
       endpoint: node.endpoint,
       capacity_hint: node.capacity_hint,
+      placement_labels: node.placement_labels || [],
+      node_attestation_verified: node.attestation?.verified === true,
+      device_fingerprint: node.attestation?.device_fingerprint || null,
+      field_claim: node.attestation?.field_claim ?? null,
       healthy_at_end: node.healthy !== false
     })),
     rejected_nodes: [...resolved.rejected, ...resourceRejected],

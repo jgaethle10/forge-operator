@@ -45,3 +45,22 @@ NodeSeed is dependency-free Node.js and can be supervised by the operating syste
 ## Boundary
 
 NodeSeed makes software capacity available. It does not grant Evercraft permission to commandeer arbitrary devices. A machine must deliberately run NodeSeed or otherwise expose a compatible, authorized capacity adapter.
+
+
+## Placement labels
+
+A NodeSeed may advertise bounded placement labels such as 'ground', 'gateway', 'vehicle', 'temporary', or 'air_relay'.
+
+Programmatic startup passes placementLabels. CLI startup accepts:
+
+    --labels ground,gateway
+
+or the EVERCRAFT_NODE_LABELS environment variable.
+
+Labels are normalized to lowercase, restricted to safe identifier characters, deduplicated, capped, exposed through /v1/capacity, and copied into NodeSeed receipts. They describe placement characteristics only. They do not grant authorization, certify hardware, certify flight status, or override workload admission.
+
+Saban resource profiles may use required_node_labels and forbidden_node_labels to constrain placement. This keeps the scheduler generic while allowing a mission to require a class such as air_relay or explicitly exclude it.
+
+Run:
+
+    npm run proof:nodeseed-placement
