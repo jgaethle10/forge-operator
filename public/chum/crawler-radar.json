@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-26T22:44:38.101Z",
+  "generated_at": "2026-09-26T22:52:47.209Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -8,7 +8,7 @@
     "evidence_state": "none"
   },
   "observation_count": 0,
-  "negative_provider_pickup_receipts": 169,
+  "negative_provider_pickup_receipts": 170,
   "surface_count": 2207,
   "strike_now_count": 1966,
   "doctrine": {
@@ -156,6 +156,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -616,6 +622,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -1070,6 +1082,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -1530,6 +1548,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -1984,6 +2008,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -2444,6 +2474,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -2898,6 +2934,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -3358,6 +3400,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -3812,6 +3860,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -4272,6 +4326,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -4726,6 +4786,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -5186,6 +5252,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -5640,6 +5712,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -6100,6 +6178,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -6554,6 +6638,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -7014,6 +7104,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -7468,6 +7564,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
@@ -7928,6 +8030,12 @@
         },
         {
           "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
+        },
+        {
+          "provider": "generic_agent",
           "observed_at": "2026-09-26T05:00:25.403Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-evidence-timeline-008-110282430970d99b.json"
@@ -8382,6 +8490,12 @@
           "observed_at": "2026-09-26T17:06:39.220Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-d2fcd1e2e0cfe06f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T22:44:57.150Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-media-agent-tool-007-f17229d6fc684e63.json"
         },
         {
           "provider": "generic_agent",
