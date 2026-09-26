@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "public-edge-controller",
+  "mission_key": "public-specialist-edge",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": false,
+  "cadence_seconds": 60,
+  "entrypoint": "systemia/organism/public-edge-controller-runner.mjs",
+  "authority": {
+    "deploy_admitted_edge_workload": "autonomous_when_configured",
+    "deploy_admitted_specialist_workload": "autonomous_when_configured",
+    "bind_public_route": "autonomous_after_https_verification",
+    "renew_compute_leases": "autonomous",
+    "release_route_on_decommission": "autonomous",
+    "create_payment_obligation": false,
+    "grant_customer_production_access": false,
+    "founder_login_required": false
+  },
+  "truth_gates": [
+    "immutable_release_ref",
+    "authorized_capacity_endpoint",
+    "allocator_authority_file",
+    "wildcard_tls_admission",
+    "deployment_receipt_binding",
+    "instance_binding",
+    "public_https_verification",
+    "external_canary_before_discovery_promotion"
+  ]
+}
