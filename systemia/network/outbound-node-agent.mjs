@@ -57,13 +57,18 @@ function routeAllowed(method, route) {
   if (method === 'POST' && route === '/v1/attest') return true;
   if (method === 'POST' && route === '/v1/leases') return true;
   if (method === 'POST' && route === '/v1/jobs') return true;
+  if (method === 'POST' && route === '/v1/field-enrollment-packet') return true;
   if (
     method === 'GET' &&
     /^\/v1\/services\/[^/]+\/health$/.test(route)
   ) return true;
   if (
     method === 'POST' &&
-    /^\/v1\/services\/[^/]+\/(?:cycle|checkpoint|deployment-receipt|stop)$/.test(route)
+    /^\/v1\/services\/[^/]+\/(?:cycle|checkpoint|deployment-receipt|stop|specialist-identity-attestation|public-route-capabilities|public-route-leases)$/.test(route)
+  ) return true;
+  if (
+    method === 'POST' &&
+    /^\/v1\/services\/[^/]+\/public-route-leases\/[^/]+\/release$/.test(route)
   ) return true;
   if (
     method === 'POST' &&
