@@ -1,0 +1,58 @@
+# Candidate CI trigger: owned browser public-edge lane
+name: Evercraft Browser Worker
+
+on:
+  pull_request:
+    paths:
+      - "systemia/evercraft-web/browser-worker/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/yard/browser-worker-proof.mjs"
+      - "systemia/yard/browser-public-route-proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "package.json"
+      - ".github/workflows/evercraft-browser-worker.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/evercraft-web/browser-worker/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/yard/browser-worker-proof.mjs"
+      - "systemia/yard/browser-public-route-proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "package.json"
+      - ".github/workflows/evercraft-browser-worker.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  browser-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: systemia/evercraft-web/browser-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Policy tests
+        run: npm test
+      - name: Build worker image
+        run: docker build -t evercraft/browser-worker:ci .
+
+  yard-browser-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove private Yard browser lifecycle
+        run: node systemia/yard/browser-worker-proof.mjs
+      - name: Prove Browser through Evercraft public edge
+        run: node systemia/yard/browser-public-route-proof.mjs
