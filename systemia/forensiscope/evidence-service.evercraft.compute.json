@@ -21,7 +21,8 @@
     "evidence_graph_wholesale_export": false,
     "source_paths_public": false,
     "modern_mcp_header_integrity": true,
-    "privacy_safe_access_audit_receipts": true
+    "privacy_safe_access_audit_receipts": true,
+    "immediate_access_revocation_enforced": true
   },
   "protocols": {
     "mcp_modern": "2026-07-28",
@@ -41,7 +42,8 @@
     "public MCP canary succeeds",
     "public route receipt recorded before discovery migration",
     "health reports privacy-safe evidence access audit receipts",
-    "public MCP canary verifies scoped access and no raw-media or checkout tools"
+    "public MCP canary verifies scoped access and no raw-media or checkout tools",
+    "health reports immediate evidence access revocation enforcement"
   ],
   "provider_policy": {
     "named_cloud_dependency": false,
