@@ -1485,6 +1485,52 @@ export async function startEvercraftComputeNode({
         return send(res, 200, entry.runtime.health());
       }
 
+      const specialistIdentityAttestation = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/specialist-identity-attestation$/
+      );
+      if (req.method === 'POST' && specialistIdentityAttestation) {
+        const entry = services.get(specialistIdentityAttestation[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.specialist-handoff-mcp.v1') {
+          return send(res, 422, { error: 'specialist_identity_attestation_not_supported' });
+        }
+
+        let health;
+        try {
+          health = entry.runtime.setIdentityAttestation({
+            deviceFingerprint: body.device_fingerprint,
+            edgeAttestationReceipt: body.edge_attestation_receipt,
+            specialistAttestationReceipt: body.specialist_attestation_receipt,
+            sameDeviceBinding: body.same_device_binding === true,
+          });
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
+
+        return send(res, 200, {
+          ok: true,
+          identity_attestation_bound: health.identity_attestation_bound === true,
+          same_device_binding: health.same_device_binding === true,
+          device_fingerprint: health.device_fingerprint || null,
+          edge_attestation_receipt_ref: health.edge_attestation_receipt_ref || null,
+          specialist_attestation_receipt_ref: health.specialist_attestation_receipt_ref || null,
+          receipt: chain.issue('specialist.identity-attestation.bound', {
+            service_id: specialistIdentityAttestation[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            device_fingerprint: health.device_fingerprint || null,
+            edge_attestation_receipt_ref: health.edge_attestation_receipt_ref || null,
+            specialist_attestation_receipt_ref: health.specialist_attestation_receipt_ref || null,
+            same_device_binding: health.same_device_binding === true,
+          }),
+        });
+      }
+
       const publicRouteCapabilities = req.url?.match(
         /^\/v1\/services\/([^/]+)\/public-route-capabilities$/
       );
