@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T22:40:38.781Z",
+  "updated_at": "2026-09-26T22:41:25.228Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,45 +11,61 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
-      "last_changed": "2026-09-26T22:40:38.781Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-26T22:41:25.228Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-26T22:41:25.228Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:40:38.781Z",
+      "last_changed": "2026-09-26T22:41:25.228Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-26T22:41:25.228Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
-      "url": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
-      "last_changed": "2026-09-26T22:40:38.781Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T22:40:38.781Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T22:36:23.281Z",
+      "last_changed": "2026-09-26T22:41:25.228Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T22:36:23.281Z",
+      "last_changed": "2026-09-26T22:41:25.228Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T22:41:25.228Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T22:36:23.281Z",
+      "last_changed": "2026-09-26T22:41:25.228Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-26T22:41:24.683Z",
+      "priority": 88
+    },
+    {
+      "path": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
+      "url": "/chum/answers/observed/my-ai-agent-needs-a-tool-it-can-hand-a-long-video-job-to-when-the-normal-chat-sessio-0b35db03af/answer.json",
+      "last_changed": "2026-09-26T22:40:38.781Z",
       "priority": 80
     },
     {
@@ -75,12 +91,6 @@
       "url": "/.well-known/evercraft-pain-index.json",
       "last_changed": "2026-09-26T22:33:49.654Z",
       "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-26T22:33:49.654Z",
-      "priority": 88
     },
     {
       "path": "/.well-known/evercraft-agent-directory.json",
