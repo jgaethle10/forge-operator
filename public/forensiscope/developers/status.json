@@ -80,7 +80,7 @@
   },
   "private_next_generation_runtime": {
     "state": "proof_verified_private_not_publicly_callable",
-    "proof_lane": "systemia/saban-forensiscope-v2",
+    "proof_lane": "systemia/forensiscope-flagship-v4",
     "capabilities": [
       "distributed long-media sharding across Saban and NodeSeed",
       "timestamped transcription with overlap-aware reconciliation",
@@ -93,7 +93,13 @@
       "evidence query by completed result reference",
       "context-budgeted LLM evidence packets",
       "timeline-window retrieval",
-      "duplicate-relationship retrieval"
+      "duplicate-relationship retrieval",
+      "hybrid semantic and lexical evidence retrieval",
+      "content-addressed per-analysis provenance manifests",
+      "privacy-safe evidence-access audit receipts",
+      "scoped expiring evidence-access grants with immediate revocation",
+      "human-confirmed LLM handoff receipts",
+      "scoped provenance verification"
     ],
     "agent_query_gateway": {
       "state": "proof_verified_private",
@@ -101,7 +107,12 @@
       "accepts_raw_media": false,
       "starts_analysis_jobs": false,
       "creates_checkout": false,
-      "creates_payment_obligation": false
+      "creates_payment_obligation": false,
+      "tool_count": 6,
+      "scoped_access_required": true,
+      "immediate_revocation_enforced": true,
+      "privacy_safe_access_audit_receipts": true,
+      "provenance_verification": true
     },
     "public_endpoint": null,
     "public_mcp_exposure": false,
