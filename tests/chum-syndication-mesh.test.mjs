@@ -28,6 +28,13 @@ test('CHUM syndication mesh fans canonical products out without bootstrap spam',
     canonical_url: 'https://example.com/demo',
     intents: ['solve demo problem']
   });
+  write(path.join(root, 'public/chum/products/mirror-only/ai-discovery.json'), {
+    product_key: 'mirror-only',
+    name: 'Mirror Only Product',
+    class: 'test_capability',
+    canonical_url: 'https://example.com/mirror-only',
+    intents: ['solve mirror-only problem']
+  });
   write(path.join(root, 'public/sitemap.xml'), '<?xml version="1.0"?><urlset><url><loc>/chum/products/demo/</loc></url></urlset>\n');
   write(path.join(root, 'public/llms.txt'), '# Evercraft\n');
   write(path.join(root, 'llms.txt'), '# Evercraft\n');
@@ -35,15 +42,16 @@ test('CHUM syndication mesh fans canonical products out without bootstrap spam',
   write(path.join(root, 'public/ai-discovery.json'), { schema: 'evercraft.discovery.test', start_here: {} });
 
   const first = buildSyndicationMesh({ root, now: '2026-09-25T20:00:00.000Z' });
-  assert.equal(first.product_count, 1);
+  assert.equal(first.product_count, 2);
   assert.equal(first.bootstrap, true);
   assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'public/chum/syndication/social-queue.json'))).items.length, 0);
 
   const rss = fs.readFileSync(path.join(root, 'public/feed.xml'), 'utf8');
   assert.match(rss, /Demo Product/);
   assert.match(rss, /https:\/\/example\.com\/demo/);
+  assert.match(rss, /Mirror Only Product/);
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'public/.well-known/evercraft-syndication.json')));
-  assert.equal(manifest.product_count, 1);
+  assert.equal(manifest.product_count, 2);
   assert.equal(manifest.feeds.rss, '/feed.xml');
   const sitemap = fs.readFileSync(path.join(root, 'public/sitemap.xml'), 'utf8');
   assert.match(sitemap, /<loc>\/feed\.xml<\/loc>/);
