@@ -39,6 +39,7 @@ const seed = await startNodeSeed({
   port: 0,
   advertiseHost: '127.0.0.1',
   allocatorToken,
+  placementLabels: ['ground', 'gateway', 'ground'],
   announce: true,
   announceAddress: '127.0.0.1',
   announcePort,
@@ -50,6 +51,7 @@ try {
   assert.equal(capacity.status, 200);
   assert.equal(capacity.body.runtime, 'Evercraft Compute');
   assert.equal(capacity.body.allocation_auth, 'bearer');
+  assert.deepEqual(capacity.body.placement_labels, ['ground', 'gateway']);
 
   const unauthorized = await raw(`${seed.endpoint}/v1/leases`, {
     method: 'POST',
@@ -89,6 +91,7 @@ try {
     'utf8'
   ));
   assert.equal(persisted.named_cloud_required, false);
+  assert.deepEqual(persisted.placement_labels, ['ground', 'gateway']);
   assert.ok(!JSON.stringify(persisted).includes(allocatorToken));
 
   console.log(JSON.stringify({
@@ -100,6 +103,7 @@ try {
     yard_authenticated_lease: true,
     private_core_origin_created: true,
     beacon_contains_credentials: false,
+    placement_labels_preserved: true,
     named_cloud_required: false,
   }, null, 2));
 } finally {
