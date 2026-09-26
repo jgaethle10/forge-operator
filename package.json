@@ -112,7 +112,7 @@
     "proof:transport-diversity": "node systemia/network/transport-diversity-proof.mjs",
     "proof:durable-continuity": "node systemia/network/durable-continuity-state-proof.mjs",
     "proof:process-restart-recovery": "node systemia/network/process-restart-recovery-proof.mjs",
-    "test:aliev-discovery": "npm run chum:index && npm run chum:answers && npm run chum:mirror && node tests/aliev-discovery.test.mjs",
+    "test:aliev-discovery": "npm run chum:index && npm run chum:answers && npm run chum:mirror && npm run chum:capabilities && node tests/aliev-discovery.test.mjs",
     "test:rivet-brand": "node tests/rivet-brand.test.mjs",
     "chum:ingest-probe-misses": "node systemia/chum/provider-miss-ingest.mjs",
     "test:chum-provider-miss-ingest": "node tests/chum-provider-miss-ingest.test.mjs",
