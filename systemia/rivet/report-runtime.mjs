@@ -118,14 +118,28 @@ export async function generateYardReport({
   systemiaMachineKey,
   sourceFetch=fetch,
   stateDir,
-  now=()=>new Date().toISOString()
+  now=()=>new Date().toISOString(),
+  onProgress=()=>{}
 }){
   const requested=clean(address);
   if(requested.length<5) throw new Error('address_required');
   if(!clean(sourceUrl)) throw new Error('aliev_source_url_required');
   if(!clean(systemiaMachineKey)) throw new Error('systemia_machine_key_required');
   if(!stateDir) throw new Error('state_dir_required');
+  const startedAt=Date.now();
+  const progress=(stage,completed,total,detail={},transfer=null)=>onProgress({
+    schema:'evercraft.rivet.report-progress.v1',
+    stage,
+    completed,
+    total,
+    percent:Math.round((completed/total)*100),
+    elapsed_ms:Math.max(0,Date.now()-startedAt),
+    detail,
+    transfer
+  });
+  progress('address_admitted',1,8,{message:'Address admitted. Starting site intelligence.'});
 
+  progress('site_intelligence',2,8,{message:'Gathering property and site evidence.'});
   const response=await sourceFetch(sourceUrl,{
     method:'POST',
     headers:{
@@ -144,6 +158,13 @@ export async function generateYardReport({
   if(clean(data?.response_profile)!=='rivet_report_snapshot_v1'){
     throw new Error('aliev_snapshot_profile_required');
   }
+  progress('source_verified',3,8,{
+    message:'Source intelligence received and verified.',
+    traffic_records:arr(data?.traffic).length,
+    charger_records:arr(data?.chargers).length,
+    incentive_records:arr(data?.incentives).length,
+    observed_usage_records:arr(data?.nearby_observed_usage).length
+  });
 
   const snapshotBytes=jsonBytes(data);
   const snapshotSha=sha256(snapshotBytes);
@@ -178,14 +199,29 @@ export async function generateYardReport({
     }]
   },{now:now()});
 
+  progress('football_packing',4,8,{message:'Packing verified evidence for RIVET.'},{
+    state:'PACKING',
+    bytes_total:snapshotBytes.byteLength,
+    bytes_transferred:0,
+    percent:0
+  });
   const sealed=sealFootball(manifest,new Map([[artifactId,snapshotBytes]]));
+  progress('football_transfer',5,8,{message:'BEAST Football transfer verified.'},{
+    state:'RECEIVED',
+    bytes_total:sealed.buffer.byteLength,
+    bytes_transferred:sealed.buffer.byteLength,
+    percent:100,
+    sha256:sha256(sealed.buffer)
+  });
   const opened=openFootball(sealed.buffer);
   const caught=opened.artifacts.get(artifactId);
   if(!caught) throw new Error('football_snapshot_missing');
   if(sha256(caught)!==snapshotSha || caught.byteLength!==snapshotBytes.byteLength){
     throw new Error('football_snapshot_integrity_failed');
   }
+  progress('evidence_integrity',6,8,{message:'Evidence integrity confirmed.',source_bytes:snapshotBytes.byteLength});
 
+  progress('report_render',7,8,{message:'Building the RIVET report.'});
   const report=buildYardReport({address:requested,sourceSnapshot:data,retrievedAt:now()});
   const reportBytes=jsonBytes(report);
   const reportSha=sha256(reportBytes);
@@ -222,6 +258,7 @@ export async function generateYardReport({
     }
   };
   atomicJson(path.join(stateDir,'reports',safeId(reportId)+'.json'),record);
+  progress('ready',8,8,{message:'Report ready.',report_id:reportId});
   return record;
 }
 
