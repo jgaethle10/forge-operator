@@ -200,7 +200,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          if [ "${{ github.event_name }}" = "push" ]; then
+          if [ "${{ steps.trigger_policy.outputs.provider_probe_scope }}" = "rotating_single_machine_case" ]; then
             CASE_ID="$(node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('chum-probes/probe-suite.json'));const ids=s.cases.filter(x=>x.enabled&&x.expected_fit).map(x=>x.case_id);const i=Math.floor(Date.now()/3600000)%ids.length;process.stdout.write(ids[i]||'')")"
             echo "Push measurement rotates one live generic-agent case: $CASE_ID"
             CHUM_PROBE_PROVIDERS=generic_agent CHUM_PROBE_CASES="$CASE_ID" npm run chum:providers
@@ -335,12 +335,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ github.event_name }}" = "push" ]; then
-            echo "Push-triggered ARD pass is recon-only; scheduled/manual runs own active registry submission."
-            CHUM_ARD_SUBMIT=false npm run chum:ard-strike
-          else
+          if [ "${{ steps.trigger_policy.outputs.ard_submit }}" = "true" ]; then
             echo "Scheduled/manual ARD pass may submit bounded registry work."
             CHUM_ARD_SUBMIT=true npm run chum:ard-strike
+          else
+            echo "Push-triggered ARD pass is recon-only; scheduled/manual runs own active registry submission."
+            CHUM_ARD_SUBMIT=false npm run chum:ard-strike
           fi
 
       - name: Run CHUM portfolio mesh
@@ -495,7 +495,7 @@ jobs:
               echo "::notice::Live machine-client provider measurement completed; consumer-chat measurement remains separately authorization-gated."
               ;;
             blocked_bridge_not_configured)
-              if [ "${{ github.event_name }}" = "push" ]; then
+              if [ "${{ steps.trigger_policy.outputs.allow_blocked_provider_measurement }}" = "true" ]; then
                 echo "::warning::Provider measurement is blocked because no authorized bridge or live machine-client measurement completed."
               else
                 FAILED=1
