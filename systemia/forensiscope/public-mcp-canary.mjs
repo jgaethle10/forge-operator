@@ -66,6 +66,7 @@ export async function canaryForensiScopePublicMcp({
     health.checkout_or_payment === false &&
     health.evidence_access_required === true &&
     health.privacy_safe_access_audit_receipts === true &&
+    health.immediate_access_revocation_enforced === true &&
     health.deployment_receipt_bound === true &&
     health.deployment_receipt_ref === deploymentReceiptHash;
 
