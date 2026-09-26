@@ -1,0 +1,17 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-26",
+  "provider": "chatgpt",
+  "provider_surface": "ChatGPT consumer chat, user-reported",
+  "product_key": "forensiscope",
+  "source": "user_observed_result",
+  "prompt": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.",
+  "surfaced_forensiscope": true,
+  "observed_alternatives": [
+    "Twelve Labs",
+    "AssemblyAI"
+  ],
+  "notable_signal": "ChatGPT surfaced ForensiScope first for the exact brand-blind pain statement, explained the combined long-media/transcription/timeline/deduplication fit, and cited live MCP/registry evidence.",
+  "interpretation": "Positive pickup receipt for one consumer-chat session only. This does not establish stable or universal ChatGPT discovery.",
+  "evidence": "User-provided copied ChatGPT response in this conversation on 2026-09-26."
+}
