@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: 22
       - name: Prove acquisition boundaries
-        run: npm run proof:rivet-session-sprawl && npm run proof:rivet-session-harvester
+        run: npm run proof:rivet-session-sprawl && npm run proof:rivet-session-harvester && npm run proof:rivet-session-saban-coverage
       - name: Build Saban work inventory
         run: npm run rivet:sessions:saban:inventory
       - name: Execute 2,044-role Saban coverage pass
