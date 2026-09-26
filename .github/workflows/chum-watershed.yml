@@ -89,6 +89,8 @@ jobs:
               public/.well-known/evercraft-agent-directory.json \
               public/.well-known/evercraft-discovery.json \
               public/ai-discovery.json \
+              public/llms.txt \
+              llms.txt \
               public/llms-full.txt \
               llms-full.txt \
               public/schema.jsonld \
