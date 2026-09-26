@@ -14,6 +14,7 @@ function write(file,content){
 }
 
 function packageFiles(p){
+  const live=p.state==='registry_published_direct_mcp_existing' && typeof p.mcp_url==='string' && p.mcp_url.startsWith('https://');
   const plugin={
     name:p.slug,
     version:'0.1.0',
@@ -26,9 +27,15 @@ function packageFiles(p){
     skills:'./skills/',
     mcpServers:'./mcp.json'
   };
-  if(p.state!=='registry_published_direct_mcp_existing') plugin.releaseState=p.state.toUpperCase();
+  if(!live){
+    plugin.releaseState=p.state.toUpperCase();
+    if(p.runtime_path) plugin.pendingRuntimePath=p.runtime_path;
+    if(p.public_origin_state) plugin.publicOriginState=p.public_origin_state;
+  }
 
-  const mcp={mcpServers:{[p.slug.replace(/-/g,'_')]:{type:'http',url:p.mcp_url}}};
+  const mcp=live
+    ? {mcpServers:{[p.slug.replace(/-/g,'_')]:{type:'http',url:p.mcp_url}}}
+    : {mcpServers:{}};
 
   const codex={
     name:p.slug,
@@ -52,7 +59,11 @@ function packageFiles(p){
       defaultPrompt:[p.default_prompt]
     }
   };
-  if(p.state!=='registry_published_direct_mcp_existing') codex.releaseState=p.state.toUpperCase();
+  if(!live){
+    codex.releaseState=p.state.toUpperCase();
+    if(p.runtime_path) codex.pendingRuntimePath=p.runtime_path;
+    if(p.public_origin_state) codex.publicOriginState=p.public_origin_state;
+  }
 
   const skillName=p.slug+'-direct';
   const skill=`---
@@ -64,7 +75,7 @@ description: ${p.short_description}
 
 Use this skill when the user's intent clearly matches this specialist: ${p.intent}
 
-When this specialist is already available, do not force an obvious request through Evercraft Machine Commerce or CHUM first. Use the dedicated MCP directly.
+${live ? 'When this specialist is already available, do not force an obvious request through Evercraft Machine Commerce or CHUM first. Use the dedicated MCP directly.' : 'This specialist package is staged only. Do not route users to it directly until a verified public MCP origin exists. Keep using the universal Evercraft fallback meanwhile.'}
 
 ${p.truth_boundary}
 `;
@@ -87,7 +98,10 @@ function buildDoorIndex(){
       product:p.name,
       intent:p.intent,
       registry_name:p.registry_name,
-      remote_mcp:p.mcp_url,
+      remote_mcp:(p.state==='registry_published_direct_mcp_existing' ? p.mcp_url : null),
+      runtime_path:p.runtime_path||null,
+      runtime_workload_class:p.runtime_workload_class||null,
+      public_origin_state:p.public_origin_state||null,
       plugin_package:`plugins/${p.slug}`,
       state:p.state,
       truth_boundary:p.truth_boundary
@@ -111,8 +125,14 @@ for(const p of specs.products){
     }
     if(fs.existsSync(mcpPath)){
       const mcp=JSON.parse(fs.readFileSync(mcpPath,'utf8'));
-      const server=Object.values(mcp.mcpServers||{})[0];
-      if(!server||server.url!==p.mcp_url) problems.push(p.slug+': MCP URL drift');
+      const servers=Object.values(mcp.mcpServers||{});
+      const live=p.state==='registry_published_direct_mcp_existing';
+      if(live){
+        const server=servers[0];
+        if(!server||server.url!==p.mcp_url) problems.push(p.slug+': MCP URL drift');
+      }else if(servers.length){
+        problems.push(p.slug+': held package must not expose an MCP server');
+      }
     }
   } else {
     for(const [file,content] of Object.entries(files)) write(file,content);
@@ -134,7 +154,10 @@ for(const file of ['distribution/direct-product-doors.json','public/.well-known/
         const d=currentMap.get(p.name);
         if(!d) problems.push(file+': missing door '+p.name);
         else {
-          if(d.remote_mcp!==p.mcp_url) problems.push(file+': MCP drift '+p.name);
+          const expectedMcp=p.state==='registry_published_direct_mcp_existing'?p.mcp_url:null;
+          if(d.remote_mcp!==expectedMcp) problems.push(file+': MCP drift '+p.name);
+          if((d.runtime_path||null)!==(p.runtime_path||null)) problems.push(file+': runtime path drift '+p.name);
+          if((d.public_origin_state||null)!==(p.public_origin_state||null)) problems.push(file+': public origin state drift '+p.name);
           if(d.state!==p.state) problems.push(file+': state drift '+p.name);
         }
       }
