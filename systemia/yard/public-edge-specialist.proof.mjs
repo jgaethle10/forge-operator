@@ -64,7 +64,7 @@ try{
 
   const broker=new YardPublicRouteBroker({
     yard,
-    providerEndpoint:edge.result.local_url,
+    providerClient:yard.publicRouteProviderClient('evercraft-public-edge-proof'),
     allowLoopbackProof:true,
   });
   const binding=await broker.bindDeployment('specialist-behind-public-edge-proof',{
@@ -74,6 +74,8 @@ try{
 
   assert.equal(binding.schema,'evercraft.yard.public-route-binding.v1');
   assert.equal(binding.provider,'evercraft-public-edge');
+  assert.equal(binding.provider_transport,'compute_lease');
+  assert.ok(binding.provider_management_receipt_hash);
   assert.equal(binding.route_scope,'loopback_proof');
   assert.equal(binding.route_verified,false);
   assert.equal(binding.deployment_receipt_hash,specialist.receipt.receipt_hash);
@@ -136,6 +138,8 @@ try{
     checkout_authority:false,
     founder_login_required:false,
     external_saas_route_provider_required:false,
+    edge_control_exposed_to_yard:false,
+    provider_transport:'compute_lease',
     public_https_verified:false,
     proof_scope:'loopback_only',
     edge_deployment_receipt:edge.receipt.receipt_hash,
