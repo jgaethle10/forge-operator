@@ -43,6 +43,8 @@ fs.writeFileSync(receiptPath,JSON.stringify({
 
 const summary=ingestProviderMisses({probeReceiptPath:receiptPath,probeSuitePath:suitePath,observationsRoot,summaryPath});
 assert.equal(summary.created,1);
+assert.equal(summary.existing,0);
+assert.equal(summary.deduped_repeat_misses,0);
 assert.equal(summary.skipped_pickup_observed,1);
 assert.equal(summary.skipped_missing_provider_receipt,1);
 const files=fs.readdirSync(observationsRoot);
@@ -72,6 +74,29 @@ assert.deepEqual(summary.repair_queue[0].providers,['chatgpt']);
 assert.ok(summary.repair_queue[0].concepts.includes('media'));
 assert.ok(summary.repair_queue[0].concepts.includes('timeline'));
 assert.equal(summary.repair_queue[0].next_actions.length,4);
+
+// A fresh provider receipt for the same semantic miss must not create another
+// persisted observation or another repair-publication commit.
+const firstPersistedPath=path.join(observationsRoot,files[0]);
+const firstPersisted=fs.readFileSync(firstPersistedPath,'utf8');
+fs.writeFileSync(receiptPath,JSON.stringify({
+  schema:'evercraft.chum.cross-llm-run-receipt.v1',
+  completed_at:'2026-09-26T00:00:00Z',
+  results:[{
+    probe_id:'media-test:chatgpt',provider:'chatgpt',surface:'consumer_chat',product_key:'forensiscope',case_id:'media-test',status:'completed',
+    provider_receipt:{id:'receipt-999',observed_at:'later'},response_sha256:'different-response-hash',
+    evaluation:{expected_fit:true,pickup_observed:false}
+  }]
+}));
+const repeatSummary=ingestProviderMisses({probeReceiptPath:receiptPath,probeSuitePath:suitePath,observationsRoot,summaryPath});
+assert.equal(repeatSummary.created,0);
+assert.equal(repeatSummary.existing,1);
+assert.equal(repeatSummary.deduped_repeat_misses,1);
+assert.equal(fs.readdirSync(observationsRoot).length,1);
+assert.equal(fs.readFileSync(firstPersistedPath,'utf8'),firstPersisted);
+assert.equal(repeatSummary.observation_files[0],firstPersistedPath);
+assert.equal(repeatSummary.repair_queue.length,1);
+
 const repairActions=await runAssignment({
   assignment:{
     agent_id:'chum-test-00001',
