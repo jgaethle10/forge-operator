@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T00:41:36.502Z",
-  "url_count": 1866,
+  "updated_at": "2026-09-26T00:41:42.260Z",
+  "url_count": 1886,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -21,8 +21,8 @@
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "89f53694a696ceba25045dba6e77e8642fc4cb32591ad6f0f1bfc4748e76714f",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "2586869f32224031f2da34605c34a68923b197b4a1712566f281be2d3fac2ac6",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -75,32 +75,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "549f47b8a4bc111faeefad725d253034c1cb11184f521f0e053cfb58af8f5a99",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "831c69972ffd4a354dd6aedea74c5a54ce04f673aed72d54475c9ce05a77ccb3",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "94e510636b554b53728317333cc7f942d9dfe405b8da9187f775ddde6ba20a9d",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "7c6d58eaeb4b37a2320a4bbdc24ccf09eb462190737b335e9abbc2f3000b1d11",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "a192a73f29b2648b5af429d8893242578560a8caa2002a4d4e8cb076b97c6c15",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "abfac61ad69106dcd0a324f4dd7d206bb23ee9b534755c3eca859876afe04793",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "4bbd6665181789f15520a5bde37e774e8ff6e3e6018f89855fd7359996e689e8",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "593987e1f7b8782d680357f4da0d8d28b01058ff418dcd9c5c9bd5ae2e7f2abf",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "9d6b908388bca7117510489b4e66312e2ad9311dcaf3878a89f7abef4cad1dc6",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "90f3d898af5ffed97554f86af7806da5fe0ef223c326d8c12f7737446c52513c",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "09ddbb93bc74158db11a6ab0d77f882e4758d395e5ee26e84cca8d98f9ff83c8",
-      "last_changed": "2026-09-26T00:41:36.502Z",
+      "content_sha256": "97fe4bc63b3ca98c08677f464ea6802ae3255bf30594d993cdf451e486b4e652",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -157,10 +157,34 @@
       "last_changed": "2026-09-25T06:50:26.447Z",
       "priority": 80
     },
+    "/network/": {
+      "path": "/network/",
+      "content_sha256": "9a3d826de307a9532b48303c5058ecec7e5dc26a509107f2924cde9b088ef61f",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    "/network/llms.txt": {
+      "path": "/network/llms.txt",
+      "content_sha256": "de9cb43c7187fe678320725183f1b5c41f9cd5c69feb255caeca45e7a741a288",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 86
+    },
+    "/network/discovery.json": {
+      "path": "/network/discovery.json",
+      "content_sha256": "d496cb227bb171b768fc88cd43ec8e7a3b72269e7cbc6f50f55a7788fb0f3ff3",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    "/.well-known/evercraft-network.json": {
+      "path": "/.well-known/evercraft-network.json",
+      "content_sha256": "d496cb227bb171b768fc88cd43ec8e7a3b72269e7cbc6f50f55a7788fb0f3ff3",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 84
+    },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "549f47b8a4bc111faeefad725d253034c1cb11184f521f0e053cfb58af8f5a99",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "831c69972ffd4a354dd6aedea74c5a54ce04f673aed72d54475c9ce05a77ccb3",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -549,20 +573,20 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "ac6953f3625ba106887f716d351aa2c8c9e9769f3cfd6f2a62a8bcec19fb835b",
-      "last_changed": "2026-09-26T00:24:32.646Z",
+      "content_sha256": "a122c54f26025e3e12dbedee6223210d0e6c25ede0faff4de2893a0731cb9714",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 86
     },
     "/ai-discovery.json": {
       "path": "/ai-discovery.json",
-      "content_sha256": "3b87200dd66b3610e879570b9eed2369ab308d3a3ca53cdabaf25ef70c8dbd30",
-      "last_changed": "2026-09-25T17:29:56.413Z",
+      "content_sha256": "599334b7ea8edaca2437dd1c2fd70732a84579e2a7fc3fa285087226d5b2c6ee",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 60
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "6bc3fc75e38bb70fc038bddb7ec576af6cf857092653b34f4031e3a873178965",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "330d3dc399f451752d2ec942b832ce81ca8b464ff5bb6fa50c6a9ce86e174de3",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -579,8 +603,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "13ed9c1be53b7a75f599eba56fc3ec38c95d98135284b24dcafa2ee435d5bdc6",
-      "last_changed": "2026-09-25T20:57:58.745Z",
+      "content_sha256": "b9c90d7c73e0549e0a68df5014a77f38b8ce27dc5d12cff34bf065920ac96c9b",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -591,8 +615,8 @@
     },
     "/.well-known/evercraft-discovery.json": {
       "path": "/.well-known/evercraft-discovery.json",
-      "content_sha256": "3b87200dd66b3610e879570b9eed2369ab308d3a3ca53cdabaf25ef70c8dbd30",
-      "last_changed": "2026-09-25T17:29:56.413Z",
+      "content_sha256": "599334b7ea8edaca2437dd1c2fd70732a84579e2a7fc3fa285087226d5b2c6ee",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 84
     },
     "/.well-known/evercraft-products.json": {
@@ -2421,26 +2445,26 @@
     },
     "/chum/products/evercraft-network/": {
       "path": "/chum/products/evercraft-network/",
-      "content_sha256": "1813ed743f4da9c80e459ae78984df11565f82864ba1cd43b782a6661d49c781",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "f9f98e162f548d370a7c66afc8aabbf11180db0ec3bb94e97c7db4ff6998e7be",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 94
     },
     "/chum/products/evercraft-network/llms.txt": {
       "path": "/chum/products/evercraft-network/llms.txt",
-      "content_sha256": "c3409a288aa42bcd88903531694a509e6f4f623d8ab34c6f79fc2f2933ce56b6",
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "content_sha256": "2ed02da18ab0d1cf06be968e1db917ebc96090a88ee79dc07c87ce02cf5c461e",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 94
     },
     "/chum/products/evercraft-network/ai-discovery.json": {
       "path": "/chum/products/evercraft-network/ai-discovery.json",
-      "content_sha256": "6ff81634a1f1d55606c4453cf3086ba073bc155db213e4345f66b4c737b7e1d0",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "e10eaaf5b5e5f05cf58635ffc38d2ca606f68fb1e760863fdcce54dc870fbc3f",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 94
     },
     "/chum/products/evercraft-network/ai-conformance.json": {
       "path": "/chum/products/evercraft-network/ai-conformance.json",
-      "content_sha256": "a04068ae5440d9a4daf6d6710283b92f68d60c9795c9a11971108d26051ace08",
-      "last_changed": "2026-09-25T20:22:17.737Z",
+      "content_sha256": "5e98f4675da90a4e1a02634b72f4b1e051c859d67cca50b8e5e327d2ca9fbd47",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 94
     },
     "/chum/products/evercraft-physics-atlas/": {
@@ -3601,6 +3625,18 @@
       "last_changed": "2026-09-25T20:57:58.745Z",
       "priority": 160
     },
+    "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f/": {
+      "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f/",
+      "content_sha256": "c5c9cb89a3d404d7beaba06bb5922c19d0edb4ed2e8f71a9fcceabd570ac6b96",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json": {
+      "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
+      "content_sha256": "872435f2b12dab0978a254c69c25bfbf1824e26b5b1836592be52035217edb5c",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
     "/chum/answers/doors/application-network-continuity-3ac8582e22/": {
       "path": "/chum/answers/doors/application-network-continuity-3ac8582e22/",
       "content_sha256": "589393c27130d62cd56e4f50cd323bb60602d065d3276807ab77945c968c582e",
@@ -4201,6 +4237,18 @@
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 160
     },
+    "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/": {
+      "path": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/",
+      "content_sha256": "20f756a943bf6f46a145502ff8925c612c359832d51745c90cd457c44e6b9e2a",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json": {
+      "path": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json",
+      "content_sha256": "9ea74e6b365e15598254f3d310cee698518891fc3be9024bbae47cab3faf3d68",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
     "/chum/answers/doors/business-continuity-and-safety-0babb51749/": {
       "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749/",
       "content_sha256": "d6272302f6001239d19423994616cc0dc41c24782ac2fab93645421ae919f488",
@@ -4753,6 +4801,18 @@
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 160
     },
+    "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/": {
+      "path": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/",
+      "content_sha256": "923f15943354300afb2a74e8d5fd72317c8e9d9ad0d9282e1460fc4bfa62f82b",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json": {
+      "path": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json",
+      "content_sha256": "662ad456d4f7f1c16803e61350cfba858b3a1da083afc4ee56848618669eaeb7",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
     "/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a/": {
       "path": "/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a/",
       "content_sha256": "35377f5379462cb03260494189f0a80864aae05e2a27b8d59264e28ef543d91e",
@@ -5004,6 +5064,18 @@
       "content_sha256": "765ea677a08b052e348dd3d6c846bc157f6184a4da49c5939e34b751783ab34e",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 160
+    },
+    "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/": {
+      "path": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/",
+      "content_sha256": "e79cea565e5eaa1ced0eb655688952e76cb79c41df6b41ea8b02aa2717e21ced",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json": {
+      "path": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json",
+      "content_sha256": "97c364bbfd5c475d82c36ff7365c464ab88f5176910276ef433d24723415556a",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
     },
     "/chum/answers/doors/device-reconnect-visibility-edee3d926e/": {
       "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e/",
@@ -6721,6 +6793,18 @@
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 100
     },
+    "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/": {
+      "path": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/",
+      "content_sha256": "60ed28f54ae19c8b7f2e84b5a38b823a6a2f93a14869f5eebbd1f82626abc4ba",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json": {
+      "path": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json",
+      "content_sha256": "8048b0e28cbfc9f7c2ef35e129c752c286f00c6edff390aa4a658a96cd87b201",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
     "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4/": {
       "path": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4/",
       "content_sha256": "4831af8adcdb0e96f395e51a1b1242901b7d5e035fab9270063899c5d20e27d2",
@@ -7235,6 +7319,18 @@
       "path": "/chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55.json",
       "content_sha256": "65a3919ef38f99dba1ad4fe8a5b791ea25ed3bb8ee3e8ad9aa5f0021e7e56056",
       "last_changed": "2026-09-25T20:16:53.283Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/": {
+      "path": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/",
+      "content_sha256": "84ec2b2b19fca011f24385ae9dc3c560ee6af9c749cabdc19b8d6d04578efcbf",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json": {
+      "path": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json",
+      "content_sha256": "54301b71fc4635f194ec3397ef0c0e0e5b82ec8750b6ca47234447ecafe18e03",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 100
     },
     "/chum/answers/doors/keep-restoration-observations-and-review-status-together-b7e305d394/": {
@@ -9109,6 +9205,18 @@
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 100
     },
+    "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81/": {
+      "path": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81/",
+      "content_sha256": "fd4b09bc98c2b9f2deca092190dce7573425e4da3f0348530fe0cd21c93a96b7",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json": {
+      "path": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json",
+      "content_sha256": "e4f809de99a10b9453ce78ba10b23a4eac1a0517459bef110c53d1d6b7fb9e48",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
     "/chum/answers/doors/resolve-duplicate-suppliers-across-erp-exports-f6c12230af/": {
       "path": "/chum/answers/doors/resolve-duplicate-suppliers-across-erp-exports-f6c12230af/",
       "content_sha256": "72e2dc53325a30df70e13483ddb0be504a7e62ccbd55e86da04208d177f268bc",
@@ -9803,6 +9911,18 @@
       "path": "/chum/answers/doors/skills-based-hiring-b6991ed7ee.json",
       "content_sha256": "0b734529f019496c693d38e13d6e1e27b9ed860dc12fbbdce6a5ac3fcfa6549c",
       "last_changed": "2026-09-25T20:16:53.283Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/": {
+      "path": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/",
+      "content_sha256": "2e3afb998d46abe7da987be74a0fed9ed676dc43c4ea110167b445ee02c420fe",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json": {
+      "path": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json",
+      "content_sha256": "3f2accfd3c9e6f7a298eacdc930b39c4aa47f61a8513b96eb008fdb00dac7896",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 100
     },
     "/chum/answers/doors/software-to-run-a-live-event-daac202f9b/": {

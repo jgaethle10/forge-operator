@@ -259,7 +259,9 @@
       "@type": "Service",
       "@id": "https://network-control.base44.app/#evercraft-service",
       "name": "Evercraft Network",
-      "alternateName": [],
+      "alternateName": [
+        "Evercraft Network Resilience"
+      ],
       "url": "https://network-control.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"

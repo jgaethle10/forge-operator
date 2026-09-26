@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T00:41:36.502Z",
+  "updated_at": "2026-09-26T00:41:42.260Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,414 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-26T00:41:36.502Z",
+      "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/evercraft-network/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-conformance.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-network/llms.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 86
+    },
+    {
+      "path": "/network/llms.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-network.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/answers/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T00:41:36.502Z",
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-26T00:41:36.502Z",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-26T00:41:36.502Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
+      "url": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f/",
+      "url": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json",
+      "url": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/",
+      "url": "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json",
+      "url": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/",
+      "url": "/chum/answers/doors/continuity-visibility-when-an-authorized-internet-path-changes-a1495c5301/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json",
+      "url": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/",
+      "url": "/chum/answers/doors/device-reconnect-and-health-visibility-e196d4412a/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json",
+      "url": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/",
+      "url": "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json",
+      "url": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/",
+      "url": "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json",
+      "url": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81/",
+      "url": "/chum/answers/doors/resilient-application-identity-across-authorized-network-changes-d92ea30f81/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json",
+      "url": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/",
+      "url": "/chum/answers/doors/software-network-continuity-without-changing-carriers-75e206686c/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/evercraft-network/",
+      "url": "/chum/products/evercraft-network/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-conformance.json",
+      "url": "/chum/products/evercraft-network/ai-conformance.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-discovery.json",
+      "url": "/chum/products/evercraft-network/ai-discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-network/llms.txt",
+      "url": "/chum/products/evercraft-network/llms.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 86
+    },
+    {
+      "path": "/network/llms.txt",
+      "url": "/network/llms.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "url": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-network.json",
+      "url": "/.well-known/evercraft-network.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "url": "/ai-discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/",
+      "url": "/network/",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/discovery.json",
+      "url": "/network/discovery.json",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-09-26T00:41:42.260Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +428,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-26T00:41:36.502Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-26T00:41:36.502Z",
       "priority": 80
     },
@@ -67,12 +448,6 @@
       "url": "/chum/strike/",
       "last_changed": "2026-09-26T00:32:09.062Z",
       "priority": 80
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-26T00:24:32.646Z",
-      "priority": 86
     },
     {
       "path": "/chum/",
@@ -537,60 +912,6 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 80
-    },
-    {
-      "path": "/schema.jsonld",
-      "url": "/schema.jsonld",
-      "last_changed": "2026-09-25T20:57:58.745Z",
-      "priority": 60
-    },
-    {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "last_changed": "2026-09-25T20:22:17.737Z",
@@ -869,18 +1190,6 @@
     {
       "path": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
       "url": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-network/ai-conformance.json",
-      "url": "/chum/products/evercraft-network/ai-conformance.json",
-      "last_changed": "2026-09-25T20:22:17.737Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-network/ai-discovery.json",
-      "url": "/chum/products/evercraft-network/ai-discovery.json",
       "last_changed": "2026-09-25T20:22:17.737Z",
       "priority": 94
     },
@@ -1385,150 +1694,6 @@
     {
       "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
       "url": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
-      "url": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ai-worker-competency-test-7f140524a9.json",
-      "url": "/chum/answers/doors/ai-worker-competency-test-7f140524a9.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/air-quality-work-decision-6eeb07802f.json",
-      "url": "/chum/answers/doors/air-quality-work-decision-6eeb07802f.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/airport-parking-management-software-e93ff18ae4.json",
-      "url": "/chum/answers/doors/airport-parking-management-software-e93ff18ae4.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-a-document-dump-a54d61f378.json",
-      "url": "/chum/answers/doors/analyze-a-document-dump-a54d61f378.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
-      "url": "/chum/answers/doors/analyze-a-long-video-2badf65989.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json",
-      "url": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d.json",
-      "url": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
-      "url": "/chum/answers/doors/analyze-long-form-evidence-05fc431e5d.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
-      "url": "/chum/answers/doors/analyze-our-purchase-approval-process-0ba95e1d06.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
-      "url": "/chum/answers/doors/analyze-this-messy-erp-export-1be6680d97.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
-      "url": "/chum/answers/doors/analyze-three-way-match-problems-5a67f2b505.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json",
-      "url": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "url": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565.json",
-      "url": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
-      "url": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
-      "url": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
-      "url": "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audio-too-long-for-ai-e40950a338.json",
-      "url": "/chum/answers/doors/audio-too-long-for-ai-e40950a338.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audit-an-enterprise-operations-process-0e1ca78c9c.json",
-      "url": "/chum/answers/doors/audit-an-enterprise-operations-process-0e1ca78c9c.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
-      "url": "/chum/answers/doors/audit-app-portability-72cf49e062.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-ai-agents-and-automations-for-persistence-fa3a1c24fc.json",
-      "url": "/chum/answers/doors/audit-my-ai-agents-and-automations-for-persistence-fa3a1c24fc.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-n8n-make-zapier-cloud-function-or-webhook-stack-for-hidden-persistence-30c6cd575f.json",
-      "url": "/chum/answers/doors/audit-my-n8n-make-zapier-cloud-function-or-webhook-stack-for-hidden-persistence-30c6cd575f.json",
-      "last_changed": "2026-09-25T20:16:53.283Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
-      "url": "/chum/answers/doors/audit-my-resume-4c2e67ee30.json",
       "last_changed": "2026-09-25T20:16:53.283Z",
       "priority": 160
     }

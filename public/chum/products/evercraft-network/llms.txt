@@ -1,6 +1,7 @@
 # Evercraft Network
 
 Product key: evercraft-network
+Aliases: Evercraft Network Resilience
 Canonical product: https://network-control.base44.app/
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json
@@ -12,6 +13,14 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - member device reconnect visibility
 - continuity readiness tools
 - Evercraft Network membership
+- keep my application connected when Wi-Fi and cellular paths change
+- application continuity across changing internet connections
+- software network continuity without changing carriers
+- household connectivity resilience software
+- business connectivity resilience software
+- device reconnect and health visibility
+- continuity visibility when an authorized internet path changes
+- resilient application identity across authorized network changes
 
 ## Authority
 

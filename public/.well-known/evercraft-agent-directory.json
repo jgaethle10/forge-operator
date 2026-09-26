@@ -738,7 +738,9 @@
     {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
-      "aliases": [],
+      "aliases": [
+        "Evercraft Network Resilience"
+      ],
       "class": "application_network_continuity",
       "canonical_url": "https://network-control.base44.app/",
       "intents": [
@@ -746,7 +748,15 @@
         "network resilience software",
         "member device reconnect visibility",
         "continuity readiness tools",
-        "Evercraft Network membership"
+        "Evercraft Network membership",
+        "keep my application connected when Wi-Fi and cellular paths change",
+        "application continuity across changing internet connections",
+        "software network continuity without changing carriers",
+        "household connectivity resilience software",
+        "business connectivity resilience software",
+        "device reconnect and health visibility",
+        "continuity visibility when an authorized internet path changes",
+        "resilient application identity across authorized network changes"
       ],
       "invocation": {
         "mode": "discovery_only",
