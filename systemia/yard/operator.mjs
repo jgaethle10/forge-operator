@@ -463,6 +463,7 @@ export class YardOperator {
         body: JSON.stringify({
           lease_id: lease.lease_id,
           token: lease.token,
+          release_ref: releaseRef,
           workload_class: workloadClass,
           input,
         }),
