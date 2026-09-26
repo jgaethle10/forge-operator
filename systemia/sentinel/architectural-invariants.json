@@ -97,9 +97,19 @@
       "required_literals": [
         "node systemia/sentinel/trigger-mode-policy.mjs",
         "steps.trigger_policy.outputs.require_consumer_bridge",
+        "steps.trigger_policy.outputs.provider_probe_scope",
+        "steps.trigger_policy.outputs.ard_submit",
+        "steps.trigger_policy.outputs.allow_blocked_provider_measurement",
         "steps.trigger_policy.outputs.broadcast_discovery"
       ],
-      "repair_recipe_id": "trigger-mode-policy-drift"
+      "repair_recipe_id": "trigger-mode-policy-drift",
+      "occurrence_limits": [
+        {
+          "literal": "${{ github.event_name }}",
+          "min": 1,
+          "max": 1
+        }
+      ]
     }
   ]
 }
