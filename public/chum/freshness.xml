@@ -2,20 +2,22 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-26T02:26:35.403Z</updated>
+<updated>2026-09-26T02:29:08.076Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-26T02:29:08.076Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-26T02:29:08.076Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T02:29:08.076Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-26T02:29:08.076Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0f07c582266ddaf1fb8bb94e</id><title>/chum/products/ibmi-rescue/ai-discovery.json</title><updated>2026-09-26T02:29:07.565Z</updated><link href="/chum/products/ibmi-rescue/ai-discovery.json"/><category term="priority-94"/></entry>
+<entry><id>urn:evercraft:chum:5c00cb6dcc6ad4fb68cf8500</id><title>/chum/products/ibmi-rescue/llms.txt</title><updated>2026-09-26T02:29:07.565Z</updated><link href="/chum/products/ibmi-rescue/llms.txt"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:df1ee1d0ca7a04ae37385c83</id><title>/chum/products/evercraft-clip/</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/chum/products/evercraft-clip/"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:c23ede010bbf3ef93572791f</id><title>/chum/products/evercraft-clip/ai-conformance.json</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/chum/products/evercraft-clip/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:3469e9f62539be40fd1ee1ee</id><title>/chum/products/evercraft-clip/ai-discovery.json</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/chum/products/evercraft-clip/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:b6ea44ad02241415adaab931</id><title>/chum/products/evercraft-clip/llms.txt</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/chum/products/evercraft-clip/llms.txt"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:0e181ab18adead50737d7723</id><title>/llms-full.txt</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/llms-full.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:901775e23cd6e7d85bd20643</id><title>/.well-known/evercraft-agent-directory.json</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/.well-known/evercraft-agent-directory.json"/><category term="priority-84"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6d9c0abbf1642687807b64f6</id><title>/chum/index.json</title><updated>2026-09-26T02:26:35.403Z</updated><link href="/chum/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-26T02:26:29.639Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-26T02:26:29.639Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-26T02:26:29.639Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:25030e1dce82c6e376bfc7f5</id><title>/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json</title><updated>2026-09-26T02:19:41.271Z</updated><link href="/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:02828e5dca3f0780fcbb6f8a</id><title>/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/</title><updated>2026-09-26T02:19:41.271Z</updated><link href="/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:43c6188e447dfde63a708e05</id><title>/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json</title><updated>2026-09-26T02:19:41.271Z</updated><link href="/chum/answers/doors/create-social-ready-video-outputs-with-a-governed-publishing-path-ec776b8ce1.json"/><category term="priority-100"/></entry>
@@ -103,6 +105,4 @@
 <entry><id>urn:evercraft:chum:7e08b3263ddcc2592de75860</id><title>/chum/products/evercraft-network/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/evercraft-network/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:707cbd4529ce6fa5eaa1dffd</id><title>/chum/products/evercraft-network/ai-discovery.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/evercraft-network/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:dc77a8eaa1b41dd4c0fa91e9</id><title>/chum/products/evercraft-physics-atlas/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/evercraft-physics-atlas/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:9b90e01e0acdb960e4b4bb83</id><title>/chum/products/evercraft-physics-atlas/ai-discovery.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/evercraft-physics-atlas/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:8f7be14b3a75d668d73dcd3a</id><title>/chum/products/evercraft-property-services/ai-conformance.json</title><updated>2026-09-26T00:44:36.244Z</updated><link href="/chum/products/evercraft-property-services/ai-conformance.json"/><category term="priority-94"/></entry>
 </feed>
