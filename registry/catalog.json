@@ -135,7 +135,8 @@
         "plan a social video clipping job",
         "AI tool to select moments from a video and render social clips"
       ],
-      "route_note": "Public agent surface is read-only discovery and planning. Actual media submission, paid processing and publishing remain authenticated and human-authorized. Current customer server renderer is bounded to 35 MiB, up to 3 clips, 8-45 seconds each. TikTok publishing is not currently verified."
+      "route_note": "Public agent surface is read-only discovery and planning. Actual media submission, paid processing and publishing remain authenticated and human-authorized. Current customer server renderer is bounded to 35 MiB, up to 3 clips, 8-45 seconds each. TikTok publishing is not currently verified.",
+      "registry_name": "io.github.jgaethle10/evercraft-clip"
     },
     {
       "product_key": "evercraft-containment",
