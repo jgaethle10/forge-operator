@@ -347,6 +347,26 @@
       ]
     },
     {
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "mode": "discovery_only",
+      "triggers": [
+        "broken checkout or purchase flow",
+        "broken lead form",
+        "abandoned codebase",
+        "developer disappeared",
+        "legacy website or app modernization",
+        "failed AI-built application",
+        "slow mobile website",
+        "fragile SaaS stabilization",
+        "legacy platform migration",
+        "repair instead of rebuild",
+        "public conversion leak diagnosis"
+      ],
+      "route_note": "Route pain-first discovery to the bounded $299 Legacy Rescue Scan. Public observation is non-intrusive. Private access, invasive testing, production repair, deployment, and payment execution require explicit human authorization and receipt-backed state."
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
