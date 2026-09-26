@@ -110,6 +110,10 @@ for (const product of directory.products || []) {
   fs.mkdirSync(dir, { recursive: true });
   const canonicalUrl = safePublicUrl(product.canonical_url, base + '/index.html');
   const specialistMcp = safePublicUrl(registry?.mcp, null);
+  const registryPublicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
+  const registryName = conf?.mcp_registry?.name
+    ? (registryPublicationState.startsWith('published') ? conf.mcp_registry.name : null)
+    : (registry?.registry_name || null);
 
   const discovery = {
     schema: 'evercraft.chum.product-discovery.v1',
@@ -124,7 +128,7 @@ for (const product of directory.products || []) {
     boundaries: product.boundaries || [],
     commercial: product.commercial || null,
     machine_commerce_handoff: product.commercial?.machine_commerce_handoff || null,
-    registry_name: registry?.registry_name || conf?.mcp_registry?.name || null,
+    registry_name: registryName,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
     developer_surfaces: product.developer_surfaces || null,
