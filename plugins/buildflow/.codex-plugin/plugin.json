@@ -1,0 +1,37 @@
+{
+  "name": "buildflow",
+  "version": "0.1.0",
+  "description": "Use BuildFlow directly for enterprise operations problems involving ERP, migration, process discovery, procurement, vendor identity, role routing, or governed-agent handoff without exposing private customer records.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "buildflow",
+    "erp",
+    "migration",
+    "enterprise-operations",
+    "procurement",
+    "governed-agents",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "BuildFlow Enterprise Operations",
+    "shortDescription": "Route enterprise operations and migration problems safely",
+    "longDescription": "Use BuildFlow directly for enterprise operations problems involving ERP, migration, process discovery, procurement, vendor identity, role routing, or governed-agent handoff without exposing private customer records.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+    "defaultPrompt": [
+      "Route this enterprise operations problem to the smallest safe BuildFlow capability without exposing private records."
+    ]
+  }
+}
