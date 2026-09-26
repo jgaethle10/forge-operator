@@ -512,7 +512,12 @@
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
-      "aliases": [],
+      "aliases": [
+        "Evercraft Fetch",
+        "Evercraft Web Agent",
+        "Evercraft Browser",
+        "Evercraft Search"
+      ],
       "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",

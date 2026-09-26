@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T03:57:56.595Z",
-  "url_count": 2069,
+  "updated_at": "2026-09-26T03:58:02.744Z",
+  "url_count": 2089,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -21,8 +21,8 @@
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "3fc5295d24ed9d82f29286d138818c3e57eb786e7160d97f4970b8efedda8059",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "598c3aa1075886ba960f733b766278e259f3f6ce24b4789d7982d73a53bdf07a",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -75,32 +75,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "b0ab7471ef247b508464c8dcea8d6c02eedf8f98853f8356ba2dd7e4c496cdbe",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "c6375a3360b30184a8e9c91d4bd9b614f2ad1f539ffe1d88c32c9cd89ee1bdec",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "a559eca3518eab4971cba9e65a5670f5159a34e2ab5f6c32c0b7681cd9b133bd",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "37b27e59d610ec04816304516b80468a9fb336efb2ae86a480f021f81c1b0a7a",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "ab7ea753e46d4a9600fb4b4af5e86cd54355b1add13867706b24a5b2b1a6b705",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "16a5bc07a1c5d0353f856ecd8c9e906a207f45ed9da4fcd7969a4b034c503c84",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "aa28ecdc85788c932569fa168d2a3b343f3d486e96e234f3eca797e33aad9b95",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "8e6c51eacba69fb587d7209f2ab084014dacec8feb87b719836ccf24e8a97859",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "048edad297c9acd58ab197986477f760a0e8ab31f02699b0629b9c65e6b518bf",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "37582cc60068ae027473b3c9aae5b424dcc25aa1185ba2e73b1cbf7e6caef123",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -123,8 +123,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "34571ce8e8906bded902e0983a35410dc486cedefc34727201c877e54c31b799",
-      "last_changed": "2026-09-26T03:57:56.595Z",
+      "content_sha256": "4ca79b69d52fbff588ea2debb18ff93475115a71f9c6269b677e40104b69800c",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -231,8 +231,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "b0ab7471ef247b508464c8dcea8d6c02eedf8f98853f8356ba2dd7e4c496cdbe",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "c6375a3360b30184a8e9c91d4bd9b614f2ad1f539ffe1d88c32c9cd89ee1bdec",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -621,8 +621,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "640ec55fa6102ef282e4dd99d80ff07cc591ce5b46626d8d8f822cb0df754856",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "6e7fdf3cb1fbf9bc484f34b36f6bf4cb2dfb984eb8f704dca40da1806cccfbcb",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -633,8 +633,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "1fc439613acfcd3a9895f709ff195d4e60bb0ab728a523c28e15b46ec31ec7c4",
-      "last_changed": "2026-09-26T03:36:07.913Z",
+      "content_sha256": "4f02cca82678f7e93a935f05c7b52187ee7d3397b76181bd8b97f82873f76418",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -651,8 +651,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "10bf954ad147dec4c77a0a6349dca4df3eb32d8a0bbe04ffbf060b7302c4c8ae",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "8136b4f211dfb4736c775c2786129392da0f34c71069b0c785500a77a67c3d0e",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -2673,26 +2673,26 @@
     },
     "/chum/products/evercraft-web/": {
       "path": "/chum/products/evercraft-web/",
-      "content_sha256": "1ef9e9f4504f8512b20aa10703b136183e53c3f73ce4532f43e11b4e0c7d54ba",
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "content_sha256": "9b90acaeca7b02d5b2025d71d80a91903db0ef940f26c63c3dcf9da148e59a94",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/llms.txt": {
       "path": "/chum/products/evercraft-web/llms.txt",
-      "content_sha256": "980fca4fc8c5a51e07b6bbca317becbeb70458cb7709a0ef2fd3daff39a05f26",
-      "last_changed": "2026-09-26T03:57:56.041Z",
+      "content_sha256": "119bc961f53347dd8452d004ff05e430a5a536d4ca1f27c1ab96a9e63b817091",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/ai-discovery.json": {
       "path": "/chum/products/evercraft-web/ai-discovery.json",
-      "content_sha256": "7877d493c34ad732f96951217b1cc078be2a344e724183c615df2e40b2dd3178",
-      "last_changed": "2026-09-26T03:57:56.041Z",
+      "content_sha256": "59217eb64445cd1121f958970fc7c9f9d1406b138c7dfe5c9628a82f4f139575",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/ai-conformance.json": {
       "path": "/chum/products/evercraft-web/ai-conformance.json",
-      "content_sha256": "bfcf494144a7ddcf7880188ed7182affc8e86853307dd657207302ad24613950",
-      "last_changed": "2026-09-26T00:44:36.244Z",
+      "content_sha256": "80327c1f9fa29c817b58053192db47e0e5788a040ee562f7a4b06aef27499368",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 94
     },
     "/chum/products/evercraft-wildlife-atlas/": {
@@ -3667,6 +3667,18 @@
       "last_changed": "2026-09-26T03:45:42.293Z",
       "priority": 100
     },
+    "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264/": {
+      "path": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264/",
+      "content_sha256": "ecc42f61cad7a54d8a9fb8b8aa3743d69a9037c1c5f3ff5e8947c0fe976d4eb7",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json": {
+      "path": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
+      "content_sha256": "9f792f0e1a2f5b1e7a2a3acb99dd376dc4096e7ac5652ee44be728f4755554dd",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
     "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386/": {
       "path": "/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386/",
       "content_sha256": "ca06e935a99b802d276facc5be194b030c2b34c618eb197c98444af697e2f93f",
@@ -4338,6 +4350,18 @@
       "content_sha256": "28cfa8fb790e3ad06ba35b5fb2cfd1d7d1b7184d0fe5a17c3ac371fcf024c2f6",
       "last_changed": "2026-09-26T03:45:42.293Z",
       "priority": 160
+    },
+    "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954/": {
+      "path": "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954/",
+      "content_sha256": "76ee37343ac52bb0aff956abe70cb114094595e633be7db781de5cd849b80639",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954.json": {
+      "path": "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954.json",
+      "content_sha256": "39df2653f62f7dd07c05db305a0b4d09407b2600582c9944b7d5f35a284a3e14",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
     },
     "/chum/answers/doors/brutally-critique-this-message-d550264762/": {
       "path": "/chum/answers/doors/brutally-critique-this-message-d550264762/",
@@ -5934,6 +5958,18 @@
       "content_sha256": "dfc69b93d54e26012e35086b0e16a6cfbf0311981573f98b8c64456e026b6cde",
       "last_changed": "2026-09-26T03:45:42.293Z",
       "priority": 160
+    },
+    "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839/": {
+      "path": "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839/",
+      "content_sha256": "5554e226af4691e8ff28c913838a51d29d64a3abf1c916508ecd1d42c2b6ca65",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839.json": {
+      "path": "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839.json",
+      "content_sha256": "44feae9dfc24011838cff438346ac28823146494e74bf900913ac2c3f22eaafb",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
     },
     "/chum/answers/doors/evidence-timeline-review-2e05014564/": {
       "path": "/chum/answers/doors/evidence-timeline-review-2e05014564/",
@@ -8695,6 +8731,18 @@
       "last_changed": "2026-09-26T03:45:42.293Z",
       "priority": 100
     },
+    "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/": {
+      "path": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/",
+      "content_sha256": "c14ef52bc1764e3ac1797aa2f0a3a9a63df3a8e0b8d7a5de989536cd2fa6ae6b",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json": {
+      "path": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json",
+      "content_sha256": "6e9f1842c9fcdfe3da331118e9d0fcf7986766ee442de3064bb03ca2945a65ad",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
     "/chum/answers/doors/my-chatbot-says-the-video-is-too-large-d63e45c59b/": {
       "path": "/chum/answers/doors/my-chatbot-says-the-video-is-too-large-d63e45c59b/",
       "content_sha256": "74cf0645683d8d86d826262a2d63e123a7cd4239a04665204d39a93155edf2d3",
@@ -9739,6 +9787,18 @@
       "last_changed": "2026-09-26T03:45:42.293Z",
       "priority": 100
     },
+    "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c/": {
+      "path": "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c/",
+      "content_sha256": "6c1b74675504f1a2fc829cdbe786d3b8a4f32597c7bb0f5e0e6de9ca2d1490ef",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c.json": {
+      "path": "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c.json",
+      "content_sha256": "dcf9f1a06c78be79e27beb3b2762398bcc2bbd6fa1912053511a3a09d7833141",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
     "/chum/answers/doors/pull-important-moments-from-a-long-recording-b45a1bcb87/": {
       "path": "/chum/answers/doors/pull-important-moments-from-a-long-recording-b45a1bcb87/",
       "content_sha256": "ff44741424638fecc73ae6d5d17b222a54f141f61d7d417c80f1ad8a7cd06e65",
@@ -9797,6 +9857,18 @@
       "path": "/chum/answers/doors/read-a-url-for-my-ai-agent-ea01d57664.json",
       "content_sha256": "bb05a6cca6fbb272df2d3a0fff3c5c3f660cd20f03bf46156666be65f2639e7c",
       "last_changed": "2026-09-26T03:45:42.293Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50/": {
+      "path": "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50/",
+      "content_sha256": "0d2ff0d6f9c9b588137ba9cd05adc0f2e26b1107b6152e2773bb4a5eaf856eda",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50.json": {
+      "path": "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50.json",
+      "content_sha256": "c8a83c6e7d662e291853db766578b2b76b25f3e46b6c80d79dad7eb80424a892",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 100
     },
     "/chum/answers/doors/read-web-page-ec9dedc4a7/": {
@@ -10145,6 +10217,18 @@
       "path": "/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json",
       "content_sha256": "c33738d8be5486f6c2501f5c2ffeea4ee34343215ce5fdf8060124fd89aa4148",
       "last_changed": "2026-09-26T03:45:42.293Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a/": {
+      "path": "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a/",
+      "content_sha256": "3e6ffa351446470968c35421a97b5858683c96ac2ad7b2ec4873794e1df74b66",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a.json": {
+      "path": "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a.json",
+      "content_sha256": "a25a946c079bfe7f8aec40a81a672f487fe426382401578aaf30ec0ff9b02238",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 100
     },
     "/chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59/": {
@@ -10987,6 +11071,18 @@
       "last_changed": "2026-09-26T03:45:42.293Z",
       "priority": 100
     },
+    "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/": {
+      "path": "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/",
+      "content_sha256": "c051325716650cfe4932685144ac686ff1b755b473049831c16cacd9241a7a17",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e.json": {
+      "path": "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e.json",
+      "content_sha256": "fa6242a81c3fcfd0cb5def2503f5dc4b484b497647dd572463a919f6fa651b74",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
     "/chum/answers/doors/study-ecological-relationships-and-food-webs-18bb832ffc/": {
       "path": "/chum/answers/doors/study-ecological-relationships-and-food-webs-18bb832ffc/",
       "content_sha256": "b90748802104e6868470d8d3574199e12ad899bde85de6923cd599d183bc70bc",
@@ -11635,6 +11731,18 @@
       "last_changed": "2026-09-26T03:45:42.293Z",
       "priority": 100
     },
+    "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359/": {
+      "path": "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359/",
+      "content_sha256": "c14d0ff04726f339f32ed644a1b450447e37d613f8f361c79ba7c155970a95e5",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359.json": {
+      "path": "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359.json",
+      "content_sha256": "2d38436060f6f84611e9272d134cc602e2cc680620bb7267dd527dbf5401601a",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
     "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/": {
       "path": "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/",
       "content_sha256": "f732588cddf7506947f671707500dd35240f2839f3dc0e7e3776094d4be3f1ce",
@@ -11957,6 +12065,18 @@
       "path": "/chum/answers/doors/web-agent-that-can-navigate-websites-1f8d482f58.json",
       "content_sha256": "d81b540ae597746361d9cb8690a1015555c884b0ecab27d7364fad80fe41e93c",
       "last_changed": "2026-09-26T03:45:42.293Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b/": {
+      "path": "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b/",
+      "content_sha256": "dc4225825d5b2c0b4cc8597041776fde970f9782ee4ac0c60955117d75bd6c75",
+      "last_changed": "2026-09-26T03:58:02.744Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b.json": {
+      "path": "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b.json",
+      "content_sha256": "af46ab7b606040e0125d9c3577268680c3f6ef2a1cdb9b533f020fbcc2b0a3d2",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 100
     },
     "/chum/answers/doors/web-fetch-api-40c61ca747/": {
@@ -12393,14 +12513,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "3acf82a2103be5842b06889f6dfb00fb8ec4139d1dfa0b29e1cf24421ec8588c",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "8ed5b4a6be59549dd67a68c1d556e892480b426de181c2f86822927fbd51b5fd",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "6d693f0cb613233c28c3bf95b30a656f883a474440718f32523580e4357f326b",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "f0afd0730a188c71172014bedec5d787cf5d20932e8eb3fbede9bd1b39aafb9f",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -12411,8 +12531,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "c2609b0c2ef41f31ea01053b0768f5af15a6a073a062e78ad0fd44e760eb75ea",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "852e8a204f70ca00f8968464bc6659b4702322cfc4cc1624338b7d45ef35f4b3",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -12423,8 +12543,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "acb614214df150219dbdf26ea984ed9de9896550b1fbf1a81cca33b3b720b876",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "125b9385fff46ab46b995fe765403774f009fb6c4c4927c9ffdff11c994aa6dc",
+      "last_changed": "2026-09-26T03:58:02.744Z",
       "priority": 80
     }
   }

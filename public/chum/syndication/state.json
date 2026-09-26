@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-26T03:45:42.134Z",
+  "updated_at": "2026-09-26T03:58:02.586Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "2f7587032bbc37f2389b6c0df935cdff31fb8741f4ee32d2555bf26c22b6a57b",
@@ -27,7 +27,7 @@
     "evercraft-physics-atlas": "2e49fc83f75c3d72b98f6f070a2210da15ffbf4e76f58fd27890b667dfde68ce",
     "evercraft-property-services": "f697ccf24475576275249cd99089e6ec381dc9fde950b5d68c37a2032db44bc9",
     "evercraft-rewards": "4364a986c38b9cba8264d974495680088430fd6e44242883661950727a675e60",
-    "evercraft-web": "d3f9be7afa393436e730ab507ee05972e99e27505a4c6cc21e459791bc7266fb",
+    "evercraft-web": "17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3",
     "website-launch": "0b317f14acd06a92db7ccc3e42ea7ea94e64015e73c32503536d7b78293232d8",
     "evercraft-wildlife-atlas": "4b09b4f72fd3bb9c9207f6f48e2f5659c767c89bceed7da60c93e1f67f953077",
     "evermaps": "9bf37832497e465387bf4892259cb18ba6d38ed40a8fd5d96f8d1df8915fb29f",

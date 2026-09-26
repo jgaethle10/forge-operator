@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 98
-Unique user phrases: 743
-Candidate edges: 822
+Unique user phrases: 753
+Candidate edges: 832
 Ambiguous phrases: 79
 
 ## 15 GB video analysis
@@ -123,6 +123,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 - Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+
+## AI research retrieval API
+Answer ID: intent:b5a1bbc264
+Human-readable match: /chum/answers/doors/ai-research-retrieval-api-b5a1bbc264/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## AI scam draining my bank account
 Answer ID: intent:5ee1d51386
@@ -519,6 +526,13 @@ Candidates:
 Answer ID: intent:4865230391
 Human-readable match: /chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
+
+## browserless public web retrieval for agents
+Answer ID: intent:56bd1b7954
+Human-readable match: /chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954.json
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
@@ -1467,6 +1481,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Network Resilience + Founding Membership | kind=machine_offer | commercial=discovery_only | machine=human_handoff_only | public=https://network-control.base44.app/join
 - Evercraft Network | kind=product | commercial=product_contract | machine=discovery_only | public=https://network-control.base44.app/
+
+## evidence-backed web retrieval
+Answer ID: intent:dbe955d839
+Human-readable match: /chum/answers/doors/evidence-backed-web-retrieval-dbe955d839/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## evidence timeline review
 Answer ID: intent:2e05014564
@@ -3103,6 +3124,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - SkyOps Parking | kind=product | commercial=product_contract | machine=discovery_only | public=https://skyopsparking.base44.app/
 
+## multi-URL public web fetch
+Answer ID: intent:fd424feb3f
+Human-readable match: /chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
+
 ## my chatbot says the video is too large
 Answer ID: intent:d63e45c59b
 Human-readable match: /chum/answers/doors/my-chatbot-says-the-video-is-too-large-d63e45c59b/
@@ -3720,6 +3748,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Guardian | kind=product | commercial=product_contract | machine=discovery_only | public=https://guardian-pilot.base44.app/
 
+## public webpage extraction with headings links and canonical metadata
+Answer ID: intent:739dfd926c
+Human-readable match: /chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
+
 ## pull important moments from a long recording
 Answer ID: intent:b45a1bcb87
 Human-readable match: /chum/answers/doors/pull-important-moments-from-a-long-recording-b45a1bcb87/
@@ -3754,6 +3789,13 @@ Human-readable match: /chum/answers/doors/read-a-url-for-my-ai-agent-ea01d57664/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/read-a-url-for-my-ai-agent-ea01d57664.json
 Candidates:
 - Evercraft Web Agent / Fetch & Browser | kind=machine_offer | commercial=discovery_only | machine=specialist_discovery_ready_runtime_gated | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web
+
+## read multiple public pages without sharing cookies or credentials
+Answer ID: intent:ea0d069a50
+Human-readable match: /chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## read web page
 Answer ID: intent:ec9dedc4a7
@@ -3960,6 +4002,13 @@ Human-readable match: /chum/answers/doors/retail-ev-charging-site-analysis-49b69
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retail-ev-charging-site-analysis-49b6979e0f.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## retrieve several web pages with provenance hashes
+Answer ID: intent:da70490a1a
+Human-readable match: /chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 
 ## return public-safe geospatial evidence
 Answer ID: intent:a12af72d59
@@ -4459,6 +4508,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Shadow Migration Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## structured web content extraction for AI agents
+Answer ID: intent:bc8095fc5e
+Human-readable match: /chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
+
 ## study ecological relationships and food webs
 Answer ID: intent:18bb832ffc
 Human-readable match: /chum/answers/doors/study-ecological-relationships-and-food-webs-18bb832ffc/
@@ -4843,6 +4899,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## URL-to-text API for LLMs
+Answer ID: intent:fbac9ca359
+Human-readable match: /chum/answers/doors/url-to-text-api-for-llms-fbac9ca359/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
+
 ## utility tariff for EV charging at this property
 Answer ID: intent:affaf0c924
 Human-readable match: /chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/
@@ -5032,6 +5095,13 @@ Candidates:
 Answer ID: intent:1f8d482f58
 Human-readable match: /chum/answers/doors/web-agent-that-can-navigate-websites-1f8d482f58/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-agent-that-can-navigate-websites-1f8d482f58.json
+Candidates:
+- Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
+
+## web content API for RAG ingestion
+Answer ID: intent:ba630be72b
+Human-readable match: /chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b.json
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 

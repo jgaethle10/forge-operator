@@ -323,7 +323,12 @@
       "@type": "Service",
       "@id": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs#evercraft-service",
       "name": "Evercraft Web",
-      "alternateName": [],
+      "alternateName": [
+        "Evercraft Fetch",
+        "Evercraft Web Agent",
+        "Evercraft Browser",
+        "Evercraft Search"
+      ],
       "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"

@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 98,
-    "unique_user_phrases": 743,
-    "mapped_candidate_edges": 822,
+    "unique_user_phrases": 753,
+    "mapped_candidate_edges": 832,
     "ambiguous_phrases": 79,
     "product_candidates": 53,
     "machine_offer_candidates": 45
@@ -405,6 +405,29 @@
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b5a1bbc264",
+      "user_language": "AI research retrieval API",
+      "normalized": "ai research retrieval api",
+      "relative_json": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
+      "relative_page": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
         }
       ]
     },
@@ -1752,6 +1775,29 @@
       "relative_json": "/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json",
       "relative_page": "/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:56bd1b7954",
+      "user_language": "browserless public web retrieval for agents",
+      "normalized": "browserless public web retrieval for agents",
+      "relative_json": "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954.json",
+      "relative_page": "/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/browserless-public-web-retrieval-for-agents-56bd1b7954.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -5004,6 +5050,29 @@
           "pain_page": "/chum/products/evercraft-network/",
           "public_url": "https://network-control.base44.app/",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dbe955d839",
+      "user_language": "evidence-backed web retrieval",
+      "normalized": "evidence backed web retrieval",
+      "relative_json": "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839.json",
+      "relative_page": "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
         }
       ]
     },
@@ -10598,6 +10667,29 @@
       ]
     },
     {
+      "answer_id": "intent:fd424feb3f",
+      "user_language": "multi-URL public web fetch",
+      "normalized": "multi url public web fetch",
+      "relative_json": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json",
+      "relative_page": "/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/multi-url-public-web-fetch-fd424feb3f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d63e45c59b",
       "user_language": "my chatbot says the video is too large",
       "normalized": "my chatbot says the video is too large",
@@ -12695,6 +12787,29 @@
       ]
     },
     {
+      "answer_id": "intent:739dfd926c",
+      "user_language": "public webpage extraction with headings links and canonical metadata",
+      "normalized": "public webpage extraction with headings links and canonical metadata",
+      "relative_json": "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c.json",
+      "relative_page": "/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/public-webpage-extraction-with-headings-links-and-canonical-metadata-739dfd926c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:b45a1bcb87",
       "user_language": "pull important moments from a long recording",
       "normalized": "pull important moments from a long recording",
@@ -12806,6 +12921,29 @@
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ea0d069a50",
+      "user_language": "read multiple public pages without sharing cookies or credentials",
+      "normalized": "read multiple public pages without sharing cookies or credentials",
+      "relative_json": "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50.json",
+      "relative_page": "/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/read-multiple-public-pages-without-sharing-cookies-or-credentials-ea0d069a50.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
         }
       ]
     },
@@ -13509,6 +13647,29 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:da70490a1a",
+      "user_language": "retrieve several web pages with provenance hashes",
+      "normalized": "retrieve several web pages with provenance hashes",
+      "relative_json": "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a.json",
+      "relative_page": "/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/retrieve-several-web-pages-with-provenance-hashes-da70490a1a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
         }
       ]
     },
@@ -15219,6 +15380,29 @@
       ]
     },
     {
+      "answer_id": "intent:bc8095fc5e",
+      "user_language": "structured web content extraction for AI agents",
+      "normalized": "structured web content extraction for ai agents",
+      "relative_json": "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e.json",
+      "relative_page": "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:18bb832ffc",
       "user_language": "study ecological relationships and food webs",
       "normalized": "study ecological relationships and food webs",
@@ -16533,6 +16717,29 @@
       ]
     },
     {
+      "answer_id": "intent:fbac9ca359",
+      "user_language": "URL-to-text API for LLMs",
+      "normalized": "url to text api for llms",
+      "relative_json": "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359.json",
+      "relative_page": "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:affaf0c924",
       "user_language": "utility tariff for EV charging at this property",
       "normalized": "utility tariff for ev charging at this property",
@@ -17173,6 +17380,29 @@
       "relative_json": "/chum/answers/doors/web-agent-that-can-navigate-websites-1f8d482f58.json",
       "relative_page": "/chum/answers/doors/web-agent-that-can-navigate-websites-1f8d482f58/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-agent-that-can-navigate-websites-1f8d482f58.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-web",
+          "kind": "product",
+          "product_key": "evercraft-web",
+          "public_id": null,
+          "name": "Evercraft Web",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-web/",
+          "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+          "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ba630be72b",
+      "user_language": "web content API for RAG ingestion",
+      "normalized": "web content api for rag ingestion",
+      "relative_json": "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b.json",
+      "relative_page": "/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/web-content-api-for-rag-ingestion-ba630be72b.json",
       "candidate_count": 1,
       "candidates": [
         {

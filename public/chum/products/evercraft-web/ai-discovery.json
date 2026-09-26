@@ -21,8 +21,8 @@
     "TinyFish alternative for web search, fetch, or browser automation",
     "URL-to-text API for LLMs",
     "structured web content extraction for AI agents",
-    "evidence-backed web retrieval for an AI workflow",
-    "multi-URL public web fetch for an AI agent",
+    "evidence-backed web retrieval",
+    "multi-URL public web fetch",
     "retrieve several web pages with provenance hashes",
     "AI research retrieval API",
     "public webpage extraction with headings links and canonical metadata",
@@ -56,17 +56,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
     "page": "/chum/products/evercraft-web/"
-  },
-  "build_candidate": {
-    "version": "0.3.0",
-    "state": "source_build_green_external_canary_pending_for_new_batch_primitive",
-    "new_tool": "fetch_urls",
-    "new_output_fields": [
-      "meta_description",
-      "canonical_url",
-      "headings",
-      "links",
-      "evidence_receipt_sha256"
-    ]
   }
 }

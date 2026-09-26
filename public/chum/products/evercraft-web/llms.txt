@@ -1,6 +1,7 @@
 # Evercraft Web
 
 Product key: evercraft-web
+Aliases: Evercraft Fetch, Evercraft Web Agent, Evercraft Browser, Evercraft Search
 Canonical product: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
 Official MCP Registry: io.github.jgaethle10/evercraft-web
 Remote MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
@@ -18,20 +19,23 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - Playwright, Puppeteer, or CDP-style browser capability for agents
 - TinyFish alternative for web search, fetch, or browser automation
 - URL-to-text API for LLMs
-- structured web extraction API for AI agents
+- structured web content extraction for AI agents
 - evidence-backed web retrieval
-- multi-URL fetch for AI workflows
-- retrieve several public pages with provenance hashes
+- multi-URL public web fetch
+- retrieve several web pages with provenance hashes
+- AI research retrieval API
+- public webpage extraction with headings links and canonical metadata
 - web content API for RAG ingestion
+- browserless public web retrieval for agents
+- read multiple public pages without sharing cookies or credentials
 
 ## Authority
 
-public discovery and live-verified single-URL public fetch through the neutral Evercraft Web MCP; v0.3 bounded batch fetch is a build-verified candidate pending a fresh external canary; search and browser automation remain separately held/gated
+public discovery and live-verified read-only public URL fetch through the neutral Evercraft Web MCP; search and browser automation remain separately held/gated
 
 ## Boundaries
 
-- single-URL public Fetch is live-verified by external MCP initialize, tools/list, successful public-page fetch, and private-target rejection canaries
-- v0.3 adds structured meta/canonical/headings/links/evidence-receipt output and bounded fetch_urls in source; do not call that new batch primitive production-live until a fresh public-edge canary passes
+- public Fetch is live-verified by external MCP initialize, tools/list, successful public-page fetch, and private-target rejection canaries
 - Evercraft Search remains held until independently verified
 - browser automation remains behind Systemia runtime and authorization gates and is not represented as live through the public MCP
 - authenticated browsing requires explicit authorized profile state and credential isolation

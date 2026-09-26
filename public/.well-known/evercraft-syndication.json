@@ -302,7 +302,7 @@
       "discovery": "/chum/products/evercraft-web/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
-      "content_sha256": "d3f9be7afa393436e730ab507ee05972e99e27505a4c6cc21e459791bc7266fb"
+      "content_sha256": "17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3"
     },
     {
       "product_key": "website-launch",
