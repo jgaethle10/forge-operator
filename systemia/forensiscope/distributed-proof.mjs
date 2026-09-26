@@ -22,6 +22,7 @@ import { issueEvidenceAccessToken } from './evidence-access.mjs';
 import { handleForensiScopeMcpHttp } from './mcp-http.mjs';
 import { runForensiScopeAnalysis } from './pipeline.mjs';
 import { compareForensiScopeEvidence } from './evidence-compare.mjs';
+import { issueForensiScopeAnalysisHandoff } from './analysis-handoff.mjs';
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -830,6 +831,59 @@ const pipelineQuery = invokeForensiScopeGatewayTool({
 assert.equal(pipelineQuery.access.verified, true);
 assert.ok(pipelineQuery.result.match_count > 0);
 
+assert.throws(
+  () => issueForensiScopeAnalysisHandoff({
+    analysisReceipt: pipelineReceipt,
+    handoff: {
+      confirmed: false,
+      recipient: 'forensiscope-proof-agent'
+    }
+  }),
+  /explicit confirmation/
+);
+
+const analysisHandoff = issueForensiScopeAnalysisHandoff({
+  analysisReceipt: pipelineReceipt,
+  handoff: {
+    confirmed: true,
+    recipient: 'forensiscope-proof-agent'
+  },
+  scopes: ['query', 'context', 'timeline'],
+  ttlSeconds: 3600
+});
+assert.equal(
+  analysisHandoff.schema,
+  'evercraft.forensiscope.analysis-handoff.v1'
+);
+assert.equal(
+  analysisHandoff.evidence_ref,
+  pipelineReceipt.result.evidence_ref
+);
+assert.equal(analysisHandoff.boundaries.human_confirmed, true);
+assert.equal(analysisHandoff.boundaries.raw_media_included, false);
+assert.equal(analysisHandoff.boundaries.source_path_included, false);
+assert.equal(
+  analysisHandoff.boundaries.evidence_ref_is_not_authorization_by_itself,
+  true
+);
+assert.ok(
+  analysisHandoff.tools.includes('forensiscope_build_context_packet')
+);
+
+const handoffQuery = invokeForensiScopeGatewayTool({
+  name: 'forensiscope_query_evidence',
+  args: {
+    evidence_ref: analysisHandoff.evidence_ref,
+    access_token: analysisHandoff.access.token,
+    query: 'boundary-3',
+    top_k: 2,
+    context_radius_seconds: 3
+  },
+  rootDir
+});
+assert.equal(handoffQuery.access.verified, true);
+assert.ok(handoffQuery.result.match_count > 0);
+
 const comparisonPipelineReceipt = await runForensiScopeAnalysis({
   source: {
     path: comparisonSourcePath,
@@ -1022,6 +1076,8 @@ const proof = {
   single_entry_evidence_ref: pipelineReceipt.result.evidence_ref,
   single_entry_transcript_segments: pipelineReceipt.result.transcript_segments,
   single_entry_query_matches: pipelineQuery.result.match_count,
+  human_confirmed_handoff_tools: analysisHandoff.tools.length,
+  human_confirmed_handoff_query_matches: handoffQuery.result.match_count,
   single_entry_pipeline_wall_ms: pipelineReceipt.metrics.pipeline_wall_time_ms,
   single_entry_execution_wall_ms: pipelineReceipt.metrics.execution_wall_time_ms,
   single_entry_media_seconds_per_execution_second:
