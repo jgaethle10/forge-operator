@@ -38,6 +38,7 @@ export class PublicEdgeController {
     this.allowLoopbackProof=Boolean(allowLoopbackProof);
     this.binding=null;
     this.requestedHostname='';
+    this.identityAttestationRequired=false;
     this.timer=null;
     this.inFlight=false;
     this.sequence=0;
@@ -49,6 +50,7 @@ export class PublicEdgeController {
         if(persisted?.schema==='evercraft.yard.public-edge-controller-state.v1'){
           this.binding=persisted.binding||null;
           this.requestedHostname=String(persisted.requested_hostname||'');
+          this.identityAttestationRequired=Boolean(persisted.identity_attestation_required);
           this.sequence=Math.max(0,Number(persisted.sequence||0));
         }
       }catch{}
@@ -66,6 +68,7 @@ export class PublicEdgeController {
       specialist_deployment_id:this.specialistDeploymentId,
       binding:this.binding,
       requested_hostname:this.requestedHostname||null,
+      identity_attestation_required:this.identityAttestationRequired,
       allow_loopback_proof:this.allowLoopbackProof,
       sequence:this.sequence,
       updated_at:new Date().toISOString(),
@@ -109,6 +112,7 @@ export class PublicEdgeController {
     requestedHostname='evercraft-specialists',
     edgeRollbackTarget='none:first_install',
     specialistRollbackTarget='none:first_install',
+    requireIdentityAttestation=false,
   }={}){
     if(!/^[a-f0-9]{40}$/i.test(String(releaseRef||''))){
       throw new Error('release_ref_must_be_immutable_sha');
@@ -119,6 +123,7 @@ export class PublicEdgeController {
     let specialistRecord=null;
     let broker=null;
     this.requestedHostname=String(requestedHostname||'evercraft-specialists');
+    this.identityAttestationRequired=Boolean(requireIdentityAttestation);
 
     try{
       edgeRecord=await this.yard.deployRelease({
@@ -159,6 +164,27 @@ export class PublicEdgeController {
         throw new Error('edge_and_specialist_must_share_compute_node_for_loopback_upstream');
       }
 
+      let edgeAttestation=null;
+      let specialistAttestation=null;
+      if(this.identityAttestationRequired){
+        [edgeAttestation,specialistAttestation]=await Promise.all([
+          this.yard.attestDeployment(this.edgeDeploymentId),
+          this.yard.attestDeployment(this.specialistDeploymentId),
+        ]);
+        if(edgeAttestation.identity_verified!==true){
+          throw new Error('public_edge_identity_attestation_failed');
+        }
+        if(specialistAttestation.identity_verified!==true){
+          throw new Error('specialist_identity_attestation_failed');
+        }
+        if(
+          !edgeAttestation.device_fingerprint ||
+          edgeAttestation.device_fingerprint!==specialistAttestation.device_fingerprint
+        ){
+          throw new Error('edge_specialist_device_attestation_mismatch');
+        }
+      }
+
       broker=new YardPublicRouteBroker({
         yard:this.yard,
         providerClient:this.yard.publicRouteProviderClient(this.edgeDeploymentId),
@@ -197,6 +223,19 @@ export class PublicEdgeController {
         route_verified:this.binding.route_verified,
         origin:this.binding.origin,
         provider_transport:this.binding.provider_transport,
+        identity_attestation_required:this.identityAttestationRequired,
+        identity_verified:this.identityAttestationRequired
+          ? edgeAttestation?.identity_verified===true && specialistAttestation?.identity_verified===true
+          : null,
+        device_fingerprint:this.identityAttestationRequired
+          ? edgeAttestation?.device_fingerprint||null
+          : null,
+        edge_attestation_receipt:this.identityAttestationRequired
+          ? edgeAttestation?.receipt_hash||null
+          : null,
+        specialist_attestation_receipt:this.identityAttestationRequired
+          ? specialistAttestation?.receipt_hash||null
+          : null,
         founder_login_required:false,
       });
     }catch(error){
@@ -226,6 +265,7 @@ export class PublicEdgeController {
     requestedHostname = 'evercraft-specialists',
     edgeRollbackTarget = 'none:first_install',
     specialistRollbackTarget = 'none:first_install',
+    requireIdentityAttestation = true,
   } = {}) {
     const resolution = await discoverEligibleCapacity({
       workloadClass: 'systemia.public-edge.v1',
@@ -266,6 +306,7 @@ export class PublicEdgeController {
       requestedHostname,
       edgeRollbackTarget,
       specialistRollbackTarget,
+      requireIdentityAttestation,
     });
 
     return {
@@ -294,6 +335,21 @@ export class PublicEdgeController {
       this.yard.renewDeploymentLease(this.edgeDeploymentId,{ttlMs:this.leaseTtlMs}),
       this.yard.renewDeploymentLease(this.specialistDeploymentId,{ttlMs:this.leaseTtlMs}),
     ]);
+
+    if(this.identityAttestationRequired){
+      const [edgeAttestation,specialistAttestation]=await Promise.all([
+        this.yard.attestDeployment(this.edgeDeploymentId),
+        this.yard.attestDeployment(this.specialistDeploymentId),
+      ]);
+      if(
+        edgeAttestation.identity_verified!==true ||
+        specialistAttestation.identity_verified!==true ||
+        !edgeAttestation.device_fingerprint ||
+        edgeAttestation.device_fingerprint!==specialistAttestation.device_fingerprint
+      ){
+        throw new Error('controller_resume_identity_attestation_failed');
+      }
+    }
 
     const broker=new YardPublicRouteBroker({
       yard:this.yard,
