@@ -46,6 +46,13 @@ function fixture() {
         { product_key: 'rivet', status: 'completed', evaluation: { pickup_observed: false } }
       ]
     },
+    pickupConsistency: {
+      schema: 'evercraft.chum.provider-pickup-consistency.v1',
+      rollups: [
+        { provider: 'chatgpt', surface_class: 'consumer_chat', product_key: 'forensiscope', samples: 5, pickups: 5, misses: 0, pickup_rate: 1, state: 'healthy' },
+        { provider: 'generic_agent', surface_class: 'machine_client', product_key: 'rivet', samples: 5, pickups: 4, misses: 1, pickup_rate: 0.8, state: 'healthy' }
+      ]
+    },
     commerceCanary: {
       schema: 'evercraft.chum.commerce-canary.v1',
       results: [
@@ -78,6 +85,7 @@ test('Fire Control closes the funnel only with provider-verified payment', () =>
   assert.equal(receipt.funnel.sell_now.total, 2);
   assert.equal(receipt.funnel.sell_now.crawler_observed, 2);
   assert.equal(receipt.funnel.sell_now.provider_pickup, 1);
+  assert.equal(receipt.funnel.sell_now.provider_pickup_consistent, 2);
   assert.equal(receipt.funnel.sell_now.money_path_readable, 2);
   assert.equal(receipt.funnel.sell_now.provider_verified_payment, 1);
 
@@ -232,4 +240,28 @@ test('Fire Control identifies offer-view dropoff without calling it a payment fa
   assert.equal(row.next_action.action, 'repair_offer_trust_value_or_primary_cta');
   assert.equal(row.evidence.attributed_offer_views, 3);
   assert.equal(row.evidence.attributed_continue_clicks, 0);
+});
+
+test('Fire Control treats intermittent pickup as distribution debt before checkout tuning', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes.results = [
+    { product_key: 'forensiscope', status: 'completed', evaluation: { pickup_observed: true } },
+    { product_key: 'rivet', status: 'completed', evaluation: { pickup_observed: true } }
+  ];
+  data.pickupConsistency.rollups = [
+    { provider: 'chatgpt', surface_class: 'consumer_chat', product_key: 'forensiscope', samples: 5, pickups: 5, misses: 0, pickup_rate: 1, state: 'healthy' },
+    { provider: 'generic_agent', surface_class: 'machine_client', product_key: 'rivet', samples: 4, pickups: 1, misses: 3, pickup_rate: 0.25, state: 'intermittent' }
+  ];
+
+  const receipt = buildFireControl({ root, ...data });
+  const rivet = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(rivet.stages.provider_pickup, true);
+  assert.equal(rivet.stages.provider_pickup_consistent, false);
+  assert.equal(rivet.first_broken_stage, 'provider_pickup_consistent');
+  assert.equal(rivet.next_action.priority, 'P1');
+  assert.equal(rivet.next_action.action, 'increase_repeat_brand_blind_pickup_until_5_receipts_and_80_percent_then_retest');
+  assert.equal(rivet.evidence.provider_pickup_consistency_state, 'intermittent');
+  assert.equal(rivet.evidence.provider_pickup_consistency_best_rate, 0.25);
 });
