@@ -47,7 +47,7 @@ function assetPath(jobId,row){
 function verifyAssets(job){
   const map=new Map();
   for(const row of job.assets){
-    const file=assetPath(job.job_id,row);
+    const file=assetPath(job.asset_scope_id,row);
     if(!fs.existsSync(file)) throw new Error(`asset_not_staged:${row.id}`);
     const observed=sha(fs.readFileSync(file));
     if(observed!==row.sha256) throw new Error(`asset_digest_mismatch:${row.id}`);
@@ -99,7 +99,7 @@ async function render(job){
     }
     const receipt={
       schema:'evercraft.fallen.render-receipt.v1',
-      engine:ENGINE,job_id:job.job_id,
+      engine:ENGINE,job_id:job.job_id,asset_scope_id:job.asset_scope_id,
       stage_id:job.stage.id,
       stage_sha256:sha(JSON.stringify({...job.stage,createdAt:undefined})),
       frame_start:job.frame_start,frame_count:job.frame_count,total_frames:job.total_frames,
