@@ -185,7 +185,7 @@
     "proof:saban-fallen-creative": "node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory systemia/saban/fixtures/fallen-creative-council-job.json --agents 20 --workers 4 --execute --reconcile",
     "proof:saban-fallen-tournament": "node systemia/saban/multiplier.mjs --software fallen-shot-tournament --inventory systemia/saban/fixtures/fallen-shot-tournament-job.json --agents 16 --workers 4 --execute --reconcile",
     "test:public-edge-mainline-invariants": "node --test tests/public-edge-mainline-invariants.test.mjs",
-    "test:household-fabric": "node systemia/household-fabric/engine.test.mjs && node systemia/household-fabric/ingest.test.mjs && node systemia/household-fabric/surface.test.mjs"
+    "test:household-fabric": "node systemia/household-fabric/engine.test.mjs && node systemia/household-fabric/ingest.test.mjs && node systemia/household-fabric/surface.test.mjs && node systemia/household-fabric/collectors/yvl-events.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
