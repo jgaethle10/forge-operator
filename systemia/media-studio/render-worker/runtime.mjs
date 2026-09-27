@@ -34,7 +34,7 @@ function layerMarkup(layer){
   if(layer.kind==='metric') return `<div class="layer metric-layer" data-layer="${esc(layer.id)}" style="${base}"><div class="metric-label">${esc(layer.label||'')}</div><div data-metric-value class="metric-value"></div>${badge}</div>`;
   if(layer.kind==='geo') return `<svg class="layer geo-layer" data-layer="${esc(layer.id)}" viewBox="0 0 ${Number(layer.width)||1} ${Number(layer.height)||1}" style="${base}" xmlns="http://www.w3.org/2000/svg"></svg>`;
   if(layer.kind==='timeline') return `<div class="layer timeline-layer" data-layer="${esc(layer.id)}" style="${base}"><div class="timeline-rail"></div><div class="timeline-playhead"></div>${(layer.events||[]).map(event=>`<div class="timeline-event" data-event-t="${Number(event.t)||0}"></div>`).join('')}${badge}</div>`;
-  return `<div class="layer shape-layer" data-layer="${esc(layer.id)}" style="${base}">${badge}</div>`;
+  const radius=layer.shape==='circle'?'50%':(Number(layer.radius)||0)+'px';return `<div class="layer shape-layer" data-layer="${esc(layer.id)}" style="${base};background:${esc(layer.fill||'transparent')};border:${Number(layer.strokeWidth)||0}px solid ${esc(layer.stroke||'transparent')};border-radius:${radius};">${badge}</div>`;
 }
 
 export function buildStageHtml(stage){
