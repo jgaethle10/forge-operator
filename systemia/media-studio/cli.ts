@@ -4,6 +4,7 @@ import { compileFilmPlan } from './director.js';
 import { inspectProject } from './inspect.js';
 import { renderFilm } from './render.js';
 import { buildSabanProductionInventory } from './production-runtime.js';
+import { buildCreativeCouncilInventory } from './creative-council.js';
 import { compileSeriesEpisode } from './series.js';
 import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
 
@@ -27,6 +28,7 @@ function usage() {
     '  npm run media:studio -- build <project.json> <output.mp4> [plan.json]',
     '  npm run media:studio -- series <project.json> <bible.json> <series-plan.json>',
     '  npm run media:studio -- inventory <series-plan.json> <inventory.json>',
+    '  npm run media:studio -- council <plan.json> <creative-inventory.json>',
   ].join('\n'));
 }
 
@@ -35,6 +37,19 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'council') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const plan = readJson<FilmPlan>(input);
+    const inventory = buildCreativeCouncilInventory(plan);
+    writeJson(output, inventory);
+    console.log(`Creative council inventory created: ${path.resolve(output)}`);
     return;
   }
 
