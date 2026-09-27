@@ -5,20 +5,201 @@
     "sentinel"
   ],
   "by_domain": {
-    "weather": ["weather_desk", "faie", "towi", "evermaps"],
-    "climate": ["weather_desk", "faie", "towi", "evermaps"],
-    "water": ["weather_desk", "faie", "towi", "evermaps"],
-    "environment": ["faie", "towi", "evermaps"],
-    "earth_hazards": ["faie", "towi", "evermaps", "emergency_command"],
-    "geophysics": ["faie", "towi", "evermaps", "emergency_command"],
-    "disaster": ["faie", "towi", "evermaps", "emergency_command", "recovery_accountability"],
-    "infrastructure": ["faie", "towi", "evermaps", "rivet", "omnicore"],
-    "transport": ["faie", "towi", "evermaps", "rivet", "omnicore"],
-    "energy": ["faie", "towi", "evermaps", "rivet"],
-    "ai": ["portfolio_sentinel", "chum", "security"],
-    "cyber": ["portfolio_sentinel", "chum", "security"],
-    "economy": ["faie", "household_fabric"],
-    "household": ["household_fabric"]
+    "weather": [
+      "weather_desk",
+      "faie",
+      "towi",
+      "evermaps"
+    ],
+    "climate": [
+      "weather_desk",
+      "faie",
+      "towi",
+      "evermaps"
+    ],
+    "water": [
+      "weather_desk",
+      "faie",
+      "towi",
+      "evermaps"
+    ],
+    "environment": [
+      "faie",
+      "towi",
+      "evermaps"
+    ],
+    "earth_hazards": [
+      "faie",
+      "towi",
+      "evermaps",
+      "emergency_command"
+    ],
+    "geophysics": [
+      "faie",
+      "towi",
+      "evermaps",
+      "emergency_command"
+    ],
+    "disaster": [
+      "faie",
+      "towi",
+      "evermaps",
+      "emergency_command",
+      "recovery_accountability"
+    ],
+    "infrastructure": [
+      "faie",
+      "towi",
+      "evermaps",
+      "rivet",
+      "omnicore"
+    ],
+    "transport": [
+      "faie",
+      "towi",
+      "evermaps",
+      "rivet",
+      "omnicore"
+    ],
+    "energy": [
+      "faie",
+      "towi",
+      "evermaps",
+      "rivet"
+    ],
+    "ai": [
+      "portfolio_sentinel",
+      "chum",
+      "security"
+    ],
+    "cyber": [
+      "portfolio_sentinel",
+      "chum",
+      "security"
+    ],
+    "economy": [
+      "faie",
+      "household_fabric"
+    ],
+    "household": [
+      "household_fabric"
+    ],
+    "ocean": [
+      "faie",
+      "towi",
+      "evermaps",
+      "weather_desk",
+      "omnicore"
+    ],
+    "space_weather": [
+      "faie",
+      "towi",
+      "evermaps",
+      "emergency_command",
+      "network"
+    ],
+    "aviation": [
+      "faie",
+      "towi",
+      "evermaps",
+      "omnicore",
+      "skyops"
+    ],
+    "maritime": [
+      "faie",
+      "towi",
+      "evermaps",
+      "omnicore"
+    ],
+    "telecom": [
+      "faie",
+      "towi",
+      "evermaps",
+      "network",
+      "portfolio_sentinel"
+    ],
+    "robotics": [
+      "faie",
+      "towi",
+      "portfolio_sentinel"
+    ],
+    "semiconductors": [
+      "faie",
+      "towi",
+      "portfolio_sentinel",
+      "rivet"
+    ],
+    "industrial": [
+      "faie",
+      "towi",
+      "evermaps",
+      "portfolio_sentinel"
+    ],
+    "supply_chain": [
+      "faie",
+      "towi",
+      "evermaps",
+      "household_fabric",
+      "omnicore"
+    ],
+    "agriculture": [
+      "faie",
+      "towi",
+      "evermaps",
+      "household_fabric"
+    ],
+    "food": [
+      "faie",
+      "towi",
+      "household_fabric",
+      "global_health_atlas"
+    ],
+    "public_health": [
+      "towi",
+      "evermaps",
+      "global_health_atlas"
+    ],
+    "biology": [
+      "towi",
+      "global_health_atlas"
+    ],
+    "science": [
+      "faie",
+      "towi",
+      "global_health_atlas"
+    ],
+    "labor": [
+      "faie",
+      "towi",
+      "household_fabric"
+    ],
+    "housing": [
+      "faie",
+      "towi",
+      "evermaps",
+      "household_fabric",
+      "eps"
+    ],
+    "construction": [
+      "faie",
+      "towi",
+      "evermaps",
+      "eps"
+    ],
+    "regulation": [
+      "faie",
+      "towi",
+      "portfolio_sentinel"
+    ],
+    "public_policy": [
+      "faie",
+      "towi"
+    ],
+    "general": [
+      "faie",
+      "towi",
+      "evermaps"
+    ]
   },
   "rule": "Persistence is not completion. Every admitted observation updates shared context and is offered to every subscribed consumer. Consumers decide whether the context changes their own work."
 }
