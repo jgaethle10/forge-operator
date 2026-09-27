@@ -189,11 +189,11 @@ body{display:flex;align-items:center;justify-content:center}
     for(const route of layer.routes||[]){
       const pts=route.points.map(p=>project(p.lat,p.lon,layer));
       const shown=trim(pts,clamp(at(route.progress,t,t/stage.durationSec),0,1));
-      const path=document.createElementNS(ns,'polyline');path.setAttribute('points',shown.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke','rgba(255,255,255,.88)');path.setAttribute('stroke-width',route.width||3);path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');el.appendChild(path);
+      const path=document.createElementNS(ns,'polyline');path.setAttribute('points',shown.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke','rgba(255,255,255,.88)');path.setAttribute('stroke-width',route.width||3);path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');if(['modeled','inferred','synthetic_visualization'].includes(route.evidenceState))path.setAttribute('stroke-dasharray','10 8');el.appendChild(path);
     }
     for(const point of layer.points||[]){
       const p=project(point.lat,point.lon,layer);
-      const circle=document.createElementNS(ns,'circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r','5');circle.setAttribute('fill','#fff');el.appendChild(circle);
+      const circle=document.createElementNS(ns,'circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r','5');circle.setAttribute('fill','#fff');el.appendChild(circle);if(point.label){const label=document.createElementNS(ns,'text');label.setAttribute('x',p.x+10);label.setAttribute('y',p.y-8);label.setAttribute('fill','rgba(255,255,255,.88)');label.setAttribute('font-size','16');label.setAttribute('font-family','Montserrat,Arial,sans-serif');label.textContent=point.label;el.appendChild(label)}
     }
   };
   window.__evercraftRenderAt=async(timeSec)=>{
@@ -203,8 +203,9 @@ body{display:flex;align-items:center;justify-content:center}
     camera.style.transform='translate('+(-c.x)+'px,'+(-c.y)+'px) scale('+c.zoom+') rotate('+(c.rotationDeg||0)+'deg)';
     for(const layer of stage.layers){
       const el=document.querySelector('[data-layer="'+CSS.escape(layer.id)+'"]');if(!el)continue;
-      const opacity=clamp(at(layer.opacity,t,1),0,1),scale=Math.max(0,at(layer.scale,t,1)),rot=at(layer.rotationDeg,t,0);
-      el.style.opacity=opacity;el.style.transform='scale('+scale+') rotate('+rot+'deg)';
+      const opacity=clamp(at(layer.opacity,t,1),0,1),scale=Math.max(0,at(layer.scale,t,1)),rot=at(layer.rotationDeg,t,0),tx=at(layer.translateX,t,0),ty=at(layer.translateY,t,0),parallax=Number.isFinite(Number(layer.parallax))?Number(layer.parallax):1;
+      const px=c.x*(1-parallax),py=c.y*(1-parallax),pz=Math.pow(Math.max(.0001,c.zoom),parallax-1);
+      el.style.opacity=opacity;el.style.transform='translate('+(tx+px)+'px,'+(ty+py)+'px) scale('+(scale*pz)+') rotate('+(rot+(c.rotationDeg||0)*(parallax-1))+'deg)';
       if(layer.kind==='media'){
         const video=el.querySelector('video');
         if(video){
