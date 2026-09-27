@@ -592,6 +592,36 @@
       }
     },
     {
+      "product_key": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "class": "business_decision_simulator",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/llms.txt",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-conformance.json",
+      "doorway_state": "pain_index_public_mirror",
+      "conformance_state": "provider_miss_receipt_backed_repairing",
+      "provider_behavior_state": "generic_agent_brand_blind_misses_observed",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json",
+      "chum_mirror_state": "generated_public_fallback",
+      "mcp_registry": {
+        "name": null,
+        "publication_state": "not_published_public_route_pending"
+      },
+      "public_web_discovery_state": "pain_index_and_chum_mirror_required_provider_pickup_not_yet_verified",
+      "observed_provider_debt": {
+        "provider": "generic_agent",
+        "surface": "machine_client",
+        "case_ids": [
+          "business-simulator-startup-001",
+          "business-simulator-pricing-002",
+          "business-simulator-expansion-003",
+          "business-simulator-transaction-004"
+        ],
+        "observed_at": "2026-09-27",
+        "state": "miss_receipts_persisted"
+      }
+    },
+    {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
       "class": "agent_commerce",
