@@ -56,6 +56,8 @@ export function normalizeOpportunity(raw, now = new Date()) {
     actions: Array.isArray(raw.actions) ? raw.actions : [],
     sponsored: Boolean(raw.sponsored),
     sponsor_label: text(raw.sponsor_label),
+    exclusive_group: text(raw.exclusive_group),
+    benefit_key: text(raw.benefit_key),
     raw_metadata: raw.raw_metadata ?? null,
   };
 }
