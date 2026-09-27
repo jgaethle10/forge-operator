@@ -1,0 +1,116 @@
+{
+  "schema": "systemia.household-fabric.geography-sources.v1",
+  "geography": "yakima-wa",
+  "verified_at": "2026-09-27",
+  "truth_note": "verified_public_source means the source exists and matches the stated domain. It does not mean an automated collector is live.",
+  "sources": [
+    {
+      "id": "yakima-transit-gtfs",
+      "name": "Yakima Transit GTFS",
+      "categories": [
+        "transit"
+      ],
+      "source_class": "official_public",
+      "source_url": "https://yakimatransit.org/gtfs-feed/",
+      "source_state": "verified_public_source",
+      "collector_state": "not_wired",
+      "intended_acquisition": "official_gtfs_download",
+      "freshness_target_minutes": 1440
+    },
+    {
+      "id": "yakima-valley-libraries-events",
+      "name": "Yakima Valley Libraries Events",
+      "categories": [
+        "event"
+      ],
+      "source_class": "official_public",
+      "source_url": "https://www.yvl.org/events/",
+      "source_state": "verified_public_source",
+      "collector_state": "not_wired",
+      "intended_acquisition": "public_event_feed_or_html_adapter",
+      "freshness_target_minutes": 1440
+    },
+    {
+      "id": "worksourcewa-yakima",
+      "name": "WorkSourceWA Yakima job search",
+      "categories": [
+        "job"
+      ],
+      "source_class": "official_public",
+      "source_url": "https://www.worksourcewa.com/jobsearch/powersearch.aspx?vw=d",
+      "source_state": "verified_public_source",
+      "collector_state": "not_wired",
+      "intended_acquisition": "public_search_adapter_with_terms_review",
+      "freshness_target_minutes": 1440
+    },
+    {
+      "id": "cascade-wa-rebates",
+      "name": "Cascade Natural Gas Washington Residential Rebates",
+      "categories": [
+        "rebate",
+        "utility"
+      ],
+      "source_class": "official_public",
+      "source_url": "https://www.cngc.com/energy-efficiency/residential-rebate-offerings/",
+      "source_state": "verified_public_source",
+      "collector_state": "not_wired",
+      "intended_acquisition": "public_program_adapter",
+      "freshness_target_minutes": 10080
+    },
+    {
+      "id": "cascade-wa-assistance",
+      "name": "Cascade Natural Gas Washington Income-Qualified Assistance",
+      "categories": [
+        "benefit",
+        "utility"
+      ],
+      "source_class": "official_public",
+      "source_url": "https://www.cngc.com/customer-service/income-qualified_assistance_programs/washington/",
+      "source_state": "verified_public_source",
+      "collector_state": "not_wired",
+      "intended_acquisition": "public_program_adapter",
+      "freshness_target_minutes": 10080
+    },
+    {
+      "id": "yvfwc-community-services",
+      "name": "Yakima Valley Farm Workers Clinic Community Services",
+      "categories": [
+        "benefit",
+        "event"
+      ],
+      "source_class": "official_public",
+      "source_url": "https://www.yvfwc.com/services/",
+      "source_state": "verified_public_source",
+      "collector_state": "not_wired",
+      "intended_acquisition": "public_resource_adapter",
+      "freshness_target_minutes": 10080
+    }
+  ],
+  "missing_priority_lanes": [
+    {
+      "category": "fuel",
+      "need": "price-capable lawful feed or merchant/partner lane",
+      "state": "unresolved"
+    },
+    {
+      "category": "grocery",
+      "need": "merchant offers/prices with location and expiration",
+      "state": "unresolved"
+    },
+    {
+      "category": "meal",
+      "need": "local merchant offers with expiry and sponsorship separation",
+      "state": "unresolved"
+    },
+    {
+      "category": "gig",
+      "need": "short paid opportunities with scam controls and provenance",
+      "state": "unresolved"
+    },
+    {
+      "category": "retail",
+      "need": "merchant offers/prices with item identity and expiry",
+      "state": "unresolved"
+    }
+  ]
+}
