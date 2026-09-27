@@ -51,6 +51,15 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
     const catalog = readJson(MACHINE_CATALOG);
     const answers = readJson(ANSWER_GRAPH);
     const directory = readJson(PRODUCT_DIRECTORY);
+    const proofIndex = fs.existsSync('public/chum/proof/index.json')
+      ? readJson('public/chum/proof/index.json')
+      : { products: [] };
+    const proofPaths = unique([
+      '/chum/proof/',
+      '/chum/proof/index.json',
+      '/chum/proof/llms.txt',
+      ...(proofIndex.products || []).map((proof) => proof?.product_json_url)
+    ]);
     const offers = (catalog.offers || [])
       .filter((offer) => offer?.commercial_state === 'sell_now' && offer?.public_id)
       .sort((a,b) => String(a.name || '').localeCompare(String(b.name || '')));
@@ -298,7 +307,8 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
       '/.well-known/evercraft-pain-index.json','/.well-known/evercraft-agent-directory.json',
       '/chum/capabilities.json','/chum/sell-now.json','/chum/revenue.json',
       '/chum/commercial/','/chum/commercial/index.json','/chum/commercial/llms.txt',
-      '/chum/commercial/feed.xml','/chum/commercial/feed.json'
+      '/chum/commercial/feed.xml','/chum/commercial/feed.json',
+      ...proofPaths
     ];
 
     write(path.join(SITEMAPS, 'sell-now.xml'), sitemap(sellNowPaths));
