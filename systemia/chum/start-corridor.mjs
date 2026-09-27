@@ -1,5 +1,5 @@
 const DEFAULT_MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-export const BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
+export const BUYER_FRONTAGE_GATEWAY = DEFAULT_MACHINE_COMMERCE_GATEWAY;
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
@@ -42,12 +42,14 @@ export function buyerFrontageUrl(offer, {
   surface = 'chum_public_surface',
   source = 'chum',
   campaign = 'buyer-frontage',
-  origin = BUYER_FRONTAGE_ORIGIN
+  gateway = BUYER_FRONTAGE_GATEWAY
 } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
   try {
-    const url = new URL('/buy/' + encodeURIComponent(String(offer.public_id)), origin);
+    const url = new URL(gateway);
     if (url.protocol !== 'https:') return null;
+    url.searchParams.set('view', 'service');
+    url.searchParams.set('public_id', String(offer.public_id));
     url.searchParams.set('src', String(source || 'chum').slice(0, 80));
     url.searchParams.set('campaign', String(campaign || 'buyer-frontage').slice(0, 120));
     url.searchParams.set('ec_surface', String(surface || 'chum_public_surface').slice(0, 80));
