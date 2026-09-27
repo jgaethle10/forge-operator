@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-27T20:08:04.787Z",
+  "generated_at": "2026-09-27T23:01:59.577Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
@@ -235,36 +235,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441.json",
       "score": 222,
       "urgency": "strike_now",
@@ -285,26 +255,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
       "score": 222,
       "urgency": "strike_now",
@@ -316,36 +266,6 @@
     },
     {
       "path": "/chum/answers/doors/evercraft-network-membership-861ace178a/",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -1016,6 +936,86 @@
     },
     {
       "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22/",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784/",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [

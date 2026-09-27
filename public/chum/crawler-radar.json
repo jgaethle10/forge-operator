@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-27T20:08:04.787Z",
+  "generated_at": "2026-09-27T23:01:59.577Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
   "surface_count": 2376,
-  "strike_now_count": 2101,
+  "strike_now_count": 2094,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -8862,72 +8862,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441.json",
       "product_key": null,
       "score": 222,
@@ -8972,50 +8906,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
       "product_key": null,
       "score": 222,
@@ -9044,72 +8934,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-26T23:54:16.768Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12866,6 +12690,28 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858/",
       "product_key": null,
       "score": 215,
@@ -12960,6 +12806,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/buy-space-hoodies-or-apparel-dce8a879ad.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -14054,6 +13922,28 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/compare-my-website-against-competitors-d5e67cd8bf/",
       "product_key": null,
       "score": 215,
@@ -15088,6 +14978,28 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615/",
       "product_key": null,
       "score": 215,
@@ -15710,6 +15622,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18652,12 +18586,56 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba/",
       "product_key": null,
       "score": 215,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -19032,6 +19010,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-psychedelic-space-graphic-tees-57e559302d.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T22:18:18.960Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
