@@ -45,7 +45,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "forensiscope-evidence-review-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "aliev",
@@ -58,7 +65,15 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "aliev-site-opportunity-snapshot-v1",
+        "rivet-site-underwriting-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "findmypart",
@@ -71,7 +86,15 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "findmypart-paid-hunt-v1",
+        "findmypart-repair-shop-desk-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "systemia-website-audit",
@@ -84,7 +107,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "audit-center-website-audit-machine-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "career-command",
@@ -97,7 +127,15 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "career-command-interview-practice-machine-v1",
+        "career-command-resume-job-fit-machine-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "eventwave",
@@ -110,7 +148,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "eventwave-paid-promotion-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "faie",
@@ -123,7 +168,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "faie-signal-brief-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "buildflow",
@@ -136,7 +188,19 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "buildflow-bounded-agent-action-v1",
+        "buildflow-enterprise-ops-router-v1",
+        "buildflow-entity-resolution-machine-v1",
+        "buildflow-process-audit-machine-v1",
+        "buildflow-procure-to-pay-shadow-v1",
+        "buildflow-shadow-migration-machine-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "evercraft-web",
@@ -149,7 +213,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "evercraft-web-browser-agent-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "website-launch",
@@ -162,7 +233,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "website-launch-service-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "systemia-remote-ops",
@@ -183,6 +261,11 @@
         "desired_registry_name": "io.github.jgaethle10/systemia-remote-ops",
         "public_execution_verified": false,
         "registry_publication_proven": false
+      },
+      "capability_public_ids": [],
+      "fallback": {
+        "mode": "universal_until_direct_door_verified",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -196,7 +279,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "deck-capital-fit-sprint-machine-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "evercraft-clip",
@@ -209,7 +299,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "evercraft-clip-social-video-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "roasted",
@@ -222,7 +319,14 @@
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
-      "registry_candidate": null
+      "registry_candidate": null,
+      "capability_public_ids": [
+        "roasted-text-pressure-test-machine-v1"
+      ],
+      "fallback": {
+        "mode": "universal_when_ambiguous_or_specialist_unavailable",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      }
     },
     {
       "slug": "ibmi-rescue",
@@ -243,6 +347,13 @@
         "desired_registry_name": "io.github.jgaethle10/ibmi-rescue",
         "public_execution_verified": false,
         "registry_publication_proven": false
+      },
+      "capability_public_ids": [
+        "ibmi-rescue-v1"
+      ],
+      "fallback": {
+        "mode": "universal_until_direct_door_verified",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -264,6 +375,13 @@
         "desired_registry_name": "io.github.jgaethle10/foundry-app-escape",
         "public_execution_verified": false,
         "registry_publication_proven": false
+      },
+      "capability_public_ids": [
+        "foundry-app-escape-audit-v1"
+      ],
+      "fallback": {
+        "mode": "universal_until_direct_door_verified",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -285,6 +403,13 @@
         "desired_registry_name": "io.github.jgaethle10/site-survive",
         "public_execution_verified": false,
         "registry_publication_proven": false
+      },
+      "capability_public_ids": [
+        "site-survive-rapid-audit-v1"
+      ],
+      "fallback": {
+        "mode": "universal_until_direct_door_verified",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     }
   ],
