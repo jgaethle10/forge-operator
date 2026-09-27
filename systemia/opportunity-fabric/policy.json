@@ -1,0 +1,94 @@
+{
+  "schema": "evercraft.opportunity-fabric.policy.v1",
+  "policy_name": "Evercraft Creator Covenant",
+  "version": "0.1.0-draft",
+  "status": "draft_for_counsel_review",
+  "production_legal_review_required": true,
+  "principles": {
+    "owner_retains_rights": true,
+    "upload_transfers_ownership": false,
+    "viewing_grants_commercial_license": false,
+    "match_requires_protected_content": false,
+    "recipient_identity_required_before_disclosure": true,
+    "owner_approval_required_before_disclosure": true,
+    "covenant_acceptance_required_before_disclosure": true,
+    "receipt_required_for_every_disclosure": true,
+    "joint_work_allocation_required_before_creation": true
+  },
+  "default_evaluation_license": {
+    "allowed": [
+      "evaluate_fit",
+      "prepare_quote",
+      "prepare_proposal",
+      "assess_production_feasibility",
+      "assess_collaboration_fit"
+    ],
+    "prohibited_without_separate_explicit_license": [
+      "commercial_production",
+      "publication",
+      "sale",
+      "resale",
+      "distribution",
+      "sublicensing",
+      "ai_training",
+      "model_fine_tuning",
+      "embedding_corpus_creation",
+      "derivative_commercialization",
+      "independent_reproduction",
+      "reverse_engineering_for_competitive_use",
+      "circumvention"
+    ]
+  },
+  "confidentiality": {
+    "protected_material_use_limited_to_accepted_purpose": true,
+    "redisclosure_prohibited_without_owner_authorization": true,
+    "access_revocation_supported": true,
+    "retention_and_deletion_terms_required_in_final_agreement": true
+  },
+  "non_circumvention": {
+    "required_in_final_agreement": true,
+    "description": "Participants may not use protected opportunity information obtained through the fabric to bypass the originating party contrary to the accepted agreement."
+  },
+  "collaboration": {
+    "pre_creation_allocation_fields": [
+      "background_ip_owner",
+      "new_work_ownership",
+      "license_scope",
+      "revenue_split",
+      "credit",
+      "territory",
+      "duration",
+      "derivative_rights"
+    ]
+  },
+  "receipt": {
+    "required_fields": [
+      "receipt_id",
+      "asset_id",
+      "asset_fingerprint",
+      "owner_id",
+      "recipient_id",
+      "purpose",
+      "agreement_version",
+      "agreement_accepted_at",
+      "owner_approved_at",
+      "disclosed_at"
+    ],
+    "tamper_evidence": "sha256",
+    "digital_signature_required_for_production": true
+  },
+  "counsel_review_scope": [
+    "electronic_assent",
+    "confidentiality",
+    "trade_secret_preservation",
+    "copyright_and_license",
+    "non_circumvention",
+    "joint_authorship_and_work_for_hire",
+    "remedies_and_damages",
+    "dispute_resolution",
+    "governing_law",
+    "jurisdiction",
+    "record_retention",
+    "privacy_and_data_processing"
+  ]
+}
