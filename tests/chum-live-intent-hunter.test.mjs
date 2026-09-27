@@ -142,4 +142,57 @@ const commercialEv = huntLiveIntent({
 assert.equal(commercialEv.match.public_id, 'rivet-site-underwriting-v1');
 assert.equal(commercialEv.routing_receipt.explicit_commercial_continuation, true);
 
+const remoteOpsPainIndex = {
+  entries: [
+    {
+      capability_id: 'product:systemia-remote-ops',
+      product_key: 'systemia-remote-ops',
+      name: 'Systemia Remote Ops',
+      kind: 'product',
+      pain_phrases: [
+        'I am considering opening another location and hiring more people before I sign a lease or add payroll',
+        'model revenue margins recurring costs cash outlay break-even and runway under several expansion scenarios',
+        'simulate a pricing change before changing prices',
+        'simulate an acquisition before buying a company',
+        'start a business and compare operating and cash-flow assumptions before committing money'
+      ],
+      canonical_url: 'https://example.com/systemia-remote-ops',
+      commercial_state: 'product_contract',
+      machine_state: 'discovery_only'
+    },
+    {
+      capability_id: 'product:systemia-decision-lab',
+      product_key: 'systemia-decision-lab',
+      name: 'Systemia Decision Lab',
+      kind: 'product',
+      pain_phrases: [
+        'should I hire an employee',
+        'hire vs outsource',
+        'hire vs automate',
+        'compare the real cost of hiring before adding payroll'
+      ],
+      canonical_url: 'https://example.com/systemia-decision-lab',
+      commercial_state: 'product_contract',
+      machine_state: 'discovery_only'
+    }
+  ]
+};
+
+const remoteOpsExpansion = huntLiveIntent({
+  catalog: { offers: [] },
+  directory,
+  painIndex: remoteOpsPainIndex,
+  intent: 'I am considering opening another location and hiring more people. Before I sign a lease or add payroll, I want to model revenue, margins, recurring costs, cash outlay, break-even and runway under several scenarios.'
+});
+assert.equal(remoteOpsExpansion.match.product_key, 'systemia-remote-ops');
+assert.equal(remoteOpsExpansion.state, 'discovery_match');
+
+const decisionLabHiring = huntLiveIntent({
+  catalog: { offers: [] },
+  directory,
+  painIndex: remoteOpsPainIndex,
+  intent: 'Should I hire an employee or outsource this role? I want to compare the real cost of adding payroll.'
+});
+assert.equal(decisionLabHiring.match.product_key, 'systemia-decision-lab');
+
 console.log('CHUM live-intent hunter proof passed.');
