@@ -1,0 +1,31 @@
+name: Opportunity Fabric Protection Proof
+
+on:
+  push:
+    paths:
+      - 'systemia/opportunity-fabric/**'
+      - '.github/workflows/opportunity-fabric.yml'
+  pull_request:
+    paths:
+      - 'systemia/opportunity-fabric/**'
+      - '.github/workflows/opportunity-fabric.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  protection-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run Opportunity Fabric protection tests
+        run: node --test systemia/opportunity-fabric/engine.test.mjs
