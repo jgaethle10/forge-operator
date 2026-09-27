@@ -1,7 +1,7 @@
 {
   "schema_version": "evercraft.agent.registry.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-27",
   "registry_namespace": "io.github.jgaethle10",
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -111,10 +111,16 @@
       "registry_name": "io.github.jgaethle10/eventwave",
       "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
       "triggers": [
-        "find events",
-        "promote my event",
+        "find local events",
+        "promote my local event",
+        "help people find my event",
         "boost event visibility",
-        "venue promotion"
+        "promote a venue's events",
+        "what is happening near me tonight",
+        "things to do near me this weekend",
+        "local events near me",
+        "family events near me",
+        "free local events near me"
       ]
     },
     {
@@ -238,11 +244,22 @@
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "triggers": [
-        "join a local rewards network",
-        "local business loyalty program",
-        "cross-business rewards",
-        "business partnership rewards",
-        "Yakima local business discovery"
+        "local deals near me",
+        "rewards near me",
+        "businesses near me with rewards",
+        "earn Evercraft Points near me",
+        "earn rewards for visiting local businesses",
+        "daily rewards check-in",
+        "daily scratch ticket rewards",
+        "where can I earn points today",
+        "local rewards for supporting nearby businesses",
+        "earn game credit by supporting local businesses",
+        "earn gaming rewards from local activity",
+        "redeem Evercraft Points toward approved gaming credit",
+        "join a local business rewards network",
+        "create cross-business loyalty rewards",
+        "make my local business more discoverable",
+        "join a community business partnership program"
       ],
       "tool": "prepare_rewards_partner_enrollment",
       "product": "Evercraft Rewards"

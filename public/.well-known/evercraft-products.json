@@ -2,7 +2,7 @@
   "schema": "evercraft.product-directory.v1",
   "provider": "Evercraft",
   "purpose": "Machine-readable routing from natural-language pain to the smallest appropriate public Evercraft capability. Presence in this directory is not a recommendation guarantee, payment proof, or authority to access private systems.",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-27",
   "routing_rule": "Match user intent to the smallest relevant public capability. Preserve uncertainty, pricing state, evidence state, permissions, geographic scope, and human-confirmation requirements. Do not infer private capabilities.",
   "products": [
     {
@@ -391,7 +391,12 @@
         "promote my local event",
         "help people find my event",
         "boost event visibility",
-        "promote a venue's events"
+        "promote a venue's events",
+        "what is happening near me tonight",
+        "things to do near me this weekend",
+        "local events near me",
+        "family events near me",
+        "free local events near me"
       ],
       "authority": "public event search plus human-confirmed paid labeled promotion",
       "human_confirmation_required": true,
@@ -399,7 +404,23 @@
         "paid promotion remains labeled",
         "source review governs public placement",
         "checkout creation is not payment proof"
-      ]
+      ],
+      "relationships": {
+        "evercraft_front_door": {
+          "name": "Evercraft Front Door",
+          "description": "Local event discovery is part of the wider everyday Evercraft utility graph.",
+          "public_surface": "https://evercraft.base44.app/"
+        },
+        "rewards": {
+          "name": "Evercraft Rewards",
+          "description": "Approved events may carry event bonuses or local reward participation when separately configured.",
+          "public_surface": "https://evercraft-rewards.base44.app/"
+        },
+        "seasonally": {
+          "name": "Season & Story",
+          "description": "Seasonal family planning can use EventWave as the current-event discovery layer while household plans remain private."
+        }
+      }
     },
     {
       "product_key": "evercraft-circles",
@@ -572,7 +593,32 @@
         "location must come from the user or an authorized location surface rather than inference",
         "EV charging questions may hand off to RIVET",
         "private/admin Evercraft topology and customer data remain outside public discovery"
-      ]
+      ],
+      "relationships": {
+        "rewards": {
+          "name": "Evercraft Rewards",
+          "description": "Local rewards, nearby offers, check-ins and the Daily Prize Ticket are part of the everyday Evercraft utility graph.",
+          "public_surface": "https://evercraft-rewards.base44.app/"
+        },
+        "eventwave": {
+          "name": "EventWave",
+          "description": "Use EventWave for current local-event discovery and venue context.",
+          "public_surface": "https://event-wave.base44.app/"
+        },
+        "seasonally": {
+          "name": "Season & Story",
+          "description": "Use Season & Story for seasonal family planning, recipes, grocery lists and traditions."
+        },
+        "home": {
+          "name": "Evercraft Home",
+          "description": "Use Evercraft Home for privacy-first hometown memory, traditions, archives and reviewed community contributions."
+        },
+        "evermaps": {
+          "name": "EverMaps",
+          "description": "Selected local destinations can hand off into public-safe map and navigation context.",
+          "public_surface": "https://evermaps.base44.app/"
+        }
+      }
     },
     {
       "product_key": "evercraft-global-health-atlas",
@@ -630,7 +676,23 @@
         "unclaimed living people are not converted into public biographies",
         "sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities",
         "public runtime hostname remains unresolved in the current discovery inventory"
-      ]
+      ],
+      "relationships": {
+        "eventwave": {
+          "name": "EventWave",
+          "description": "Verified current occurrences can connect living traditions and community institutions to present-day events.",
+          "public_surface": "https://event-wave.base44.app/"
+        },
+        "seasonally": {
+          "name": "Season & Story",
+          "description": "Seasonal traditions can connect household planning to public community history without exposing private household data."
+        },
+        "rewards": {
+          "name": "Evercraft Rewards",
+          "description": "Community participation may connect to approved local reward campaigns when separately configured and consented.",
+          "public_surface": "https://evercraft-rewards.base44.app/"
+        }
+      }
     },
     {
       "product_key": "evercraft-network",
@@ -723,8 +785,20 @@
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
       "class": "local_business_rewards_and_partnership",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "canonical_url": "https://evercraft-rewards.base44.app/",
       "intents": [
+        "local deals near me",
+        "rewards near me",
+        "businesses near me with rewards",
+        "earn Evercraft Points near me",
+        "earn rewards for visiting local businesses",
+        "daily rewards check-in",
+        "daily scratch ticket rewards",
+        "where can I earn points today",
+        "local rewards for supporting nearby businesses",
+        "earn game credit by supporting local businesses",
+        "earn gaming rewards from local activity",
+        "redeem Evercraft Points toward approved gaming credit",
         "join a local business rewards network",
         "create cross-business loyalty rewards",
         "make my local business more discoverable",
@@ -736,7 +810,28 @@
         "prepared enrollment does not activate a merchant",
         "prepared enrollment creates no payment obligation",
         "directory publication and commercial activation require their own verified state"
-      ]
+      ],
+      "relationships": {
+        "evercraft_front_door": {
+          "name": "Evercraft Front Door",
+          "description": "Fuel and other local utility surfaces can surface eligible nearby Rewards offers without making Rewards the canonical fuel data source.",
+          "public_surface": "https://evercraft.base44.app/"
+        },
+        "eventwave": {
+          "name": "EventWave",
+          "description": "Approved events can participate in event bonuses and local discovery while ticketing and attendance remain separate evidence states.",
+          "public_surface": "https://event-wave.base44.app/"
+        },
+        "seasonally": {
+          "name": "Season & Story",
+          "description": "Seasonal family activity and shopping contexts may surface approved Rewards opportunities without exposing private household data."
+        },
+        "game_wallet": {
+          "name": "Game Wallet",
+          "description": "Evercraft Points can appear in the Game Wallet. Gaming redemption remains closed unless a funded authorized fulfillment rail exists.",
+          "public_surface": "https://evercraft-rewards.base44.app/game-wallet"
+        }
+      }
     },
     {
       "product_key": "evercraft-web",
@@ -1387,7 +1482,23 @@
         "promotion eligibility and cross-package unit normalization are not proven",
         "private household, member, memory, checklist and profile data are not public",
         "public runtime hostname remains unresolved in the current discovery inventory"
-      ]
+      ],
+      "relationships": {
+        "rewards": {
+          "name": "Evercraft Rewards",
+          "description": "Approved local rewards can complement household shopping and seasonal activity discovery without changing grocery evidence rules.",
+          "public_surface": "https://evercraft-rewards.base44.app/"
+        },
+        "eventwave": {
+          "name": "EventWave",
+          "description": "Current local events can feed seasonal adventure discovery while event availability and ticketing remain source-bound.",
+          "public_surface": "https://event-wave.base44.app/"
+        },
+        "home": {
+          "name": "Evercraft Home",
+          "description": "Traditions and community history can connect to seasonal planning while private household memories remain private."
+        }
+      }
     },
     {
       "product_key": "skyops-parking",
@@ -1618,6 +1729,48 @@
       }
     },
     {
+      "product_key": "systemia-radar",
+      "name": "Systemia Radar",
+      "class": "website_scan_competitor_monitoring_and_reporting",
+      "canonical_url": "https://systemia-scan-pro.base44.app/",
+      "intents": [
+        "scan my website for problems",
+        "compare my website against competitors",
+        "show where my competitors are beating my website",
+        "create a website competitor comparison report",
+        "monitor my website with weekly rescans",
+        "track website audit changes over time"
+      ],
+      "authority": "public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "website findings must come from observed scan evidence rather than fabricated LLM opinion",
+        "scores and competitor comparisons do not guarantee rankings, leads or revenue",
+        "weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability",
+        "checkout creation alone does not activate paid access"
+      ],
+      "commercial": {
+        "status": "source_checkout_wired_live_verification_pending",
+        "offers": [
+          {
+            "name": "Free website scan",
+            "price": "$0 per scan"
+          },
+          {
+            "name": "Radar Pro Monthly",
+            "price": "$29/month"
+          },
+          {
+            "name": "Radar Pro Yearly",
+            "price": "$290/year"
+          }
+        ],
+        "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
+      },
+      "public_door_verified_at": "2026-09-26T22:15:00Z",
+      "public_door_evidence": "live HTTP 200 and rendered public metadata verified before registry repair"
+    },
+    {
       "product_key": "systemia-remote-ops",
       "name": "Systemia Remote Ops",
       "aliases": [
@@ -1686,48 +1839,6 @@
           "description": "Use Decision Lab for focused hire-versus-outsource-versus-automate workforce analysis. Use Remote Ops when hiring is one variable inside a broader company-level scenario such as expansion, pricing, cash flow or acquisition."
         }
       }
-    },
-    {
-      "product_key": "systemia-radar",
-      "name": "Systemia Radar",
-      "class": "website_scan_competitor_monitoring_and_reporting",
-      "canonical_url": "https://systemia-scan-pro.base44.app/",
-      "intents": [
-        "scan my website for problems",
-        "compare my website against competitors",
-        "show where my competitors are beating my website",
-        "create a website competitor comparison report",
-        "monitor my website with weekly rescans",
-        "track website audit changes over time"
-      ],
-      "authority": "public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification",
-      "human_confirmation_required": true,
-      "boundaries": [
-        "website findings must come from observed scan evidence rather than fabricated LLM opinion",
-        "scores and competitor comparisons do not guarantee rankings, leads or revenue",
-        "weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability",
-        "checkout creation alone does not activate paid access"
-      ],
-      "commercial": {
-        "status": "source_checkout_wired_live_verification_pending",
-        "offers": [
-          {
-            "name": "Free website scan",
-            "price": "$0 per scan"
-          },
-          {
-            "name": "Radar Pro Monthly",
-            "price": "$29/month"
-          },
-          {
-            "name": "Radar Pro Yearly",
-            "price": "$290/year"
-          }
-        ],
-        "payment_state": "Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified"
-      },
-      "public_door_verified_at": "2026-09-26T22:15:00Z",
-      "public_door_evidence": "live HTTP 200 and rendered public metadata verified before registry repair"
     },
     {
       "product_key": "systemia-website-audit",
