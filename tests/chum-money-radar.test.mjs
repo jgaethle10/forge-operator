@@ -189,3 +189,22 @@ test('Money Radar blocks an unauthenticated trusted payment receipt source', asy
   assert.equal(receipt.payment_measurement_state, 'blocked_source_auth_missing');
   assert.equal(receipt.source.payment.fetched, false);
 });
+
+test('payment export uses GitHub OIDC in authorized CHUM workflows', () => {
+  for (const file of [
+    '.github/workflows/chum-watershed.yml',
+    '.github/workflows/chum-llm-hunter.yml',
+  ]) {
+    const workflow = fs.readFileSync(file, 'utf8');
+    assert.match(workflow, /id-token:\s*write/, file);
+    assert.match(workflow, /evercraft-chum-payment-export/, file);
+    assert.match(workflow, /ACTIONS_ID_TOKEN_REQUEST_URL/, file);
+    assert.match(workflow, /ACTIONS_ID_TOKEN_REQUEST_TOKEN/, file);
+    assert.match(workflow, /machineCommercePaymentExport/, file);
+    assert.doesNotMatch(
+      workflow,
+      /CHUM_ATTRIBUTION_EXPORT_TOKEN:\s*\$\{\{\s*secrets\./,
+      file + ' should use short-lived OIDC instead of a long-lived payment-export secret'
+    );
+  }
+});
