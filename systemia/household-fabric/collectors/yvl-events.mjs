@@ -109,3 +109,76 @@ export function parseYvlEvents(normalizedPageText, options = {}) {
 
   return events;
 }
+
+
+function browserEventOpportunity(title, schedule, browserResult, options = {}) {
+  const observedAt = new Date(
+    options.observed_at ??
+    browserResult.finished_at ??
+    Date.now()
+  ).toISOString();
+  const sourceUrl = options.source_url ?? browserResult.final_url ?? DEFAULT_SOURCE_URL;
+  const sourceName = options.source_name ?? DEFAULT_SOURCE_NAME;
+
+  return {
+    id: 'yvl-' + idFor(title, schedule, sourceUrl),
+    title: clean(title),
+    description: clean(schedule),
+    category: 'event',
+    source_url: sourceUrl,
+    source_name: sourceName,
+    observed_at: observedAt,
+    evidence_state: 'public',
+    confidence: 0.98,
+    eligibility: 'verified',
+    gross_savings_cents: 0,
+    gross_earnings_cents: 0,
+    holiday_tags: familyTags(clean(title)),
+    audience_tags: familyTags(clean(title)).length ? ['family'] : [],
+    location: null,
+    actions: [{
+      type: 'view_source',
+      label: 'View event',
+      url: sourceUrl,
+    }],
+    sponsored: false,
+    raw_metadata: {
+      event_schedule_text: clean(schedule),
+      event_location_text: null,
+      cost_state: 'library_program_source_describes_programs_as_free',
+      parser: 'yvl-browser-snapshot-v1',
+      browser_engine: clean(browserResult.engine) || null,
+      browser_text_sha256: clean(browserResult.text_sha256) || null,
+      browser_evidence_receipt_sha256: clean(browserResult.evidence_receipt_sha256) || null,
+    },
+  };
+}
+
+export function parseYvlBrowserResult(browserResult, options = {}) {
+  if (!browserResult || browserResult.ok !== true) {
+    throw new Error('successful browser result is required');
+  }
+  if (!browserResult.snapshot || !Array.isArray(browserResult.snapshot.headings)) {
+    throw new Error('browser snapshot headings are required');
+  }
+  if (!clean(browserResult.evidence_receipt_sha256)) {
+    throw new Error('browser evidence receipt is required');
+  }
+
+  const headings = browserResult.snapshot.headings
+    .map(row => ({
+      level: clean(row?.level).toLowerCase(),
+      text: clean(row?.text),
+    }))
+    .filter(row => row.level && row.text);
+
+  const events = [];
+  for (let i = 0; i < headings.length - 1; i += 1) {
+    const current = headings[i];
+    const next = headings[i + 1];
+    if (current.level !== 'h5' || next.level !== 'h6') continue;
+    events.push(browserEventOpportunity(current.text, next.text, browserResult, options));
+  }
+
+  return events;
+}
