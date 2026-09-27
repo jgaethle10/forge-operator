@@ -124,10 +124,10 @@ Hard-fail dimensions such as subject coverage, continuity, truth and editability
 
 ### Deliberate candidate exploration
 
-Before generation, Fallen can compile multiple **different visual strategies** for each Creative Council shot instead of cloning one prompt with different random seeds. World-intelligence scenes explore source-first documentary, spatial/data fusion, cinematic scale, and proof/detail treatments. Product/workflow scenes explore real product capture, spatial workflow, data proof, and human context. Every variant inherits the same must-show, truth, provenance and brand constraints.
+Before generation, Fallen can compile multiple **different visual strategies** for each Creative Council shot instead of cloning one prompt with different random seeds. World-intelligence scenes explore source-first documentary, spatial/data fusion, cinematic scale, and proof/detail treatments. Product/workflow scenes explore real product capture, spatial workflow, data proof, and human context. Every variant inherits the same must-show, truth, provenance and brand constraints, plus the reconciled Creative Council directives and rejection contract.
 
 ```bash
-npm run media:studio -- explore ./tmp/creative-council.json ./tmp/exploration.json
+npm run media:studio -- explore ./tmp/creative-bundle.json ./tmp/exploration.json
 ```
 
 The tournament therefore compares competing creative hypotheses, not merely stochastic variants of the same idea.
