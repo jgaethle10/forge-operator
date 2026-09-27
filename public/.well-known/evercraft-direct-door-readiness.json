@@ -1,0 +1,292 @@
+{
+  "schema": "evercraft.direct-door-readiness.v1",
+  "generated_from": "distribution/direct-plugin-specs.json",
+  "routing_policy": {
+    "default": "specialist_direct_when_clear",
+    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable"
+  },
+  "promotion_order": [
+    "prove_product_runtime",
+    "verify_public_https_and_mcp_canary",
+    "publish_official_mcp_registry_entry",
+    "observe_provider_pickup_separately"
+  ],
+  "summary": {
+    "product_count": 17,
+    "direct_callable_count": 13,
+    "registry_published_count": 13,
+    "registry_pending_count": 0,
+    "public_route_pending_count": 4,
+    "not_direct_callable_count": 4
+  },
+  "shared_blockers": {
+    "shared_public_edge_canary": [
+      "systemia-remote-ops",
+      "ibmi-rescue",
+      "foundry-app-escape",
+      "site-survive"
+    ],
+    "official_mcp_registry_publication": [
+      "systemia-remote-ops",
+      "ibmi-rescue",
+      "foundry-app-escape",
+      "site-survive"
+    ]
+  },
+  "products": [
+    {
+      "slug": "forensiscope",
+      "name": "ForensiScope",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/forensiscope",
+      "mcp_url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "aliev",
+      "name": "AliEV / RIVET",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/aliev",
+      "mcp_url": "https://aliev.base44.app/functions/alievMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "findmypart",
+      "name": "FindMyPart",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp_url": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "mcp_url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "career-command",
+      "name": "Career Command",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/career-command",
+      "mcp_url": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "eventwave",
+      "name": "EventWave",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "mcp_url": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "faie",
+      "name": "FAIE",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/faie",
+      "mcp_url": "https://faie.base44.app/functions/faieMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "mcp_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "evercraft-web",
+      "name": "Evercraft Web",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "mcp_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "website-launch",
+      "name": "Website Launch",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/website-launch",
+      "mcp_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "state": "yard_runtime_proven_public_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
+      "mcp_url": null,
+      "public_origin_state": "https_route_unbound",
+      "runtime_path": "/mcp/systemia-remote-ops",
+      "blocking_gates": [
+        "shared_public_edge_canary",
+        "official_mcp_registry_publication"
+      ],
+      "registry_candidate": {
+        "publication_state": "waiting_public_https_verification",
+        "desired_registry_name": "io.github.jgaethle10/systemia-remote-ops",
+        "public_execution_verified": false,
+        "registry_publication_proven": false
+      }
+    },
+    {
+      "slug": "deck-capital-fit",
+      "name": "Deck Capital Fit",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "mcp_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "evercraft-clip",
+      "name": "Evercraft Clip",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "mcp_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "roasted",
+      "name": "ROASTED",
+      "state": "registry_published_direct_mcp_existing",
+      "direct_callable": true,
+      "registry_published": true,
+      "registry_name": "io.github.jgaethle10/roasted",
+      "mcp_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "public_origin_state": null,
+      "runtime_path": null,
+      "blocking_gates": [],
+      "registry_candidate": null
+    },
+    {
+      "slug": "ibmi-rescue",
+      "name": "Evercraft IBM i Rescue",
+      "state": "yard_runtime_proven_public_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
+      "mcp_url": null,
+      "public_origin_state": "https_route_unbound",
+      "runtime_path": "/mcp/ibmi-rescue",
+      "blocking_gates": [
+        "shared_public_edge_canary",
+        "official_mcp_registry_publication"
+      ],
+      "registry_candidate": {
+        "publication_state": "waiting_public_https_verification",
+        "desired_registry_name": "io.github.jgaethle10/ibmi-rescue",
+        "public_execution_verified": false,
+        "registry_publication_proven": false
+      }
+    },
+    {
+      "slug": "foundry-app-escape",
+      "name": "Evercraft Foundry App Escape Audit",
+      "state": "yard_runtime_proven_public_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
+      "mcp_url": null,
+      "public_origin_state": "https_route_unbound",
+      "runtime_path": "/mcp/foundry-app-escape",
+      "blocking_gates": [
+        "shared_public_edge_canary",
+        "official_mcp_registry_publication"
+      ],
+      "registry_candidate": {
+        "publication_state": "waiting_public_https_verification",
+        "desired_registry_name": "io.github.jgaethle10/foundry-app-escape",
+        "public_execution_verified": false,
+        "registry_publication_proven": false
+      }
+    },
+    {
+      "slug": "site-survive",
+      "name": "Site-Survive Rapid Audit",
+      "state": "yard_runtime_proven_public_route_pending",
+      "direct_callable": false,
+      "registry_published": false,
+      "registry_name": null,
+      "mcp_url": null,
+      "public_origin_state": "https_route_unbound",
+      "runtime_path": "/mcp/site-survive",
+      "blocking_gates": [
+        "shared_public_edge_canary",
+        "official_mcp_registry_publication"
+      ],
+      "registry_candidate": {
+        "publication_state": "waiting_public_https_verification",
+        "desired_registry_name": "io.github.jgaethle10/site-survive",
+        "public_execution_verified": false,
+        "registry_publication_proven": false
+      }
+    }
+  ],
+  "truth_boundary": "This ledger reports Evercraft-controlled doorway state only. A callable MCP or registry publication does not prove that any external AI provider has discovered, ranked, recommended, or invoked the product. Provider pickup is measured separately."
+}
