@@ -167,6 +167,46 @@
       ]
     },
     {
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "canonical_url": "https://evercraft.base44.app/",
+      "aliases": [
+        "Evercraft Front Door"
+      ],
+      "triggers": [
+        "cheapest gas near me",
+        "current gas prices near me",
+        "compare nearby fuel prices",
+        "find diesel near me",
+        "find EV charging near me",
+        "useful local tools for everyday life",
+        "what can Evercraft help me with today"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route ordinary daily-life utility questions directly to the public Evercraft front door. Fuel answers remain read-only and evidence/freshness bounded."
+    },
+    {
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "aliases": [
+        "Home"
+      ],
+      "triggers": [
+        "preserve hometown memories",
+        "explore local history and traditions",
+        "share a hometown story safely",
+        "community memory and local archives",
+        "reconnect around a school team neighborhood or venue privately",
+        "local traditions events awards and community institutions",
+        "help solve a community memory puzzle"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route privacy-first hometown/community memory intent here. Public discovery never exposes private membership, reconnection or personal-memory data."
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "canonical_url": "https://network-control.base44.app/",
@@ -443,6 +483,26 @@
         "make this writing sharper",
         "professional text critique"
       ]
+    },
+    {
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "aliases": [
+        "Seasonally"
+      ],
+      "triggers": [
+        "seasonal family activities",
+        "seasonal recipes for my family",
+        "turn this recipe into a grocery list",
+        "family seasonal traditions",
+        "local seasonal events and adventures",
+        "compare grocery basket prices near me",
+        "cheapest groceries for this recipe"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route seasonal family, recipe and grocery-list intent here. Live retailer-price claims remain held until a receipt-backed source proof exists."
     },
     {
       "product_key": "skyops-parking",
