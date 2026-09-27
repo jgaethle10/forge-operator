@@ -4,6 +4,14 @@ import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corrid
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const directPluginSpecs = JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.json','utf8'));
+const conformanceCatalog = fs.existsSync('conformance/products.json')
+  ? JSON.parse(fs.readFileSync('conformance/products.json','utf8'))
+  : { products: [] };
+const conformanceByCapabilityId = new Map(
+  (conformanceCatalog.products || [])
+    .filter((row) => row?.machine_commerce_public_id)
+    .map((row) => [String(row.machine_commerce_public_id), row])
+);
 const LIVE_DIRECT_STATES=new Set([
   'registry_published_direct_mcp_existing',
   'public_https_verified_registry_pending',
@@ -59,6 +67,36 @@ function entryPaidOffer(offer){
     .sort((a,b)=>a.usd-b.usd);
   return paid.length?{...paid[0].tier,price_usd_normalized:paid[0].usd}:null;
 }
+function liveProofForCapability(publicId){
+  const row=conformanceByCapabilityId.get(String(publicId||''))||null;
+  if(!row) return null;
+  const evidence=String(row.live_canary_evidence||'').trim();
+  const registryName=String(row.mcp_registry?.name||'').trim();
+  const mcp=String(row.mcp||'').trim();
+  const conformanceState=String(row.conformance_state||'').trim();
+  const handoffState=String(row.machine_commerce_handoff_state||'').trim();
+  const liveReadOnly=conformanceState==='live_read_only_mcp_verified' &&
+    handoffState.includes('verified') &&
+    evidence.startsWith('https://') &&
+    mcp.startsWith('https://');
+  return {
+    product_key:row.product_key||null,
+    conformance_state:conformanceState||null,
+    machine_commerce_handoff_state:handoffState||null,
+    registry_name:registryName||null,
+    mcp:mcp||null,
+    live_canary_evidence:evidence||null,
+    live_read_only_verified:liveReadOnly
+  };
+}
+function invocationStatusFor(offer, proof){
+  if(proof?.live_read_only_verified){
+    return 'LIVE READ-ONLY MCP VERIFIED: '+String(proof.conformance_state||'verified')+
+      '; machine handoff state '+String(proof.machine_commerce_handoff_state||'verified')+
+      '; evidence '+String(proof.live_canary_evidence||'');
+  }
+  return offer.invocation_status;
+}
 function descriptionFor(offer){
   const problem=String(offer.problem||'').trim();
   if(problem) return problem;
@@ -75,6 +113,7 @@ for(const offer of catalog.offers||[]){
   const base='https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+id;
   const pageUrl='/chum/capabilities/'+id+'/';
   const directProduct=directByCapabilityId.get(id) || null;
+  const liveProof=liveProofForCapability(id);
   const directSpecialist=directProduct ? {
     product:directProduct.name,
     plugin_package:'plugins/'+directProduct.slug,
@@ -105,7 +144,9 @@ for(const offer of catalog.offers||[]){
     confirmation:offer.confirmation,
     public_url:canonicalUrl,
     payment_authority:offer.payment_authority,
-    invocation_status:offer.invocation_status,
+    invocation_status:invocationStatusFor(offer,liveProof),
+    live_proof:liveProof,
+    live_canary_evidence:liveProof?.live_canary_evidence||null,
     preferred_agent_route:directSpecialist ? 'direct_specialist' : 'universal_fallback',
     direct_specialist:directSpecialist,
     machine_commerce_mcp:universalMcp,
@@ -162,7 +203,8 @@ for(const offer of catalog.offers||[]){
     '',
     '## Invocation and authority',
     '',
-    offer.invocation_status||'',
+    invocationStatusFor(offer,liveProof)||'',
+    ...(liveProof?.live_canary_evidence ? ['Live canary evidence: '+liveProof.live_canary_evidence] : []),
     '',
     offer.confirmation||'',
     '',
@@ -244,6 +286,8 @@ for(const offer of catalog.offers||[]){
     start_url_state:record.start_url_state,
     machine_review_url:record.machine_review_url,
     entry_paid_offer:record.entry_paid_offer,
+    live_proof:record.live_proof,
+    live_canary_evidence:record.live_canary_evidence,
     preferred_agent_route:record.preferred_agent_route,
     direct_specialist:record.direct_specialist,
     use_when:offer.intent_terms||[]
