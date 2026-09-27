@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-27T23:49:53.287Z",
+  "generated_at": "2026-09-27T23:52:44.681Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -332,6 +332,16 @@
       "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
       "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
       "content_sha256": "b38780c2959069f4dbcf2b1b0befe5079f4ae86c4d6b6e9f2915abbb87cfbf02",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-rewards:71ddf22e4e54741b833e612d1b62fbf56b6d6ebfa1e55c06c01dc45e0f364339",
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
+      "content_sha256": "71ddf22e4e54741b833e612d1b62fbf56b6d6ebfa1e55c06c01dc45e0f364339",
       "requires_authorized_destination": true
     },
     {

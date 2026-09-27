@@ -329,8 +329,8 @@
       "llms": "./evercraft-rewards/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {

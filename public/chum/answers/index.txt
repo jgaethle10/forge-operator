@@ -747,7 +747,7 @@ Answer ID: intent:7a4331cf86
 Human-readable match: /chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## buy a Christmas light installation lead
 Answer ID: intent:5ec6340858
@@ -1265,7 +1265,7 @@ Answer ID: intent:2c3ab05040
 Human-readable match: /chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## create social-ready video outputs with a governed publishing path
 Answer ID: intent:ec776b8ce1
@@ -1329,14 +1329,14 @@ Answer ID: intent:5348821cf2
 Human-readable match: /chum/answers/doors/daily-rewards-check-in-5348821cf2/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/daily-rewards-check-in-5348821cf2.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## daily scratch ticket rewards
 Answer ID: intent:ea8243a20b
 Human-readable match: /chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## dedupe our vendor list safely
 Answer ID: intent:9edf25e4db
@@ -1422,28 +1422,28 @@ Answer ID: intent:425423859c
 Human-readable match: /chum/answers/doors/earn-evercraft-points-near-me-425423859c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## earn game credit by supporting local businesses
 Answer ID: intent:1e1bf9da6f
 Human-readable match: /chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## earn gaming rewards from local activity
 Answer ID: intent:797bb6432d
 Human-readable match: /chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## earn rewards for visiting local businesses
 Answer ID: intent:d04e178d65
 Human-readable match: /chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## escape vendor lock-in
 Answer ID: intent:9bf9834ecc
@@ -2929,7 +2929,7 @@ Answer ID: intent:4a5d34ada5
 Human-readable match: /chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## join a founding professional networking beta
 Answer ID: intent:d27794cd5a
@@ -2950,7 +2950,7 @@ Answer ID: intent:7d1ef68f27
 Human-readable match: /chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## journal and review my trades
 Answer ID: intent:42a3d685c4
@@ -3133,7 +3133,7 @@ Answer ID: intent:5c9f9f79b7
 Human-readable match: /chum/answers/doors/local-deals-near-me-5c9f9f79b7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## local events near me
 Answer ID: intent:e826ea2875
@@ -3147,7 +3147,7 @@ Answer ID: intent:e507d240b3
 Human-readable match: /chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## local seasonal events and adventures
 Answer ID: intent:92b5c0e6d1
@@ -3240,7 +3240,7 @@ Answer ID: intent:5368f3dc15
 Human-readable match: /chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## make reels from an authorized source video
 Answer ID: intent:8742052def
@@ -4261,7 +4261,7 @@ Answer ID: intent:8e558dce41
 Human-readable match: /chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## relationship safety planning
 Answer ID: intent:ea06cabc20
@@ -4517,7 +4517,7 @@ Answer ID: intent:89d5f09b97
 Human-readable match: /chum/answers/doors/rewards-near-me-89d5f09b97/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rewards-near-me-89d5f09b97.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## RIVET EV charging report
 Answer ID: intent:09f613a2a6
@@ -5897,7 +5897,7 @@ Answer ID: intent:3b76c8caac
 Human-readable match: /chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
 ## where is Evercraft Network verified
 Answer ID: intent:b0f7c0a824

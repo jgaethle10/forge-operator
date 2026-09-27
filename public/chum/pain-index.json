@@ -30,8 +30,8 @@
     "machine_offer_entries": 45,
     "entries_with_pain_language": 102,
     "sell_now_machine_offers": 13,
-    "entries_with_declared_mcp": 61,
-    "callable_or_routable_entries": 42,
+    "entries_with_declared_mcp": 60,
+    "callable_or_routable_entries": 41,
     "suppressed_legacy_marketing_routes": 8
   },
   "entries": [
@@ -3438,31 +3438,34 @@
       "inputs": null,
       "outputs": null,
       "canonical_url": "https://evercraft-rewards.base44.app/",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "registry_name": null,
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
+        "preferred": "universal_machine_commerce",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
+      "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet activity; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
       "boundaries": [
-        "prepared enrollment does not activate a merchant",
-        "prepared enrollment creates no payment obligation",
-        "directory publication and commercial activation require their own verified state"
+        "read-only discovery creates no payment obligation",
+        "a verified geofence check-in proves eligible proximity only and does not prove a purchase, transaction value, ticket purchase or event attendance",
+        "Daily Prize Ticket selection, issuance, claim and credit state remain separate; ambiguous credit state requires reconciliation instead of automatic double payment",
+        "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail exists",
+        "Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership",
+        "prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation",
+        "merchant directory publication and commercial activation require their own verified state"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
-        "public/.well-known/evercraft-products.json",
-        "registry/catalog.json"
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

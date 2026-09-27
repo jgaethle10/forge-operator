@@ -685,7 +685,7 @@
       "llms_path": "/chum/products/evercraft-rewards/llms.txt",
       "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": "",
       "class": "local_business_rewards_and_partnership",
       "intents": [
         "local deals near me",
@@ -705,11 +705,11 @@
         "make my local business more discoverable",
         "join a community business partnership program"
       ],
-      "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
+      "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet activity; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "b38780c2959069f4dbcf2b1b0befe5079f4ae86c4d6b6e9f2915abbb87cfbf02",
+      "content_sha256": "71ddf22e4e54741b833e612d1b62fbf56b6d6ebfa1e55c06c01dc45e0f364339",
       "updated_at": "2026-09-27T00:00:00.000Z"
     },
     {

@@ -1414,9 +1414,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evercraft-rewards
 Product key: evercraft-rewards
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
+Machine state: discovery_only
 Public URL: https://evercraft-rewards.base44.app/
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - local deals near me
 - rewards near me
@@ -1435,7 +1434,7 @@ Use when the user means:
 - make my local business more discoverable
 - join a community business partnership program
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Web
 Capability ID: product:evercraft-web

@@ -315,8 +315,8 @@
       "llms": "/chum/products/evercraft-rewards/llms.txt",
       "discovery": "/chum/products/evercraft-rewards/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "b38780c2959069f4dbcf2b1b0befe5079f4ae86c4d6b6e9f2915abbb87cfbf02"
+      "mcp": null,
+      "content_sha256": "71ddf22e4e54741b833e612d1b62fbf56b6d6ebfa1e55c06c01dc45e0f364339"
     },
     {
       "product_key": "evercraft-web",
