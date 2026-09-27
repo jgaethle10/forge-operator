@@ -203,9 +203,9 @@ body{display:flex;align-items:center;justify-content:center}
     camera.style.transform='translate('+(-c.x)+'px,'+(-c.y)+'px) scale('+c.zoom+') rotate('+(c.rotationDeg||0)+'deg)';
     for(const layer of stage.layers){
       const el=document.querySelector('[data-layer="'+CSS.escape(layer.id)+'"]');if(!el)continue;
-      const opacity=clamp(at(layer.opacity,t,1),0,1),scale=Math.max(0,at(layer.scale,t,1)),rot=at(layer.rotationDeg,t,0),tx=at(layer.translateX,t,0),ty=at(layer.translateY,t,0),parallax=Number.isFinite(Number(layer.parallax))?Number(layer.parallax):1;
+      const opacity=clamp(at(layer.opacity,t,1),0,1),scale=Math.max(0,at(layer.scale,t,1)),rot=at(layer.rotationDeg,t,0),rx=at(layer.rotateXDeg,t,0),ry=at(layer.rotateYDeg,t,0),tx=at(layer.translateX,t,0),ty=at(layer.translateY,t,0),parallax=Number.isFinite(Number(layer.parallax))?Number(layer.parallax):1,perspective=Number.isFinite(Number(layer.perspectivePx))?Number(layer.perspectivePx):1200;
       const px=c.x*(1-parallax),py=c.y*(1-parallax),pz=Math.pow(Math.max(.0001,c.zoom),parallax-1);
-      el.style.opacity=opacity;el.style.transform='translate('+(tx+px)+'px,'+(ty+py)+'px) scale('+(scale*pz)+') rotate('+(rot+(c.rotationDeg||0)*(parallax-1))+'deg)';
+      el.style.opacity=opacity;el.style.transform='perspective('+perspective+'px) translate('+(tx+px)+'px,'+(ty+py)+'px) scale('+(scale*pz)+') rotateX('+rx+'deg) rotateY('+ry+'deg) rotate('+(rot+(c.rotationDeg||0)*(parallax-1))+'deg)';
       if(layer.kind==='media'){
         const video=el.querySelector('video');
         if(video){
