@@ -37,7 +37,8 @@
     "commercial_intent_rss": "/chum/commercial/feed.xml",
     "commercial_intent_json": "/chum/commercial/feed.json",
     "opensearch": "/opensearch.xml",
-    "syndication_hub": "/chum/syndication/"
+    "syndication_hub": "/chum/syndication/",
+    "direct_door_readiness": "/.well-known/evercraft-direct-door-readiness.json"
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
