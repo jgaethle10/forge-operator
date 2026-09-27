@@ -7,6 +7,19 @@ const conformanceByKey = new Map((conformance.products || []).map((row) => [row.
 const robots = fs.readFileSync('public/robots.txt','utf8');
 const indexHtml = fs.readFileSync('public/chum/index.html','utf8');
 const llmsFull = fs.readFileSync('public/llms-full.txt','utf8');
+const proofIndex = fs.existsSync('public/chum/proof/index.json')
+  ? JSON.parse(fs.readFileSync('public/chum/proof/index.json','utf8'))
+  : { products: [] };
+const proofByKey = new Map();
+for (const proof of proofIndex.products || []) {
+  const fallbackCoverage = proof?.product_key === 'rivet'
+    ? ['rivet', 'aliev']
+    : [proof?.product_key].filter(Boolean);
+  const coverage = Array.isArray(proof?.covered_product_keys) && proof.covered_product_keys.length
+    ? proof.covered_product_keys
+    : fallbackCoverage;
+  for (const coveredKey of coverage) proofByKey.set(String(coveredKey), proof);
+}
 
 for (const token of [
   'OAI-SearchBot','ChatGPT-User','GPTBot',
@@ -21,6 +34,7 @@ assert.ok(indexHtml.includes('CHUM'), 'CHUM public index missing');
 assert.ok(indexHtml.includes('Describe the problem'), 'CHUM public index missing pain-first form');
 assert.ok(indexHtml.includes('/llms-full.txt'), 'CHUM public index missing full LLM directory link');
 assert.ok(indexHtml.includes('/openapi.json'), 'CHUM public index missing OpenAPI link');
+assert.ok(indexHtml.includes('/chum/proof/'), 'CHUM public index missing Proof Factory link');
 
 for (const product of directory.products || []) {
   const key = String(product.product_key || '').trim();
@@ -32,6 +46,7 @@ for (const product of directory.products || []) {
   }
 
   const html = fs.readFileSync(`${root}/index.html`,'utf8');
+  const llms = fs.readFileSync(`${root}/llms.txt`,'utf8');
   const discovery = JSON.parse(fs.readFileSync(`${root}/ai-discovery.json`,'utf8'));
   const conf = conformanceByKey.get(key);
   const registryPublicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
@@ -44,6 +59,16 @@ for (const product of directory.products || []) {
   assert.ok(html.includes('./llms.txt'), `${key} product page missing llms.txt link`);
   assert.ok(html.includes('./ai-discovery.json'), `${key} product page missing discovery JSON link`);
 
+  const proof = proofByKey.get(key);
+  if (proof) {
+    const expectedCard = proof.product_json_url || `/chum/proof/${proof.product_key}.json`;
+    assert.equal(discovery.proof_library?.product_card, expectedCard, `${key} discovery mirror lost Proof Factory card`);
+    assert.equal(discovery.proof_library?.evidence_state, proof.evidence_state, `${key} discovery mirror changed proof evidence state`);
+    assert.ok(llms.includes(`Receipt-backed proof: ${expectedCard}`), `${key} LLM mirror missing proof door`);
+    assert.ok(html.includes(expectedCard), `${key} human mirror missing proof door`);
+    assert.equal(discovery.provider_behavior_state, undefined, `${key} discovery mirror must not infer provider behavior from proof publication`);
+  }
+
   const painPhrases = Array.isArray(product.intents) ? product.intents.filter(Boolean) : [];
   assert.ok(painPhrases.length > 0, `${key} has no public problem-language intents`);
 }
@@ -54,7 +79,8 @@ const publicFiles = [
   'public/.well-known/evercraft-chum.json',
   'public/.well-known/evercraft-pain-index.json',
   'public/.well-known/evercraft-products.json',
-  'public/.well-known/evercraft-machine-catalog.json'
+  'public/.well-known/evercraft-machine-catalog.json',
+  'public/chum/proof/index.json'
 ];
 
 const secretLike = [
@@ -68,6 +94,11 @@ for (const file of publicFiles) {
   for (const pattern of secretLike) {
     assert.ok(!pattern.test(content), `secret-like material found in ${file}`);
   }
+}
+
+const alievDiscovery = JSON.parse(fs.readFileSync('public/chum/products/aliev/ai-discovery.json','utf8'));
+if (proofByKey.has('aliev')) {
+  assert.equal(alievDiscovery.proof_library?.product_card, '/chum/proof/rivet.json', 'AliEV must inherit the RIVET proof card');
 }
 
 console.log('CHUM PUBLIC DISCOVERY SURFACES PASS', JSON.stringify({
