@@ -122,6 +122,16 @@ The tournament is evidence-bound. Visual scores must come from verified observat
 
 Hard-fail dimensions such as subject coverage, continuity, truth and editability eliminate a candidate regardless of how attractive it is. This prevents a visually impressive but incorrect or misleading render from winning on aesthetics alone.
 
+### Deliberate candidate exploration
+
+Before generation, Fallen can compile multiple **different visual strategies** for each Creative Council shot instead of cloning one prompt with different random seeds. World-intelligence scenes explore source-first documentary, spatial/data fusion, cinematic scale, and proof/detail treatments. Product/workflow scenes explore real product capture, spatial workflow, data proof, and human context. Every variant inherits the same must-show, truth, provenance and brand constraints.
+
+```bash
+npm run media:studio -- explore ./tmp/creative-council.json ./tmp/exploration.json
+```
+
+The tournament therefore compares competing creative hypotheses, not merely stochastic variants of the same idea.
+
 ### Visual Observer packets
 
 Before a candidate enters the jury, Fallen can produce a deterministic observation bundle. The observer verifies the artifact digest, probes media shape, samples evenly distributed frames, hashes every sampled frame, measures objective motion activity for video, and emits an objective editability receipt. Visual analyzers must cite the packet's artifact or frame hashes in any additional subject/composition/motion/continuity/brand/beauty receipt; receipts citing evidence outside the packet are rejected.
