@@ -98,7 +98,7 @@ test('tournament advances the stronger fully verified candidate', async () => {
           assignment: {
             agent_id: `agent-${role}-${shot.id}`,
             role,
-            item: { raw: { candidate: shot } },
+            item: { raw: { candidate: shot, creativeGenomeDigest: 'genome-1' } },
           },
         }),
       );
@@ -127,7 +127,7 @@ test('pretty-but-wrong candidate cannot win when required subject evidence fails
           assignment: {
             agent_id: `agent-${role}-${shot.id}`,
             role,
-            item: { raw: { candidate: shot } },
+            item: { raw: { candidate: shot, creativeGenomeDigest: 'genome-1' } },
           },
         }),
       );
@@ -160,7 +160,7 @@ test('missing verified beauty observation blocks rather than inventing a score',
     assignment: {
       agent_id: 'beauty-agent',
       role: 'beauty_judge',
-      item: { raw: { candidate: shot } },
+      item: { raw: { candidate: shot, creativeGenomeDigest: 'genome-1' } },
     },
   });
 
@@ -182,7 +182,7 @@ test('synthetic visual without a label hard-fails truth', async () => {
     assignment: {
       agent_id: 'truth-agent',
       role: 'truth_judge',
-      item: { raw: { candidate: shot } },
+      item: { raw: { candidate: shot, creativeGenomeDigest: 'genome-1' } },
     },
   });
 
