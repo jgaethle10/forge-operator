@@ -1,0 +1,26 @@
+name: Domain Authority
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/domain-authority/**'
+      - '.github/workflows/domain-authority.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/domain-authority/**'
+      - '.github/workflows/domain-authority.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove fail-closed zone and mail DNS contract
+        run: node systemia/domain-authority/domain-plan.proof.mjs
