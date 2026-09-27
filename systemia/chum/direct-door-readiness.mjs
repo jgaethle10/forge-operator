@@ -7,6 +7,8 @@ const DIRECT_CALLABLE_STATES = new Set([
   'registry_published_direct_mcp_existing',
   'public_https_verified_registry_pending',
 ]);
+const UNIVERSAL_MACHINE_COMMERCE_MCP =
+  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
 
 function arg(name, fallback = null) {
   const i = process.argv.indexOf(name);
@@ -62,6 +64,18 @@ export function classifyDirectDoor(product, candidate = null) {
     public_origin_state: product.public_origin_state || null,
     runtime_path: product.runtime_path || null,
     blocking_gates: blockingGates,
+    capability_public_ids: Array.isArray(product.capability_public_ids)
+      ? product.capability_public_ids
+      : [],
+    fallback: directCallable
+      ? {
+          mode: 'universal_when_ambiguous_or_specialist_unavailable',
+          mcp: UNIVERSAL_MACHINE_COMMERCE_MCP,
+        }
+      : {
+          mode: 'universal_until_direct_door_verified',
+          mcp: UNIVERSAL_MACHINE_COMMERCE_MCP,
+        },
     registry_candidate: candidate
       ? {
           publication_state: candidate.publication_state || null,
