@@ -16,7 +16,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/aliev-site-opportunity-snapshot-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=aliev-site-opportunity-snapshot-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=aliev-site-opportunity-snapshot-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1",
       "entry_paid_offer": {
@@ -66,7 +66,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/audit-center-website-audit-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=audit-center-website-audit-machine-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=audit-center-website-audit-machine-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1",
       "entry_paid_offer": {
@@ -119,7 +119,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/career-command-interview-practice-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=career-command-interview-practice-machine-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=career-command-interview-practice-machine-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1",
       "entry_paid_offer": {
@@ -163,7 +163,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/deck-capital-fit-sprint-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=deck-capital-fit-sprint-machine-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=deck-capital-fit-sprint-machine-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1",
       "entry_paid_offer": {
@@ -208,7 +208,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/eventwave-paid-promotion-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=eventwave-paid-promotion-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=eventwave-paid-promotion-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1",
       "entry_paid_offer": {
@@ -254,7 +254,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/faie-signal-brief-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=faie-signal-brief-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=faie-signal-brief-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1",
       "entry_paid_offer": {
@@ -294,7 +294,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=findmypart-paid-hunt-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=findmypart-paid-hunt-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
       "entry_paid_offer": {
@@ -334,7 +334,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/foundry-app-escape-audit-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=foundry-app-escape-audit-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=foundry-app-escape-audit-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
       "entry_paid_offer": {
@@ -366,7 +366,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/ibmi-rescue-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=ibmi-rescue-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=ibmi-rescue-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1",
       "entry_paid_offer": {
@@ -415,7 +415,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/rivet-site-underwriting-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=rivet-site-underwriting-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=rivet-site-underwriting-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
       "entry_paid_offer": {
@@ -471,7 +471,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/roasted-text-pressure-test-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=roasted-text-pressure-test-machine-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=roasted-text-pressure-test-machine-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1",
       "entry_paid_offer": {
@@ -516,7 +516,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/site-survive-rapid-audit-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=site-survive-rapid-audit-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=site-survive-rapid-audit-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
       "entry_paid_offer": {
@@ -548,7 +548,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/llms.txt",
       "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/capability.json",
       "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/schema.jsonld",
-      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/website-launch-service-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=website-launch-service-v1",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1&src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=website-launch-service-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1",
       "entry_paid_offer": {
