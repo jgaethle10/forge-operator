@@ -2,9 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-27T23:52:44.847Z</updated>
+<updated>2026-09-27T23:54:40.179Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-27T23:54:40.179Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-27T23:54:40.179Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:3fba73c665c9f87f7bf4ae41</id><title>/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:fe983b3a2bd992eb85b3745d</id><title>/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:6ced4ddeb5111e35c283db1a</id><title>/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json"/><category term="priority-100"/></entry>
@@ -44,7 +46,6 @@
 <entry><id>urn:evercraft:chum:37d28cd6c3d1e6b46c8259a0</id><title>/chum/answers/index.txt</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/index.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:4d8d3f3bf5bf5034b0b7a603</id><title>/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:39c52aee30c97453cdf53d96</id><title>/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:54c615f3a47d6649bffba47c</id><title>/chum/pain-index.json</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/pain-index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:dd55382bdac459cac744435b</id><title>/chum/pain-index.txt</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/pain-index.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:9f7c55769d25e413b694841d</id><title>/chum/products/evercraft-rewards/</title><updated>2026-09-27T23:52:03.465Z</updated><link href="/chum/products/evercraft-rewards/"/><category term="priority-94"/></entry>
@@ -63,7 +64,6 @@
 <entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-27T23:51:19.544Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-27T23:51:19.544Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:85b28624a8b31b9bd8767fd1</id><title>/.well-known/evercraft-products.json</title><updated>2026-09-27T23:51:19.121Z</updated><link href="/.well-known/evercraft-products.json"/><category term="priority-88"/></entry>
-<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-27T23:51:19.121Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:5024cafa07f67a36cf6a5e6c</id><title>/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:30418e19783a107588fbc0c3</id><title>/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0/</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0/"/><category term="priority-100"/></entry>
