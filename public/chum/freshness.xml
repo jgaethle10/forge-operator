@@ -2,9 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-27T06:03:00.949Z</updated>
+<updated>2026-09-27T06:29:50.364Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-27T06:29:50.364Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-27T06:29:50.364Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-27T06:29:50.364Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-27T06:29:50.364Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-27T06:29:50.364Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:f1ff70118477fca174734282</id><title>/chum/sitemaps/products.xml</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/sitemaps/products.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:00627a7935d54185a93fdf35</id><title>/chum/answers/doors/business-decision-laboratory-be5b709998.json</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/answers/doors/business-decision-laboratory-be5b709998.json"/><category term="priority-100"/></entry>
@@ -100,9 +105,4 @@
 <entry><id>urn:evercraft:chum:901775e23cd6e7d85bd20643</id><title>/.well-known/evercraft-agent-directory.json</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/.well-known/evercraft-agent-directory.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:3cfc074c946dfb057e5bc7b0</id><title>/.well-known/evercraft-syndication.json</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/.well-known/evercraft-syndication.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:9897894058be7f4d3e2fbce7</id><title>/chum/</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:3235f46797d260d8413f1667</id><title>/chum/answers/</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/answers/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:f7fc88a8da08584220d59519</id><title>/chum/answers/index.json</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/answers/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:37d28cd6c3d1e6b46c8259a0</id><title>/chum/answers/index.txt</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/answers/index.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:17df75fe669cae85cd0b00ed</id><title>/chum/answers/observed/</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/answers/observed/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:5252c2fa30a95918588f7afc</id><title>/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/"/><category term="priority-80"/></entry>
 </feed>
