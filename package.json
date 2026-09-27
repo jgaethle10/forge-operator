@@ -177,7 +177,7 @@
     "test:mcp-registry-field-gate": "node --test tests/mcp-registry-field-gate.test.mjs",
     "proof:public-edge-field-mission": "node systemia/organism/public-edge-field-mission.proof.mjs",
     "proof:public-edge-resident-wiring": "node systemia/core/public-edge-resident-wiring.proof.mjs",
-    "test:household-fabric": "node systemia/household-fabric/engine.test.mjs"
+    "test:household-fabric": "node systemia/household-fabric/engine.test.mjs && node systemia/household-fabric/ingest.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
