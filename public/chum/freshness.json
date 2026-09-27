@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T00:07:01.877Z",
+  "updated_at": "2026-09-27T00:58:13.468Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,372 +11,62 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-diesel-near-me-69c964f8ca.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-diesel-near-me-69c964f8ca/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/preserve-hometown-memories-71794b538a.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/preserve-hometown-memories-71794b538a/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/seasonal-family-activities-42be4e5b00.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/seasonal-family-activities-42be4e5b00/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/ai-conformance.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/llms.txt",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/ai-conformance.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/ai-discovery.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/llms.txt",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/ai-conformance.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/ai-discovery.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/llms.txt",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-27T00:58:13.468Z",
       "priority": 80
     },
     {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-27T00:58:13.468Z",
       "priority": 80
     },
     {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-27T00:58:13.468Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "last_changed": "2026-09-27T00:58:13.468Z",
       "priority": 80
     },
     {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-27T00:58:13.468Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-27T00:58:13.468Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-27T00:58:13.468Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-27T00:58:13.468Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-27T00:58:13.468Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-27T00:58:13.468Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -762,12 +452,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-27T00:07:01.877Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-27T00:07:01.877Z",
@@ -816,24 +500,6 @@
       "priority": 60
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-27T00:06:56.897Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-27T00:06:56.897Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-27T00:06:56.897Z",
-      "priority": 80
-    },
-    {
       "path": "/.well-known/evercraft-products.json",
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-27T00:06:55.913Z",
@@ -843,12 +509,6 @@
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-26T23:58:24.067Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-26T23:58:23.716Z",
       "priority": 80
     },
     {
