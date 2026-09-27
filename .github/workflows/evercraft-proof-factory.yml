@@ -1,0 +1,141 @@
+name: Evercraft Proof Factory
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 */6 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/proof-factory/**"
+      - "systemia/forensiscope/distributed-proof.mjs"
+      - "systemia/forensiscope/artifact-return-proof.mjs"
+      - "systemia/rivet/report-runtime.proof.mjs"
+      - "systemia/rivet/national-session-sprawl.proof.mjs"
+      - "tests/proof-factory.test.mjs"
+      - "package.json"
+      - ".github/workflows/evercraft-proof-factory.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: evercraft-proof-factory
+  cancel-in-progress: true
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure media proof dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+
+      - name: Prove Proof Factory contract
+        run: npm run test:proof-factory
+
+      - name: Execute product proof set
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run proof:forensiscope-distributed
+          npm run proof:forensiscope-artifact-return
+          mkdir -p artifacts/rivet-proof
+          node systemia/rivet/report-runtime.proof.mjs > artifacts/rivet-proof/report-runtime-latest.json
+          node systemia/rivet/national-session-sprawl.proof.mjs > artifacts/rivet-proof/session-sprawl-latest.json
+          npm run proof:factory
+
+      - name: Validate promoted proof state
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync('artifacts/proof-factory/latest.json','utf8'));
+          if (receipt.schema !== 'evercraft.proof-factory.run.v1') throw new Error('Unexpected Proof Factory schema.');
+          if (receipt.product_count !== 2) throw new Error('Expected two focused proof products.');
+          if (receipt.fully_proved_products !== 2) throw new Error('Both focused products must have current passing execution proofs before public proof promotion.');
+          if (receipt.media_briefs < 4) throw new Error('Proof Factory must emit the focused visual proof briefs.');
+          NODE
+
+      - name: Publish public proof library
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Evercraft Proof Factory"
+          git config user.email "proof-factory@users.noreply.github.com"
+
+          rebuild_proof() {
+            npm run proof:forensiscope-distributed
+            npm run proof:forensiscope-artifact-return
+            mkdir -p artifacts/rivet-proof
+            node systemia/rivet/report-runtime.proof.mjs > artifacts/rivet-proof/report-runtime-latest.json
+            node systemia/rivet/national-session-sprawl.proof.mjs > artifacts/rivet-proof/session-sprawl-latest.json
+            npm run proof:factory
+          }
+
+          for ATTEMPT in 1 2 3; do
+            echo "Proof publication attempt ${ATTEMPT}/3"
+            git fetch origin main --quiet
+            git reset --hard origin/main
+            rebuild_proof
+            git add public/chum/proof
+
+            if git diff --cached --quiet; then
+              echo "Public proof library is already current."
+              exit 0
+            fi
+
+            git commit -m "Proof Factory refresh verified product proof [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Verified public proof library published."
+              exit 0
+            fi
+
+            echo "Main advanced during proof publication; rebuilding from the new tip."
+          done
+
+          echo "Proof Factory publication lost three consecutive main-branch races." >&2
+          exit 1
+
+      - name: Write proof summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f artifacts/proof-factory/latest.md ]; then
+            cat artifacts/proof-factory/latest.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload proof receipts and media briefs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-proof-factory
+          path: |
+            artifacts/forensiscope-proof/**
+            artifacts/rivet-proof/**
+            artifacts/proof-factory/**
+            public/chum/proof/**
+          if-no-files-found: warn
