@@ -96,6 +96,7 @@ for(const [file,needle] of [
   ['public/llms.txt',readinessPath],
   ['AI-DISCOVERY.md','evercraft-direct-door-readiness.json'],
   ['llms.txt','evercraft-direct-door-readiness.json'],
+  ['llms-full.txt','evercraft-direct-door-readiness.json'],
 ]){
   const content=fs.readFileSync(path.join(root,file),'utf8');
   assert.ok(
