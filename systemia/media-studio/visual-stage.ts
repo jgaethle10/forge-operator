@@ -33,6 +33,9 @@ export interface BaseLayer {
   opacity?: number | NumericKeyframe[];
   scale?: number | NumericKeyframe[];
   rotationDeg?: number | NumericKeyframe[];
+  rotateXDeg?: number | NumericKeyframe[];
+  rotateYDeg?: number | NumericKeyframe[];
+  perspectivePx?: number;
   translateX?: number | NumericKeyframe[];
   translateY?: number | NumericKeyframe[];
   parallax?: number;
@@ -150,10 +153,12 @@ export interface EvaluatedCamera {
   rotationDeg: number;
 }
 
-export interface EvaluatedLayer extends Omit<BaseLayer, 'opacity' | 'scale' | 'rotationDeg' | 'translateX' | 'translateY'> {
+export interface EvaluatedLayer extends Omit<BaseLayer, 'opacity' | 'scale' | 'rotationDeg' | 'rotateXDeg' | 'rotateYDeg' | 'translateX' | 'translateY'> {
   opacity: number;
   scale: number;
   rotationDeg: number;
+  rotateXDeg: number;
+  rotateYDeg: number;
   translateX: number;
   translateY: number;
   raw: VisualLayer;
@@ -235,6 +240,8 @@ export function evaluateStage(stage:VisualStage,t:number){
       const opacity=clamp(valueAt(layer.opacity,time,1),0,1);
       const scale=Math.max(0,valueAt(layer.scale,time,1));
       const rotationDeg=valueAt(layer.rotationDeg,time,0);
+      const rotateXDeg=valueAt(layer.rotateXDeg,time,0);
+      const rotateYDeg=valueAt(layer.rotateYDeg,time,0);
       const translateX=valueAt(layer.translateX,time,0);
       const translateY=valueAt(layer.translateY,time,0);
       const evaluated:EvaluatedLayer={
@@ -250,6 +257,8 @@ export function evaluateStage(stage:VisualStage,t:number){
         opacity,
         scale,
         rotationDeg,
+        rotateXDeg,
+        rotateYDeg,
         translateX,
         translateY,
         raw:layer
