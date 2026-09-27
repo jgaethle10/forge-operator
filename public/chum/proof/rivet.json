@@ -1,23 +1,69 @@
 {
   "schema": "evercraft.proof-factory.product-card.v1",
-  "generated_at": null,
+  "generated_at": "2026-09-27T14:45:55.460Z",
   "product_key": "rivet",
   "name": "RIVET / AliEV",
   "product_url": "/rivet/",
   "discovery_url": "/rivet/discovery.json",
-  "evidence_state": "proof_pending",
+  "evidence_state": "execution_proofs_passed",
   "proof_summary": {
     "required": 2,
-    "passed": 0,
-    "unresolved": 2
+    "passed": 2,
+    "unresolved": 0
   },
+  "proofs": [
+    {
+      "id": "address-to-ready-report",
+      "state": "pass",
+      "schema": "evercraft.rivet.yard-report-proof.v1",
+      "source_code": "/systemia/rivet/report-runtime.proof.mjs",
+      "receipt_path": "artifacts/rivet-proof/report-runtime-latest.json",
+      "metrics": {
+        "address_to_ready_report": true,
+        "beast_football_source_snapshot": true,
+        "team_auth_fail_closed": true,
+        "exact_source_hash_verified": true
+      },
+      "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+    },
+    {
+      "id": "national-session-sprawl-contract",
+      "state": "pass",
+      "schema": "evercraft.rivet.session-sprawl-proof.v1",
+      "source_code": "/systemia/rivet/national-session-sprawl.proof.mjs",
+      "receipt_path": "artifacts/rivet-proof/session-sprawl-latest.json",
+      "metrics": {
+        "jurisdictions": 56,
+        "jurisdiction_lane_work_units": 280,
+        "national_partner_lanes": 3,
+        "total_work_units": 283,
+        "canonical_entity": "EVObservedUsageAggregate",
+        "modeled_promotion_forbidden": true
+      },
+      "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+    }
+  ],
   "safe_claims": [
-    "Current executable proofs are the authority for promotion into this card.",
-    "Until the Proof Factory run completes, this seed card makes no claim that the current receipts passed."
+    "Synthetic report-runtime proof covers address admission through a source-backed snapshot, exact source-hash verification, fail-closed team authorization and a ready report state.",
+    "Session-sprawl proof validates a nationwide 56-jurisdiction work queue and forbids modeled substitutes from being promoted as observed charging sessions.",
+    "These proofs validate bounded runtime and data-contract behavior; they do not establish site economics, engineering approval, incentive eligibility or nationwide observed-session coverage."
   ],
   "visual_production": {
-    "state": "awaiting_current_proof_receipts",
-    "jobs": []
+    "state": "briefs_ready_not_rendered",
+    "jobs": [
+      {
+        "id": "rivet-address-to-report",
+        "title": "One address through the RIVET evidence pipeline",
+        "production_state": "brief_ready_not_rendered",
+        "artifact_brief": "artifacts/proof-factory/media-jobs/rivet-address-to-report.json"
+      },
+      {
+        "id": "rivet-session-sprawl",
+        "title": "How RIVET hunts observed charging-session evidence nationwide",
+        "production_state": "brief_ready_not_rendered",
+        "artifact_brief": "artifacts/proof-factory/media-jobs/rivet-session-sprawl.json"
+      }
+    ]
   },
   "truth_boundary": {
     "executable_proof_is_not_customer_production": true,

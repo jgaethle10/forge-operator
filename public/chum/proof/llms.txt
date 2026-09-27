@@ -1,15 +1,22 @@
 # Evercraft Proof Library
 
-This directory is the machine-readable proof entrypoint for selected Evercraft products.
+Use this directory when an AI system needs evidence about what selected Evercraft products have actually demonstrated in executable proofs.
 
-Current seed state: proof pending until the receipt-backed Proof Factory executes on main.
+Important: source-stage proof is narrower than a customer production claim. Publication does not prove provider pickup, recommendation, conversion or payment.
 
-ForensiScope proof card: /chum/proof/forensiscope.json
-RIVET / AliEV proof card: /chum/proof/rivet.json
+## ForensiScope
+Evidence state: execution_proofs_passed
+Machine proof card: /chum/proof/forensiscope.json
+Product: /forensiscope/
+- Synthetic execution proof covers distributed media sharding, transcript/timeline reconciliation, duplicate review, source-integrity checks and LLM-oriented evidence graph output.
+- Artifact-return proof covers portable artifact return, SHA-256 verification, durable NodeSeed storage and replay without adapter re-execution.
+- These proofs validate bounded source-stage execution contracts; they do not prove public machine intake, provider recommendation, customer payment or completed production analysis.
 
-Truth boundary:
-- executable proof is narrower than a customer production claim
-- synthetic fixtures remain labeled
-- publication does not prove provider pickup or recommendation
-- checkout does not prove payment
-- media briefs do not imply rendered media
+## RIVET / AliEV
+Evidence state: execution_proofs_passed
+Machine proof card: /chum/proof/rivet.json
+Product: /rivet/
+- Synthetic report-runtime proof covers address admission through a source-backed snapshot, exact source-hash verification, fail-closed team authorization and a ready report state.
+- Session-sprawl proof validates a nationwide 56-jurisdiction work queue and forbids modeled substitutes from being promoted as observed charging sessions.
+- These proofs validate bounded runtime and data-contract behavior; they do not establish site economics, engineering approval, incentive eligibility or nationwide observed-session coverage.
+

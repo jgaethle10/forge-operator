@@ -1,29 +1,147 @@
 {
   "schema": "evercraft.proof-factory.public-index.v1",
-  "generated_at": null,
+  "generated_at": "2026-09-27T14:45:55.460Z",
   "coordinator": "Systemia",
-  "purpose": "Public entrypoint for receipt-backed Evercraft product proof.",
-  "state": "proof_pending_until_current_receipts_run",
+  "purpose": "Promote executable, bounded product proof into machine-readable public evidence without turning source-stage tests into unsupported production or market claims.",
   "doctrine": {
     "receipt_before_claim": true,
     "synthetic_fixtures_must_remain_labeled": true,
     "publication_is_not_provider_pickup": true,
     "pickup_is_not_recommendation": true,
     "checkout_is_not_payment": true,
+    "payment_requires_authoritative_verification": true,
     "media_brief_is_not_rendered_media": true
   },
   "products": [
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
-      "evidence_state": "proof_pending",
-      "product_json_url": "/chum/proof/forensiscope.json"
+      "evidence_state": "execution_proofs_passed",
+      "passed_proofs": 2,
+      "required_proofs": 2,
+      "product_json_url": "/chum/proof/forensiscope.json",
+      "product_url": "/forensiscope/",
+      "discovery_url": "/forensiscope/discovery.json",
+      "proofs": [
+        {
+          "id": "distributed-media-execution",
+          "state": "pass",
+          "schema": "evercraft.forensiscope.distributed-execution-proof.v1",
+          "source_code": "/systemia/forensiscope/distributed-proof.mjs",
+          "receipt_path": "artifacts/forensiscope-proof/latest.json",
+          "metrics": {
+            "shards": 4,
+            "logical_agents": 24,
+            "physical_workers": 6,
+            "nodeseed_count": 2,
+            "completed_assignments": 24,
+            "timeline_entries": 4,
+            "transcript_segments": 5,
+            "near_repeated_pairs": 4,
+            "evidence_graph_nodes": 16,
+            "evidence_graph_edges": 19,
+            "llm_evidence_atoms": 5,
+            "source_unchanged": true,
+            "public_machine_intake_enabled": false
+          },
+          "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+        },
+        {
+          "id": "portable-artifact-return",
+          "state": "pass",
+          "schema": "evercraft.forensiscope.artifact-return-proof.v1",
+          "source_code": "/systemia/forensiscope/artifact-return-proof.mjs",
+          "receipt_path": "artifacts/forensiscope-proof/artifact-return/latest.json",
+          "metrics": {
+            "restart_replay_deduplicated": true,
+            "coordinator_path_rehydrated": true,
+            "durable_nodeseed_store_survived_restart": true,
+            "artifact_download_reverified_sha256": true,
+            "adapter_reexecution_required_on_replay": false
+          },
+          "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+        }
+      ],
+      "safe_claims": [
+        "Synthetic execution proof covers distributed media sharding, transcript/timeline reconciliation, duplicate review, source-integrity checks and LLM-oriented evidence graph output.",
+        "Artifact-return proof covers portable artifact return, SHA-256 verification, durable NodeSeed storage and replay without adapter re-execution.",
+        "These proofs validate bounded source-stage execution contracts; they do not prove public machine intake, provider recommendation, customer payment or completed production analysis."
+      ],
+      "visual_jobs": [
+        {
+          "id": "forensiscope-proof-flow",
+          "title": "How ForensiScope turns a long recording into compact evidence",
+          "production_state": "brief_ready_not_rendered",
+          "artifact_brief": "artifacts/proof-factory/media-jobs/forensiscope-proof-flow.json"
+        },
+        {
+          "id": "forensiscope-duplicate-proof",
+          "title": "Finding repeated footage without losing source lineage",
+          "production_state": "brief_ready_not_rendered",
+          "artifact_brief": "artifacts/proof-factory/media-jobs/forensiscope-duplicate-proof.json"
+        }
+      ]
     },
     {
       "product_key": "rivet",
       "name": "RIVET / AliEV",
-      "evidence_state": "proof_pending",
-      "product_json_url": "/chum/proof/rivet.json"
+      "evidence_state": "execution_proofs_passed",
+      "passed_proofs": 2,
+      "required_proofs": 2,
+      "product_json_url": "/chum/proof/rivet.json",
+      "product_url": "/rivet/",
+      "discovery_url": "/rivet/discovery.json",
+      "proofs": [
+        {
+          "id": "address-to-ready-report",
+          "state": "pass",
+          "schema": "evercraft.rivet.yard-report-proof.v1",
+          "source_code": "/systemia/rivet/report-runtime.proof.mjs",
+          "receipt_path": "artifacts/rivet-proof/report-runtime-latest.json",
+          "metrics": {
+            "address_to_ready_report": true,
+            "beast_football_source_snapshot": true,
+            "team_auth_fail_closed": true,
+            "exact_source_hash_verified": true
+          },
+          "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+        },
+        {
+          "id": "national-session-sprawl-contract",
+          "state": "pass",
+          "schema": "evercraft.rivet.session-sprawl-proof.v1",
+          "source_code": "/systemia/rivet/national-session-sprawl.proof.mjs",
+          "receipt_path": "artifacts/rivet-proof/session-sprawl-latest.json",
+          "metrics": {
+            "jurisdictions": 56,
+            "jurisdiction_lane_work_units": 280,
+            "national_partner_lanes": 3,
+            "total_work_units": 283,
+            "canonical_entity": "EVObservedUsageAggregate",
+            "modeled_promotion_forbidden": true
+          },
+          "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+        }
+      ],
+      "safe_claims": [
+        "Synthetic report-runtime proof covers address admission through a source-backed snapshot, exact source-hash verification, fail-closed team authorization and a ready report state.",
+        "Session-sprawl proof validates a nationwide 56-jurisdiction work queue and forbids modeled substitutes from being promoted as observed charging sessions.",
+        "These proofs validate bounded runtime and data-contract behavior; they do not establish site economics, engineering approval, incentive eligibility or nationwide observed-session coverage."
+      ],
+      "visual_jobs": [
+        {
+          "id": "rivet-address-to-report",
+          "title": "One address through the RIVET evidence pipeline",
+          "production_state": "brief_ready_not_rendered",
+          "artifact_brief": "artifacts/proof-factory/media-jobs/rivet-address-to-report.json"
+        },
+        {
+          "id": "rivet-session-sprawl",
+          "title": "How RIVET hunts observed charging-session evidence nationwide",
+          "production_state": "brief_ready_not_rendered",
+          "artifact_brief": "artifacts/proof-factory/media-jobs/rivet-session-sprawl.json"
+        }
+      ]
     }
   ]
 }

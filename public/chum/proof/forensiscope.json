@@ -1,23 +1,77 @@
 {
   "schema": "evercraft.proof-factory.product-card.v1",
-  "generated_at": null,
+  "generated_at": "2026-09-27T14:45:55.460Z",
   "product_key": "forensiscope",
   "name": "ForensiScope",
   "product_url": "/forensiscope/",
   "discovery_url": "/forensiscope/discovery.json",
-  "evidence_state": "proof_pending",
+  "evidence_state": "execution_proofs_passed",
   "proof_summary": {
     "required": 2,
-    "passed": 0,
-    "unresolved": 2
+    "passed": 2,
+    "unresolved": 0
   },
+  "proofs": [
+    {
+      "id": "distributed-media-execution",
+      "state": "pass",
+      "schema": "evercraft.forensiscope.distributed-execution-proof.v1",
+      "source_code": "/systemia/forensiscope/distributed-proof.mjs",
+      "receipt_path": "artifacts/forensiscope-proof/latest.json",
+      "metrics": {
+        "shards": 4,
+        "logical_agents": 24,
+        "physical_workers": 6,
+        "nodeseed_count": 2,
+        "completed_assignments": 24,
+        "timeline_entries": 4,
+        "transcript_segments": 5,
+        "near_repeated_pairs": 4,
+        "evidence_graph_nodes": 16,
+        "evidence_graph_edges": 19,
+        "llm_evidence_atoms": 5,
+        "source_unchanged": true,
+        "public_machine_intake_enabled": false
+      },
+      "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+    },
+    {
+      "id": "portable-artifact-return",
+      "state": "pass",
+      "schema": "evercraft.forensiscope.artifact-return-proof.v1",
+      "source_code": "/systemia/forensiscope/artifact-return-proof.mjs",
+      "receipt_path": "artifacts/forensiscope-proof/artifact-return/latest.json",
+      "metrics": {
+        "restart_replay_deduplicated": true,
+        "coordinator_path_rehydrated": true,
+        "durable_nodeseed_store_survived_restart": true,
+        "artifact_download_reverified_sha256": true,
+        "adapter_reexecution_required_on_replay": false
+      },
+      "boundary": "Executable proof receipt only. Do not generalize beyond the fields and contract demonstrated by the proof."
+    }
+  ],
   "safe_claims": [
-    "Current executable proofs are the authority for promotion into this card.",
-    "Until the Proof Factory run completes, this seed card makes no claim that the current receipts passed."
+    "Synthetic execution proof covers distributed media sharding, transcript/timeline reconciliation, duplicate review, source-integrity checks and LLM-oriented evidence graph output.",
+    "Artifact-return proof covers portable artifact return, SHA-256 verification, durable NodeSeed storage and replay without adapter re-execution.",
+    "These proofs validate bounded source-stage execution contracts; they do not prove public machine intake, provider recommendation, customer payment or completed production analysis."
   ],
   "visual_production": {
-    "state": "awaiting_current_proof_receipts",
-    "jobs": []
+    "state": "briefs_ready_not_rendered",
+    "jobs": [
+      {
+        "id": "forensiscope-proof-flow",
+        "title": "How ForensiScope turns a long recording into compact evidence",
+        "production_state": "brief_ready_not_rendered",
+        "artifact_brief": "artifacts/proof-factory/media-jobs/forensiscope-proof-flow.json"
+      },
+      {
+        "id": "forensiscope-duplicate-proof",
+        "title": "Finding repeated footage without losing source lineage",
+        "production_state": "brief_ready_not_rendered",
+        "artifact_brief": "artifacts/proof-factory/media-jobs/forensiscope-duplicate-proof.json"
+      }
+    ]
   },
   "truth_boundary": {
     "executable_proof_is_not_customer_production": true,
