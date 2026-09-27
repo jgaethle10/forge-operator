@@ -88,6 +88,12 @@ jobs:
           git config user.email "proof-factory@users.noreply.github.com"
 
           rebuild_proof() {
+            rm -rf \
+              artifacts/forensiscope-proof \
+              artifacts/forensiscope-intake/proof \
+              artifacts/forensiscope-intake/artifact-return \
+              artifacts/rivet-proof \
+              artifacts/proof-factory
             npm run proof:forensiscope-distributed
             npm run proof:forensiscope-artifact-return
             mkdir -p artifacts/rivet-proof
