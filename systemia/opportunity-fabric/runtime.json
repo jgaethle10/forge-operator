@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.opportunity-fabric.runtime.v1",
+  "product_key": "opportunity-fabric",
+  "name": "Evercraft Opportunity Fabric",
+  "updated_at": "2026-09-27",
+  "runtime": {
+    "provider": "base44",
+    "app_id": "6ab85d74fe2093703c6247e0",
+    "checkpoint_id": "6ab9aba10fc08e43850055fa",
+    "checkpoint_commit": "493de6c9248ef72011b1f735486e21798d82a7c9",
+    "public_url": null,
+    "publication_state": "not_claimed_public"
+  },
+  "verified_capabilities": [
+    "metadata-first member profiles",
+    "I HAVE / I NEED / I CAN DO / I AM OPEN TO discovery model",
+    "metadata-first opportunity posts",
+    "local complementarity ranking",
+    "private connection-request entity",
+    "requester/target/admin row-level access on connection requests",
+    "member and opportunity public cards do not expose contact email",
+    "accepted connection opens direct contact path",
+    "protected-material-present flag without protected content storage in public listing UI",
+    "Creator Covenant acknowledgement in connection flow"
+  ],
+  "verification": {
+    "app_lint": "pass",
+    "app_vite_build": "pass",
+    "privacy_grep": {
+      "public_profile_mailto": "none",
+      "public_opportunity_mailto": "none",
+      "protected_content_fields_in_app_source": "none",
+      "mailto_only_after_accepted_connection": true
+    },
+    "forge_core_protection_proof": "pass",
+    "systemia_portfolio_sentinel": "pass"
+  },
+  "known_limits": [
+    "Creator Covenant legal language remains draft_for_counsel_review",
+    "production-grade identity proof beyond authenticated account is not yet claimed",
+    "cryptographically signed disclosure receipts are not yet wired into the Base44 UI",
+    "protected asset upload/reveal is intentionally not exposed in the public listing flow",
+    "public deployment URL is not yet claimed",
+    "full repository Forge check remains blocked by the separate Evercraft Network discovery invariant"
+  ],
+  "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
+}
