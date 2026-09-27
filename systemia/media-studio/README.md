@@ -75,6 +75,34 @@ The resulting `evercraft.fallen.series-plan.v1` contains:
 
 This is the foundation for recurring cartoons, serialized films, recurring commercial characters and brand campaigns where identity must survive across many generations and editing sessions.
 
+## Creative Council
+
+Fallen now has a separate pre-production swarm called the **Fallen Creative Council**. It is registered in Saban as `fallen-creative-council` and fans ten owned creative roles across each planned scene or semantic coverage gap before provider execution.
+
+The current crew is intentionally cross-system rather than a new isolated team:
+
+- **Little Red Studio** owns story architecture, world building and brand art direction.
+- **ForensiScope Create** owns visual evidence scouting and documentary-truth boundaries.
+- **Fallen** owns cinematography, data graphics and edit rhythm.
+- **Kaidance** owns sound direction.
+- **Human Experience Sentinel** owns the beauty judgment.
+
+Each role returns a structured note. Saban reconciles the notes into an `evercraft.fallen.creative-council-reconciliation.v1` receipt with one **creative genome** per shot. The genome contains story, camera, coverage, graphics, world, edit, sound, art-direction, truth and beauty constraints plus a unioned rejection contract. A scene cannot silently pass as "finished" merely because it rendered.
+
+The council is deliberately provider-neutral. It performs no model call by itself and creates no synthetic media claim. Its job is to make the downstream asset search/generation request much harder to misunderstand, and to give provider output a concrete visual contract to satisfy.
+
+Build a council inventory from a film plan:
+
+```bash
+npm run media:studio -- council ./tmp/plan.json ./tmp/creative-council.json
+```
+
+Run the bounded Saban proof:
+
+```bash
+npm run proof:saban-fallen-creative
+```
+
 ## Architecture direction
 
 1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
