@@ -103,6 +103,37 @@ Run the bounded Saban proof:
 npm run proof:saban-fallen-creative
 ```
 
+## Shot Tournament
+
+Fallen now has a second governed swarm after the Creative Council: the **Shot Tournament**. The Creative Council defines what a shot must accomplish; the tournament decides which produced candidate is allowed to advance.
+
+The jury uses eight independent roles:
+
+- subject coverage
+- composition
+- motion
+- continuity
+- documentary truth
+- brand fidelity
+- beauty
+- editability
+
+The tournament is evidence-bound. Visual scores must come from verified observation receipts with evidence references. Missing visual evidence blocks a judge instead of inventing a quality score from metadata or filenames. Truth checks are fail-closed: incomplete provenance, unknown source state, or unlabeled synthetic/modelled visualization cannot advance.
+
+Hard-fail dimensions such as subject coverage, continuity, truth and editability eliminate a candidate regardless of how attractive it is. This prevents a visually impressive but incorrect or misleading render from winning on aesthetics alone.
+
+Build a tournament inventory:
+
+```bash
+npm run media:studio -- tournament ./tmp/candidates.json ./tmp/tournament.json
+```
+
+Run the bounded Saban proof:
+
+```bash
+npm run proof:saban-fallen-tournament
+```
+
 ## Architecture direction
 
 1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
