@@ -599,8 +599,8 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-conformance.json",
       "doorway_state": "pain_index_public_mirror",
-      "conformance_state": "provider_miss_receipt_backed_repairing",
-      "provider_behavior_state": "generic_agent_brand_blind_misses_observed",
+      "conformance_state": "public_discovery_repair_receipt_backed",
+      "provider_behavior_state": "not_run",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json",
       "chum_mirror_state": "generated_public_fallback",
       "mcp_registry": {
@@ -611,6 +611,7 @@
       "observed_provider_debt": {
         "provider": "generic_agent",
         "surface": "machine_client",
+        "interpretation": "Four named authorized probes missed Systemia Remote Ops. These are case-specific negative pickup receipts and do not establish generalized provider behavior.",
         "case_ids": [
           "business-simulator-startup-001",
           "business-simulator-pricing-002",
