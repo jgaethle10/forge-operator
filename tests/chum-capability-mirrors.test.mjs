@@ -80,3 +80,23 @@ test('SELL NOW mirrors expose one human Start corridor',()=>{
     assert.match(page,/Start here/,row.public_id);
   }
 });
+
+test('live conformance proof survives capability generation',()=>{
+  const conformance=JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
+  const live=(conformance.products||[]).filter((row)=>
+    row?.machine_commerce_public_id &&
+    row?.conformance_state==='live_read_only_mcp_verified' &&
+    String(row?.live_canary_evidence||'').startsWith('https://')
+  );
+  assert.ok(live.length>=1,'expected at least one live read-only MCP conformance record');
+  for(const proof of live){
+    const file='public/chum/capabilities/'+proof.machine_commerce_public_id+'/capability.json';
+    assert.equal(fs.existsSync(file),true,file);
+    const record=JSON.parse(fs.readFileSync(file,'utf8'));
+    assert.match(String(record.invocation_status||''),/^LIVE READ-ONLY MCP VERIFIED:/,proof.machine_commerce_public_id);
+    assert.equal(record.live_canary_evidence,proof.live_canary_evidence,proof.machine_commerce_public_id);
+    assert.equal(record.live_proof?.conformance_state,proof.conformance_state,proof.machine_commerce_public_id);
+    assert.equal(record.live_proof?.machine_commerce_handoff_state,proof.machine_commerce_handoff_state,proof.machine_commerce_public_id);
+    assert.equal(record.live_proof?.mcp,proof.mcp,proof.machine_commerce_public_id);
+  }
+});
