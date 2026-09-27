@@ -22,11 +22,11 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-27T06:29:50.364Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-27T14:20:19.547Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-27T14:38:35.350Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-27T06:02:55.542Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-27T14:20:13.796Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-27T14:20:13.796Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-27T14:20:13.796Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-27T14:38:35.350Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-27T14:38:35.350Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-27T14:38:35.350Z</lastmod></url>
   <url><loc>/chum/commercial/</loc><lastmod>2026-09-26T23:44:54.286Z</lastmod></url>
   <url><loc>/chum/commercial/index.json</loc><lastmod>2026-09-26T23:44:54.286Z</lastmod></url>
   <url><loc>/chum/commercial/llms.txt</loc><lastmod>2026-09-26T23:44:54.286Z</lastmod></url>
@@ -54,8 +54,8 @@
   <url><loc>/network/discovery.json</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
   <url><loc>/.well-known/evercraft-network.json</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
   <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
-  <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
-  <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
+  <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-27T14:38:34.804Z</lastmod></url>
+  <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-27T14:38:34.804Z</lastmod></url>
   <url><loc>/rivet/brand.json</loc><lastmod>2026-09-25T21:21:08.209Z</lastmod></url>
   <url><loc>/rivet/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>
   <url><loc>/rivet/ev-charging-utility-incentive-screening/</loc><lastmod>2026-09-25T21:21:03.904Z</lastmod></url>

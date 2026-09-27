@@ -2,13 +2,15 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-27T14:20:19.547Z</updated>
+<updated>2026-09-27T14:38:35.350Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-27T14:20:19.547Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-27T14:20:13.796Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-27T14:20:13.796Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-27T14:20:13.796Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-27T14:38:35.350Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-27T14:38:35.350Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-27T14:38:35.350Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-27T14:38:35.350Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:a3e8c77f221fee705d18c291</id><title>/rivet/llms.txt</title><updated>2026-09-27T14:38:34.804Z</updated><link href="/rivet/llms.txt"/><category term="priority-86"/></entry>
+<entry><id>urn:evercraft:chum:2576ed5e803c8026a98fb469</id><title>/rivet/discovery.json</title><updated>2026-09-27T14:38:34.804Z</updated><link href="/rivet/discovery.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-27T06:29:50.364Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:f1ff70118477fca174734282</id><title>/chum/sitemaps/products.xml</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/sitemaps/products.xml"/><category term="priority-108"/></entry>
@@ -103,6 +105,4 @@
 <entry><id>urn:evercraft:chum:d94f8c48cb8dc06d95957402</id><title>/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/llms.txt</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/llms.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:0e181ab18adead50737d7723</id><title>/llms-full.txt</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/llms-full.txt"/><category term="priority-86"/></entry>
 <entry><id>urn:evercraft:chum:901775e23cd6e7d85bd20643</id><title>/.well-known/evercraft-agent-directory.json</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/.well-known/evercraft-agent-directory.json"/><category term="priority-84"/></entry>
-<entry><id>urn:evercraft:chum:3cfc074c946dfb057e5bc7b0</id><title>/.well-known/evercraft-syndication.json</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/.well-known/evercraft-syndication.json"/><category term="priority-84"/></entry>
-<entry><id>urn:evercraft:chum:9897894058be7f4d3e2fbce7</id><title>/chum/</title><updated>2026-09-27T06:03:00.949Z</updated><link href="/chum/"/><category term="priority-80"/></entry>
 </feed>
