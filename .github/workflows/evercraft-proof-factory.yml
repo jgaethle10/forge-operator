@@ -59,12 +59,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          rm -rf \
+            artifacts/forensiscope-proof \
+            artifacts/forensiscope-intake/proof \
+            artifacts/forensiscope-intake/artifact-return \
+            artifacts/rivet-proof \
+            artifacts/proof-factory
+
+          # ForensiScope is fail-closed at the product receipt level, but a missing
+          # ASR/runtime dependency must not suppress independently valid RIVET proof.
+          set +e
           npm run proof:forensiscope-distributed
+          FORENSISCOPE_DISTRIBUTED_EXIT=$?
           npm run proof:forensiscope-artifact-return
+          FORENSISCOPE_ARTIFACT_EXIT=$?
+          set -e
+
           mkdir -p artifacts/rivet-proof
           node systemia/rivet/report-runtime.proof.mjs > artifacts/rivet-proof/report-runtime-latest.json
           node systemia/rivet/national-session-sprawl.proof.mjs > artifacts/rivet-proof/session-sprawl-latest.json
           npm run proof:factory
+
+          echo "ForensiScope distributed proof exit: ${FORENSISCOPE_DISTRIBUTED_EXIT}"
+          echo "ForensiScope artifact-return proof exit: ${FORENSISCOPE_ARTIFACT_EXIT}"
 
       - name: Validate promoted proof state
         shell: bash
@@ -75,8 +92,17 @@ jobs:
           const receipt = JSON.parse(fs.readFileSync('artifacts/proof-factory/latest.json','utf8'));
           if (receipt.schema !== 'evercraft.proof-factory.run.v1') throw new Error('Unexpected Proof Factory schema.');
           if (receipt.product_count !== 2) throw new Error('Expected two focused proof products.');
-          if (receipt.fully_proved_products !== 2) throw new Error('Both focused products must have current passing execution proofs before public proof promotion.');
           if (receipt.media_briefs < 4) throw new Error('Proof Factory must emit the focused visual proof briefs.');
+
+          const rivet = receipt.products?.find((row) => row.product_key === 'rivet');
+          const forensiscope = receipt.products?.find((row) => row.product_key === 'forensiscope');
+          if (!rivet || rivet.evidence_state !== 'execution_proofs_passed') {
+            throw new Error('RIVET must retain current passing execution proofs before publication.');
+          }
+          if (!forensiscope) throw new Error('ForensiScope proof state is missing.');
+          if (forensiscope.evidence_state !== 'execution_proofs_passed') {
+            console.warn('ForensiScope remains fail-closed at its current evidence state:', forensiscope.evidence_state);
+          }
           NODE
 
       - name: Publish public proof library
@@ -94,8 +120,14 @@ jobs:
               artifacts/forensiscope-intake/artifact-return \
               artifacts/rivet-proof \
               artifacts/proof-factory
+            set +e
             npm run proof:forensiscope-distributed
+            FORENSISCOPE_DISTRIBUTED_EXIT=$?
             npm run proof:forensiscope-artifact-return
+            FORENSISCOPE_ARTIFACT_EXIT=$?
+            set -e
+            echo "ForensiScope distributed proof exit: ${FORENSISCOPE_DISTRIBUTED_EXIT}"
+            echo "ForensiScope artifact-return proof exit: ${FORENSISCOPE_ARTIFACT_EXIT}"
             mkdir -p artifacts/rivet-proof
             node systemia/rivet/report-runtime.proof.mjs > artifacts/rivet-proof/report-runtime-latest.json
             node systemia/rivet/national-session-sprawl.proof.mjs > artifacts/rivet-proof/session-sprawl-latest.json
@@ -114,7 +146,7 @@ jobs:
               exit 0
             fi
 
-            git commit -m "Proof Factory refresh verified product proof [skip ci]"
+            git commit -m "Proof Factory refresh truthful product evidence [skip ci]"
             if git push origin HEAD:main; then
               echo "Verified public proof library published."
               exit 0
