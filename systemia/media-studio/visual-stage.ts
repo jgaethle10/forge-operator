@@ -66,6 +66,8 @@ export interface TextLayer extends BaseLayer {
 export interface ShapeLayer extends BaseLayer {
   kind: 'shape';
   shape: 'rect' | 'circle' | 'line';
+  fill?: string;
+  stroke?: string;
   strokeWidth?: number;
   radius?: number;
 }
