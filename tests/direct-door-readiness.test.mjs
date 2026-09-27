@@ -141,3 +141,17 @@ for(const product of heldSpecs){
     product.slug+': held direct doors must use universal fallback in CHUM pain routing'
   );
 }
+
+
+for(const [file,readinessAccessor,label] of [
+  ['public/.well-known/evercraft-agent.json',(json)=>json.start_here?.direct_door_readiness,'agent discovery manifest'],
+  ['public/.well-known/evercraft-chum.json',(json)=>json.public_entrypoints?.direct_door_readiness,'CHUM manifest'],
+  ['public/.well-known/evercraft-discovery.json',(json)=>json.start_here?.direct_door_readiness,'discovery watershed'],
+]){
+  const json=JSON.parse(fs.readFileSync(path.join(root,file),'utf8'));
+  const value=readinessAccessor(json);
+  assert.ok(
+    typeof value==='string' && value.includes('evercraft-direct-door-readiness.json'),
+    label+' must advertise direct-door readiness'
+  );
+}
