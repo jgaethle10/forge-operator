@@ -10,6 +10,8 @@ import {
   objectiveEditabilityReceipt,
   prepareVisualObservationPacket,
 } from './visual-observer.js';
+import { compileExplorationBatch } from './shot-exploration.js';
+import type { CreativeCouncilInventory } from './creative-council.js';
 import { compileSeriesEpisode } from './series.js';
 import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
 
@@ -36,6 +38,7 @@ function usage() {
     '  npm run media:studio -- council <plan.json> <creative-inventory.json>',
     '  npm run media:studio -- tournament <candidates.json> <tournament-inventory.json>',
     '  npm run media:studio -- observe <candidate.json> <observation-bundle.json> [frame-dir]',
+    '  npm run media:studio -- explore <creative-inventory.json> <exploration-batch.json>',
   ].join('\n'));
 }
 
@@ -44,6 +47,19 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'explore') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const inventory = readJson<CreativeCouncilInventory>(input);
+    const exploration = compileExplorationBatch(inventory);
+    writeJson(output, exploration);
+    console.log(`Shot exploration batch created: ${path.resolve(output)}`);
     return;
   }
 
