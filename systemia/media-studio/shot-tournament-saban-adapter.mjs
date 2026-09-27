@@ -235,6 +235,7 @@ function inspect(role, candidate) {
 export async function runAssignment({ assignment }) {
   const role = assignment?.role;
   const candidate = candidateFrom(assignment?.item);
+  const creativeGenomeDigest = assignment?.item?.raw?.creativeGenomeDigest || assignment?.item?.creativeGenomeDigest || null;
   const config = ROLE_CONFIG[role];
 
   if (!config) {
@@ -268,6 +269,8 @@ export async function runAssignment({ assignment }) {
     role,
     candidate_id: candidate?.id || null,
     shot_id: candidate?.shotId || null,
+    artifact_digest: candidate?.artifactDigest || null,
+    creative_genome_digest: creativeGenomeDigest,
     score: inspected.score,
     threshold: inspected.threshold,
     weight: config.weight,
@@ -323,6 +326,12 @@ function rankableCandidate(entries, requiredRoles) {
     ],
     evidence_refs: [
       ...new Set(entries.flatMap((entry) => entry.evidence_refs || []))
+    ],
+    artifact_digests: [
+      ...new Set(entries.map((entry) => entry.artifact_digest).filter(Boolean))
+    ],
+    creative_genome_digests: [
+      ...new Set(entries.map((entry) => entry.creative_genome_digest).filter(Boolean))
     ]
   };
 }
@@ -352,7 +361,26 @@ export async function reconcile({ results, plan }) {
         a.candidate_id.localeCompare(b.candidate_id)
     );
 
-  const winner = rankable[0] || null;
+  for (const candidate of candidates) {
+    if (candidate.artifact_digests.length !== 1) {
+      candidate.status = 'blocked';
+      candidate.findings.push('candidate_artifact_digest_disagreement');
+    }
+    if (candidate.creative_genome_digests.length !== 1) {
+      candidate.status = 'blocked';
+      candidate.findings.push('creative_genome_digest_disagreement');
+    }
+  }
+
+  const reRankable = candidates
+    .filter((candidate) => candidate.status === 'rankable')
+    .sort(
+      (a, b) =>
+        b.score - a.score ||
+        a.candidate_id.localeCompare(b.candidate_id)
+    );
+
+  const winner = reRankable[0] || null;
   const blocked = candidates.filter((candidate) => candidate.status === 'blocked');
 
   return {
@@ -361,9 +389,11 @@ export async function reconcile({ results, plan }) {
     winner_candidate_id: winner?.candidate_id || null,
     winner_score: winner?.score ?? null,
     candidate_count: candidates.length,
-    rankable_candidate_count: rankable.length,
+    rankable_candidate_count: reRankable.length,
     blocked_candidate_count: blocked.length,
-    ranking: rankable,
+    winner_artifact_digest: winner?.artifact_digests?.[0] || null,
+    creative_genome_digest: winner?.creative_genome_digests?.[0] || null,
+    ranking: reRankable,
     blocked,
     execution_boundary: {
       winner_is_selected_for_next_gate_only: true,
