@@ -9,6 +9,7 @@ const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-provider-miss-'));
 const suitePath=path.join(root,'probe-suite.json');
 const receiptPath=path.join(root,'provider-probe.json');
 const observationsRoot=path.join(root,'observations');
+const historyPath=path.join(root,'probe-history.json');
 const summaryPath=path.join(root,'summary.json');
 
 fs.writeFileSync(suitePath,JSON.stringify({
@@ -41,12 +42,22 @@ fs.writeFileSync(receiptPath,JSON.stringify({
   ]
 }));
 
-const summary=ingestProviderMisses({probeReceiptPath:receiptPath,probeSuitePath:suitePath,observationsRoot,summaryPath});
+const summary=ingestProviderMisses({probeReceiptPath:receiptPath,probeSuitePath:suitePath,observationsRoot,historyPath,summaryPath});
 assert.equal(summary.created,1);
 assert.equal(summary.existing,0);
 assert.equal(summary.deduped_repeat_misses,0);
 assert.equal(summary.skipped_pickup_observed,1);
 assert.equal(summary.skipped_missing_provider_receipt,1);
+assert.equal(summary.history_added,2);
+assert.equal(summary.history_existing,0);
+const history=JSON.parse(fs.readFileSync(historyPath,'utf8'));
+assert.equal(history.schema,'evercraft.chum.provider-probe-history.v1');
+assert.equal(history.records.length,2);
+assert.equal(history.records.filter((record)=>record.pickup_observed).length,1);
+assert.equal(history.records.filter((record)=>!record.pickup_observed).length,1);
+assert.ok(history.records.every((record)=>record.provider_receipt_sha256?.length===64));
+assert.ok(history.records.every((record)=>record.response_sha256));
+assert.ok(history.records.every((record)=>record.privacy?.credentials_persisted===false));
 const files=fs.readdirSync(observationsRoot);
 assert.equal(files.length,1);
 const row=JSON.parse(fs.readFileSync(path.join(observationsRoot,files[0]),'utf8'));
@@ -88,11 +99,15 @@ fs.writeFileSync(receiptPath,JSON.stringify({
     evaluation:{expected_fit:true,pickup_observed:false}
   }]
 }));
-const repeatSummary=ingestProviderMisses({probeReceiptPath:receiptPath,probeSuitePath:suitePath,observationsRoot,summaryPath});
+const repeatSummary=ingestProviderMisses({probeReceiptPath:receiptPath,probeSuitePath:suitePath,observationsRoot,historyPath,summaryPath});
 assert.equal(repeatSummary.created,0);
 assert.equal(repeatSummary.existing,1);
 assert.equal(repeatSummary.deduped_repeat_misses,1);
+assert.equal(repeatSummary.history_added,1);
 assert.equal(fs.readdirSync(observationsRoot).length,1);
+const repeatHistory=JSON.parse(fs.readFileSync(historyPath,'utf8'));
+assert.equal(repeatHistory.records.length,3);
+assert.equal(repeatHistory.records.filter((record)=>record.provider==='chatgpt' && !record.pickup_observed).length,2);
 assert.equal(fs.readFileSync(firstPersistedPath,'utf8'),firstPersisted);
 assert.equal(repeatSummary.observation_files[0],firstPersistedPath);
 assert.equal(repeatSummary.repair_queue.length,1);
