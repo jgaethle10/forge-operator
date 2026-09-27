@@ -34,6 +34,7 @@ function stateFor({ samples, pickups, misses, rate, minSamples, targetRate }) {
 
 export function measureProviderPickupConsistency({
   observationsRoot = 'conformance/provider-observations',
+  historyPath = 'conformance/provider-observations/probe-history.json',
   productKey = null,
   prompt = null,
   minSamples = 5,
@@ -42,6 +43,41 @@ export function measureProviderPickupConsistency({
 } = {}) {
   const promptHash = prompt ? sha256(normalizePrompt(prompt)) : null;
   const rows = [];
+  const seenReceiptKeys = new Set();
+  const pushRow = (row) => {
+    if (row?.receipt_key && seenReceiptKeys.has(row.receipt_key)) return;
+    if (row?.receipt_key) seenReceiptKeys.add(row.receipt_key);
+    rows.push(row);
+  };
+
+  if (fs.existsSync(historyPath)) {
+    try {
+      const history = readJson(historyPath);
+      if (history?.schema === 'evercraft.chum.provider-probe-history.v1' && Array.isArray(history.records)) {
+        for (const row of history.records) {
+          if (productKey && String(row.product_key || '') !== productKey) continue;
+          const rowPromptHash = row.prompt_sha256 || null;
+          if (promptHash && rowPromptHash !== promptHash) continue;
+          pushRow({
+            file: historyPath,
+            observed_at: row.observed_at || null,
+            provider: String(row.provider || 'unknown').toLowerCase(),
+            surface_class: surfaceClass({
+              provider: row.provider,
+              provider_surface: row.provider_surface,
+              source: row.source
+            }),
+            product_key: row.product_key || null,
+            prompt_hash: rowPromptHash,
+            pickup: row.pickup_observed === true,
+            source: row.source || 'authorized_provider_probe',
+            receipt_key: row.receipt_key_sha256 || null
+          });
+        }
+      }
+    } catch {}
+  }
+
   if (fs.existsSync(observationsRoot)) {
     for (const name of fs.readdirSync(observationsRoot).filter((n) => n.endsWith('.json')).sort()) {
       const pathname = path.join(observationsRoot, name);
@@ -54,7 +90,18 @@ export function measureProviderPickupConsistency({
       const normalized = normalizePrompt(row.prompt);
       const rowPromptHash = normalized ? sha256(normalized) : null;
       if (promptHash && rowPromptHash !== promptHash) continue;
-      rows.push({
+      const receiptKey = row.provider_receipt_sha256 && row.response_sha256 && row.observed_at
+        ? sha256([
+            String(row.provider || 'unknown'),
+            String(row.case_id || ''),
+            String(row.product_key || ''),
+            rowPromptHash || '',
+            String(row.provider_receipt_sha256),
+            String(row.response_sha256),
+            String(row.observed_at)
+          ].join('|'))
+        : null;
+      pushRow({
         file: pathname,
         observed_at: row.observed_at || null,
         provider: String(row.provider || 'unknown').toLowerCase(),
@@ -62,7 +109,8 @@ export function measureProviderPickupConsistency({
         product_key: row.product_key || null,
         prompt_hash: rowPromptHash,
         pickup: value,
-        source: row.source || null
+        source: row.source || null,
+        receipt_key: receiptKey
       });
     }
   }
@@ -98,17 +146,63 @@ export function measureProviderPickupConsistency({
     };
   }).sort((a,b) => a.provider.localeCompare(b.provider) || a.product_key.localeCompare(b.product_key || ''));
 
+  const rollupGroups = new Map();
+  for (const row of rows) {
+    const key = [row.provider, row.surface_class, row.product_key || 'unknown'].join('|');
+    const group = rollupGroups.get(key) || {
+      provider: row.provider,
+      surface_class: row.surface_class,
+      product_key: row.product_key,
+      samples: 0,
+      pickups: 0,
+      misses: 0,
+      prompt_hashes: new Set()
+    };
+    group.samples += 1;
+    if (row.pickup) group.pickups += 1;
+    else group.misses += 1;
+    if (row.prompt_hash) group.prompt_hashes.add(row.prompt_hash);
+    rollupGroups.set(key, group);
+  }
+
+  const rollups = [...rollupGroups.values()].map((group) => {
+    const rate = group.samples ? group.pickups / group.samples : 0;
+    return {
+      provider: group.provider,
+      surface_class: group.surface_class,
+      product_key: group.product_key,
+      samples: group.samples,
+      pickups: group.pickups,
+      misses: group.misses,
+      distinct_prompts: group.prompt_hashes.size,
+      pickup_rate: Number(rate.toFixed(4)),
+      target_rate: targetRate,
+      minimum_samples_for_green: minSamples,
+      state: stateFor({ ...group, rate, minSamples, targetRate })
+    };
+  }).sort((a,b) =>
+    a.product_key.localeCompare(b.product_key || '') ||
+    a.provider.localeCompare(b.provider) ||
+    a.surface_class.localeCompare(b.surface_class)
+  );
+
   const summary = {
     schema: 'evercraft.chum.provider-pickup-consistency.v1',
     generated_at: new Date().toISOString(),
     filters: { product_key: productKey, prompt_hash: promptHash },
+    source: {
+      observations_root: observationsRoot,
+      history_path: historyPath,
+      rows_considered: rows.length
+    },
     policy: {
       target_pickup_rate: targetRate,
       minimum_independent_receipts_for_green: minSamples,
       mixed_positive_and_negative_receipts_are_intermittent_until_threshold_is_met: true,
       publication_does_not_imply_provider_pickup: true
     },
-    measurements
+    measurements,
+    rollups
   };
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -121,7 +215,13 @@ export function measureProviderPickupConsistency({
     '',
     '| Provider | Surface | Product | Samples | Pickups | Misses | Rate | State |',
     '|---|---|---|---:|---:|---:|---:|---|',
-    ...measurements.map((m) => `| ${m.provider} | ${m.surface_class} | ${m.product_key || ''} | ${m.samples} | ${m.pickups} | ${m.misses} | ${Math.round(m.pickup_rate*100)}% | ${m.state} |`)
+    ...measurements.map((m) => `| ${m.provider} | ${m.surface_class} | ${m.product_key || ''} | ${m.samples} | ${m.pickups} | ${m.misses} | ${Math.round(m.pickup_rate*100)}% | ${m.state} |`),
+    '',
+    '## Product/provider rollups',
+    '',
+    '| Provider | Surface | Product | Prompts | Samples | Pickups | Misses | Rate | State |',
+    '|---|---|---|---:|---:|---:|---:|---:|---|',
+    ...rollups.map((m) => `| ${m.provider} | ${m.surface_class} | ${m.product_key || ''} | ${m.distinct_prompts} | ${m.samples} | ${m.pickups} | ${m.misses} | ${Math.round(m.pickup_rate*100)}% | ${m.state} |`)
   ];
   fs.writeFileSync(mdPath, md.join('\n') + '\n');
   return summary;
