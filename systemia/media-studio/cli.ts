@@ -17,6 +17,7 @@ import { buildVisualStageHtml } from './visual-stage-html.js';
 import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel-stage.js';
 import type { VisualStage } from './visual-stage.js';
 import { buildDistributedRenderPlan, type RenderAssetManifestRow } from './distributed-render.js';
+import { compileProductStoryStage, type ProductStoryInput } from './product-story-stage.js';
 import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
 
 function readJson<T>(filePath: string): T {
@@ -46,6 +47,7 @@ function usage() {
     '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
     '  npm run media:studio -- render-plan <render-input.json> <render-plan.json>',
+    '  npm run media:studio -- product-story <story.json> <visual-stage.json>',
   ].join('\n'));
 }
 
@@ -54,6 +56,19 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'product-story') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const story = readJson<ProductStoryInput>(input);
+    const stage = compileProductStoryStage(story);
+    writeJson(output, stage);
+    console.log(`Product-story visual stage created: ${path.resolve(output)}`);
     return;
   }
 

@@ -178,6 +178,19 @@ npm run media:studio -- world-intel ./tmp/story.json ./tmp/world-stage.json ./tm
 
 This is intended for Week in Motion, TOWI, FAIE and other geography/time/scale-heavy stories where the visuals need to carry the explanation rather than sit behind typography.
 
+### Product-story compiler
+
+Fallen can turn a **verified real product capture** into a camera-driven explainer stage. The product screen remains the source of truth while Fallen choreographs focus regions, step labels, camera motion, result metrics and a workflow timeline around it.
+
+```bash
+npm run media:studio -- product-story ./tmp/rivet-story.json ./tmp/rivet-stage.json
+npm run media:studio -- render-plan ./tmp/rivet-render-input.json ./tmp/rivet-render-plan.json
+```
+
+The capture itself must be `observed`, `public_source` or `licensed` and must carry source references. Synthetic/modelled imagery cannot be supplied as the real product capture. Synthetic graphics may explain a workflow elsewhere in the production, but they cannot impersonate RIVET, ForensiScope, Systemia or another product UI.
+
+Focus regions use normalized capture coordinates, fail closed when they leave the product frame, and activate only during their declared workflow step. This lets the camera and graphic overlays point at what the real product is doing without replacing it with a generated mockup.
+
 ## Architecture direction
 
 1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
