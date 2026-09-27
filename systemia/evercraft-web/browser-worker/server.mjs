@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import http from 'node:http';
 import { chromium } from 'playwright';
 import { createSecureOutboundProxy } from './secure-proxy.mjs';
+import { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
 import {
   assertBrowserRequestUrl,
   assertPublicHttpUrl,
@@ -109,11 +110,11 @@ async function runAction(page, action, timeoutMs) {
 }
 
 async function extractPage(page, maxTextChars) {
-  return page.evaluate((limit) => {
+  return page.evaluate(({limit, headingSelector, maxHeadings}) => {
     const clean = (value) => String(value || '').replace(/\s+/g,' ').trim();
     const text = clean(document.body?.innerText || '').slice(0, limit);
-    const headings = [...document.querySelectorAll('h1,h2,h3')]
-      .slice(0,50)
+    const headings = [...document.querySelectorAll(headingSelector)]
+      .slice(0,maxHeadings)
       .map((node) => ({level:node.tagName.toLowerCase(), text:clean(node.textContent).slice(0,300)}))
       .filter((row) => row.text);
     const links = [...document.querySelectorAll('a[href]')]
@@ -128,7 +129,7 @@ async function extractPage(page, maxTextChars) {
       headings,
       links
     };
-  }, maxTextChars);
+  }, {limit:maxTextChars, headingSelector:HEADING_SELECTOR, maxHeadings:MAX_HEADINGS});
 }
 
 async function browse(job) {
