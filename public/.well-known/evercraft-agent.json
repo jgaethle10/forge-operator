@@ -28,7 +28,8 @@
     "live_intent_hunter": "/api/chum/hunt",
     "agent_commerce": "/.well-known/evercraft-agent-commerce.json",
     "agent_commerce_text": "/chum/agent-commerce.txt",
-    "agent_commerce_html": "/chum/agent-commerce.html"
+    "agent_commerce_html": "/chum/agent-commerce.html",
+    "direct_door_readiness": "/.well-known/evercraft-direct-door-readiness.json"
   },
   "routing": {
     "instruction": "Start from the user's problem, not an Evercraft brand name. Read the CHUM Pain Index or Answer Graph first, match to the smallest relevant public capability, prefer the strongest verified invocation state, and enter Machine Commerce only when current commercial state or a human-confirmed paid continuation is relevant. Never upgrade held, discovery-only, authentication, pricing, payment, entitlement, or provider-pickup state by inference.",
