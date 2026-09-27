@@ -191,6 +191,32 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "class": "daily_life_local_utility_front_door",
+      "canonical_url": "https://evercraft.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json",
+      "doorway_state": "source_build_green_origin_host_live_external_machine_file_canary_pending",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "class": "privacy_first_hometown_social_memory",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-conformance.json",
+      "doorway_state": "source_build_green_origin_runtime_unresolved",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "bounded_membership_discovery",
@@ -454,6 +480,19 @@
         "version": "1.0.0",
         "publication_state": "published"
       },
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "class": "seasonal_family_household_companion",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-conformance.json",
+      "doorway_state": "source_build_green_origin_runtime_unresolved",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback"
     },
     {
