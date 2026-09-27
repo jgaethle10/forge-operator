@@ -876,21 +876,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:systemia-remote-ops:4bd5d2337f0b8085",
+      "id": "urn:evercraft:product:systemia-remote-ops:f3d1216da0486d70",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json",
       "title": "Systemia Remote Ops",
-      "summary": "Systemia Remote Ops is an Evercraft public capability. Common needs: I am thinking about starting a business and want to test the idea before I commit; simulate a business before I start it; business simulator for a new company; business digital twin for decision making.",
+      "summary": "Systemia Remote Ops is an Evercraft business decision simulator capability. Common needs: I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job; I want a business simulator where I can change assumptions and compare scenarios before starting a company; simulate a business before I start it; stress test my business plan before spending money.",
       "date_modified": "2026-09-26T00:00:00.000Z",
       "tags": [
-        "I am thinking about starting a business and want to test the idea before I commit",
+        "business_decision_simulator",
+        "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job",
+        "I want a business simulator where I can change assumptions and compare scenarios before starting a company",
         "simulate a business before I start it",
-        "business simulator for a new company",
-        "business digital twin for decision making",
-        "run a what-if scenario for my business",
         "stress test my business plan before spending money",
-        "should I add a new product or service to my business",
-        "should I remove a product or service from my business"
+        "I run a small service business and want to simulate raising prices before I actually change customer pricing",
+        "simulate a pricing change before changing prices",
+        "compare pricing scenarios while keeping assumptions separate from real results",
+        "I am considering opening another location and hiring more people before I sign a lease or add payroll"
       ]
     },
     {

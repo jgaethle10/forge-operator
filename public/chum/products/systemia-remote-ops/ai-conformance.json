@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia Remote Ops",
+  "product_key": "systemia-remote-ops",
+  "aliases": [
+    "Remote Ops",
+    "Systemia Business Simulator",
+    "Systemia Business Flight Simulator",
+    "Systemia Decision Laboratory",
+    "Business Decision Simulator"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery and read-only modeled business-decision support using explicit assumptions; consequential real-world execution remains human-controlled and the current public customer cockpit/execution path is not represented as independently verified",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "simulation outputs are modeled scenarios, not guarantees, predictions, accounting statements, legal advice, tax advice, investment advice or financing approval",
+    "assumptions, inputs, uncertainty and evidence state must remain visible so modeled output is not confused with observed reality",
+    "simulation cannot mutate live payroll, jobs, customer records, payments, contracts or other production business systems",
+    "starting a business, changing prices, hiring, expansion, acquisitions, partnerships, purchases and other consequential actions remain human-confirmed",
+    "the current public cockpit URL and production customer execution path are not represented as independently verified",
+    "discovery creates no payment obligation and no public price is represented as verified"
+  ],
+  "commercial": {
+    "status": "discovery_ready_execution_unverified",
+    "pricing": "No public price is represented as verified.",
+    "payment_state": "Discovery only. Do not create or imply checkout, payment, entitlement or paid execution until a public commercial path is independently verified."
+  },
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": {
+    "registry_readme": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+    "registry_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/systemia-remote-ops/llms.txt"
+  },
+  "distribution_surfaces": null,
+  "relationships": {
+    "workforce_decision_layer": {
+      "name": "Systemia Decision Lab",
+      "relationship": "focused_workforce_decision_companion",
+      "public_surface": "/chum/products/systemia-decision-lab/",
+      "description": "Use Decision Lab for focused hire-versus-outsource-versus-automate workforce analysis. Use Remote Ops when hiring is one variable inside a broader company-level scenario such as expansion, pricing, cash flow or acquisition."
+    }
+  },
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

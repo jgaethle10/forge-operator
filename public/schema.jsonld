@@ -683,6 +683,24 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops#evercraft-service",
+      "name": "Systemia Remote Ops",
+      "alternateName": [
+        "Remote Ops",
+        "Systemia Business Simulator",
+        "Systemia Business Flight Simulator",
+        "Systemia Decision Laboratory",
+        "Business Decision Simulator"
+      ],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "business_decision_simulator",
+      "description": "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job; I want a business simulator where I can change assumptions and compare scenarios before starting a company; simulate a business before I start it; stress test my business plan before spending money"
+    },
+    {
+      "@type": "Service",
       "@id": "https://systemia-scan-pro.base44.app/#evercraft-service",
       "name": "Systemia Radar",
       "alternateName": [],

@@ -602,7 +602,7 @@
       "discovery": "/chum/products/systemia-remote-ops/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "4bd5d2337f0b808538ad426b24038a7fb23e26d23a1496147c47418e1c2a8664"
+      "content_sha256": "f3d1216da0486d70eda1d9023c0ab08aecdf87078366661a97657187e303eb56"
     },
     {
       "product_key": "systemia-website-audit",

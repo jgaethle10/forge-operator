@@ -1213,6 +1213,36 @@
       "distribution_surfaces": null
     },
     {
+      "product_key": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "aliases": [
+        "Remote Ops",
+        "Systemia Business Simulator",
+        "Systemia Business Flight Simulator",
+        "Systemia Decision Laboratory",
+        "Business Decision Simulator"
+      ],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-remote-ops/ai-conformance.json",
+      "page_url": "/chum/products/systemia-remote-ops/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": {
+        "status": "discovery_ready_execution_unverified",
+        "pricing": "No public price is represented as verified.",
+        "payment_state": "Discovery only. Do not create or imply checkout, payment, entitlement or paid execution until a public commercial path is independently verified."
+      },
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": {
+        "registry_readme": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+        "registry_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/systemia-remote-ops/llms.txt"
+      },
+      "distribution_surfaces": null
+    },
+    {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
       "aliases": [],

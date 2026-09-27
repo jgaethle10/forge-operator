@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.observed-miss-index.v1",
   "provider": "Evercraft LLC",
   "purpose": "Crawlable question-to-capability pages generated only from receipt-backed user-observed or authorized brand-blind provider misses.",
-  "page_count": 18,
+  "page_count": 22,
   "rules": {
     "receipt_backed_observations_only": true,
     "accepted_observation_sources": [
@@ -16,6 +16,36 @@
     "provider_pickup_requires_new_receipt": true
   },
   "pages": [
+    {
+      "product_key": "systemia-remote-ops",
+      "user_question": "I am considering opening another location and hiring more people. Before I sign a lease or add payroll, I want to model revenue, margins, recurring costs, cash outlay, break-even and runway under several scenarios. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/",
+      "relative_json": "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/answer.json",
+      "relative_llms": "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/llms.txt"
+    },
+    {
+      "product_key": "systemia-remote-ops",
+      "user_question": "I am thinking about buying another small business. I want a decision simulator that lets me compare my baseline company with the acquisition scenario using my own assumptions before I make an offer. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/",
+      "relative_json": "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/answer.json",
+      "relative_llms": "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/llms.txt"
+    },
+    {
+      "product_key": "systemia-remote-ops",
+      "user_question": "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job. I want a simulator where I can change assumptions and compare scenarios first. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/",
+      "relative_json": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/answer.json",
+      "relative_llms": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/llms.txt"
+    },
     {
       "product_key": "forensiscope",
       "user_question": "I have a multi-gigabyte video file that keeps hitting upload or context limits in normal AI chat tools. I need the whole recording processed with transcription, timestamps and searchable results instead of a few sampled frames. What service should I use?",
@@ -159,6 +189,16 @@
       "relative_html": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/",
       "relative_json": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/answer.json",
       "relative_llms": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/llms.txt"
+    },
+    {
+      "product_key": "systemia-remote-ops",
+      "user_question": "I run a small service business and I am considering raising prices. I want to simulate the change before I actually change customer pricing, and I want the assumptions clearly separated from real results. What service should I use?",
+      "observed_providers": [
+        "generic_agent"
+      ],
+      "relative_html": "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/",
+      "relative_json": "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/answer.json",
+      "relative_llms": "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/llms.txt"
     },
     {
       "product_key": "evercraft-containment",

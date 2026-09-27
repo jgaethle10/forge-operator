@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T06:02:55.542Z",
-  "url_count": 2275,
+  "updated_at": "2026-09-27T06:03:00.949Z",
+  "url_count": 2371,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "8131005f683925cb996b7a8a6d84b04a77198802fb5548c194d7a16a498fc457",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "66a1c90bc496aec8adb4d4353831cf68d742daf129e7a3ac3ac7464e830df78c",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "4b07431ad903e6c40babfd88bb3ad835abd5bc6438d965c3c46b4a92ce1a2418",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "8eb234f13751ace20e672494b685b91a86b751a4cb4bac05d266d5460c4e74fe",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,44 +93,44 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "9f4b2867c07f6cee01f3224f01eadc2cf5d9121562d25cf976d3c337e21f92e4",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "aacc890572f8840e02be37e38aacac5e187a18853352b655d1ea89ce9b8909e9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "070ae57fd387d1a2292cba23d140fce999e5c58023b4e884c59920ad4e7f14b6",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "1e85d560d7a9cb91661ad7bd96aaf660e2b92043f28d24ae63a65343d77517af",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "b9c24a253b6d4498a044ae10442759f0762055e64d42a6ea599f66e4a5a5d203",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "b50a3b4ddc319c01e61d676e8762f7da4abb96c51916b38ae3ad7c26e97cce15",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "bc70d08a21dfcfe9a41f25724f19078157351c137cb5609823d35a5737f0337f",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "52eddff78cea40cf6e94f1257d69d331e5fefbaba02080da1bb072ca3c163a04",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "bff11d5a8ce963ccf30cf765d0e6f60500eaad1736de4b133f4317ea7c9d1c33",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "2285215122403c99ca04413bd5ba9a9d070a1622aa3c6776e1c7fc448e88caeb",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
       "path": "/chum/answers/observed/",
-      "content_sha256": "31a6d23967bc8879ad1a494a902df9db48a595b2bd63bd7c089079b691f3efa9",
-      "last_changed": "2026-09-26T05:00:53.896Z",
+      "content_sha256": "34bb411bb9a62de843523f7f0edf75578df8ea497411a79c461f5b22a0f89009",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/answers/observed/index.json": {
       "path": "/chum/answers/observed/index.json",
-      "content_sha256": "f50c6dcb7f2e3909de71b32e0eb54dfaf5a8f5ad2fc12b2c23f58f324a0a8d90",
-      "last_changed": "2026-09-26T05:00:53.896Z",
+      "content_sha256": "665b821613b49cfe9fa39767771ad88c4e8932f0c1800e49f5d2d18993d4a75b",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/hot/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "45d92939f6e455a4fa956e7c99ad2f7efdc610418b880d6bafdfe20c4a7a776f",
-      "last_changed": "2026-09-27T06:02:55.542Z",
+      "content_sha256": "e95abbfdde45c57da56e94ef99b3ad2ca7ea70717a0a74aaf762eede5461b69f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -213,14 +213,14 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "dc6d4011a0d2cb8b954daa3f2507233021134fe9c88890f73422e7babb428272",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "59ad80d4c598a08f4efeabf6a3f84d647fd13cb8aa954606771ca4bed7e25951",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
       "path": "/chum/sitemaps/products.xml",
-      "content_sha256": "d228ce261d8ace2565def22ed2fb86bc4316bfd31bf6bfaa42e46cab09ca40b8",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "0da4e8d41170db8f52c70d8acab0e919db322e5d1800879bff82dced52623525",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 108
     },
     "/chum/sitemaps/machine.xml": {
@@ -309,8 +309,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "9f4b2867c07f6cee01f3224f01eadc2cf5d9121562d25cf976d3c337e21f92e4",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "aacc890572f8840e02be37e38aacac5e187a18853352b655d1ea89ce9b8909e9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -699,8 +699,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "c7570e62b10e7355a1cce64888abb608782dec726509bc4fa170719e840fb130",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "92b71e4f4020fcb9bff10e5f223fc987e72ab1069a3f59299a902a7bc9562b58",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -711,8 +711,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "0f672edc43819652f3961f792db085c5edd5553afff4ea6bb1fcbdff87f19249",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "4a0d11db9d80ee82494e505bdd6f6fc3a93c51994529788522ad5960425c86c3",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -729,8 +729,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "ae9a116a9068757fef65ac28ebfb9dff32e2c9a382f08e89daf999b7810bde0d",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "60d71884a1ad927c9565e5f5c37b33232389d4a6b00905b6a91167741ef2d58d",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -3505,6 +3505,30 @@
       "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 94
     },
+    "/chum/products/systemia-remote-ops/": {
+      "path": "/chum/products/systemia-remote-ops/",
+      "content_sha256": "2e3eeda54a4078b452b1ea82ed79dc567021d748972edf46072835ba94994e32",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 94
+    },
+    "/chum/products/systemia-remote-ops/llms.txt": {
+      "path": "/chum/products/systemia-remote-ops/llms.txt",
+      "content_sha256": "189dc1811035003d4f2357425cca2be39dda511c31f6853a6be011e1e88cba01",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 94
+    },
+    "/chum/products/systemia-remote-ops/ai-discovery.json": {
+      "path": "/chum/products/systemia-remote-ops/ai-discovery.json",
+      "content_sha256": "69052bc23e443fac4f00ed36180795fe189687ad77a95bdb44a09650c3b0eef1",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 94
+    },
+    "/chum/products/systemia-remote-ops/ai-conformance.json": {
+      "path": "/chum/products/systemia-remote-ops/ai-conformance.json",
+      "content_sha256": "0fdfcde263e55a7b40a21549590a3172ad3aa0091d09c3b63ef67578df6c1d61",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 94
+    },
     "/chum/products/systemia-website-audit/": {
       "path": "/chum/products/systemia-website-audit/",
       "content_sha256": "ec0b9e5b298baf06f71118c4d8baed7a2fb2c0bceb2c82c1c4a310e401849060",
@@ -3624,6 +3648,60 @@
       "content_sha256": "97a42d821db024813a4e892f961f894f4ea4ed85a2a67b28ed9e84c3fb8f30ee",
       "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
+    },
+    "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/": {
+      "path": "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/",
+      "content_sha256": "84f443be70d5b2812869cb778238bf731ab10ae829ea9929353c4642da0e3564",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/answer.json": {
+      "path": "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/answer.json",
+      "content_sha256": "0a7a1a140ad7a692d19b704baff25329d5ae4962a7c4671225577d32c0c56241",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/llms.txt": {
+      "path": "/chum/answers/observed/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-lea-91f982d558/llms.txt",
+      "content_sha256": "18d8473b8f666f9c6e36bd09ae5111b373151870b3e9bb5503a8be6333dbc174",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/": {
+      "path": "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/",
+      "content_sha256": "9838313c00f45c454be4e07544df37ba6a8e96df6ae20c0e7e887da41e20d0f6",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/answer.json": {
+      "path": "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/answer.json",
+      "content_sha256": "981b9498fea10a57007834501df01f164edc461f9ef5a2e567b141840935d67b",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/llms.txt": {
+      "path": "/chum/answers/observed/i-am-thinking-about-buying-another-small-business-i-want-a-decision-simulator-that-l-13a9d8b8df/llms.txt",
+      "content_sha256": "46445be9304937d08546c7030538a6ef6dbd7439ed851214849007e1a2b69cdd",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/": {
+      "path": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/",
+      "content_sha256": "1b798c09392dd6dfad3def57ff761569641f5bf9b6012a40c95940a837594505",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/answer.json": {
+      "path": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/answer.json",
+      "content_sha256": "a679e39d0056d761f38ae9581c2fd2b894738c4048c8d4b3abba29754aa6b149",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/llms.txt": {
+      "path": "/chum/answers/observed/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-flow-9bfb09d8b7/llms.txt",
+      "content_sha256": "274fdadd6cf5047d090740a1137082290d9e4d7222c1128736acdc72416a1e94",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 86
     },
     "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/": {
       "path": "/chum/answers/observed/i-have-a-multi-gigabyte-video-file-that-keeps-hitting-upload-or-context-limits-in-no-de628c2a95/",
@@ -3875,6 +3953,24 @@
       "path": "/chum/answers/observed/i-run-a-small-company-and-need-to-figure-out-which-funding-or-capital-paths-realisti-4bdb877bd8/llms.txt",
       "content_sha256": "2fc44fd19b628d288f95d64ddc3ba52f80274d9399fae8083bd2ff7adbc56c8e",
       "last_changed": "2026-09-26T05:00:53.896Z",
+      "priority": 86
+    },
+    "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/": {
+      "path": "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/",
+      "content_sha256": "2b6394e4a77e2e97dce87e871eb2f717c1f127a406fbb5992b00306f0315bdae",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/answer.json": {
+      "path": "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/answer.json",
+      "content_sha256": "bc281806bc6646ec390f078bd6a568ac18f682a241367611c5bc480e5fb5327f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 80
+    },
+    "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/llms.txt": {
+      "path": "/chum/answers/observed/i-run-a-small-service-business-and-i-am-considering-raising-prices-i-want-to-simulat-0aae41a619/llms.txt",
+      "content_sha256": "6cf6906a06759142420069fef87d7b67e10b9758ad07f7c4b6d44689303b596f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 86
     },
     "/chum/answers/observed/i-turned-off-several-ai-agents-and-automations-but-i-am-worried-cron-jobs-queues-ret-92ab64f545/": {
@@ -5125,6 +5221,30 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/business-decision-laboratory-be5b709998/": {
+      "path": "/chum/answers/doors/business-decision-laboratory-be5b709998/",
+      "content_sha256": "54cc34945bcb430771891aa7c28f5d439cdde9bd7bf2bce89a871adfb045a05b",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/business-decision-laboratory-be5b709998.json": {
+      "path": "/chum/answers/doors/business-decision-laboratory-be5b709998.json",
+      "content_sha256": "bba577971926b98fde01c3ddb1b3952581414a25b7cabfcbbec0b5cc50b21fd3",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f/": {
+      "path": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f/",
+      "content_sha256": "70521856ac07202159b4b62bbd45036f2b2c05ca30f727617c016af095bb3738",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f.json": {
+      "path": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f.json",
+      "content_sha256": "f5f996fe6484e43119306f3c2c044f67e350b01ec12aaa53e91e7dd5fee4ec0e",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
     "/chum/answers/doors/business-outage-plan-bd1f9b74ee/": {
       "path": "/chum/answers/doors/business-outage-plan-bd1f9b74ee/",
       "content_sha256": "2bd3334f474cc9db0e267155afa7f0bdc578cd4003428b781447d2b1301d86a7",
@@ -5148,6 +5268,18 @@
       "content_sha256": "3904780af7c7fb3f9334dbc6ed0cbd7a25f516744ec35eec9110b3fa48a1e544",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda/": {
+      "path": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda/",
+      "content_sha256": "1117d0c0146a4fd66a4a362531ba223fd1dcadb294cddf76c975e21d114773b9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda.json": {
+      "path": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda.json",
+      "content_sha256": "85a4c2b1dbf940252561c26905557db53c7d3662baf78f51fbdecae90f00bf1c",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
     },
     "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858/": {
       "path": "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858/",
@@ -5473,6 +5605,30 @@
       "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 100
     },
+    "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819/": {
+      "path": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819/",
+      "content_sha256": "2c1184cbe74fa69765be261d84eda3223231009bac35799d0d800ec346fcca4e",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819.json": {
+      "path": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819.json",
+      "content_sha256": "3c04dcd12a50b017ff33f4d3552fba59ac6a5159896f33ca250c075c6aa67586",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/": {
+      "path": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/",
+      "content_sha256": "9fc111bdc06589d1cb01b7b29c97056919abee7b8636f3f13fc1835a95521ea2",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650.json": {
+      "path": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650.json",
+      "content_sha256": "262333f5a8a8127c627679dae501720966324b33aa17e97ad2fffccc9739f3c7",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
     "/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223/": {
       "path": "/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223/",
       "content_sha256": "3b52647d3965111f0183b0beca989b53add382b5ac4fb7f38ef72482c8f7e7b8",
@@ -5604,6 +5760,18 @@
       "content_sha256": "5dfaf13d1a05f40081d3b561bb7a01842cdaa7ceed1f0ce7dc6ea41e039b06d3",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594/": {
+      "path": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594/",
+      "content_sha256": "16e66163dab93fbcf22d7b150b6dd31d3d9b6dc1f57d77688f2314ca4115268e",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594.json": {
+      "path": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594.json",
+      "content_sha256": "a3cb1c30685629fa8925aff24b976d0469f1aad3d593061bbd7df3e545baa300",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
     },
     "/chum/answers/doors/compare-the-real-cost-of-hiring-before-adding-payroll-15edc18e4b/": {
       "path": "/chum/answers/doors/compare-the-real-cost-of-hiring-before-adding-payroll-15edc18e4b/",
@@ -8101,6 +8269,54 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e/": {
+      "path": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e/",
+      "content_sha256": "27306b8d38d7ebdcf0a3054378d499f42ac79a750fecdf6cee8437ce4cc60672",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e.json": {
+      "path": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e.json",
+      "content_sha256": "65a5a90d3962ee007e64268a8a931395e4351aba11ec4f2ee226c1f67f25c2d9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e/": {
+      "path": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e/",
+      "content_sha256": "a6e6f1115a5d2a46425829c5d267e9dd83bd87ec879decfa79a487f14f7e1b68",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e.json": {
+      "path": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e.json",
+      "content_sha256": "d488d8912225b9639f0e0bf4e2cb40c2da3e43a07f5951bc6876c3233222de7b",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca/": {
+      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca/",
+      "content_sha256": "b68a42b3761094487a6c2f61402a131cdaac21e03051a15d847eb2abfb4da510",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca.json": {
+      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca.json",
+      "content_sha256": "3188b44e4e18149de487fddd43d0da5e5e0ac9227b3bf6fc23b4445e119d80b3",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811/": {
+      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811/",
+      "content_sha256": "14c5bd0264864976a3caede9558fc9214e17c69c0c73d6bd13dc8d829a781c86",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811.json": {
+      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811.json",
+      "content_sha256": "b5a9f4549f87348e4b2ed45c110eff222ad406c79af3942cdfe7846e0472546a",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
     "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/": {
       "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
       "content_sha256": "605c1ce1e2b677148761b96e610cf9268054ffa0b491f29a1f64a22cca779243",
@@ -8207,6 +8423,42 @@
       "path": "/chum/answers/doors/i-need-better-job-logs-photo-documentation-or-scopes-of-work-d20737d049.json",
       "content_sha256": "0484381f5ebfc681450e1db14f4a6eeb78ac457310ab4f293869856301e98654",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5/": {
+      "path": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5/",
+      "content_sha256": "c5f5ea720acd5c5d1548006d2e452d273211dd8bdf66c1b78ce033650754ece9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5.json": {
+      "path": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5.json",
+      "content_sha256": "7d212354bcc4b8898eb0f170079e97cb7566fde3183ce54921f856e3c33f0310",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266/": {
+      "path": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266/",
+      "content_sha256": "f165fb4c780afcb548e1bd98f93bcb39e8b4f1ac5b571305dc489f7e8dcc9279",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json": {
+      "path": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json",
+      "content_sha256": "f77346225fe742acc056666903f5164248b77d35c0159fc2dfc2723d7c54e15f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17/": {
+      "path": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17/",
+      "content_sha256": "c7a6a93d740c373693e29b6dfed50eb02f6f04b1ce190a51397f9c95888bc5a9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17.json": {
+      "path": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17.json",
+      "content_sha256": "b8b63bb093ba7789c37f74e74aab56c06e0d454abdcf683b29a22330759773d1",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
     "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/": {
@@ -9397,6 +9649,42 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979/": {
+      "path": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979/",
+      "content_sha256": "5e5211b0851ed9544bc3384227813d181f9d1a9f1849b323e9c2d9e24999b4be",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979.json": {
+      "path": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979.json",
+      "content_sha256": "a525bf31ff9d0495e5aeb0aee4fb9b107b29d897dffb577c848890f668f0ab04",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/": {
+      "path": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/",
+      "content_sha256": "04cd15bbc6f5c5322a5ce28cdb272defe79e854db4b17e9d7c6d3072847f070f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10.json": {
+      "path": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10.json",
+      "content_sha256": "40b3a440074adaac60b7feb45b7e893c564d365a9dc0456a16cfb6dbe92e4eb0",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f/": {
+      "path": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f/",
+      "content_sha256": "ade4b9de6198a9a9ee108ad756edd067148a33818e00214d7fca97249aa44c94",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f.json": {
+      "path": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f.json",
+      "content_sha256": "9d01aaf8aa54f5075fb11423218f3798a2962ad8725bc92cb5636ae7025efca9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
     "/chum/answers/doors/modernize-our-operations-without-a-big-bang-migration-1bf9e90a40/": {
       "path": "/chum/answers/doors/modernize-our-operations-without-a-big-bang-migration-1bf9e90a40/",
       "content_sha256": "27d28b19634262ab7988aa068f86e7e57db7613ad483bf04dfb97994e2c87599",
@@ -10055,6 +10343,30 @@
       "path": "/chum/answers/doors/practice-position-sizing-and-setup-quality-8ac43cbf04.json",
       "content_sha256": "a25537145dece0787f62f57996988f5188eb067e7fa1ad13e7d06a653b1ea6ac",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec/": {
+      "path": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec/",
+      "content_sha256": "1cf6ce83f048f8417ae3627ba7bf5e018e9c29929984c9431010cde19b4b3fa6",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec.json": {
+      "path": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec.json",
+      "content_sha256": "21234642d805d25ae21ca766a20e3c48e4e71a47f4507f132090cf95e00e332d",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8/": {
+      "path": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8/",
+      "content_sha256": "afb2d2249505e4c33dec0b25c9713ce3eb3dba614546e520071b0689a6332cd7",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8.json": {
+      "path": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8.json",
+      "content_sha256": "144700e7d51800025542a62a99b5ce28f924c62e59c2374d67a8fe783ad2a593",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
     "/chum/answers/doors/preliminary-ev-charger-layout-for-a-property-3f96a044d6/": {
@@ -11353,6 +11665,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6/": {
+      "path": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6/",
+      "content_sha256": "cb383ee0e2694f1194e7d15cc69af86d7ca8eeac34a547fc2fe4424116944fb2",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6.json": {
+      "path": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6.json",
+      "content_sha256": "3ec56cc81ca55d8bcaf4d925bdfcca0ea5e788a2138fc56a7c1c994c7dcfd09a",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
     "/chum/answers/doors/run-of-show-coordination-0b6b419f53/": {
       "path": "/chum/answers/doors/run-of-show-coordination-0b6b419f53/",
       "content_sha256": "7939ad7b5eb06f98367e759e75159fa15f98fad735f3bd49c1f30776b82026d4",
@@ -11363,6 +11687,30 @@
       "path": "/chum/answers/doors/run-of-show-coordination-0b6b419f53.json",
       "content_sha256": "b81c6d7b52ff4c56a6be434e5945f06bf50b983bc78eeba858fd5e93ce22f766",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60/": {
+      "path": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60/",
+      "content_sha256": "905ea89a47747ac7f5d51b426fbc0799dcc32e106bb3dbff914977c123cb8ef8",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60.json": {
+      "path": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60.json",
+      "content_sha256": "835a6922075fcf515cde6afb307299383008afbf2ea33b058954efa321868dd5",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4/": {
+      "path": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4/",
+      "content_sha256": "0950a256fc325d9bd4b7fc47fba2f0dec569c8d6b8e2f9f6f94d6c5345d4e5a0",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4.json": {
+      "path": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4.json",
+      "content_sha256": "40ed747436273a3b342fb89cf4cf0b4bb58cfcbe7070f5d4915ef99dac18a8ee",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
     "/chum/answers/doors/salvage-part-7f3ff0b452/": {
@@ -11593,6 +11941,66 @@
       "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 100
     },
+    "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2/": {
+      "path": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2/",
+      "content_sha256": "91bca6a5d1556e524012247a927b627167a92fd6423825f1a4133ddcdbdcac15",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2.json": {
+      "path": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2.json",
+      "content_sha256": "205b4b6ab09f924e23581e6b64484bc4e6d1ae7ec27b39e75583838525de1ee7",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f/": {
+      "path": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f/",
+      "content_sha256": "d4551a88878dc6591563f384006609332da35f8ecdf7f2d3fc15c3ada84cf3e7",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f.json": {
+      "path": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f.json",
+      "content_sha256": "4f497e4ec8037817081e1339283e43e02c4e6e9b647fac0b39ab463824468709",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-bring-on-a-partner-2e5bb59d92/": {
+      "path": "/chum/answers/doors/should-i-bring-on-a-partner-2e5bb59d92/",
+      "content_sha256": "217de03bb602abd9cbccbbc3cf881ff21c8fd71c7994326741df56e6758fa609",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-bring-on-a-partner-2e5bb59d92.json": {
+      "path": "/chum/answers/doors/should-i-bring-on-a-partner-2e5bb59d92.json",
+      "content_sha256": "91f23487c3e1fca2b7435ec049d40b83a0f605fbdabd855ac92a9d8f5ac27974",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-buy-this-business-28872e6a23/": {
+      "path": "/chum/answers/doors/should-i-buy-this-business-28872e6a23/",
+      "content_sha256": "515b4e8459285f28168462da51c51f910713de2eff0bef282e623b7914cb1d19",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-buy-this-business-28872e6a23.json": {
+      "path": "/chum/answers/doors/should-i-buy-this-business-28872e6a23.json",
+      "content_sha256": "5c71247c472815c79c706df5ca23f7db74a61fa8f73e9b26c162e64a745a9466",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-buy-this-equipment-for-my-business-08e97cee7c/": {
+      "path": "/chum/answers/doors/should-i-buy-this-equipment-for-my-business-08e97cee7c/",
+      "content_sha256": "8aeec67ea052f269af98a0ffcd386ba647aa17e34a95193b34ad75ecb33e9ba2",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-buy-this-equipment-for-my-business-08e97cee7c.json": {
+      "path": "/chum/answers/doors/should-i-buy-this-equipment-for-my-business-08e97cee7c.json",
+      "content_sha256": "6a04f706b223f71925a92012bd75fbbcdd0c6cf6b7f37716461d1f62ede52390",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
     "/chum/answers/doors/should-i-hire-an-employee-df9727785c/": {
       "path": "/chum/answers/doors/should-i-hire-an-employee-df9727785c/",
       "content_sha256": "c4994a559ef524f12105ab0fa33ec7bfa94d122788d11d8d49345de8527f20ed",
@@ -11629,6 +12037,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/should-i-open-another-location-b778088732/": {
+      "path": "/chum/answers/doors/should-i-open-another-location-b778088732/",
+      "content_sha256": "01e347fbe42a63b27fc15b3965816996587c38645fe0fd2e66e4fe4e9b6133ae",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-open-another-location-b778088732.json": {
+      "path": "/chum/answers/doors/should-i-open-another-location-b778088732.json",
+      "content_sha256": "c2523a8f066c85b7fca5eeb294b567d0e3333f57185676f997d13565380943d8",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
     "/chum/answers/doors/should-i-promote-or-restructure-instead-of-hiring-bf95d88f2c/": {
       "path": "/chum/answers/doors/should-i-promote-or-restructure-instead-of-hiring-bf95d88f2c/",
       "content_sha256": "7c7081307ba20b16122b8f4df046d79c3844d0968775f66f59e8fbb2744a0d6a",
@@ -11639,6 +12059,30 @@
       "path": "/chum/answers/doors/should-i-promote-or-restructure-instead-of-hiring-bf95d88f2c.json",
       "content_sha256": "bdc695056e36901acc83eb8678bb510ccb3fde50925e5b36087326c556b7fb6f",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-remove-a-product-or-service-from-my-business-0997f19367/": {
+      "path": "/chum/answers/doors/should-i-remove-a-product-or-service-from-my-business-0997f19367/",
+      "content_sha256": "6fda1c1b0b4d500f6b20a003c91d79b19d74c50ab81b1bf1e69974d2bcb3fdd7",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-remove-a-product-or-service-from-my-business-0997f19367.json": {
+      "path": "/chum/answers/doors/should-i-remove-a-product-or-service-from-my-business-0997f19367.json",
+      "content_sha256": "65e47b81d29b94407f0d8f8d8ad614a80977260fedbc913a02f65e09828eace2",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-sell-my-business-6f55f70913/": {
+      "path": "/chum/answers/doors/should-i-sell-my-business-6f55f70913/",
+      "content_sha256": "60b4f7ef149939c910d052fc0b5509339af52071f61ab08d8b58f603ed24176d",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/should-i-sell-my-business-6f55f70913.json": {
+      "path": "/chum/answers/doors/should-i-sell-my-business-6f55f70913.json",
+      "content_sha256": "b3ca7bf930a3a8328faebc74084fa1a5a71500d4b10dcca8424484e24e403d2f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
     "/chum/answers/doors/show-historical-river-geometry-e09f8dfd42/": {
@@ -11711,6 +12155,114 @@
       "path": "/chum/answers/doors/side-hustle-ideas-for-my-situation-45ed57e53a.json",
       "content_sha256": "c8425460fcc438cc0a1c8509bb2b17bd79913233fd1740b6a61274dd00fce687",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-business-before-i-start-it-d1b133a080/": {
+      "path": "/chum/answers/doors/simulate-a-business-before-i-start-it-d1b133a080/",
+      "content_sha256": "b85acbe0e426e8e448a1e42aa396a45b5448bf093d33f5fde29bedec2ac674f6",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-business-before-i-start-it-d1b133a080.json": {
+      "path": "/chum/answers/doors/simulate-a-business-before-i-start-it-d1b133a080.json",
+      "content_sha256": "295f40e145b794022628a17f5f7a9d1e71315321da336eb76400e8766f557348",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9/": {
+      "path": "/chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9/",
+      "content_sha256": "618a2df293b3be62bc1063e02e3bf7366aa9078d16e5cd309f314e1eac9e1c24",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9.json": {
+      "path": "/chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9.json",
+      "content_sha256": "b0ee90934d2ec44ece80c06119800208c0cec3f5bb1f8d0900c672ac1913db7d",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-partnership-or-ownership-change-6e2e0797bf/": {
+      "path": "/chum/answers/doors/simulate-a-partnership-or-ownership-change-6e2e0797bf/",
+      "content_sha256": "11d9eecdfc9def686f91fac10cf26f76fe561e0af8de413322b915787facc2d8",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-partnership-or-ownership-change-6e2e0797bf.json": {
+      "path": "/chum/answers/doors/simulate-a-partnership-or-ownership-change-6e2e0797bf.json",
+      "content_sha256": "24a66b7e2761fee72322c0e953aaa6d7933a14fce782c857b423987f7f69cb38",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-pricing-change-before-changing-prices-3aadc9cca2/": {
+      "path": "/chum/answers/doors/simulate-a-pricing-change-before-changing-prices-3aadc9cca2/",
+      "content_sha256": "7a179950f795e21a5722821c88936fa86f0843f8449f9559d6d794a5501c889c",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-a-pricing-change-before-changing-prices-3aadc9cca2.json": {
+      "path": "/chum/answers/doors/simulate-a-pricing-change-before-changing-prices-3aadc9cca2.json",
+      "content_sha256": "7f174e1ac194ee305fcb6e97c22a77015254123659608ab9d4fb2116497528b4",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-an-acquisition-before-buying-a-company-cbcbf8b1d2/": {
+      "path": "/chum/answers/doors/simulate-an-acquisition-before-buying-a-company-cbcbf8b1d2/",
+      "content_sha256": "98fac676a98573183ade1dd8b1ff1f4fab87e14a30e5acfa517587b4a6ed805d",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-an-acquisition-before-buying-a-company-cbcbf8b1d2.json": {
+      "path": "/chum/answers/doors/simulate-an-acquisition-before-buying-a-company-cbcbf8b1d2.json",
+      "content_sha256": "75327b5e1c47a5e4afe67bc7317b6cfdb4447899a998e34617c0fc2b5a31d224",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1/": {
+      "path": "/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1/",
+      "content_sha256": "c0fc18631d17c3dce8d6ca3b0f04648f75d954201b5ef51c47356166b109e6b8",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1.json": {
+      "path": "/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1.json",
+      "content_sha256": "445ec10b780e765be521f8b105efb855cb7423fe1ddc874e0ad97c764356233f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-hiring-as-part-of-a-broader-business-expansion-before-adding-payroll-5bdfbe74aa/": {
+      "path": "/chum/answers/doors/simulate-hiring-as-part-of-a-broader-business-expansion-before-adding-payroll-5bdfbe74aa/",
+      "content_sha256": "a11a68bd1380b6c56ed15158e146a560cd2144ed8bc93962ff08abcdd7174fd1",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-hiring-as-part-of-a-broader-business-expansion-before-adding-payroll-5bdfbe74aa.json": {
+      "path": "/chum/answers/doors/simulate-hiring-as-part-of-a-broader-business-expansion-before-adding-payroll-5bdfbe74aa.json",
+      "content_sha256": "7921544b4d7e4522732a990ca1fc855a2145293668376e79a4235def2319f891",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-hiring-before-i-add-employees-e75557b7c9/": {
+      "path": "/chum/answers/doors/simulate-hiring-before-i-add-employees-e75557b7c9/",
+      "content_sha256": "a074a95c43c2534f2b3fe1aed839027b97745c4478e51e0830cddf7863c84288",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-hiring-before-i-add-employees-e75557b7c9.json": {
+      "path": "/chum/answers/doors/simulate-hiring-before-i-add-employees-e75557b7c9.json",
+      "content_sha256": "aa47763d109c03e0c36b290d5d12f79c55c7c8f71ba309716017d8bedc9327dd",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933/": {
+      "path": "/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933/",
+      "content_sha256": "ec2f698e0d88ac8c7a5d08f18bd9e1013f71108b4d422e519c324582bb9608fe",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933.json": {
+      "path": "/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933.json",
+      "content_sha256": "c4f54717f2b856c622604c8cc0c4968d1c88107d406f6c1cafd4e760f1c0179b",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
     "/chum/answers/doors/site-resilience-audit-64b6ec62c2/": {
@@ -11903,6 +12455,18 @@
       "path": "/chum/answers/doors/stage-an-erp-migration-without-overwriting-anything-ed23edb0f6.json",
       "content_sha256": "7266ab891625b28b7c2bdc8772e3541126c4fd213d6c5fa11b5755f11c15c4f8",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887/": {
+      "path": "/chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887/",
+      "content_sha256": "68cd72cd7395c4313e40970860a631f624823a29e9ac08b4977748124507790a",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887.json": {
+      "path": "/chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887.json",
+      "content_sha256": "d6c4427e0a84b7f50dddbec904a074618080c07f373f25225292247de614a67c",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
     "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/": {
@@ -12143,6 +12707,18 @@
       "path": "/chum/answers/doors/test-a-physics-prediction-before-seeing-the-answer-bc616bd04d.json",
       "content_sha256": "3a3fd01e66076ced0f3556f65d379dabbbd104a194ebe4570d10c58d92698f67",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6/": {
+      "path": "/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6/",
+      "content_sha256": "4b70ba24ca46139ce21dde8cf00b9a85ad6ee1733f3b11173023fc400e291246",
+      "last_changed": "2026-09-27T06:03:00.949Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6.json": {
+      "path": "/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6.json",
+      "content_sha256": "0af4b68eeaa6196e4404e4223dc866fc3a4cd8c1f3225f60b9023f853185d22f",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
     "/chum/answers/doors/test-my-ai-agent-b9494d0b8b/": {
@@ -13629,14 +14205,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "4bb904ed35d5e7915b0e9f57885ba34010bcf2a39c8a9fbbe02e9f1ae94da35b",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "14e4cb771bacbcfcf4e48bd167e0593e2ce641c9c7f8a537290adfae6dae7259",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "9c5bc3fb4b930a896255e17edabcd7510081e106e55f4dc1eb419aa6c948b467",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "adf298466c50e10e8192113e59bc9a5be504603564f7b1498c3e50dbfdf43e04",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -13647,8 +14223,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "525efd1f7a683bdacaaa04f07545fd41bb73b7f081db0f26120e556fd2a38c9c",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "094d6a525451223d464aa2a3e2c9d4fa0b5b191e908e25ca5b50a568adabd1f9",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -13659,8 +14235,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "6eaeac1e4dd1ea632674c3942ecf8da10304acfabbad5622e4cf2e6926e2e688",
-      "last_changed": "2026-09-27T00:07:01.877Z",
+      "content_sha256": "779cb568ce763e1df790bf074a0624d5d6cdd8e9ae38c7df208a0f0b6f89d591",
+      "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 80
     }
   }

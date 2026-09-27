@@ -672,6 +672,19 @@
       }
     },
     {
+      "product_key": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "class": "business_decision_simulator",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "github_record": "./systemia-remote-ops/README.md",
+      "llms": "./systemia-remote-ops/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
       "class": "website_conversion_and_technical_audit",

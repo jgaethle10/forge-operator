@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-27T00:07:01.710Z",
+  "generated_at": "2026-09-27T06:03:00.780Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -162,6 +162,16 @@
       "discovery_path": "/chum/products/systemia-remote-ops/ai-discovery.json",
       "text": "Systemia Remote Ops: Systemia Remote Ops is an Evercraft public capability. Common needs: I am thinking about starting a business and want to test the idea before I commit; simulate a business before I start it; business simulator for a new company; business digital twin for decision making.",
       "content_sha256": "4bd5d2337f0b808538ad426b24038a7fb23e26d23a1496147c47418e1c2a8664",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "systemia-remote-ops:f3d1216da0486d70eda1d9023c0ab08aecdf87078366661a97657187e303eb56",
+      "product_key": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+      "discovery_path": "/chum/products/systemia-remote-ops/ai-discovery.json",
+      "text": "Systemia Remote Ops: Systemia Remote Ops is an Evercraft business decision simulator capability. Common needs: I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job; I want a business simulator where I can change assumptions and compare scenarios before starting a company; simulate a business before I start it; stress test my business plan before spending money.",
+      "content_sha256": "f3d1216da0486d70eda1d9023c0ab08aecdf87078366661a97657187e303eb56",
       "requires_authorized_destination": true
     }
   ]

@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 101,
-    "unique_user_phrases": 787,
-    "mapped_candidate_edges": 880,
+    "pain_index_entries": 102,
+    "unique_user_phrases": 827,
+    "mapped_candidate_edges": 920,
     "ambiguous_phrases": 93,
-    "product_candidates": 56,
+    "product_candidates": 57,
     "machine_offer_candidates": 45
   },
   "doors": [
@@ -2403,6 +2403,52 @@
       ]
     },
     {
+      "answer_id": "intent:be5b709998",
+      "user_language": "business decision laboratory",
+      "normalized": "business decision laboratory",
+      "relative_json": "/chum/answers/doors/business-decision-laboratory-be5b709998.json",
+      "relative_page": "/chum/answers/doors/business-decision-laboratory-be5b709998/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/business-decision-laboratory-be5b709998.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0ba75ac36f",
+      "user_language": "business digital twin for decision making",
+      "normalized": "business digital twin for decision making",
+      "relative_json": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f.json",
+      "relative_page": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:bd1f9b74ee",
       "user_language": "business outage plan",
       "normalized": "business outage plan",
@@ -2445,6 +2491,29 @@
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:46196f8cda",
+      "user_language": "business simulator for a new company",
+      "normalized": "business simulator for a new company",
+      "relative_json": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda.json",
+      "relative_page": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
         }
       ]
     },
@@ -3106,6 +3175,52 @@
       ]
     },
     {
+      "answer_id": "intent:eb02295819",
+      "user_language": "compare a baseline business with an acquisition scenario using my own assumptions",
+      "normalized": "compare a baseline business with an acquisition scenario using my own assumptions",
+      "relative_json": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819.json",
+      "relative_page": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:400f146650",
+      "user_language": "compare business strategy options before choosing one",
+      "normalized": "compare business strategy options before choosing one",
+      "relative_json": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650.json",
+      "relative_page": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d49f331223",
       "user_language": "compare electricity mixes between regions",
       "normalized": "compare electricity mixes between regions",
@@ -3354,6 +3469,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-global-health-atlas/",
           "public_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e289213594",
+      "user_language": "compare pricing scenarios while keeping assumptions separate from real results",
+      "normalized": "compare pricing scenarios while keeping assumptions separate from real results",
+      "relative_json": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594.json",
+      "relative_page": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
         }
       ]
@@ -8467,6 +8605,98 @@
       ]
     },
     {
+      "answer_id": "intent:6d0359b43e",
+      "user_language": "I am considering opening another location and hiring more people before I sign a lease or add payroll",
+      "normalized": "i am considering opening another location and hiring more people before i sign a lease or add payroll",
+      "relative_json": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e.json",
+      "relative_page": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e1a9de412e",
+      "user_language": "I am thinking about buying another small business and want to compare my baseline company with the acquisition scenario before I make an offer",
+      "normalized": "i am thinking about buying another small business and want to compare my baseline company with the acquisition scenario before i make an offer",
+      "relative_json": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e.json",
+      "relative_page": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8a084977ca",
+      "user_language": "I am thinking about starting a business and want to test the idea before I commit",
+      "normalized": "i am thinking about starting a business and want to test the idea before i commit",
+      "relative_json": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca.json",
+      "relative_page": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:48e91f0811",
+      "user_language": "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job",
+      "normalized": "i am thinking about starting a business and want to test the operating and cash flow assumptions before i commit real money or quit my job",
+      "relative_json": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811.json",
+      "relative_page": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:a25b87dd23",
       "user_language": "I am worried an IBM i upgrade will break batch jobs interfaces or vendor software",
       "normalized": "i am worried an ibm i upgrade will break batch jobs interfaces or vendor software",
@@ -8682,6 +8912,75 @@
           "pain_page": "/chum/products/systemia-field-library/",
           "public_url": "https://systemiafieldlibrary.com/",
           "registry_name": "io.github.jgaethle10/systemia-field-library"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1b59f6c2f5",
+      "user_language": "I run a small service business and want to simulate raising prices before I actually change customer pricing",
+      "normalized": "i run a small service business and want to simulate raising prices before i actually change customer pricing",
+      "relative_json": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5.json",
+      "relative_page": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:adb561e266",
+      "user_language": "I want a business simulator where I can change assumptions and compare scenarios before starting a company",
+      "normalized": "i want a business simulator where i can change assumptions and compare scenarios before starting a company",
+      "relative_json": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json",
+      "relative_page": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a51bf4ce17",
+      "user_language": "I want to see how this decision could affect staffing sales cash flow and operations",
+      "normalized": "i want to see how this decision could affect staffing sales cash flow and operations",
+      "relative_json": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17.json",
+      "relative_page": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
         }
       ]
     },
@@ -11095,6 +11394,75 @@
       ]
     },
     {
+      "answer_id": "intent:9153013979",
+      "user_language": "model a business sale or exit before committing",
+      "normalized": "model a business sale or exit before committing",
+      "relative_json": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979.json",
+      "relative_page": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:12c6dfcf10",
+      "user_language": "model cash flow and operations before making a business decision",
+      "normalized": "model cash flow and operations before making a business decision",
+      "relative_json": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10.json",
+      "relative_page": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f79405f35f",
+      "user_language": "model revenue margins recurring costs cash outlay break-even and runway under several expansion scenarios",
+      "normalized": "model revenue margins recurring costs cash outlay break even and runway under several expansion scenarios",
+      "relative_json": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f.json",
+      "relative_page": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:1bf9e90a40",
       "user_language": "modernize our operations without a big bang migration",
       "normalized": "modernize our operations without a big bang migration",
@@ -12475,6 +12843,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/daytrade-lens/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6581ee91ec",
+      "user_language": "practice running my business before making the real move",
+      "normalized": "practice running my business before making the real move",
+      "relative_json": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec.json",
+      "relative_page": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3eb7ad75d8",
+      "user_language": "pre-decision business simulation",
+      "normalized": "pre decision business simulation",
+      "relative_json": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8.json",
+      "relative_page": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
         }
       ]
@@ -15072,6 +15486,29 @@
       ]
     },
     {
+      "answer_id": "intent:c4b8dabcb6",
+      "user_language": "run a what-if scenario for my business",
+      "normalized": "run a what if scenario for my business",
+      "relative_json": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6.json",
+      "relative_page": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0b6b419f53",
       "user_language": "run of show coordination",
       "normalized": "run of show coordination",
@@ -15090,6 +15527,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/everystage/",
           "public_url": "https://every-stage.base44.app/product",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9967d2bf60",
+      "user_language": "run the business decision before I risk the business",
+      "normalized": "run the business decision before i risk the business",
+      "relative_json": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60.json",
+      "relative_page": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c4ea6c9af4",
+      "user_language": "run the company before I risk the company",
+      "normalized": "run the company before i risk the company",
+      "relative_json": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4.json",
+      "relative_page": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
         }
       ]
@@ -15532,6 +16015,121 @@
       ]
     },
     {
+      "answer_id": "intent:7f1977a5a2",
+      "user_language": "should I add a new product or service to my business",
+      "normalized": "should i add a new product or service to my business",
+      "relative_json": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2.json",
+      "relative_page": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5f2f5e9e7f",
+      "user_language": "should I add or remove a product or service",
+      "normalized": "should i add or remove a product or service",
+      "relative_json": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f.json",
+      "relative_page": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:2e5bb59d92",
+      "user_language": "should I bring on a partner",
+      "normalized": "should i bring on a partner",
+      "relative_json": "/chum/answers/doors/should-i-bring-on-a-partner-2e5bb59d92.json",
+      "relative_page": "/chum/answers/doors/should-i-bring-on-a-partner-2e5bb59d92/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-bring-on-a-partner-2e5bb59d92.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:28872e6a23",
+      "user_language": "should I buy this business",
+      "normalized": "should i buy this business",
+      "relative_json": "/chum/answers/doors/should-i-buy-this-business-28872e6a23.json",
+      "relative_page": "/chum/answers/doors/should-i-buy-this-business-28872e6a23/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-buy-this-business-28872e6a23.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:08e97cee7c",
+      "user_language": "should I buy this equipment for my business",
+      "normalized": "should i buy this equipment for my business",
+      "relative_json": "/chum/answers/doors/should-i-buy-this-equipment-for-my-business-08e97cee7c.json",
+      "relative_page": "/chum/answers/doors/should-i-buy-this-equipment-for-my-business-08e97cee7c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-buy-this-equipment-for-my-business-08e97cee7c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:df9727785c",
       "user_language": "should I hire an employee",
       "normalized": "should i hire an employee",
@@ -15613,6 +16211,29 @@
       ]
     },
     {
+      "answer_id": "intent:b778088732",
+      "user_language": "should I open another location",
+      "normalized": "should i open another location",
+      "relative_json": "/chum/answers/doors/should-i-open-another-location-b778088732.json",
+      "relative_page": "/chum/answers/doors/should-i-open-another-location-b778088732/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-open-another-location-b778088732.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:bf95d88f2c",
       "user_language": "should I promote or restructure instead of hiring",
       "normalized": "should i promote or restructure instead of hiring",
@@ -15631,6 +16252,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-decision-lab/",
           "public_url": "https://systemiadecisionlab.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0997f19367",
+      "user_language": "should I remove a product or service from my business",
+      "normalized": "should i remove a product or service from my business",
+      "relative_json": "/chum/answers/doors/should-i-remove-a-product-or-service-from-my-business-0997f19367.json",
+      "relative_page": "/chum/answers/doors/should-i-remove-a-product-or-service-from-my-business-0997f19367/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-remove-a-product-or-service-from-my-business-0997f19367.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6f55f70913",
+      "user_language": "should I sell my business",
+      "normalized": "should i sell my business",
+      "relative_json": "/chum/answers/doors/should-i-sell-my-business-6f55f70913.json",
+      "relative_page": "/chum/answers/doors/should-i-sell-my-business-6f55f70913/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/should-i-sell-my-business-6f55f70913.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
         }
       ]
@@ -15805,6 +16472,213 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/income-war-map-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d1b133a080",
+      "user_language": "simulate a business before I start it",
+      "normalized": "simulate a business before i start it",
+      "relative_json": "/chum/answers/doors/simulate-a-business-before-i-start-it-d1b133a080.json",
+      "relative_page": "/chum/answers/doors/simulate-a-business-before-i-start-it-d1b133a080/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-a-business-before-i-start-it-d1b133a080.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:bff31f9fb9",
+      "user_language": "simulate a major capital purchase before spending",
+      "normalized": "simulate a major capital purchase before spending",
+      "relative_json": "/chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9.json",
+      "relative_page": "/chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-a-major-capital-purchase-before-spending-bff31f9fb9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6e2e0797bf",
+      "user_language": "simulate a partnership or ownership change",
+      "normalized": "simulate a partnership or ownership change",
+      "relative_json": "/chum/answers/doors/simulate-a-partnership-or-ownership-change-6e2e0797bf.json",
+      "relative_page": "/chum/answers/doors/simulate-a-partnership-or-ownership-change-6e2e0797bf/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-a-partnership-or-ownership-change-6e2e0797bf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3aadc9cca2",
+      "user_language": "simulate a pricing change before changing prices",
+      "normalized": "simulate a pricing change before changing prices",
+      "relative_json": "/chum/answers/doors/simulate-a-pricing-change-before-changing-prices-3aadc9cca2.json",
+      "relative_page": "/chum/answers/doors/simulate-a-pricing-change-before-changing-prices-3aadc9cca2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-a-pricing-change-before-changing-prices-3aadc9cca2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cbcbf8b1d2",
+      "user_language": "simulate an acquisition before buying a company",
+      "normalized": "simulate an acquisition before buying a company",
+      "relative_json": "/chum/answers/doors/simulate-an-acquisition-before-buying-a-company-cbcbf8b1d2.json",
+      "relative_page": "/chum/answers/doors/simulate-an-acquisition-before-buying-a-company-cbcbf8b1d2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-an-acquisition-before-buying-a-company-cbcbf8b1d2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:96623404d1",
+      "user_language": "simulate business expansion before signing a lease",
+      "normalized": "simulate business expansion before signing a lease",
+      "relative_json": "/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1.json",
+      "relative_page": "/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-business-expansion-before-signing-a-lease-96623404d1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5bdfbe74aa",
+      "user_language": "simulate hiring as part of a broader business expansion before adding payroll",
+      "normalized": "simulate hiring as part of a broader business expansion before adding payroll",
+      "relative_json": "/chum/answers/doors/simulate-hiring-as-part-of-a-broader-business-expansion-before-adding-payroll-5bdfbe74aa.json",
+      "relative_page": "/chum/answers/doors/simulate-hiring-as-part-of-a-broader-business-expansion-before-adding-payroll-5bdfbe74aa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-hiring-as-part-of-a-broader-business-expansion-before-adding-payroll-5bdfbe74aa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e75557b7c9",
+      "user_language": "simulate hiring before I add employees",
+      "normalized": "simulate hiring before i add employees",
+      "relative_json": "/chum/answers/doors/simulate-hiring-before-i-add-employees-e75557b7c9.json",
+      "relative_page": "/chum/answers/doors/simulate-hiring-before-i-add-employees-e75557b7c9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-hiring-before-i-add-employees-e75557b7c9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:68e69ac933",
+      "user_language": "simulate layoffs or restructuring before changing the team",
+      "normalized": "simulate layoffs or restructuring before changing the team",
+      "relative_json": "/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933.json",
+      "relative_page": "/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/simulate-layoffs-or-restructuring-before-changing-the-team-68e69ac933.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
         }
       ]
@@ -16221,6 +17095,29 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:40ecd7e887",
+      "user_language": "stress test my business plan before spending money",
+      "normalized": "stress test my business plan before spending money",
+      "relative_json": "/chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887.json",
+      "relative_page": "/chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
         }
       ]
@@ -16705,6 +17602,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-physics-atlas/",
           "public_url": "https://evercraft-physics-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:215d20c5c6",
+      "user_language": "test a product launch before I launch it",
+      "normalized": "test a product launch before i launch it",
+      "relative_json": "/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6.json",
+      "relative_page": "/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-remote-ops",
+          "kind": "product",
+          "product_key": "systemia-remote-ops",
+          "public_id": null,
+          "name": "Systemia Remote Ops",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-remote-ops/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
         }
       ]
