@@ -14,6 +14,21 @@ const answerGraph = fs.existsSync('public/chum/answers/index.json')
 const commercialIntentMesh = fs.existsSync('public/chum/commercial/index.json')
   ? readJson('public/chum/commercial/index.json')
   : { clusters: [] };
+const proofIndex = fs.existsSync('public/chum/proof/index.json')
+  ? readJson('public/chum/proof/index.json')
+  : { products: [] };
+const proofByKey = new Map();
+for (const proof of proofIndex.products || []) {
+  const fallbackCoverage = proof?.product_key === 'rivet'
+    ? ['rivet', 'aliev']
+    : [proof?.product_key].filter(Boolean);
+  const coverage = Array.isArray(proof?.covered_product_keys) && proof.covered_product_keys.length
+    ? proof.covered_product_keys
+    : fallbackCoverage;
+  for (const coveredKey of coverage) {
+    if (coveredKey) proofByKey.set(String(coveredKey), proof);
+  }
+}
 
 const catalogByKey = new Map((catalog.products || []).map((p) => [p.product_key || String(p.registry_name || '').split('/').pop(), p]));
 const conformanceByKey = new Map((conformance.products || []).map((p) => [p.product_key, p]));
@@ -136,6 +151,15 @@ for (const product of directory.products || []) {
   if (!key) continue;
   const registry = catalogByKey.get(key) || null;
   const conf = conformanceByKey.get(key) || null;
+  const proof = proofByKey.get(key) || null;
+  const proofLibrary = proof ? {
+    index: '/chum/proof/',
+    product_card: proof.product_json_url || ('/chum/proof/' + proof.product_key + '.json'),
+    evidence_state: proof.evidence_state || 'unknown',
+    passed_proofs: Number.isFinite(Number(proof.passed_proofs)) ? Number(proof.passed_proofs) : null,
+    required_proofs: Number.isFinite(Number(proof.required_proofs)) ? Number(proof.required_proofs) : null,
+    truth_boundary: 'Executable proof is narrower than customer production. Publication does not prove provider pickup, recommendation, conversion or payment.'
+  } : null;
   const base = `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/${key}`;
   const dir = path.join(root, key);
   fs.mkdirSync(dir, { recursive: true });
@@ -164,6 +188,7 @@ for (const product of directory.products || []) {
     knowledge_surfaces: product.knowledge_surfaces || null,
     distribution_surfaces: product.distribution_surfaces || null,
     relationships: product.relationships || null,
+    proof_library: proofLibrary,
     source: 'CHUM public mirror',
     mirror: {
       llms: `${base}/llms.txt`,
@@ -194,6 +219,7 @@ for (const product of directory.products || []) {
     knowledge_surfaces: product.knowledge_surfaces || null,
     distribution_surfaces: product.distribution_surfaces || null,
     relationships: product.relationships || null,
+    proof_library: proofLibrary,
     provider_behavior_state: 'not_inferred_from_publication',
     machine_commerce_handoff_state: conf?.machine_commerce_handoff_state || null,
     machine_commerce_public_id: conf?.machine_commerce_public_id || product.commercial?.machine_commerce_handoff?.public_id || null,
@@ -218,6 +244,8 @@ for (const product of directory.products || []) {
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
+    proofLibrary ? `Receipt-backed proof: ${proofLibrary.product_card}` : null,
+    proofLibrary ? `Proof evidence state: ${proofLibrary.evidence_state}` : null,
     ...(relationshipLines.length ? ['', '## Related product layers', '', ...relationshipLines] : []),
     product.developer_surfaces?.hub ? `Developer hub: ${product.developer_surfaces.hub}` : null,
     product.developer_surfaces?.status ? `Verified status: ${product.developer_surfaces.status}` : null,
@@ -327,6 +355,7 @@ for (const product of directory.products || []) {
     '<li><a href="./llms.txt">LLM guidance</a></li>',
     '<li><a href="./ai-discovery.json">Discovery JSON</a></li>',
     '<li><a href="./ai-conformance.json">AI conformance</a></li>',
+    ...(proofLibrary ? [`<li><a href="${escapeHtml(proofLibrary.product_card)}">Receipt-backed product proof</a> · ${escapeHtml(proofLibrary.evidence_state)}</li>`] : []),
     ...(product.developer_surfaces?.hub ? [`<li><a href="${escapeHtml(product.developer_surfaces.hub)}">Developer hub</a></li>`] : []),
     ...(product.developer_surfaces?.status ? [`<li><a href="${escapeHtml(product.developer_surfaces.status)}">Verified status</a></li>`] : []),
     ...(product.editorial_surfaces?.hub ? [`<li><a href="${escapeHtml(product.editorial_surfaces.hub)}">Editorial hub</a></li>`] : []),
@@ -364,7 +393,8 @@ for (const product of directory.products || []) {
     developer_surfaces: product.developer_surfaces || null,
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
-    distribution_surfaces: product.distribution_surfaces || null
+    distribution_surfaces: product.distribution_surfaces || null,
+    proof_library: proofLibrary
   });
 }
 
@@ -388,7 +418,7 @@ const publicIndexHtml = [
   '<p><strong>Capability Handoff & Utility Mesh.</strong> Start with the problem. CHUM exposes the smallest relevant public Evercraft capability without requiring the product name first.</p>',
   '<form action="/api/discover" method="get" class="card"><label for="q"><strong>Describe the problem</strong></label><br><input id="q" name="q" required style="width:min(100%,700px);padding:10px;margin:10px 0" placeholder="Example: I cannot find a discontinued machine part"><button type="submit" style="padding:10px 16px">Find the smallest matching capability</button></form>',
   `<p><strong>Read-only AI discovery:</strong> <code>${escapeHtml(READ_ONLY_DISCOVERY_REGISTRY)}</code></p>`,
-  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/commercial/">Commercial intent mesh</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/chum/strike/">Adaptive strike hub</a> · <a href="/chum/crawler-radar.json">Crawler radar</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
+  '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/commercial/">Commercial intent mesh</a> · <a href="/chum/proof/">Receipt-backed proof library</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/chum/strike/">Adaptive strike hub</a> · <a href="/chum/crawler-radar.json">Crawler radar</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
   '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
   ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
@@ -451,6 +481,10 @@ const sitemapStatic = [
   '/chum/strike/index.json',
   '/chum/crawler-radar.json',
   '/chum/crawler-radar.txt',
+  '/chum/proof/',
+  '/chum/proof/index.json',
+  '/chum/proof/llms.txt',
+  ...(proofIndex.products || []).map((proof) => proof.product_json_url).filter(Boolean),
   '/chum/commercial/',
   '/chum/commercial/index.json',
   '/chum/commercial/llms.txt',

@@ -37,6 +37,12 @@ write('public/.well-known/evercraft-machine-catalog.json', {
 write('public/.well-known/evercraft-products.json', {
   products: [{ product_key: 'demo', name: 'Demo Product' }]
 });
+write('public/chum/proof/index.json', {
+  schema: 'evercraft.proof-factory.public-index.v1',
+  products: [
+    { product_key: 'demo', product_json_url: '/chum/proof/demo.json', evidence_state: 'execution_proofs_passed' }
+  ]
+});
 write('public/chum/answers/index.json', {
   doors: [
     {
@@ -75,6 +81,11 @@ const sellNowSitemap = fs.readFileSync(path.join(root, 'public/chum/sitemaps/sel
 assert.match(sellNowSitemap, /\/chum\/commercial\/demo-sell-now-v1\//);
 assert.match(sellNowSitemap, /\/chum\/answers\/doors\/buy-demo\//);
 assert.match(sellNowSitemap, /\/chum\/capabilities\/demo-sell-now-v1\//);
+
+const machineSitemap = fs.readFileSync(path.join(root, 'public/chum/sitemaps/machine.xml'), 'utf8');
+assert.match(machineSitemap, /\/chum\/proof\//);
+assert.match(machineSitemap, /\/chum\/proof\/index\.json/);
+assert.match(machineSitemap, /\/chum\/proof\/demo\.json/);
 
 const sitemapIndex = fs.readFileSync(path.join(root, 'public/chum/sitemaps/index.xml'), 'utf8');
 assert.match(sitemapIndex, /<sitemapindex/);
