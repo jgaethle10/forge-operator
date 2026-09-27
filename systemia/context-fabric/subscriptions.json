@@ -1,0 +1,24 @@
+{
+  "schema": "evercraft.context-fabric.subscriptions.v1",
+  "always": [
+    "systemia_world_model",
+    "sentinel"
+  ],
+  "by_domain": {
+    "weather": ["weather_desk", "faie", "towi", "evermaps"],
+    "climate": ["weather_desk", "faie", "towi", "evermaps"],
+    "water": ["weather_desk", "faie", "towi", "evermaps"],
+    "environment": ["faie", "towi", "evermaps"],
+    "earth_hazards": ["faie", "towi", "evermaps", "emergency_command"],
+    "geophysics": ["faie", "towi", "evermaps", "emergency_command"],
+    "disaster": ["faie", "towi", "evermaps", "emergency_command", "recovery_accountability"],
+    "infrastructure": ["faie", "towi", "evermaps", "rivet", "omnicore"],
+    "transport": ["faie", "towi", "evermaps", "rivet", "omnicore"],
+    "energy": ["faie", "towi", "evermaps", "rivet"],
+    "ai": ["portfolio_sentinel", "chum", "security"],
+    "cyber": ["portfolio_sentinel", "chum", "security"],
+    "economy": ["faie", "household_fabric"],
+    "household": ["household_fabric"]
+  },
+  "rule": "Persistence is not completion. Every admitted observation updates shared context and is offered to every subscribed consumer. Consumers decide whether the context changes their own work."
+}
