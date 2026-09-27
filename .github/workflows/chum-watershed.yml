@@ -304,9 +304,14 @@ jobs:
 
           rebuild_repairs() {
             npm run chum:ingest-probe-misses
-            node systemia/chum/build-observed-miss-pages.mjs
-            npm run chum:mirror
-            npm run chum:crawl-pressure
+            REPAIR_QUEUE="$(node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('artifacts/chum/provider-miss-ingest-latest.json','utf8'));process.stdout.write(String((r.repair_queue||[]).length))")"
+            if [ "$REPAIR_QUEUE" -gt 0 ]; then
+              node systemia/chum/build-observed-miss-pages.mjs
+              npm run chum:mirror
+              npm run chum:crawl-pressure
+            else
+              echo "Pickup-only evidence; persisting provider history without rebuilding miss surfaces."
+            fi
           }
 
           stage_repairs() {
