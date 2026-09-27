@@ -21,6 +21,7 @@ import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
+import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -300,11 +301,9 @@ export async function startEvercraftComputeNode({
     typeof browserRuntimeFactory === 'function' ||
     browserContainerAvailable();
 
+  const forensiscopeTranscriptionCapability = transcriptionCapabilityStatus();
   const serviceCapabilities = {
-    forensiscope_transcription: configuredExecutableAvailable({
-      enabled: process.env.FORENSISCOPE_TRANSCRIBE_ENABLED,
-      executable: process.env.FORENSISCOPE_TRANSCRIBE_EXECUTABLE
-    }),
+    forensiscope_transcription: forensiscopeTranscriptionCapability.ready === true,
     evercraft_web_browser: browserRuntimeReady,
     public_edge: publicEdgeCapability
   };
