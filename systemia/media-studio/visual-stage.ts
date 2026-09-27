@@ -221,14 +221,6 @@ export function cameraAt(camera:VisualStageCamera,t:number):EvaluatedCamera{
   return {x:0,y:0,zoom:1,rotationDeg:0};
 }
 
-function metricValue(layer:MetricLayer,t:number){
-  const progress=clamp(valueAt(layer.progress,t,t/layer.rawDuration,0),0,1);
-  return interpolate(layer.from,layer.to,progress);
-}
-
-declare global {
-  interface Number { readonly rawDuration:number; }
-}
 
 export function evaluateStage(stage:VisualStage,t:number){
   const time=clamp(t,0,stage.durationSec);
