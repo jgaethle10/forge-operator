@@ -184,7 +184,12 @@
     "test:forensiscope-asr": "node --test systemia/forensiscope/asr-runner.test.mjs",
     "proof:saban-fallen-creative": "node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory systemia/saban/fixtures/fallen-creative-council-job.json --agents 20 --workers 4 --execute --reconcile",
     "proof:saban-fallen-tournament": "node systemia/saban/multiplier.mjs --software fallen-shot-tournament --inventory systemia/saban/fixtures/fallen-shot-tournament-job.json --agents 16 --workers 4 --execute --reconcile",
-    "test:public-edge-mainline-invariants": "node --test tests/public-edge-mainline-invariants.test.mjs"
+    "test:public-edge-mainline-invariants": "node --test tests/public-edge-mainline-invariants.test.mjs",
+    "forensiscope:doctor": "node systemia/forensiscope/doctor.mjs",
+    "forensiscope:doctor:strict": "node systemia/forensiscope/doctor.mjs --strict",
+    "forensiscope:batch": "node systemia/forensiscope/batch-transcribe.mjs",
+    "test:forensiscope-batch": "node --test systemia/forensiscope/batch-transcribe.test.mjs",
+    "test:forensiscope-runtime": "npm run test:forensiscope-asr && npm run test:forensiscope-batch"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

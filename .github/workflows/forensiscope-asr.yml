@@ -6,6 +6,9 @@ on:
       - "systemia/forensiscope/asr-runner.mjs"
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
+      - "systemia/forensiscope/batch-transcribe.mjs"
+      - "systemia/forensiscope/batch-transcribe.test.mjs"
+      - "systemia/forensiscope/doctor.mjs"
       - "systemia/forensiscope/ASR.md"
       - "package.json"
       - ".github/workflows/forensiscope-asr.yml"
@@ -15,6 +18,9 @@ on:
       - "systemia/forensiscope/asr-runner.mjs"
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
+      - "systemia/forensiscope/batch-transcribe.mjs"
+      - "systemia/forensiscope/batch-transcribe.test.mjs"
+      - "systemia/forensiscope/doctor.mjs"
       - "systemia/forensiscope/ASR.md"
       - "package.json"
       - ".github/workflows/forensiscope-asr.yml"
@@ -35,5 +41,7 @@ jobs:
         run: |
           node --check systemia/forensiscope/asr-runner.mjs
           node --check systemia/forensiscope/transcription-engine.mjs
-      - name: ASR contract tests
-        run: npm run test:forensiscope-asr
+          node --check systemia/forensiscope/batch-transcribe.mjs
+          node --check systemia/forensiscope/doctor.mjs
+      - name: ForensiScope runtime tests
+        run: npm run test:forensiscope-runtime
