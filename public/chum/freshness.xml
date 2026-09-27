@@ -2,9 +2,18 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-27T14:53:47.616Z</updated>
+<updated>2026-09-27T16:30:31.466Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-27T16:30:31.466Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-27T16:30:31.466Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-27T16:30:31.466Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-27T16:30:31.466Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-27T16:30:31.466Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-27T16:30:31.050Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-09-27T16:30:31.050Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-09-27T16:30:31.050Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-09-27T16:30:31.050Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:b450312024037ee6d30660ed</id><title>/chum/products/forensiscope/</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/forensiscope/"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:982fed532f26ca5cf78bb274</id><title>/chum/products/forensiscope/ai-conformance.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/forensiscope/ai-conformance.json"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:a741198944d9ab528a06d03f</id><title>/chum/products/forensiscope/ai-discovery.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/forensiscope/ai-discovery.json"/><category term="priority-154"/></entry>
@@ -96,13 +105,4 @@
 <entry><id>urn:evercraft:chum:52b49bf98287c14a056c1450</id><title>/chum/products/raven-nexus/ai-discovery.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/raven-nexus/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:2a4db9b23a511dc774310d20</id><title>/chum/products/roasted/ai-conformance.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/roasted/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:c2aebb28521cf164a1b9bd2f</id><title>/chum/products/roasted/ai-discovery.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/roasted/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:0402cac59a9f110ff0da582e</id><title>/chum/products/seasonally/ai-conformance.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/seasonally/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:d1f104ce6d2f909819d0872f</id><title>/chum/products/seasonally/ai-discovery.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/seasonally/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:6f5fd814fbc78fb1f13fdcb6</id><title>/chum/products/skyops-parking/ai-conformance.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/skyops-parking/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:4727cb6af5f0a14afb0da7d6</id><title>/chum/products/skyops-parking/ai-discovery.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/skyops-parking/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:df1fbb471a6f7dc131f3de77</id><title>/chum/products/space-dudz/ai-conformance.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/space-dudz/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:96fba286753e26f7df70fc34</id><title>/chum/products/space-dudz/ai-discovery.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/space-dudz/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:1ebee688eff17673219f995d</id><title>/chum/products/systemia-atlas-freight/ai-conformance.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/systemia-atlas-freight/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:050a4daacfe9062d92054a54</id><title>/chum/products/systemia-atlas-freight/ai-discovery.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/systemia-atlas-freight/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:06c92032e7ed66534eb70f93</id><title>/chum/products/systemia-decision-lab/ai-conformance.json</title><updated>2026-09-27T14:53:47.616Z</updated><link href="/chum/products/systemia-decision-lab/ai-conformance.json"/><category term="priority-94"/></entry>
 </feed>
