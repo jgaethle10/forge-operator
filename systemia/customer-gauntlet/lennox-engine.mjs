@@ -157,11 +157,14 @@ export async function runLocalLennox({ offer, persona, reviewUrl, buyerUrl, time
   const sessionId = sha(`${offer?.public_id || 'offer'}:${persona?.id || 'persona'}:${Date.now()}:${crypto.randomUUID()}`).slice(0,24);
   const targetUrl = buyerUrl || reviewUrl || offer?.public_url || null;
   const blockedChecks = [
-    'pixel_visual_diff',
+    'rendered_screenshot_capture',
     'visual_clipping',
     'javascript_console_errors',
     'javascript_form_interaction',
     'keyboard_tab_order',
+    'broken_image_scan',
+    'blank_state_scan',
+    'rendered_brand_metadata',
     'checkout_submit',
     'provider_payment_verification',
     'entitlement_verification',
