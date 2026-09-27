@@ -189,7 +189,8 @@
     "forensiscope:doctor:strict": "node systemia/forensiscope/doctor.mjs --strict",
     "forensiscope:batch": "node systemia/forensiscope/batch-transcribe.mjs",
     "test:forensiscope-batch": "node --test systemia/forensiscope/batch-transcribe.test.mjs",
-    "test:forensiscope-runtime": "npm run test:forensiscope-asr && npm run test:forensiscope-batch"
+    "test:forensiscope-runtime": "npm run test:forensiscope-asr && npm run test:forensiscope-engine && npm run test:forensiscope-batch",
+    "test:forensiscope-engine": "node --test systemia/forensiscope/transcription-engine.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
