@@ -30,6 +30,12 @@ for (const spec of specs.products) {
   const row = bySlug.get(spec.slug);
   assert.ok(row, 'missing readiness row: ' + spec.slug);
 
+  assert.deepEqual(
+    row.capability_public_ids,
+    Array.isArray(spec.capability_public_ids) ? spec.capability_public_ids : [],
+    spec.slug + ': capability_public_ids must mirror direct spec'
+  );
+
   if (spec.state === 'registry_published_direct_mcp_existing') {
     assert.equal(row.direct_callable, true, spec.slug + ': published door must be callable');
     assert.equal(row.registry_published, true, spec.slug + ': published door must be registry-backed');
@@ -43,6 +49,15 @@ for (const spec of specs.products) {
       row.blocking_gates,
       ['shared_public_edge_canary', 'official_mcp_registry_publication'],
       spec.slug + ': route-pending gate sequence drift'
+    );
+    assert.equal(
+      row.fallback?.mode,
+      'universal_until_direct_door_verified',
+      spec.slug + ': held direct door must expose universal fallback'
+    );
+    assert.ok(
+      row.fallback?.mcp?.includes('machineCommerceMcp'),
+      spec.slug + ': held direct door fallback must target Machine Commerce'
     );
   }
 
