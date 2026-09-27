@@ -38,7 +38,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:context-fabric",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:context-fabric && npm run proof:rockies",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -180,7 +180,8 @@
     "proof:remote-edge-delegation": "node systemia/yard/remote-edge-delegation.proof.mjs",
     "proof:public-edge-private-yard-authority": "node systemia/yard/public-edge-private-yard-authority.proof.mjs",
     "test:forensiscope-asr": "node --test systemia/forensiscope/asr-runner.test.mjs",
-    "proof:context-fabric": "node systemia/context-fabric/context-fabric.proof.mjs"
+    "proof:context-fabric": "node systemia/context-fabric/context-fabric.proof.mjs",
+    "proof:rockies": "node systemia/rockies/expansion.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
