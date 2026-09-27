@@ -161,6 +161,9 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalo
 Official read-only discovery MCP:
 io.github.jgaethle10/evercraft-capability-discovery
 
+Direct specialist readiness ledger:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json
+
 CHUM pain-first routing index (JSON):
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
 
