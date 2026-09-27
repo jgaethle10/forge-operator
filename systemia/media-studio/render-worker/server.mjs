@@ -87,11 +87,11 @@ async function render(job){
     const consoleErrors=[];
     page.on('console',msg=>{if(msg.type()==='error'&&consoleErrors.length<50)consoleErrors.push(msg.text().slice(0,1000))});
     await page.setContent(buildStageHtml(job.stage),{waitUntil:'load',timeout:15000});
-    await page.waitForFunction(()=>window.__evercraftStageReady===true,{timeout:5000});
+    await page.waitForFunction(()=>window.__evercraftStageReady===true,null,{timeout:5000});
     for(let offset=0;offset<job.frame_count;offset+=1){
       const frame=job.frame_start+offset;
       await page.evaluate(async value=>{document.documentElement.dataset.evercraftFrameReady='false';await window.__evercraftRenderFrame(value)},frame);
-      await page.waitForFunction(()=>document.documentElement.dataset.evercraftFrameReady==='true',{timeout:5000});
+      await page.waitForFunction(()=>document.documentElement.dataset.evercraftFrameReady==='true',null,{timeout:5000});
       const png=await page.screenshot({type:'png',animations:'disabled',caret:'hide',clip:{x:0,y:0,width:job.stage.width,height:job.stage.height}});
       const filename=`frame-${String(frame).padStart(8,'0')}.png`,file=path.join(outputDir,filename);
       fs.writeFileSync(file,png,{mode:0o600});
