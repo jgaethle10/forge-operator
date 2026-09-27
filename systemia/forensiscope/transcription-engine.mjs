@@ -160,6 +160,21 @@ export function probeTranscriptionEngine({ env = process.env } = {}) {
   };
 }
 
+export function transcriptionCapabilityStatus({ env = process.env } = {}) {
+  const probe = probeTranscriptionEngine({ env });
+  const ready =
+    probe.state === 'configured' &&
+    probe.probe_state !== 'unavailable';
+
+  return {
+    ready,
+    state: probe.state,
+    engine_id: probe.engine_id || null,
+    probe_state: probe.probe_state || null,
+    reason: probe.probe_reason || probe.reason || null
+  };
+}
+
 export function transcribePreparedAudio({
   audioPath,
   bounds,
