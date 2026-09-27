@@ -43,7 +43,7 @@ Displayed Founding Membership: $9.99/month for up to five devices. Billing is no
 
 ## Invocation and authority
 
-SOURCE-WIRED: Network specialist MCP tools and agent gateway are prepared for read-only capability discovery, public presence and human handoff. Production verification is still required before claiming the v1.2.0 MCP surface is live.
+LIVE READ-ONLY MCP VERIFIED: production tools/list exposes get_network_capabilities, get_network_presence, and prepare_network_handoff through Evercraft Machine Commerce v1.3.1; get_network_capabilities has an executed live read-only canary receipt. Presence and handoff execution remain not-yet-canaried. Billing remains not live.
 
 AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.
 
