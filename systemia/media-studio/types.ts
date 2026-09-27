@@ -259,6 +259,16 @@ export interface ProductionReceipt {
   generatedAt: string;
 }
 
+export interface ShotSelectionReceipt {
+  schema: 'evercraft.fallen.shot-selection-receipt.v1';
+  needId: string;
+  candidateId: string;
+  artifactDigest: string;
+  creativeGenomeDigest: string;
+  tournamentReceiptDigest: string;
+  selectedAt: string;
+}
+
 export interface ProductionAdmission {
   needId: string;
   status: 'accepted' | 'rejected';

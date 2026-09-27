@@ -8,6 +8,7 @@ COPY . .
 RUN npm run build
 
 FROM node:22-alpine AS runtime
+RUN apk add --no-cache ffmpeg && ffmpeg -version && ffprobe -version
 WORKDIR /app
 
 ENV NODE_ENV=production

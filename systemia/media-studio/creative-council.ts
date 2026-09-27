@@ -46,6 +46,23 @@ export interface CreativeShotMission {
   crew: CreativeCrewBinding[];
 }
 
+export interface CreativeCouncilBlueprint {
+  shot_id: string;
+  status: 'blocked' | 'ready_for_asset_or_provider_routing';
+  missing_roles: string[];
+  findings: string[];
+  creative_genome: Record<string, any>;
+  rejection_contract: string[];
+}
+
+export interface CreativeCouncilReconciliation {
+  schema: 'evercraft.fallen.creative-council-reconciliation.v1';
+  status: 'blocked' | 'reconciled';
+  shot_count: number;
+  blocked_shot_count: number;
+  blueprints: CreativeCouncilBlueprint[];
+}
+
 export interface CreativeCouncilInventory {
   schema: 'evercraft.fallen.creative-council-inventory.v1';
   projectId: string;

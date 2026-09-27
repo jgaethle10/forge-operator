@@ -1,0 +1,217 @@
+{
+  "jobs": [
+    {
+      "kind": "fallen_shot_candidate",
+      "key": "candidate-a",
+      "creativeGenomeDigest": "proof-genome-001",
+      "candidate": {
+        "id": "candidate-a",
+        "shotId": "shot-proof-1",
+        "artifactPath": "./candidate-a.mp4",
+        "artifactDigest": "sha256:candidate-a",
+        "kind": "video",
+        "durationSec": 5,
+        "aspectRatio": "16:9",
+        "sourceState": "licensed_source",
+        "provenance": "complete",
+        "subjectIds": [
+          "naval-vessel"
+        ],
+        "observations": [
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-a",
+            "metric": "subject_coverage",
+            "verifierId": "subject-verifier",
+            "verifierState": "verified",
+            "score": 0.95,
+            "threshold": 0.85,
+            "evidenceRefs": [
+              "frame:001"
+            ],
+            "subjectId": "naval-vessel"
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-a",
+            "metric": "composition",
+            "verifierId": "composition-verifier",
+            "verifierState": "verified",
+            "score": 0.92,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "frame:002"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-a",
+            "metric": "motion_quality",
+            "verifierId": "motion-verifier",
+            "verifierState": "verified",
+            "score": 0.9,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "motion:001"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-a",
+            "metric": "continuity",
+            "verifierId": "continuity-verifier",
+            "verifierState": "verified",
+            "score": 0.94,
+            "threshold": 0.85,
+            "evidenceRefs": [
+              "continuity:001"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-a",
+            "metric": "brand_fidelity",
+            "verifierId": "brand-verifier",
+            "verifierState": "verified",
+            "score": 0.88,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "brand:001"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-a",
+            "metric": "beauty",
+            "verifierId": "beauty-verifier",
+            "verifierState": "verified",
+            "score": 0.91,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "beauty:001"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-a",
+            "metric": "editability",
+            "verifierId": "editability-verifier",
+            "verifierState": "verified",
+            "score": 0.96,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "ffprobe:001"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "kind": "fallen_shot_candidate",
+      "key": "candidate-b",
+      "creativeGenomeDigest": "proof-genome-001",
+      "candidate": {
+        "id": "candidate-b",
+        "shotId": "shot-proof-1",
+        "artifactPath": "./candidate-b.mp4",
+        "artifactDigest": "sha256:candidate-b",
+        "kind": "video",
+        "durationSec": 5,
+        "aspectRatio": "16:9",
+        "sourceState": "generated_visualization",
+        "provenance": "complete",
+        "syntheticLabelPresent": true,
+        "subjectIds": [
+          "naval-vessel"
+        ],
+        "observations": [
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-b",
+            "metric": "subject_coverage",
+            "verifierId": "subject-verifier",
+            "verifierState": "verified",
+            "score": 0.9,
+            "threshold": 0.85,
+            "evidenceRefs": [
+              "frame:101"
+            ],
+            "subjectId": "naval-vessel"
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-b",
+            "metric": "composition",
+            "verifierId": "composition-verifier",
+            "verifierState": "verified",
+            "score": 0.86,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "frame:102"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-b",
+            "metric": "motion_quality",
+            "verifierId": "motion-verifier",
+            "verifierState": "verified",
+            "score": 0.83,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "motion:101"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-b",
+            "metric": "continuity",
+            "verifierId": "continuity-verifier",
+            "verifierState": "verified",
+            "score": 0.9,
+            "threshold": 0.85,
+            "evidenceRefs": [
+              "continuity:101"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-b",
+            "metric": "brand_fidelity",
+            "verifierId": "brand-verifier",
+            "verifierState": "verified",
+            "score": 0.85,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "brand:101"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-b",
+            "metric": "beauty",
+            "verifierId": "beauty-verifier",
+            "verifierState": "verified",
+            "score": 0.89,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "beauty:101"
+            ]
+          },
+          {
+            "schema": "evercraft.fallen.visual-observation.v1",
+            "candidateId": "candidate-b",
+            "metric": "editability",
+            "verifierId": "editability-verifier",
+            "verifierState": "verified",
+            "score": 0.93,
+            "threshold": 0.8,
+            "evidenceRefs": [
+              "ffprobe:101"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

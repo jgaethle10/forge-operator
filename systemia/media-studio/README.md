@@ -103,6 +103,57 @@ Run the bounded Saban proof:
 npm run proof:saban-fallen-creative
 ```
 
+## Shot Tournament
+
+Fallen now has a second governed swarm after the Creative Council: the **Shot Tournament**. The Creative Council defines what a shot must accomplish; the tournament decides which produced candidate is allowed to advance.
+
+The jury uses eight independent roles:
+
+- subject coverage
+- composition
+- motion
+- continuity
+- documentary truth
+- brand fidelity
+- beauty
+- editability
+
+The tournament is evidence-bound. Visual scores must come from verified observation receipts with evidence references. Missing visual evidence blocks a judge instead of inventing a quality score from metadata or filenames. Truth checks are fail-closed: incomplete provenance, unknown source state, or unlabeled synthetic/modelled visualization cannot advance.
+
+Hard-fail dimensions such as subject coverage, continuity, truth and editability eliminate a candidate regardless of how attractive it is. This prevents a visually impressive but incorrect or misleading render from winning on aesthetics alone.
+
+### Deliberate candidate exploration
+
+Before generation, Fallen can compile multiple **different visual strategies** for each Creative Council shot instead of cloning one prompt with different random seeds. World-intelligence scenes explore source-first documentary, spatial/data fusion, cinematic scale, and proof/detail treatments. Product/workflow scenes explore real product capture, spatial workflow, data proof, and human context. Every variant inherits the same must-show, truth, provenance and brand constraints, plus the reconciled Creative Council directives and rejection contract.
+
+```bash
+npm run media:studio -- explore ./tmp/creative-bundle.json ./tmp/exploration.json
+```
+
+The tournament therefore compares competing creative hypotheses, not merely stochastic variants of the same idea.
+
+### Visual Observer packets
+
+Before a candidate enters the jury, Fallen can produce a deterministic observation bundle. The observer verifies the artifact digest, probes media shape, samples evenly distributed frames, hashes every sampled frame, measures objective motion activity for video, and emits an objective editability receipt. Visual analyzers must cite the packet's artifact or frame hashes in any additional subject/composition/motion/continuity/brand/beauty receipt; receipts citing evidence outside the packet are rejected.
+
+```bash
+npm run media:studio -- observe ./tmp/candidate.json ./tmp/observation.json ./tmp/frames
+```
+
+This keeps the visual jury grounded in the exact candidate bytes it is judging.
+
+Build a tournament inventory:
+
+```bash
+npm run media:studio -- tournament ./tmp/candidates.json ./tmp/tournament.json
+```
+
+Run the bounded Saban proof:
+
+```bash
+npm run proof:saban-fallen-tournament
+```
+
 ## Architecture direction
 
 1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
