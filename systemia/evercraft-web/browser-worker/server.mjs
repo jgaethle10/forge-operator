@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import http from 'node:http';
 import { chromium } from 'playwright';
-import { createSecureOutboundProxy } from './secure-proxy.mjs';
+import { createSecureOutboundProxy } from './secure-proxy.mjs';\nimport { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
 import {
   assertBrowserRequestUrl,
   assertPublicHttpUrl,
