@@ -68,12 +68,31 @@ for(const c of cases){
   }
 }
 
+const remoteOpsCases=[
+  'I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job. I want a simulator where I can change assumptions and compare scenarios first. What service should I use?',
+  'I run a small service business and I am considering raising prices. I want to simulate the change before I actually change customer pricing, and I want the assumptions clearly separated from real results. What service should I use?',
+  'I am considering opening another location and hiring more people. Before I sign a lease or add payroll, I want to model revenue, margins, recurring costs, cash outlay, break-even and runway under several scenarios. What service should I use?',
+  'I am thinking about buying another small business. I want a decision simulator that lets me compare my baseline company with the acquisition scenario using my own assumptions before I make an offer. What service should I use?'
+];
+
+for(const query of remoteOpsCases){
+  const ranked=rankPain(index,query,5);
+  if(ranked[0]?.entry?.product_key!=='systemia-remote-ops'){
+    fail(`Remote Ops exact provider-miss regression did not rank first; got ${ranked.map((r)=>r.entry.capability_id+':'+r.score).join(', ')}`);
+  }
+}
+
+const focusedHiring=rankPain(index,'Should I hire an employee or outsource this role? I want to compare the real cost of adding payroll.',5);
+if(focusedHiring[0]?.entry?.product_key!=='systemia-decision-lab'){
+  fail(`focused workforce decision should stay with Systemia Decision Lab; got ${focusedHiring.map((r)=>r.entry.capability_id+':'+r.score).join(', ')}`);
+}
+
 const negative=rankPain(index,'I want a photo editor that adds vintage film stickers to vacation pictures.',3);
 if(negative[0]?.score>=45) fail('negative control matched too strongly');
 
 console.log('CHUM_PAIN_INDEX_PASS',JSON.stringify({
   entries:index.summary.entries,
   sell_now:sellNow.length,
-  tested_brand_blind_cases:cases.length,
+  tested_brand_blind_cases:cases.length+remoteOpsCases.length+1,
   negative_top_score:negative[0]?.score||0
 }));

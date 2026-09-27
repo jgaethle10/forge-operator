@@ -1,7 +1,7 @@
 {
   "name": "systemia-remote-ops",
   "version": "0.1.0",
-  "description": "Simulate business decisions before acting",
+  "description": "Simulate startup, pricing, expansion, hiring, acquisition and other business decisions before acting",
   "author": {
     "name": "Evercraft LLC"
   },
@@ -14,7 +14,20 @@
     "business-simulation",
     "pricing",
     "decision-lab",
-    "mcp"
+    "mcp",
+    "startup-simulation",
+    "business-simulator",
+    "cash-flow-scenario",
+    "pricing-change",
+    "business-expansion",
+    "hiring-scenario",
+    "break-even",
+    "runway",
+    "acquisition",
+    "buy-a-business",
+    "business-sale",
+    "what-if",
+    "decision-simulation"
   ],
   "skills": "./skills/",
   "mcpServers": "./mcp.json",
