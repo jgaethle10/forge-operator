@@ -42,7 +42,7 @@ function layerMarkup(layer:VisualLayer){
 
   if(layer.kind==='media'){
     const tag=layer.mediaKind==='video'
-      ? `<video data-source="${esc(layer.sourcePath)}" muted playsinline preload="auto" style="width:100%;height:100%;object-fit:${layer.fit};"></video>`
+      ? `<video src="${esc(layer.sourcePath)}" data-source="${esc(layer.sourcePath)}" muted playsinline preload="auto" style="width:100%;height:100%;object-fit:${layer.fit};"></video>`
       : `<img src="${esc(layer.sourcePath)}" style="width:100%;height:100%;object-fit:${layer.fit};"/>`;
     return `<div class="layer media-layer" data-layer="${esc(layer.id)}" style="${base}">${tag}${badge}</div>`;
   }
@@ -205,7 +205,7 @@ body{display:flex;align-items:center;justify-content:center}
       const el=document.querySelector('[data-layer="'+CSS.escape(layer.id)+'"]');if(!el)continue;
       const opacity=clamp(at(layer.opacity,t,1),0,1),scale=Math.max(0,at(layer.scale,t,1)),rot=at(layer.rotationDeg,t,0);
       el.style.opacity=opacity;el.style.transform='scale('+scale+') rotate('+rot+'deg)';
-      if(layer.kind==='video'||layer.kind==='media'){
+      if(layer.kind==='media'){
         const video=el.querySelector('video');
         if(video){
           const desired=(layer.trimStartSec||0)+t*(layer.playbackRate||1);
