@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.cross-llm-probe-suite.v1",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-27",
   "purpose": "Measure whether clean AI sessions discover and accurately route real buyer pain to public Evercraft capabilities without brand seeding.",
   "providers": [
     "chatgpt",
@@ -358,6 +358,22 @@
       ],
       "enabled": true,
       "prompt": "I need a contractor estimator that can use field measurements and job photos as scope evidence, show uncertainty, and force a site review when the evidence is too weak for a firm price. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "contractor-api-006",
+      "product_key": "eps-estimate-intelligence",
+      "expected_product": "EPS Estimate Intelligence",
+      "expected_aliases": [
+        "EPS Estimate Intelligence",
+        "EPS Field-Service Estimate Engine"
+      ],
+      "expected_hosts": [
+        "base44.app",
+        "peak-eps-calc.base44.app"
+      ],
+      "enabled": true,
+      "prompt": "My AI agent needs a read-only contractor pricing function it can call with labor hours, labor rate, materials, equipment, overhead, contingency and target gross margin. I do not want the tool saving customer data, creating a proposal, or charging anyone. What service should I use?",
       "expected_fit": true
     },
     {
