@@ -4,41 +4,145 @@
   "purpose": "Seed registry for nationwide observed EV charging-session acquisition. Candidate status does not imply licensing, access, or site-level session availability.",
   "canonical_entity": "EVObservedUsageAggregate",
   "existing_domestic_ingestors": [
-    {"jurisdiction":"NY","adapter":"ingestNYCPlugNYCObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"NC","adapter":"ingestCaryObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"CO","adapter":"ingestBoulderObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"CA","adapter":"ingestPaloAltoObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"}
+    {
+      "jurisdiction": "NY",
+      "adapter": "ingestNYCPlugNYCObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "NC",
+      "adapter": "ingestCaryObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "CO",
+      "adapter": "ingestBoulderObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "CA",
+      "adapter": "ingestPaloAltoObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    }
   ],
   "national_candidates": [
     {
-      "name":"Joint Office EV-ChART",
-      "lane":"federal-funded-publication",
-      "status":"restricted_raw_public_aggregates_available",
-      "notes":"Quarterly charging-session data are collected for federally funded infrastructure. Raw portal access is limited to funding recipients/authorized parties; public outputs are aggregated/anonymized. Hunt state recipient publications and public reports, not restricted raw records."
+      "name": "Joint Office EV-ChART",
+      "lane": "federal-funded-publication",
+      "status": "restricted_raw_public_aggregates_available",
+      "notes": "Quarterly charging-session data are collected for federally funded infrastructure. Raw portal access is limited to funding recipients/authorized parties; public outputs are aggregated/anonymized. Hunt state recipient publications and public reports, not restricted raw records."
     },
     {
-      "name":"DOE Livewire / EV WATTS",
-      "lane":"federal-funded-publication",
-      "status":"candidate",
-      "notes":"Nationwide real-world EVSE dataset and analytics include sessions, utilization and energy. Verify current downloadable geographic resolution and reuse terms before ingest."
+      "name": "DOE Livewire / EV WATTS",
+      "lane": "federal-funded-publication",
+      "status": "candidate",
+      "notes": "Nationwide real-world EVSE dataset and analytics include sessions, utilization and energy. Verify current downloadable geographic resolution and reuse terms before ingest."
     },
     {
-      "name":"California Energy Commission funded-project reporting",
-      "lane":"grant-project-reports",
-      "status":"candidate_with_confidentiality_boundary",
-      "notes":"CEC-funded projects submit detailed utilization/session data. Individual-charger utilization may be confidential, but public grant/project reports can contain publishable site/project aggregates."
+      "name": "California Energy Commission funded-project reporting",
+      "lane": "grant-project-reports",
+      "status": "candidate_with_confidentiality_boundary",
+      "notes": "CEC-funded projects submit detailed utilization/session data. Individual-charger utilization may be confidential, but public grant/project reports can contain publishable site/project aggregates."
     },
     {
-      "name":"Stable Auto",
-      "lane":"licensed-utilization-provider",
-      "status":"commercial_candidate",
-      "notes":"Markets nationwide utilization intelligence based on real charging operating data. Requires commercial evaluation and explicit purchasing authority before any paid integration."
+      "name": "Stable Auto",
+      "lane": "licensed-utilization-provider",
+      "status": "commercial_candidate",
+      "notes": "Markets nationwide utilization intelligence based on real charging operating data. Requires commercial evaluation and explicit purchasing authority before any paid integration."
     },
     {
-      "name":"AFDC charging-network directory",
-      "lane":"operator-utility-public",
-      "status":"lead_generator_only",
-      "notes":"Strong national inventory/network directory for identifying operators and station IDs. Inventory is not session telemetry and must never be promoted to observed usage."
+      "name": "AFDC charging-network directory",
+      "lane": "operator-utility-public",
+      "status": "lead_generator_only",
+      "notes": "Strong national inventory/network directory for identifying operators and station IDs. Inventory is not session telemetry and must never be promoted to observed usage."
+    },
+    {
+      "name": "Seattle SDOT EVCROW Evaluation Report",
+      "lane": "operator-utility-public",
+      "jurisdiction": "WA",
+      "status": "INGESTED_SPATIAL_BLOCK_LEVEL",
+      "notes": "Official monthly observed sessions and kWh for two DC fast chargers on the 2500 block of 16th Ave S. Coordinate is a block-level anchor, not exact charger GPS."
+    },
+    {
+      "name": "Austin Energy FY2026 Q1 EV Charging Network",
+      "lane": "operator-utility-public",
+      "jurisdiction": "TX",
+      "status": "NETWORK_AGGREGATE_SUPPORTING_ONLY",
+      "notes": "Observed network session totals are useful market context but are not site-resolved and do not satisfy a local RIVET session badge."
+    },
+    {
+      "name": "PennDOT NEVI public reporting",
+      "lane": "federal-funded-publication",
+      "jurisdiction": "PA",
+      "status": "STATE_AGGREGATE_SUPPORTING_ONLY",
+      "notes": "Public NEVI session totals are statewide/network aggregate evidence, not coordinate-resolved site sessions."
+    },
+    {
+      "name": "ACN-Data / ACN-Data Static",
+      "lane": "grant-project-reports",
+      "jurisdiction": "CA",
+      "status": "QUARANTINED_RESEARCH_ONLY",
+      "notes": "Current ACN terms are educational/research only. 81 imported reservoir rows were set to confidence 0 and excluded from commercial RIVET coverage."
+    },
+    {
+      "name": "CHARGED Los Angeles",
+      "lane": "grant-project-reports",
+      "jurisdiction": "CA",
+      "status": "ENERGY_ONLY_SUPPORTING",
+      "notes": "MIT-licensed city-scale dataset has site coordinates and hourly kWh/duration, but volume is energy, not session count. Never promote it to observed sessions."
+    },
+    {
+      "name": "City of Evanston EV charging usage (legacy nx7w-jb8v)",
+      "lane": "state-open-data",
+      "jurisdiction": "IL",
+      "status": "SOURCE_RECOVERY_IN_PROGRESS",
+      "notes": "Official metadata confirms monthly sessions, ports, energy and unique drivers for six city-owned ChargePoint stations, Jan 2016-Aug 2017. Legacy Socrata endpoint is retired; actual row values/current reuse path still need recovery before ingest."
     }
-  ]
+  ],
+  "verified_spatial_families": [
+    {
+      "jurisdiction": "CO",
+      "name": "Boulder public EV charging sessions",
+      "status": "SPATIALIZED",
+      "physical_sites": 46,
+      "evidence_class": "public_observed_site_aggregate"
+    },
+    {
+      "jurisdiction": "NC",
+      "name": "Town of Cary EV charging sessions",
+      "status": "SPATIALIZED",
+      "physical_sites": 6,
+      "evidence_class": "public_observed_site_aggregate"
+    },
+    {
+      "jurisdiction": "CA",
+      "name": "Palo Alto public charging usage",
+      "status": "SPATIALIZED",
+      "physical_sites": 9,
+      "evidence_class": "public_observed_site_aggregate"
+    },
+    {
+      "jurisdiction": "WA",
+      "name": "Seattle SDOT EVCROW Beacon Hill",
+      "status": "SPATIALIZED_BLOCK_LEVEL",
+      "physical_sites": 1,
+      "evidence_class": "public_observed_site_aggregate"
+    },
+    {
+      "jurisdiction": "NY",
+      "name": "NYC DOT PlugNYC",
+      "status": "SPATIALIZED_CURRENT",
+      "physical_sites": 10,
+      "evidence_class": "public_observed_site_aggregate"
+    }
+  ],
+  "quarantine_policy": {
+    "research_only_sources": "confidence_pct=0 and QUARANTINED_* schema marker until commercial reuse rights are independently verified",
+    "modeled_or_energy_only": "may support demand context but never populate charging_sessions_count",
+    "non_site_aggregates": "may support market context but never satisfy local observed-session coverage"
+  }
 }

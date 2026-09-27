@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.rivet.session-coverage-baseline.v2",
+  "mission_id": "rivet-us-session-sprawl-001",
+  "as_of": "2026-09-26T22:30:00Z",
+  "scope": "Verified coordinate-resolved U.S. observed-session families actively validated during the Sep 26 session-sprawl strike. This is not asserted to be a complete census of every historical reservoir row.",
+  "spatially_usable_jurisdictions": 5,
+  "spatially_usable_physical_sites": 72,
+  "coordinate_resolved_site_period_rows": 1721,
+  "session_sum_policy": "Do not publish a single cross-source historical session total because some source families overlap monthly and YTD periods. Counts remain source/period scoped.",
+  "jurisdictions": [
+    {
+      "jurisdiction": "Boulder, Colorado, US",
+      "coordinate_session_rows": 1418,
+      "physical_sites": 46,
+      "earliest": "2018-01-01",
+      "latest": "2023-12-01",
+      "status": "SPATIALIZED",
+      "notes": "22 exact-address geocodes backfilled across existing official usage history; 2052 Junction Pl intentionally remains unresolved rather than using a road-center."
+    },
+    {
+      "jurisdiction": "Cary, North Carolina, US",
+      "coordinate_session_rows": 263,
+      "physical_sites": 6,
+      "earliest": "2012-04-01",
+      "latest": "2023-02-01",
+      "status": "SPATIALIZED",
+      "notes": "Town of Cary observed sessions normalized by physical address/month; six site addresses coordinate-resolved."
+    },
+    {
+      "jurisdiction": "Palo Alto, California, US",
+      "coordinate_session_rows": 10,
+      "physical_sites": 9,
+      "earliest": "2011-10-01",
+      "latest": "2021-01-01",
+      "status": "SPATIALIZED",
+      "notes": "Nine physical municipal charging sites are coordinate-resolved; citywide network aggregates remain non-spatial."
+    },
+    {
+      "jurisdiction": "Seattle, Washington, US",
+      "coordinate_session_rows": 12,
+      "physical_sites": 1,
+      "earliest": "2018-01-01",
+      "latest": "2019-01-01",
+      "status": "SPATIALIZED_BLOCK_LEVEL",
+      "notes": "Official EVCROW monthly sessions/kWh for two DC fast chargers on the 2500 block of 16th Ave S. Coordinate is explicitly a block-level anchor, not exact charger GPS. Duplicate older family retired."
+    },
+    {
+      "jurisdiction": "New York City, New York, US",
+      "coordinate_session_rows": 18,
+      "physical_sites": 10,
+      "earliest": "2026-01-01",
+      "latest": "2026-09-01",
+      "status": "SPATIALIZED_CURRENT",
+      "notes": "Current coordinate-resolved monthly and YTD site records normalized with canonical physical site_id so overlapping representations do not become duplicate report signals."
+    }
+  ],
+  "quarantines": [
+    {
+      "source_family": "ACN-Data Static",
+      "rows": 81,
+      "status": "QUARANTINED_RESEARCH_ONLY",
+      "reason": "Current ACN terms are educational/research only; rows are confidence 0 and cannot enter commercial RIVET session coverage."
+    }
+  ],
+  "evidence_rule": "Only source-observed charging session counts with usable site geography, period and provenance count toward the report's observed-session layer. AADT, inventory, energy-only demand series, modeled utilization and statewide aggregates do not."
+}
