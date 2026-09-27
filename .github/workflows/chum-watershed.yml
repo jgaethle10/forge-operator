@@ -365,22 +365,27 @@ jobs:
           set -euo pipefail
           node <<'NODE'
           const fs = require('fs');
-          const requestUrl = process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
-          const requestToken = process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
-          if (!requestUrl || !requestToken) throw new Error('GitHub OIDC request environment is unavailable.');
-          const url = new URL(requestUrl);
-          url.searchParams.set('audience', 'evercraft-chum-payment-export');
-          const response = await fetch(url, {
-            headers: { authorization: 'bearer ' + requestToken }
+          (async () => {
+            const requestUrl = process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
+            const requestToken = process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
+            if (!requestUrl || !requestToken) throw new Error('GitHub OIDC request environment is unavailable.');
+            const url = new URL(requestUrl);
+            url.searchParams.set('audience', 'evercraft-chum-payment-export');
+            const response = await fetch(url, {
+              headers: { authorization: 'bearer ' + requestToken }
+            });
+            if (!response.ok) throw new Error('GitHub OIDC token request failed with HTTP ' + response.status);
+            const body = await response.json();
+            if (!body?.value) throw new Error('GitHub OIDC token response did not contain a token.');
+            process.stdout.write('::add-mask::' + body.value + '\n');
+            fs.appendFileSync(process.env.GITHUB_ENV, [
+              'CHUM_ATTRIBUTION_EXPORT_URL=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport',
+              'CHUM_ATTRIBUTION_EXPORT_TOKEN=' + body.value
+            ].join('\n') + '\n');
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
           });
-          if (!response.ok) throw new Error('GitHub OIDC token request failed with HTTP ' + response.status);
-          const body = await response.json();
-          if (!body?.value) throw new Error('GitHub OIDC token response did not contain a token.');
-          process.stdout.write('::add-mask::' + body.value + '\n');
-          fs.appendFileSync(process.env.GITHUB_ENV, [
-            'CHUM_ATTRIBUTION_EXPORT_URL=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport',
-            'CHUM_ATTRIBUTION_EXPORT_TOKEN=' + body.value
-          ].join('\n') + '\n');
           NODE
 
       - name: Measure authoritative payment funnel
