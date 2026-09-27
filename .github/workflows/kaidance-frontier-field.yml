@@ -15,6 +15,17 @@ on:
       - 'public/.well-known/evercraft-products.json'
       - 'public/chum/products/**'
       - '.github/workflows/kaidance-frontier-field.yml'
+  pull_request:
+    paths:
+      - 'systemia/organism/frontier-watch.mjs'
+      - 'systemia/organism/science-hazard-watch.mjs'
+      - 'systemia/organism/kaidance-frontier-proof.mjs'
+      - 'systemia/organism/kaidance-frontier-cycle.mjs'
+      - 'systemia/collider/**'
+      - 'registry/**'
+      - 'public/.well-known/evercraft-products.json'
+      - 'public/chum/products/**'
+      - '.github/workflows/kaidance-frontier-field.yml'
   schedule:
     - cron: '*/5 * * * *'
 
