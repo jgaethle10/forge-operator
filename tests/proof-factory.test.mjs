@@ -76,17 +76,21 @@ assert.equal(receipt.media_briefs, 4);
 const publicIndex = JSON.parse(fs.readFileSync(path.join(root, 'public/chum/proof/index.json'), 'utf8'));
 assert.equal(publicIndex.schema, 'evercraft.proof-factory.public-index.v1');
 assert.equal(publicIndex.products.length, 2);
+assert.deepEqual(publicIndex.products.find((row) => row.product_key === 'forensiscope').covered_product_keys, ['forensiscope']);
+assert.deepEqual(publicIndex.products.find((row) => row.product_key === 'rivet').covered_product_keys, ['rivet', 'aliev']);
 assert.equal(publicIndex.doctrine.receipt_before_claim, true);
 assert.equal(publicIndex.doctrine.media_brief_is_not_rendered_media, true);
 
 const forensiscope = JSON.parse(fs.readFileSync(path.join(root, 'public/chum/proof/forensiscope.json'), 'utf8'));
 assert.equal(forensiscope.evidence_state, 'execution_proofs_passed');
+assert.deepEqual(forensiscope.covered_product_keys, ['forensiscope']);
 assert.equal(forensiscope.proof_summary.passed, 2);
 assert.equal(forensiscope.proofs[0].metrics.public_machine_intake_enabled, false);
 assert.equal(forensiscope.visual_production.state, 'briefs_ready_not_rendered');
 
 const rivet = JSON.parse(fs.readFileSync(path.join(root, 'public/chum/proof/rivet.json'), 'utf8'));
 assert.equal(rivet.evidence_state, 'execution_proofs_passed');
+assert.deepEqual(rivet.covered_product_keys, ['rivet', 'aliev']);
 assert.equal(rivet.proofs[0].metrics.address_to_ready_report, true);
 assert.equal(rivet.proofs[1].metrics.jurisdictions, 56);
 assert.equal(rivet.truth_boundary.no_unverified_benchmark_claims, true);
