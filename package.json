@@ -181,7 +181,8 @@
     "proof:public-edge-resident-wiring": "node systemia/core/public-edge-resident-wiring.proof.mjs",
     "proof:remote-edge-delegation": "node systemia/yard/remote-edge-delegation.proof.mjs",
     "proof:public-edge-private-yard-authority": "node systemia/yard/public-edge-private-yard-authority.proof.mjs",
-    "test:forensiscope-asr": "node --test systemia/forensiscope/asr-runner.test.mjs"
+    "test:forensiscope-asr": "node --test systemia/forensiscope/asr-runner.test.mjs",
+    "proof:saban-fallen-creative": "node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory systemia/saban/fixtures/fallen-creative-council-job.json --agents 20 --workers 4 --execute --reconcile"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

@@ -3,6 +3,26 @@ export type ProjectFormat = 'commercial' | 'social_short' | 'short_film' | 'epis
 export type AspectRatio = '9:16' | '16:9' | '1:1';
 export type RightsState = 'owned' | 'licensed' | 'unknown' | 'restricted';
 
+export type VisualTreatment =
+  | 'documentary_or_verified_visualization'
+  | 'product_or_data_visualization';
+
+export interface VisualSubject {
+  id: string;
+  label: string;
+  preferredTreatment: VisualTreatment;
+}
+
+export interface VisualCoverageRequirement {
+  id: string;
+  subjectId: string;
+  subjectLabel: string;
+  preferredTreatment: VisualTreatment;
+  minScreenTimeSec: number;
+  matchedAssetIds: string[];
+  status: 'covered' | 'missing';
+}
+
 export interface SourceAsset {
   id: string;
   path: string;
@@ -79,13 +99,15 @@ export interface ScenePlan {
 
 export interface GenerationRequest {
   id: string;
-  reason: 'coverage_gap' | 'continuity_gap' | 'creative_enhancement';
+  reason: 'coverage_gap' | 'semantic_coverage_gap' | 'continuity_gap' | 'creative_enhancement';
   prompt: string;
   durationSec: number;
   aspectRatio: AspectRatio;
   status: 'requested' | 'resolved' | 'skipped';
   resolvedAssetPath?: string;
   provenance?: string;
+  coverageRequirementId?: string;
+  subjectId?: string;
 }
 
 export interface ProvenanceRecord {
@@ -105,6 +127,7 @@ export interface FilmPlan {
   durationSec: number;
   scenes: ScenePlan[];
   generationRequests: GenerationRequest[];
+  visualCoverage?: VisualCoverageRequirement[];
   provenance: ProvenanceRecord[];
   warnings: string[];
   createdAt: string;

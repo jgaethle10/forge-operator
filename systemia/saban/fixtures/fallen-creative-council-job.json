@@ -1,0 +1,63 @@
+{
+  "jobs": [
+    {
+      "kind": "fallen_creative_shot",
+      "key": "creative-scene-naval-proof",
+      "shot": {
+        "id": "creative-scene-naval-proof",
+        "sourceType": "scene",
+        "sourceId": "scene-naval-proof",
+        "beat": "hook",
+        "durationSec": 5,
+        "aspectRatio": "16:9",
+        "storyPrompt": "Show naval vessels, armored vehicles and world intelligence as a cinematic Week in Motion segment.",
+        "intent": "Open on a real naval subject, then reveal the geography and evidence around it.",
+        "sourcePath": "./fixtures/destroyer-proof.mp4",
+        "mediaKind": "video",
+        "subjectIds": [
+          "naval-vessel"
+        ],
+        "coverage": [
+          {
+            "id": "coverage-1-naval-vessel",
+            "subjectId": "naval-vessel",
+            "subjectLabel": "naval vessel",
+            "preferredTreatment": "documentary_or_verified_visualization",
+            "minScreenTimeSec": 2.5,
+            "matchedAssetIds": [
+              "destroyer-proof"
+            ],
+            "status": "covered"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "fallen_creative_shot",
+      "key": "creative-gen-armor-proof",
+      "shot": {
+        "id": "creative-gen-armor-proof",
+        "sourceType": "generation_request",
+        "sourceId": "gen-armor-proof",
+        "durationSec": 3,
+        "aspectRatio": "16:9",
+        "storyPrompt": "Show naval vessels, armored vehicles and world intelligence as a cinematic Week in Motion segment.",
+        "intent": "MUST-SHOW visual coverage: tank or armored vehicle.",
+        "subjectIds": [
+          "armored-vehicle"
+        ],
+        "coverage": [
+          {
+            "id": "coverage-2-armored-vehicle",
+            "subjectId": "armored-vehicle",
+            "subjectLabel": "tank or armored vehicle",
+            "preferredTreatment": "documentary_or_verified_visualization",
+            "minScreenTimeSec": 2.5,
+            "matchedAssetIds": [],
+            "status": "missing"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -9,6 +9,11 @@ import type {
   SourceAsset,
   StoryBeat,
 } from './types.js';
+import {
+  compileVisualCoverage,
+  semanticCoverageGenerationRequests,
+  subjectRelevanceScore,
+} from './visual-coverage.js';
 
 const FORMAT_BEATS: Record<ProjectFormat, StoryBeat[]> = {
   commercial: ['hook', 'setup', 'proof', 'development', 'cta'],
@@ -78,6 +83,7 @@ function allocateDurations(beats: StoryBeat[], target: number) {
 function scoreAssetForBeat(asset: SourceAsset, beat: StoryBeat, prompt: string) {
   const haystack = [...(asset.tags ?? []), asset.notes ?? '', prompt].join(' ').toLowerCase();
   let score = asset.kind === 'video' ? 2 : 1;
+  score += subjectRelevanceScore(asset, prompt);
 
   if (beat === 'hook' || beat === 'climax') score += asset.kind === 'video' ? 2 : 0;
   if (beat === 'proof' && /(detail|result|before|after|proof|demo|work|product)/.test(haystack)) score += 2;
@@ -101,8 +107,12 @@ function pickAsset(
     })[0];
 }
 
-function generationRequestsFor(project: MediaProject, aspectRatio: AspectRatio): GenerationRequest[] {
-  const requests: GenerationRequest[] = [];
+function generationRequestsFor(
+  project: MediaProject,
+  aspectRatio: AspectRatio,
+  semanticRequests: GenerationRequest[] = [],
+): GenerationRequest[] {
+  const requests: GenerationRequest[] = [...semanticRequests];
   const visuals = chooseVisuals(project.assets);
   const format = project.brief.format ?? 'commercial';
 
@@ -147,6 +157,13 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
       `Restricted assets cannot be rendered: ${restricted.map((asset) => asset.id).join(', ')}`,
     );
   }
+
+  const visualCoverage = compileVisualCoverage(project);
+  const semanticRequests = semanticCoverageGenerationRequests(
+    project,
+    aspectRatio,
+    visualCoverage,
+  );
 
   const beats = FORMAT_BEATS[format];
   const durations = allocateDurations(beats, durationSec);
@@ -222,7 +239,8 @@ export function compileFilmPlan(project: MediaProject): FilmPlan {
     durationSec:
       Math.round(scenes.reduce((sum, scene) => sum + scene.durationSec, 0) * 10) / 10,
     scenes,
-    generationRequests: generationRequestsFor(project, aspectRatio),
+    generationRequests: generationRequestsFor(project, aspectRatio, semanticRequests),
+    visualCoverage,
     provenance,
     warnings,
     createdAt: new Date().toISOString(),
