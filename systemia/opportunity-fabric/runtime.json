@@ -6,8 +6,8 @@
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6ab9aba10fc08e43850055fa",
-    "checkpoint_commit": "493de6c9248ef72011b1f735486e21798d82a7c9",
+    "checkpoint_id": "6ab9ac28e324eee945ab8f04",
+    "checkpoint_commit": "c1e6485538e7ad6cafd15c30e799223ddf1c30c7",
     "public_url": null,
     "publication_state": "not_claimed_public"
   },
@@ -21,7 +21,11 @@
     "member and opportunity public cards do not expose contact email",
     "accepted connection opens direct contact path",
     "protected-material-present flag without protected content storage in public listing UI",
-    "Creator Covenant acknowledgement in connection flow"
+    "Creator Covenant acknowledgement in connection flow",
+    "private owner-only ProtectedAsset registry",
+    "browser-local SHA-256 file fingerprinting",
+    "fingerprint-only vault registration with content_uploaded=false",
+    "vault records do not require uploading protected file bytes"
   ],
   "verification": {
     "app_lint": "pass",
@@ -32,6 +36,11 @@
       "protected_content_fields_in_app_source": "none",
       "mailto_only_after_accepted_connection": true
     },
+    "vault": {
+      "owner_only_rls": true,
+      "hash_algorithm": "SHA-256 via browser Web Crypto",
+      "file_bytes_uploaded_by_vault_flow": false
+    },
     "forge_core_protection_proof": "pass",
     "systemia_portfolio_sentinel": "pass"
   },
@@ -40,6 +49,7 @@
     "production-grade identity proof beyond authenticated account is not yet claimed",
     "cryptographically signed disclosure receipts are not yet wired into the Base44 UI",
     "protected asset upload/reveal is intentionally not exposed in the public listing flow",
+    "fingerprint registration is evidence support and is not represented as copyright registration, patent filing, or dispositive proof of ownership",
     "public deployment URL is not yet claimed",
     "full repository Forge check remains blocked by the separate Evercraft Network discovery invariant"
   ],
