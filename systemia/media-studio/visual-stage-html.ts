@@ -66,7 +66,9 @@ function layerMarkup(layer:VisualLayer){
     return `<div class="layer timeline-layer" data-layer="${esc(layer.id)}" style="${base}"><div class="timeline-rail"></div><div class="timeline-playhead"></div>${timeline.events.map(event=>`<div class="timeline-event" data-event-t="${event.t}" title="${esc(event.label)}"></div>`).join('')}${badge}</div>`;
   }
 
-  return `<div class="layer shape-layer" data-layer="${esc(layer.id)}" style="${base}">${badge}</div>`;
+  const shape=layer as import('./visual-stage.js').ShapeLayer;
+  const radius=shape.shape==='circle'?'50%':`${shape.radius??0}px`;
+  return `<div class="layer shape-layer" data-layer="${esc(layer.id)}" style="${base};background:${esc(shape.fill??'transparent')};border:${shape.strokeWidth??0}px solid ${esc(shape.stroke??'transparent')};border-radius:${radius};">${badge}</div>`;
 }
 
 export function buildVisualStageHtml(stage:VisualStage){
