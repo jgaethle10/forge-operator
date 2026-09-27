@@ -43,7 +43,8 @@ test('rejects stale fuel and ranks by net household value', () => {
 
   assert.equal(rows.length, 2);
   assert.equal(rows[0].id, 'useful-close');
-  assert.equal(rows[0].value.net_value_cents, 450);\n  assert.equal(rows.some(row => row.id === 'stale'), false);
+  assert.equal(rows[0].value.net_value_cents, 450);
+  assert.equal(rows.some(row => row.id === 'stale'), false);
 });
 
 test('holiday mode can prioritize practical holiday pressure relief without changing net value', () => {
