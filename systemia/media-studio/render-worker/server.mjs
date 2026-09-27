@@ -47,7 +47,7 @@ function assetPath(jobId,row){
 function verifyAssets(job){
   const map=new Map();
   for(const row of job.assets){
-    const file=assetPath(job.job_id,row);
+    const file=assetPath(job.asset_scope_id,row);
     if(!fs.existsSync(file)) throw new Error(`asset_not_staged:${row.id}`);
     const observed=sha(fs.readFileSync(file));
     if(observed!==row.sha256) throw new Error(`asset_digest_mismatch:${row.id}`);
@@ -99,7 +99,7 @@ async function render(job){
     }
     const receipt={
       schema:'evercraft.fallen.render-receipt.v1',
-      engine:ENGINE,job_id:job.job_id,
+      engine:ENGINE,job_id:job.job_id,asset_scope_id:job.asset_scope_id,
       stage_id:job.stage.id,
       stage_sha256:sha(JSON.stringify({...job.stage,createdAt:undefined})),
       frame_start:job.frame_start,frame_count:job.frame_count,total_frames:job.total_frames,
@@ -112,15 +112,43 @@ async function render(job){
     return receipt;
   }finally{await context.close().catch(()=>{})}
 }
+function safeArtifactRequest(urlPath){
+  const match=String(urlPath||'').match(/^\/v1\/artifact\/([a-zA-Z0-9._-]{1,128})\/(frame-\d{8}\.png)$/);
+  if(!match) throw new Error('artifact_request_invalid');
+  return {jobId:match[1],filename:match[2]};
+}
+function outputArtifactPath(jobId,filename){
+  const root=path.resolve(OUTPUT_ROOT,jobId);
+  const file=path.resolve(root,filename);
+  if(file!==root&&!file.startsWith(root+path.sep)) throw new Error('artifact_path_escape');
+  return file;
+}
+function binary(res,status,buffer,contentType='application/octet-stream'){
+  res.writeHead(status,{
+    'content-type':contentType,
+    'content-length':buffer.length,
+    'cache-control':'no-store',
+    'x-content-type-options':'nosniff',
+    'x-artifact-sha256':sha(buffer)
+  });
+  res.end(buffer);
+}
 const server=http.createServer(async(req,res)=>{
   try{
     if(req.method==='GET'&&req.url==='/healthz'){json(res,200,{ok:true,service:'fallen-render-worker',engine:ENGINE,active_jobs:activeJobs,max_concurrency:MAX_CONCURRENCY});return}
-    if(req.method!=='POST'||req.url!=='/v1/render'){json(res,404,{ok:false,error:'not_found'});return}
     if(!authorized(req)){json(res,401,{ok:false,error:'unauthorized'});return}
+    if(req.method==='GET'&&String(req.url||'').startsWith('/v1/artifact/')){
+      const {jobId,filename}=safeArtifactRequest(req.url);
+      const file=outputArtifactPath(jobId,filename);
+      if(!fs.existsSync(file)){json(res,404,{ok:false,error:'artifact_not_found'});return}
+      binary(res,200,fs.readFileSync(file),'image/png');
+      return;
+    }
+    if(req.method!=='POST'||req.url!=='/v1/render'){json(res,404,{ok:false,error:'not_found'});return}
     if(activeJobs>=MAX_CONCURRENCY){json(res,429,{ok:false,error:'capacity_exhausted',retryable:true});return}
     const job=sanitizeRenderJob(await readJson(req));activeJobs+=1;
     try{json(res,200,{ok:true,...await render(job)})}finally{activeJobs-=1}
-  }catch(error){const message=error instanceof Error?error.message:String(error);const client=/^(render_job_|stage_|job_id_|asset_|media_|layer_|duplicate_|too_many_|camera_|evidence_|invalid_json|request_body_too_large)/.test(message);json(res,client?400:500,{ok:false,error:message,engine:ENGINE})}
+  }catch(error){const message=error instanceof Error?error.message:String(error);const client=/^(render_job_|stage_|job_id_|asset_|artifact_|media_|layer_|duplicate_|too_many_|camera_|evidence_|invalid_json|request_body_too_large)/.test(message);json(res,client?400:500,{ok:false,error:message,engine:ENGINE})}
 });
 server.listen(PORT,'0.0.0.0',()=>console.log(JSON.stringify({event:'fallen_render_worker_listening',port:PORT,engine:ENGINE})));
 async function shutdown(){server.close();if(browserPromise){try{(await browserPromise).close()}catch{}}process.exit(0)}
