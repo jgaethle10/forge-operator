@@ -1,0 +1,36 @@
+name: Direct Door Readiness Ledger
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'distribution/direct-plugin-specs.json'
+      - 'distribution/mcp-registry-candidates/**'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - 'systemia/chum/direct-door-readiness.mjs'
+      - 'tests/direct-door-readiness.test.mjs'
+      - '.github/workflows/direct-door-readiness.yml'
+  pull_request:
+    paths:
+      - 'distribution/direct-plugin-specs.json'
+      - 'distribution/mcp-registry-candidates/**'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - 'systemia/chum/direct-door-readiness.mjs'
+      - 'tests/direct-door-readiness.test.mjs'
+      - '.github/workflows/direct-door-readiness.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify machine-readable direct-door readiness ledger
+        run: |
+          node systemia/chum/direct-door-readiness.mjs --check
+          node tests/direct-door-readiness.test.mjs
