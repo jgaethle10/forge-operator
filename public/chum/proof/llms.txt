@@ -1,0 +1,15 @@
+# Evercraft Proof Library
+
+This directory is the machine-readable proof entrypoint for selected Evercraft products.
+
+Current seed state: proof pending until the receipt-backed Proof Factory executes on main.
+
+ForensiScope proof card: /chum/proof/forensiscope.json
+RIVET / AliEV proof card: /chum/proof/rivet.json
+
+Truth boundary:
+- executable proof is narrower than a customer production claim
+- synthetic fixtures remain labeled
+- publication does not prove provider pickup or recommendation
+- checkout does not prove payment
+- media briefs do not imply rendered media
