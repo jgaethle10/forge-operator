@@ -125,6 +125,14 @@
       "items": {
         "type": "object"
       }
+    },
+    "exclusive_group": {
+      "type": "string",
+      "description": "Optional mutually-exclusive choice group. At most one member should contribute to a conservative action plan."
+    },
+    "benefit_key": {
+      "type": "string",
+      "description": "Optional identity for one underlying benefit surfaced through multiple sources. Prevents duplicate value counting."
     }
   },
   "anyOf": [
