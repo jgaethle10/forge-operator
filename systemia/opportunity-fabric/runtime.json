@@ -6,8 +6,8 @@
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6ab9ac28e324eee945ab8f04",
-    "checkpoint_commit": "c1e6485538e7ad6cafd15c30e799223ddf1c30c7",
+    "checkpoint_id": "6ab9ad1477304adfa9c7de3d",
+    "checkpoint_commit": "32c6a489e31d6141cad0777da075de573dcd9f4d",
     "public_url": null,
     "publication_state": "not_claimed_public"
   },
@@ -25,7 +25,8 @@
     "private owner-only ProtectedAsset registry",
     "browser-local SHA-256 file fingerprinting",
     "fingerprint-only vault registration with content_uploaded=false",
-    "vault records do not require uploading protected file bytes"
+    "vault records do not require uploading protected file bytes",
+    "cross-industry complementarity smoke proof for designer/printer and musician/studio"
   ],
   "verification": {
     "app_lint": "pass",
@@ -42,7 +43,13 @@
       "file_bytes_uploaded_by_vault_flow": false
     },
     "forge_core_protection_proof": "pass",
-    "systemia_portfolio_sentinel": "pass"
+    "systemia_portfolio_sentinel": "pass",
+    "cross_industry_smoke": {
+      "designer_printer_score": 170,
+      "musician_studio_score": 322,
+      "printer_opportunity_score": 204,
+      "result": "pass"
+    }
   },
   "known_limits": [
     "Creator Covenant legal language remains draft_for_counsel_review",
