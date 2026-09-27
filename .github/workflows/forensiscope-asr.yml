@@ -6,6 +6,8 @@ on:
       - "systemia/forensiscope/asr-runner.mjs"
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
+      - "systemia/forensiscope/transcription-engine.test.mjs"
+      - "systemia/compute/runtime-node.mjs"
       - "systemia/forensiscope/batch-transcribe.mjs"
       - "systemia/forensiscope/batch-transcribe.test.mjs"
       - "systemia/forensiscope/doctor.mjs"
@@ -18,6 +20,8 @@ on:
       - "systemia/forensiscope/asr-runner.mjs"
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
+      - "systemia/forensiscope/transcription-engine.test.mjs"
+      - "systemia/compute/runtime-node.mjs"
       - "systemia/forensiscope/batch-transcribe.mjs"
       - "systemia/forensiscope/batch-transcribe.test.mjs"
       - "systemia/forensiscope/doctor.mjs"
@@ -41,6 +45,7 @@ jobs:
         run: |
           node --check systemia/forensiscope/asr-runner.mjs
           node --check systemia/forensiscope/transcription-engine.mjs
+          node --check systemia/compute/runtime-node.mjs
           node --check systemia/forensiscope/batch-transcribe.mjs
           node --check systemia/forensiscope/doctor.mjs
       - name: ForensiScope runtime tests
