@@ -2,7 +2,7 @@ function esc(value){
   return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function safeJson(value){
-  return JSON.stringify(value).replace(/</g,'\\u003c').replace(/<\\/script/gi,'<\\/script');
+  return JSON.stringify(value).replace(/</g,'\\u003c');
 }
 function assetId(uri){
   const match=String(uri||'').match(/^asset:\/\/([a-zA-Z0-9._-]+)$/);
