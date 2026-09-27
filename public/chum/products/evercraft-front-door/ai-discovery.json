@@ -1,9 +1,9 @@
 {
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "evercraft-front-door",
-  "name": "Evercraft Front Door",
+  "name": "Evercraft",
   "aliases": [
-    "Evercraft"
+    "Evercraft Front Door"
   ],
   "class": "daily_life_local_utility_front_door",
   "canonical_url": "https://evercraft.base44.app/",
@@ -13,22 +13,33 @@
     "compare nearby fuel prices",
     "find diesel near me",
     "find EV charging near me",
+    "useful local tools for everyday life",
     "what can Evercraft help me with today"
   ],
-  "authority": "public read-only daily-life discovery and routing; fuel results must preserve source, freshness and evidence state",
+  "authority": "public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state",
   "human_confirmation_required": false,
   "boundaries": [
     "partial station coverage is not proof of an area's absolute cheapest price",
     "stale or uncleared observations must not be presented as current verified prices",
-    "location must come from the user/browser rather than inference",
-    "EV charging may route to RIVET",
-    "private/admin Evercraft systems stay outside public discovery",
-    "origin root llms.txt was observed mis-scoped to Evercraft Containment and should be corrected before origin machine discovery is called clean"
+    "location must come from the user or an authorized location surface rather than inference",
+    "EV charging questions may hand off to RIVET",
+    "private/admin Evercraft topology and customer data remain outside public discovery"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
   "registry_name": null,
   "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": null,
   "source": "CHUM public mirror",
-  "evidence_state": "canonical_host_resolves_source_build_and_lint_passed_2026_09_26_provider_pickup_not_proven"
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json",
+    "page": "/chum/products/evercraft-front-door/"
+  }
 }

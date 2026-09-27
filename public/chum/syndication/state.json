@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-26T23:54:16.604Z",
+  "updated_at": "2026-09-27T00:07:01.710Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "2f7587032bbc37f2389b6c0df935cdff31fb8741f4ee32d2555bf26c22b6a57b",
@@ -13,6 +13,7 @@
     "ecoledger": "55ed80e629dbeee9efb406e723b3e88e25efee44803d73a60393be004a357590",
     "eps-estimate-engine": "e8cc08c323a0ef522345a3e07fe5753d49f6f091ca1fb4f1ffb4a30ad5168d48",
     "eventwave": "ddf98677b219ff0fa1a71b7ad88b994c3cb55b9d06ba671a373e3bb18ad4312b",
+    "evercraft-front-door": "19afaa9c9c253d727323195c4c727c17937a90468975fa0c0473095a5ae9269a",
     "career-command": "6fdd4424779d87a124f7535d70e293b07fb87a3e8be1795ebde3f1926935623a",
     "evercraft-circles": "4b927f30fcedd982d1202a3c7cdecae45d783fec947e3b4bcfa2d92a3a60bfae",
     "evercraft-clip": "1b596a6dfc0ab50cc77369527485e7875abd14c9329823d08ad78eecc7798f84",
@@ -22,6 +23,7 @@
     "deck-capital-fit": "39c8283e5ffbe1bcf275493d91d2831d931ee8eee2cb4e29019e4396b33618b2",
     "evercraft-fantasy-intelligence": "d1fd70fddd202143e192ecd5705a97080a41b6cb78f3de75b67b10d5cbe7a64f",
     "evercraft-global-health-atlas": "40f78aac0ac61c73ec94dfe949978147ec7f2f4faa77f5b592030bb3f02fae08",
+    "evercraft-home": "fd542d4c2c61d7fac39faccf7483b6b2689ffcbf171b01c4939754875f6d7d5c",
     "ibmi-rescue": "aec894f8a803e42e762821273bd13dae9fd9850f4e6503467de76dda9393813f",
     "evercraft-network": "6a70947660123841b61095ba25529d34a41c3a74b6fe30fa01254281ccf3ee2e",
     "evercraft-physics-atlas": "2e49fc83f75c3d72b98f6f070a2210da15ffbf4e76f58fd27890b667dfde68ce",
@@ -44,6 +46,7 @@
     "little-red-book-export-qa": "41790c3c11ab59a247baed59fe6c1ecce5c94cc09d887b6d1d7ce105483a0c61",
     "raven-nexus": "fbd4d5200be76cbc0adafff989ec1f1968d5acb1673e6f229fff7fd6be57a21d",
     "roasted": "a916992d80ab03c5681dd08519298d1498e20beeaac901a5de1bd8987d8cac15",
+    "seasonally": "8ab5bf3389a2f0d875cce1eab3183507c0072bf614e96b5f739883a01dcd016a",
     "skyops-parking": "d1b25d0a2a29fa5a2c1396ec74fd4db95baead06c3d8b54c28670954fae8a991",
     "space-dudz": "7e396072116f4cffe60d16d7f0664b812f5ccaeb70c50bfba55add1e6201aa7b",
     "systemia-atlas-freight": "6bfe2dc835668f6efd67d3e76496154853449943f2771a886e240056d1a3424b",

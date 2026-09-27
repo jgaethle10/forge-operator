@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-26T23:54:16.604Z",
+  "generated_at": "2026-09-27T00:07:01.710Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -12,6 +12,26 @@
       "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
       "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
       "content_sha256": "271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-front-door:19afaa9c9c253d727323195c4c727c17937a90468975fa0c0473095a5ae9269a",
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "canonical_url": "https://evercraft.base44.app/",
+      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
+      "content_sha256": "19afaa9c9c253d727323195c4c727c17937a90468975fa0c0473095a5ae9269a",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-home:fd542d4c2c61d7fac39faccf7483b6b2689ffcbf171b01c4939754875f6d7d5c",
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "discovery_path": "/chum/products/evercraft-home/ai-discovery.json",
+      "text": "Evercraft Home: Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
+      "content_sha256": "fd542d4c2c61d7fac39faccf7483b6b2689ffcbf171b01c4939754875f6d7d5c",
       "requires_authorized_destination": true
     },
     {
@@ -62,6 +82,16 @@
       "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
       "text": "Legacy Rescue Lab: Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
       "content_sha256": "4d36f7b9d918ad65b311a7e221660d17d28f3f6ca14d17ab94d1e2914705e561",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "seasonally:8ab5bf3389a2f0d875cce1eab3183507c0072bf614e96b5f739883a01dcd016a",
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "discovery_path": "/chum/products/seasonally/ai-discovery.json",
+      "text": "Season & Story: Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
+      "content_sha256": "8ab5bf3389a2f0d875cce1eab3183507c0072bf614e96b5f739883a01dcd016a",
       "requires_authorized_destination": true
     },
     {

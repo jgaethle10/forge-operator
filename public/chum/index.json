@@ -413,6 +413,25 @@
       "distribution_surfaces": null
     },
     {
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "aliases": [
+        "Evercraft Front Door"
+      ],
+      "canonical_url": "https://evercraft.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-front-door/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
+    },
+    {
       "product_key": "evercraft-global-health-atlas",
       "name": "Evercraft Global Health Atlas",
       "aliases": [
@@ -424,6 +443,25 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-conformance.json",
       "page_url": "/chum/products/evercraft-global-health-atlas/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
+    },
+    {
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "aliases": [
+        "Home"
+      ],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-conformance.json",
+      "page_url": "/chum/products/evercraft-home/",
       "registry_name": null,
       "mcp": null,
       "commercial": null,
@@ -943,6 +981,25 @@
       "page_url": "/chum/products/roasted/",
       "registry_name": "io.github.jgaethle10/roasted",
       "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "commercial": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null
+    },
+    {
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "aliases": [
+        "Seasonally"
+      ],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-conformance.json",
+      "page_url": "/chum/products/seasonally/",
+      "registry_name": null,
+      "mcp": null,
       "commercial": null,
       "developer_surfaces": null,
       "editorial_surfaces": null,

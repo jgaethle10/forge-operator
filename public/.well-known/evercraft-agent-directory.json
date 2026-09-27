@@ -735,6 +735,43 @@
       "developer_surfaces": null
     },
     {
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "aliases": [
+        "Evercraft Front Door"
+      ],
+      "class": "daily_life_local_utility_front_door",
+      "canonical_url": "https://evercraft.base44.app/",
+      "intents": [
+        "cheapest gas near me",
+        "current gas prices near me",
+        "compare nearby fuel prices",
+        "find diesel near me",
+        "find EV charging near me",
+        "useful local tools for everyday life",
+        "what can Evercraft help me with today"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json",
+      "human_confirmation_required": false,
+      "authority": "public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state",
+      "boundaries": [
+        "partial station coverage is not proof of an area's absolute cheapest price",
+        "stale or uncleared observations must not be presented as current verified prices",
+        "location must come from the user or an authorized location surface rather than inference",
+        "EV charging questions may hand off to RIVET",
+        "private/admin Evercraft topology and customer data remain outside public discovery"
+      ],
+      "commercial": null,
+      "developer_surfaces": null
+    },
+    {
       "product_key": "evercraft-global-health-atlas",
       "name": "Evercraft Global Health Atlas",
       "aliases": [
@@ -769,6 +806,45 @@
         "absence of a surveillance signal can reflect missing coverage rather than absence of disease",
         "time-sensitive health signals require explicit as-of dates and source freshness",
         "restricted or governed datasets retain their source terms and must not be silently bulk-republished"
+      ],
+      "commercial": null,
+      "developer_surfaces": null
+    },
+    {
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "aliases": [
+        "Home"
+      ],
+      "class": "privacy_first_hometown_social_memory",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "intents": [
+        "preserve hometown memories",
+        "explore local history and traditions",
+        "share a hometown story safely",
+        "community memory and local archives",
+        "reconnect around a school team neighborhood or venue privately",
+        "local traditions events awards and community institutions",
+        "help solve a community memory puzzle"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound",
+      "boundaries": [
+        "no public people directory or manufactured social activity",
+        "Porch contributions remain private until reviewed and consented for public display",
+        "room membership and reconnection choices are private by default",
+        "personal memories stay private",
+        "unclaimed living people are not converted into public biographies",
+        "sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities",
+        "public runtime hostname remains unresolved in the current discovery inventory"
       ],
       "commercial": null,
       "developer_surfaces": null
@@ -1648,6 +1724,44 @@
         "checkout requires explicit human agreement to pay",
         "checkout creation is not payment proof",
         "paid result retrieval requires the issued share token"
+      ],
+      "commercial": null,
+      "developer_surfaces": null
+    },
+    {
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "aliases": [
+        "Seasonally"
+      ],
+      "class": "seasonal_family_household_companion",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "intents": [
+        "seasonal family activities",
+        "seasonal recipes for my family",
+        "turn this recipe into a grocery list",
+        "family seasonal traditions",
+        "local seasonal events and adventures",
+        "compare grocery basket prices near me",
+        "cheapest groceries for this recipe"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound",
+      "boundaries": [
+        "live Kroger retailer-price retrieval is held until legitimate server credentials and a bounded real source proof exist",
+        "do not claim Seasonally currently finds the cheapest local grocery basket",
+        "retailer SKU price evidence and grocery-term-to-product matching remain separate evidence states",
+        "promotion eligibility and cross-package unit normalization are not proven",
+        "private household, member, memory, checklist and profile data are not public",
+        "public runtime hostname remains unresolved in the current discovery inventory"
       ],
       "commercial": null,
       "developer_surfaces": null

@@ -1,8 +1,10 @@
 # Evercraft Home
 
 Product key: evercraft-home
-Canonical discovery record: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
+Aliases: Home
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-conformance.json
 
 ## Use this capability when the user means
 
@@ -14,6 +16,22 @@ CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator
 - local traditions events awards and community institutions
 - help solve a community memory puzzle
 
-## Authority and privacy
+## Authority
 
-Public discovery can describe reviewed Porch posts, public Rooms, places, eras, traditions, events and archives. Private memberships, personal memories, identity verification and reconnection state are not public.
+public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound
+
+## Boundaries
+
+- no public people directory or manufactured social activity
+- Porch contributions remain private until reviewed and consented for public display
+- room membership and reconnection choices are private by default
+- personal memories stay private
+- unclaimed living people are not converted into public biographies
+- sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities
+- public runtime hostname remains unresolved in the current discovery inventory
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

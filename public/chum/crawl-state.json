@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T00:06:56.897Z",
-  "url_count": 2221,
+  "updated_at": "2026-09-27T00:07:01.877Z",
+  "url_count": 2275,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "5359d322ab5a8d4a8d9c6d1c21b8d13ab141729f86f3b44823668bf1b64b51c5",
-      "last_changed": "2026-09-26T22:18:18.960Z",
+      "content_sha256": "8131005f683925cb996b7a8a6d84b04a77198802fb5548c194d7a16a498fc457",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "cfe362e1ec90daeebc3f85c193ab7c6eaba41e88eeb65eb73c7c70ff729427fa",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "4b07431ad903e6c40babfd88bb3ad835abd5bc6438d965c3c46b4a92ce1a2418",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "425862cddef5a8f5c6349cb799602e73372eca129c84ac667c8364e4ce624400",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "9f4b2867c07f6cee01f3224f01eadc2cf5d9121562d25cf976d3c337e21f92e4",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "dc235f154a81fea4c73670f0a5cb91016652663b9394a6d1699a04822c3d4c81",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "070ae57fd387d1a2292cba23d140fce999e5c58023b4e884c59920ad4e7f14b6",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "60976ea5dbeafdc42aa6a2d753ef8bb150c0f01a299214e7e06845d580eeb7a0",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "b9c24a253b6d4498a044ae10442759f0762055e64d42a6ea599f66e4a5a5d203",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "7c3d0df4b101d6ee8b04f5a662b1c2310ac55d0ffba18fbc3e393d4fda4acaa1",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "bc70d08a21dfcfe9a41f25724f19078157351c137cb5609823d35a5737f0337f",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "82955a82a92c8c61087e89be95698c4d1cf472e7418f5eb775e4d99c5643c499",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "bff11d5a8ce963ccf30cf765d0e6f60500eaad1736de4b133f4317ea7c9d1c33",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "1cfd2ee0a78e5f0d8196b7f10b7a09e9e166e18c7030f40e3c63f8ae651ad701",
-      "last_changed": "2026-09-27T00:06:56.897Z",
+      "content_sha256": "060d234e3d8dc199abd4a82cb513ddd7083bab92f9f50fe91638ee420c938ac8",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -213,14 +213,14 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "d64cb5c641e392c942de92cb7c5d4a45def32bd60a2ffa75e5b97e3a8ff583ea",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "dc6d4011a0d2cb8b954daa3f2507233021134fe9c88890f73422e7babb428272",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
       "path": "/chum/sitemaps/products.xml",
-      "content_sha256": "404c7d4375e7ffcf0665e4bc635be649ffcc28ed2c7da259c847da6b914c7741",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "d228ce261d8ace2565def22ed2fb86bc4316bfd31bf6bfaa42e46cab09ca40b8",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 108
     },
     "/chum/sitemaps/machine.xml": {
@@ -309,8 +309,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "425862cddef5a8f5c6349cb799602e73372eca129c84ac667c8364e4ce624400",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "9f4b2867c07f6cee01f3224f01eadc2cf5d9121562d25cf976d3c337e21f92e4",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -699,8 +699,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "1179b11ab438de819ffe7c83d07e9053c645a3c2f4f8bef493bb3b108cd5af61",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "c7570e62b10e7355a1cce64888abb608782dec726509bc4fa170719e840fb130",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -711,8 +711,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "ef27aa7e75e46410165a9d5bd94b0a708250980911a9e7880067ca7019c007ba",
-      "last_changed": "2026-09-26T22:18:18.960Z",
+      "content_sha256": "0f672edc43819652f3961f792db085c5edd5553afff4ea6bb1fcbdff87f19249",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -729,8 +729,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "3510e1fcc70c81e0782178c72b1ed70d0cdf6b5e66696d2eed2fa29f1d055730",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "ae9a116a9068757fef65ac28ebfb9dff32e2c9a382f08e89daf999b7810bde0d",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -2635,6 +2635,30 @@
       "last_changed": "2026-09-26T00:44:36.244Z",
       "priority": 94
     },
+    "/chum/products/evercraft-front-door/": {
+      "path": "/chum/products/evercraft-front-door/",
+      "content_sha256": "c600e5a3414544502875dab17a6e14fe7b45f103c6eaf9a7d5888ec31417ebc7",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/evercraft-front-door/llms.txt": {
+      "path": "/chum/products/evercraft-front-door/llms.txt",
+      "content_sha256": "6506eeb2e4bd5a2c9aef8028785ec4c21bcc30d1f0962f2c9773504f51411b60",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/evercraft-front-door/ai-discovery.json": {
+      "path": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "content_sha256": "df7caa78822fc218bef4d1b55322e9f6591bd1e64826498e9d388bfa05e6fc1e",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/evercraft-front-door/ai-conformance.json": {
+      "path": "/chum/products/evercraft-front-door/ai-conformance.json",
+      "content_sha256": "b199891abbabe0a8d6445bbedcce7c6d403d473271b9f67d826229ac5bc16572",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
     "/chum/products/evercraft-global-health-atlas/": {
       "path": "/chum/products/evercraft-global-health-atlas/",
       "content_sha256": "a898109ad1959bb92dc6e7da7bad3948df8171a64a7ffeb7ea5f49e9e2226ff8",
@@ -2657,6 +2681,30 @@
       "path": "/chum/products/evercraft-global-health-atlas/ai-conformance.json",
       "content_sha256": "933af77ac3107adb897462ed1e9ddd2fbcaf7529bc72b1f9dbd8fa72a3319e85",
       "last_changed": "2026-09-26T00:44:36.244Z",
+      "priority": 94
+    },
+    "/chum/products/evercraft-home/": {
+      "path": "/chum/products/evercraft-home/",
+      "content_sha256": "045bfa895a0b042d4b02637fa108873dde92af5278ffc2d64f0d65eb07a47e4b",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/evercraft-home/llms.txt": {
+      "path": "/chum/products/evercraft-home/llms.txt",
+      "content_sha256": "0216f8e51dd7c55e2f44a6eea42c8149c93565d81f9bbb956bc4981d0f767e2f",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/evercraft-home/ai-discovery.json": {
+      "path": "/chum/products/evercraft-home/ai-discovery.json",
+      "content_sha256": "c3a3ad700a59f4ffc8a4754cb151aa8f28c921d6b792ebcc3304e158769415f6",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/evercraft-home/ai-conformance.json": {
+      "path": "/chum/products/evercraft-home/ai-conformance.json",
+      "content_sha256": "79c99b9133354b9e94c95adf4c53cbb6166fac3d2b8891dc9d33a417df58f734",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 94
     },
     "/chum/products/evercraft-network/": {
@@ -3263,6 +3311,30 @@
       "path": "/chum/products/roasted/ai-conformance.json",
       "content_sha256": "a6c93a2acd9b6d90fcfe6559f1063de482b8ef23587e5ee8ccc4e1d2ec8a3dd7",
       "last_changed": "2026-09-26T00:44:36.244Z",
+      "priority": 94
+    },
+    "/chum/products/seasonally/": {
+      "path": "/chum/products/seasonally/",
+      "content_sha256": "cf665a8245dc638eb342e4aafe37c53aa2df795fa616142debf374a020cf7528",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/seasonally/llms.txt": {
+      "path": "/chum/products/seasonally/llms.txt",
+      "content_sha256": "94b7cb57866b2c1d1b679215ad37c6d4b84477ce45af190d1755175ffaba196c",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/seasonally/ai-discovery.json": {
+      "path": "/chum/products/seasonally/ai-discovery.json",
+      "content_sha256": "bfa3acc569a8f39abbdf3210848ad4d3ac15322c8ac2b3272fcdedb276b46909",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 94
+    },
+    "/chum/products/seasonally/ai-conformance.json": {
+      "path": "/chum/products/seasonally/ai-conformance.json",
+      "content_sha256": "0d80846531e7117e02f2c928c88351465fa6824ca2958a25ee3477f796b2e146",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 94
     },
     "/chum/products/skyops-parking/": {
@@ -5233,6 +5305,30 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d/": {
+      "path": "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d/",
+      "content_sha256": "54ec3b6f7532c800979430a6f3f3f61fde36a8e9ef73a4cc903e4201cea39668",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d.json": {
+      "path": "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d.json",
+      "content_sha256": "39bcf8778b5360ae49f4ce8755c32c4efe79b2286b26131ee7b6c2a4f462a0b6",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c/": {
+      "path": "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c/",
+      "content_sha256": "9e0ccca22fccb6cf1adbe40e7d83ca2c4b5b7ebbd9cc0b1e7aa2f3ecff77041a",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c.json": {
+      "path": "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c.json",
+      "content_sha256": "8d97b31e9717fd0bca0f13104d5c143517932a7e75ec623d3cfd873dcf81cec0",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7/": {
       "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7/",
       "content_sha256": "36f9cf5842296579dc2452dc34f837b5d5822502e4c0a38815d6d78186435eb4",
@@ -5365,6 +5461,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b/": {
+      "path": "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b/",
+      "content_sha256": "71be92ef616819aa1d0b527ed94c507bb8545f8ac0bc434c98c4a691cc80337f",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b.json": {
+      "path": "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b.json",
+      "content_sha256": "b1265d01e18176ae7105a2f58dda3d6393c1eaf26b538832a5da506abcc92bb7",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223/": {
       "path": "/chum/answers/doors/compare-electricity-mixes-between-regions-d49f331223/",
       "content_sha256": "3b52647d3965111f0183b0beca989b53add382b5ac4fb7f38ef72482c8f7e7b8",
@@ -5401,6 +5509,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d/": {
+      "path": "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d/",
+      "content_sha256": "cc91840f5414dde8f984d531745686d9df028ca076c0890404f0639b325e82be",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d.json": {
+      "path": "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d.json",
+      "content_sha256": "ea30d5ee80accfe3348c8736cee703e148793fcff0b20eef742fde85dd67c4ba",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/compare-habitats-migration-and-conservation-evidence-f96975ed34/": {
       "path": "/chum/answers/doors/compare-habitats-migration-and-conservation-evidence-f96975ed34/",
       "content_sha256": "f054d4b263c99728f951a29f46bf29f0b66ae803c0a7d201b15f43cb44df2107",
@@ -5436,6 +5556,18 @@
       "content_sha256": "208fc18f0bd3927b1b9227e698ab2aedc19b6bafc0c7fb3a3e5d5c920f23090a",
       "last_changed": "2026-09-26T22:18:18.960Z",
       "priority": 160
+    },
+    "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707/": {
+      "path": "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707/",
+      "content_sha256": "07781e4153eb5cbb5cf8c74fd78d145d1c3960cb94c3482f351b4ddc5a032ed7",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707.json": {
+      "path": "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707.json",
+      "content_sha256": "d8a867814905627da5a393095b38d47192da8c7adb69b6dfbe7df894acca81f0",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
     },
     "/chum/answers/doors/compare-or-deduplicate-multiple-recordings-30d78e95a1/": {
       "path": "/chum/answers/doors/compare-or-deduplicate-multiple-recordings-30d78e95a1/",
@@ -5904,6 +6036,18 @@
       "content_sha256": "2993e11271a09fe4598d37736eec08f340fce7c3146ecaef2b9723b99aadab0a",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e/": {
+      "path": "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e/",
+      "content_sha256": "c4893cecb85933de01eeae10ae4558752b01ec40681af77beac315e1f1083a1b",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e.json": {
+      "path": "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e.json",
+      "content_sha256": "700dc022ece7852e0dccb2a74e067b65fd9d08002b424cad414d5775908c8f96",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
     },
     "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/": {
       "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/",
@@ -6469,6 +6613,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd/": {
+      "path": "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd/",
+      "content_sha256": "c06348203b4dedd965075021ffd98151d66bf695bc16db7fafbe37e24682e23a",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd.json": {
+      "path": "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd.json",
+      "content_sha256": "ec31886706db756af025922c7b98696dafcf4071263ef029ac73f131b85358c8",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46/": {
       "path": "/chum/answers/doors/explore-relativity-quantum-nuclear-or-particle-physics-6e591ede46/",
       "content_sha256": "5e2b090b26fc096714113c87b982ea3cbbbb0b27d94b554ea57218f6b716a4a3",
@@ -6588,6 +6744,18 @@
       "content_sha256": "79eada2594aee39280e102e843d716364d4944ec32219bb7adf0bb151b86d2a2",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f/": {
+      "path": "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f/",
+      "content_sha256": "536d69b73ab047d4e5b156587017addf0416243f0eac4ba99670a8a64c42fc79",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f.json": {
+      "path": "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f.json",
+      "content_sha256": "b40a54bcdf6b3e0a6a37cc6785f82586f0e334e1f944e6854997906b3fa1b735",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
     },
     "/chum/answers/doors/family-support-resources-2f5fb611e6/": {
       "path": "/chum/answers/doors/family-support-resources-2f5fb611e6/",
@@ -6889,6 +7057,18 @@
       "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 160
     },
+    "/chum/answers/doors/find-diesel-near-me-69c964f8ca/": {
+      "path": "/chum/answers/doors/find-diesel-near-me-69c964f8ca/",
+      "content_sha256": "3726fe9e755289680e459c93957ba516c639e8ac520ec89ebaf69d8caf545e25",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/find-diesel-near-me-69c964f8ca.json": {
+      "path": "/chum/answers/doors/find-diesel-near-me-69c964f8ca.json",
+      "content_sha256": "a77d828bfefecf3e2aa1d0e2cf41d708ecaa67b5a7f38105f5153e7284b6ca57",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/": {
       "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/",
       "content_sha256": "06a26ede3bb6c18925f1ada2a28c73b981930d28d9be1fb6be3515a2f49de144",
@@ -6912,6 +7092,18 @@
       "content_sha256": "7f703acdad8e6ada5c8c067a531b5489d344e3028cc1d0daf0ee144739306f44",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced/": {
+      "path": "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced/",
+      "content_sha256": "70a68cfbfb639510014b5ac7d4cac6b8c53e9b9fae57a009aba5757e09bcea5d",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced.json": {
+      "path": "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced.json",
+      "content_sha256": "bf410fefa7b0d446738de88b897ac328f9028419ac84e339a4553bc8c5576398",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
     },
     "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/": {
       "path": "/chum/answers/doors/find-ev-charging-opportunities-in-this-market-c01f603871/",
@@ -7775,6 +7967,18 @@
       "path": "/chum/answers/doors/help-people-find-my-event-89faf273d0.json",
       "content_sha256": "a28a6125c4cef9ffc22b3f23b24c422602a92de6cc5b3535414e40b2a749eaec",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f/": {
+      "path": "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f/",
+      "content_sha256": "6960cb0c20f7614fadf150d23efdb70124d507f960fbcc15a05dda86778a570a",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f.json": {
+      "path": "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f.json",
+      "content_sha256": "1627e4e0c69c99919b5484abefc487811d6948304f65fab9bfb54b30d320f63b",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 100
     },
     "/chum/answers/doors/help-with-identity-theft-credential-compromise-or-account-takeover-risk-1de9f142df/": {
@@ -8759,6 +8963,30 @@
       "path": "/chum/answers/doors/local-business-loyalty-program-ba196ba899.json",
       "content_sha256": "a4466eacb482d71fa97c8a98c517ab463d14fd9908d80bd76b2732764cece651",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1/": {
+      "path": "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1/",
+      "content_sha256": "c380563409efb5486a8ec61c46fbe9f5b0f50ab36cfbda8349b1f2611860d898",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1.json": {
+      "path": "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1.json",
+      "content_sha256": "5889a6a49cb31eaed133503ade9354a26d515c8ec9f3afdc79b4c673bb8f603a",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58/": {
+      "path": "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58/",
+      "content_sha256": "635d9f13787f562422b80f37032f1494a23064362aa9b897ce904db2c41341e8",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58.json": {
+      "path": "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58.json",
+      "content_sha256": "2f9c7d2ea3b1b6f4dd5d86432d4aeb69bb63e93d4938f845d8e184c433a23253",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 100
     },
     "/chum/answers/doors/long-form-transcription-overflow-d558baadaf/": {
@@ -9925,6 +10153,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/preserve-hometown-memories-71794b538a/": {
+      "path": "/chum/answers/doors/preserve-hometown-memories-71794b538a/",
+      "content_sha256": "43812504ab59778577fc9c0125fc8eb00b837b916f52c039e33b7db36ec10303",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/preserve-hometown-memories-71794b538a.json": {
+      "path": "/chum/answers/doors/preserve-hometown-memories-71794b538a.json",
+      "content_sha256": "ef7a91ee95d7d02bf4b9347e86ce506d5dc25c81c6e213e9559cdea5036f8696",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/pressure-test-my-writing-54816ae317/": {
       "path": "/chum/answers/doors/pressure-test-my-writing-54816ae317/",
       "content_sha256": "e79196017b1b39e367d4fba84f5749d65787759878561244bb2e1316876994ca",
@@ -10463,6 +10703,18 @@
       "path": "/chum/answers/doors/reconcile-records-from-multiple-business-systems-0fe3c0fe60.json",
       "content_sha256": "6706ca6664ef6e80b5308f5dce4f9b1e42f82c466906c01f9b5d0048854bb08f",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915/": {
+      "path": "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915/",
+      "content_sha256": "3fdf91b2f476e3aeba90c994d6cf3df728e16a2ac52b7e5be18cf31c2c96b531",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915.json": {
+      "path": "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915.json",
+      "content_sha256": "7859844cce6046fca92b1a6998f04c5047fd7cbd3d0cbd20e7ccf5179f659bd4",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 100
     },
     "/chum/answers/doors/reconstruct-our-process-from-logs-4462ab878f/": {
@@ -11197,6 +11449,30 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/seasonal-family-activities-42be4e5b00/": {
+      "path": "/chum/answers/doors/seasonal-family-activities-42be4e5b00/",
+      "content_sha256": "72af8b9cda6e788d15b344243c6c021d9b10ae73631175fbd8b0cc4e67baa873",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/seasonal-family-activities-42be4e5b00.json": {
+      "path": "/chum/answers/doors/seasonal-family-activities-42be4e5b00.json",
+      "content_sha256": "73887670a4da909c6d370a636b58ab805cb81b069f889100a91aaf1859dd84a3",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d/": {
+      "path": "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d/",
+      "content_sha256": "f1e7272d9aff8985cc5b25a0f2bbf081a85114f316ebc6caa8d3576bc166b782",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d.json": {
+      "path": "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d.json",
+      "content_sha256": "d56446037cad77f76dab9eb3e28e63c32d55507242ea14419df990717958bf49",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/security-camera-footage-review-8c7a4181b3/": {
       "path": "/chum/answers/doors/security-camera-footage-review-8c7a4181b3/",
       "content_sha256": "743ffe44004c6397a5bdf856834ff158476cdb4abecd85e1fe3d60ab0cfecbd7",
@@ -11279,6 +11555,18 @@
       "path": "/chum/answers/doors/set-up-family-safety-check-ins-or-preparedness-3d83a72549.json",
       "content_sha256": "dd92f8c21cd7ef38de45c83f9519b22405acd7fbf501c54177407c4ce2f2c26d",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20/": {
+      "path": "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20/",
+      "content_sha256": "34766383a0654be810d5cd6146b31946a5452896a29089773b69cbfc60f50c4d",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20.json": {
+      "path": "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20.json",
+      "content_sha256": "bb9a0f6b2939aad4c218955d633b131e61f8a7de60b6a299974e94ccf60a2bd7",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 100
     },
     "/chum/answers/doors/shop-retro-space-streetwear-29e88c1eb1/": {
@@ -12217,6 +12505,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5/": {
+      "path": "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5/",
+      "content_sha256": "92c0cff6ec2f8a3eb722a369027436e28d06d759299631cba77cd1c4fa444a23",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5.json": {
+      "path": "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5.json",
+      "content_sha256": "4af5ab6fada30a54334674548c84c33b178c4edcc817cfdd2c65b69a4aa93644",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
     "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/": {
       "path": "/chum/answers/doors/turn-this-video-into-social-clips-fc9eabdd6c/",
       "content_sha256": "601835cc4637b077870ea161cb0e7775fc3d5cd351df20955baab5fa6d5a3248",
@@ -12287,6 +12587,18 @@
       "path": "/chum/answers/doors/url-to-text-api-for-llms-fbac9ca359.json",
       "content_sha256": "5e33e325705ca4262a5e308f5eab3671a58e8a68f3592afb3572eb0c51f82070",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33/": {
+      "path": "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33/",
+      "content_sha256": "29830d6074df8e8f6decf4c607d9e7d45f4f5c3ca9c0575e23c8264efbfef181",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33.json": {
+      "path": "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33.json",
+      "content_sha256": "ada9b01b556f2463e1c4710c2e6ce14d0b11883186b55342a27dd9c272fa5d06",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 100
     },
     "/chum/answers/doors/utility-tariff-for-ev-charging-at-this-property-affaf0c924/": {
@@ -12743,6 +13055,18 @@
       "path": "/chum/answers/doors/what-am-i-missing-for-this-job-2a6d8ef99f.json",
       "content_sha256": "77161abf1cb371b092747222b03592400cffb0637241c602d441f8454ee33503",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667/": {
+      "path": "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667/",
+      "content_sha256": "2e30a28a0fc2fd64832bf24f264ded1d13977c4b272042f3d4729ba198430fc1",
+      "last_changed": "2026-09-27T00:07:01.877Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667.json": {
+      "path": "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667.json",
+      "content_sha256": "0dc74bbaa3c8ff28071fc68cee84165b36e4dd9bd12f59f06cbd2510b6ec61c9",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 100
     },
     "/chum/answers/doors/what-data-is-missing-for-this-decision-8e0a8c1a6f/": {
@@ -13305,14 +13629,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "b767b650445cb31a2e46c5a2b4c9db4856fe585bbc7c2a1d682382aa57828e53",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "4bb904ed35d5e7915b0e9f57885ba34010bcf2a39c8a9fbbe02e9f1ae94da35b",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "9f027bf87c429d2ed23a18b8a83a1b7ab2534e2533689653b3cc101899b7eab7",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "9c5bc3fb4b930a896255e17edabcd7510081e106e55f4dc1eb419aa6c948b467",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -13323,20 +13647,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "cfe5834968ce2423051473cf3f83d589f7afbce4cc76c47409b12bbe7a61f86e",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "525efd1f7a683bdacaaa04f07545fd41bb73b7f081db0f26120e556fd2a38c9c",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "307481332383aeae35cdc9443732418a0d41d436110c026e348b5281a4f1422d",
-      "last_changed": "2026-09-26T22:18:18.960Z",
+      "content_sha256": "b4037a3546a4a69722099f137ba1c4f32e8da9073f81fd464494d85be703ac6c",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "8ab3c6f3139d05f98248eaa8d2d29ed4c5c14b9de5e6b5e25359ce77621f7f91",
-      "last_changed": "2026-09-26T23:54:16.768Z",
+      "content_sha256": "6eaeac1e4dd1ea632674c3942ecf8da10304acfabbad5622e4cf2e6926e2e688",
+      "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 80
     }
   }

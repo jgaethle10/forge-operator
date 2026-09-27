@@ -1,0 +1,43 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Season & Story",
+  "product_key": "seasonally",
+  "aliases": [
+    "Seasonally"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "live Kroger retailer-price retrieval is held until legitimate server credentials and a bounded real source proof exist",
+    "do not claim Seasonally currently finds the cheapest local grocery basket",
+    "retailer SKU price evidence and grocery-term-to-product matching remain separate evidence states",
+    "promotion eligibility and cross-package unit normalization are not proven",
+    "private household, member, memory, checklist and profile data are not public",
+    "public runtime hostname remains unresolved in the current discovery inventory"
+  ],
+  "commercial": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

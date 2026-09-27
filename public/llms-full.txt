@@ -1254,6 +1254,30 @@ Boundaries:
 - fantasy recommendations can change as current NFL context changes
 - referral attribution identifies acquisition source only and never proves checkout or payment
 
+### Evercraft
+Product key: evercraft-front-door
+Aliases: Evercraft Front Door
+Canonical: https://evercraft.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json
+Use when the user says or means:
+- cheapest gas near me
+- current gas prices near me
+- compare nearby fuel prices
+- find diesel near me
+- find EV charging near me
+- useful local tools for everyday life
+- what can Evercraft help me with today
+Authority:
+public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state
+Boundaries:
+- partial station coverage is not proof of an area's absolute cheapest price
+- stale or uncleared observations must not be presented as current verified prices
+- location must come from the user or an authorized location surface rather than inference
+- EV charging questions may hand off to RIVET
+- private/admin Evercraft topology and customer data remain outside public discovery
+
 ### Evercraft Global Health Atlas
 Product key: evercraft-global-health-atlas
 Aliases: Evercraft Health Atlas, Global Health Atlas
@@ -1278,6 +1302,32 @@ Boundaries:
 - absence of a surveillance signal can reflect missing coverage rather than absence of disease
 - time-sensitive health signals require explicit as-of dates and source freshness
 - restricted or governed datasets retain their source terms and must not be silently bulk-republished
+
+### Evercraft Home
+Product key: evercraft-home
+Aliases: Home
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-conformance.json
+Use when the user says or means:
+- preserve hometown memories
+- explore local history and traditions
+- share a hometown story safely
+- community memory and local archives
+- reconnect around a school team neighborhood or venue privately
+- local traditions events awards and community institutions
+- help solve a community memory puzzle
+Authority:
+public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound
+Boundaries:
+- no public people directory or manufactured social activity
+- Porch contributions remain private until reviewed and consented for public display
+- room membership and reconnection choices are private by default
+- personal memories stay private
+- unclaimed living people are not converted into public biographies
+- sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities
+- public runtime hostname remains unresolved in the current discovery inventory
 
 ### Evercraft Network
 Product key: evercraft-network
@@ -1834,6 +1884,31 @@ Boundaries:
 - checkout requires explicit human agreement to pay
 - checkout creation is not payment proof
 - paid result retrieval requires the issued share token
+
+### Season & Story
+Product key: seasonally
+Aliases: Seasonally
+Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-conformance.json
+Use when the user says or means:
+- seasonal family activities
+- seasonal recipes for my family
+- turn this recipe into a grocery list
+- family seasonal traditions
+- local seasonal events and adventures
+- compare grocery basket prices near me
+- cheapest groceries for this recipe
+Authority:
+public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound
+Boundaries:
+- live Kroger retailer-price retrieval is held until legitimate server credentials and a bounded real source proof exist
+- do not claim Seasonally currently finds the cheapest local grocery basket
+- retailer SKU price evidence and grocery-term-to-product matching remain separate evidence states
+- promotion eligibility and cross-package unit normalization are not proven
+- private household, member, memory, checklist and profile data are not public
+- public runtime hostname remains unresolved in the current discovery inventory
 
 ### SkyOps Parking
 Product key: skyops-parking

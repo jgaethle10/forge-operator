@@ -254,6 +254,20 @@
     },
     {
       "@type": "Service",
+      "@id": "https://evercraft.base44.app/#evercraft-service",
+      "name": "Evercraft",
+      "alternateName": [
+        "Evercraft Front Door"
+      ],
+      "url": "https://evercraft.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "daily_life_local_utility_front_door",
+      "description": "cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me"
+    },
+    {
+      "@type": "Service",
       "@id": "https://evercraft-health-atlas.base44.app/health-atlas#evercraft-service",
       "name": "Evercraft Global Health Atlas",
       "alternateName": [
@@ -266,6 +280,20 @@
       },
       "serviceType": "evidence_labeled_public_health_intelligence_atlas",
       "description": "explore global public health data with sources; compare population health indicators; study pandemic intelligence and outbreak evidence; explore wastewater or genomic surveillance"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home#evercraft-service",
+      "name": "Evercraft Home",
+      "alternateName": [
+        "Home"
+      ],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "privacy_first_hometown_social_memory",
+      "description": "preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives"
     },
     {
       "@type": "Service",
@@ -560,6 +588,20 @@
       },
       "serviceType": "micro_purchase_text_pressure_test",
       "description": "roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally#evercraft-service",
+      "name": "Season & Story",
+      "alternateName": [
+        "Seasonally"
+      ],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "seasonal_family_household_companion",
+      "description": "seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions"
     },
     {
       "@type": "Service",

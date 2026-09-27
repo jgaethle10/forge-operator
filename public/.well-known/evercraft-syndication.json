@@ -30,7 +30,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 54,
+  "product_count": 57,
   "products": [
     {
       "product_key": "aliev",
@@ -143,6 +143,17 @@
       "content_sha256": "ddf98677b219ff0fa1a71b7ad88b994c3cb55b9d06ba671a373e3bb18ad4312b"
     },
     {
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "canonical_url": "https://evercraft.base44.app/",
+      "mirror": "/chum/products/evercraft-front-door/",
+      "llms": "/chum/products/evercraft-front-door/llms.txt",
+      "discovery": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "19afaa9c9c253d727323195c4c727c17937a90468975fa0c0473095a5ae9269a"
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "canonical_url": "https://evercraft-career-command.base44.app/",
@@ -240,6 +251,17 @@
       "registry_name": null,
       "mcp": null,
       "content_sha256": "40f78aac0ac61c73ec94dfe949978147ec7f2f4faa77f5b592030bb3f02fae08"
+    },
+    {
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "mirror": "/chum/products/evercraft-home/",
+      "llms": "/chum/products/evercraft-home/llms.txt",
+      "discovery": "/chum/products/evercraft-home/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "fd542d4c2c61d7fac39faccf7483b6b2689ffcbf171b01c4939754875f6d7d5c"
     },
     {
       "product_key": "ibmi-rescue",
@@ -482,6 +504,17 @@
       "registry_name": "io.github.jgaethle10/roasted",
       "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
       "content_sha256": "a916992d80ab03c5681dd08519298d1498e20beeaac901a5de1bd8987d8cac15"
+    },
+    {
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "mirror": "/chum/products/seasonally/",
+      "llms": "/chum/products/seasonally/llms.txt",
+      "discovery": "/chum/products/seasonally/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "8ab5bf3389a2f0d875cce1eab3183507c0072bf614e96b5f739883a01dcd016a"
     },
     {
       "product_key": "skyops-parking",

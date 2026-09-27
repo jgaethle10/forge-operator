@@ -16,20 +16,31 @@
     "compare grocery basket prices near me",
     "cheapest groceries for this recipe"
   ],
-  "authority": "public product discovery; household actions are account-bound",
+  "authority": "public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound",
   "human_confirmation_required": true,
   "boundaries": [
-    "live Kroger retailer-price retrieval is held until legitimate server credentials and a real bounded source proof exist",
+    "live Kroger retailer-price retrieval is held until legitimate server credentials and a bounded real source proof exist",
     "do not claim Seasonally currently finds the cheapest local grocery basket",
-    "retailer SKU price evidence and grocery-term-to-product matching are separate evidence states",
+    "retailer SKU price evidence and grocery-term-to-product matching remain separate evidence states",
     "promotion eligibility and cross-package unit normalization are not proven",
-    "private household data is not public",
-    "public runtime hostname remains unresolved in the discovery inventory"
+    "private household, member, memory, checklist and profile data are not public",
+    "public runtime hostname remains unresolved in the current discovery inventory"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
   "registry_name": null,
   "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": null,
   "source": "CHUM public mirror",
-  "evidence_state": "source_build_and_regressions_passed_2026_09_26_live_retailer_source_held"
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-conformance.json",
+    "page": "/chum/products/seasonally/"
+  }
 }

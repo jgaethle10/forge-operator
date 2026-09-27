@@ -177,6 +177,24 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:evercraft-front-door:19afaa9c9c253d72",
+      "url": "https://evercraft.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
+      "title": "Evercraft",
+      "summary": "Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "daily_life_local_utility_front_door",
+        "cheapest gas near me",
+        "current gas prices near me",
+        "compare nearby fuel prices",
+        "find diesel near me",
+        "find EV charging near me",
+        "useful local tools for everyday life",
+        "what can Evercraft help me with today"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:career-command:6fdd4424779d87a1",
       "url": "https://evercraft-career-command.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",
@@ -324,6 +342,24 @@
         "study One Health signals",
         "research disease evidence with uncertainty attached",
         "find public health data blind spots"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:evercraft-home:fd542d4c2c61d7fa",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json",
+      "title": "Evercraft Home",
+      "summary": "Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "privacy_first_hometown_social_memory",
+        "preserve hometown memories",
+        "explore local history and traditions",
+        "share a hometown story safely",
+        "community memory and local archives",
+        "reconnect around a school team neighborhood or venue privately",
+        "local traditions events awards and community institutions",
+        "help solve a community memory puzzle"
       ]
     },
     {
@@ -698,6 +734,24 @@
         "pressure test this text",
         "make this writing sharper",
         "give me a gentle or professional critique"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:seasonally:8ab5bf3389a2f0d8",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
+      "title": "Season & Story",
+      "summary": "Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
+      "date_modified": "2026-09-26T00:00:00.000Z",
+      "tags": [
+        "seasonal_family_household_companion",
+        "seasonal family activities",
+        "seasonal recipes for my family",
+        "turn this recipe into a grocery list",
+        "family seasonal traditions",
+        "local seasonal events and adventures",
+        "compare grocery basket prices near me",
+        "cheapest groceries for this recipe"
       ]
     },
     {

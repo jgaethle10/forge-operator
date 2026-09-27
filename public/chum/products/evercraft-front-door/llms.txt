@@ -1,8 +1,10 @@
-# Evercraft Front Door
+# Evercraft
 
 Product key: evercraft-front-door
+Aliases: Evercraft Front Door
 Canonical product: https://evercraft.base44.app/
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json
 
 ## Use this capability when the user means
 
@@ -11,18 +13,23 @@ CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator
 - compare nearby fuel prices
 - find diesel near me
 - find EV charging near me
+- useful local tools for everyday life
 - what can Evercraft help me with today
 
 ## Authority
 
-Public read-only daily-life discovery and routing. Fuel observations must preserve source and freshness.
+public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state
 
 ## Boundaries
 
 - partial station coverage is not proof of an area's absolute cheapest price
 - stale or uncleared observations must not be presented as current verified prices
-- location must come from the user/browser rather than inference
-- EV charging may route to RIVET
-- private/admin Evercraft systems stay outside public discovery
+- location must come from the user or an authorized location surface rather than inference
+- EV charging questions may hand off to RIVET
+- private/admin Evercraft topology and customer data remain outside public discovery
 
-Discovery creates no payment obligation.
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

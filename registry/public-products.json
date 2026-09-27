@@ -243,12 +243,38 @@
       }
     },
     {
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "class": "daily_life_local_utility_front_door",
+      "canonical_url": "https://evercraft.base44.app/",
+      "github_record": "./evercraft-front-door/README.md",
+      "llms": "./evercraft-front-door/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "evercraft-global-health-atlas",
       "name": "Evercraft Global Health Atlas",
       "class": "evidence_labeled_public_health_intelligence_atlas",
       "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
       "github_record": "./evercraft-global-health-atlas/README.md",
       "llms": "./evercraft-global-health-atlas/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "class": "privacy_first_hometown_social_memory",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "github_record": "./evercraft-home/README.md",
+      "llms": "./evercraft-home/llms.txt",
       "registry_name": null,
       "invocation": {
         "mode": "discovery_only",
@@ -539,6 +565,19 @@
       "invocation": {
         "mode": "mcp",
         "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
+      }
+    },
+    {
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "class": "seasonal_family_household_companion",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "github_record": "./seasonally/README.md",
+      "llms": "./seasonally/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {

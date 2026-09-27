@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Home",
+  "product_key": "evercraft-home",
+  "aliases": [
+    "Home"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "no public people directory or manufactured social activity",
+    "Porch contributions remain private until reviewed and consented for public display",
+    "room membership and reconnection choices are private by default",
+    "personal memories stay private",
+    "unclaimed living people are not converted into public biographies",
+    "sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities",
+    "public runtime hostname remains unresolved in the current discovery inventory"
+  ],
+  "commercial": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

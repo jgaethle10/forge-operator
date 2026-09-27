@@ -16,21 +16,32 @@
     "local traditions events awards and community institutions",
     "help solve a community memory puzzle"
   ],
-  "authority": "public discovery for reviewed community-memory surfaces; private social graph remains account-bound",
+  "authority": "public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound",
   "human_confirmation_required": true,
   "boundaries": [
     "no public people directory or manufactured social activity",
-    "Porch contributions are review-gated and consent-gated",
-    "room membership and reconnection choices are private",
+    "Porch contributions remain private until reviewed and consented for public display",
+    "room membership and reconnection choices are private by default",
     "personal memories stay private",
-    "living-person identity claims are not inferred from community evidence",
-    "sponsorship does not buy editorial or evidence treatment",
-    "public runtime hostname remains unresolved in the discovery inventory"
+    "unclaimed living people are not converted into public biographies",
+    "sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities",
+    "public runtime hostname remains unresolved in the current discovery inventory"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
   "registry_name": null,
   "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": null,
   "source": "CHUM public mirror",
-  "evidence_state": "source_build_and_privacy_invariant_passed_2026_09_26_runtime_hostname_unresolved"
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-conformance.json",
+    "page": "/chum/products/evercraft-home/"
+  }
 }

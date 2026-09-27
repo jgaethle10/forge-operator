@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 98,
-    "unique_user_phrases": 766,
-    "mapped_candidate_edges": 859,
+    "pain_index_entries": 101,
+    "unique_user_phrases": 787,
+    "mapped_candidate_edges": 880,
     "ambiguous_phrases": 93,
-    "product_candidates": 53,
+    "product_candidates": 56,
     "machine_offer_candidates": 45
   },
   "doors": [
@@ -2748,6 +2748,52 @@
       ]
     },
     {
+      "answer_id": "intent:dc9ace146d",
+      "user_language": "cheapest gas near me",
+      "normalized": "cheapest gas near me",
+      "relative_json": "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d.json",
+      "relative_page": "/chum/answers/doors/cheapest-gas-near-me-dc9ace146d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cheapest-gas-near-me-dc9ace146d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-front-door",
+          "kind": "product",
+          "product_key": "evercraft-front-door",
+          "public_id": null,
+          "name": "Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-front-door/",
+          "public_url": "https://evercraft.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f1a8d2dd3c",
+      "user_language": "cheapest groceries for this recipe",
+      "normalized": "cheapest groceries for this recipe",
+      "relative_json": "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c.json",
+      "relative_page": "/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cheapest-groceries-for-this-recipe-f1a8d2dd3c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:seasonally",
+          "kind": "product",
+          "product_key": "seasonally",
+          "public_id": null,
+          "name": "Season & Story",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/seasonally/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:465dd47ba7",
       "user_language": "check if my book is ready for KDP",
       "normalized": "check if my book is ready for kdp",
@@ -3037,6 +3083,29 @@
       ]
     },
     {
+      "answer_id": "intent:a9c858c51b",
+      "user_language": "community memory and local archives",
+      "normalized": "community memory and local archives",
+      "relative_json": "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b.json",
+      "relative_page": "/chum/answers/doors/community-memory-and-local-archives-a9c858c51b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/community-memory-and-local-archives-a9c858c51b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-home",
+          "kind": "product",
+          "product_key": "evercraft-home",
+          "public_id": null,
+          "name": "Evercraft Home",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-home/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d49f331223",
       "user_language": "compare electricity mixes between regions",
       "normalized": "compare electricity mixes between regions",
@@ -3106,6 +3175,29 @@
       ]
     },
     {
+      "answer_id": "intent:0ba188c91d",
+      "user_language": "compare grocery basket prices near me",
+      "normalized": "compare grocery basket prices near me",
+      "relative_json": "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d.json",
+      "relative_page": "/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-grocery-basket-prices-near-me-0ba188c91d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:seasonally",
+          "kind": "product",
+          "product_key": "seasonally",
+          "public_id": null,
+          "name": "Season & Story",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/seasonally/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:f96975ed34",
       "user_language": "compare habitats migration and conservation evidence",
       "normalized": "compare habitats migration and conservation evidence",
@@ -3170,6 +3262,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-radar/",
           "public_url": "https://systemia-scan-pro.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:43d895a707",
+      "user_language": "compare nearby fuel prices",
+      "normalized": "compare nearby fuel prices",
+      "relative_json": "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707.json",
+      "relative_page": "/chum/answers/doors/compare-nearby-fuel-prices-43d895a707/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-nearby-fuel-prices-43d895a707.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-front-door",
+          "kind": "product",
+          "product_key": "evercraft-front-door",
+          "public_id": null,
+          "name": "Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-front-door/",
+          "public_url": "https://evercraft.base44.app/",
           "registry_name": null
         }
       ]
@@ -4127,6 +4242,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/infinite-classroom/",
           "public_url": "https://infiniteclassroom.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e2e55b266e",
+      "user_language": "current gas prices near me",
+      "normalized": "current gas prices near me",
+      "relative_json": "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e.json",
+      "relative_page": "/chum/answers/doors/current-gas-prices-near-me-e2e55b266e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/current-gas-prices-near-me-e2e55b266e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-front-door",
+          "kind": "product",
+          "product_key": "evercraft-front-door",
+          "public_id": null,
+          "name": "Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-front-door/",
+          "public_url": "https://evercraft.base44.app/",
           "registry_name": null
         }
       ]
@@ -5333,6 +5471,29 @@
       ]
     },
     {
+      "answer_id": "intent:5ab1408ccd",
+      "user_language": "explore local history and traditions",
+      "normalized": "explore local history and traditions",
+      "relative_json": "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd.json",
+      "relative_page": "/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explore-local-history-and-traditions-5ab1408ccd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-home",
+          "kind": "product",
+          "product_key": "evercraft-home",
+          "public_id": null,
+          "name": "Evercraft Home",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-home/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:6e591ede46",
       "user_language": "explore relativity quantum nuclear or particle physics",
       "normalized": "explore relativity quantum nuclear or particle physics",
@@ -5558,6 +5719,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evernest/",
           "public_url": "https://evernest-home.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1ffb660b1f",
+      "user_language": "family seasonal traditions",
+      "normalized": "family seasonal traditions",
+      "relative_json": "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f.json",
+      "relative_page": "/chum/answers/doors/family-seasonal-traditions-1ffb660b1f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/family-seasonal-traditions-1ffb660b1f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:seasonally",
+          "kind": "product",
+          "product_key": "seasonally",
+          "public_id": null,
+          "name": "Season & Story",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/seasonally/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
           "registry_name": null
         }
       ]
@@ -6138,6 +6322,29 @@
       ]
     },
     {
+      "answer_id": "intent:69c964f8ca",
+      "user_language": "find diesel near me",
+      "normalized": "find diesel near me",
+      "relative_json": "/chum/answers/doors/find-diesel-near-me-69c964f8ca.json",
+      "relative_page": "/chum/answers/doors/find-diesel-near-me-69c964f8ca/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-diesel-near-me-69c964f8ca.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-front-door",
+          "kind": "product",
+          "product_key": "evercraft-front-door",
+          "public_id": null,
+          "name": "Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-front-door/",
+          "public_url": "https://evercraft.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:56c8f870bd",
       "user_language": "find drift across our apps APIs workflows and discovery surfaces",
       "normalized": "find drift across our apps apis workflows and discovery surfaces",
@@ -6192,6 +6399,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:53f5e4cced",
+      "user_language": "find EV charging near me",
+      "normalized": "find ev charging near me",
+      "relative_json": "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced.json",
+      "relative_page": "/chum/answers/doors/find-ev-charging-near-me-53f5e4cced/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-ev-charging-near-me-53f5e4cced.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-front-door",
+          "kind": "product",
+          "product_key": "evercraft-front-door",
+          "public_id": null,
+          "name": "Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-front-door/",
+          "public_url": "https://evercraft.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -7968,6 +8198,29 @@
           "pain_page": "/chum/products/eventwave/",
           "public_url": "https://event-wave.base44.app/",
           "registry_name": "io.github.jgaethle10/eventwave"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d857f8af8f",
+      "user_language": "help solve a community memory puzzle",
+      "normalized": "help solve a community memory puzzle",
+      "relative_json": "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f.json",
+      "relative_page": "/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-solve-a-community-memory-puzzle-d857f8af8f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-home",
+          "kind": "product",
+          "product_key": "evercraft-home",
+          "public_id": null,
+          "name": "Evercraft Home",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-home/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+          "registry_name": null
         }
       ]
     },
@@ -9914,6 +10167,52 @@
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:92b5c0e6d1",
+      "user_language": "local seasonal events and adventures",
+      "normalized": "local seasonal events and adventures",
+      "relative_json": "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1.json",
+      "relative_page": "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:seasonally",
+          "kind": "product",
+          "product_key": "seasonally",
+          "public_id": null,
+          "name": "Season & Story",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/seasonally/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:435c643e58",
+      "user_language": "local traditions events awards and community institutions",
+      "normalized": "local traditions events awards and community institutions",
+      "relative_json": "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58.json",
+      "relative_page": "/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-traditions-events-awards-and-community-institutions-435c643e58.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-home",
+          "kind": "product",
+          "product_key": "evercraft-home",
+          "public_id": null,
+          "name": "Evercraft Home",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-home/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+          "registry_name": null
         }
       ]
     },
@@ -12389,6 +12688,29 @@
       ]
     },
     {
+      "answer_id": "intent:71794b538a",
+      "user_language": "preserve hometown memories",
+      "normalized": "preserve hometown memories",
+      "relative_json": "/chum/answers/doors/preserve-hometown-memories-71794b538a.json",
+      "relative_page": "/chum/answers/doors/preserve-hometown-memories-71794b538a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/preserve-hometown-memories-71794b538a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-home",
+          "kind": "product",
+          "product_key": "evercraft-home",
+          "public_id": null,
+          "name": "Evercraft Home",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-home/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:54816ae317",
       "user_language": "pressure test my writing",
       "normalized": "pressure test my writing",
@@ -13443,6 +13765,29 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
           "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ab6e2bf915",
+      "user_language": "reconnect around a school team neighborhood or venue privately",
+      "normalized": "reconnect around a school team neighborhood or venue privately",
+      "relative_json": "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915.json",
+      "relative_page": "/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reconnect-around-a-school-team-neighborhood-or-venue-privately-ab6e2bf915.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-home",
+          "kind": "product",
+          "product_key": "evercraft-home",
+          "public_id": null,
+          "name": "Evercraft Home",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-home/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
           "registry_name": null
         }
       ]
@@ -14911,6 +15256,52 @@
       ]
     },
     {
+      "answer_id": "intent:42be4e5b00",
+      "user_language": "seasonal family activities",
+      "normalized": "seasonal family activities",
+      "relative_json": "/chum/answers/doors/seasonal-family-activities-42be4e5b00.json",
+      "relative_page": "/chum/answers/doors/seasonal-family-activities-42be4e5b00/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/seasonal-family-activities-42be4e5b00.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:seasonally",
+          "kind": "product",
+          "product_key": "seasonally",
+          "public_id": null,
+          "name": "Season & Story",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/seasonally/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7e7ef7284d",
+      "user_language": "seasonal recipes for my family",
+      "normalized": "seasonal recipes for my family",
+      "relative_json": "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d.json",
+      "relative_page": "/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/seasonal-recipes-for-my-family-7e7ef7284d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:seasonally",
+          "kind": "product",
+          "product_key": "seasonally",
+          "public_id": null,
+          "name": "Season & Story",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/seasonally/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:8c7a4181b3",
       "user_language": "security camera footage review",
       "normalized": "security camera footage review",
@@ -15067,6 +15458,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/raven-nexus/",
           "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a000eb2f20",
+      "user_language": "share a hometown story safely",
+      "normalized": "share a hometown story safely",
+      "relative_json": "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20.json",
+      "relative_page": "/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/share-a-hometown-story-safely-a000eb2f20.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-home",
+          "kind": "product",
+          "product_key": "evercraft-home",
+          "public_id": null,
+          "name": "Evercraft Home",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-home/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
           "registry_name": null
         }
       ]
@@ -17022,6 +17436,29 @@
       ]
     },
     {
+      "answer_id": "intent:9dbaeec6e5",
+      "user_language": "turn this recipe into a grocery list",
+      "normalized": "turn this recipe into a grocery list",
+      "relative_json": "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5.json",
+      "relative_page": "/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-recipe-into-a-grocery-list-9dbaeec6e5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:seasonally",
+          "kind": "product",
+          "product_key": "seasonally",
+          "public_id": null,
+          "name": "Season & Story",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/seasonally/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fc9eabdd6c",
       "user_language": "turn this video into social clips",
       "normalized": "turn this video into social clips",
@@ -17168,6 +17605,29 @@
           "pain_page": "/chum/products/evercraft-web/",
           "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
           "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:02c84f1e33",
+      "user_language": "useful local tools for everyday life",
+      "normalized": "useful local tools for everyday life",
+      "relative_json": "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33.json",
+      "relative_page": "/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/useful-local-tools-for-everyday-life-02c84f1e33.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-front-door",
+          "kind": "product",
+          "product_key": "evercraft-front-door",
+          "public_id": null,
+          "name": "Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-front-door/",
+          "public_url": "https://evercraft.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -18089,6 +18549,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
           "public_url": "https://evercraft-career-command.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cf04d7f667",
+      "user_language": "what can Evercraft help me with today",
+      "normalized": "what can evercraft help me with today",
+      "relative_json": "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667.json",
+      "relative_page": "/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-front-door",
+          "kind": "product",
+          "product_key": "evercraft-front-door",
+          "public_id": null,
+          "name": "Evercraft",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-front-door/",
+          "public_url": "https://evercraft.base44.app/",
           "registry_name": null
         }
       ]

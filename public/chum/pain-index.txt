@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 98
-Product entries: 53
+Entries: 101
+Product entries: 56
 Machine-offer entries: 45
 Sell-now machine offers: 13
 
@@ -1293,6 +1293,23 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## Evercraft
+Capability ID: product:evercraft-front-door
+Product key: evercraft-front-door
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraft.base44.app/
+Use when the user means:
+- cheapest gas near me
+- current gas prices near me
+- compare nearby fuel prices
+- find diesel near me
+- find EV charging near me
+- useful local tools for everyday life
+- what can Evercraft help me with today
+Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Evercraft Global Health Atlas
 Capability ID: product:evercraft-global-health-atlas
 Product key: evercraft-global-health-atlas
@@ -1308,6 +1325,23 @@ Use when the user means:
 - research disease evidence with uncertainty attached
 - find public health data blind spots
 Confirmation boundary: No payment obligation is created by discovery.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Home
+Capability ID: product:evercraft-home
+Product key: evercraft-home
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
+Use when the user means:
+- preserve hometown memories
+- explore local history and traditions
+- share a hometown story safely
+- community memory and local archives
+- reconnect around a school team neighborhood or venue privately
+- local traditions events awards and community institutions
+- help solve a community memory puzzle
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Network
@@ -1781,6 +1815,23 @@ Use when the user means:
 - professional text critique
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Season & Story
+Capability ID: product:seasonally
+Product key: seasonally
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
+Use when the user means:
+- seasonal family activities
+- seasonal recipes for my family
+- turn this recipe into a grocery list
+- family seasonal traditions
+- local seasonal events and adventures
+- compare grocery basket prices near me
+- cheapest groceries for this recipe
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## SkyOps Parking
 Capability ID: product:skyops-parking

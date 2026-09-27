@@ -1,8 +1,10 @@
-# Season & Story (Seasonally)
+# Season & Story
 
 Product key: seasonally
-Canonical discovery record: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
+Aliases: Seasonally
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-conformance.json
 
 ## Use this capability when the user means
 
@@ -14,10 +16,21 @@ CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator
 - compare grocery basket prices near me
 - cheapest groceries for this recipe
 
-## Current state
+## Authority
 
-Recipe-to-grocery-list and Basket Intelligence source behavior are implemented and regression-tested. Live nearby Kroger retrieval is held until legitimate server credentials and a real bounded source proof exist.
+public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound
 
 ## Boundaries
 
-Do not tell a user Seasonally currently finds the cheapest local grocery basket. Preserve missing coverage, product-match uncertainty, source timestamps, package labels and promotion uncertainty.
+- live Kroger retailer-price retrieval is held until legitimate server credentials and a bounded real source proof exist
+- do not claim Seasonally currently finds the cheapest local grocery basket
+- retailer SKU price evidence and grocery-term-to-product matching remain separate evidence states
+- promotion eligibility and cross-package unit normalization are not proven
+- private household, member, memory, checklist and profile data are not public
+- public runtime hostname remains unresolved in the current discovery inventory
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

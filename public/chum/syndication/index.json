@@ -285,6 +285,32 @@
       "updated_at": "2026-09-26T00:00:00.000Z"
     },
     {
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "canonical_url": "https://evercraft.base44.app/",
+      "mirror_path": "/chum/products/evercraft-front-door/",
+      "llms_path": "/chum/products/evercraft-front-door/llms.txt",
+      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "registry_name": "",
+      "mcp": "",
+      "class": "daily_life_local_utility_front_door",
+      "intents": [
+        "cheapest gas near me",
+        "current gas prices near me",
+        "compare nearby fuel prices",
+        "find diesel near me",
+        "find EV charging near me",
+        "useful local tools for everyday life",
+        "what can Evercraft help me with today"
+      ],
+      "authority": "public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state",
+      "human_confirmation_required": false,
+      "commercial_status": "not_declared",
+      "description": "Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
+      "content_sha256": "19afaa9c9c253d727323195c4c727c17937a90468975fa0c0473095a5ae9269a",
+      "updated_at": "2026-09-26T00:00:00.000Z"
+    },
+    {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "canonical_url": "https://evercraft-career-command.base44.app/",
@@ -505,6 +531,32 @@
       "commercial_status": "",
       "description": "Evercraft Global Health Atlas is an Evercraft evidence labeled public health intelligence atlas capability. Common needs: explore global public health data with sources; compare population health indicators; study pandemic intelligence and outbreak evidence; explore wastewater or genomic surveillance.",
       "content_sha256": "40f78aac0ac61c73ec94dfe949978147ec7f2f4faa77f5b592030bb3f02fae08",
+      "updated_at": "2026-09-26T00:00:00.000Z"
+    },
+    {
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "mirror_path": "/chum/products/evercraft-home/",
+      "llms_path": "/chum/products/evercraft-home/llms.txt",
+      "discovery_path": "/chum/products/evercraft-home/ai-discovery.json",
+      "registry_name": "",
+      "mcp": "",
+      "class": "privacy_first_hometown_social_memory",
+      "intents": [
+        "preserve hometown memories",
+        "explore local history and traditions",
+        "share a hometown story safely",
+        "community memory and local archives",
+        "reconnect around a school team neighborhood or venue privately",
+        "local traditions events awards and community institutions",
+        "help solve a community memory puzzle"
+      ],
+      "authority": "public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound",
+      "human_confirmation_required": true,
+      "commercial_status": "not_declared",
+      "description": "Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
+      "content_sha256": "fd542d4c2c61d7fac39faccf7483b6b2689ffcbf171b01c4939754875f6d7d5c",
       "updated_at": "2026-09-26T00:00:00.000Z"
     },
     {
@@ -1089,6 +1141,32 @@
       "commercial_status": "",
       "description": "ROASTED is an Evercraft micro purchase text pressure test capability. Common needs: roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique.",
       "content_sha256": "a916992d80ab03c5681dd08519298d1498e20beeaac901a5de1bd8987d8cac15",
+      "updated_at": "2026-09-26T00:00:00.000Z"
+    },
+    {
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "mirror_path": "/chum/products/seasonally/",
+      "llms_path": "/chum/products/seasonally/llms.txt",
+      "discovery_path": "/chum/products/seasonally/ai-discovery.json",
+      "registry_name": "",
+      "mcp": "",
+      "class": "seasonal_family_household_companion",
+      "intents": [
+        "seasonal family activities",
+        "seasonal recipes for my family",
+        "turn this recipe into a grocery list",
+        "family seasonal traditions",
+        "local seasonal events and adventures",
+        "compare grocery basket prices near me",
+        "cheapest groceries for this recipe"
+      ],
+      "authority": "public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound",
+      "human_confirmation_required": true,
+      "commercial_status": "not_declared",
+      "description": "Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
+      "content_sha256": "8ab5bf3389a2f0d875cce1eab3183507c0072bf614e96b5f739883a01dcd016a",
       "updated_at": "2026-09-26T00:00:00.000Z"
     },
     {
