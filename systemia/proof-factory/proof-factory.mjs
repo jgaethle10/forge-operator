@@ -82,14 +82,14 @@ const DEFAULT_TARGETS = [
         id: 'address-to-ready-report',
         path: 'artifacts/rivet-proof/report-runtime-latest.json',
         expected_schema: 'evercraft.rivet.yard-report-proof.v1',
-        required_status: 'pass',
+        required_ok: true,
         source_code: '/systemia/rivet/report-runtime.proof.mjs'
       },
       {
         id: 'national-session-sprawl-contract',
         path: 'artifacts/rivet-proof/session-sprawl-latest.json',
         expected_schema: 'evercraft.rivet.session-sprawl-proof.v1',
-        required_status: 'pass',
+        required_ok: true,
         source_code: '/systemia/rivet/national-session-sprawl.proof.mjs'
       }
     ],
@@ -153,6 +153,7 @@ function proofState(spec, payload) {
   if (!payload) return 'missing';
   if (payload.schema !== spec.expected_schema) return 'schema_mismatch';
   if (spec.required_status && payload.status !== spec.required_status) return 'failed';
+  if (spec.required_ok && payload.ok !== true) return 'failed';
   if (payload.ok === false) return 'failed';
   return 'pass';
 }
@@ -426,7 +427,6 @@ export function buildProofFactory({
   return receipt;
 }
 
-const isCli = process.argv[1] && import.meta.url === fileURLToPath(import.meta.url) ? false : false;
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {
   const receipt = buildProofFactory();
   console.log(JSON.stringify({
