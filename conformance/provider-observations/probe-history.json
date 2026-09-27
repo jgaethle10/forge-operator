@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-27T21:23:21.752Z",
+  "updated_at": "2026-09-27T23:52:00.474Z",
   "max_records": 500,
   "records": [
     {
@@ -1219,6 +1219,24 @@
       "prompt_sha256": "960e86c5283508d845db3b8c3b6e019ebbbad305b8d759d7dfd1e83b8d17908b",
       "pickup_observed": false,
       "provider_receipt_sha256": "2786507fb3028397f3fe17925f0f70ee8dcd50454421338e699293520caff92a",
+      "response_sha256": "7d20843c076b8b557216dd4cbffbde3f75fc980c7e612ae2298bfd4c6963a189",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "4a7d6d40c442dad694771f4ed31b84ca96b17c647969c8056a3f5b5f9b6040cd",
+      "observed_at": "2026-09-27T23:52:00.474Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-transaction-004",
+      "prompt_sha256": "960e86c5283508d845db3b8c3b6e019ebbbad305b8d759d7dfd1e83b8d17908b",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "bc2c5622085f1bc8d00baf01c16f390780e67a772ddae2964234173565b684e2",
       "response_sha256": "7d20843c076b8b557216dd4cbffbde3f75fc980c7e612ae2298bfd4c6963a189",
       "source": "authorized_provider_probe",
       "privacy": {

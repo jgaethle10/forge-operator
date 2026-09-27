@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T23:51:19.544Z",
+  "updated_at": "2026-09-27T23:52:03.465Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,32 +11,139 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-27T23:51:19.544Z",
-      "priority": 80
+      "path": "/chum/products/evercraft-rewards/",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-27T23:51:19.544Z",
-      "priority": 80
+      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/llms.txt",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 84
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-27T23:51:19.544Z",
+      "last_changed": "2026-09-27T23:52:03.465Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/",
-      "last_changed": "2026-09-27T23:51:19.544Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-27T23:51:19.544Z",
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
       "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/products/evercraft-rewards/",
+      "url": "/chum/products/evercraft-rewards/",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "url": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "url": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/llms.txt",
+      "url": "/chum/products/evercraft-rewards/llms.txt",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 94
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-09-27T23:52:03.465Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -46,12 +153,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-27T23:51:19.544Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-27T23:51:19.544Z",
       "priority": 80
     },
@@ -668,30 +769,6 @@
       "priority": 94
     },
     {
-      "path": "/chum/products/evercraft-rewards/",
-      "url": "/chum/products/evercraft-rewards/",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "url": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "url": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/llms.txt",
-      "url": "/chum/products/evercraft-rewards/llms.txt",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 94
-    },
-    {
       "path": "/chum/products/seasonally/ai-conformance.json",
       "url": "/chum/products/seasonally/ai-conformance.json",
       "last_changed": "2026-09-27T23:49:53.447Z",
@@ -734,20 +811,8 @@
       "priority": 86
     },
     {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 86
-    },
-    {
       "path": "/.well-known/evercraft-agent-commerce.json",
       "url": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
       "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 84
     },
@@ -760,12 +825,6 @@
     {
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
       "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 84
     },
@@ -818,12 +877,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/pain-index.json",
       "url": "/chum/pain-index.json",
       "last_changed": "2026-09-27T23:49:53.447Z",
@@ -842,26 +895,8 @@
       "priority": 80
     },
     {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 80
-    },
-    {
       "path": "/ai-discovery.json",
       "url": "/ai-discovery.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
       "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 60
     },
