@@ -58,3 +58,11 @@ Mesh LLM guide: /rivet/mesh/llms.txt
 - Modeled economics are not guaranteed realized economics.
 - Preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing, or construction approval.
 - Publication is not proof that an AI provider indexed, cited, recommended, or invoked this capability.
+
+
+## Proof library
+
+Machine-readable proof card: /chum/proof/rivet.json
+Proof index: /chum/proof/
+
+Proof cards are promoted only from executable receipts. Synthetic fixtures remain labeled. A proof receipt does not imply site economics, engineering approval, AI-provider recommendation, checkout, or payment.
