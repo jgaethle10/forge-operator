@@ -21,7 +21,7 @@
     },
     "buyer_frontage": {
       "method": "GET",
-      "url_template": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}"
+      "url_template": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id={publicId}"
     },
     "public_funnel_export": {
       "method": "GET",
