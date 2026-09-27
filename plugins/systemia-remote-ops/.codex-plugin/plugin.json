@@ -1,7 +1,7 @@
 {
   "name": "systemia-remote-ops",
   "version": "0.1.0",
-  "description": "Use Systemia Remote Ops when a founder or operator wants to simulate a consequential business decision before changing the real business. The resident Evercraft Compute runtime can route decisions, run a transparent native pricing heuristic, and compare startup, staffing, product/service, expansion, transaction, partnership, capital-purchase, and other scenarios using only explicit caller-supplied assumptions.",
+  "description": "Use Systemia Remote Ops when a founder, operator, buyer or seller wants to test a consequential business move before committing money, payroll, leases, contracts or ownership changes. It models startup, pricing, expansion, staffing, product/service, acquisition, partnership and capital-purchase scenarios using explicit caller-supplied assumptions while keeping modeled outputs separate from observed results.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
@@ -15,14 +15,27 @@
     "business-simulation",
     "pricing",
     "decision-lab",
-    "mcp"
+    "mcp",
+    "startup-simulation",
+    "business-simulator",
+    "cash-flow-scenario",
+    "pricing-change",
+    "business-expansion",
+    "hiring-scenario",
+    "break-even",
+    "runway",
+    "acquisition",
+    "buy-a-business",
+    "business-sale",
+    "what-if",
+    "decision-simulation"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Systemia Remote Ops",
-    "shortDescription": "Simulate business decisions before acting",
-    "longDescription": "Use Systemia Remote Ops when a founder or operator wants to simulate a consequential business decision before changing the real business. The resident Evercraft Compute runtime can route decisions, run a transparent native pricing heuristic, and compare startup, staffing, product/service, expansion, transaction, partnership, capital-purchase, and other scenarios using only explicit caller-supplied assumptions.",
+    "shortDescription": "Simulate startup, pricing, expansion, hiring, acquisition and other business decisions before acting",
+    "longDescription": "Use Systemia Remote Ops when a founder, operator, buyer or seller wants to test a consequential business move before committing money, payroll, leases, contracts or ownership changes. It models startup, pricing, expansion, staffing, product/service, acquisition, partnership and capital-purchase scenarios using explicit caller-supplied assumptions while keeping modeled outputs separate from observed results.",
     "developerName": "Evercraft LLC",
     "category": "Business",
     "capabilities": [
@@ -30,7 +43,7 @@
     ],
     "websiteURL": "https://systemia-remote-ops.base44.app/",
     "defaultPrompt": [
-      "I am considering a business decision and want to simulate the likely tradeoffs before I act."
+      "I am considering a consequential business decision. Help me model the baseline, change the assumptions, compare scenarios, and keep modeled results clearly separated from observed reality before I act."
     ]
   },
   "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
