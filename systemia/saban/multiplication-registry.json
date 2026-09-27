@@ -539,6 +539,80 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "fallen-creative-council",
+      "name": "Fallen Creative Council",
+      "aliases": [
+        "fallen creative council",
+        "fallen shot council",
+        "media-studio creative council",
+        "week-in-motion creative swarm"
+      ],
+      "adapter": "systemia/media-studio/creative-council-saban-adapter.mjs",
+      "default_logical_agents": 100,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 12,
+      "max_physical_workers": 128,
+      "lease_seconds": 600,
+      "roles": [
+        "story_architect",
+        "cinematography_director",
+        "visual_evidence_scout",
+        "data_graphics_director",
+        "world_builder",
+        "edit_rhythm_director",
+        "sound_director",
+        "brand_art_director",
+        "documentary_truth_guard",
+        "beauty_judge"
+      ],
+      "work_sources": [],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": false,
+        "production_provider_calls": false,
+        "source_media_write": false,
+        "automatic_publication": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "canon_mutation": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 128,
+        "max_work_items": 100000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 10,
+        "target_logical_per_physical_worker": 8,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
