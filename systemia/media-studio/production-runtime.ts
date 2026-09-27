@@ -5,6 +5,7 @@ import type {
   ProductionArtifact,
   ProductionNeed,
   ProductionReceipt,
+  ShotSelectionReceipt,
 } from './types.js';
 
 function expectedArtifactKind(need: ProductionNeed): ProductionArtifact['kind'] {
@@ -81,9 +82,11 @@ export function admitProductionResult(input: {
   artifact: ProductionArtifact;
   receipt: ProductionReceipt;
   identityEvidence?: IdentityEvidence[];
+  selectionReceipt?: ShotSelectionReceipt;
 }): ProductionAdmission {
   const { need, route, artifact, receipt } = input;
   const identityEvidence = input.identityEvidence ?? [];
+  const selectionReceipt = input.selectionReceipt;
   const reasons: string[] = [];
 
   addReason(
@@ -108,6 +111,19 @@ export function admitProductionResult(input: {
     receipt.artifactDigest === artifact.digest,
     'Receipt artifact digest does not match the delivered artifact.',
   );
+  if (selectionReceipt) {
+    addReason(
+      reasons,
+      selectionReceipt.needId === need.id,
+      'Shot selection receipt need ID does not match production need.',
+    );
+    addReason(
+      reasons,
+      selectionReceipt.artifactDigest === artifact.digest,
+      'Delivered artifact does not match the tournament-selected shot digest.',
+    );
+  }
+
   addReason(
     reasons,
     artifact.kind === expectedArtifactKind(need),
