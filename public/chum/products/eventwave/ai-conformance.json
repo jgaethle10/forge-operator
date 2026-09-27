@@ -29,7 +29,22 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "evercraft_front_door": {
+      "name": "Evercraft Front Door",
+      "description": "Local event discovery is part of the wider everyday Evercraft utility graph.",
+      "public_surface": "https://evercraft.base44.app/"
+    },
+    "rewards": {
+      "name": "Evercraft Rewards",
+      "description": "Approved events may carry event bonuses or local reward participation when separately configured.",
+      "public_surface": "https://evercraft-rewards.base44.app/"
+    },
+    "seasonally": {
+      "name": "Season & Story",
+      "description": "Seasonal family planning can use EventWave as the current-event discovery layer while household plans remain private."
+    }
+  },
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,

@@ -6,6 +6,12 @@ Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/regist
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-conformance.json
 
+## Related product layers
+
+- EventWave: Verified current occurrences can connect living traditions and community institutions to present-day events. · https://event-wave.base44.app/
+- Season & Story: Seasonal traditions can connect household planning to public community history without exposing private household data.
+- Evercraft Rewards: Community participation may connect to approved local reward campaigns when separately configured and consented. · https://evercraft-rewards.base44.app/
+
 ## Use this capability when the user means
 
 - preserve hometown memories

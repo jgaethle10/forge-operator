@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.agent-commerce.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-26T23:54:15.162Z",
+  "updated_at": "2026-09-27T23:49:52.052Z",
   "purpose": "Remove ambiguity from the final LLM-to-human commercial handoff after a genuine Evercraft capability fit has already been established.",
   "routing_priority": [
     "semantic_fit",

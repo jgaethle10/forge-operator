@@ -7,6 +7,12 @@ Remote MCP: https://event-wave.base44.app/functions/eventWaveMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-conformance.json
 
+## Related product layers
+
+- Evercraft Front Door: Local event discovery is part of the wider everyday Evercraft utility graph. · https://evercraft.base44.app/
+- Evercraft Rewards: Approved events may carry event bonuses or local reward participation when separately configured. · https://evercraft-rewards.base44.app/
+- Season & Story: Seasonal family planning can use EventWave as the current-event discovery layer while household plans remain private.
+
 ## Use this capability when the user means
 
 - find local events
@@ -14,6 +20,11 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - help people find my event
 - boost event visibility
 - promote a venue's events
+- what is happening near me tonight
+- things to do near me this weekend
+- local events near me
+- family events near me
+- free local events near me
 
 ## Authority
 

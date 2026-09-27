@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 102,
-    "unique_user_phrases": 827,
-    "mapped_candidate_edges": 920,
+    "unique_user_phrases": 841,
+    "mapped_candidate_edges": 934,
     "ambiguous_phrases": 93,
     "product_candidates": 57,
     "machine_offer_candidates": 45
@@ -347,6 +347,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dd0a4af1a0",
+      "user_language": "AI contractor estimate tool",
+      "normalized": "ai contractor estimate tool",
+      "relative_json": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
+      "relative_page": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
         }
       ]
     },
@@ -1899,7 +1922,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -2472,29 +2495,6 @@
       ]
     },
     {
-      "answer_id": "intent:cf1abda2b6",
-      "user_language": "business partnership rewards",
-      "normalized": "business partnership rewards",
-      "relative_json": "/chum/answers/doors/business-partnership-rewards-cf1abda2b6.json",
-      "relative_page": "/chum/answers/doors/business-partnership-rewards-cf1abda2b6/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/business-partnership-rewards-cf1abda2b6.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:evercraft-rewards",
-          "kind": "product",
-          "product_key": "evercraft-rewards",
-          "public_id": null,
-          "name": "Evercraft Rewards",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
-        }
-      ]
-    },
-    {
       "answer_id": "intent:46196f8cda",
       "user_language": "business simulator for a new company",
       "normalized": "business simulator for a new company",
@@ -2514,6 +2514,29 @@
           "pain_page": "/chum/products/systemia-remote-ops/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7a4331cf86",
+      "user_language": "businesses near me with rewards",
+      "normalized": "businesses near me with rewards",
+      "relative_json": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
+      "relative_page": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -2648,7 +2671,30 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1d88dc3c96",
+      "user_language": "calculate contractor sell price from gross margin",
+      "normalized": "calculate contractor sell price from gross margin",
+      "relative_json": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96.json",
+      "relative_page": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -3916,7 +3962,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -3939,7 +3985,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4016,6 +4062,29 @@
       ]
     },
     {
+      "answer_id": "intent:33e8e59e36",
+      "user_language": "contractor pricing API",
+      "normalized": "contractor pricing api",
+      "relative_json": "/chum/answers/doors/contractor-pricing-api-33e8e59e36.json",
+      "relative_page": "/chum/answers/doors/contractor-pricing-api-33e8e59e36/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-pricing-api-33e8e59e36.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:46ec574313",
       "user_language": "contractor private price book",
       "normalized": "contractor private price book",
@@ -4031,7 +4100,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4229,7 +4298,7 @@
           "commercial_state": "product_contract",
           "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+          "public_url": "https://evercraft-rewards.base44.app/",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
@@ -4339,29 +4408,6 @@
       ]
     },
     {
-      "answer_id": "intent:c465e82da6",
-      "user_language": "cross-business rewards",
-      "normalized": "cross business rewards",
-      "relative_json": "/chum/answers/doors/cross-business-rewards-c465e82da6.json",
-      "relative_page": "/chum/answers/doors/cross-business-rewards-c465e82da6/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cross-business-rewards-c465e82da6.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:evercraft-rewards",
-          "kind": "product",
-          "product_key": "evercraft-rewards",
-          "public_id": null,
-          "name": "Evercraft Rewards",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
-        }
-      ]
-    },
-    {
       "answer_id": "intent:32bd20f557",
       "user_language": "cross-subject learning",
       "normalized": "cross subject learning",
@@ -4423,7 +4469,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4450,6 +4496,52 @@
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5348821cf2",
+      "user_language": "daily rewards check-in",
+      "normalized": "daily rewards check in",
+      "relative_json": "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
+      "relative_page": "/chum/answers/doors/daily-rewards-check-in-5348821cf2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ea8243a20b",
+      "user_language": "daily scratch ticket rewards",
+      "normalized": "daily scratch ticket rewards",
+      "relative_json": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
+      "relative_page": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4731,6 +4823,98 @@
       ]
     },
     {
+      "answer_id": "intent:425423859c",
+      "user_language": "earn Evercraft Points near me",
+      "normalized": "earn evercraft points near me",
+      "relative_json": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
+      "relative_page": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1e1bf9da6f",
+      "user_language": "earn game credit by supporting local businesses",
+      "normalized": "earn game credit by supporting local businesses",
+      "relative_json": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
+      "relative_page": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:797bb6432d",
+      "user_language": "earn gaming rewards from local activity",
+      "normalized": "earn gaming rewards from local activity",
+      "relative_json": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
+      "relative_page": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d04e178d65",
+      "user_language": "earn rewards for visiting local businesses",
+      "normalized": "earn rewards for visiting local businesses",
+      "relative_json": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
+      "relative_page": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9bf9834ecc",
       "user_language": "escape vendor lock-in",
       "normalized": "escape vendor lock in",
@@ -4815,7 +4999,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4838,7 +5022,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -5839,6 +6023,29 @@
       ]
     },
     {
+      "answer_id": "intent:df760efe4b",
+      "user_language": "family events near me",
+      "normalized": "family events near me",
+      "relative_json": "/chum/answers/doors/family-events-near-me-df760efe4b.json",
+      "relative_page": "/chum/answers/doors/family-events-near-me-df760efe4b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/family-events-near-me-df760efe4b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:eventwave",
+          "kind": "product",
+          "product_key": "eventwave",
+          "public_id": null,
+          "name": "EventWave",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/eventwave/",
+          "public_url": "https://event-wave.base44.app/",
+          "registry_name": "io.github.jgaethle10/eventwave"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:182aa4158a",
       "user_language": "family preparedness resources",
       "normalized": "family preparedness resources",
@@ -6130,7 +6337,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -6583,29 +6790,6 @@
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
           "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:4a55dfdb73",
-      "user_language": "find events",
-      "normalized": "find events",
-      "relative_json": "/chum/answers/doors/find-events-4a55dfdb73.json",
-      "relative_page": "/chum/answers/doors/find-events-4a55dfdb73/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-events-4a55dfdb73.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:eventwave",
-          "kind": "product",
-          "product_key": "eventwave",
-          "public_id": null,
-          "name": "EventWave",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/eventwave/",
-          "public_url": "https://event-wave.base44.app/",
-          "registry_name": "io.github.jgaethle10/eventwave"
         }
       ]
     },
@@ -7402,6 +7586,52 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d04365320d",
+      "user_language": "free contractor estimate calculator",
+      "normalized": "free contractor estimate calculator",
+      "relative_json": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d.json",
+      "relative_page": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/free-contractor-estimate-calculator-d04365320d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:021869826b",
+      "user_language": "free local events near me",
+      "normalized": "free local events near me",
+      "relative_json": "/chum/answers/doors/free-local-events-near-me-021869826b.json",
+      "relative_page": "/chum/answers/doors/free-local-events-near-me-021869826b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/free-local-events-near-me-021869826b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:eventwave",
+          "kind": "product",
+          "product_key": "eventwave",
+          "public_id": null,
+          "name": "EventWave",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/eventwave/",
+          "public_url": "https://event-wave.base44.app/",
+          "registry_name": "io.github.jgaethle10/eventwave"
         }
       ]
     },
@@ -9668,7 +9898,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -9762,7 +9992,7 @@
           "commercial_state": "product_contract",
           "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+          "public_url": "https://evercraft-rewards.base44.app/",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
@@ -9831,30 +10061,7 @@
           "commercial_state": "product_contract",
           "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:8bddfc6c2f",
-      "user_language": "join a local rewards network",
-      "normalized": "join a local rewards network",
-      "relative_json": "/chum/answers/doors/join-a-local-rewards-network-8bddfc6c2f.json",
-      "relative_page": "/chum/answers/doors/join-a-local-rewards-network-8bddfc6c2f/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-local-rewards-network-8bddfc6c2f.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:evercraft-rewards",
-          "kind": "product",
-          "product_key": "evercraft-rewards",
-          "public_id": null,
-          "name": "Evercraft Rewards",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+          "public_url": "https://evercraft-rewards.base44.app/",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
@@ -10048,7 +10255,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -10447,12 +10654,12 @@
       ]
     },
     {
-      "answer_id": "intent:ba196ba899",
-      "user_language": "local business loyalty program",
-      "normalized": "local business loyalty program",
-      "relative_json": "/chum/answers/doors/local-business-loyalty-program-ba196ba899.json",
-      "relative_page": "/chum/answers/doors/local-business-loyalty-program-ba196ba899/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-business-loyalty-program-ba196ba899.json",
+      "answer_id": "intent:5c9f9f79b7",
+      "user_language": "local deals near me",
+      "normalized": "local deals near me",
+      "relative_json": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
+      "relative_page": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -10464,7 +10671,53 @@
           "commercial_state": "product_contract",
           "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e826ea2875",
+      "user_language": "local events near me",
+      "normalized": "local events near me",
+      "relative_json": "/chum/answers/doors/local-events-near-me-e826ea2875.json",
+      "relative_page": "/chum/answers/doors/local-events-near-me-e826ea2875/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-events-near-me-e826ea2875.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:eventwave",
+          "kind": "product",
+          "product_key": "eventwave",
+          "public_id": null,
+          "name": "EventWave",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/eventwave/",
+          "public_url": "https://event-wave.base44.app/",
+          "registry_name": "io.github.jgaethle10/eventwave"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e507d240b3",
+      "user_language": "local rewards for supporting nearby businesses",
+      "normalized": "local rewards for supporting nearby businesses",
+      "relative_json": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
+      "relative_page": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
@@ -10787,7 +11040,7 @@
           "commercial_state": "product_contract",
           "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+          "public_url": "https://evercraft-rewards.base44.app/",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
@@ -11925,6 +12178,29 @@
       ]
     },
     {
+      "answer_id": "intent:d0de142039",
+      "user_language": "no account contractor estimate",
+      "normalized": "no account contractor estimate",
+      "relative_json": "/chum/answers/doors/no-account-contractor-estimate-d0de142039.json",
+      "relative_page": "/chum/answers/doors/no-account-contractor-estimate-d0de142039/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/no-account-contractor-estimate-d0de142039.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:bf265dd596",
       "user_language": "obsolete part",
       "normalized": "obsolete part",
@@ -12413,7 +12689,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -13255,7 +13531,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -13443,29 +13719,6 @@
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
           "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:37370b48a4",
-      "user_language": "promote my event",
-      "normalized": "promote my event",
-      "relative_json": "/chum/answers/doors/promote-my-event-37370b48a4.json",
-      "relative_page": "/chum/answers/doors/promote-my-event-37370b48a4/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/promote-my-event-37370b48a4.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:eventwave",
-          "kind": "product",
-          "product_key": "eventwave",
-          "public_id": null,
-          "name": "EventWave",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/eventwave/",
-          "public_url": "https://event-wave.base44.app/",
-          "registry_name": "io.github.jgaethle10/eventwave"
         }
       ]
     },
@@ -14295,6 +14548,29 @@
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
           "public_url": "https://findmypart.base44.app/",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8e558dce41",
+      "user_language": "redeem Evercraft Points toward approved gaming credit",
+      "normalized": "redeem evercraft points toward approved gaming credit",
+      "relative_json": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
+      "relative_page": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -15152,6 +15428,29 @@
       ]
     },
     {
+      "answer_id": "intent:89d5f09b97",
+      "user_language": "rewards near me",
+      "normalized": "rewards near me",
+      "relative_json": "/chum/answers/doors/rewards-near-me-89d5f09b97.json",
+      "relative_page": "/chum/answers/doors/rewards-near-me-89d5f09b97/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rewards-near-me-89d5f09b97.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:09f613a2a6",
       "user_language": "RIVET EV charging report",
       "normalized": "rivet ev charging report",
@@ -15386,7 +15685,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -15869,7 +16168,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -15915,7 +16214,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -17745,6 +18044,29 @@
       ]
     },
     {
+      "answer_id": "intent:a76cdf0ee0",
+      "user_language": "things to do near me this weekend",
+      "normalized": "things to do near me this weekend",
+      "relative_json": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0.json",
+      "relative_page": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:eventwave",
+          "kind": "product",
+          "product_key": "eventwave",
+          "public_id": null,
+          "name": "EventWave",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/eventwave/",
+          "public_url": "https://event-wave.base44.app/",
+          "registry_name": "io.github.jgaethle10/eventwave"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:24f9daa01e",
       "user_language": "this audio is too long for my AI to process",
       "normalized": "this audio is too long for my ai to process",
@@ -18198,7 +18520,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "discovery_and_handoff",
+          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -18722,29 +19044,6 @@
           "pain_page": "/chum/products/everystage/",
           "public_url": "https://every-stage.base44.app/product",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:9b8da2c1e8",
-      "user_language": "venue promotion",
-      "normalized": "venue promotion",
-      "relative_json": "/chum/answers/doors/venue-promotion-9b8da2c1e8.json",
-      "relative_page": "/chum/answers/doors/venue-promotion-9b8da2c1e8/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/venue-promotion-9b8da2c1e8.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:eventwave",
-          "kind": "product",
-          "product_key": "eventwave",
-          "public_id": null,
-          "name": "EventWave",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/eventwave/",
-          "public_url": "https://event-wave.base44.app/",
-          "registry_name": "io.github.jgaethle10/eventwave"
         }
       ]
     },
@@ -19543,6 +19842,29 @@
       ]
     },
     {
+      "answer_id": "intent:960699d185",
+      "user_language": "what is happening near me tonight",
+      "normalized": "what is happening near me tonight",
+      "relative_json": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185.json",
+      "relative_page": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-is-happening-near-me-tonight-960699d185.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:eventwave",
+          "kind": "product",
+          "product_key": "eventwave",
+          "public_id": null,
+          "name": "EventWave",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/eventwave/",
+          "public_url": "https://event-wave.base44.app/",
+          "registry_name": "io.github.jgaethle10/eventwave"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:98c67beafc",
       "user_language": "what is still running after I turned the automation off",
       "normalized": "what is still running after i turned the automation off",
@@ -19832,6 +20154,29 @@
       ]
     },
     {
+      "answer_id": "intent:3b76c8caac",
+      "user_language": "where can I earn points today",
+      "normalized": "where can i earn points today",
+      "relative_json": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
+      "relative_page": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:b0f7c0a824",
       "user_language": "where is Evercraft Network verified",
       "normalized": "where is evercraft network verified",
@@ -20093,29 +20438,6 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:d509cdd5c8",
-      "user_language": "Yakima local business discovery",
-      "normalized": "yakima local business discovery",
-      "relative_json": "/chum/answers/doors/yakima-local-business-discovery-d509cdd5c8.json",
-      "relative_page": "/chum/answers/doors/yakima-local-business-discovery-d509cdd5c8/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/yakima-local-business-discovery-d509cdd5c8.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:evercraft-rewards",
-          "kind": "product",
-          "product_key": "evercraft-rewards",
-          "public_id": null,
-          "name": "Evercraft Rewards",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/evercraft-rewards/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },

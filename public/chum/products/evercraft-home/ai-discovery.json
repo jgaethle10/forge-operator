@@ -36,7 +36,22 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "eventwave": {
+      "name": "EventWave",
+      "description": "Verified current occurrences can connect living traditions and community institutions to present-day events.",
+      "public_surface": "https://event-wave.base44.app/"
+    },
+    "seasonally": {
+      "name": "Season & Story",
+      "description": "Seasonal traditions can connect household planning to public community history without exposing private household data."
+    },
+    "rewards": {
+      "name": "Evercraft Rewards",
+      "description": "Community participation may connect to approved local reward campaigns when separately configured and consented.",
+      "public_surface": "https://evercraft-rewards.base44.app/"
+    }
+  },
   "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {

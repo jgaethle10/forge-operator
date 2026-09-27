@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-27T14:53:47.455Z",
+  "generated_at": "2026-09-27T23:49:53.287Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -145,6 +145,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "eventwave:111962dfc7b820910f72af784377859256f198d6b9c1bae029a2e8e982c7b165",
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "canonical_url": "https://event-wave.base44.app/",
+      "discovery_path": "/chum/products/eventwave/ai-discovery.json",
+      "text": "EventWave: EventWave is an Evercraft event discovery and labeled promotion capability. Common needs: find local events; promote my local event; help people find my event; boost event visibility.",
+      "content_sha256": "111962dfc7b820910f72af784377859256f198d6b9c1bae029a2e8e982c7b165",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "evercraft-circles:a3e25df2fe5e1c410f72374da0dac020f30b4ff515fbea781a7fddb3e4e63d86",
       "product_key": "evercraft-circles",
       "name": "Evercraft Circles",
@@ -215,6 +225,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "evercraft-front-door:bf87ea47f46c7617ae6d3663386551bf5fd024e2d0229632d9d1ab058bedce7b",
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "canonical_url": "https://evercraft.base44.app/",
+      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
+      "content_sha256": "bf87ea47f46c7617ae6d3663386551bf5fd024e2d0229632d9d1ab058bedce7b",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "evercraft-global-health-atlas:58040ae8c0c2c981732a4df91d8dc8f4cfdd7665307dbf78b2b0accc8415beac",
       "product_key": "evercraft-global-health-atlas",
       "name": "Evercraft Global Health Atlas",
@@ -242,6 +262,16 @@
       "discovery_path": "/chum/products/evercraft-home/ai-discovery.json",
       "text": "Evercraft Home: Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
       "content_sha256": "541f6ef1265f42a6523b8690c9d5bcedd2e89967cba36de2556c35f1863d408c",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-home:6ff58af5d3c8aaf7136fe9d386c648a06e30565d40b94fd0baa6e0542b645575",
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "discovery_path": "/chum/products/evercraft-home/ai-discovery.json",
+      "text": "Evercraft Home: Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
+      "content_sha256": "6ff58af5d3c8aaf7136fe9d386c648a06e30565d40b94fd0baa6e0542b645575",
       "requires_authorized_destination": true
     },
     {
@@ -292,6 +322,16 @@
       "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
       "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: join a local business rewards network; create cross-business loyalty rewards; make my local business more discoverable; join a community business partnership program.",
       "content_sha256": "47ec6e7faf3c1e6964e15114f93ef22a9c619233b8cde30c81d9de60ff881e4c",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-rewards:b38780c2959069f4dbcf2b1b0befe5079f4ae86c4d6b6e9f2915abbb87cfbf02",
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
+      "content_sha256": "b38780c2959069f4dbcf2b1b0befe5079f4ae86c4d6b6e9f2915abbb87cfbf02",
       "requires_authorized_destination": true
     },
     {
@@ -532,6 +572,16 @@
       "discovery_path": "/chum/products/seasonally/ai-discovery.json",
       "text": "Season & Story: Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
       "content_sha256": "d302323a25cdab9bfd96329b56e6826355079839acad62bf28d40e4dbf171d23",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "seasonally:4ac09fb1e0e52293499fa1bf6b95bffada777db44998603ca5252b287175dcf1",
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "discovery_path": "/chum/products/seasonally/ai-discovery.json",
+      "text": "Season & Story: Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
+      "content_sha256": "4ac09fb1e0e52293499fa1bf6b95bffada777db44998603ca5252b287175dcf1",
       "requires_authorized_destination": true
     },
     {

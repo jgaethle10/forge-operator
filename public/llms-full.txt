@@ -1131,6 +1131,11 @@ Use when the user says or means:
 - help people find my event
 - boost event visibility
 - promote a venue's events
+- what is happening near me tonight
+- things to do near me this weekend
+- local events near me
+- family events near me
+- free local events near me
 Authority:
 public event search plus human-confirmed paid labeled promotion
 Boundaries:
@@ -1412,13 +1417,25 @@ Boundaries:
 
 ### Evercraft Rewards
 Product key: evercraft-rewards
-Canonical: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
+Canonical: https://evercraft-rewards.base44.app/
 Machine state: mcp
 Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
 Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json
 Use when the user says or means:
+- local deals near me
+- rewards near me
+- businesses near me with rewards
+- earn Evercraft Points near me
+- earn rewards for visiting local businesses
+- daily rewards check-in
+- daily scratch ticket rewards
+- where can I earn points today
+- local rewards for supporting nearby businesses
+- earn game credit by supporting local businesses
+- earn gaming rewards from local activity
+- redeem Evercraft Points toward approved gaming credit
 - join a local business rewards network
 - create cross-business loyalty rewards
 - make my local business more discoverable
@@ -2063,6 +2080,30 @@ Boundaries:
 - production changes, payment actions and external communications remain separately gated
 - customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified
 
+### Systemia Radar
+Product key: systemia-radar
+Canonical: https://systemia-scan-pro.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-conformance.json
+Use when the user says or means:
+- scan my website for problems
+- compare my website against competitors
+- show where my competitors are beating my website
+- create a website competitor comparison report
+- monitor my website with weekly rescans
+- track website audit changes over time
+Authority:
+public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification
+Commercial state:
+- Status: source_checkout_wired_live_verification_pending
+- Payment state: Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified
+Boundaries:
+- website findings must come from observed scan evidence rather than fabricated LLM opinion
+- scores and competitor comparisons do not guarantee rankings, leads or revenue
+- weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability
+- checkout creation alone does not activate paid access
+
 ### Systemia Remote Ops
 Product key: systemia-remote-ops
 Aliases: Remote Ops, Systemia Business Simulator, Systemia Business Flight Simulator, Systemia Decision Laboratory, Business Decision Simulator
@@ -2112,30 +2153,6 @@ Boundaries:
 - starting a business, changing prices, hiring, expansion, acquisitions, partnerships, purchases and other consequential actions remain human-confirmed
 - the current public cockpit URL and production customer execution path are not represented as independently verified
 - discovery creates no payment obligation and no public price is represented as verified
-
-### Systemia Radar
-Product key: systemia-radar
-Canonical: https://systemia-scan-pro.base44.app/
-Machine state: discovery_only
-Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-discovery.json
-AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/ai-conformance.json
-Use when the user says or means:
-- scan my website for problems
-- compare my website against competitors
-- show where my competitors are beating my website
-- create a website competitor comparison report
-- monitor my website with weekly rescans
-- track website audit changes over time
-Authority:
-public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification
-Commercial state:
-- Status: source_checkout_wired_live_verification_pending
-- Payment state: Source includes checkout, payment webhook, purchase-status and unlock functions; paid state must be independently provider-verified
-Boundaries:
-- website findings must come from observed scan evidence rather than fabricated LLM opinion
-- scores and competitor comparisons do not guarantee rankings, leads or revenue
-- weekly monitoring reflects reachable scan data and is not a guarantee of continuous availability
-- checkout creation alone does not activate paid access
 
 ### Systemia Website Audit
 Product key: systemia-website-audit

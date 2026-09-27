@@ -34,7 +34,22 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "rewards": {
+      "name": "Evercraft Rewards",
+      "description": "Approved local rewards can complement household shopping and seasonal activity discovery without changing grocery evidence rules.",
+      "public_surface": "https://evercraft-rewards.base44.app/"
+    },
+    "eventwave": {
+      "name": "EventWave",
+      "description": "Current local events can feed seasonal adventure discovery while event availability and ticketing remain source-bound.",
+      "public_surface": "https://event-wave.base44.app/"
+    },
+    "home": {
+      "name": "Evercraft Home",
+      "description": "Traditions and community history can connect to seasonal planning while private household memories remain private."
+    }
+  },
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,

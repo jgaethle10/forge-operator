@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T23:49:47.406Z",
+  "updated_at": "2026-09-27T23:49:53.447Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,27 +11,1470 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-27T23:49:47.406Z",
+      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimating-software-49474d67fa.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimating-software-49474d67fa/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-pricing-api-33e8e59e36.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-pricing-api-33e8e59e36/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-private-price-book-46ec574313.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-private-price-book-46ec574313/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/family-events-near-me-df760efe4b.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/family-events-near-me-df760efe4b/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/field-service-estimating-software-aebb1374cd.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/field-service-estimating-software-aebb1374cd/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-local-events-near-me-021869826b.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-local-events-near-me-021869826b/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/job-costing-estimate-2289ed7386.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/job-costing-estimate-2289ed7386/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-events-near-me-e826ea2875.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-events-near-me-e826ea2875/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/no-account-contractor-estimate-d0de142039.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/no-account-contractor-estimate-d0de142039/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/painting-estimate-calculator-825b60b4de.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/painting-estimate-calculator-825b60b4de/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/price-this-contractor-job-aef270b551.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/price-this-contractor-job-aef270b551/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rewards-near-me-89d5f09b97.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rewards-near-me-89d5f09b97/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/intents/eps-estimate-engine-machine-v1/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/capabilities/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/products/eventwave/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eventwave/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eventwave/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eventwave/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-front-door/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-front-door/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-home/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-home/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-home/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/seasonally/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/seasonally/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/seasonally/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 86
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-27T23:49:47.406Z",
+      "path": "/chum/agent-commerce.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-27T23:49:47.406Z",
+      "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-27T23:49:47.406Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
+      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
+      "url": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0/",
+      "url": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json",
+      "url": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68/",
+      "url": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
+      "url": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86/",
+      "url": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json",
+      "url": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd/",
+      "url": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96.json",
+      "url": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96/",
+      "url": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json",
+      "url": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6/",
+      "url": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimating-software-49474d67fa.json",
+      "url": "/chum/answers/doors/contractor-estimating-software-49474d67fa.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-estimating-software-49474d67fa/",
+      "url": "/chum/answers/doors/contractor-estimating-software-49474d67fa/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-pricing-api-33e8e59e36.json",
+      "url": "/chum/answers/doors/contractor-pricing-api-33e8e59e36.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-pricing-api-33e8e59e36/",
+      "url": "/chum/answers/doors/contractor-pricing-api-33e8e59e36/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-private-price-book-46ec574313.json",
+      "url": "/chum/answers/doors/contractor-private-price-book-46ec574313.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/contractor-private-price-book-46ec574313/",
+      "url": "/chum/answers/doors/contractor-private-price-book-46ec574313/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json",
+      "url": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/",
+      "url": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
+      "url": "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2/",
+      "url": "/chum/answers/doors/daily-rewards-check-in-5348821cf2/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
+      "url": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/",
+      "url": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
+      "url": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c/",
+      "url": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
+      "url": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/",
+      "url": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
+      "url": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/",
+      "url": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
+      "url": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/",
+      "url": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json",
+      "url": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e/",
+      "url": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json",
+      "url": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/",
+      "url": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/family-events-near-me-df760efe4b.json",
+      "url": "/chum/answers/doors/family-events-near-me-df760efe4b.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/family-events-near-me-df760efe4b/",
+      "url": "/chum/answers/doors/family-events-near-me-df760efe4b/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/field-service-estimating-software-aebb1374cd.json",
+      "url": "/chum/answers/doors/field-service-estimating-software-aebb1374cd.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/field-service-estimating-software-aebb1374cd/",
+      "url": "/chum/answers/doors/field-service-estimating-software-aebb1374cd/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d.json",
+      "url": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d/",
+      "url": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-local-events-near-me-021869826b.json",
+      "url": "/chum/answers/doors/free-local-events-near-me-021869826b.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-local-events-near-me-021869826b/",
+      "url": "/chum/answers/doors/free-local-events-near-me-021869826b/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/job-costing-estimate-2289ed7386.json",
+      "url": "/chum/answers/doors/job-costing-estimate-2289ed7386.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/job-costing-estimate-2289ed7386/",
+      "url": "/chum/answers/doors/job-costing-estimate-2289ed7386/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json",
+      "url": "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json",
+      "url": "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
+      "url": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571/",
+      "url": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
+      "url": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7/",
+      "url": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-events-near-me-e826ea2875.json",
+      "url": "/chum/answers/doors/local-events-near-me-e826ea2875.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-events-near-me-e826ea2875/",
+      "url": "/chum/answers/doors/local-events-near-me-e826ea2875/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
+      "url": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/",
+      "url": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json",
+      "url": "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/no-account-contractor-estimate-d0de142039.json",
+      "url": "/chum/answers/doors/no-account-contractor-estimate-d0de142039.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/no-account-contractor-estimate-d0de142039/",
+      "url": "/chum/answers/doors/no-account-contractor-estimate-d0de142039/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/painting-estimate-calculator-825b60b4de.json",
+      "url": "/chum/answers/doors/painting-estimate-calculator-825b60b4de.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/painting-estimate-calculator-825b60b4de/",
+      "url": "/chum/answers/doors/painting-estimate-calculator-825b60b4de/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/price-this-contractor-job-aef270b551.json",
+      "url": "/chum/answers/doors/price-this-contractor-job-aef270b551.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/price-this-contractor-job-aef270b551/",
+      "url": "/chum/answers/doors/price-this-contractor-job-aef270b551/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
+      "url": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41/",
+      "url": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rewards-near-me-89d5f09b97.json",
+      "url": "/chum/answers/doors/rewards-near-me-89d5f09b97.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rewards-near-me-89d5f09b97/",
+      "url": "/chum/answers/doors/rewards-near-me-89d5f09b97/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json",
+      "url": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27/",
+      "url": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json",
+      "url": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/",
+      "url": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json",
+      "url": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e/",
+      "url": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0.json",
+      "url": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0/",
+      "url": "/chum/answers/doors/things-to-do-near-me-this-weekend-a76cdf0ee0/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json",
+      "url": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/",
+      "url": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185.json",
+      "url": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185/",
+      "url": "/chum/answers/doors/what-is-happening-near-me-tonight-960699d185/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
+      "url": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/",
+      "url": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/intents/eps-estimate-engine-machine-v1/",
+      "url": "/chum/intents/eps-estimate-engine-machine-v1/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 98
+    },
+    {
+      "path": "/chum/capabilities/",
+      "url": "/chum/capabilities/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/",
+      "url": "/chum/capabilities/eps-estimate-engine-machine-v1/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
+      "url": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
+      "url": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 96
+    },
+    {
+      "path": "/chum/products/eventwave/",
+      "url": "/chum/products/eventwave/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eventwave/ai-conformance.json",
+      "url": "/chum/products/eventwave/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eventwave/ai-discovery.json",
+      "url": "/chum/products/eventwave/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/eventwave/llms.txt",
+      "url": "/chum/products/eventwave/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-front-door/ai-conformance.json",
+      "url": "/chum/products/evercraft-front-door/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "url": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-front-door/llms.txt",
+      "url": "/chum/products/evercraft-front-door/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-home/ai-conformance.json",
+      "url": "/chum/products/evercraft-home/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-home/ai-discovery.json",
+      "url": "/chum/products/evercraft-home/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-home/llms.txt",
+      "url": "/chum/products/evercraft-home/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/",
+      "url": "/chum/products/evercraft-rewards/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "url": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "url": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/llms.txt",
+      "url": "/chum/products/evercraft-rewards/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/seasonally/ai-conformance.json",
+      "url": "/chum/products/seasonally/ai-conformance.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/seasonally/ai-discovery.json",
+      "url": "/chum/products/seasonally/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/seasonally/llms.txt",
+      "url": "/chum/products/seasonally/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt",
+      "url": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 86
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "url": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "url": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "url": "/chum/agent-commerce.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
+      "url": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
+      "url": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "url": "/ai-discovery.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-09-27T23:49:53.447Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -41,12 +1484,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-27T23:49:47.406Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-27T23:49:47.406Z",
       "priority": 80
     },
@@ -411,12 +1848,6 @@
       "priority": 92
     },
     {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "last_changed": "2026-09-27T16:30:38.500Z",
-      "priority": 92
-    },
-    {
       "path": "/chum/sell-now.txt",
       "url": "/chum/sell-now.txt",
       "last_changed": "2026-09-27T16:30:38.500Z",
@@ -429,22 +1860,10 @@
       "priority": 90
     },
     {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "last_changed": "2026-09-27T16:30:38.500Z",
-      "priority": 90
-    },
-    {
       "path": "/chum/revenue.txt",
       "url": "/chum/revenue.txt",
       "last_changed": "2026-09-27T16:30:38.500Z",
       "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "url": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-27T16:30:38.500Z",
-      "priority": 84
     },
     {
       "path": "/chum/agent-commerce.html",
@@ -453,20 +1872,8 @@
       "priority": 80
     },
     {
-      "path": "/chum/agent-commerce.json",
-      "url": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-27T16:30:38.500Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/agent-commerce.txt",
       "url": "/chum/agent-commerce.txt",
-      "last_changed": "2026-09-27T16:30:38.500Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
       "last_changed": "2026-09-27T16:30:38.500Z",
       "priority": 80
     },
@@ -657,18 +2064,6 @@
       "priority": 94
     },
     {
-      "path": "/chum/products/eventwave/ai-conformance.json",
-      "url": "/chum/products/eventwave/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/eventwave/ai-discovery.json",
-      "url": "/chum/products/eventwave/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
       "path": "/chum/products/evercraft-circles/ai-conformance.json",
       "url": "/chum/products/evercraft-circles/ai-conformance.json",
       "last_changed": "2026-09-27T14:53:47.616Z",
@@ -729,18 +2124,6 @@
       "priority": 94
     },
     {
-      "path": "/chum/products/evercraft-front-door/ai-conformance.json",
-      "url": "/chum/products/evercraft-front-door/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "url": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
       "path": "/chum/products/evercraft-global-health-atlas/ai-conformance.json",
       "url": "/chum/products/evercraft-global-health-atlas/ai-conformance.json",
       "last_changed": "2026-09-27T14:53:47.616Z",
@@ -749,18 +2132,6 @@
     {
       "path": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
       "url": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/ai-conformance.json",
-      "url": "/chum/products/evercraft-home/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/ai-discovery.json",
-      "url": "/chum/products/evercraft-home/ai-discovery.json",
       "last_changed": "2026-09-27T14:53:47.616Z",
       "priority": 94
     },
@@ -801,736 +2172,10 @@
       "priority": 94
     },
     {
-      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "url": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "url": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
       "path": "/chum/products/evercraft-web/ai-conformance.json",
       "url": "/chum/products/evercraft-web/ai-conformance.json",
       "last_changed": "2026-09-27T14:53:47.616Z",
       "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/ai-discovery.json",
-      "url": "/chum/products/evercraft-web/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-wildlife-atlas/ai-conformance.json",
-      "url": "/chum/products/evercraft-wildlife-atlas/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
-      "url": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/ai-conformance.json",
-      "url": "/chum/products/evermaps/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/ai-discovery.json",
-      "url": "/chum/products/evermaps/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evernest/ai-conformance.json",
-      "url": "/chum/products/evernest/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evernest/ai-discovery.json",
-      "url": "/chum/products/evernest/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/everystage/ai-conformance.json",
-      "url": "/chum/products/everystage/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/everystage/ai-discovery.json",
-      "url": "/chum/products/everystage/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/ai-conformance.json",
-      "url": "/chum/products/faie/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/ai-discovery.json",
-      "url": "/chum/products/faie/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/findmypart/ai-conformance.json",
-      "url": "/chum/products/findmypart/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/findmypart/ai-discovery.json",
-      "url": "/chum/products/findmypart/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/forensic-record/ai-conformance.json",
-      "url": "/chum/products/forensic-record/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/forensic-record/ai-discovery.json",
-      "url": "/chum/products/forensic-record/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/global-energy-atlas/ai-conformance.json",
-      "url": "/chum/products/global-energy-atlas/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/global-energy-atlas/ai-discovery.json",
-      "url": "/chum/products/global-energy-atlas/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/ai-conformance.json",
-      "url": "/chum/products/globalstat/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/ai-discovery.json",
-      "url": "/chum/products/globalstat/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/guardian/ai-conformance.json",
-      "url": "/chum/products/guardian/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/guardian/ai-discovery.json",
-      "url": "/chum/products/guardian/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "url": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/infinite-classroom/ai-conformance.json",
-      "url": "/chum/products/infinite-classroom/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/infinite-classroom/ai-discovery.json",
-      "url": "/chum/products/infinite-classroom/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "url": "/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "url": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/ai-conformance.json",
-      "url": "/chum/products/little-red-book-export-qa/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "url": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/ai-conformance.json",
-      "url": "/chum/products/raven-nexus/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/ai-discovery.json",
-      "url": "/chum/products/raven-nexus/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/roasted/ai-conformance.json",
-      "url": "/chum/products/roasted/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/roasted/ai-discovery.json",
-      "url": "/chum/products/roasted/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/ai-conformance.json",
-      "url": "/chum/products/seasonally/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/ai-discovery.json",
-      "url": "/chum/products/seasonally/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/skyops-parking/ai-conformance.json",
-      "url": "/chum/products/skyops-parking/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/skyops-parking/ai-discovery.json",
-      "url": "/chum/products/skyops-parking/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/space-dudz/ai-conformance.json",
-      "url": "/chum/products/space-dudz/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/space-dudz/ai-discovery.json",
-      "url": "/chum/products/space-dudz/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-atlas-freight/ai-conformance.json",
-      "url": "/chum/products/systemia-atlas-freight/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-atlas-freight/ai-discovery.json",
-      "url": "/chum/products/systemia-atlas-freight/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-decision-lab/ai-conformance.json",
-      "url": "/chum/products/systemia-decision-lab/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-decision-lab/ai-discovery.json",
-      "url": "/chum/products/systemia-decision-lab/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-field-library/ai-conformance.json",
-      "url": "/chum/products/systemia-field-library/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-field-library/ai-discovery.json",
-      "url": "/chum/products/systemia-field-library/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "url": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "url": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-radar/ai-conformance.json",
-      "url": "/chum/products/systemia-radar/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-radar/ai-discovery.json",
-      "url": "/chum/products/systemia-radar/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-remote-ops/ai-conformance.json",
-      "url": "/chum/products/systemia-remote-ops/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-remote-ops/ai-discovery.json",
-      "url": "/chum/products/systemia-remote-ops/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-website-audit/ai-conformance.json",
-      "url": "/chum/products/systemia-website-audit/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-website-audit/ai-discovery.json",
-      "url": "/chum/products/systemia-website-audit/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/talent-atlas/ai-conformance.json",
-      "url": "/chum/products/talent-atlas/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/talent-atlas/ai-discovery.json",
-      "url": "/chum/products/talent-atlas/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/thoughtdrop/ai-conformance.json",
-      "url": "/chum/products/thoughtdrop/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/thoughtdrop/ai-discovery.json",
-      "url": "/chum/products/thoughtdrop/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/towi-research/ai-conformance.json",
-      "url": "/chum/products/towi-research/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/towi-research/ai-discovery.json",
-      "url": "/chum/products/towi-research/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/website-launch/ai-conformance.json",
-      "url": "/chum/products/website-launch/ai-conformance.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/website-launch/ai-discovery.json",
-      "url": "/chum/products/website-launch/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/proof/llms.txt",
-      "url": "/chum/proof/llms.txt",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "url": "/chum/",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/",
-      "url": "/chum/proof/",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 60
-    },
-    {
-      "path": "/rivet/llms.txt",
-      "url": "/rivet/llms.txt",
-      "last_changed": "2026-09-27T14:38:34.804Z",
-      "priority": 86
-    },
-    {
-      "path": "/rivet/discovery.json",
-      "url": "/rivet/discovery.json",
-      "last_changed": "2026-09-27T14:38:34.804Z",
-      "priority": 60
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "url": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "url": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/business-decision-laboratory-be5b709998.json",
-      "url": "/chum/answers/doors/business-decision-laboratory-be5b709998.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/business-decision-laboratory-be5b709998/",
-      "url": "/chum/answers/doors/business-decision-laboratory-be5b709998/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f.json",
-      "url": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f/",
-      "url": "/chum/answers/doors/business-digital-twin-for-decision-making-0ba75ac36f/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda.json",
-      "url": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda/",
-      "url": "/chum/answers/doors/business-simulator-for-a-new-company-46196f8cda/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819.json",
-      "url": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819/",
-      "url": "/chum/answers/doors/compare-a-baseline-business-with-an-acquisition-scenario-using-my-own-assumptions-eb02295819/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650.json",
-      "url": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/",
-      "url": "/chum/answers/doors/compare-business-strategy-options-before-choosing-one-400f146650/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594.json",
-      "url": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594/",
-      "url": "/chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e.json",
-      "url": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e/",
-      "url": "/chum/answers/doors/i-am-considering-opening-another-location-and-hiring-more-people-before-i-sign-a-l-6d0359b43e/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e.json",
-      "url": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e/",
-      "url": "/chum/answers/doors/i-am-thinking-about-buying-another-small-business-and-want-to-compare-my-baseline--e1a9de412e/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca.json",
-      "url": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca/",
-      "url": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-idea-before-i-commit-8a084977ca/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811.json",
-      "url": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811/",
-      "url": "/chum/answers/doors/i-am-thinking-about-starting-a-business-and-want-to-test-the-operating-and-cash-fl-48e91f0811/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5.json",
-      "url": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5/",
-      "url": "/chum/answers/doors/i-run-a-small-service-business-and-want-to-simulate-raising-prices-before-i-actual-1b59f6c2f5/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json",
-      "url": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266/",
-      "url": "/chum/answers/doors/i-want-a-business-simulator-where-i-can-change-assumptions-and-compare-scenarios-b-adb561e266/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17.json",
-      "url": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17/",
-      "url": "/chum/answers/doors/i-want-to-see-how-this-decision-could-affect-staffing-sales-cash-flow-and-operatio-a51bf4ce17/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979.json",
-      "url": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979/",
-      "url": "/chum/answers/doors/model-a-business-sale-or-exit-before-committing-9153013979/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10.json",
-      "url": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/",
-      "url": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f.json",
-      "url": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f/",
-      "url": "/chum/answers/doors/model-revenue-margins-recurring-costs-cash-outlay-break-even-and-runway-under-seve-f79405f35f/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec.json",
-      "url": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec/",
-      "url": "/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8.json",
-      "url": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8/",
-      "url": "/chum/answers/doors/pre-decision-business-simulation-3eb7ad75d8/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6.json",
-      "url": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6/",
-      "url": "/chum/answers/doors/run-a-what-if-scenario-for-my-business-c4b8dabcb6/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60.json",
-      "url": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60/",
-      "url": "/chum/answers/doors/run-the-business-decision-before-i-risk-the-business-9967d2bf60/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4.json",
-      "url": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4/",
-      "url": "/chum/answers/doors/run-the-company-before-i-risk-the-company-c4ea6c9af4/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2.json",
-      "url": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2/",
-      "url": "/chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f.json",
-      "url": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f.json",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f/",
-      "url": "/chum/answers/doors/should-i-add-or-remove-a-product-or-service-5f2f5e9e7f/",
-      "last_changed": "2026-09-27T06:03:00.949Z",
-      "priority": 100
     }
   ]
 }

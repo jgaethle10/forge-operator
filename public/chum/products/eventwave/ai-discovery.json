@@ -10,7 +10,12 @@
     "promote my local event",
     "help people find my event",
     "boost event visibility",
-    "promote a venue's events"
+    "promote a venue's events",
+    "what is happening near me tonight",
+    "things to do near me this weekend",
+    "local events near me",
+    "family events near me",
+    "free local events near me"
   ],
   "authority": "public event search plus human-confirmed paid labeled promotion",
   "human_confirmation_required": true,
@@ -28,7 +33,22 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "evercraft_front_door": {
+      "name": "Evercraft Front Door",
+      "description": "Local event discovery is part of the wider everyday Evercraft utility graph.",
+      "public_surface": "https://evercraft.base44.app/"
+    },
+    "rewards": {
+      "name": "Evercraft Rewards",
+      "description": "Approved events may carry event bonuses or local reward participation when separately configured.",
+      "public_surface": "https://evercraft-rewards.base44.app/"
+    },
+    "seasonally": {
+      "name": "Season & Story",
+      "description": "Seasonal family planning can use EventWave as the current-event discovery layer while household plans remain private."
+    }
+  },
   "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {

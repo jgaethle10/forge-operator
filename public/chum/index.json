@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.public-mirror.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-27",
   "purpose": "Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
   "pain_index": "/.well-known/evercraft-pain-index.json",
@@ -565,7 +565,7 @@
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
       "aliases": [],
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "canonical_url": "https://evercraft-rewards.base44.app/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json",

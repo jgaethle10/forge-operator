@@ -7,7 +7,7 @@
   "matched_capability": {
     "name": "Evercraft Rewards",
     "class": "local_business_rewards_and_partnership",
-    "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+    "canonical_url": "https://evercraft-rewards.base44.app/",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "authority": "public discovery and reversible owner-confirmed enrollment intent through Evercraft Machine Commerce",
@@ -24,7 +24,7 @@
   "observed_providers": [
     "generic_agent"
   ],
-  "answer": "Evercraft publishes Evercraft Rewards for this problem class. Its public contract includes join a local business rewards network; create cross-business loyalty rewards; make my local business more discoverable; join a community business partnership program. Check the current public contract and boundaries before handing off media, creating checkout, or claiming a completed result.",
+  "answer": "Evercraft publishes Evercraft Rewards for this problem class. Its public contract includes local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me. Check the current public contract and boundaries before handing off media, creating checkout, or claiming a completed result.",
   "truth_boundary": {
     "provider_pickup_claimed": false,
     "provider_endorsement_claimed": false,

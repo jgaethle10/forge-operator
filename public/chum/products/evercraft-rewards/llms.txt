@@ -1,14 +1,33 @@
 # Evercraft Rewards
 
 Product key: evercraft-rewards
-Canonical product: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs
+Canonical product: https://evercraft-rewards.base44.app/
 Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
 Remote MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json
 
+## Related product layers
+
+- Evercraft Front Door: Fuel and other local utility surfaces can surface eligible nearby Rewards offers without making Rewards the canonical fuel data source. · https://evercraft.base44.app/
+- EventWave: Approved events can participate in event bonuses and local discovery while ticketing and attendance remain separate evidence states. · https://event-wave.base44.app/
+- Season & Story: Seasonal family activity and shopping contexts may surface approved Rewards opportunities without exposing private household data.
+- Game Wallet: Evercraft Points can appear in the Game Wallet. Gaming redemption remains closed unless a funded authorized fulfillment rail exists. · https://evercraft-rewards.base44.app/game-wallet
+
 ## Use this capability when the user means
 
+- local deals near me
+- rewards near me
+- businesses near me with rewards
+- earn Evercraft Points near me
+- earn rewards for visiting local businesses
+- daily rewards check-in
+- daily scratch ticket rewards
+- where can I earn points today
+- local rewards for supporting nearby businesses
+- earn game credit by supporting local businesses
+- earn gaming rewards from local activity
+- redeem Evercraft Points toward approved gaming credit
 - join a local business rewards network
 - create cross-business loyalty rewards
 - make my local business more discoverable

@@ -34,7 +34,31 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "rewards": {
+      "name": "Evercraft Rewards",
+      "description": "Local rewards, nearby offers, check-ins and the Daily Prize Ticket are part of the everyday Evercraft utility graph.",
+      "public_surface": "https://evercraft-rewards.base44.app/"
+    },
+    "eventwave": {
+      "name": "EventWave",
+      "description": "Use EventWave for current local-event discovery and venue context.",
+      "public_surface": "https://event-wave.base44.app/"
+    },
+    "seasonally": {
+      "name": "Season & Story",
+      "description": "Use Season & Story for seasonal family planning, recipes, grocery lists and traditions."
+    },
+    "home": {
+      "name": "Evercraft Home",
+      "description": "Use Evercraft Home for privacy-first hometown memory, traditions, archives and reviewed community contributions."
+    },
+    "evermaps": {
+      "name": "EverMaps",
+      "description": "Selected local destinations can hand off into public-safe map and navigation context.",
+      "public_surface": "https://evermaps.base44.app/"
+    }
+  },
   "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {
