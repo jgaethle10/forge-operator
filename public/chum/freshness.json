@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T05:22:17.771Z",
+  "updated_at": "2026-09-27T06:02:55.542Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,67 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-27T05:22:17.771Z",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-27T06:02:55.542Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-27T05:22:17.771Z",
+      "last_changed": "2026-09-27T06:02:55.542Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-27T06:02:55.542Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-27T06:02:54.995Z",
+      "priority": 88
     },
     {
       "path": "/chum/hot/",
@@ -408,24 +458,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-27T04:04:18.596Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-27T04:04:18.596Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-27T04:04:18.596Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/capabilities/agent-proving-mission-v1/capability.json",
       "url": "/chum/capabilities/agent-proving-mission-v1/capability.json",
       "last_changed": "2026-09-27T03:48:14.633Z",
@@ -628,12 +660,6 @@
       "url": "/chum/capabilities/towi-evidence-research-machine-v1/capability.json",
       "last_changed": "2026-09-27T03:48:14.633Z",
       "priority": 96
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-27T03:48:08.674Z",
-      "priority": 80
     },
     {
       "path": "/chum/sitemaps/answers.xml",
@@ -1066,12 +1092,6 @@
       "url": "/schema.jsonld",
       "last_changed": "2026-09-27T00:07:01.877Z",
       "priority": 60
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-27T00:06:55.913Z",
-      "priority": 88
     },
     {
       "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565.json",
