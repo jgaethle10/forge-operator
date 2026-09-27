@@ -111,11 +111,12 @@ function verifiedRevenueByCurrency(events) {
   return totals;
 }
 
-function firstBrokenStage(stages, commercialState) {
+function firstBrokenStage(stages, commercialState, { pickupConsistencyPresent = false } = {}) {
   if (!stages.published) return 'published';
   if (!stages.announced) return 'announced';
   if (!stages.crawler_observed) return 'crawler_observed';
   if (!stages.provider_pickup) return 'provider_pickup';
+  if (pickupConsistencyPresent && !stages.provider_pickup_consistent) return 'provider_pickup_consistent';
   if (commercialState === 'sell_now' && !stages.money_path_readable) return 'money_path_readable';
   if (commercialState === 'sell_now' && !stages.acquisition_measurement_ready) return 'acquisition_measurement_ready';
   if (commercialState === 'sell_now' && !stages.payment_measurement_ready) return 'payment_measurement_ready';
@@ -146,6 +147,13 @@ function repairFor({ broken, providerRows, radarRows, commerce, commercialState,
       return { priority: 'P0', action: 'resolve_provider_probe_block_then_reprobe', owner: 'MISSILE_LOCK' };
     }
     return { priority: 'P1', action: 'repair_answer_doors_schema_crosslinks_and_registry_presence_then_reprobe', owner: 'CHUM+MISSILE_LOCK' };
+  }
+  if (broken === 'provider_pickup_consistent') {
+    return {
+      priority: commercialState === 'sell_now' ? 'P1' : 'P2',
+      action: 'increase_repeat_brand_blind_pickup_until_5_receipts_and_80_percent_then_retest',
+      owner: 'CHUM+MISSILE_LOCK'
+    };
   }
   if (broken === 'money_path_readable') {
     return {
@@ -205,6 +213,7 @@ export function buildFireControl({
   commerceCanary = null,
   revenueEvents = null,
   moneyRadar = null,
+  pickupConsistency = null,
 } = {}) {
   const publicDir = path.join(root, 'public');
   const artifactDir = path.join(root, 'artifacts', 'chum');
@@ -216,6 +225,16 @@ export function buildFireControl({
   const commerce = commerceCanary || readJson(path.join(artifactDir, 'commerce-canary-latest.json'), { results: [] });
   const events = revenueEvents || readNdjson(path.join(artifactDir, 'revenue-events.ndjson'));
   const money = moneyRadar || readJson(path.join(artifactDir, 'money-radar-latest.json'), { measurement_state: 'blocked_source_not_configured', products: [] });
+  const pickup = pickupConsistency || readJson(path.join(artifactDir, 'provider-pickup-consistency-latest.json'), { rollups: [] });
+  const pickupConsistencyPresent = pickup?.schema === 'evercraft.chum.provider-pickup-consistency.v1';
+  const pickupByProduct = new Map();
+  for (const row of pickup?.rollups || []) {
+    if (!row?.product_key) continue;
+    const key = normalize(row.product_key);
+    const list = pickupByProduct.get(key) || [];
+    list.push(row);
+    pickupByProduct.set(key, list);
+  }
   const moneyByOffer = new Map((money?.products || []).filter((row) => row?.public_id).map((row) => [row.public_id, row]));
 
   const radarByProduct = mapRadar(crawlerRadar);
@@ -229,6 +248,7 @@ export function buildFireControl({
     const providerRows = productKeys.flatMap((key) => probesByProduct.get(normalize(key)) || []);
     const commerceRow = commerceByOffer.get(offer.public_id) || null;
     const moneyRow = moneyByOffer.get(offer.public_id) || null;
+    const pickupRows = productKeys.flatMap((key) => pickupByProduct.get(normalize(key)) || []);
     const offerEvents = eventsForOffer(events, offer, productKeys);
     const paidEvents = paymentEvents(offerEvents);
 
@@ -237,13 +257,14 @@ export function buildFireControl({
       announced: radarRows.some((row) => row.indexnow_pending === false),
       crawler_observed: radarRows.some((row) => Boolean(row.last_observed_crawler_fetch)),
       provider_pickup: providerRows.some((row) => row.status === 'completed' && row.evaluation?.pickup_observed === true),
+      provider_pickup_consistent: !pickupConsistencyPresent || pickupRows.some((row) => row.state === 'healthy'),
       money_path_readable: offer.commercial_state !== 'sell_now' ? true : commerceRow?.valid === true,
       acquisition_measurement_ready: offer.commercial_state !== 'sell_now' ? true : money?.acquisition_measurement_state === 'measured',
       payment_measurement_ready: offer.commercial_state !== 'sell_now' ? true : money?.payment_measurement_state === 'measured',
       provider_verified_payment: paidEvents.length > 0,
     };
 
-    const broken = firstBrokenStage(stages, offer.commercial_state);
+    const broken = firstBrokenStage(stages, offer.commercial_state, { pickupConsistencyPresent });
     const repair = repairFor({
       broken,
       providerRows,
@@ -277,6 +298,18 @@ export function buildFireControl({
         provider_probe_count: providerRows.length,
         provider_probe_completed: providerRows.filter((row) => row.status === 'completed').length,
         provider_pickup_count: providerRows.filter((row) => row.evaluation?.pickup_observed).length,
+        provider_pickup_consistency_present: pickupConsistencyPresent,
+        provider_pickup_rollup_count: pickupRows.length,
+        provider_pickup_consistency_state: !pickupConsistencyPresent
+          ? 'unmeasured'
+          : pickupRows.some((row) => row.state === 'healthy')
+            ? 'healthy'
+            : pickupRows.length
+              ? pickupRows.map((row) => row.state).sort().join(',')
+              : 'no_samples',
+        provider_pickup_consistency_best_rate: pickupRows.length
+          ? Math.max(...pickupRows.map((row) => Number(row.pickup_rate || 0)))
+          : null,
         commerce_canary_present: Boolean(commerceRow),
         commerce_canary_valid: commerceRow?.valid === true,
         money_radar_state: money?.measurement_state || 'unknown',
@@ -335,6 +368,8 @@ export function buildFireControl({
       provider_probe_bridge_configured: probes?.bridge_configured === true,
       commerce_canary_present: commerce?.schema === 'evercraft.chum.commerce-canary.v1',
       money_radar_present: money?.schema === 'evercraft.chum.money-radar.v1',
+      pickup_consistency_present: pickupConsistencyPresent,
+      pickup_consistency_rollups: pickup?.rollups?.length || 0,
       money_radar_measurement_state: money?.measurement_state || 'unknown',
       acquisition_measurement_state: money?.acquisition_measurement_state || 'unknown',
       payment_measurement_state: money?.payment_measurement_state || 'unknown',
@@ -348,6 +383,7 @@ export function buildFireControl({
         announced: stageCount(rows, 'announced'),
         crawler_observed: stageCount(rows, 'crawler_observed'),
         provider_pickup: stageCount(rows, 'provider_pickup'),
+        provider_pickup_consistent: stageCount(rows, 'provider_pickup_consistent'),
       },
       sell_now: {
         total: sellNowRows.length,
@@ -355,6 +391,7 @@ export function buildFireControl({
         announced: stageCount(sellNowRows, 'announced'),
         crawler_observed: stageCount(sellNowRows, 'crawler_observed'),
         provider_pickup: stageCount(sellNowRows, 'provider_pickup'),
+        provider_pickup_consistent: stageCount(sellNowRows, 'provider_pickup_consistent'),
         money_path_readable: stageCount(sellNowRows, 'money_path_readable'),
         acquisition_measurement_ready: stageCount(sellNowRows, 'acquisition_measurement_ready'),
         payment_measurement_ready: stageCount(sellNowRows, 'payment_measurement_ready'),
@@ -376,6 +413,7 @@ export function buildFireControl({
     `Sell-now: ${receipt.funnel.sell_now.total}`,
     `Sell-now crawler observed: ${receipt.funnel.sell_now.crawler_observed}`,
     `Sell-now provider pickup: ${receipt.funnel.sell_now.provider_pickup}`,
+    `Sell-now consistent provider pickup: ${receipt.funnel.sell_now.provider_pickup_consistent}`,
     `Sell-now healthy money paths: ${receipt.funnel.sell_now.money_path_readable}`,
     `Sell-now acquisition measurement ready: ${receipt.funnel.sell_now.acquisition_measurement_ready}`,
     `Sell-now payment measurement ready: ${receipt.funnel.sell_now.payment_measurement_ready}`,
