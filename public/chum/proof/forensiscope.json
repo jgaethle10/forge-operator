@@ -1,7 +1,10 @@
 {
   "schema": "evercraft.proof-factory.product-card.v1",
-  "generated_at": "2026-09-27T14:45:55.460Z",
+  "generated_at": "2026-09-27T14:55:00.934Z",
   "product_key": "forensiscope",
+  "covered_product_keys": [
+    "forensiscope"
+  ],
   "name": "ForensiScope",
   "product_url": "/forensiscope/",
   "discovery_url": "/forensiscope/discovery.json",

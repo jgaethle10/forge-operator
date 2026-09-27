@@ -1,7 +1,11 @@
 {
   "schema": "evercraft.proof-factory.product-card.v1",
-  "generated_at": "2026-09-27T14:45:55.460Z",
+  "generated_at": "2026-09-27T14:55:00.934Z",
   "product_key": "rivet",
+  "covered_product_keys": [
+    "rivet",
+    "aliev"
+  ],
   "name": "RIVET / AliEV",
   "product_url": "/rivet/",
   "discovery_url": "/rivet/discovery.json",
