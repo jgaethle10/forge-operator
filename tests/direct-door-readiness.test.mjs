@@ -89,3 +89,28 @@ console.log(
     public_route_pending_count: actual.summary.public_route_pending_count,
   })
 );
+
+
+const readinessPath='/.well-known/evercraft-direct-door-readiness.json';
+for(const [file,needle] of [
+  ['public/llms.txt',readinessPath],
+  ['AI-DISCOVERY.md','evercraft-direct-door-readiness.json'],
+  ['llms.txt','evercraft-direct-door-readiness.json'],
+]){
+  const content=fs.readFileSync(path.join(root,file),'utf8');
+  assert.ok(
+    content.includes(needle),
+    file+': primary discovery surfaces must link direct-door readiness'
+  );
+}
+const capabilities=JSON.parse(
+  fs.readFileSync(
+    path.join(root,'public/.well-known/evercraft-capabilities.json'),
+    'utf8'
+  )
+);
+assert.equal(
+  capabilities.discovery?.directDoorReadiness,
+  readinessPath,
+  'capability manifest must advertise direct-door readiness'
+);
