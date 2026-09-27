@@ -36,7 +36,17 @@
   "confirmation": "AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.",
   "public_url": "https://network-control.base44.app/join",
   "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
-  "invocation_status": "SOURCE-WIRED: Network specialist MCP tools and agent gateway are prepared for read-only capability discovery, public presence and human handoff. Production verification is still required before claiming the v1.2.0 MCP surface is live.",
+  "invocation_status": "LIVE READ-ONLY MCP VERIFIED: live_read_only_mcp_verified; machine handoff state bounded_read_only_mcp_verified; evidence https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
+  "live_proof": {
+    "product_key": "evercraft-network",
+    "conformance_state": "live_read_only_mcp_verified",
+    "machine_commerce_handoff_state": "bounded_read_only_mcp_verified",
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
+    "live_read_only_verified": true
+  },
+  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
   "preferred_agent_route": "universal_fallback",
   "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

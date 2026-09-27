@@ -20,6 +20,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=agent-proving-mission-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -45,6 +47,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ai-capability-install-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -76,6 +80,8 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "AliEV / RIVET",
@@ -128,6 +134,8 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Systemia Website Audit",
@@ -169,6 +177,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-bounded-agent-action-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "BuildFlow Enterprise Operations",
@@ -203,6 +213,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-enterprise-ops-router-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "BuildFlow Enterprise Operations",
@@ -238,6 +250,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-entity-resolution-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "BuildFlow Enterprise Operations",
@@ -272,6 +286,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-process-audit-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "BuildFlow Enterprise Operations",
@@ -308,6 +324,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-procure-to-pay-shadow-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "BuildFlow Enterprise Operations",
@@ -343,6 +361,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=buildflow-shadow-migration-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "BuildFlow Enterprise Operations",
@@ -377,6 +397,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=callproof-complaint-packet-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -403,6 +425,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=capability-concierge-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -434,6 +458,8 @@
         "premium_action_limit": 25,
         "price_usd_normalized": 19
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Career Command",
@@ -469,6 +495,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-resume-job-fit-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Career Command",
@@ -504,6 +532,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=community-health-evidence-brief-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -529,6 +559,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=condition-desk-field-ops-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -555,6 +587,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=datafoundry-data-gap-audit-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -588,6 +622,8 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Deck Capital Fit",
@@ -624,6 +660,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eps-estimate-engine-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -666,6 +704,8 @@
         "billing": "one_time",
         "price_usd_normalized": 49
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "EventWave",
@@ -705,6 +745,16 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1",
       "entry_paid_offer": null,
+      "live_proof": {
+        "product_key": "evercraft-clip",
+        "conformance_state": "mcp_registry_live_receipt_backed",
+        "machine_commerce_handoff_state": "verification_required_checkout_not_verified",
+        "registry_name": "io.github.jgaethle10/evercraft-clip",
+        "mcp": null,
+        "live_canary_evidence": null,
+        "live_read_only_verified": false
+      },
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Evercraft Clip",
@@ -743,6 +793,16 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-network-resilience-membership-v1",
       "entry_paid_offer": null,
+      "live_proof": {
+        "product_key": "evercraft-network",
+        "conformance_state": "live_read_only_mcp_verified",
+        "machine_commerce_handoff_state": "bounded_read_only_mcp_verified",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
+        "live_read_only_verified": true
+      },
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -775,6 +835,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-web-browser-agent-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Evercraft Web",
@@ -816,6 +878,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evermaps-evidence-projection-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -847,6 +911,8 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "FAIE",
@@ -885,6 +951,8 @@
         "billing": "one_time",
         "price_usd_normalized": 19
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "FindMyPart",
@@ -918,6 +986,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-repair-shop-desk-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "FindMyPart",
@@ -951,6 +1021,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "ForensiScope",
@@ -999,6 +1071,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 500
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1023,6 +1097,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=freight-load-exception-intelligence-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1049,6 +1125,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=globalstat-country-intelligence-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1082,6 +1160,16 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "live_proof": {
+        "product_key": "ibmi-rescue",
+        "conformance_state": "machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
+        "machine_commerce_handoff_state": "live_verified",
+        "registry_name": null,
+        "mcp": null,
+        "live_canary_evidence": "GitHubActionsRun:36211823272",
+        "live_read_only_verified": false
+      },
+      "live_canary_evidence": "GitHubActionsRun:36211823272",
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1114,6 +1202,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=income-war-map-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1141,6 +1231,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=large-document-corpus-review-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1166,6 +1258,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=littlered-kdp-export-qa-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1191,6 +1285,16 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
       "entry_paid_offer": null,
+      "live_proof": {
+        "product_key": "systemia-portfolio-sentinel",
+        "conformance_state": "live_match_canary_passed",
+        "machine_commerce_handoff_state": null,
+        "registry_name": null,
+        "mcp": null,
+        "live_canary_evidence": "[object Object]",
+        "live_read_only_verified": false
+      },
+      "live_canary_evidence": "[object Object]",
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1227,6 +1331,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=raven-nexus-pain-router-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1267,6 +1373,8 @@
         "billing": "one_time",
         "price_usd_normalized": 299
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "AliEV / RIVET",
@@ -1320,6 +1428,8 @@
         "billing": "one_time",
         "price_usd_normalized": 0.99
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "ROASTED",
@@ -1364,6 +1474,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1388,6 +1500,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1412,6 +1526,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-evidence-profile-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1438,6 +1554,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=talent-proof-portal-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1464,6 +1582,8 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=towi-evidence-research-machine-v1",
       "entry_paid_offer": null,
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -1495,6 +1615,8 @@
         "billing": "one_time",
         "price_usd_normalized": 500
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Website Launch",

@@ -22,6 +22,8 @@
   "public_url": "https://findmypart.base44.app/",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "Discoverable capability; recurring entitlement/payment path still being verified.",
+  "live_proof": null,
+  "live_canary_evidence": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "FindMyPart",

@@ -39,6 +39,8 @@
   "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
   "payment_authority": "Evercraft Payments with provider verification",
   "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
+  "live_proof": null,
+  "live_canary_evidence": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "EventWave",

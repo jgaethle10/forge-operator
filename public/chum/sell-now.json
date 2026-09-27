@@ -26,6 +26,8 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "AliEV / RIVET",
@@ -78,6 +80,8 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Systemia Website Audit",
@@ -126,6 +130,8 @@
         "premium_action_limit": 25,
         "price_usd_normalized": 19
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Career Command",
@@ -168,6 +174,8 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Deck Capital Fit",
@@ -209,6 +217,8 @@
         "billing": "one_time",
         "price_usd_normalized": 49
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "EventWave",
@@ -253,6 +263,8 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "FAIE",
@@ -291,6 +303,8 @@
         "billing": "one_time",
         "price_usd_normalized": 19
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "FindMyPart",
@@ -330,6 +344,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 500
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -361,6 +377,16 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "live_proof": {
+        "product_key": "ibmi-rescue",
+        "conformance_state": "machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
+        "machine_commerce_handoff_state": "live_verified",
+        "registry_name": null,
+        "mcp": null,
+        "live_canary_evidence": "GitHubActionsRun:36211823272",
+        "live_read_only_verified": false
+      },
+      "live_canary_evidence": "GitHubActionsRun:36211823272",
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -399,6 +425,8 @@
         "billing": "one_time",
         "price_usd_normalized": 299
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "AliEV / RIVET",
@@ -452,6 +480,8 @@
         "billing": "one_time",
         "price_usd_normalized": 0.99
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "ROASTED",
@@ -496,6 +526,8 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -525,6 +557,8 @@
         "billing": "one_time",
         "price_usd_normalized": 500
       },
+      "live_proof": null,
+      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Website Launch",

@@ -40,6 +40,16 @@
   "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
   "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
   "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
+  "live_proof": {
+    "product_key": "systemia-portfolio-sentinel",
+    "conformance_state": "live_match_canary_passed",
+    "machine_commerce_handoff_state": null,
+    "registry_name": null,
+    "mcp": null,
+    "live_canary_evidence": "[object Object]",
+    "live_read_only_verified": false
+  },
+  "live_canary_evidence": "[object Object]",
   "preferred_agent_route": "universal_fallback",
   "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

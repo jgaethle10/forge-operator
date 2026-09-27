@@ -30,6 +30,8 @@
   "public_url": "https://evercraft-career-command.base44.app/",
   "payment_authority": "Evercraft Payments",
   "invocation_status": "catalog_ready_runtime_adapter_pending",
+  "live_proof": null,
+  "live_canary_evidence": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "Career Command",

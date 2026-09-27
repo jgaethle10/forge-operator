@@ -56,6 +56,8 @@
   "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
   "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
   "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.",
+  "live_proof": null,
+  "live_canary_evidence": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "AliEV / RIVET",
