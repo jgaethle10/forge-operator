@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T23:49:53.447Z",
+  "updated_at": "2026-09-27T23:51:19.544Z",
   "url_count": 2404,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -135,38 +135,38 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "6bf15554529784a805f7d9f9e0a2ece23381c4245d76ce70dba762fb36137016",
-      "last_changed": "2026-09-27T16:57:57.585Z",
+      "content_sha256": "153979355a8a51cdf8eea298ed22beb244f56a88d8a2582967cc60799ab9ce2c",
+      "last_changed": "2026-09-27T23:51:19.121Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "54fecf3c8680f73f34476cbc7c90630daf449887d74f611a9a2cb33abe3dc4af",
-      "last_changed": "2026-09-27T23:49:53.447Z",
+      "content_sha256": "4784c6aadddff11e7aefcda1ee1aab864fc4ff3ed682f41a251e443a99c0936a",
+      "last_changed": "2026-09-27T23:51:19.544Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "c0dc814ed94953b2ed32aa22bc1020bf418800faa737755eda30ca77d84bfa99",
-      "last_changed": "2026-09-27T23:01:59.958Z",
+      "content_sha256": "7adafa1d525bfb331676edf5cd9956bfc5eda9295e0de637094b7072be37b86a",
+      "last_changed": "2026-09-27T23:51:19.544Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "23f722c26c60414257b7a277299384185a327fe19f29de88d3e2ec31a9f3b6f7",
-      "last_changed": "2026-09-27T23:49:47.406Z",
+      "content_sha256": "01a71a2078130debc3b5e119a03c8b9c724077f2cd479c13808f302b2717e673",
+      "last_changed": "2026-09-27T23:51:19.544Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "f0cfdc156985efb49fa93b2d681839b9f947da980cd2a4cbe7f21f639bf17baa",
-      "last_changed": "2026-09-27T23:49:47.406Z",
+      "content_sha256": "e26660bf2058523ae3d0018767bb4e6fdb5758b70c3dd7a61e8d8fc6f2dc7cf6",
+      "last_changed": "2026-09-27T23:51:19.544Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "42e2d79f902c2fb1df99a0d345aef37a63177e8136aee54499fd77190f7d487a",
-      "last_changed": "2026-09-27T23:49:47.406Z",
+      "content_sha256": "b8f9c574e50b7489ecf8a0e4a0a1a03683f044d6bb20fb52b01e702098bb9cc9",
+      "last_changed": "2026-09-27T23:51:19.544Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -783,8 +783,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "7b0fd83d61e5e48220f9d86b3d1c90e2664179df55b85e75871e84a91b4befa8",
-      "last_changed": "2026-09-27T23:49:46.838Z",
+      "content_sha256": "a6e1c62deba10c46a8860061d67f4dc8858716465c7fad1f77c1da05d090e358",
+      "last_changed": "2026-09-27T23:51:19.121Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -1727,7 +1727,7 @@
       "path": "/chum/intents/foundry-app-escape-audit-v1/",
       "content_sha256": "43ec69a8eb1e02da2a8bf5246aa7a748b028a5d2fd4da6eebe3c124e7f0cab42",
       "last_changed": "2026-09-27T16:30:38.500Z",
-      "priority": 98
+      "priority": 158
     },
     "/chum/capabilities/foundry-app-escape-audit-v1/": {
       "path": "/chum/capabilities/foundry-app-escape-audit-v1/",
@@ -2207,7 +2207,7 @@
       "path": "/chum/intents/website-launch-service-v1/",
       "content_sha256": "1b3859f8c7232363f1a596008c8cf19bdfa4461e743e46bd0ddf43488668aece",
       "last_changed": "2026-09-27T16:30:38.500Z",
-      "priority": 98
+      "priority": 158
     },
     "/chum/capabilities/website-launch-service-v1/": {
       "path": "/chum/capabilities/website-launch-service-v1/",
@@ -2465,13 +2465,13 @@
       "path": "/chum/products/deck-capital-fit/ai-discovery.json",
       "content_sha256": "88f1b1a352133158bce6180292880a928dc5bfeb664e9f051f85a80f59a5a110",
       "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/deck-capital-fit/ai-conformance.json": {
       "path": "/chum/products/deck-capital-fit/ai-conformance.json",
       "content_sha256": "2a25d31f99b67326532a1921268ad85851c714ca5d206ed8de6e860f89f13e60",
       "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/ecoledger/": {
       "path": "/chum/products/ecoledger/",
@@ -2609,13 +2609,13 @@
       "path": "/chum/products/evercraft-containment/ai-discovery.json",
       "content_sha256": "e29dbabd046adf14983da11306d54b815092807de916f58420eacc6a2f9f1c75",
       "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/evercraft-containment/ai-conformance.json": {
       "path": "/chum/products/evercraft-containment/ai-conformance.json",
       "content_sha256": "f9b6ca899bb561497c32be41929a8c852c873800fb25ef4e12f167ad8d35d290",
       "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/evercraft-cosmos-atlas/": {
       "path": "/chum/products/evercraft-cosmos-atlas/",
