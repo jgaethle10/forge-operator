@@ -27,6 +27,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 env:
   # Use the canonical public origin when it is configured so generated sell-now
@@ -357,13 +358,41 @@ jobs:
         continue-on-error: true
         run: npm run chum:crawler-radar
 
+      - name: Mint trusted payment-export identity
+        if: always() && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          (async () => {
+            const requestUrl = process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
+            const requestToken = process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
+            if (!requestUrl || !requestToken) throw new Error('GitHub OIDC request environment is unavailable.');
+            const url = new URL(requestUrl);
+            url.searchParams.set('audience', 'evercraft-chum-payment-export');
+            const response = await fetch(url, {
+              headers: { authorization: 'bearer ' + requestToken }
+            });
+            if (!response.ok) throw new Error('GitHub OIDC token request failed with HTTP ' + response.status);
+            const body = await response.json();
+            if (!body?.value) throw new Error('GitHub OIDC token response did not contain a token.');
+            process.stdout.write('::add-mask::' + body.value + '\n');
+            fs.appendFileSync(process.env.GITHUB_ENV, [
+              'CHUM_ATTRIBUTION_EXPORT_URL=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport',
+              'CHUM_ATTRIBUTION_EXPORT_TOKEN=' + body.value
+            ].join('\n') + '\n');
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
       - name: Measure authoritative payment funnel
         id: money_radar
         if: always()
         continue-on-error: true
         env:
-          CHUM_ATTRIBUTION_EXPORT_URL: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_URL }}
-          CHUM_ATTRIBUTION_EXPORT_TOKEN: ${{ secrets.CHUM_ATTRIBUTION_EXPORT_TOKEN }}
           CHUM_MONEY_RADAR_STRICT: "false"
         run: npm run chum:money-radar
 

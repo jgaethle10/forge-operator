@@ -1,4 +1,5 @@
 const DEFAULT_MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+export const BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
@@ -37,6 +38,26 @@ export function configuredChumPublicOrigin(value = process.env.CHUM_PUBLIC_ORIGI
   }
 }
 
+export function buyerFrontageUrl(offer, {
+  surface = 'chum_public_surface',
+  source = 'chum',
+  campaign = 'buyer-frontage',
+  origin = BUYER_FRONTAGE_ORIGIN
+} = {}) {
+  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
+  try {
+    const url = new URL('/buy/' + encodeURIComponent(String(offer.public_id)), origin);
+    if (url.protocol !== 'https:') return null;
+    url.searchParams.set('src', String(source || 'chum').slice(0, 80));
+    url.searchParams.set('campaign', String(campaign || 'buyer-frontage').slice(0, 120));
+    url.searchParams.set('ec_surface', String(surface || 'chum_public_surface').slice(0, 80));
+    url.searchParams.set('ec_public_id', String(offer.public_id));
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function directHumanBuyerUrl(offer, { surface = 'chum_public_surface' } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
   const destination = DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)] || '';
@@ -67,6 +88,9 @@ export function humanStartUrl(offer, {
       + '?surface=' + encodeURIComponent(String(surface || 'chum_public_surface'));
   }
 
+  const frontage = buyerFrontageUrl(offer, { surface });
+  if (frontage) return frontage;
+
   const direct = directHumanBuyerUrl(offer, { surface });
   if (direct) return direct;
 
@@ -78,6 +102,7 @@ export function humanStartState(offer, {
 } = {}) {
   if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return 'not_sell_now';
   if (configuredChumPublicOrigin(publicOrigin)) return 'tracked_chum_handoff_configured_origin';
+  if (buyerFrontageUrl(offer)) return 'evercraft_buyer_frontage';
   if (DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)]) return 'direct_human_buyer_destination';
   return 'machine_commerce_review_fallback';
 }

@@ -9,6 +9,7 @@ import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-r
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
+import { buyerFrontageUrl } from './systemia/chum/start-corridor.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
@@ -489,6 +490,8 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
       chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
+      buyerFrontage: 'https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}',
+      acquisitionExport: 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition?view=export&hours=720',
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
       specialistMcps: [
         { product: 'Evercraft IBM i Rescue', path: '/mcp/ibmi-rescue', state: 'read_only_handoff_runtime' },
@@ -798,16 +801,20 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       return;
     }
 
+    const targetUrl = buyerFrontageUrl(offer, {
+      surface,
+      source: providerClaim === 'unknown' ? 'chum' : providerClaim
+    }) || chumHumanReviewUrl(offer.public_id);
     const issued = issueReferralToken({
       productKey: offer.product_key || offer.public_id,
       publicId: offer.public_id,
       providerClaim,
       surface,
-      targetUrl: offer.public_url,
+      targetUrl,
       intent,
     }, chumAttributionSecret);
 
-    const landing = new URL(offer.public_url);
+    const landing = new URL(targetUrl);
     landing.searchParams.set('ec_ref', issued.token);
     landing.searchParams.set('ec_source', 'chum');
 
@@ -858,7 +865,10 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
       return;
     }
 
-    const targetUrl = chumHumanReviewUrl(offer.public_id);
+    const targetUrl = buyerFrontageUrl(offer, {
+      surface,
+      source: providerClaim === 'unknown' ? 'chum' : providerClaim
+    }) || chumHumanReviewUrl(offer.public_id);
     const landing = new URL(targetUrl);
     landing.searchParams.set('ec_source', 'chum');
     landing.searchParams.set('ec_surface', surface);
@@ -913,7 +923,7 @@ app.post('/api/chum/attribution/event', rateLimit(240, 60 * 60 * 1000), async (r
   if (!PUBLIC_ATTRIBUTION_STAGES.includes(stage as (typeof PUBLIC_ATTRIBUTION_STAGES)[number])) {
     res.status(403).json({
       success: false,
-      error: 'Public callers may record landing or checkout_started only. Payment verification requires the trusted payment adapter.',
+      error: 'Public callers may record landing, offer_view, continue_clicked, or checkout_started only. Payment verification requires the trusted payment adapter.',
     });
     return;
   }
