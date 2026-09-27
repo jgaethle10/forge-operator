@@ -18,13 +18,24 @@
     "browser_handoff": {
       "method": "GET",
       "path": "/api/chum/go/{publicId}"
+    },
+    "buyer_frontage": {
+      "method": "GET",
+      "url_template": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}"
+    },
+    "public_funnel_export": {
+      "method": "GET",
+      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition?view=export&hours=720",
+      "authority": "acquisition_only_no_payment_authority"
     }
   },
   "stages": {
-    "landing": "A signed CHUM referral recorded a public landing receipt before a human review handoff when attribution is configured.",
-    "checkout_started": "A user entered an approved checkout path. This is not payment.",
+    "landing": "A human reached the branded Evercraft buyer frontage or another tracked public acquisition surface.",
+    "checkout_started": "A product checkout was prepared only after its required human confirmation. This is not payment.",
     "payment_verified": "Trusted server-side/payment-authority evidence verified a payment. Public callers cannot assert this stage.",
-    "fulfilled": "Trusted evidence records fulfillment after a verified payment."
+    "fulfilled": "Trusted evidence records fulfillment after a verified payment.",
+    "offer_view": "The branded Evercraft buyer frontage loaded current public offer terms.",
+    "continue_clicked": "The human clicked Continue from the branded buyer frontage toward the product-specific next step. This is not checkout or payment."
   },
   "privacy": {
     "raw_user_intent_in_token": false,
@@ -32,7 +43,7 @@
     "provider_identity": "caller_asserted unless a separate provider receipt exists",
     "private_topology_exposed": false
   },
-  "revenue_rule": "Only payment_verified events accepted through the trusted ingest boundary may count toward verified revenue.",
+  "revenue_rule": "Public acquisition telemetry measures landing, offer_view, continue_clicked and checkout_started only. Revenue is emitted only from the separately authenticated Machine Commerce payment export after product-gateway provider verification.",
   "provider_rule": "A provider claim in a referral is attribution metadata, not proof that the named AI provider discovered or recommended Evercraft.",
   "human_gate": "Sell-now discovery may expose a Start path, but discovery and attribution create no payment obligation. Checkout still requires the product's explicit human confirmation and paid state still requires authoritative provider verification."
 }
