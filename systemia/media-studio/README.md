@@ -122,6 +122,16 @@ The tournament is evidence-bound. Visual scores must come from verified observat
 
 Hard-fail dimensions such as subject coverage, continuity, truth and editability eliminate a candidate regardless of how attractive it is. This prevents a visually impressive but incorrect or misleading render from winning on aesthetics alone.
 
+### Visual Observer packets
+
+Before a candidate enters the jury, Fallen can produce a deterministic observation bundle. The observer verifies the artifact digest, probes media shape, samples evenly distributed frames, hashes every sampled frame, measures objective motion activity for video, and emits an objective editability receipt. Visual analyzers must cite the packet's artifact or frame hashes in any additional subject/composition/motion/continuity/brand/beauty receipt; receipts citing evidence outside the packet are rejected.
+
+```bash
+npm run media:studio -- observe ./tmp/candidate.json ./tmp/observation.json ./tmp/frames
+```
+
+This keeps the visual jury grounded in the exact candidate bytes it is judging.
+
 Build a tournament inventory:
 
 ```bash
