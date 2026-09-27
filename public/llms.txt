@@ -20,6 +20,7 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 - CHUM content-hash crawl state: /chum/crawl-state.json
 - Official read-only discovery MCP: io.github.jgaethle10/evercraft-capability-discovery
 - Problem-to-product directory: /.well-known/evercraft-products.json
+- Direct specialist readiness: /.well-known/evercraft-direct-door-readiness.json
 - Crawlable CHUM capability directory: /chum/
 - Full LLM/capability directory: /llms-full.txt
 - Sell-now revenue watershed: /chum/revenue.txt
