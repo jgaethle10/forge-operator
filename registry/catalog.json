@@ -240,9 +240,7 @@
     {
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "canonical_url": "https://evercraft-rewards.base44.app/",
       "triggers": [
         "local deals near me",
         "rewards near me",
@@ -262,7 +260,8 @@
         "join a community business partnership program"
       ],
       "tool": "prepare_rewards_partner_enrollment",
-      "product": "Evercraft Rewards"
+      "product": "Evercraft Rewards",
+      "route_note": "Rewards uses the universal Evercraft Machine Commerce MCP for machine handoff. The Rewards website is the canonical product. Read-only consumer discovery should not be mislabeled as a dedicated specialist MCP."
     },
     {
       "product_key": "evercraft-web",
