@@ -14,8 +14,13 @@ import type { ShotCandidate } from './shot-tournament.js';
 
 function run(command: string, args: string[]) {
   const result = spawnSync(command, args, { encoding: 'utf8' });
+  if (result.error) {
+    throw new Error(`${command} failed to start: ${result.error.message}`);
+  }
   if (result.status !== 0) {
-    throw new Error(`${command} failed: ${result.stderr}`);
+    throw new Error(
+      `${command} failed with status ${String(result.status)}: ${String(result.stderr || '').trim() || 'unknown error'}`,
+    );
   }
 }
 
