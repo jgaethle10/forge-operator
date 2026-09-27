@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Systemia Household Fabric Price Observation",
+  "type": "object",
+  "required": [
+    "id",
+    "item_key",
+    "category",
+    "location_id",
+    "unit",
+    "price_micros_per_unit",
+    "observed_at",
+    "source_class",
+    "source_id"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "item_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "enum": [
+        "fuel",
+        "grocery",
+        "retail",
+        "meal",
+        "service",
+        "other"
+      ]
+    },
+    "location_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "location_label": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "price_micros_per_unit": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "USD micros per unit. $1.00 = 1,000,000."
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_class": {
+      "enum": [
+        "official_public",
+        "merchant_public",
+        "licensed_feed",
+        "partner_feed",
+        "community_observation"
+      ]
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "reporter_id": {
+      "type": "string"
+    },
+    "evidence_receipt_sha256": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "raw_metadata": {}
+  },
+  "additionalProperties": false
+}
