@@ -18,7 +18,7 @@ function esc(value:string){
 }
 
 function safeJson(value:unknown){
-  return JSON.stringify(value).replace(/</g,'\\u003c').replace(/<\\/script/gi,'<\\/script');
+  return JSON.stringify(value).replace(/</g,'\\u003c');
 }
 
 function evidenceLabel(state:EvidenceState|undefined){
