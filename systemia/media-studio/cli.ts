@@ -13,6 +13,9 @@ import {
 import { compileExplorationBatch } from './shot-exploration.js';
 import type { CreativeCouncilInventory, CreativeCouncilReconciliation } from './creative-council.js';
 import { compileSeriesEpisode } from './series.js';
+import { buildVisualStageHtml } from './visual-stage-html.js';
+import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel-stage.js';
+import type { VisualStage } from './visual-stage.js';
 import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
 
 function readJson<T>(filePath: string): T {
@@ -39,6 +42,8 @@ function usage() {
     '  npm run media:studio -- tournament <candidates.json> <tournament-inventory.json>',
     '  npm run media:studio -- observe <candidate.json> <observation-bundle.json> [frame-dir]',
     '  npm run media:studio -- explore <creative-bundle.json> <exploration-batch.json>',
+    '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
+    '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
   ].join('\n'));
 }
 
@@ -47,6 +52,37 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'world-intel') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const story = readJson<WorldIntelStageInput>(input);
+    const stage = compileWorldIntelStage(story);
+    writeJson(output, stage);
+    if (optionalPlan) {
+      fs.mkdirSync(path.dirname(path.resolve(optionalPlan)), { recursive: true });
+      fs.writeFileSync(path.resolve(optionalPlan), buildVisualStageHtml(stage), 'utf8');
+    }
+    console.log(`World-intelligence visual stage created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Visual stage HTML created: ${path.resolve(optionalPlan)}`);
+    return;
+  }
+
+  if (command === 'stage') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const stage = readJson<VisualStage>(input);
+    fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
+    fs.writeFileSync(path.resolve(output), buildVisualStageHtml(stage), 'utf8');
+    console.log(`Visual stage HTML created: ${path.resolve(output)}`);
     return;
   }
 
