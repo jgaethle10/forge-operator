@@ -55,6 +55,8 @@ jobs:
         run: |
           npm run test:chum-hunter
           npm run test:chum-live-intent
+          npm run test:chum-provider-miss-ingest
+          npm run test:chum-pickup-consistency
           npm run test:saban-revenue
 
       - name: Prove federated ARD strike contracts
@@ -115,6 +117,31 @@ jobs:
             `completed=${receipt.summary?.completed || 0}`,
             `blocked=${receipt.summary?.blocked || 0}`
           ].join('\n') + '\n');
+          NODE
+
+      - name: Capture provider pickup history and consistency
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run chum:ingest-probe-misses
+          npm run chum:pickup-consistency
+          node <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync('artifacts/chum/provider-pickup-consistency-latest.json','utf8'));
+          const rollups = receipt.rollups || [];
+          const healthy = rollups.filter((row) => row.state === 'healthy').length;
+          const unresolved = rollups.filter((row) => row.state !== 'healthy').length;
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, [
+            '',
+            '## Provider pickup consistency',
+            '',
+            `Tracked product/provider rollups: ${rollups.length}`,
+            `Healthy rollups: ${healthy}`,
+            `Unresolved rollups: ${unresolved}`,
+            ''
+          ].join('\n'));
           NODE
 
       - name: Strike federated ARD discovery
@@ -193,6 +220,10 @@ jobs:
             cat artifacts/chum/money-radar-latest.md >> "$GITHUB_STEP_SUMMARY"
             echo >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f artifacts/chum/provider-pickup-consistency-latest.md ]; then
+            cat artifacts/chum/provider-pickup-consistency-latest.md >> "$GITHUB_STEP_SUMMARY"
+            echo >> "$GITHUB_STEP_SUMMARY"
+          fi
           if [ -f artifacts/chum/fire-control-latest.md ]; then
             cat artifacts/chum/fire-control-latest.md >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -208,6 +239,8 @@ jobs:
             artifacts/chum/mcp-canary-latest.*
             artifacts/chum/commerce-canary-latest.*
             artifacts/chum/provider-probe-latest.*
+            artifacts/chum/provider-miss-ingest-latest.json
+            artifacts/chum/provider-pickup-consistency-latest.*
             artifacts/chum/ard-strike-latest.*
             artifacts/chum/crawler-radar-latest.json
             artifacts/chum/money-radar-latest.*

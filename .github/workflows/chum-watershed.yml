@@ -237,40 +237,54 @@ jobs:
           set -euo pipefail
           npm run chum:ingest-probe-misses
           CREATED="$(node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('artifacts/chum/provider-miss-ingest-latest.json','utf8'));process.stdout.write(String(r.created||0))")"
-          echo "created=$CREATED" >> "$GITHUB_OUTPUT"
-          if [ "$CREATED" -eq 0 ]; then
-            echo "No completed receipt-backed provider misses were created; discovery repair generation is skipped."
+          HISTORY_ADDED="$(node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('artifacts/chum/provider-miss-ingest-latest.json','utf8'));process.stdout.write(String(r.history_added||0))")"
+          REPAIR_QUEUE="$(node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('artifacts/chum/provider-miss-ingest-latest.json','utf8'));process.stdout.write(String((r.repair_queue||[]).length))")"
+          EVIDENCE_ADDED="$((CREATED + HISTORY_ADDED))"
+          {
+            echo "created=$CREATED"
+            echo "history_added=$HISTORY_ADDED"
+            echo "repair_queue=$REPAIR_QUEUE"
+            echo "evidence_added=$EVIDENCE_ADDED"
+          } >> "$GITHUB_OUTPUT"
+          if [ "$EVIDENCE_ADDED" -eq 0 ]; then
+            echo "No new receipt-backed provider evidence was observed; discovery repair generation is skipped."
             exit 0
           fi
-          node systemia/chum/build-observed-miss-pages.mjs
-          npm run chum:mirror
-          npm run chum:crawl-pressure
+          if [ "$REPAIR_QUEUE" -gt 0 ]; then
+            node systemia/chum/build-observed-miss-pages.mjs
+            npm run chum:mirror
+            npm run chum:crawl-pressure
+          else
+            echo "Provider evidence contained pickups only; preserving history without inventing a repair."
+          fi
 
       - name: Measure provider pickup consistency
         id: pickup_consistency
         if: always()
         shell: bash
-        env:
-          CHUM_PICKUP_PRODUCT: forensiscope
-          CHUM_PICKUP_PROMPT: >-
-            I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots.
         run: |
           set -euo pipefail
           npm run chum:pickup-consistency
           node <<'NODE'
           const fs = require('fs');
           const receipt = JSON.parse(fs.readFileSync('artifacts/chum/provider-pickup-consistency-latest.json','utf8'));
-          const row = (receipt.measurements || []).find((m) =>
+          const legacyRow = (receipt.measurements || []).find((m) =>
             m.provider === 'chatgpt' &&
             m.product_key === 'forensiscope' &&
             m.surface_class === 'consumer_chat_observed'
           );
+          const rollups = receipt.rollups || [];
+          const healthy = rollups.filter((row) => row.state === 'healthy').length;
+          const unresolved = rollups.filter((row) => row.state !== 'healthy').length;
           fs.appendFileSync(process.env.GITHUB_OUTPUT, [
-            `state=${row?.state || 'no_samples'}`,
-            `samples=${row?.samples || 0}`,
-            `pickups=${row?.pickups || 0}`,
-            `misses=${row?.misses || 0}`,
-            `pickup_rate=${row?.pickup_rate ?? 0}`
+            `state=${legacyRow?.state || 'no_samples'}`,
+            `samples=${legacyRow?.samples || 0}`,
+            `pickups=${legacyRow?.pickups || 0}`,
+            `misses=${legacyRow?.misses || 0}`,
+            `pickup_rate=${legacyRow?.pickup_rate ?? 0}`,
+            `portfolio_rollups=${rollups.length}`,
+            `portfolio_healthy=${healthy}`,
+            `portfolio_unresolved=${unresolved}`
           ].join('\n') + '\n');
           NODE
 
@@ -281,8 +295,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ steps.provider_repairs.outputs.created }}" = "0" ]; then
-            echo "No new provider observations exist; provider repair persistence is a true no-op."
+          if [ "${{ steps.provider_repairs.outputs.evidence_added }}" = "0" ]; then
+            echo "No new provider evidence exists; provider repair persistence is a true no-op."
             exit 0
           fi
           git config user.name "Evercraft CHUM"
@@ -290,9 +304,14 @@ jobs:
 
           rebuild_repairs() {
             npm run chum:ingest-probe-misses
-            node systemia/chum/build-observed-miss-pages.mjs
-            npm run chum:mirror
-            npm run chum:crawl-pressure
+            REPAIR_QUEUE="$(node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('artifacts/chum/provider-miss-ingest-latest.json','utf8'));process.stdout.write(String((r.repair_queue||[]).length))")"
+            if [ "$REPAIR_QUEUE" -gt 0 ]; then
+              node systemia/chum/build-observed-miss-pages.mjs
+              npm run chum:mirror
+              npm run chum:crawl-pressure
+            else
+              echo "Pickup-only evidence; persisting provider history without rebuilding miss surfaces."
+            fi
           }
 
           stage_repairs() {
@@ -456,7 +475,12 @@ jobs:
             echo "ChatGPT ForensiScope pickups: ${{ steps.pickup_consistency.outputs.pickups }}"
             echo "ChatGPT ForensiScope misses: ${{ steps.pickup_consistency.outputs.misses }}"
             echo "ChatGPT ForensiScope pickup rate: ${{ steps.pickup_consistency.outputs.pickup_rate }}"
-            echo "Provider repairs created: ${{ steps.provider_repairs.outputs.created }}"
+            echo "Provider miss observations created: ${{ steps.provider_repairs.outputs.created }}"
+            echo "Provider history receipts added: ${{ steps.provider_repairs.outputs.history_added }}"
+            echo "Provider repair queue products: ${{ steps.provider_repairs.outputs.repair_queue }}"
+            echo "Portfolio pickup rollups: ${{ steps.pickup_consistency.outputs.portfolio_rollups }}"
+            echo "Portfolio healthy pickup rollups: ${{ steps.pickup_consistency.outputs.portfolio_healthy }}"
+            echo "Portfolio unresolved pickup rollups: ${{ steps.pickup_consistency.outputs.portfolio_unresolved }}"
             echo "Provider repair persistence: ${{ steps.persist_repairs.outcome }}"
             echo "Portfolio mesh: ${{ steps.mesh.outcome }}"
             echo "Fire Control crawler evidence: ${{ steps.fire_radar.outcome }}"
