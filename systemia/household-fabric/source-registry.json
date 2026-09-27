@@ -1,0 +1,126 @@
+{
+  "schema": "systemia.household-fabric.source-registry.v1",
+  "version": "1.0.0",
+  "purpose": "Coverage and trust policy for household opportunity data. This registry defines source classes and minimum evidence coverage; it does not itself claim that any source is live.",
+  "source_classes": {
+    "official_public": {
+      "trust": "preferred",
+      "examples": [
+        "government benefits",
+        "utility programs",
+        "transit agencies",
+        "public events"
+      ],
+      "requirements": [
+        "source URL or stable source ID",
+        "observed_at",
+        "explicit evidence_state"
+      ]
+    },
+    "merchant_public": {
+      "trust": "usable",
+      "examples": [
+        "store offers",
+        "restaurant offers",
+        "merchant-published prices"
+      ],
+      "requirements": [
+        "publicly attributable offer or price",
+        "observed_at",
+        "expiration when known"
+      ]
+    },
+    "licensed_feed": {
+      "trust": "preferred_when_current",
+      "requirements": [
+        "license permits intended use",
+        "provider timestamp",
+        "provenance retained"
+      ]
+    },
+    "partner_feed": {
+      "trust": "usable_with_identity",
+      "requirements": [
+        "identified partner",
+        "provider timestamp",
+        "conflict handling"
+      ]
+    },
+    "community_observation": {
+      "trust": "corroborate_for_money_claims",
+      "requirements": [
+        "observation timestamp",
+        "location",
+        "confidence",
+        "no anonymous high-value monetary claim promoted without corroboration"
+      ]
+    },
+    "modeled": {
+      "trust": "supporting_only",
+      "requirements": [
+        "must remain labeled modeled",
+        "cannot silently overwrite observed values"
+      ]
+    }
+  },
+  "global_rules": [
+    "Never fabricate or backfill a monetary observation.",
+    "A stale source degrades rather than silently passing.",
+    "Conflicting same-time material values remain visible to the reconciliation lane.",
+    "Sponsored status never increases organic rank.",
+    "Eligibility uncertainty must remain visible.",
+    "Do not require a poverty declaration to access household intelligence."
+  ],
+  "geographies": {
+    "yakima-wa": {
+      "label": "Yakima, Washington",
+      "pilot": true,
+      "coverage": {
+        "fuel": {
+          "min_fresh_observations": 2,
+          "min_distinct_sources": 2
+        },
+        "grocery": {
+          "min_fresh_observations": 3,
+          "min_distinct_sources": 2
+        },
+        "retail": {
+          "min_fresh_observations": 2,
+          "min_distinct_sources": 2
+        },
+        "meal": {
+          "min_fresh_observations": 2,
+          "min_distinct_sources": 2
+        },
+        "event": {
+          "min_fresh_observations": 2,
+          "min_distinct_sources": 2
+        },
+        "job": {
+          "min_fresh_observations": 3,
+          "min_distinct_sources": 2
+        },
+        "gig": {
+          "min_fresh_observations": 1,
+          "min_distinct_sources": 1
+        },
+        "rebate": {
+          "min_fresh_observations": 1,
+          "min_distinct_sources": 1
+        },
+        "benefit": {
+          "min_fresh_observations": 1,
+          "min_distinct_sources": 1
+        },
+        "utility": {
+          "min_fresh_observations": 1,
+          "min_distinct_sources": 1
+        },
+        "transit": {
+          "min_fresh_observations": 1,
+          "min_distinct_sources": 1
+        }
+      }
+    }
+  }
+}
