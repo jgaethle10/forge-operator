@@ -36,4 +36,4 @@ jobs:
           node --check systemia/forensiscope/asr-runner.mjs
           node --check systemia/forensiscope/transcription-engine.mjs
       - name: ASR contract tests
-        run: npm run test:forensiscope-asr
+        run: npm run test:forensiscope-runtime
