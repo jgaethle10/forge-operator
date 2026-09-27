@@ -35,7 +35,8 @@
       "method": "POST",
       "path": "/api/chum/hunt",
       "trigger": "current LLM/agent user intent"
-    }
+    },
+    "directDoorReadiness": "/.well-known/evercraft-direct-door-readiness.json"
   },
   "jobs": [
     "operations bottleneck diagnosis",

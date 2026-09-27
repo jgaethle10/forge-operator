@@ -103,6 +103,7 @@ Production MCP evidence on 2026-09-26 verified initialize, `tools/list` exposure
 - `/.well-known/evercraft-discovery.json`
 - `/.well-known/evercraft-products.json`
 - `/.well-known/evercraft-direct-doors.json` - direct specialist MCP/plugin doors; use before the universal fallback when intent is clear
+- `/.well-known/evercraft-direct-door-readiness.json` - current direct-callability, registry state and blocking gates for every specialist door
 - `/.well-known/evercraft-pain-index.json`
 - `/chum/pain-index.txt`
 - `/.well-known/evercraft-agent-directory.json`

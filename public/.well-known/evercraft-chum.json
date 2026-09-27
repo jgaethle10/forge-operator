@@ -59,7 +59,8 @@
     "crawlable_html_directory": "/chum/",
     "product_page_pattern": "/chum/products/{product_key}/",
     "discovery_post": "/api/discover",
-    "discovery_get": "/api/discover?q={natural-language-problem}"
+    "discovery_get": "/api/discover?q={natural-language-problem}",
+    "direct_door_readiness": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json"
   },
   "verified_crawler_controls": [
     {

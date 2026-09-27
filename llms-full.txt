@@ -3,6 +3,10 @@
 Evercraft publishes public machine-readable capabilities for AI assistants and agents.
 Start from the user problem. The user does not need to know an Evercraft product name.
 
+
+Direct specialist readiness ledger:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json
+
 ## Universal routing
 
 Human/search directory: /ai
