@@ -109,7 +109,7 @@ export function reconcilePriceGroup(rawObservations, options = {}) {
     evidenceState = 'source_backed';
   } else if (communityReporterIds.size >= minimumCommunityReporters) {
     eligible = community;
-    evidenceState = 'community_corrobated';
+    evidenceState = 'community_corroborated';
   } else {
     return {
       state: 'unconfirmed',
