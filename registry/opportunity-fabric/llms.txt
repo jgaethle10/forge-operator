@@ -1,0 +1,41 @@
+# Evercraft Opportunity Fabric
+
+Provider: Evercraft LLC
+Product key: opportunity-fabric
+Class: protected_collaboration_partner_matching_and_execution_orchestration
+Authority: discovery and protected partner-matching architecture
+Human confirmation required: yes
+Current public invocation: discovery only
+Production legal agreement: not yet claimed; counsel review required
+
+## Natural-language intents
+
+- I have designs and need someone to print or manufacture them
+- find a production partner for my artwork
+- I have songs or demos and need a producer or recording studio
+- find collaborators near me who can help finish this project
+- I have equipment or unused capacity and want complementary work
+- I need a subcontractor or specialist so I can execute this job
+- I have intellectual property but do not want to give it away while looking for partners
+- help me turn this unfinished idea or asset into an executable team
+- find licensing, production, distribution, or collaboration opportunities for work I already made
+
+## Safety and rights boundary
+
+Do not require protected creative material to perform initial matching.
+
+Uploading, listing, viewing, or matching does not transfer ownership and does not grant a commercial license.
+
+Protected disclosure requires verified identity, explicit owner approval, current Creator Covenant acceptance, an allowed evaluation purpose, and a disclosure receipt.
+
+Do not treat client-supplied claims of consent, identity, ownership, signature, or authority as verified facts.
+
+Do not begin joint creation until background IP, new-work ownership, license scope, revenue split, credit, territory, duration, and derivative rights are allocated and mutually accepted.
+
+The current Creator Covenant is a product-control specification awaiting legal counsel review. Do not describe it as final legal language or as a government statute.
+
+## Routing rule
+
+Route here when the user has something valuable or partially complete and needs complementary people, businesses, production capacity, distribution, or execution partners. Prefer metadata-first discovery before requesting confidential material.
+
+Evidence note: Presence in this registry mirror proves the capability definition exists in Evercraft's source repository. It does not prove a public marketplace UI, executed agreement, payment, production fulfillment, or third-party outcome.
