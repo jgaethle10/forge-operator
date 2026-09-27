@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 const DEFAULT_TARGETS = [
   {
     product_key: 'forensiscope',
+    covered_product_keys: ['forensiscope'],
     name: 'ForensiScope',
     public_product_url: '/forensiscope/',
     discovery_url: '/forensiscope/discovery.json',
@@ -73,6 +74,7 @@ const DEFAULT_TARGETS = [
   },
   {
     product_key: 'rivet',
+    covered_product_keys: ['rivet', 'aliev'],
     name: 'RIVET / AliEV',
     public_product_url: '/rivet/',
     discovery_url: '/rivet/discovery.json',
@@ -307,6 +309,7 @@ export function buildProofFactory({
       schema: 'evercraft.proof-factory.product-card.v1',
       generated_at: generatedAt,
       product_key: target.product_key,
+      covered_product_keys: target.covered_product_keys || [target.product_key],
       name: target.name,
       product_url: target.public_product_url,
       discovery_url: target.discovery_url,
@@ -334,6 +337,7 @@ export function buildProofFactory({
     writeJson(path.join(publicRoot, target.product_key + '.json'), card);
     return {
       product_key: target.product_key,
+      covered_product_keys: target.covered_product_keys || [target.product_key],
       name: target.name,
       evidence_state: evidenceState,
       passed_proofs: passed,
