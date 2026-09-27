@@ -156,3 +156,14 @@ for(const [file,readinessAccessor,label] of [
     label+' must advertise direct-door readiness'
   );
 }
+
+
+const serverSource=fs.readFileSync(path.join(root,'server.ts'),'utf8');
+assert.ok(
+  serverSource.includes("direct_door_readiness: '/.well-known/evercraft-direct-door-readiness.json'"),
+  'discovery API must expose direct-door readiness'
+);
+assert.ok(
+  serverSource.includes('direct_callability_uses_readiness_ledger: true'),
+  'discovery API must tell agents that direct callability follows readiness'
+);
