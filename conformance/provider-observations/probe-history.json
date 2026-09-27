@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-27T14:42:05.410Z",
+  "updated_at": "2026-09-27T14:57:01.372Z",
   "max_records": 500,
   "records": [
     {
@@ -31,6 +31,24 @@
       "prompt_sha256": "8c709a0e098b7b5518639ea251f7e16a0569408714a7084bc227e9bfec73d1d8",
       "pickup_observed": true,
       "provider_receipt_sha256": "701a459c8e6183136d0d0f77bc829d1a7471a4b54b47ceec73fb0ed06c543a17",
+      "response_sha256": "0633dc535596f6009a061fecd7efc7709fd626afc15a8c4f584606b5709eb3be",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "7d2532b7d5849023211d84d285e1c9109df9c9ce8b482dcdda2032f0c1686761",
+      "observed_at": "2026-09-27T14:57:01.372Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "aliev",
+      "case_id": "ev-hotel-002",
+      "prompt_sha256": "8c709a0e098b7b5518639ea251f7e16a0569408714a7084bc227e9bfec73d1d8",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "ea1242659d4561e79669d2d3563c231fbe31964ea4791b2a593f019dca96c7b4",
       "response_sha256": "0633dc535596f6009a061fecd7efc7709fd626afc15a8c4f584606b5709eb3be",
       "source": "authorized_provider_probe",
       "privacy": {
