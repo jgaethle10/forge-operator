@@ -1,0 +1,97 @@
+name: Fallen Render Worker
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/render-worker/**"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/world-*.ts"
+      - ".github/workflows/fallen-render-worker.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/render-worker/**"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/world-*.ts"
+      - ".github/workflows/fallen-render-worker.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  render-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: systemia/media-studio/render-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Policy tests
+        run: npm test
+      - name: Build renderer image
+        run: docker build -t evercraft/fallen-render-worker:ci .
+      - name: Start renderer
+        run: |
+          docker run -d --rm --name fallen-render-ci \
+            -p 8791:8787 \
+            -e FALLEN_RENDER_WORKER_TOKEN=ci-token \
+            evercraft/fallen-render-worker:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8791/healthz >/tmp/fallen-health.json; then exit 0; fi
+            sleep 1
+          done
+          docker logs fallen-render-ci
+          exit 1
+      - name: Render deterministic frame canary
+        run: |
+          cat >/tmp/fallen-render-job.json <<'JSON'
+          {
+            "schema":"evercraft.fallen.render-job.v1",
+            "job_id":"ci-proof",
+            "stage":{
+              "schema":"evercraft.fallen.visual-stage.v1",
+              "id":"ci-stage",
+              "width":640,
+              "height":360,
+              "fps":30,
+              "durationSec":2,
+              "background":"#080b0b",
+              "camera":{"keyframes":[{"t":0,"x":0,"y":0,"zoom":1}]},
+              "layers":[
+                {"id":"headline","kind":"text","z":1,"x":30,"y":30,"width":580,"height":120,"text":"EVERCRAFT VISUAL STAGE","fontSize":42,"fontWeight":700},
+                {"id":"metric","kind":"metric","z":2,"x":30,"y":190,"width":300,"height":120,"label":"FRAME PROOF","from":0,"to":100,"progress":[{"t":0,"value":0},{"t":2,"value":1}]}
+              ],
+              "createdAt":"2026-09-27T00:00:00.000Z"
+            },
+            "assets":[],
+            "frame_start":30,
+            "frame_count":1
+          }
+          JSON
+          curl -fsS \
+            -H 'authorization: Bearer ci-token' \
+            -H 'content-type: application/json' \
+            --data-binary @/tmp/fallen-render-job.json \
+            http://127.0.0.1:8791/v1/render >/tmp/fallen-render-result.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const row=JSON.parse(fs.readFileSync('/tmp/fallen-render-result.json','utf8'));
+          if(!row.ok) throw new Error(JSON.stringify(row));
+          if(row.frames?.length!==1) throw new Error('frame_count_mismatch');
+          if(!/^[a-f0-9]{64}$/.test(row.frames[0].sha256||'')) throw new Error('frame_sha_missing');
+          if(row.frames[0].frame!==30) throw new Error('wrong_frame_rendered');
+          if(row.boundaries?.external_network_allowed!==false) throw new Error('network_boundary_missing');
+          console.log(JSON.stringify({frame:row.frames[0],receipt:row.receipt_sha256}));
+          NODE
+      - name: Show renderer logs on failure
+        if: failure()
+        run: docker logs fallen-render-ci || true
+      - name: Stop renderer
+        if: always()
+        run: docker stop fallen-render-ci || true
