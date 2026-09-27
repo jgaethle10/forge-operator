@@ -6,6 +6,7 @@ import {
 } from './shot-exploration.js';
 import type {
   CreativeCouncilInventory,
+  CreativeCouncilReconciliation,
   CreativeShotMission,
 } from './creative-council.js';
 
@@ -79,7 +80,7 @@ test('product shot explores real capture, workflow, proof and human context inst
   assert.match(exploration.variants[2]?.prompt ?? '', /result, report, metric/i);
 });
 
-test('exploration batch binds every shot to one stable creative inventory digest', () => {
+test('exploration batch binds variants to the reconciled specialist creative genome', () => {
   const inventory: CreativeCouncilInventory = {
     schema: 'evercraft.fallen.creative-council-inventory.v1',
     projectId: 'project-1',
@@ -95,11 +96,44 @@ test('exploration batch binds every shot to one stable creative inventory digest
     ],
   };
 
-  const batch = compileExplorationBatch(inventory);
+  const reconciliation: CreativeCouncilReconciliation = {
+    schema: 'evercraft.fallen.creative-council-reconciliation.v1',
+    status: 'reconciled',
+    shot_count: 1,
+    blocked_shot_count: 0,
+    blueprints: [
+      {
+        shot_id: worldShot.id,
+        status: 'ready_for_asset_or_provider_routing',
+        missing_roles: [],
+        findings: [],
+        creative_genome: {
+          camera: {
+            directives: ['Use foreground, subject and background layers.'],
+          },
+          art_direction: {
+            directives: ['Typography supports the image; it does not become the image.'],
+          },
+        },
+        rejection_contract: ['typewriter_wall', 'flat_card_sequence'],
+      },
+    ],
+  };
+
+  const batch = compileExplorationBatch(inventory, reconciliation);
   assert.equal(batch.shots.length, 1);
   assert.equal(batch.creativeGenomeDigest.length, 64);
-  assert.equal(
+  assert.equal(batch.shots[0]?.creativeGenomeDigest.length, 64);
+  assert.notEqual(
     batch.shots[0]?.creativeGenomeDigest,
     batch.creativeGenomeDigest,
+  );
+  assert.match(
+    batch.shots[0]?.variants[0]?.prompt ?? '',
+    /Use foreground, subject and background layers/i,
+  );
+  assert.equal(
+    batch.shots[0]?.variants[0]?.mustAvoid.includes('typewriter_wall'),
+    true,
   );
 });
