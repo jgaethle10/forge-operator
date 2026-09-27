@@ -33,6 +33,9 @@ export interface BaseLayer {
   opacity?: number | NumericKeyframe[];
   scale?: number | NumericKeyframe[];
   rotationDeg?: number | NumericKeyframe[];
+  translateX?: number | NumericKeyframe[];
+  translateY?: number | NumericKeyframe[];
+  parallax?: number;
   evidenceState?: EvidenceState;
   sourceRefs?: string[];
 }
@@ -147,10 +150,12 @@ export interface EvaluatedCamera {
   rotationDeg: number;
 }
 
-export interface EvaluatedLayer extends Omit<BaseLayer, 'opacity' | 'scale' | 'rotationDeg'> {
+export interface EvaluatedLayer extends Omit<BaseLayer, 'opacity' | 'scale' | 'rotationDeg' | 'translateX' | 'translateY'> {
   opacity: number;
   scale: number;
   rotationDeg: number;
+  translateX: number;
+  translateY: number;
   raw: VisualLayer;
   metricValue?: number;
   geoRoutes?: Array<GeoRoute & { progressValue: number }>;
@@ -230,6 +235,8 @@ export function evaluateStage(stage:VisualStage,t:number){
       const opacity=clamp(valueAt(layer.opacity,time,1),0,1);
       const scale=Math.max(0,valueAt(layer.scale,time,1));
       const rotationDeg=valueAt(layer.rotationDeg,time,0);
+      const translateX=valueAt(layer.translateX,time,0);
+      const translateY=valueAt(layer.translateY,time,0);
       const evaluated:EvaluatedLayer={
         id:layer.id,
         kind:layer.kind,
@@ -243,6 +250,8 @@ export function evaluateStage(stage:VisualStage,t:number){
         opacity,
         scale,
         rotationDeg,
+        translateX,
+        translateY,
         raw:layer
       };
       if(layer.kind==='metric'){
