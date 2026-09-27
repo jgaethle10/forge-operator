@@ -6,6 +6,10 @@ import { renderFilm } from './render.js';
 import { buildSabanProductionInventory } from './production-runtime.js';
 import { buildCreativeCouncilInventory } from './creative-council.js';
 import { buildShotTournamentInventory, type ShotCandidate } from './shot-tournament.js';
+import {
+  objectiveEditabilityReceipt,
+  prepareVisualObservationPacket,
+} from './visual-observer.js';
 import { compileSeriesEpisode } from './series.js';
 import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
 
@@ -31,6 +35,7 @@ function usage() {
     '  npm run media:studio -- inventory <series-plan.json> <inventory.json>',
     '  npm run media:studio -- council <plan.json> <creative-inventory.json>',
     '  npm run media:studio -- tournament <candidates.json> <tournament-inventory.json>',
+    '  npm run media:studio -- observe <candidate.json> <observation-bundle.json> [frame-dir]',
   ].join('\n'));
 }
 
@@ -39,6 +44,27 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'observe') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const candidate = readJson<ShotCandidate>(input);
+    const packet = prepareVisualObservationPacket({
+      candidate,
+      outputDir: optionalPlan,
+    });
+    const editability = objectiveEditabilityReceipt(packet);
+    writeJson(output, {
+      schema: 'evercraft.fallen.visual-observation-bundle.v1',
+      packet,
+      objectiveReceipts: [editability],
+    });
+    console.log(`Visual observation bundle created: ${path.resolve(output)}`);
     return;
   }
 
