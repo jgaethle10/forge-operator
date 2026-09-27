@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import type {
   CreativeCouncilInventory,
+  CreativeCouncilReconciliation,
   CreativeShotMission,
 } from './creative-council.js';
 
@@ -29,6 +30,7 @@ export interface ShotExplorationVariant {
   mustShow: string[];
   mustPreserve: string[];
   mustAvoid: string[];
+  councilDirectives: string[];
   prompt: string;
 }
 
@@ -98,15 +100,16 @@ function mustShow(shot: CreativeShotMission) {
   ];
 }
 
-function commonAvoids() {
-  return [
+function commonAvoids(extra: string[] = []) {
+  return [...new Set([
     'generic text-only title card used as the primary visual',
     'abstract neon interface with no story function',
     'fake product UI presented as a real capture',
     'synthetic real-event imagery presented as documentary evidence',
     'unreadable dashboard wall',
     'decorative motion that does not reveal information',
-  ];
+    ...extra,
+  ])];
 }
 
 function commonPreserve(shot: CreativeShotMission) {
@@ -127,10 +130,12 @@ function variant(
   syntheticAllowed: boolean,
   syntheticLabelRequired: boolean,
   direction: string,
+  councilDirectives: string[],
+  councilRejections: string[],
 ): ShotExplorationVariant {
   const show = mustShow(shot);
   const preserve = commonPreserve(shot);
-  const avoid = commonAvoids();
+  const avoid = commonAvoids(councilRejections);
 
   return {
     id: `${shot.id}-${strategy}`,
@@ -142,12 +147,14 @@ function variant(
     mustShow: show,
     mustPreserve: preserve,
     mustAvoid: avoid,
+    councilDirectives,
     prompt: [
       `SHOT STRATEGY: ${strategy}.`,
       direction,
       `MUST SHOW: ${show.join('; ')}.`,
       `PRESERVE: ${preserve.join('; ')}.`,
       `AVOID: ${avoid.join('; ')}.`,
+      ...(councilDirectives.length ? [`COUNCIL DIRECTIVES: ${councilDirectives.join('; ')}.`] : []),
       `STORY: ${shot.storyPrompt}`,
       `SHOT INTENT: ${shot.intent}`,
       `DURATION: ${shot.durationSec}s. ASPECT: ${shot.aspectRatio}.`,
@@ -158,6 +165,8 @@ function variant(
 export function compileShotExploration(
   shot: CreativeShotMission,
   creativeGenomeDigest: string,
+  councilDirectives: string[] = [],
+  councilRejections: string[] = [],
 ): ShotExploration {
   if (!creativeGenomeDigest?.trim()) {
     throw new Error('creativeGenomeDigest is required.');
@@ -177,6 +186,8 @@ export function compileShotExploration(
         false,
         false,
         'Lead with the strongest authentic or properly licensed physical-world source shot. Let the real object or event occupy the frame before explanatory graphics arrive.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -185,6 +196,8 @@ export function compileShotExploration(
         true,
         true,
         'Fuse the physical subject with geography, movement, timeline, telemetry or evidence overlays that remain spatially attached to what they explain. Synthetic elements are visualization, never evidence.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -193,6 +206,8 @@ export function compileShotExploration(
         true,
         true,
         'Communicate scale through depth, environment, relative size and motivated camera movement. Prefer a strong physical subject and world context over interface chrome.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -201,6 +216,8 @@ export function compileShotExploration(
         false,
         false,
         'Use a concrete detail, source moment, close view or evidence insert that proves the narrated point, then preserve enough context that the viewer knows what they are seeing.',
+        councilDirectives,
+        councilRejections,
       ),
     );
   } else if (product) {
@@ -212,6 +229,8 @@ export function compileShotExploration(
         false,
         false,
         'Use the real product or verified product capture as the hero. Demonstrate one meaningful action with minimal explanatory text.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -220,6 +239,8 @@ export function compileShotExploration(
         true,
         false,
         'Represent the workflow as a physical or spatial transformation while keeping real product captures clearly distinguishable from explanatory visualization.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -228,6 +249,8 @@ export function compileShotExploration(
         false,
         false,
         'Lead with the result, report, metric, map or evidence produced by the product. Show cause and effect rather than a feature checklist.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -236,6 +259,8 @@ export function compileShotExploration(
         true,
         true,
         'Show the real-world situation the product changes, then connect the product action to that outcome. Avoid generic lifestyle imagery with no causal link.',
+        councilDirectives,
+        councilRejections,
       ),
     );
   } else {
@@ -247,6 +272,8 @@ export function compileShotExploration(
         true,
         true,
         'Find the strongest concrete visual embodiment of the story beat and stage it with depth, motivated motion and a clear focal point.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -255,6 +282,8 @@ export function compileShotExploration(
         false,
         false,
         'Ground the beat in a source-backed detail or close view that carries meaning without requiring a paragraph of text.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -263,6 +292,8 @@ export function compileShotExploration(
         true,
         true,
         'Anchor the beat in a human or real-world context when doing so clarifies why the moment matters.',
+        councilDirectives,
+        councilRejections,
       ),
       variant(
         shot,
@@ -271,6 +302,8 @@ export function compileShotExploration(
         true,
         true,
         'Use spatial graphics, scale, sequence or relationship only when they reveal structure that a normal shot cannot.',
+        councilDirectives,
+        councilRejections,
       ),
     );
   }
@@ -283,16 +316,59 @@ export function compileShotExploration(
   };
 }
 
+function genomeDirectives(genome: Record<string, any>) {
+  return [
+    ...new Set(
+      Object.values(genome)
+        .flatMap((section: any) => Array.isArray(section?.directives) ? section.directives : [])
+        .map((item: unknown) => String(item).trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
 export function compileExplorationBatch(
   inventory: CreativeCouncilInventory,
+  reconciliation: CreativeCouncilReconciliation,
 ): ExplorationBatch {
-  const digest = creativeInventoryDigest(inventory);
+  if (reconciliation.status !== 'reconciled') {
+    throw new Error('Creative Council must reconcile before shot exploration.');
+  }
+
+  const blueprintByShot = new Map(
+    reconciliation.blueprints.map((blueprint) => [blueprint.shot_id, blueprint]),
+  );
+
+  const shots = inventory.jobs.map((job) => {
+    const blueprint = blueprintByShot.get(job.shot.id);
+    if (!blueprint) {
+      throw new Error(`Creative Council blueprint missing for ${job.shot.id}.`);
+    }
+    if (blueprint.status !== 'ready_for_asset_or_provider_routing') {
+      throw new Error(`Creative Council blocked ${job.shot.id}.`);
+    }
+    const digest = crypto
+      .createHash('sha256')
+      .update(JSON.stringify(stable(blueprint.creative_genome)))
+      .digest('hex');
+
+    return compileShotExploration(
+      job.shot,
+      digest,
+      genomeDirectives(blueprint.creative_genome),
+      blueprint.rejection_contract,
+    );
+  });
+
+  const batchDigest = crypto
+    .createHash('sha256')
+    .update(JSON.stringify(stable(shots.map((shot) => shot.creativeGenomeDigest))))
+    .digest('hex');
+
   return {
     schema: 'evercraft.fallen.exploration-batch.v1',
     projectId: inventory.projectId,
-    creativeGenomeDigest: digest,
-    shots: inventory.jobs.map((job) =>
-      compileShotExploration(job.shot, digest),
-    ),
+    creativeGenomeDigest: batchDigest,
+    shots,
   };
 }
