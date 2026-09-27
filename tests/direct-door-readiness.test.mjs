@@ -114,3 +114,30 @@ assert.equal(
   readinessPath,
   'capability manifest must advertise direct-door readiness'
 );
+
+
+const painIndex=JSON.parse(
+  fs.readFileSync(
+    path.join(root,'public/.well-known/evercraft-pain-index.json'),
+    'utf8'
+  )
+);
+const heldSpecs=specs.products.filter(
+  (product)=>product.state==='yard_runtime_proven_public_route_pending'
+);
+for(const product of heldSpecs){
+  const entry=(painIndex.entries||[]).find(
+    (row)=>row.product_key===product.slug
+  );
+  if(!entry) continue;
+  assert.equal(
+    entry.mcp,
+    null,
+    product.slug+': held direct doors must not leak specialist MCPs into CHUM pain routing'
+  );
+  assert.equal(
+    entry.routing?.preferred,
+    'universal_machine_commerce',
+    product.slug+': held direct doors must use universal fallback in CHUM pain routing'
+  );
+}
