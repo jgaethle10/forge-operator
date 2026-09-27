@@ -50,5 +50,10 @@
     "preliminary screening and planning are not final engineering, survey, permitting, utility interconnection, financing, or construction approval",
     "publication is not proof that an AI provider indexed, cited, recommended, or invoked this capability"
   ],
-  "provider_behavior_state": "not_inferred_from_publication"
+  "provider_behavior_state": "not_inferred_from_publication",
+  "proof_library": {
+    "index": "/chum/proof/",
+    "product_card": "/chum/proof/rivet.json",
+    "state": "receipt_backed_public_proof"
+  }
 }

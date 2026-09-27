@@ -133,5 +133,10 @@
     "html": "/forensiscope/long-video-deduplication-transcription/",
     "llms": "/forensiscope/long-video-deduplication-transcription/llms.txt",
     "trigger": "long or oversized video inspection + timestamped transcription + duplicate or near-duplicate segment review in one workflow"
+  },
+  "proof_library": {
+    "index": "/chum/proof/",
+    "product_card": "/chum/proof/forensiscope.json",
+    "state": "receipt_backed_public_proof"
   }
 }

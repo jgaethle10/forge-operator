@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.proof-factory.product-card.v1",
+  "generated_at": null,
+  "product_key": "rivet",
+  "name": "RIVET / AliEV",
+  "product_url": "/rivet/",
+  "discovery_url": "/rivet/discovery.json",
+  "evidence_state": "proof_pending",
+  "proof_summary": {
+    "required": 2,
+    "passed": 0,
+    "unresolved": 2
+  },
+  "safe_claims": [
+    "Current executable proofs are the authority for promotion into this card.",
+    "Until the Proof Factory run completes, this seed card makes no claim that the current receipts passed."
+  ],
+  "visual_production": {
+    "state": "awaiting_current_proof_receipts",
+    "jobs": []
+  },
+  "truth_boundary": {
+    "executable_proof_is_not_customer_production": true,
+    "publication_is_not_provider_pickup": true,
+    "provider_pickup_is_not_recommendation": true,
+    "checkout_is_not_payment": true,
+    "no_unverified_benchmark_claims": true
+  }
+}
