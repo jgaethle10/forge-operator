@@ -10,6 +10,13 @@ on:
       - 'systemia/chum/direct-door-readiness.mjs'
       - 'tests/direct-door-readiness.test.mjs'
       - '.github/workflows/direct-door-readiness.yml'
+      - 'llms.txt'
+      - 'public/llms.txt'
+      - 'AI-DISCOVERY.md'
+      - 'public/.well-known/evercraft-agent.json'
+      - 'public/.well-known/evercraft-chum.json'
+      - 'public/.well-known/evercraft-discovery.json'
+      - 'public/.well-known/evercraft-capabilities.json'
   pull_request:
     paths:
       - 'distribution/direct-plugin-specs.json'
@@ -18,6 +25,13 @@ on:
       - 'systemia/chum/direct-door-readiness.mjs'
       - 'tests/direct-door-readiness.test.mjs'
       - '.github/workflows/direct-door-readiness.yml'
+      - 'llms.txt'
+      - 'public/llms.txt'
+      - 'AI-DISCOVERY.md'
+      - 'public/.well-known/evercraft-agent.json'
+      - 'public/.well-known/evercraft-chum.json'
+      - 'public/.well-known/evercraft-discovery.json'
+      - 'public/.well-known/evercraft-capabilities.json'
 
 permissions:
   contents: read
