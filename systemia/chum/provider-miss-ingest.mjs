@@ -12,6 +12,8 @@ export function ingestProviderMisses({
   probeReceiptPath = 'artifacts/chum/provider-probe-latest.json',
   probeSuitePath = 'chum-probes/probe-suite.json',
   observationsRoot = 'conformance/provider-observations',
+  historyPath = 'conformance/provider-observations/probe-history.json',
+  historyLimit = 500,
   summaryPath = 'artifacts/chum/provider-miss-ingest-latest.json'
 } = {}) {
   const summary = {
@@ -25,6 +27,9 @@ export function ingestProviderMisses({
     skipped_not_expected_fit: 0,
     skipped_missing_case: 0,
     skipped_missing_provider_receipt: 0,
+    history_added: 0,
+    history_existing: 0,
+    history_path: historyPath,
     observation_files: [],
     repair_queue: []
   };
@@ -44,12 +49,96 @@ export function ingestProviderMisses({
     throw new Error('Unexpected CHUM probe suite schema.');
   }
 
+  let history = {
+    schema: 'evercraft.chum.provider-probe-history.v1',
+    updated_at: null,
+    max_records: historyLimit,
+    records: []
+  };
+  if (fs.existsSync(historyPath)) {
+    try {
+      const existingHistory = readJson(historyPath);
+      if (existingHistory?.schema === history.schema && Array.isArray(existingHistory.records)) {
+        history = { ...history, ...existingHistory, max_records: historyLimit };
+      }
+    } catch {}
+  }
+  const historyKeys = new Set(
+    (history.records || []).map((row) => row?.receipt_key_sha256).filter(Boolean)
+  );
+
   const caseById = new Map((suite.cases || []).map((row) => [row.case_id, row]));
   const repairMap = new Map();
   fs.mkdirSync(observationsRoot, { recursive: true });
 
   const semanticMissKey = ({ provider, caseId, productKey, promptHash }) =>
     sha256([provider, caseId, productKey, promptHash].join('|'));
+
+  const appendProbeHistory = (result, testCase) => {
+    if (
+      result?.status !== 'completed' ||
+      result?.evaluation?.expected_fit !== true ||
+      !result?.provider_receipt ||
+      !result?.response_sha256 ||
+      !testCase?.prompt ||
+      !testCase?.product_key
+    ) return;
+
+    const signature = intentSignature(testCase.prompt);
+    const promptHash = sha256(signature.norm);
+    const providerReceiptHash = sha256(JSON.stringify(result.provider_receipt));
+    const observedAt = result.observed_at || probeReceipt.completed_at || new Date().toISOString();
+    const receiptKeySha256 = sha256([
+      String(result.provider || 'unknown'),
+      String(result.case_id || ''),
+      String(testCase.product_key),
+      promptHash,
+      providerReceiptHash,
+      String(result.response_sha256),
+      observedAt
+    ].join('|'));
+
+    if (historyKeys.has(receiptKeySha256)) {
+      summary.history_existing += 1;
+      return;
+    }
+
+    historyKeys.add(receiptKeySha256);
+    history.records.push({
+      receipt_key_sha256: receiptKeySha256,
+      observed_at: observedAt,
+      provider: String(result.provider || 'unknown'),
+      provider_surface: String(result.surface || 'authorized provider bridge'),
+      product_key: String(testCase.product_key),
+      case_id: String(result.case_id || ''),
+      prompt_sha256: promptHash,
+      pickup_observed: result.evaluation?.pickup_observed === true,
+      provider_receipt_sha256: providerReceiptHash,
+      response_sha256: String(result.response_sha256),
+      source: 'authorized_provider_probe',
+      privacy: {
+        full_provider_response_persisted: false,
+        provider_session_reference_persisted: false,
+        credentials_persisted: false
+      }
+    });
+    summary.history_added += 1;
+  };
+
+  for (const result of probeReceipt.results || []) {
+    const testCase = caseById.get(result?.case_id);
+    if (testCase && testCase.product_key === result?.product_key) appendProbeHistory(result, testCase);
+  }
+
+  if (summary.history_added > 0) {
+    history.records = history.records
+      .sort((a, b) => String(a.observed_at || '').localeCompare(String(b.observed_at || '')))
+      .slice(-Math.max(1, Number(historyLimit) || 500));
+    history.updated_at = probeReceipt.completed_at || new Date().toISOString();
+    history.max_records = historyLimit;
+    fs.mkdirSync(path.dirname(historyPath), { recursive: true });
+    fs.writeFileSync(historyPath, JSON.stringify(history, null, 2) + '\n');
+  }
 
   // Existing receipt-backed misses may have legacy evidence-hash filenames.
   // Index them semantically so repeated observations do not create a new Git
