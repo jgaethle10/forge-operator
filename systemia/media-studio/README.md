@@ -154,6 +154,30 @@ Run the bounded Saban proof:
 npm run proof:saban-fallen-tournament
 ```
 
+## Visual Stage
+
+Fallen now has a deterministic layered graphics surface above the legacy clip concatenator. A visual stage contains a virtual camera plus independently animated media, text, shape, geo, metric and timeline layers. Layers support local translation, scale, rotation, perspective, parallax and evidence state.
+
+The stage compiler emits a self-contained browser surface with explicit `window.__evercraftRenderAt(seconds)` and `window.__evercraftRenderFrame(frame)` controls. A render worker can therefore request an exact frame repeatedly and receive the same composition rather than recording a wall-clock animation.
+
+Evidence state is part of the scene graph. Modeled, inferred and synthetic visualization layers require source references, and the browser renderer visually distinguishes modeled/inferred/synthetic geo routes from observed/source-grounded routes.
+
+Build a browser-renderable stage:
+
+```bash
+npm run media:studio -- stage ./tmp/stage.json ./tmp/stage.html
+```
+
+### World-intelligence compiler
+
+A structured world-intelligence story can compile directly into a visual stage with real subject footage, an optional Evercraft set plate, a map plate, routes, tracked points, metrics and a timeline:
+
+```bash
+npm run media:studio -- world-intel ./tmp/story.json ./tmp/world-stage.json ./tmp/world-stage.html
+```
+
+This is intended for Week in Motion, TOWI, FAIE and other geography/time/scale-heavy stories where the visuals need to carry the explanation rather than sit behind typography.
+
 ## Architecture direction
 
 1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
