@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-27T05:22:12.673Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "systemia-remote-ops",
+  "source": "authorized_provider_probe",
+  "case_id": "business-simulator-pricing-002",
+  "prompt": "I run a small service business and I am considering raising prices. I want to simulate the change before I actually change customer pricing, and I want the assumptions clearly separated from real results. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Systemia Remote Ops capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "semantic_miss_key_sha256": "b0ad41767eb18c0306dad613c34b9e8591e1ffaea7ae6ca7292b29fc55c4bbf2",
+  "provider_receipt_sha256": "84844783f34056436737bc204c3d9320c601d9c039fb807a6b98ebb72b515390",
+  "response_sha256": "292df0bdb9ea059ceb3ac219d7b836891494aae60a441a515da2c5ef8b1a6545",
+  "probe_id": "business-simulator-pricing-002:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "34c097bdc72af624ef6fc1c684a014507d3d51d7aa3bacbe90e7df0cd0ac5655",
+    "tokens": [
+      "run",
+      "small",
+      "service",
+      "busines",
+      "am",
+      "consider",
+      "rais",
+      "pric",
+      "simulate",
+      "change",
+      "before",
+      "actually",
+      "customer",
+      "assumption",
+      "clearly",
+      "separat",
+      "real",
+      "result"
+    ],
+    "concepts": [],
+    "concept_evidence": []
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

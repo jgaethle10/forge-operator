@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-27T05:22:14.983Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "systemia-remote-ops",
+  "source": "authorized_provider_probe",
+  "case_id": "business-simulator-transaction-004",
+  "prompt": "I am thinking about buying another small business. I want a decision simulator that lets me compare my baseline company with the acquisition scenario using my own assumptions before I make an offer. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Systemia Remote Ops capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "semantic_miss_key_sha256": "5f1a18cb82c11a4a5b1018f5451f16a37c3a773d02dffb678c5916f6bb81b001",
+  "provider_receipt_sha256": "1d76698878287b285d78d544e59f23d72e468b4c278987426040a765142f8c99",
+  "response_sha256": "7d20843c076b8b557216dd4cbffbde3f75fc980c7e612ae2298bfd4c6963a189",
+  "probe_id": "business-simulator-transaction-004:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "960e86c5283508d845db3b8c3b6e019ebbbad305b8d759d7dfd1e83b8d17908b",
+    "tokens": [
+      "am",
+      "think",
+      "about",
+      "buying",
+      "another",
+      "small",
+      "busines",
+      "decision",
+      "simulator",
+      "lets",
+      "compare",
+      "baseline",
+      "company",
+      "acquisition",
+      "scenario",
+      "using",
+      "own",
+      "assumption",
+      "before",
+      "offer",
+      "service"
+    ],
+    "concepts": [],
+    "concept_evidence": []
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

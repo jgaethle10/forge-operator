@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-27T05:22:11.445Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "systemia-remote-ops",
+  "source": "authorized_provider_probe",
+  "case_id": "business-simulator-startup-001",
+  "prompt": "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job. I want a simulator where I can change assumptions and compare scenarios first. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Systemia Remote Ops capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "semantic_miss_key_sha256": "7dc13fd4cebc52542460cbe73f49a2037aab47e95941b01ec99751ff17b5ed1b",
+  "provider_receipt_sha256": "7623bb6fe40b51bda64378409075e3a269ed957e2d855d2f427816a5cd2e34e2",
+  "response_sha256": "8425ba4a68bec0178920b4ec02d11170a3a35369ab83f1806dfb46456a2ded1d",
+  "probe_id": "business-simulator-startup-001:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "877db7140c325f80f8988dbcf36c6c10b4ef488b9306daf52be2f39e4e0ee67e",
+    "tokens": [
+      "am",
+      "think",
+      "about",
+      "start",
+      "busines",
+      "test",
+      "operat",
+      "cash",
+      "flow",
+      "assumption",
+      "before",
+      "commit",
+      "real",
+      "money",
+      "quit",
+      "job",
+      "simulator",
+      "change",
+      "compare",
+      "scenario",
+      "first",
+      "service"
+    ],
+    "concepts": [],
+    "concept_evidence": []
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}

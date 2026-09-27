@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.provider-observation.v1",
+  "observed_at": "2026-09-27T05:22:13.902Z",
+  "provider": "generic_agent",
+  "provider_surface": "machine_client",
+  "product_key": "systemia-remote-ops",
+  "source": "authorized_provider_probe",
+  "case_id": "business-simulator-expansion-003",
+  "prompt": "I am considering opening another location and hiring more people. Before I sign a lease or add payroll, I want to model revenue, margins, recurring costs, cash outlay, break-even and runway under several scenarios. What service should I use?",
+  "surfaced_expected_product": false,
+  "surfaced_product": false,
+  "notable_gap": "Authorized brand-blind provider probe completed without surfacing the expected Systemia Remote Ops capability.",
+  "interpretation": "Negative pickup receipt. This is evidence of a discovery miss only, not a product-quality judgment or provider endorsement of alternatives.",
+  "evidence_state": "provider_receipt_hashed",
+  "semantic_miss_key_sha256": "d13aab86a5fcd7b52722edd32293baebb7526ed10b2ed396821c60b718534bc0",
+  "provider_receipt_sha256": "94f8b4d9d994cef3bb813170a8af278b0b1d4256c822fcccd2a4def5b2c4f851",
+  "response_sha256": "80282ebfbdf2f0c9a7ab101c45bd7b8a4bda9681ba2bc727206d1a18a2a959c3",
+  "probe_id": "business-simulator-expansion-003:generic_agent",
+  "intent_fingerprint": {
+    "normalized_prompt_sha256": "7c8667c614ff5c1a5050299b28517d3b4bdc3826ed386fddd9d7818883cc8c08",
+    "tokens": [
+      "am",
+      "consider",
+      "open",
+      "another",
+      "location",
+      "hiring",
+      "more",
+      "people",
+      "before",
+      "sign",
+      "lease",
+      "add",
+      "payroll",
+      "model",
+      "revenue",
+      "margin",
+      "recurr",
+      "cost",
+      "cash",
+      "outlay",
+      "break",
+      "even",
+      "runway",
+      "under",
+      "several",
+      "scenario",
+      "service"
+    ],
+    "concepts": [
+      "property"
+    ],
+    "concept_evidence": [
+      {
+        "concept": "property",
+        "evidence": "location"
+      }
+    ]
+  },
+  "privacy": {
+    "full_provider_response_persisted": false,
+    "provider_session_reference_persisted": false,
+    "credentials_persisted": false
+  }
+}
