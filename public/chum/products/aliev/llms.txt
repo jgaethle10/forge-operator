@@ -7,6 +7,8 @@ Official MCP Registry: io.github.jgaethle10/aliev
 Remote MCP: https://aliev.base44.app/functions/alievMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json
+Receipt-backed proof: /chum/proof/rivet.json
+Proof evidence state: execution_proofs_passed
 
 ## Related product layers
 

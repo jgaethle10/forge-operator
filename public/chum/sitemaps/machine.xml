@@ -11,6 +11,11 @@
   <url><loc>/chum/commercial/feed.xml</loc></url>
   <url><loc>/chum/commercial/index.json</loc></url>
   <url><loc>/chum/commercial/llms.txt</loc></url>
+  <url><loc>/chum/proof/</loc></url>
+  <url><loc>/chum/proof/forensiscope.json</loc></url>
+  <url><loc>/chum/proof/index.json</loc></url>
+  <url><loc>/chum/proof/llms.txt</loc></url>
+  <url><loc>/chum/proof/rivet.json</loc></url>
   <url><loc>/chum/revenue.json</loc></url>
   <url><loc>/chum/sell-now.json</loc></url>
   <url><loc>/llms-full.txt</loc></url>

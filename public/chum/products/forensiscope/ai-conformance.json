@@ -84,6 +84,14 @@
     "llms": "/forensiscope/distribution/llms.txt"
   },
   "relationships": null,
+  "proof_library": {
+    "index": "/chum/proof/",
+    "product_card": "/chum/proof/forensiscope.json",
+    "evidence_state": "execution_proofs_passed",
+    "passed_proofs": 2,
+    "required_proofs": 2,
+    "truth_boundary": "Executable proof is narrower than customer production. Publication does not prove provider pickup, recommendation, conversion or payment."
+  },
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,

@@ -69,6 +69,14 @@
       "description": "RIVET turns AliEV address-level EV infrastructure intelligence into customer-facing property screening, planning, and reporting."
     }
   },
+  "proof_library": {
+    "index": "/chum/proof/",
+    "product_card": "/chum/proof/rivet.json",
+    "evidence_state": "execution_proofs_passed",
+    "passed_proofs": 2,
+    "required_proofs": 2,
+    "truth_boundary": "Executable proof is narrower than customer production. Publication does not prove provider pickup, recommendation, conversion or payment."
+  },
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",

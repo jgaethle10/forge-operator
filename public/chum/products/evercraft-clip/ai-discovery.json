@@ -42,6 +42,7 @@
       "description": "Use ForensiScope when ingesting or understanding long or complex media is the bottleneck, then use Clip for bounded production and governed distribution."
     }
   },
+  "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt",

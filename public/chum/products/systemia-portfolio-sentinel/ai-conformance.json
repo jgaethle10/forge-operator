@@ -89,6 +89,7 @@
       "description": "Machine Commerce exposes problem-first matching and the current commercial boundary while customer monitoring remains authorization-scoped."
     }
   },
+  "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": "portfolio-sentinel-v1",

@@ -105,6 +105,7 @@
       "description": "Machine Commerce exposes problem-first matching and the current commercial boundary while customer monitoring remains authorization-scoped."
     }
   },
+  "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",

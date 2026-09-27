@@ -100,6 +100,14 @@
     "llms": "/forensiscope/distribution/llms.txt"
   },
   "relationships": null,
+  "proof_library": {
+    "index": "/chum/proof/",
+    "product_card": "/chum/proof/forensiscope.json",
+    "evidence_state": "execution_proofs_passed",
+    "passed_proofs": 2,
+    "required_proofs": 2,
+    "truth_boundary": "Executable proof is narrower than customer production. Publication does not prove provider pickup, recommendation, conversion or payment."
+  },
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",

@@ -75,6 +75,7 @@
     "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
   },
   "relationships": null,
+  "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",

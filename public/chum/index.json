@@ -31,7 +31,15 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": {
+        "index": "/chum/proof/",
+        "product_card": "/chum/proof/rivet.json",
+        "evidence_state": "execution_proofs_passed",
+        "passed_proofs": 2,
+        "required_proofs": 2,
+        "truth_boundary": "Executable proof is narrower than customer production. Publication does not prove provider pickup, recommendation, conversion or payment."
+      }
     },
     {
       "product_key": "buildflow",
@@ -48,7 +56,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "callproof-vault",
@@ -82,7 +91,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "career-command",
@@ -99,7 +109,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "christmas-lights-usa",
@@ -133,7 +144,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "chronosport",
@@ -150,7 +162,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "coda-y-codigo",
@@ -192,7 +205,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "contractor-cloud",
@@ -209,7 +223,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "daytrade-lens",
@@ -231,7 +246,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "deck-capital-fit",
@@ -248,7 +264,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "ecoledger",
@@ -267,7 +284,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "eps-estimate-engine",
@@ -286,7 +304,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "eventwave",
@@ -303,7 +322,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-circles",
@@ -320,7 +340,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-clip",
@@ -337,7 +358,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-containment",
@@ -357,7 +379,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-cosmos-atlas",
@@ -374,7 +397,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-fantasy-intelligence",
@@ -410,7 +434,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-front-door",
@@ -429,7 +454,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-global-health-atlas",
@@ -449,7 +475,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-home",
@@ -468,7 +495,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-network",
@@ -487,7 +515,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-physics-atlas",
@@ -504,7 +533,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-property-services",
@@ -528,7 +558,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-rewards",
@@ -545,7 +576,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-web",
@@ -567,7 +599,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evercraft-wildlife-atlas",
@@ -584,7 +617,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evermaps",
@@ -603,7 +637,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "evernest",
@@ -620,7 +655,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "everystage",
@@ -637,7 +673,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "faie",
@@ -654,7 +691,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "findmypart",
@@ -671,7 +709,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "forensic-record",
@@ -688,7 +727,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "forensiscope",
@@ -757,6 +797,14 @@
         "hub": "/forensiscope/distribution/",
         "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
         "llms": "/forensiscope/distribution/llms.txt"
+      },
+      "proof_library": {
+        "index": "/chum/proof/",
+        "product_card": "/chum/proof/forensiscope.json",
+        "evidence_state": "execution_proofs_passed",
+        "passed_proofs": 2,
+        "required_proofs": 2,
+        "truth_boundary": "Executable proof is narrower than customer production. Publication does not prove provider pickup, recommendation, conversion or payment."
       }
     },
     {
@@ -774,7 +822,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "globalstat",
@@ -793,7 +842,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "guardian",
@@ -812,7 +862,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "ibmi-rescue",
@@ -862,7 +913,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "infinite-classroom",
@@ -879,7 +931,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "legacy-rescue-lab",
@@ -932,7 +985,8 @@
       "distribution_surfaces": {
         "hub": "/legacy-rescue-lab/distribution/",
         "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
-      }
+      },
+      "proof_library": null
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -951,7 +1005,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "raven-nexus",
@@ -968,7 +1023,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "roasted",
@@ -985,7 +1041,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "seasonally",
@@ -1004,7 +1061,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "skyops-parking",
@@ -1021,7 +1079,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "space-dudz",
@@ -1043,7 +1102,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -1062,7 +1122,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "systemia-decision-lab",
@@ -1092,7 +1153,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "systemia-field-library",
@@ -1109,7 +1171,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "systemia-portfolio-sentinel",
@@ -1176,7 +1239,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "systemia-radar",
@@ -1210,7 +1274,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "systemia-remote-ops",
@@ -1240,7 +1305,8 @@
         "registry_readme": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
         "registry_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/systemia-remote-ops/llms.txt"
       },
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "systemia-website-audit",
@@ -1257,7 +1323,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "talent-atlas",
@@ -1276,7 +1343,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "thoughtdrop",
@@ -1308,7 +1376,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "towi-research",
@@ -1328,7 +1397,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     },
     {
       "product_key": "website-launch",
@@ -1345,7 +1415,8 @@
       "developer_surfaces": null,
       "editorial_surfaces": null,
       "knowledge_surfaces": null,
-      "distribution_surfaces": null
+      "distribution_surfaces": null,
+      "proof_library": null
     }
   ]
 }

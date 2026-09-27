@@ -70,6 +70,7 @@
     "social_pack": "/legacy-rescue-lab/distribution/social-pack.json"
   },
   "relationships": null,
+  "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,

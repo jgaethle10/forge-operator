@@ -53,6 +53,7 @@
       "description": "Use Decision Lab for focused hire-versus-outsource-versus-automate workforce analysis. Use Remote Ops when hiring is one variable inside a broader company-level scenario such as expansion, pricing, cash flow or acquisition."
     }
   },
+  "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
