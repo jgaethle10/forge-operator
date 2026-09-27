@@ -8,6 +8,7 @@ The durable product boundary lives above any single foundation model. Fallen own
 
 - Commercial, social-short, short-film and episodic story structures.
 - Prompt-aware shot allocation.
+- Semantic must-show coverage: concrete subjects named in a brief (for example ships, tanks, wildfire, aircraft, charging infrastructure) are checked against source assets and become explicit production needs when missing, instead of being replaced by generic text cards.
 - Image and video source inputs.
 - FFprobe metadata inspection.
 - FFmpeg normalization and MP4 assembly.
@@ -85,6 +86,10 @@ This is the foundation for recurring cartoons, serialized films, recurring comme
 7. **Render**: assemble deterministic platform-ready outputs with audio mixing, captions and delivery variants.
 8. **Scale**: export bounded production needs to Saban, where independent guards verify continuity, identity requirements, voice, rights, provenance and timing before reconciliation.
 9. **Distribute**: package only admitted outputs for Evercraft Clip and other authorized publishing lanes.
+
+## Visual coverage rule
+
+Fallen now treats named physical subjects as a coverage contract. If a brief says battleships, tanks, wildfire, aircraft, charging stations or another recognized concrete subject, the plan records whether that subject is actually represented by source media. Missing subjects produce explicit generation requests with minimum on-screen time and a prohibition on substituting generic typography. Documentary/source-grounded media is preferred for real-world events; synthetic material must remain labeled visualization rather than evidence.
 
 ## Next engineering slices
 
