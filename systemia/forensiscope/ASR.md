@@ -44,3 +44,37 @@ The executable must write a JSON array or `{ "segments": [...] }` to stdout. Seg
 - Absolute timestamps are still applied by the ForensiScope reconciliation layer, preserving shard lineage and overlap handling.
 - The engine identity is recorded with transcript results so downstream evidence can distinguish providers/models.
 - Remote healthchecks are opt-in to avoid accidental provider traffic from ordinary placement checks.
+
+
+## Operator runtime
+
+Run the readiness doctor before admitting a media job:
+
+```bash
+npm run forensiscope:doctor
+npm run forensiscope:doctor:strict
+```
+
+The doctor reports ffmpeg, ffprobe, transcription-engine state, engine identity, and exact blockers without exposing credentials.
+
+For a meeting split across multiple recordings, pass the files in chronological order:
+
+```bash
+npm run forensiscope:batch -- IMG_4166.MOV IMG_4167.MOV IMG_4168.MOV --out ./artifacts/rivet-meeting.json
+```
+
+The batch runtime:
+
+- probes each source duration with ffprobe;
+- hashes every immutable source with SHA-256;
+- splits long sources into bounded overlapping chunks;
+- extracts 16 kHz mono working audio without modifying the source;
+- sends each chunk through the canonical ForensiScope transcription engine;
+- converts chunk-relative speech timing into source-local and meeting-global timestamps;
+- reconciles duplicate speech introduced by chunk overlap;
+- records engine identity and per-chunk transcription receipts;
+- emits one `evercraft.forensiscope.meeting-transcript.v1` JSON record.
+
+Defaults are 300-second chunks with 2 seconds of overlap. Use `--chunk-seconds` and `--overlap-seconds` when a provider or local engine needs different limits. `--keep-audio` is intended only for debugging and preserves the temporary audio work directory.
+
+The input order is authoritative. ForensiScope does not guess chronological gaps between separately recorded files.
