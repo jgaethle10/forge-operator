@@ -13,6 +13,14 @@ for (const key of ['medical-research', 'earthquake-intelligence', 'volcano-intel
   assert.ok(frontier.report.obligations.some((x) => x.asset_key === key), `missing ${key}`);
 }
 assert.equal(frontier.snapshot.counts.admitted, frontier.report.obligation_count);
+assert.equal(frontier.report.publication_owner, 'Evercraft Clip');
+assert.match(frontier.report.publication_policy, /evercraft-clip/);
+for (const obligation of frontier.report.obligations) {
+  assert.ok(obligation.required_receipts.includes('documentation'), `missing documentation receipt for ${obligation.asset_key}`);
+  assert.ok(obligation.required_receipts.includes('publication_disposition'), `missing publication disposition for ${obligation.asset_key}`);
+  assert.equal(obligation.publication_owner, 'Evercraft Clip');
+  assert.deepEqual(obligation.publication_states, ['documented_only', 'queued_to_clip', 'published_verified', 'held_with_reason']);
+}
 
 const mockFetch = async (url) => {
   const href = String(url);
