@@ -3,17 +3,17 @@
   <url><loc>/</loc></url>
   <url><loc>/chum/</loc><lastmod>2026-09-27T23:49:53.447Z</lastmod></url>
   <url><loc>/chum/index.json</loc><lastmod>2026-09-27T23:52:03.465Z</lastmod></url>
-  <url><loc>/chum/revenue.html</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/revenue.html</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-27T23:49:53.447Z</lastmod></url>
-  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
-  <url><loc>/chum/sell-now.html</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
-  <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/revenue.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
-  <url><loc>/chum/agent-commerce.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
-  <url><loc>/chum/agent-commerce.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/agent-commerce.html</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/sell-now.html</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/revenue.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/agent-commerce.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/agent-commerce.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/agent-commerce.html</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
   <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
   <url><loc>/chum/answers/</loc><lastmod>2026-09-27T23:52:44.847Z</lastmod></url>
@@ -22,7 +22,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-28T07:42:44.652Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-28T14:52:04.960Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-28T07:35:44.911Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-28T14:52:04.960Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-28T14:52:04.960Z</lastmod></url>
@@ -123,17 +123,17 @@
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/llms.txt</loc><lastmod>2026-09-28T07:50:27.019Z</lastmod></url>
-  <url><loc>/llms-full.txt</loc><lastmod>2026-09-28T07:50:35.341Z</lastmod></url>
+  <url><loc>/llms-full.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/ai-discovery.json</loc><lastmod>2026-09-28T07:50:35.341Z</lastmod></url>
   <url><loc>/schema.jsonld</loc><lastmod>2026-09-27T23:49:53.447Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-09-26T23:44:49.028Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-27T23:52:03.465Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-28T07:50:35.341Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-27T23:51:19.121Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -159,15 +159,15 @@
   <url><loc>/chum/capabilities/ai-capability-install-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/ai-capability-install-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/ai-capability-install-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/aliev-site-opportunity-snapshot-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/aliev-site-opportunity-snapshot-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/aliev-site-opportunity-snapshot-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/aliev-site-opportunity-snapshot-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/audit-center-website-audit-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/audit-center-website-audit-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/audit-center-website-audit-machine-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/audit-center-website-audit-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/audit-center-website-audit-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/audit-center-website-audit-machine-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/buildflow-bounded-agent-action-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/buildflow-bounded-agent-action-v1/</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
@@ -209,10 +209,10 @@
   <url><loc>/chum/capabilities/capability-concierge-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/capability-concierge-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/capability-concierge-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/career-command-interview-practice-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/career-command-interview-practice-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/career-command-interview-practice-machine-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/career-command-interview-practice-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/career-command-interview-practice-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/career-command-interview-practice-machine-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/career-command-interview-practice-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/career-command-resume-job-fit-machine-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/career-command-resume-job-fit-machine-v1/</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
@@ -234,20 +234,20 @@
   <url><loc>/chum/capabilities/datafoundry-data-gap-audit-machine-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/datafoundry-data-gap-audit-machine-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/datafoundry-data-gap-audit-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/deck-capital-fit-sprint-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/deck-capital-fit-sprint-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/eps-estimate-engine-machine-v1/</loc><lastmod>2026-09-27T23:49:53.447Z</lastmod></url>
   <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
   <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
   <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/capability.json</loc><lastmod>2026-09-28T07:39:13.230Z</lastmod></url>
   <url><loc>/chum/capabilities/eps-estimate-engine-machine-v1/schema.jsonld</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
-  <url><loc>/chum/intents/eventwave-paid-promotion-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/eventwave-paid-promotion-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/evercraft-clip-social-video-v1/</loc><lastmod>2026-09-26T03:45:42.293Z</lastmod></url>
   <url><loc>/chum/capabilities/evercraft-clip-social-video-v1/</loc><lastmod>2026-09-26T23:44:54.286Z</lastmod></url>
@@ -269,15 +269,15 @@
   <url><loc>/chum/capabilities/evermaps-evidence-projection-machine-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/evermaps-evidence-projection-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/faie-signal-brief-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/faie-signal-brief-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/faie-signal-brief-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/faie-signal-brief-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/faie-signal-brief-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/faie-signal-brief-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/faie-signal-brief-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/faie-signal-brief-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/faie-signal-brief-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/findmypart-paid-hunt-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/findmypart-paid-hunt-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/findmypart-repair-shop-desk-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/findmypart-repair-shop-desk-v1/</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
@@ -289,10 +289,10 @@
   <url><loc>/chum/capabilities/forensiscope-evidence-review-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/forensiscope-evidence-review-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/forensiscope-evidence-review-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/foundry-app-escape-audit-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/foundry-app-escape-audit-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/foundry-app-escape-audit-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/foundry-app-escape-audit-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/foundry-app-escape-audit-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/foundry-app-escape-audit-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/foundry-app-escape-audit-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/foundry-app-escape-audit-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/foundry-app-escape-audit-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/freight-load-exception-intelligence-machine-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/freight-load-exception-intelligence-machine-v1/</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
@@ -304,10 +304,10 @@
   <url><loc>/chum/capabilities/globalstat-country-intelligence-machine-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/globalstat-country-intelligence-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/ibmi-rescue-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/ibmi-rescue-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/ibmi-rescue-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/ibmi-rescue-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/ibmi-rescue-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/ibmi-rescue-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/ibmi-rescue-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/ibmi-rescue-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/ibmi-rescue-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/income-war-map-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/income-war-map-v1/</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
@@ -334,20 +334,20 @@
   <url><loc>/chum/capabilities/raven-nexus-pain-router-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/raven-nexus-pain-router-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/raven-nexus-pain-router-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/rivet-site-underwriting-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/rivet-site-underwriting-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/rivet-site-underwriting-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld</loc><lastmod>2026-09-26T04:58:13.847Z</lastmod></url>
-  <url><loc>/chum/intents/roasted-text-pressure-test-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/roasted-text-pressure-test-machine-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/roasted-text-pressure-test-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/roasted-text-pressure-test-machine-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/site-survive-rapid-audit-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/site-survive-rapid-audit-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/site-survive-rapid-audit-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/site-survive-rapid-audit-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/site-survive-rapid-audit-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/site-survive-rapid-audit-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/site-survive-rapid-audit-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/site-survive-rapid-audit-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/site-survive-rapid-audit-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/intents/systemia-yard-runtime-extension-v1/</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/capabilities/systemia-yard-runtime-extension-v1/</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
@@ -369,10 +369,10 @@
   <url><loc>/chum/capabilities/towi-evidence-research-machine-v1/llms.txt</loc><lastmod>2026-09-26T06:29:53.033Z</lastmod></url>
   <url><loc>/chum/capabilities/towi-evidence-research-machine-v1/capability.json</loc><lastmod>2026-09-27T03:48:14.633Z</lastmod></url>
   <url><loc>/chum/capabilities/towi-evidence-research-machine-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
-  <url><loc>/chum/intents/website-launch-service-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/website-launch-service-v1/</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/website-launch-service-v1/llms.txt</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
-  <url><loc>/chum/capabilities/website-launch-service-v1/capability.json</loc><lastmod>2026-09-27T16:30:38.500Z</lastmod></url>
+  <url><loc>/chum/intents/website-launch-service-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/website-launch-service-v1/</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/website-launch-service-v1/llms.txt</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
+  <url><loc>/chum/capabilities/website-launch-service-v1/capability.json</loc><lastmod>2026-09-28T14:52:12.847Z</lastmod></url>
   <url><loc>/chum/capabilities/website-launch-service-v1/schema.jsonld</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/products/aliev/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
   <url><loc>/chum/products/aliev/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
