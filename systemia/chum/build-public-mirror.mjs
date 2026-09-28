@@ -421,6 +421,8 @@ for (const product of directory.products || []) {
     registry_name: discovery.registry_name,
     mcp: discovery.mcp,
     commercial: product.commercial || null,
+    human_start_url: discovery.human_start_url,
+    buyer_frontage_url: discovery.buyer_frontage_url,
     developer_surfaces: product.developer_surfaces || null,
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
