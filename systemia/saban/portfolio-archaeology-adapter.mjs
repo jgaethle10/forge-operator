@@ -13,17 +13,40 @@ function normalize(value) {
     .replace(/\s+/g, ' ');
 }
 
+const LOW_INFORMATION_IDENTITY_TOKENS = new Set([
+  'evercraft',
+  'systemia',
+  'ai'
+]);
+
 function tokens(value) {
   return new Set(normalize(value).split(' ').filter(Boolean));
+}
+
+function identityTokens(value) {
+  return new Set(
+    normalize(value)
+      .split(' ')
+      .filter(Boolean)
+      .filter((token) => !LOW_INFORMATION_IDENTITY_TOKENS.has(token))
+  );
+}
+
+function setJaccard(aa, bb) {
+  if (!aa.size || !bb.size) return 0;
+  let overlap = 0;
+  for (const token of aa) if (bb.has(token)) overlap += 1;
+  return overlap / (aa.size + bb.size - overlap);
 }
 
 function jaccard(a, b) {
   const aa = tokens(a);
   const bb = tokens(b);
-  if (!aa.size || !bb.size) return 0;
-  let overlap = 0;
-  for (const token of aa) if (bb.has(token)) overlap += 1;
-  return overlap / (aa.size + bb.size - overlap);
+  return setJaccard(aa, bb);
+}
+
+function semanticIdentityOverlap(a, b) {
+  return setJaccard(identityTokens(a), identityTokens(b));
 }
 
 function editDistance(a, b) {
@@ -132,11 +155,15 @@ function classify(raw, publicAliases) {
     };
   }
 
-  if (match && match.score >= 0.72) {
+  const semanticOverlap = match ? semanticIdentityOverlap(name, match.label) : 0;
+  if (match && match.score >= 0.72 && semanticOverlap >= 0.5) {
     return {
       classification: 'likely_alias',
       confidence: Number(match.score.toFixed(3)),
-      public_match: match,
+      public_match: {
+        ...match,
+        semantic_identity_overlap: Number(semanticOverlap.toFixed(3))
+      },
       admission_required: true
     };
   }
@@ -147,7 +174,12 @@ function classify(raw, publicAliases) {
         ? 'commercial_candidate'
         : 'needs_review',
     confidence: match ? Number(match.score.toFixed(3)) : 0,
-    public_match: match && match.score >= 0.4 ? match : null,
+    public_match: match && match.score >= 0.4
+      ? {
+          ...match,
+          semantic_identity_overlap: Number(semanticIdentityOverlap(name, match.label).toFixed(3))
+        }
+      : null,
     admission_required: true
   };
 }
