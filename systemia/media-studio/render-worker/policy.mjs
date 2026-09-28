@@ -85,6 +85,7 @@ function sanitizeAssets(input,stage){
 export function sanitizeRenderJob(input={}){
   if(input.schema!=='evercraft.fallen.render-job.v1') throw new Error('render_job_schema_invalid');
   const jobId=cleanId(input.job_id,'job_id');
+  const assetScopeId=cleanId(input.asset_scope_id||jobId,'asset_scope_id');
   const stage=sanitizeStage(input.stage);
   const assets=sanitizeAssets(input.assets,stage);
   const totalFrames=Math.ceil(stage.durationSec*stage.fps);
@@ -94,6 +95,7 @@ export function sanitizeRenderJob(input={}){
   return {
     schema:'evercraft.fallen.render-job.v1',
     job_id:jobId,
+    asset_scope_id:assetScopeId,
     stage,
     assets,
     frame_start:frameStart,
