@@ -230,6 +230,16 @@ Compile a hosted episode:
 npm run media:studio -- virtual-production ./tmp/week-episode.json ./tmp/week-production-plan.json ./tmp/week-stage.html
 ```
 
+Prepare a real host performance plate before rendering:
+
+```bash
+npm run media:studio -- host-plate ./tmp/host-plate-prep.json ./tmp/host-plate.receipt.json
+```
+
+The host-plate path accepts an already-alpha source or chroma-keys an explicitly supplied performance recording into VP9 WebM with alpha, strips audio, hashes the input/output, and emits an identity/provenance receipt. This gives the studio a practical route for a real founder walkthrough without fabricating a likeness.
+
+A beat may also mount a transparent foreground occlusion plate above the host. That lets architecture, desks, railings and door frames pass in front of the presenter while the canonical room remains behind them, creating a proper 2.5D set instead of a person pasted over a background.
+
 The output is one Visual Stage suitable for the existing private Fallen Render Workers and distributed exact-frame renderer. Render completion still does not grant publication authority.
 
 The production boundary is deliberate: Fallen can move an approved host reference through the world, but it will not fabricate a founder identity merely because a script asks for one. A real Week in Motion host pass requires an approved Jesse reference/performance asset or another explicitly licensed host asset.
