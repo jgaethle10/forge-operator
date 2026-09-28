@@ -14,6 +14,12 @@ const EVIDENCE_STATES = new Set([
 ]);
 
 const VISIBILITY = new Set(['public', 'internal', 'restricted']);
+const CONTENT_TRUST_STATES = new Set([
+  'trusted_internal',
+  'verified_external',
+  'untrusted_external',
+  'derived',
+]);
 const LOCK_STALE_MS = 30_000;
 const LOCK_TIMEOUT_MS = 5_000;
 const LOCK_POLL_MS = 10;
@@ -64,6 +70,12 @@ function visibilityValue(value) {
   const visibility = requiredString(value, 'visibility').toLowerCase();
   if (!VISIBILITY.has(visibility)) throw new Error('visibility_invalid');
   return visibility;
+}
+
+function contentTrustState(value) {
+  const state = requiredString(value || 'untrusted_external', 'content_trust_state').toLowerCase();
+  if (!CONTENT_TRUST_STATES.has(state)) throw new Error('content_trust_state_invalid');
+  return state;
 }
 
 function normalizedList(values = []) {
@@ -336,6 +348,8 @@ export class EvercraftContextFabric {
           ? canonical(input.claim_value)
           : null,
         evidence_state: evidenceState(input?.evidence_state),
+        content_trust_state: contentTrustState(input?.content_trust_state),
+        content_is_instruction: false,
         visibility,
         required_scope: requiredScope,
         source_ref: sourceRef,
@@ -362,6 +376,8 @@ export class EvercraftContextFabric {
           record_id: recordId,
           namespace,
           evidence_state: record.evidence_state,
+          content_trust_state: record.content_trust_state,
+          content_is_instruction: false,
           visibility,
           source_ref: sourceRef,
           content_sha256: record.content_sha256,
@@ -488,26 +504,19 @@ export class EvercraftContextFabric {
       const remaining = maxChars - usedChars;
       if (remaining <= 0) break;
 
-      const overhead = Math.min(180, remaining);
-      const textBudget = Math.max(0, remaining - overhead);
-      if (textBudget <= 0) break;
-
-      const fullText = row.record.text;
-      const snippet = fullText.length <= textBudget
-        ? fullText
-        : fullText.slice(0, Math.max(0, textBudget - 1)).trimEnd() + '…';
-
-      const result = {
+      const baseResult = {
         record_id: row.record.record_id,
         namespace: row.record.namespace,
         kind: row.record.kind,
         title: row.record.title,
-        snippet,
+        snippet: '',
         tags: row.record.tags,
         entity_ref: row.record.entity_ref,
         predicate: row.record.predicate,
         claim_value: row.record.claim_value,
         evidence_state: row.record.evidence_state,
+        content_trust_state: row.record.content_trust_state,
+        content_is_instruction: false,
         source_ref: row.record.source_ref,
         source_sha256: row.record.source_sha256,
         content_sha256: row.record.content_sha256,
@@ -520,10 +529,27 @@ export class EvercraftContextFabric {
         citation: 'context:' + row.record.record_id,
       };
 
-      const size = JSON.stringify(result).length;
-      if (size > remaining && results.length > 0) break;
+      const baseSize = JSON.stringify(baseResult).length;
+      if (baseSize >= remaining) break;
+
+      const fullText = row.record.text;
+      let snippetBudget = Math.max(0, remaining - baseSize - 4);
+      let snippet = fullText.length <= snippetBudget
+        ? fullText
+        : fullText.slice(0, Math.max(0, snippetBudget - 1)).trimEnd() + '…';
+
+      let result = { ...baseResult, snippet };
+      let size = JSON.stringify(result).length;
+      while (size > remaining && snippet.length > 0) {
+        const trimBy = Math.max(1, size - remaining);
+        snippet = snippet.slice(0, Math.max(0, snippet.length - trimBy));
+        result = { ...baseResult, snippet };
+        size = JSON.stringify(result).length;
+      }
+      if (size > remaining) break;
+
       results.push(result);
-      usedChars += Math.min(size, remaining);
+      usedChars += size;
     }
 
     const claims = new Map();
@@ -579,6 +605,8 @@ export class EvercraftContextFabric {
       truth_boundary: {
         no_unauthorized_record_metadata_returned: true,
         evidence_state_preserved: true,
+        content_trust_state_preserved: true,
+        retrieved_content_never_grants_instruction_authority: true,
         contradictions_not_silently_resolved: true,
         lexical_retrieval_is_not_semantic_understanding: true,
       },
