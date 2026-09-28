@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - "systemia/organism/portfolio-sentinel**"
+      - "systemia/organism/estate-convergence.mjs"
+      - "systemia/saban/estate-inventory.snapshot.json"
       - "systemia/sentinel/**"
       - "systemia/experience/**"
       - "systemia/saban/multiplication-registry.json"
@@ -25,6 +27,8 @@ on:
   pull_request:
     paths:
       - "systemia/organism/portfolio-sentinel**"
+      - "systemia/organism/estate-convergence.mjs"
+      - "systemia/saban/estate-inventory.snapshot.json"
       - "systemia/sentinel/**"
       - "systemia/experience/**"
       - "systemia/saban/multiplication-registry.json"
