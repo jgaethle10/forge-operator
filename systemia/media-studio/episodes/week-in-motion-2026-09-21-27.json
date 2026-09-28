@@ -1,0 +1,402 @@
+{
+  "schema": "evercraft.fallen.studio-journey.v1",
+  "id": "week-in-motion-2026-09-21-27",
+  "stops": [
+    {
+      "id": "wim-2026-09-21-27-lobby",
+      "roomId": "lobby",
+      "headline": "WEEK IN MOTION",
+      "subhead": "September 21–27, 2026 · The week Evercraft started owning the rails",
+      "durationSec": 4,
+      "aspectRatio": "16:9",
+      "contents": [
+        {
+          "slotId": "welcome-wall",
+          "kind": "text",
+          "text": "SYSTEMS BECAME INFRASTRUCTURE\nPRODUCTS BECAME DOORS\nEVIDENCE BECAME THE RULE",
+          "fontSize": 54,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:week-audit:2026-09-21-27"
+          ]
+        },
+        {
+          "slotId": "week-strip",
+          "kind": "text",
+          "text": "A WALK THROUGH THE WEEK · HQ REVIEW",
+          "fontSize": 34,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:week-audit:2026-09-21-27"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wim-2026-09-21-27-global-ops",
+      "roomId": "global_ops",
+      "headline": "SYSTEMIA TOOK THE CENTER",
+      "subhead": "Control plane, admission, routing and portfolio motion moved underneath the products.",
+      "durationSec": 4,
+      "aspectRatio": "16:9",
+      "contents": [
+        {
+          "slotId": "subject-wall",
+          "kind": "text",
+          "text": "SYSTEMIA\nCONTROL PLANE\n50 PRODUCTS ADMITTED\nMERGED TO MAIN",
+          "fontSize": 46,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "github:forge-operator:systemia-control-plane"
+          ]
+        },
+        {
+          "slotId": "world-wall",
+          "kind": "geo",
+          "projection": "mercator",
+          "centerLat": 39,
+          "centerLon": -98,
+          "zoom": 1.2,
+          "grid": true,
+          "points": [
+            {
+              "id": "yakima",
+              "lat": 46.6021,
+              "lon": -120.5059,
+              "label": "HQ",
+              "evidenceState": "synthetic_visualization",
+              "sourceRefs": [
+                "visualization:week-in-motion"
+              ]
+            },
+            {
+              "id": "ca",
+              "lat": 36.7783,
+              "lon": -119.4179,
+              "label": "RIVET",
+              "evidenceState": "synthetic_visualization",
+              "sourceRefs": [
+                "visualization:week-in-motion"
+              ]
+            },
+            {
+              "id": "va",
+              "lat": 37.4316,
+              "lon": -78.6569,
+              "label": "EV SITES",
+              "evidenceState": "synthetic_visualization",
+              "sourceRefs": [
+                "visualization:week-in-motion"
+              ]
+            }
+          ],
+          "routes": [
+            {
+              "id": "portfolio-route",
+              "points": [
+                {
+                  "lat": 46.6021,
+                  "lon": -120.5059
+                },
+                {
+                  "lat": 36.7783,
+                  "lon": -119.4179
+                },
+                {
+                  "lat": 37.4316,
+                  "lon": -78.6569
+                }
+              ],
+              "evidenceState": "synthetic_visualization",
+              "sourceRefs": [
+                "visualization:week-in-motion"
+              ]
+            }
+          ],
+          "evidenceState": "synthetic_visualization",
+          "sourceRefs": [
+            "visualization:week-in-motion"
+          ]
+        },
+        {
+          "slotId": "ops-strip",
+          "kind": "metric",
+          "label": "SYSTEMIA-ADMITTED PRODUCTS",
+          "value": 50,
+          "unit": "",
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "github:forge-operator:systemia-control-plane"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wim-2026-09-21-27-product-gallery",
+      "roomId": "product_gallery",
+      "headline": "PRODUCTS GOT THEIR OWN DOORS",
+      "subhead": "RIVET, AliEV, ForensiScope, EPS and the wider portfolio became easier for machines and people to reach directly.",
+      "durationSec": 4,
+      "aspectRatio": "16:9",
+      "contents": [
+        {
+          "slotId": "hero-product",
+          "kind": "text",
+          "text": "RIVET / AliEV\nForensiScope\nEPS\nCHUM\nDIRECT PRODUCT DOORS",
+          "fontSize": 52,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "github:forge-operator:direct-product-doors",
+            "github:forge-operator:chum-watershed"
+          ]
+        },
+        {
+          "slotId": "proof-panel",
+          "kind": "metric",
+          "label": "CHUM PRODUCTS",
+          "value": 57,
+          "unit": "",
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:chum:2026-09-27"
+          ]
+        },
+        {
+          "slotId": "product-strip",
+          "kind": "text",
+          "text": "17 SPECIALIST DOORS · 13 DIRECTLY CALLABLE",
+          "fontSize": 34,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:direct-doors:2026-09-27"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wim-2026-09-21-27-research-lab",
+      "roomId": "research_lab",
+      "headline": "THE EDGES KEPT MOVING",
+      "subhead": "Kaidance, research and the studio itself pushed across the portfolio without silently dropping old work.",
+      "durationSec": 4,
+      "aspectRatio": "16:9",
+      "contents": [
+        {
+          "slotId": "evidence-wall",
+          "kind": "text",
+          "text": "KAIDANCE / COLLIDER\n150 SURFACES\n150 OBLIGATIONS\n0 SILENT DROPS",
+          "fontSize": 48,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:kaidance:2026-09-27"
+          ]
+        },
+        {
+          "slotId": "model-table",
+          "kind": "text",
+          "text": "FALLEN\nCREATIVE COUNCIL\nVISUAL OBSERVER\nSHOT TOURNAMENT",
+          "fontSize": 42,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "github:pull/431",
+            "github:pull/433",
+            "github:pull/460"
+          ]
+        },
+        {
+          "slotId": "lab-strip",
+          "kind": "metric",
+          "label": "PORTFOLIO SURFACES COVERED",
+          "value": 150,
+          "unit": "",
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:kaidance:2026-09-27"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wim-2026-09-21-27-field-bay",
+      "roomId": "field_bay",
+      "headline": "THE SOFTWARE KEPT TOUCHING THE REAL WORLD",
+      "subhead": "EPS, EV infrastructure and field execution stayed connected to physical work instead of becoming dashboard theater.",
+      "durationSec": 4,
+      "aspectRatio": "16:9",
+      "contents": [
+        {
+          "slotId": "field-feed",
+          "kind": "text",
+          "text": "EPS FIELD OPERATIONS\nCONTRACTOR FRONT DOOR\nCUSTOMER PROPOSALS\nPRIVATE PRICE BOOKS",
+          "fontSize": 46,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:eps:week-2026-09-21-27"
+          ]
+        },
+        {
+          "slotId": "telemetry-wall",
+          "kind": "text",
+          "text": "RIVET\nSITE INTELLIGENCE\nEV DATA\nFIELD-READY REPORTS",
+          "fontSize": 42,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:rivet:week-2026-09-21-27"
+          ]
+        },
+        {
+          "slotId": "field-strip",
+          "kind": "text",
+          "text": "REAL WORK · REAL ASSETS · REAL RECEIPTS",
+          "fontSize": 32,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:week-audit:2026-09-21-27"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wim-2026-09-21-27-proof-room",
+      "roomId": "proof_room",
+      "headline": "WE DIDN'T PAINT THE RED LIGHTS GREEN",
+      "subhead": "Some ambitious infrastructure worked. Some didn't. The week got stronger because the system recorded the difference.",
+      "durationSec": 4,
+      "aspectRatio": "16:9",
+      "contents": [
+        {
+          "slotId": "receipt-wall",
+          "kind": "text",
+          "text": "OWNED BROWSER WORKER · EXECUTED\nFORENSISCOPE · GLAMA VERIFIED\nYARD ROUTING · BLOCKED\nMONEY RADAR · 0 PAYMENTS",
+          "fontSize": 42,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "github:forge-operator:evercraft-browser-worker",
+            "evercraft:forensiscope:glama-verified",
+            "evercraft:money-radar:2026-09-27"
+          ]
+        },
+        {
+          "slotId": "verification-panel",
+          "kind": "text",
+          "text": "FAIL CLOSED\nIS A FEATURE",
+          "fontSize": 48,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:evidence-doctrine"
+          ]
+        },
+        {
+          "slotId": "proof-timeline",
+          "kind": "timeline",
+          "startSec": 0,
+          "endSec": 6,
+          "events": [
+            {
+              "id": "m1",
+              "t": 0.5,
+              "label": "SYSTEMIA",
+              "evidenceState": "observed",
+              "sourceRefs": [
+                "github:forge-operator"
+              ]
+            },
+            {
+              "id": "m2",
+              "t": 1.5,
+              "label": "YARD",
+              "evidenceState": "observed",
+              "sourceRefs": [
+                "github:forge-operator"
+              ]
+            },
+            {
+              "id": "m3",
+              "t": 2.5,
+              "label": "DOORS",
+              "evidenceState": "observed",
+              "sourceRefs": [
+                "github:forge-operator"
+              ]
+            },
+            {
+              "id": "m4",
+              "t": 3.5,
+              "label": "BROWSER",
+              "evidenceState": "observed",
+              "sourceRefs": [
+                "github:forge-operator"
+              ]
+            },
+            {
+              "id": "m5",
+              "t": 4.5,
+              "label": "FALLEN",
+              "evidenceState": "observed",
+              "sourceRefs": [
+                "github:forge-operator"
+              ]
+            },
+            {
+              "id": "m6",
+              "t": 5.5,
+              "label": "PROOF",
+              "evidenceState": "observed",
+              "sourceRefs": [
+                "github:forge-operator"
+              ]
+            }
+          ],
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:week-audit:2026-09-21-27"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wim-2026-09-21-27-observation-deck",
+      "roomId": "observation_deck",
+      "headline": "NOW THE COMPANY CAN SEE ITSELF MOVE",
+      "subhead": "The next frontier is turning this machinery into repeatable revenue, public proof and useful work in the world.",
+      "durationSec": 4,
+      "aspectRatio": "16:9",
+      "contents": [
+        {
+          "slotId": "horizon-wall",
+          "kind": "text",
+          "text": "EVERCRAFT\nTHE WEEK WE STARTED\nOWNING THE RAILS",
+          "fontSize": 68,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:week-audit:2026-09-21-27"
+          ]
+        },
+        {
+          "slotId": "next-motion",
+          "kind": "text",
+          "text": "NEXT: CONVERSION · DISTRIBUTION · FIELD PROOF · WORLD IMPACT",
+          "fontSize": 31,
+          "fontWeight": 700,
+          "evidenceState": "observed",
+          "sourceRefs": [
+            "evercraft:next-motion:2026-09-28"
+          ]
+        }
+      ]
+    }
+  ]
+}
