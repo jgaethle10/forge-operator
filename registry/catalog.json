@@ -494,6 +494,29 @@
       "route_note": "Route pain-first discovery to the bounded $299 Legacy Rescue Scan. Public observation is non-intrusive. Private access, invasive testing, production repair, deployment, and payment execution require explicit human authorization and receipt-backed state."
     },
     {
+      "product_key": "payflow",
+      "name": "PayFlow",
+      "aliases": [],
+      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "triggers": [
+        "payroll tracker for a small business",
+        "employee payment ledger",
+        "track employee pay history",
+        "payroll spreadsheet alternative",
+        "track payroll corrections and reversals",
+        "small team payroll recordkeeping",
+        "payroll audit trail",
+        "contractor payroll records",
+        "seasonal employee payment records",
+        "commission or bonus payment record tracker",
+        "document a payroll dispute or correction",
+        "keep crew payment history organized"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route payroll-recordkeeping intent here. Do not infer wage transmission, tax filing, bank settlement or legal compliance from a ledger record."
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
@@ -567,6 +590,27 @@
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
       "route_note": "Route seasonal family, recipe and grocery-list intent here. Live retailer-price claims remain held until a receipt-backed source proof exists."
+    },
+    {
+      "product_key": "second-stitch",
+      "name": "The Second Stitch",
+      "aliases": [
+        "Project Second Stitch"
+      ],
+      "canonical_url": "https://the-second-stitch.base44.app/",
+      "triggers": [
+        "turn a sewing project into a material list",
+        "estimate fabric and notions for a project",
+        "plan materials for costumes or small-batch textile production",
+        "textile project-to-material planning",
+        "repeat textile ordering and material continuity",
+        "professional fabric procurement workflow",
+        "model a textile retail project-planning pilot",
+        "textile intelligence for schools theaters makers quilters or upholstery shops"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route textile project-to-material planning and prototype procurement-model intent here. Preserve independent-concept and modeled-economics boundaries."
     },
     {
       "product_key": "skyops-parking",

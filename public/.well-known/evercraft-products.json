@@ -1493,6 +1493,36 @@
       ]
     },
     {
+      "product_key": "payflow",
+      "name": "PayFlow",
+      "class": "small_team_payroll_recordkeeping",
+      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "intents": [
+        "payroll tracker for a small business",
+        "employee payment ledger",
+        "track employee pay history",
+        "payroll spreadsheet alternative",
+        "track payroll corrections and reversals",
+        "small team payroll recordkeeping",
+        "payroll audit trail",
+        "contractor payroll records",
+        "seasonal employee payment records",
+        "commission or bonus payment record tracker",
+        "document a payroll dispute or correction",
+        "keep crew payment history organized"
+      ],
+      "authority": "public product discovery; authenticated employee and payroll records remain private",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "recordkeeping is not proof wages were transmitted",
+        "not a bank or direct-deposit provider",
+        "not a tax filer, payroll tax calculator, benefits administrator, accounting system or legal compliance service unless separately verified",
+        "payment records are not bank settlement evidence",
+        "corrections and reversals preserve history",
+        "private employee, compensation, payment, workspace and account data are not public"
+      ]
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "class": "pain_first_modular_safety_and_stability",
@@ -1630,6 +1660,34 @@
           "description": "Traditions and community history can connect to seasonal planning while private household memories remain private."
         }
       }
+    },
+    {
+      "product_key": "second-stitch",
+      "name": "The Second Stitch",
+      "aliases": [
+        "Project Second Stitch"
+      ],
+      "class": "textile_project_intelligence_and_procurement_prototype",
+      "canonical_url": "https://the-second-stitch.base44.app/",
+      "intents": [
+        "turn a sewing project into a material list",
+        "estimate fabric and notions for a project",
+        "plan materials for costumes or small-batch textile production",
+        "textile project-to-material planning",
+        "repeat textile ordering and material continuity",
+        "professional fabric procurement workflow",
+        "model a textile retail project-planning pilot",
+        "textile intelligence for schools theaters makers quilters or upholstery shops"
+      ],
+      "authority": "public discovery and prototype exploration only",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "independent Evercraft concept; references to Michaels or JOANN do not imply sponsorship, partnership, endorsement, private-system access or an accepted commercial relationship",
+        "pilot economics are modeled scenarios, not observed results or forecasts",
+        "material quantities are planning estimates",
+        "no supplier inventory, current price, dye-lot continuity, fulfillment, ordering or procurement integration is implied unless separately verified",
+        "discovery creates no purchase, supplier commitment, commercial pilot or customer relationship"
+      ]
     },
     {
       "product_key": "skyops-parking",
