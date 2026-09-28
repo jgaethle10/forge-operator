@@ -671,9 +671,50 @@ export async function buildMoneyRadar({
   );
 
   const generatedMs = Date.parse(generatedAt);
-  const prior24End = Number.isFinite(generatedMs) ? new Date(generatedMs - 24 * 3600_000).toISOString() : new Date(Date.now() - 24 * 3600_000).toISOString();
+  const effectiveNowMs = Number.isFinite(generatedMs) ? generatedMs : Date.now();
+  const prior24End = new Date(effectiveNowMs - 24 * 3600_000).toISOString();
   const prior24 = windowSnapshot(accepted, prior24End, 24);
   const current24 = windows['24h'];
+  const current24AcquisitionEvents = accepted.filter((event) => {
+    if (event._source_kind !== 'public_acquisition_https' || !PUBLIC_STAGES.has(event.stage)) return false;
+    const t = Date.parse(event.occurred_at || '');
+    return Number.isFinite(t) && t >= effectiveNowMs - 24 * 3600_000 && t <= effectiveNowMs;
+  });
+  const v2Events = current24AcquisitionEvents.filter((event) => clean(event.telemetry_version).toLowerCase() === 'money-radar-v2');
+  const classifiedEvents = current24AcquisitionEvents.filter((event) => actorClass(event) !== 'unknown');
+  const qualifiedEvents24 = current24AcquisitionEvents.filter((event) => QUALIFIED_BUYER_CLASSES.has(actorClass(event)));
+  const qualifiedWithSession = qualifiedEvents24.filter((event) => Boolean(safeSession(event)));
+  const eventsWithSource = current24AcquisitionEvents.filter((event) => {
+    const source = clean(event.provider_claim).toLowerCase();
+    return Boolean(source && source !== 'unknown');
+  });
+  const eventsWithCampaign = current24AcquisitionEvents.filter((event) => Boolean(clean(event.campaign)));
+  const eventsWithSurface = current24AcquisitionEvents.filter((event) => Boolean(clean(event.surface)));
+  const telemetry_quality = {
+    window: '24h',
+    events: current24AcquisitionEvents.length,
+    v2_events: v2Events.length,
+    legacy_or_unversioned_events: current24AcquisitionEvents.length - v2Events.length,
+    v2_coverage_rate: rate(v2Events.length, current24AcquisitionEvents.length),
+    actor_classification_coverage_rate: rate(classifiedEvents.length, current24AcquisitionEvents.length),
+    qualified_event_count: qualifiedEvents24.length,
+    qualified_session_coverage_rate: rate(qualifiedWithSession.length, qualifiedEvents24.length),
+    source_coverage_rate: rate(eventsWithSource.length, current24AcquisitionEvents.length),
+    campaign_coverage_rate: rate(eventsWithCampaign.length, current24AcquisitionEvents.length),
+    surface_coverage_rate: rate(eventsWithSurface.length, current24AcquisitionEvents.length),
+  };
+  telemetry_quality.state = telemetry_quality.events === 0
+    ? 'no_recent_events'
+    : telemetry_quality.v2_coverage_rate != null && telemetry_quality.v2_coverage_rate < 0.8
+      ? 'transitioning_or_legacy_heavy'
+      : telemetry_quality.qualified_event_count > 0 && telemetry_quality.qualified_session_coverage_rate != null && telemetry_quality.qualified_session_coverage_rate < 0.95
+        ? 'degraded_missing_qualified_sessions'
+        : telemetry_quality.actor_classification_coverage_rate != null && telemetry_quality.actor_classification_coverage_rate < 0.95
+          ? 'degraded_actor_classification'
+          : 'healthy';
+  telemetry_quality.conversion_decision_safe =
+    telemetry_quality.state === 'healthy' || telemetry_quality.state === 'no_recent_events';
+
   const operator_alerts = [];
   const current24TotalActors = Object.values(current24.actor_class_counts || {}).reduce((n, value) => n + Number(value || 0), 0);
   const current24MachineActors = Object.entries(current24.actor_class_counts || {})
@@ -703,6 +744,22 @@ export async function buildMoneyRadar({
       code: 'machine_dominated_acquisition',
       message: Math.round(current24MachineShare * 100) + '% of last-24h acquisition events are machine, crawler or synthetic.',
       action: 'separate_distribution_success_from_human_acquisition_and_expand_human_reach',
+    });
+  }
+  if (telemetry_quality.events >= 20 && telemetry_quality.v2_coverage_rate != null && telemetry_quality.v2_coverage_rate < 0.8) {
+    operator_alerts.push({
+      severity: 'P2',
+      code: 'telemetry_v2_coverage_low',
+      message: Math.round(telemetry_quality.v2_coverage_rate * 100) + '% of last-24h acquisition events use Money Radar v2 telemetry.',
+      action: 'finish_migrating_entry_surfaces_before_trusting_conversion_diagnosis',
+    });
+  }
+  if (telemetry_quality.qualified_event_count > 0 && telemetry_quality.qualified_session_coverage_rate != null && telemetry_quality.qualified_session_coverage_rate < 0.95) {
+    operator_alerts.push({
+      severity: 'P1',
+      code: 'qualified_session_coverage_degraded',
+      message: Math.round(telemetry_quality.qualified_session_coverage_rate * 100) + '% of last-24h qualified events carry usable session dedupe evidence.',
+      action: 'repair_session_instrumentation_before_conversion_tuning',
     });
   }
   if (current24.unique_offer_view_sessions >= DECISION_THRESHOLDS.qualified_offer_views && current24.continue_clicks === 0) {
@@ -774,6 +831,7 @@ export async function buildMoneyRadar({
     acquisition_measurement_state: acquisitionMeasurementState,
     payment_measurement_state: paymentMeasurementState,
     buyer_signal_state: buyerSignalState,
+    telemetry_quality,
     source: {
       acquisition: {
         configured: acquisitionConfigured,
@@ -864,6 +922,10 @@ export async function buildMoneyRadar({
     `Acquisition measurement state: ${acquisitionMeasurementState}`,
     `Trusted payment measurement state: ${paymentMeasurementState}`,
     `Buyer signal state: ${buyerSignalState}`,
+    `Telemetry quality state: ${telemetry_quality.state}`,
+    `Telemetry v2 coverage (24h): ${telemetry_quality.v2_coverage_rate ?? 'n/a'}`,
+    `Qualified session coverage (24h): ${telemetry_quality.qualified_session_coverage_rate ?? 'n/a'}`,
+    `Conversion decision safe: ${telemetry_quality.conversion_decision_safe}`,
     '',
     '## Traffic truth',
     '',
