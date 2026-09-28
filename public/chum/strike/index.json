@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-28T16:51:53.825Z",
+  "generated_at": "2026-09-28T16:59:42.714Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
@@ -276,6 +276,66 @@
         "no_self_identified_crawler_fetch_observed",
         "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
         "indexnow_hash_pending"
       ]
     },
@@ -690,47 +750,7 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "score": 215,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
-      "score": 215,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
-      "score": 215,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "score": 215,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [
@@ -1001,26 +1021,6 @@
     },
     {
       "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
-      "score": 215,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "score": 215,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [

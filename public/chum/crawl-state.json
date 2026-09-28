@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T16:55:33.517Z",
+  "updated_at": "2026-09-28T16:59:42.867Z",
   "url_count": 2404,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,32 +141,32 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "480781fe245255d82bcae48cf939b6d4b020fdcbab567851572a7b2a3d5025fc",
-      "last_changed": "2026-09-28T16:55:33.517Z",
+      "content_sha256": "f490d2db25f8df44585fe8a77ead753300cad6d45c6aad6dd3bffbf41c975616",
+      "last_changed": "2026-09-28T16:59:42.867Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "4bea0a35fd4fc830cd5508f356c5f7ffb274337f6da1556410dd841412404fc1",
-      "last_changed": "2026-09-28T16:07:52.394Z",
+      "content_sha256": "d0d97e212345ac51c62074076efbfd126f704c6f464581642278face519a18fd",
+      "last_changed": "2026-09-28T16:59:42.867Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "8cd7461ba2d8593ffc971a1d94991ac419eb2b8d1c050811ba292211b1ae96c8",
-      "last_changed": "2026-09-28T16:51:54.038Z",
+      "content_sha256": "85dfa583d2745c906a5c4a408ccbc8bc639c424f8e7afbb997006e927a7085cc",
+      "last_changed": "2026-09-28T16:59:42.867Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "aba07dcd4e0fb1a66cc7d83508d3527ddf99c711f7e8ee6ed836d46755583195",
-      "last_changed": "2026-09-28T16:51:54.038Z",
+      "content_sha256": "80acb10dd8f0452eb1e1ee5415e24038b5ac838ed47e9d54cd3ddbd5400ef0e0",
+      "last_changed": "2026-09-28T16:59:42.867Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "d240f645084e8db882d600f78b6caaaa1eed4e22ae29509b0a9f31645817da53",
-      "last_changed": "2026-09-28T16:51:54.038Z",
+      "content_sha256": "fd49f49814d997d4fb662d0d3daf1f2d1fe6053343530dae58da5d6f1032c151",
+      "last_changed": "2026-09-28T16:59:42.867Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -783,8 +783,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "a6e1c62deba10c46a8860061d67f4dc8858716465c7fad1f77c1da05d090e358",
-      "last_changed": "2026-09-27T23:51:19.121Z",
+      "content_sha256": "a0323e81eed194c6a8e9ab88dea5acaad91e3212847226696992350510eda50e",
+      "last_changed": "2026-09-28T16:59:42.395Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
