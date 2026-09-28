@@ -104,6 +104,10 @@ jobs:
         if: always()
         run: node systemia/saban/multiplier.mjs --software human-experience --auto --execute --reconcile --state artifacts/saban-multiplier/human-experience-state.json
 
+      - name: Reconcile estate inventory layers
+        if: always()
+        run: node systemia/organism/estate-convergence.mjs
+
       - name: Run live portfolio integrity cycle
         if: always()
         env:
@@ -130,6 +134,7 @@ jobs:
             artifacts/portfolio-sentinel/mission-snapshot.json
             artifacts/portfolio-sentinel/repair-queue.json
             artifacts/portfolio-sentinel/inventory.json
+            artifacts/portfolio-sentinel/estate-convergence.json
             artifacts/portfolio-sentinel/admission.json
             artifacts/portfolio-sentinel/repair-memory.json
             artifacts/human-experience/latest.json
@@ -146,7 +151,7 @@ jobs:
             echo "## Systemia Portfolio Sentinel"
             echo
             echo "Cadence: 5 minutes"
-            echo "Coverage: products + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery"
+            echo "Coverage: raw estate reconciliation + public products + conformance + MCP publication + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery"
             echo "Bounded failed-workflow retry: autonomous for newly observed failures"
             echo "Architectural invariants: enforced before green"
             echo "Human experience gate: Saban fan-out + owned browser visual receipts; BLOCKED never equals PASS"
@@ -155,7 +160,7 @@ jobs:
             echo "Health gate: critical/high findings fail closed until cleared"
             echo "Production mutation: human-gated"
             echo
-            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json; do
+            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/estate-convergence.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json; do
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'
