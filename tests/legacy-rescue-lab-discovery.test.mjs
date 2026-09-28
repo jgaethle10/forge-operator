@@ -15,6 +15,7 @@ const sitemap = fs.readFileSync('public/sitemap.xml', 'utf8');
 const publicIndex = readJson('public/chum/index.json');
 const rootLlms = fs.readFileSync('llms.txt', 'utf8');
 const painIndex = readJson('public/.well-known/evercraft-pain-index.json');
+const conformanceRegistry = readJson('conformance/products.json');
 
 const product = directory.products.find((row) => row.product_key === 'legacy-rescue-lab');
 assert(product, 'legacy-rescue-lab missing from product directory');
@@ -24,6 +25,12 @@ assert.match(product.commercial?.status || '', /direct_checkout_unverified/);
 assert.match(product.intents.join(' '), /checkout is broken/i);
 assert.match(product.intents.join(' '), /developer disappeared/i);
 assert.match(product.intents.join(' '), /AI agency built/i);
+assert.equal(product.commercial?.machine_commerce_handoff?.state, 'live_verified');
+assert.equal(product.commercial?.machine_commerce_handoff?.public_id, 'legacy-rescue-lab-v1');
+assert.equal(product.commercial?.machine_commerce_handoff?.tool, 'prepare_legacy_rescue_scan_handoff');
+assert.equal(product.commercial?.machine_commerce_handoff?.request_tool, 'submit_legacy_rescue_scan_request');
+assert.match(product.commercial?.machine_commerce_handoff?.buyer_url || '', /machineCommerceGateway\?view=service&public_id=legacy-rescue-lab-v1/);
+assert.doesNotMatch(product.commercial?.machine_commerce_handoff?.buyer_url || '', /\/buy\/legacy-rescue-lab-v1/);
 
 const cat = catalog.products.find((row) => row.product_key === 'legacy-rescue-lab');
 assert(cat, 'legacy-rescue-lab missing from registry catalog');
@@ -35,6 +42,14 @@ assert.equal(discovery.human_confirmation_required, true);
 assert.equal(discovery.commercial?.offers?.[0]?.offer_key, 'legacy_rescue_scan_299');
 assert.equal(discovery.mcp, null);
 assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publication');
+
+const registeredConformance = conformanceRegistry.products.find((row) => row.product_key === 'legacy-rescue-lab');
+assert(registeredConformance, 'Legacy Rescue Lab missing from conformance registry');
+assert.equal(registeredConformance.machine_commerce_handoff_state, 'live_verified');
+assert.equal(registeredConformance.machine_commerce_public_id, 'legacy-rescue-lab-v1');
+assert.equal(registeredConformance.machine_commerce_tool, 'prepare_legacy_rescue_scan_handoff');
+assert.equal(registeredConformance.machine_commerce_request_tool, 'submit_legacy_rescue_scan_request');
+assert.equal(registeredConformance.offer_state?.direct_checkout, 'unverified_not_advertised');
 
 assert.equal(offer.price_usd, 299);
 assert.equal(offer.production_change_included, false);
