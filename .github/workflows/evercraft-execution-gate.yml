@@ -1,0 +1,35 @@
+name: Evercraft Execution Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/execution-gate/**'
+      - 'systemia/passport/**'
+      - 'systemia/meter/**'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - '.github/workflows/evercraft-execution-gate.yml'
+  pull_request:
+    paths:
+      - 'systemia/execution-gate/**'
+      - 'systemia/passport/**'
+      - 'systemia/meter/**'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - '.github/workflows/evercraft-execution-gate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  execution-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove authority, capacity and route are bound before dispatch
+        run: |
+          node --test systemia/passport/passport.test.mjs
+          node --test systemia/meter/meter.test.mjs
+          node --test systemia/execution-gate/gate.test.mjs
