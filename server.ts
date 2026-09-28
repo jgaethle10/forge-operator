@@ -814,7 +814,7 @@ function sendA2aAgentCard(req: Request, res: Response) {
 app.get('/.well-known/agent-card.json', sendA2aAgentCard);
 app.get('/.well-known/agent.json', sendA2aAgentCard);
 
-app.post('/a2a/message:send', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+app.post(/^\/a2a\/message:send$/, rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
   const requestedVersion = String(req.get('A2A-Version') || '').trim();
   if (requestedVersion && requestedVersion !== '1.0') {
     res.status(400).type('application/problem+json').send(JSON.stringify({
