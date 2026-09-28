@@ -310,5 +310,12 @@
     {
       "name": "Evercraft Routing Engine"
     }
-  ]
+  ],
+  "coverage": {
+    "connector": "Base44 list_user_apps",
+    "requested_limit": 100,
+    "returned_items": 100,
+    "complete_estate_claim": false,
+    "note": "The connector accepts at most 100 rows and exposes no pagination cursor. This snapshot is an observed inventory slice, not proof that the full Evercraft software estate contains only this many apps."
+  }
 }
