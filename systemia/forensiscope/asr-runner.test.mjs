@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { once } from 'node:events';
-import { transcribeWithProvider } from './asr-runner.mjs';
+import { resolveAsrProvider, transcribeWithProvider } from './asr-runner.mjs';
 
 function wavFixture() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'forensiscope-asr-'));
@@ -76,6 +76,118 @@ test('managed ASR falls back to one timed segment for text-only JSON', async () 
       })
     });
     assert.deepEqual(result.segments, [{ start: 0, end: 7.5, text: 'single block' }]);
+  } finally {
+    fs.rmSync(fixture.dir, { recursive: true, force: true });
+  }
+});
+
+
+test('Gemini ASR auto-selects from GEMINI_API_KEY and normalizes speaker word annotations', async () => {
+  const fixture = wavFixture();
+  const calls = [];
+  const deleted = [];
+  const fakeClient = {
+    files: {
+      async upload(request) {
+        calls.push({ type: 'upload', request });
+        return {
+          name: 'files/fixture',
+          uri: 'https://example.invalid/files/fixture',
+          mimeType: 'audio/wav'
+        };
+      },
+      async delete(request) {
+        deleted.push(request);
+      }
+    },
+    interactions: {
+      async create(request) {
+        calls.push({ type: 'interaction', request });
+        return {
+          output_text: 'Hello world Yes',
+          steps: [{
+            content: [{
+              annotations: [
+                { type: 'word_info', text: 'Hello', speaker: 'spk_1', start_offset: '0.100s', end_offset: '0.450s' },
+                { type: 'word_info', text: 'world', speaker: 'spk_1', start_offset: '0.500s', end_offset: '0.850s' },
+                { type: 'word_info', text: 'Yes', speaker: 'spk_2', start_offset: '1.100s', end_offset: '1.350s' }
+              ]
+            }]
+          }]
+        };
+      }
+    }
+  };
+
+  try {
+    const env = { GEMINI_API_KEY: 'gemini-test-key' };
+    const config = resolveAsrProvider(env);
+    assert.equal(config.provider, 'gemini');
+    assert.equal(config.model, 'gemini-3.5-transcribe');
+
+    const result = await transcribeWithProvider({
+      inputPath: fixture.file,
+      durationSeconds: 2,
+      env,
+      geminiClient: fakeClient
+    });
+
+    assert.equal(result.engine_id, 'gemini:gemini-3.5-transcribe');
+    assert.deepEqual(result.segments, [
+      { start: 0.1, end: 0.85, text: 'Hello world', speaker: 'spk_1' },
+      { start: 1.1, end: 1.35, text: 'Yes', speaker: 'spk_2' }
+    ]);
+
+    const interaction = calls.find((entry) => entry.type === 'interaction')?.request;
+    assert.equal(interaction.model, 'gemini-3.5-transcribe');
+    assert.equal(
+      interaction.generation_config.transcription_config.mode.diarization_mode,
+      'speaker'
+    );
+    assert.deepEqual(
+      interaction.generation_config.transcription_config.mode.timestamp_granularities,
+      ['word']
+    );
+    assert.deepEqual(deleted, [{ name: 'files/fixture' }]);
+  } finally {
+    fs.rmSync(fixture.dir, { recursive: true, force: true });
+  }
+});
+
+test('Gemini ASR falls back to full transcript text when annotations are absent', async () => {
+  const fixture = wavFixture();
+  const fakeClient = {
+    files: {
+      async upload() {
+        return {
+          uri: 'https://example.invalid/files/fixture',
+          mimeType: 'audio/wav'
+        };
+      }
+    },
+    interactions: {
+      async create() {
+        return { output_text: 'Fallback transcript' };
+      }
+    }
+  };
+
+  try {
+    const result = await transcribeWithProvider({
+      inputPath: fixture.file,
+      durationSeconds: 9.25,
+      env: {
+        FORENSISCOPE_ASR_PROVIDER: 'gemini',
+        GEMINI_API_KEY: 'gemini-test-key'
+      },
+      geminiClient: fakeClient
+    });
+    assert.deepEqual(result.segments, [{
+      start: 0,
+      end: 9.25,
+      text: 'Fallback transcript',
+      speaker: null
+    }]);
   } finally {
     fs.rmSync(fixture.dir, { recursive: true, force: true });
   }
