@@ -1,0 +1,30 @@
+name: Evercraft Intake Fabric
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/intake-fabric/**'
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-intake-fabric.yml'
+  pull_request:
+    paths:
+      - 'systemia/intake-fabric/**'
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-intake-fabric.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  intake-fabric:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove untrusted content cannot self-authorize
+        run: |
+          node --test systemia/passport/passport.test.mjs
+          node --test systemia/intake-fabric/intake.test.mjs
