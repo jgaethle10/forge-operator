@@ -45,6 +45,7 @@ function usage() {
     '  npm run media:studio -- explore <creative-bundle.json> <exploration-batch.json>',
     '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
+    '  npm run media:studio -- render-plan <render-plan-input.json> <distributed-plan.json>',
     '  npm run media:studio -- render-plan <render-input.json> <render-plan.json>',
   ].join('\n'));
 }
@@ -73,6 +74,26 @@ function main() {
     const plan = buildDistributedRenderPlan(payload);
     writeJson(output, plan);
     console.log(`Distributed render plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'render-plan') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{
+      id: string;
+      stage: VisualStage;
+      assetScopeId?: string;
+      assets?: RenderAssetManifestRow[];
+      maxFramesPerShard?: number;
+    }>(input);
+    const plan = buildDistributedRenderPlan(payload);
+    writeJson(output, plan);
+    console.log(`Distributed render plan created: ${path.resolve(output)}`);
+    console.log(`Frames: ${plan.totalFrames}; shards: ${plan.shards.length}; fps: ${plan.fps}`);
     return;
   }
 
