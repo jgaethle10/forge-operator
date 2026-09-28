@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/evercraft-machine-commerce",
   "title": "Evercraft Machine Commerce",
-  "description": "Problem-first Evercraft commerce routing with Clip V2 planning and safe human-confirmed handoffs.",
-  "version": "1.5.0",
+  "description": "Start with match_offer: describe a problem in plain language, route it to the smallest public-safe Evercraft capability, then inspect price and terms or prepare a human-confirmed next step when appropriate.",
+  "version": "1.5.1",
   "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
   "remotes": [
     {
