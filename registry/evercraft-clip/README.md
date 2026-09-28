@@ -28,14 +28,18 @@ https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?
 LLM notes:
 https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms
 
-## Current code-backed boundary
+## Production Engine V2
 
 - public MCP tools: `get_clip_capabilities`, `plan_clip_job`
-- public agent authority: read-only discovery and planning
+- public agent authority: read-only discovery and Creative Director planning
+- creative directions: clean, bold, documentary, property
+- caption treatments: source-grounded burned-in cues, opening-hook only, or no generated captions
+- social copy: separate grounded Facebook, LinkedIn, and Instagram variants
 - customer server source ceiling: 35 MiB
 - customer clip count: up to 3
 - customer clip duration: 8-45 seconds
 - rendered customer output: 720x1280 MP4, H.264/AAC
+- long, oversized, deduplicated, or full-timeline media can be routed to ForensiScope upstream; automatic media transfer is not claimed
 - publishing code paths: Facebook, LinkedIn, Instagram
 - TikTok: not currently verified; do not advertise as live
 - actual upload, payment processing, and publishing stay inside authenticated/human-authorized Clip workflows
