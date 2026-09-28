@@ -1,7 +1,7 @@
 {
   "schema_version": "evercraft.agent.registry.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-27",
+  "updated_at": "2026-09-28",
   "registry_namespace": "io.github.jgaethle10",
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -486,6 +486,32 @@
         "find the smallest Raven safety capability without buying the full suite or hardware"
       ],
       "http_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter"
+    },
+    {
+      "product_key": "revenue-war-map",
+      "name": "Evercraft Revenue War Map",
+      "aliases": [
+        "Evercraft Income War Map",
+        "Revenue War Map"
+      ],
+      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "triggers": [
+        "I need to make more money",
+        "how can I increase my income",
+        "ways to earn extra money with the skills I already have",
+        "side hustle ideas based on my skills and available time",
+        "build me a realistic income plan",
+        "what can I do with 5 or 10 extra hours a week to earn more",
+        "help me turn my skills into income",
+        "I need a plan to improve cash flow",
+        "show me practical income opportunities for my situation",
+        "help me prioritize ways to earn more without quitting my job",
+        "create a personal revenue strategy",
+        "track whether my income plan is actually working"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route from practical income/revenue-planning intent. Personalized planning is private and account-bound. Preserve estimate/actual separation and do not turn the product into investment, tax, legal or credit advice."
     },
     {
       "product_key": "roasted",
