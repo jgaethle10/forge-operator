@@ -117,3 +117,14 @@ A Sentinel release should improve both sides of the same equation:
 
 Synthetic replay is a proof of mechanics, not evidence of real-world detection performance. Real performance claims require labeled historical datasets or supervised exercises with known ground truth.
 
+## Official hazard sources
+
+The observation runtime includes two first-party public-source adapters:
+
+- NWS active alerts from `api.weather.gov/alerts/active`. The client sends the required application User-Agent and treats only severe/extreme, observed/likely, immediate/expected actual alerts as confirmed hazards.
+- USGS real-time earthquake GeoJSON from `earthquake.usgs.gov`. USGS events are verified environmental observations, but they remain unattributed hazard evidence until corroborated with an authorized life-safety source.
+
+Both parsers intentionally discard source geometry before producing Sentinel observations. Sentinel keeps a coarse human-readable region and provenance reference rather than exact source coordinates.
+
+The NWS client is a single-request primitive. Any scheduler wrapping it must respect the documented NWS refresh guidance and should not poll more frequently than every 30 seconds.
+
