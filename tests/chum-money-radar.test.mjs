@@ -257,4 +257,7 @@ test('Money Radar counts buyer sessions once across repeated funnel events', asy
   assert.equal(receipt.products[0].unique_buyer_sessions, 1);
   assert.equal(receipt.totals.view_to_continue_rate, 1);
   assert.equal(receipt.buyer_signal_state, 'continue_without_checkout');
+  assert.equal(receipt.windows['30d'].unique_buyer_sessions, 1);
+  assert.equal(receipt.windows['30d'].view_to_continue_rate, 1);
+  assert.equal(receipt.action_queue[0].action, 'inspect_buyer_handoff_and_checkout_friction');
 });
