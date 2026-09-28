@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T18:47:14.200Z",
+  "updated_at": "2026-09-28T19:02:20.080Z",
   "max_records": 500,
   "records": [
     {
@@ -3308,6 +3308,24 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "beb7c5770ff6b89db37dd73c6d55d6ba01e9ef0f376685b6ea8cf409440efa52",
       "response_sha256": "80504076844996db86b982ebcb436055e41834494ba38fda2df1893674d55313",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "6ebe09deb345eb8d2e19cd609b764b70661b5bffc3c0d326eba6903239351150",
+      "observed_at": "2026-09-28T19:02:20.080Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "foundry-app-escape",
+      "case_id": "app-escape-001",
+      "prompt_sha256": "1105ffff9073a4cc55bb54e4d8563b346f0dce86ea07d10235d9032279e58aa7",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "409d1396dccf2f344c56fbc4efa6091d58476190a5e536f65c7401a9fe72daf4",
+      "response_sha256": "e2d7e89bf6da541f0cbc946e45ab1fd34d4b83d0f03a78a06ff2879737d54196",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
