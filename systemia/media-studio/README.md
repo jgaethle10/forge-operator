@@ -260,6 +260,15 @@ npm run media:studio -- model-plan ./tmp/visual-model-payload.json ./tmp/model-p
 npm run media:studio -- finish-plan ./tmp/finish-payload.json ./tmp/finish-plan.json
 ```
 
+
+### Non-destructive timeline
+
+Fallen now keeps the edit alive instead of flattening every generation into a final render. The timeline core stores reusable assets on named video/overlay/voice/music/SFX/caption tracks and uses optimistic versioning for safe edits.
+
+A regenerated shot can replace one clip **in place** while preserving its clip identity, start time, duration and downstream timing. Moving or trimming a clip produces a digest-bound mutation receipt rather than silently rewriting the project.
+
+This is the editing contract the Studio Agent layer can target: plan a change, mutate one bounded part of the timeline, preserve everything else, then hand the result back to a human or another governed agent.
+
 ### Production-grade gate
 
 CI specimens prove mechanics, not aesthetics. Fallen now has an explicit production-grade gate so a mannequin, test fixture, geometry-only set or text-dominant composition cannot silently become a finished Week in Motion scene.
