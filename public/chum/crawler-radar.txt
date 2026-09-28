@@ -1,8 +1,8 @@
 Evercraft CHUM Crawler Radar
-Generated: 2026-09-28T19:47:57.851Z
+Generated: 2026-09-28T21:40:54.952Z
 Observed crawler-like requests: 0
 Negative provider pickup receipts: 174
-Strike-now surfaces: 1888
+Strike-now surfaces: 1885
 
 1. [strike_now] score=250 /chum/intents/foundry-app-escape-audit-v1/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
 2. [strike_now] score=250 /chum/intents/website-launch-service-v1/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
@@ -19,20 +19,20 @@ Strike-now surfaces: 1888
 13. [strike_now] score=246 /chum/products/forensiscope/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
 14. [strike_now] score=239 /chum/products/forensiscope/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
 15. [strike_now] score=235 /chum/intents/forensiscope-evidence-review-v1/ :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
-16. [strike_now] score=231 /forensiscope/distribution/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-17. [strike_now] score=231 /forensiscope/editorial/deduplicate-long-video-segments/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-18. [strike_now] score=231 /forensiscope/editorial/forensiscope-and-assemblyai/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-19. [strike_now] score=231 /forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-20. [strike_now] score=231 /forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-21. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-echosaw/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-22. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-gemini/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-23. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-k2/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-24. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-25. [strike_now] score=231 /forensiscope/editorial/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-26. [strike_now] score=231 /forensiscope/editorial/long-video-ai-tools/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-27. [strike_now] score=231 /forensiscope/editorial/video-too-large-for-chatgpt/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-28. [strike_now] score=231 /forensiscope/mesh/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-29. [strike_now] score=223 /forensiscope/developers/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
+16. [strike_now] score=231 /forensiscope/editorial/deduplicate-long-video-segments/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+17. [strike_now] score=231 /forensiscope/editorial/forensiscope-and-assemblyai/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+18. [strike_now] score=231 /forensiscope/editorial/forensiscope-and-azure-video-indexer/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+19. [strike_now] score=231 /forensiscope/editorial/forensiscope-and-nvidia-vss/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+20. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-echosaw/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+21. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-gemini/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+22. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-k2/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+23. [strike_now] score=231 /forensiscope/editorial/forensiscope-vs-twelve-labs/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+24. [strike_now] score=231 /forensiscope/editorial/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+25. [strike_now] score=231 /forensiscope/editorial/long-video-ai-tools/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+26. [strike_now] score=231 /forensiscope/editorial/video-too-large-for-chatgpt/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+27. [strike_now] score=223 /forensiscope/developers/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
+28. [strike_now] score=223 /forensiscope/distribution/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
+29. [strike_now] score=223 /forensiscope/mesh/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 30. [strike_now] score=222 /chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 31. [strike_now] score=222 /chum/answers/doors/4-hour-video-analysis-b25c640591.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 32. [strike_now] score=222 /chum/answers/doors/account-takeover-protection-6a5072fc31.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
