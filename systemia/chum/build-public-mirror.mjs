@@ -452,7 +452,7 @@ const publicIndexHtml = [
   '<p><a href="/.well-known/evercraft-pain-index.json">Pain Index JSON</a> · <a href="/chum/pain-index.txt">Pain Index text</a> · <a href="/chum/answers/">Answer Graph</a> · <a href="/chum/commercial/">Commercial intent mesh</a> · <a href="/chum/proof/">Receipt-backed proof library</a> · <a href="/chum/answers/observed/">Observed discovery repairs</a> · <a href="/chum/hot/">Hot discovery queue</a> · <a href="/chum/strike/">Adaptive strike hub</a> · <a href="/chum/crawler-radar.json">Crawler radar</a> · <a href="/llms-full.txt">LLM directory</a> · <a href="/openapi.json">OpenAPI</a> · <a href="/chum/revenue.html">Current sell-now offers</a></p>',
   '<p class="muted">Read-only discovery comes first. Machine Commerce is the next door only when current commercial state or a human-confirmed paid continuation is relevant.</p>',
   '<h2>Public capability doors</h2><div class="grid">',
-  ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3><p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
+  ...index.products.map((product) => `<article class="card"><h3><a href="${escapeHtml(product.page_url)}">${escapeHtml(product.name)}</a></h3>${product.buyer_frontage_url ? `<p><a href="${escapeHtml(product.buyer_frontage_url)}"><strong>Review current offer</strong></a></p>` : ''}<p><a href="${escapeHtml(product.canonical_url)}">Canonical product</a></p></article>`),
   '</div>',
   '<p class="muted">Public discovery is deliberately open. Private/admin topology, secrets and customer data remain private. Discovery is not proof of provider pickup or payment.</p>',
   '</main></body></html>'
