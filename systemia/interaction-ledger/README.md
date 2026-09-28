@@ -65,3 +65,38 @@ Identity authority
 ```
 
 This is designed to turn the standing "do not spam or double up" rule into infrastructure rather than a reminder humans and agents have to remember manually.
+
+
+## Exact-message action permits
+
+For consequential outbound communication, the safe path is stronger than preflight alone.
+
+After preflight passes, `prepareContactPermit()` mints a short-lived, single-use Passport action permit bound to:
+
+- the authorized actor
+- the exact contact
+- the exact channel
+- the `contact.<channel>` scope
+- the SHA-256 fingerprint of the approved message
+- the backing Passport grant
+- a short expiry
+
+The permit does not send anything.
+
+After the approved communications provider accepts the exact message, `finalizePermittedContact()` consumes the one-time permit with the provider receipt and records the outbound interaction.
+
+Changing the content changes the fingerprint and invalidates the permit. Reusing the permit fails. An opt-out or other failed preflight never receives a permit at all.
+
+That gives Evercraft a defensible outbound path:
+
+```
+Passport grant
+  -> relationship preflight
+  -> exact-message single-use permit
+  -> approved provider action
+  -> provider receipt
+  -> consume permit
+  -> record interaction
+```
+
+The design makes duplicate or content-swapped agent sends fail at the authority layer, not merely because someone remembered a CRM rule.
