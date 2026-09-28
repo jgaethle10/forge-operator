@@ -1,0 +1,119 @@
+name: Fallen Distributed Render
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/distributed-render*"
+      - "systemia/media-studio/render-worker/**"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "package.json"
+      - ".github/workflows/fallen-distributed-render.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/distributed-render*"
+      - "systemia/media-studio/render-worker/**"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "package.json"
+      - ".github/workflows/fallen-distributed-render.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  distributed-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Ensure ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+      - name: Build renderer image
+        run: docker build -t evercraft/fallen-render-worker:distributed-ci systemia/media-studio/render-worker
+      - name: Start two render workers
+        run: |
+          docker run -d --name fallen-render-a -p 8792:8787 -e FALLEN_RENDER_WORKER_TOKEN=ci-token evercraft/fallen-render-worker:distributed-ci
+          docker run -d --name fallen-render-b -p 8793:8787 -e FALLEN_RENDER_WORKER_TOKEN=ci-token evercraft/fallen-render-worker:distributed-ci
+          for port in 8792 8793; do
+            ok=0
+            for i in $(seq 1 30); do
+              if curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null; then ok=1; break; fi
+              sleep 1
+            done
+            if [ "$ok" != "1" ]; then
+              docker logs fallen-render-a || true
+              docker logs fallen-render-b || true
+              exit 1
+            fi
+          done
+      - name: Build four-frame distributed plan
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const stage={
+            schema:'evercraft.fallen.visual-stage.v1',
+            id:'distributed-ci-stage',
+            width:640,height:360,fps:10,durationSec:.4,background:'#080b0b',
+            camera:{keyframes:[{t:0,x:0,y:0,zoom:1},{t:.4,x:8,y:0,zoom:1.02}]},
+            layers:[
+              {id:'headline',kind:'text',z:1,x:30,y:40,width:580,height:100,text:'DISTRIBUTED EVERCRAFT',fontSize:40,fontWeight:700},
+              {id:'metric',kind:'metric',z:2,x:30,y:190,width:300,height:100,label:'SHARDS',from:0,to:2,progress:[{t:0,value:0},{t:.4,value:1}]}
+            ],
+            createdAt:'2026-09-27T00:00:00.000Z'
+          };
+          const normalized={...stage,createdAt:undefined};
+          const stageDigest=crypto.createHash('sha256').update(JSON.stringify(normalized)).digest('hex');
+          const plan={
+            schema:'evercraft.fallen.distributed-render-plan.v1',
+            id:'distributed-ci',
+            stageDigest,
+            stage,
+            assetScopeId:'distributed-ci-assets',
+            assets:[],
+            fps:10,totalFrames:4,maxFramesPerShard:2,
+            shards:[
+              {id:'shard-0000',index:0,jobId:'distributed-ci-r0000',frameStart:0,frameCount:2},
+              {id:'shard-0001',index:1,jobId:'distributed-ci-r0001',frameStart:2,frameCount:2}
+            ],
+            createdAt:'2026-09-27T00:00:00.000Z'
+          };
+          fs.writeFileSync('/tmp/distributed-plan.json',JSON.stringify(plan,null,2));
+          NODE
+      - name: Render on two workers and assemble MP4
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"renderer-a","url":"http://127.0.0.1:8792","token":"ci-token"},{"id":"renderer-b","url":"http://127.0.0.1:8793","token":"ci-token"}]
+        run: |
+          node systemia/media-studio/distributed-render-coordinator.mjs /tmp/distributed-plan.json /tmp/distributed-proof.mp4 /tmp/distributed-proof.receipt.json
+      - name: Verify distributed output
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const receipt=JSON.parse(fs.readFileSync('/tmp/distributed-proof.receipt.json','utf8'));
+          if(receipt.schema!=='evercraft.fallen.distributed-render-receipt.v1') throw new Error('receipt_schema');
+          if(receipt.total_frames!==4) throw new Error('frame_count');
+          if(receipt.workers.length!==2) throw new Error('worker_count');
+          if(receipt.boundaries?.every_frame_sha256_verified!==true) throw new Error('frame_verification_missing');
+          if(!/^[a-f0-9]{64}$/.test(receipt.output_sha256||'')) throw new Error('output_sha_missing');
+          if(!fs.statSync('/tmp/distributed-proof.mp4').size) throw new Error('output_empty');
+          console.log(JSON.stringify({output_sha256:receipt.output_sha256,frame_set_sha256:receipt.frame_set_sha256,workers:receipt.workers}));
+          NODE
+          ffprobe -v error -show_entries format=duration -of default=nw=1 /tmp/distributed-proof.mp4
+      - name: Show renderer logs on failure
+        if: failure()
+        run: |
+          docker logs fallen-render-a || true
+          docker logs fallen-render-b || true
+      - name: Stop render workers
+        if: always()
+        run: |
+          docker rm -f fallen-render-a || true
+          docker rm -f fallen-render-b || true
