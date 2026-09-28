@@ -1,0 +1,97 @@
+name: KAIDANCE frontier field cycle
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/organism/frontier-watch.mjs'
+      - 'systemia/organism/science-hazard-watch.mjs'
+      - 'systemia/organism/kaidance-frontier-proof.mjs'
+      - 'systemia/organism/kaidance-frontier-cycle.mjs'
+      - 'systemia/collider/**'
+      - 'registry/**'
+      - 'public/.well-known/evercraft-products.json'
+      - 'public/chum/products/**'
+      - '.github/workflows/kaidance-frontier-field.yml'
+  pull_request:
+    paths:
+      - 'systemia/organism/frontier-watch.mjs'
+      - 'systemia/organism/science-hazard-watch.mjs'
+      - 'systemia/organism/kaidance-frontier-proof.mjs'
+      - 'systemia/organism/kaidance-frontier-cycle.mjs'
+      - 'systemia/collider/**'
+      - 'registry/**'
+      - 'public/.well-known/evercraft-products.json'
+      - 'public/chum/products/**'
+      - '.github/workflows/kaidance-frontier-field.yml'
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kaidance-frontier-field-main
+  cancel-in-progress: false
+
+jobs:
+  field-cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Restore KAIDANCE frontier state
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/kaidance-frontier/runtime/state.json
+          key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            kaidance-frontier-state-${{ runner.os }}-
+
+      - name: Prove frontier + science/hazard contracts
+        run: node systemia/organism/kaidance-frontier-proof.mjs
+
+      - name: Run live KAIDANCE frontier field cycle
+        run: node systemia/organism/kaidance-frontier-cycle.mjs
+
+      - name: Save KAIDANCE frontier state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/kaidance-frontier/runtime/state.json
+          key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Upload KAIDANCE frontier receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaidance-frontier-receipts
+          path: |
+            artifacts/kaidance-frontier/latest.json
+            artifacts/kaidance-frontier/receipts.jsonl
+            artifacts/kaidance-frontier/runtime/receipts.jsonl
+            artifacts/portfolio-frontier/latest.json
+            artifacts/portfolio-frontier/mission-snapshot.json
+            artifacts/science-hazard-watch/latest.json
+            artifacts/science-hazard-watch/mission-snapshot.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Write KAIDANCE frontier summary
+        if: always()
+        shell: bash
+        run: |
+          echo '## KAIDANCE frontier field cycle' >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          if [ -f artifacts/kaidance-frontier/latest.json ]; then
+            echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+            cat artifacts/kaidance-frontier/latest.json >> "$GITHUB_STEP_SUMMARY"
+            echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+          fi
