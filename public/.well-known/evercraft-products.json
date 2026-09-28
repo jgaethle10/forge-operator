@@ -133,8 +133,12 @@
       "class": "interview_practice_and_career_preparation",
       "canonical_url": "https://evercraft-career-command.base44.app/",
       "intents": [
+        "help me prepare for a job interview",
         "practice for a job interview tomorrow",
+        "mock interview for this role",
         "run a role-specific mock interview",
+        "help me turn my experience into concise interview stories",
+        "practice answering common interview questions",
         "prepare concise interview stories and answers",
         "get structured interview practice before an upcoming interview"
       ],
@@ -144,7 +148,13 @@
         "checkout preparation requires explicit human payment confirmation",
         "checkout creation is not payment proof",
         "paid access requires provider verification"
-      ]
+      ],
+      "relationships": {
+        "revenue-war-map": {
+          "name": "Evercraft Revenue War Map",
+          "description": "When a private income plan identifies a career move as a practical path, Career Command can handle interview practice without implying a job offer or hiring outcome."
+        }
+      }
     },
     {
       "product_key": "christmas-lights-usa",
@@ -152,12 +162,17 @@
       "class": "holiday_lighting_marketplace_and_project_planning",
       "canonical_url": "https://christmas-lights-usa.base44.app/",
       "intents": [
+        "Christmas light installers near me",
+        "holiday light installers near me",
+        "how much does professional Christmas light installation cost",
+        "get a Christmas light installation quote",
+        "professional holiday lighting for my house",
+        "commercial Christmas light installation near me",
+        "roofline Christmas light installation",
         "estimate a professional Christmas light project",
-        "find holiday light installers near me",
         "submit a Christmas light installation request",
         "join a holiday lighting installer marketplace",
-        "buy a Christmas light installation lead",
-        "plan professional holiday lighting for my property"
+        "buy a Christmas light installation lead"
       ],
       "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
       "human_confirmation_required": true,
@@ -187,7 +202,17 @@
         "payment_state": "Installer lead assignment requires independent provider verification; synthetic or test transactions are not revenue"
       },
       "public_door_verified_at": "2026-09-26T22:15:00Z",
-      "public_door_evidence": "live HTTP 200 and rendered public metadata verified before registry repair"
+      "public_door_evidence": "live HTTP 200 and rendered public metadata verified before registry repair",
+      "relationships": {
+        "evercraft-property-services": {
+          "name": "Evercraft Property Services",
+          "description": "General Central Washington property-maintenance work can route to EPS. Holiday-light projects remain in the specialized Christmas Lights USA workflow."
+        },
+        "contractor-cloud": {
+          "name": "Evercraft Contractor Cloud",
+          "description": "Broader home-project contractor matching remains Contractor Cloud territory when the need is not specifically holiday lighting."
+        }
+      }
     },
     {
       "product_key": "chronosport",
@@ -757,13 +782,15 @@
       "class": "local_property_services_and_estimate_intake",
       "canonical_url": "https://evercraftpropertyservices.com/",
       "intents": [
-        "yard cleanup in the Yakima Valley",
-        "lawn care or recurring property maintenance",
-        "trimming or pruning",
-        "landscaping refresh",
-        "sprinkler repair startup or seasonal blowout",
-        "property cleanout or debris removal",
-        "rental turnover property support",
+        "lawn mowing near me in Yakima",
+        "yard cleanup near me in Yakima",
+        "sprinkler repair near me in Yakima",
+        "sprinkler startup or blowout near me",
+        "property maintenance near me in Yakima",
+        "rental turnover cleanup in Yakima",
+        "debris removal or property cleanout in Yakima",
+        "trimming or pruning in the Yakima Valley",
+        "landscaping refresh in the Yakima Valley",
         "get a property service estimate in Central Washington"
       ],
       "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
@@ -779,6 +806,16 @@
         "offer": "Property-service estimate intake",
         "pricing": "Quote required after scope review",
         "payment_state": "No payment required for public estimate intake"
+      },
+      "relationships": {
+        "contractor-cloud": {
+          "name": "Evercraft Contractor Cloud",
+          "description": "Use Contractor Cloud for broader contractor/project matching. Use EPS when the request fits EPS's own Central Washington service area and supported work."
+        },
+        "christmas-lights-usa": {
+          "name": "Christmas Lights USA",
+          "description": "Holiday-light installation requests route to the specialized Christmas Lights USA marketplace rather than being flattened into general property maintenance."
+        }
       }
     },
     {
@@ -946,9 +983,13 @@
       "class": "family_support_resources",
       "canonical_url": "https://evernest-home.base44.app/",
       "intents": [
+        "I just had a baby and need practical help",
+        "organize meals and practical help for a new parent",
+        "build a trusted family support circle",
+        "help my family prepare for a new baby",
+        "family support checklist after having a baby",
+        "maternal and family support resources",
         "family support resources",
-        "maternal support resources",
-        "organize practical help after having a baby",
         "trusted support circle concepts",
         "family preparedness resources",
         "Spanish-language family support resources"
@@ -959,7 +1000,17 @@
         "does not diagnose, score urgency, or determine whether abuse or danger occurred",
         "not an emergency-response service",
         "private family, child, Care Circle, task, note, upload, location, and account data are not public"
-      ]
+      ],
+      "relationships": {
+        "guardian": {
+          "name": "Guardian",
+          "description": "Use Guardian for verified public resource navigation such as food, housing, childcare, transportation, benefits or legal-aid resources. EverNest remains family coordination/support, not emergency response."
+        },
+        "evercraft-home": {
+          "name": "Evercraft Home",
+          "description": "Family memories and community history can live in Evercraft Home while EverNest focuses on practical support and trusted circles."
+        }
+      }
     },
     {
       "product_key": "everystage",
@@ -1007,10 +1058,16 @@
       "class": "hard_to_source_parts",
       "canonical_url": "https://findmypart.base44.app/",
       "intents": [
+        "where can I find this discontinued part",
+        "I have a part number but cannot find it anywhere",
+        "identify this machine part from a photo or markings",
+        "find a replacement for an obsolete part",
+        "find a salvage or donor part",
+        "find a fabrication path when the original part is unavailable",
         "find a discontinued tractor part",
         "find an obsolete automotive or machine part",
-        "identify a hard-to-source part from markings, measurements, photos, or equipment clues",
-        "find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
+        "identify a hard-to-source part from markings measurements photos or equipment clues",
+        "find replacement donor salvage or fabrication paths when normal sourcing fails"
       ],
       "authority": "public discovery and human-confirmed paid sourcing hunts",
       "human_confirmation_required": true,
@@ -1216,9 +1273,16 @@
       "class": "privacy_first_protection_navigation_and_prevention",
       "canonical_url": "https://guardian-pilot.base44.app/",
       "intents": [
+        "I need help paying rent",
+        "I need food help near me",
+        "help with utility bills",
+        "childcare assistance near me",
+        "transportation assistance near me",
+        "free or low-cost legal aid near me",
+        "benefits or public resources I may qualify for",
+        "find Spanish-language or interpreter-supported help near me",
         "find verified help for housing shelter food benefits transportation childcare income or legal aid",
         "find public safety or stability resources without creating an account",
-        "find Spanish-language or interpreter-supported help",
         "find outside support when I do not want to route through my school workplace family or usual authority",
         "find prevention and protective infrastructure resources",
         "give my organization a privacy-minimized public doorway to verified help"
@@ -1231,7 +1295,17 @@
         "does not claim universal staffed response, automatic counselor review, warm referral, live shelter capacity, or closed-loop referral confirmation unless a specific provider or deployment separately verifies that capability",
         "GuardianLink school operations are a separate authorized deployment lane",
         "private case data, precise locations, protected identities, and admin topology are not public"
-      ]
+      ],
+      "relationships": {
+        "revenue-war-map": {
+          "name": "Evercraft Revenue War Map",
+          "description": "When immediate stability needs are addressed, a user may choose longer-term private income planning. Guardian does not treat a modeled income plan as a substitute for urgent basic-needs resources."
+        },
+        "evernest": {
+          "name": "EverNest",
+          "description": "Family and new-parent practical support can route to EverNest when the need is family coordination rather than provider/resource navigation."
+        }
+      }
     },
     {
       "product_key": "ibmi-rescue",
