@@ -483,20 +483,30 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "doorway_state": "chum_public_mirror_source_ready",
-      "conformance_state": "discovery_and_human_handoff_only",
-      "provider_behavior_state": "not_run",
+      "doorway_state": "chum_public_mirror_plus_live_machine_commerce_handoff",
+      "conformance_state": "machine_commerce_handoff_live_verified",
+      "provider_behavior_state": "not_inferred_from_publication",
       "chum_mirror_state": "generated_public_primary",
       "public_web_discovery_state": "source_published_general_web_pickup_not_yet_verified",
       "offer_state": {
         "name": "Legacy Rescue Scan",
         "price": "$299 one-time",
-        "direct_checkout": "unverified",
+        "human_handoff": "live_verified",
+        "direct_checkout": "unverified_not_advertised",
         "payment_state": "unverified_until_provider_payment"
       },
       "authority_state": "public discovery and bounded non-intrusive diagnostic handoff; private access and production changes require explicit authorization",
-      "specialist_mcp_state": "not_published",
-      "direct_product_door_state": "held_until_specialist_interface_is_live_verified"
+      "specialist_mcp_state": "universal_machine_commerce_mcp_live_no_dedicated_specialist",
+      "direct_product_door_state": "universal_handoff_live_direct_checkout_held",
+      "machine_commerce_handoff_state": "live_verified",
+      "machine_commerce_public_id": "legacy-rescue-lab-v1",
+      "machine_commerce_tool": "prepare_legacy_rescue_scan_handoff",
+      "machine_commerce_request_tool": "submit_legacy_rescue_scan_request",
+      "live_canary_evidence": {
+        "negative": "HTTP 409 without explicit human confirmation; zero request records created",
+        "positive": "Synthetic QA returned HTTP 201 with all checkout/payment/access/production authority flags false; record marked synthetic and retired from active queue",
+        "verified_at": "2026-09-28T18:59:01.423Z"
+      }
     },
     {
       "product_key": "payflow",
