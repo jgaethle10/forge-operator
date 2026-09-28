@@ -342,6 +342,10 @@ test('Money Radar arms and fires the first-qualified-buyer tripwire without clai
   assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'first_qualified_buyer_activity'));
   assert.equal(receipt.operator_alerts.some((alert) => alert.code === 'qualified_offer_view_zero_continue'), false);
   assert.equal(receipt.products[0].diagnosis, 'offer_signal_insufficient_sample');
+  assert.equal(receipt.telemetry_quality.state, 'healthy');
+  assert.equal(receipt.telemetry_quality.v2_coverage_rate, 1);
+  assert.equal(receipt.telemetry_quality.qualified_session_coverage_rate, 1);
+  assert.equal(receipt.telemetry_quality.conversion_decision_safe, true);
 });
 
 
@@ -388,4 +392,31 @@ test('Money Radar requires distinct qualified sessions before diagnosing an offe
   assert.equal(distinctSessions.receipt.products[0].diagnosis, 'offer_to_continue_dropoff');
   assert.equal(distinctSessions.receipt.action_queue[0].action, 'repair_offer_trust_value_or_primary_cta');
   assert.ok(distinctSessions.receipt.operator_alerts.some((alert) => alert.code === 'qualified_offer_view_zero_continue'));
+});
+
+
+test('Money Radar marks legacy-heavy telemetry as unsafe for conversion diagnosis', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const events = Array.from({ length: 20 }, (_, index) => ({
+    ...publicEvent('offer_view', 'legacy-telemetry-' + index),
+    occurred_at: '2026-09-28T11:' + String(index).padStart(2, '0') + ':00.000Z',
+    actor_class: undefined,
+    actor_confidence: undefined,
+    session_key: '',
+    telemetry_version: 'legacy',
+    provider_claim: 'direct',
+  }));
+  const { receipt } = await buildMoneyRadar({
+    root,
+    generatedAt: '2026-09-28T12:00:00.000Z',
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: events,
+  });
+
+  assert.equal(receipt.telemetry_quality.events, 20);
+  assert.equal(receipt.telemetry_quality.v2_coverage_rate, 0);
+  assert.equal(receipt.telemetry_quality.state, 'transitioning_or_legacy_heavy');
+  assert.equal(receipt.telemetry_quality.conversion_decision_safe, false);
+  assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'telemetry_v2_coverage_low'));
 });
