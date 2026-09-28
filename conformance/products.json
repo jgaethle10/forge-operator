@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "standard": "evercraft.cross-llm-conformance.v1",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-28",
   "baseline_providers": [
     "chatgpt",
     "claude",
@@ -475,6 +475,19 @@
       "conformance_state": "not_yet_propagated",
       "provider_behavior_state": "not_run",
       "public_web_discovery_state": "not_measured",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
+      "product_key": "revenue-war-map",
+      "name": "Evercraft Revenue War Map",
+      "class": "personal_revenue_planning_and_income_opportunity_mapping",
+      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-conformance.json",
+      "doorway_state": "source_build_lint_typecheck_green_origin_machine_files_added_external_canary_pending",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback"
     },
     {
