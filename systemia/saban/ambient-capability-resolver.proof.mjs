@@ -52,6 +52,7 @@ const observed=resolveAmbientCapabilities({
   requestedKinds:['observation'],
 });
 assert.deepEqual(observed.eligible.map(x=>x.id).sort(),[
+  'drone-remote-id-001',
   'plane-adsb-001',
   'speaker-ble-001',
 ]);
