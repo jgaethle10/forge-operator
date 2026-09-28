@@ -1,0 +1,255 @@
+name: Fallen Virtual Production
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/virtual-production.ts"
+      - "systemia/media-studio/virtual-production.test.ts"
+      - "systemia/media-studio/host-plate.ts"
+      - "systemia/media-studio/host-plate.test.ts"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/studio-world.ts"
+      - "systemia/media-studio/render-worker/**"
+      - ".github/workflows/fallen-virtual-production.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/virtual-production.ts"
+      - "systemia/media-studio/virtual-production.test.ts"
+      - "systemia/media-studio/host-plate.ts"
+      - "systemia/media-studio/host-plate.test.ts"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/studio-world.ts"
+      - "systemia/media-studio/render-worker/**"
+      - ".github/workflows/fallen-virtual-production.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  virtual-production-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install runtime
+        run: npm install --no-audit --no-fund
+
+      - name: Unit contracts
+        run: node --import tsx --test systemia/media-studio/virtual-production.test.ts systemia/media-studio/host-plate.test.ts
+
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+
+      - name: Build CI virtual set assets
+        run: |
+          set -euo pipefail
+          ROOT="$GITHUB_WORKSPACE/.ci-assets/virtual-production-ci"
+          mkdir -p "$ROOT"
+
+          room_plate() {
+            local out="$1"
+            local left="$2"
+            local right="$3"
+            ffmpeg -y -v error \
+              -f lavfi -i "color=c=0x080B0B:s=1920x1080:d=1" \
+              -vf "drawgrid=w=120:h=120:t=1:c=0xB7BDC5@0.10,drawbox=x=90:y=130:w=820:h=720:color=$left@0.95:t=fill,drawbox=x=1010:y=160:w=820:h=670:color=$right@0.95:t=fill,drawbox=x=120:y=860:w=1680:h=95:color=0xB79A56@0.14:t=fill" \
+              -frames:v 1 "$ROOT/$out"
+          }
+
+          room_plate lobby.png 0x141B20 0x101A22
+          room_plate global-ops.png 0x101820 0x0E1C28
+          room_plate product-gallery.png 0x171A1E 0x12181D
+
+          ffmpeg -y -v error \
+            -f lavfi -i "color=c=black@0.0:s=420x900:d=1,format=rgba" \
+            -vf "drawbox=x=135:y=160:w=150:h=470:color=0xF5F5F2@0.92:t=fill,drawbox=x=95:y=590:w=85:h=260:color=0xF5F5F2@0.92:t=fill,drawbox=x=240:y=590:w=85:h=260:color=0xF5F5F2@0.92:t=fill,drawbox=x=120:y=30:w=180:h=180:color=0xF5F5F2@0.92:t=fill" \
+            -frames:v 1 "$ROOT/ci-host-mannequin.png"
+
+          ffmpeg -y -v error \
+            -f lavfi -i "color=c=black@0.0:s=1920x1080:d=1,format=rgba" \
+            -vf "drawbox=x=820:y=0:w=190:h=1080:color=0x111719@0.98:t=fill,drawbox=x=800:y=0:w=230:h=45:color=0xB79A56@0.75:t=fill" \
+            -frames:v 1 "$ROOT/global-ops-foreground.png"
+
+      - name: Compile continuous hosted HQ
+        run: |
+          cat >/tmp/virtual-production-ci.json <<'JSON'
+          {
+            "schema":"evercraft.fallen.virtual-production.v1",
+            "id":"virtual-production-ci",
+            "aspectRatio":"16:9",
+            "host":{
+              "id":"ci-mannequin",
+              "assetId":"ci-host-mannequin",
+              "mediaKind":"image",
+              "evidenceState":"observed",
+              "sourceRefs":["ci:generated-nonhuman-mannequin"],
+              "identityEvidenceRefs":["ci:nonhuman-test-mannequin"],
+              "widthPct":0.18,
+              "heightPct":0.76,
+              "yPct":0.18
+            },
+            "beats":[
+              {
+                "id":"lobby",
+                "roomId":"lobby",
+                "headline":"VIRTUAL PRODUCTION",
+                "subhead":"One continuous Evercraft world",
+                "durationSec":2.2,
+                "cameraMode":"wide_reveal",
+                "contents":[
+                  {"slotId":"welcome-wall","kind":"text","text":"HOST + CAMERA + WORLD","fontSize":54,"fontWeight":700}
+                ]
+              },
+              {
+                "id":"ops",
+                "roomId":"global_ops",
+                "headline":"FOLLOW THE HOST",
+                "subhead":"Then push into a real display surface",
+                "durationSec":2.4,
+                "cameraMode":"screen_push",
+                "focusSlotId":"world-wall",
+                "foreground":{
+                  "assetId":"global-ops-foreground",
+                  "mediaKind":"image",
+                  "evidenceState":"synthetic_visualization",
+                  "sourceRefs":["ci:foreground-occlusion-fixture"]
+                },
+                "contents":[
+                  {"slotId":"subject-wall","kind":"text","text":"SYSTEMIA","fontSize":54,"fontWeight":700},
+                  {"slotId":"world-wall","kind":"metric","label":"CONTINUOUS WORLD","value":1,"unit":" STAGE","evidenceState":"observed","sourceRefs":["ci:virtual-production-compiler"]}
+                ]
+              },
+              {
+                "id":"products",
+                "roomId":"product_gallery",
+                "headline":"KEEP WALKING",
+                "subhead":"No stitched room cards",
+                "durationSec":2.2,
+                "cameraMode":"follow_host",
+                "contents":[
+                  {"slotId":"hero-product","kind":"text","text":"RIVET · FORENSISCOPE · EPS","fontSize":48,"fontWeight":700}
+                ]
+              }
+            ]
+          }
+          JSON
+
+          npm run media:studio -- virtual-production /tmp/virtual-production-ci.json /tmp/virtual-production-plan.json /tmp/virtual-production-stage.html
+
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const plan=JSON.parse(fs.readFileSync('/tmp/virtual-production-plan.json','utf8'));
+          plan.stage.fps=6;
+          fs.writeFileSync('/tmp/virtual-production-stage.json',JSON.stringify(plan.stage,null,2));
+          if(plan.boundaries.continuousWorldSpace!==true) throw new Error('continuous_world_boundary_missing');
+          if(plan.boundaries.foregroundAlphaOcclusionSupported!==true) throw new Error('occlusion_boundary_missing');
+          if(Math.max(...plan.stage.camera.keyframes.map(x=>x.x))<=1920) throw new Error('camera_did_not_cross_rooms');
+          NODE
+
+      - name: Build render manifest
+        run: |
+          export ROOT="$GITHUB_WORKSPACE/.ci-assets/virtual-production-ci"
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import path from 'node:path';
+          const root=process.env.ROOT;
+          const defs=[
+            ['evercraft-hq-lobby-v1','lobby.png','image/png'],
+            ['evercraft-hq-global-ops-v1','global-ops.png','image/png'],
+            ['evercraft-hq-product-gallery-v1','product-gallery.png','image/png'],
+            ['ci-host-mannequin','ci-host-mannequin.png','image/png'],
+            ['global-ops-foreground','global-ops-foreground.png','image/png']
+          ];
+          const assets=defs.map(([id,filename,media_type])=>({
+            id,filename,media_type,
+            sha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(root,filename))).digest('hex')
+          }));
+          const stage=JSON.parse(fs.readFileSync('/tmp/virtual-production-stage.json','utf8'));
+          fs.writeFileSync('/tmp/virtual-production-render-input.json',JSON.stringify({
+            id:'virtual-production-ci-render',
+            stage,
+            assetScopeId:'virtual-production-ci',
+            maxFramesPerShard:18,
+            assets
+          },null,2));
+          NODE
+          npm run media:studio -- render-plan /tmp/virtual-production-render-input.json /tmp/virtual-production-render-plan.json
+
+      - name: Build private renderer
+        run: docker build -t evercraft/fallen-render-worker:virtual-ci systemia/media-studio/render-worker
+
+      - name: Start two render workers
+        run: |
+          docker run -d --name fallen-virtual-a \
+            -p 8794:8787 \
+            -v "$GITHUB_WORKSPACE/.ci-assets:/work/assets:ro" \
+            -e FALLEN_RENDER_WORKER_TOKEN=virtual-a \
+            evercraft/fallen-render-worker:virtual-ci
+          docker run -d --name fallen-virtual-b \
+            -p 8795:8787 \
+            -v "$GITHUB_WORKSPACE/.ci-assets:/work/assets:ro" \
+            -e FALLEN_RENDER_WORKER_TOKEN=virtual-b \
+            evercraft/fallen-render-worker:virtual-ci
+          for port in 8794 8795; do
+            for i in $(seq 1 40); do
+              if curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null; then break; fi
+              sleep 1
+            done
+            curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null
+          done
+
+      - name: Render continuous virtual production canary
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"virtual-a","url":"http://127.0.0.1:8794","token":"virtual-a"},{"id":"virtual-b","url":"http://127.0.0.1:8795","token":"virtual-b"}]
+        run: |
+          node systemia/media-studio/distributed-render-coordinator.mjs \
+            /tmp/virtual-production-render-plan.json \
+            /tmp/virtual-production-canary.mp4 \
+            /tmp/virtual-production-canary.receipt.json
+
+      - name: Verify virtual production receipt
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const receipt=JSON.parse(fs.readFileSync('/tmp/virtual-production-canary.receipt.json','utf8'));
+          if(receipt.schema!=='evercraft.fallen.distributed-render-receipt.v1') throw new Error('bad_receipt_schema');
+          if(receipt.boundaries?.every_frame_sha256_verified!==true) throw new Error('frame_hash_gate_failed');
+          if(receipt.boundaries?.no_gap_no_duplicate_gate!==true) throw new Error('frame_lattice_gate_failed');
+          if(receipt.workers.length!==2) throw new Error('two_workers_not_used');
+          NODE
+          ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate,nb_frames -show_entries format=duration,size -of json /tmp/virtual-production-canary.mp4
+
+      - name: Package proof
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/artifacts/virtual-production"
+          cp /tmp/virtual-production-canary.mp4 "$GITHUB_WORKSPACE/artifacts/virtual-production/"
+          cp /tmp/virtual-production-canary.receipt.json "$GITHUB_WORKSPACE/artifacts/virtual-production/"
+          cp /tmp/virtual-production-plan.json "$GITHUB_WORKSPACE/artifacts/virtual-production/"
+          cp /tmp/virtual-production-render-plan.json "$GITHUB_WORKSPACE/artifacts/virtual-production/"
+
+      - name: Upload proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-virtual-production-canary
+          path: artifacts/virtual-production/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Stop workers
+        if: always()
+        run: |
+          docker rm -f fallen-virtual-a || true
+          docker rm -f fallen-virtual-b || true
