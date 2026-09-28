@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T19:51:06.316Z",
+  "updated_at": "2026-09-28T22:48:06.134Z",
   "max_records": 500,
   "records": [
     {
@@ -3542,6 +3542,24 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "e8c068299c7f5e4b08dc026bbfef5072bb3539841c05b959f0731cebf02d1deb",
       "response_sha256": "00bef41bc8814754094fa88f1f93f24e31346253515409edc7a59cf623c0fa8a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "73e20e119e03595dfaa73f7bd222fae49c13398f4fb17e6a9165f69b7b2bb373",
+      "observed_at": "2026-09-28T22:48:06.134Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "deck-capital-fit",
+      "case_id": "capital-fit-001",
+      "prompt_sha256": "57ad0e7158337cda51a2ccd288b4bc3f96d594a3f4b545e3fc48a5c26d26c541",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "919d2879da36b85d805b524a718c669386978af174a0fe5236d48852301c470a",
+      "response_sha256": "4965659144c48764780c6e3f6d944982a6aeacbe3efcb3467939eb7f6e12b694",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
