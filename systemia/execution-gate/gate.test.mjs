@@ -388,3 +388,100 @@ test('state survives restart and raw request is never persisted', () => {
 
   fs.rmSync(root, { recursive: true, force: true });
 });
+
+
+test('prepare saga resumes from a persisted preparing marker instead of duplicating authority or quota', () => {
+  const { root, gate, meter } = setup();
+  const fingerprint = requestFingerprint({
+    request: {
+      address: '6405 W Chestnut Ave, Yakima, WA',
+      report: 'preliminary',
+    },
+  });
+
+  fs.mkdirSync(path.join(root, 'gate'), { recursive: true });
+  fs.appendFileSync(
+    path.join(root, 'gate', 'execution-lease-events.jsonl'),
+    JSON.stringify({
+      schema: 'evercraft.execution-gate.lease-event.v1',
+      lease_id: 'lease_resume_001',
+      idempotency_key: 'execution:prepare:resume:001',
+      state: 'preparing',
+      actor_ref: 'agent:rivet-worker',
+      passport_product: 'rivet',
+      scope: 'report.generate',
+      resource_ref: 'site:yakima-001',
+      specialist_slug: 'aliev',
+      request_fingerprint: fingerprint,
+      route: null,
+      permit_id: 'permit_lease_resume_001',
+      meter_reservation_id: 'res_lease_resume_001',
+      meter: null,
+      raw_request_stored: false,
+      dispatch_performed: false,
+      recorded_at: '2026-09-27T18:00:00Z',
+      receipt_hash: 'sha256:' + '0'.repeat(64),
+    }) + '\n'
+  );
+
+  const resumed = gate.prepareExecution({
+    lease_id: 'lease_resume_001',
+    idempotency_key: 'execution:prepare:resume:001',
+    actor_ref: 'agent:rivet-worker',
+    passport_product: 'rivet',
+    scope: 'report.generate',
+    resource_ref: 'site:yakima-001',
+    specialist_slug: 'aliev',
+    request: {
+      address: '6405 W Chestnut Ave, Yakima, WA',
+      report: 'preliminary',
+    },
+    prepared_at: '2026-09-27T18:00:00Z',
+    meter: {
+      subject_ref: 'org:demo',
+      product: 'rivet',
+      metric: 'site_reports',
+      quantity: 1,
+      unit: 'report',
+    },
+  });
+
+  assert.equal(resumed.state, 'prepared');
+  assert.equal(resumed.lease.lease_id, 'lease_resume_001');
+  const meterState = meter.getEntitlementState('ent_rivet_reports', {
+    at: '2026-09-27T18:01:00Z',
+  });
+  assert.equal(meterState.reserved, 1);
+
+  const retry = gate.prepareExecution({
+    lease_id: 'lease_resume_001',
+    idempotency_key: 'execution:prepare:resume:001',
+    actor_ref: 'agent:rivet-worker',
+    passport_product: 'rivet',
+    scope: 'report.generate',
+    resource_ref: 'site:yakima-001',
+    specialist_slug: 'aliev',
+    request: {
+      address: '6405 W Chestnut Ave, Yakima, WA',
+      report: 'preliminary',
+    },
+    prepared_at: '2026-09-27T18:00:00Z',
+    meter: {
+      subject_ref: 'org:demo',
+      product: 'rivet',
+      metric: 'site_reports',
+      quantity: 1,
+      unit: 'report',
+    },
+  });
+  assert.equal(retry.state, 'prepared');
+  assert.equal(retry.duplicate, true);
+  assert.equal(
+    meter.getEntitlementState('ent_rivet_reports', {
+      at: '2026-09-27T18:01:00Z',
+    }).reserved,
+    1
+  );
+
+  fs.rmSync(root, { recursive: true, force: true });
+});
