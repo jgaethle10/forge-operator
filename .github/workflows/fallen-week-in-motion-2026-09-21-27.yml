@@ -1,0 +1,238 @@
+name: Fallen Week in Motion 2026-09-21 to 2026-09-27
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/episodes/week-in-motion-2026-09-21-27.json"
+      - ".github/workflows/fallen-week-in-motion-2026-09-21-27.yml"
+      - "systemia/media-studio/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-week-in-motion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install runtime
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+
+      - name: Build canonical HQ set plates
+        run: |
+          set -euo pipefail
+          ASSET_DIR="$GITHUB_WORKSPACE/.ci-assets/week-in-motion-hq"
+          mkdir -p "$ASSET_DIR"
+
+          make_plate() {
+            local out="$1"
+            local layout="$2"
+            ffmpeg -y -v error \
+              -f lavfi -i "color=c=0x080B0B:s=1920x1080:d=1" \
+              -vf "drawgrid=w=120:h=120:t=1:c=0xB7BDC5@0.10,$layout" \
+              -frames:v 1 "$ASSET_DIR/$out"
+          }
+
+          make_plate lobby.png "drawbox=x=210:y=150:w=1500:h=650:color=0x141B20@0.94:t=fill,drawbox=x=300:y=760:w=1320:h=115:color=0xB79A56@0.16:t=fill"
+          make_plate global-ops.png "drawbox=x=90:y=180:w=700:h=610:color=0x101A22@0.96:t=fill,drawbox=x=870:y=120:w=960:h=690:color=0x0E1C28@0.96:t=fill,drawbox=x=130:y=850:w=1650:h=110:color=0x4FB8FF@0.12:t=fill"
+          make_plate product-gallery.png "drawbox=x=120:y=150:w=1040:h=680:color=0x151A1E@0.96:t=fill,drawbox=x=1240:y=220:w=520:h=510:color=0x171C20@0.96:t=fill,drawbox=x=200:y=855:w=1500:h=105:color=0xB79A56@0.13:t=fill"
+          make_plate research-lab.png "drawbox=x=120:y=145:w=900:h=650:color=0x10171D@0.96:t=fill,drawbox=x=1110:y=260:w=650:h=475:color=0x121D23@0.96:t=fill,drawbox=x=180:y=840:w=1540:h=115:color=0x4FB8FF@0.10:t=fill"
+          make_plate field-bay.png "drawbox=x=100:y=160:w=1030:h=650:color=0x171A1C@0.96:t=fill,drawbox=x=1210:y=180:w=570:h=590:color=0x101A22@0.96:t=fill,drawbox=x=150:y=845:w=1620:h=115:color=0xB79A56@0.12:t=fill"
+          make_plate proof-room.png "drawbox=x=140:y=135:w=950:h=690:color=0x11171C@0.98:t=fill,drawbox=x=1190:y=200:w=540:h=560:color=0x161A1D@0.98:t=fill,drawbox=x=190:y=850:w=1530:h=105:color=0x4FB8FF@0.10:t=fill"
+          make_plate observation-deck.png "drawbox=x=110:y=130:w=1700:h=660:color=0x0D161D@0.94:t=fill,drawbox=x=300:y=820:w=1320:h=120:color=0xB79A56@0.15:t=fill"
+
+      - name: Compile the canonical studio journey
+        run: |
+          mkdir -p /tmp/wim/stages /tmp/wim/rendered
+          npm run media:studio -- studio-journey \
+            systemia/media-studio/episodes/week-in-motion-2026-09-21-27.json \
+            /tmp/wim/week-in-motion.journey.json
+
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const journey=JSON.parse(fs.readFileSync('/tmp/wim/week-in-motion.journey.json','utf8'));
+          journey.stages.forEach((entry,index)=>{
+            entry.stage.fps=10;
+            const n=String(index).padStart(2,'0');
+            fs.writeFileSync(`/tmp/wim/stages/${n}-${entry.roomId}.stage.json`,JSON.stringify(entry.stage,null,2));
+          });
+          fs.writeFileSync('/tmp/wim/journey-summary.json',JSON.stringify({
+            schema:journey.schema,
+            id:journey.id,
+            worldId:journey.worldId,
+            worldDigest:journey.worldDigest,
+            rooms:journey.stages.map(x=>x.roomId),
+            transitions:journey.stages.map(x=>x.transitionIn)
+          },null,2));
+          NODE
+
+      - name: Build Fallen render worker
+        run: docker build -t evercraft/fallen-render-worker:wim systemia/media-studio/render-worker
+
+      - name: Start two private Fallen render workers
+        run: |
+          docker run -d --name fallen-wim-a \
+            -p 8794:8787 \
+            -v "$GITHUB_WORKSPACE/.ci-assets:/work/assets:ro" \
+            -e FALLEN_RENDER_WORKER_TOKEN=wim-a \
+            evercraft/fallen-render-worker:wim
+          docker run -d --name fallen-wim-b \
+            -p 8795:8787 \
+            -v "$GITHUB_WORKSPACE/.ci-assets:/work/assets:ro" \
+            -e FALLEN_RENDER_WORKER_TOKEN=wim-b \
+            evercraft/fallen-render-worker:wim
+
+          for port in 8794 8795; do
+            healthy=0
+            for i in $(seq 1 45); do
+              if curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null; then
+                healthy=1
+                break
+              fi
+              sleep 1
+            done
+            test "$healthy" = "1"
+          done
+
+      - name: Render every department through Fallen
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"wim-a","url":"http://127.0.0.1:8794","token":"wim-a"},{"id":"wim-b","url":"http://127.0.0.1:8795","token":"wim-b"}]
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import path from 'node:path';
+
+          const dir=path.join(process.env.GITHUB_WORKSPACE,'.ci-assets/week-in-motion-hq');
+          const defs=[
+            ['evercraft-hq-lobby-v1','lobby.png'],
+            ['evercraft-hq-global-ops-v1','global-ops.png'],
+            ['evercraft-hq-product-gallery-v1','product-gallery.png'],
+            ['evercraft-hq-research-lab-v1','research-lab.png'],
+            ['evercraft-hq-field-bay-v1','field-bay.png'],
+            ['evercraft-hq-proof-room-v1','proof-room.png'],
+            ['evercraft-hq-observation-deck-v1','observation-deck.png']
+          ];
+          const assets=defs.map(([id,filename])=>{
+            const bytes=fs.readFileSync(path.join(dir,filename));
+            return {id,filename,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),media_type:'image/png'};
+          });
+          fs.writeFileSync('/tmp/wim/assets.json',JSON.stringify(assets,null,2));
+          NODE
+
+          i=0
+          for stage in /tmp/wim/stages/*.stage.json; do
+            n="$(printf '%02d' "$i")"
+            export STAGE="$stage"
+            export INDEX="$n"
+            node --input-type=module - <<'NODE'
+            import fs from 'node:fs';
+            const stage=JSON.parse(fs.readFileSync(process.env.STAGE,'utf8'));
+            const assets=JSON.parse(fs.readFileSync('/tmp/wim/assets.json','utf8'));
+            fs.writeFileSync(`/tmp/wim/rendered/render-${process.env.INDEX}.input.json`,JSON.stringify({
+              id:`wim-render-${process.env.INDEX}`,
+              stage,
+              assetScopeId:'week-in-motion-hq',
+              maxFramesPerShard:20,
+              assets
+            },null,2));
+            NODE
+
+            npm run media:studio -- render-plan \
+              "/tmp/wim/rendered/render-$n.input.json" \
+              "/tmp/wim/rendered/render-$n.plan.json"
+
+            node systemia/media-studio/distributed-render-coordinator.mjs \
+              "/tmp/wim/rendered/render-$n.plan.json" \
+              "/tmp/wim/rendered/clip-$n.mp4" \
+              "/tmp/wim/rendered/clip-$n.receipt.json"
+
+            ffmpeg -y -v error -ss 2 -i "/tmp/wim/rendered/clip-$n.mp4" -frames:v 1 "/tmp/wim/rendered/key-$n.png"
+            i=$((i+1))
+          done
+
+      - name: Assemble Week in Motion master and contact sheet
+        run: |
+          set -euo pipefail
+          : > /tmp/wim/rendered/concat.txt
+          for clip in /tmp/wim/rendered/clip-*.mp4; do
+            printf "file '%s'\n" "$clip" >> /tmp/wim/rendered/concat.txt
+          done
+          ffmpeg -y -v error -f concat -safe 0 -i /tmp/wim/rendered/concat.txt -c copy /tmp/wim/week-in-motion-master.mp4
+
+          ffmpeg -y -v error \
+            -framerate 1 -pattern_type glob -i '/tmp/wim/rendered/key-*.png' \
+            -vf "scale=640:-1,tile=2x4:padding=8:margin=8" \
+            -frames:v 1 /tmp/wim/week-in-motion-contact-sheet.png
+
+          ffprobe -v error \
+            -show_entries stream=codec_name,width,height,r_frame_rate,nb_frames \
+            -show_entries format=duration,size \
+            -of json /tmp/wim/week-in-motion-master.mp4 \
+            > /tmp/wim/week-in-motion-master.probe.json
+
+      - name: Verify receipts
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const files=fs.readdirSync('/tmp/wim/rendered').filter(x=>x.endsWith('.receipt.json')).sort();
+          if(files.length!==7) throw new Error(`expected_7_receipts_got_${files.length}`);
+          const summary=[];
+          for(const file of files){
+            const receipt=JSON.parse(fs.readFileSync('/tmp/wim/rendered/'+file,'utf8'));
+            if(receipt.schema!=='evercraft.fallen.distributed-render-receipt.v1') throw new Error('bad_receipt_schema');
+            if(receipt.boundaries?.every_frame_sha256_verified!==true) throw new Error('unverified_frame');
+            if(receipt.boundaries?.no_gap_no_duplicate_gate!==true) throw new Error('frame_lattice_failed');
+            summary.push({file,output_sha256:receipt.output_sha256,total_frames:receipt.total_frames,workers:receipt.workers});
+          }
+          fs.writeFileSync('/tmp/wim/render-receipt-summary.json',JSON.stringify(summary,null,2));
+          NODE
+
+      - name: Package Week in Motion visual proof
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27"
+          cp /tmp/wim/week-in-motion-master.mp4 "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/"
+          cp /tmp/wim/week-in-motion-contact-sheet.png "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/"
+          cp /tmp/wim/week-in-motion-master.probe.json "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/"
+          cp /tmp/wim/week-in-motion.journey.json "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/"
+          cp /tmp/wim/journey-summary.json "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/"
+          cp /tmp/wim/render-receipt-summary.json "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/"
+          mkdir -p "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/keyframes"
+          cp /tmp/wim/rendered/key-*.png "$GITHUB_WORKSPACE/artifacts/week-in-motion-2026-09-21-27/keyframes/"
+
+      - name: Upload Week in Motion visual proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-week-in-motion-2026-09-21-27
+          path: artifacts/week-in-motion-2026-09-21-27/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Show worker logs on failure
+        if: failure()
+        run: |
+          docker logs fallen-wim-a || true
+          docker logs fallen-wim-b || true
+
+      - name: Stop workers
+        if: always()
+        run: |
+          docker rm -f fallen-wim-a || true
+          docker rm -f fallen-wim-b || true
