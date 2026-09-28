@@ -2,11 +2,15 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-28T19:04:54.335Z</updated>
+<updated>2026-09-28T19:05:32.445Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-28T19:05:32.445Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-28T19:05:32.445Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-28T19:05:32.445Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-28T19:05:32.445Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-28T19:05:32.445Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-28T19:04:54.335Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-28T19:04:54.335Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:a578a6e1caee77790999ed79</id><title>/chum/commercial/</title><updated>2026-09-28T19:03:48.848Z</updated><link href="/chum/commercial/"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:1f9c776a26c06d16a178e5c6</id><title>/chum/commercial/feed.json</title><updated>2026-09-28T19:03:48.848Z</updated><link href="/chum/commercial/feed.json"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:da60d0a564c52ed2e335322a</id><title>/chum/commercial/feed.xml</title><updated>2026-09-28T19:03:48.848Z</updated><link href="/chum/commercial/feed.xml"/><category term="priority-112"/></entry>
@@ -101,8 +105,4 @@
 <entry><id>urn:evercraft:chum:0240c6872e509381dd87b2b7</id><title>/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:a329cd807eefb14487095433</id><title>/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:a096f8aa86cc2c59b9a2a99d</id><title>/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:bb1596c8c7df1499156eacb4</id><title>/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:e04c93daeaa9ac64f77ad032</id><title>/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:c1341279dc88707f302c7d37</id><title>/chum/answers/doors/ai-worker-competency-test-7f140524a9.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-worker-competency-test-7f140524a9.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:62be79e4dcd829fd768f6ff5</id><title>/chum/answers/doors/air-quality-work-decision-6eeb07802f.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/air-quality-work-decision-6eeb07802f.json"/><category term="priority-160"/></entry>
 </feed>
