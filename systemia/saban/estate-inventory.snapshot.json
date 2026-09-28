@@ -1,0 +1,321 @@
+{
+  "schema": "evercraft.private-estate-name-snapshot.v1",
+  "captured_on": "2026-09-28",
+  "source": "Base44 connected inventory",
+  "privacy": {
+    "app_ids_persisted": false,
+    "credentials_persisted": false,
+    "names_only": true,
+    "inventory_is_not_publication": true
+  },
+  "count": 100,
+  "apps": [
+    {
+      "name": "Evercraft Clip"
+    },
+    {
+      "name": "Evercraft"
+    },
+    {
+      "name": "OpticVault"
+    },
+    {
+      "name": "SYSTEMIA Marketing Agency"
+    },
+    {
+      "name": "Evercraft Income War Map"
+    },
+    {
+      "name": "Systemia Command Center"
+    },
+    {
+      "name": "Evercraft Rewards"
+    },
+    {
+      "name": "Evercraft AI Suite"
+    },
+    {
+      "name": "ForensiScope"
+    },
+    {
+      "name": "Habitat AI"
+    },
+    {
+      "name": "FindMyPart AI"
+    },
+    {
+      "name": "LifeLog — The Everything Tracker AI"
+    },
+    {
+      "name": "FamilySketch"
+    },
+    {
+      "name": "Evercraft Transparency Atlas"
+    },
+    {
+      "name": "AliEV"
+    },
+    {
+      "name": "RIVET"
+    },
+    {
+      "name": "Sentinel Intelligence"
+    },
+    {
+      "name": "Evercraft Deck Engine"
+    },
+    {
+      "name": "EPS Precise Estimator"
+    },
+    {
+      "name": "Little Red Studio"
+    },
+    {
+      "name": "Evercraft Docs Center"
+    },
+    {
+      "name": "PrintConnect"
+    },
+    {
+      "name": "Systemia Audit Center"
+    },
+    {
+      "name": "Systemia Radar"
+    },
+    {
+      "name": "Yakima County Sheriff"
+    },
+    {
+      "name": "Evercraft HQ"
+    },
+    {
+      "name": "Legacy DocuHub⁠"
+    },
+    {
+      "name": "Evercraft Home"
+    },
+    {
+      "name": "Evercraft Property Services"
+    },
+    {
+      "name": "Evercraft InternalOps"
+    },
+    {
+      "name": "Evercraft Network"
+    },
+    {
+      "name": "EventWave AI"
+    },
+    {
+      "name": "FAIE"
+    },
+    {
+      "name": "Instant Website Builder USA"
+    },
+    {
+      "name": "Evercraft Career Command"
+    },
+    {
+      "name": "Evercraft Journal"
+    },
+    {
+      "name": "Vote For Roman"
+    },
+    {
+      "name": "Seasonally"
+    },
+    {
+      "name": "Space Dudz"
+    },
+    {
+      "name": "Christmas Lights USA"
+    },
+    {
+      "name": "Systemia Remote Ops"
+    },
+    {
+      "name": "Raven Nexus"
+    },
+    {
+      "name": "Roasted"
+    },
+    {
+      "name": "Evercraft Canonical Data Foundry⁠"
+    },
+    {
+      "name": "Evercraft Data Foundry"
+    },
+    {
+      "name": "Systemia Field Library"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Untitled"
+    },
+    {
+      "name": "Systemia Atlas"
+    },
+    {
+      "name": "Systemia Decision Lab"
+    },
+    {
+      "name": "Systemia University"
+    },
+    {
+      "name": "PayFlow"
+    },
+    {
+      "name": "NetStatus"
+    },
+    {
+      "name": "Franchise Engine"
+    },
+    {
+      "name": "Evercraft Health Atlas"
+    },
+    {
+      "name": "Evercraft Cosmos Atlas"
+    },
+    {
+      "name": "Evercraft Circles"
+    },
+    {
+      "name": "The Second Stitch"
+    },
+    {
+      "name": "Insurance Market Radar"
+    },
+    {
+      "name": "Chronosport"
+    },
+    {
+      "name": "The Forensic Record"
+    },
+    {
+      "name": "Evercraft Emergency Command"
+    },
+    {
+      "name": "Evercraft Earth Atlas"
+    },
+    {
+      "name": "Plasma Hearth"
+    },
+    {
+      "name": "EcoLedger AI"
+    },
+    {
+      "name": "Global Energy Atlas"
+    },
+    {
+      "name": "Evercraft Physics Atlas"
+    },
+    {
+      "name": "Evercraft Wildlife Atlas"
+    },
+    {
+      "name": "Coda y Codigo"
+    },
+    {
+      "name": "Ascend"
+    },
+    {
+      "name": "ATH-Pro Omnicore"
+    },
+    {
+      "name": "Evercraft AI Workforce"
+    },
+    {
+      "name": "Energy Department"
+    },
+    {
+      "name": "EPS Command Blueprint"
+    },
+    {
+      "name": "Yakima Event Command Center (YECC)"
+    },
+    {
+      "name": "EverNest Atlas"
+    },
+    {
+      "name": "EverNest Companion"
+    },
+    {
+      "name": "GuardianLink"
+    },
+    {
+      "name": "Talent Atlas"
+    },
+    {
+      "name": "GlobalStat"
+    },
+    {
+      "name": "EverMaps"
+    },
+    {
+      "name": "TOWI AI"
+    },
+    {
+      "name": "Thoughtdrop"
+    },
+    {
+      "name": "CallProof Vault"
+    },
+    {
+      "name": "Evercraft WGS"
+    },
+    {
+      "name": "TOWI Dashboard"
+    },
+    {
+      "name": "BuildFlow"
+    },
+    {
+      "name": "EverNest"
+    },
+    {
+      "name": "EveryStage"
+    },
+    {
+      "name": "Guardian Pilot"
+    },
+    {
+      "name": "SkyOps Parking"
+    },
+    {
+      "name": "Evercraft Routing Engine"
+    }
+  ],
+  "coverage": {
+    "connector": "Base44 list_user_apps",
+    "requested_limit": 100,
+    "returned_items": 100,
+    "complete_estate_claim": false,
+    "note": "The connector accepts at most 100 rows and exposes no pagination cursor. This snapshot is an observed inventory slice, not proof that the full Evercraft software estate contains only this many apps."
+  }
+}
