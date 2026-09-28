@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/evercraft-clip",
   "title": "Evercraft Clip",
-  "description": "Read-only Creative Director planning for Evercraft Clip social-video production and distribution.",
-  "version": "0.2.0",
+  "description": "Start with plan_clip_job for authorized source media or a concrete social-video goal; it plans the edit and routes oversized or full-timeline media upstream to ForensiScope without uploading, charging, or publishing.",
+  "version": "0.2.1",
   "websiteUrl": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
   "repository": {
     "url": "https://github.com/jgaethle10/forge-operator",
