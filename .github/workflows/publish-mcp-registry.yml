@@ -62,6 +62,13 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install media runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version
+          ffprobe -version
+
       - name: Verify and authorize
         id: gate
         shell: bash
