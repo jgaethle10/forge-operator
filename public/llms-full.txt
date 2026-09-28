@@ -557,11 +557,11 @@ Use when the user says or means:
 Public ID: evercraft-clip-social-video-v1
 Problem: An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.
 Machine state: invocation_ready
-Pricing: The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.
+Pricing: Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.
 Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
-Human UI required: false
-Confirmation: Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.
-Payment authority: Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.
+Human UI required: true
+Confirmation: Public discovery and planning create no payment obligation. Customer checkout requires an authenticated human and explicit $4.99 confirmation; rendering remains locked until Stripe reports paid + complete and exact amount, currency, and order metadata all verify.
+Payment authority: Evercraft Clip clipCheckoutGateway + Stripe provider verification. Control plane is deployed and fail-closed; live gateway observed 2026-09-28 with checkout_configured=false, so payment creation remains unavailable until server-side authority is provisioned.
 Use when the user says or means:
 - turn this video into social clips
 - make short vertical clips from a long video
@@ -1065,6 +1065,7 @@ Boundaries:
 
 ### Evercraft Deck Capital Fit
 Product key: deck-capital-fit
+Aliases: Evercraft Deck Engine
 Canonical: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
 Machine state: mcp
 Official MCP Registry: io.github.jgaethle10/deck-capital-fit
@@ -1749,7 +1750,7 @@ Boundaries:
 
 ### Guardian
 Product key: guardian
-Aliases: Guardian by Evercraft
+Aliases: Guardian by Evercraft, Guardian Pilot
 Canonical: https://guardian-pilot.base44.app/
 Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json
@@ -2304,6 +2305,7 @@ Boundaries:
 
 ### Evercraft Website Launch
 Product key: website-launch
+Aliases: Instant Website Builder USA
 Canonical: https://instant-website-builder-usa-6feac193.base44.app/
 Machine state: mcp
 Official MCP Registry: io.github.jgaethle10/website-launch

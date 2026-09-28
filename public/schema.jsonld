@@ -139,7 +139,9 @@
       "@type": "Service",
       "@id": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs#evercraft-service",
       "name": "Evercraft Deck Capital Fit",
-      "alternateName": [],
+      "alternateName": [
+        "Evercraft Deck Engine"
+      ],
       "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
@@ -496,7 +498,8 @@
       "@id": "https://guardian-pilot.base44.app/#evercraft-service",
       "name": "Guardian",
       "alternateName": [
-        "Guardian by Evercraft"
+        "Guardian by Evercraft",
+        "Guardian Pilot"
       ],
       "url": "https://guardian-pilot.base44.app/",
       "provider": {
@@ -785,7 +788,9 @@
       "@type": "Service",
       "@id": "https://instant-website-builder-usa-6feac193.base44.app/#evercraft-service",
       "name": "Evercraft Website Launch",
-      "alternateName": [],
+      "alternateName": [
+        "Instant Website Builder USA"
+      ],
       "url": "https://instant-website-builder-usa-6feac193.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"

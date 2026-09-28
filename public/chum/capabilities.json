@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-28T16:59:48.504Z",
+  "updated_at": "2026-09-28T17:11:56.759Z",
   "count": 45,
   "sell_now_count": 13,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
@@ -740,7 +740,7 @@
       "name": "Evercraft Clip Social Video Production",
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
-      "pricing": "The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.",
+      "pricing": "Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.",
       "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
       "page_url": "/chum/capabilities/evercraft-clip-social-video-v1/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/llms.txt",

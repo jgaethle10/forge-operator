@@ -425,7 +425,9 @@
     {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
-      "aliases": [],
+      "aliases": [
+        "Evercraft Deck Engine"
+      ],
       "class": "capital_fit_and_founder_readiness_research",
       "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
       "intents": [
@@ -1475,7 +1477,8 @@
       "product_key": "guardian",
       "name": "Guardian",
       "aliases": [
-        "Guardian by Evercraft"
+        "Guardian by Evercraft",
+        "Guardian Pilot"
       ],
       "class": "privacy_first_protection_navigation_and_prevention",
       "canonical_url": "https://guardian-pilot.base44.app/",
@@ -2406,7 +2409,9 @@
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
-      "aliases": [],
+      "aliases": [
+        "Instant Website Builder USA"
+      ],
       "class": "done_for_you_business_website_service",
       "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
       "intents": [

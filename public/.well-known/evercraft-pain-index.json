@@ -1016,12 +1016,12 @@
       "boundaries": [],
       "commercial_state": "verification_required",
       "machine_state": "invocation_ready",
-      "pricing": "The current CustomerClipOrder processor contract expects $4.99 one-time (499 cents USD), but public checkout initiation is not yet independently verified and must not be represented as sell-now.",
+      "pricing": "Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.",
       "offers": [],
       "human_confirmation_required": true,
-      "confirmation": "Public discovery and planning create no payment obligation. Media submission, payment, rendering and publishing require the authenticated Clip workflow and explicit human authority.",
-      "payment_authority": "Evercraft Clip CustomerClipOrder requires provider-backed paid state, 499 cents USD and a Stripe session identifier. No verified public checkout creation route is currently claimed.",
-      "invocation_status": "LIVE: Clip Production Engine V2 public gateway exposes Creative Director planning with style/caption choices and a ForensiScope overflow recommendation for oversized, long, deduplicated or full-timeline media. Official MCP Registry server io.github.jgaethle10/evercraft-clip remains read-only. Authenticated media processing exists behind verified paid state. Public checkout initiation remains verification-gated.",
+      "confirmation": "Public discovery and planning create no payment obligation. Customer checkout requires an authenticated human and explicit $4.99 confirmation; rendering remains locked until Stripe reports paid + complete and exact amount, currency, and order metadata all verify.",
+      "payment_authority": "Evercraft Clip clipCheckoutGateway + Stripe provider verification. Control plane is deployed and fail-closed; live gateway observed 2026-09-28 with checkout_configured=false, so payment creation remains unavailable until server-side authority is provisioned.",
+      "invocation_status": "LIVE: Clip Production Engine V2, Customer Clip Studio, read-only Creative Director planning, and an authenticated checkout/provider-verification control plane are deployed. The live checkout offer reports 499 cents USD, explicit confirmation required, checkout creation not payment proof, and checkout_configured=false. Machine checkout is not enabled. ForensiScope remains the overflow path for oversized or full-timeline media.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]

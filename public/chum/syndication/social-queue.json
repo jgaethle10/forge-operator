@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-28T17:03:19.941Z",
+  "generated_at": "2026-09-28T17:11:58.221Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -232,6 +232,16 @@
       "discovery_path": "/chum/products/deck-capital-fit/ai-discovery.json",
       "text": "Evercraft Deck Capital Fit: Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
       "content_sha256": "86c07a04a21c2a1edd2ed18f5c6a2782e6b3a09885733f467425e83c8ec8ce8a",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "deck-capital-fit:af5876361e68537939bbd8a305069b077b3c0c1bc9c2fc425b0bb62864ab712f",
+      "product_key": "deck-capital-fit",
+      "name": "Evercraft Deck Capital Fit",
+      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "discovery_path": "/chum/products/deck-capital-fit/ai-discovery.json",
+      "text": "Evercraft Deck Capital Fit: Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
+      "content_sha256": "af5876361e68537939bbd8a305069b077b3c0c1bc9c2fc425b0bb62864ab712f",
       "requires_authorized_destination": true
     },
     {
@@ -915,6 +925,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "guardian:3f03d200a6df71ab2bfbfa0fdad646d53d7fa21a6e7175b289f9943a5c66cc18",
+      "product_key": "guardian",
+      "name": "Guardian",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "discovery_path": "/chum/products/guardian/ai-discovery.json",
+      "text": "Guardian: Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: I need help paying rent; I need food help near me; help with utility bills; childcare assistance near me.",
+      "content_sha256": "3f03d200a6df71ab2bfbfa0fdad646d53d7fa21a6e7175b289f9943a5c66cc18",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "ibmi-rescue:aec894f8a803e42e762821273bd13dae9fd9850f4e6503467de76dda9393813f",
       "product_key": "ibmi-rescue",
       "name": "Evercraft IBM i Rescue",
@@ -1442,6 +1462,16 @@
       "discovery_path": "/chum/products/website-launch/ai-discovery.json",
       "text": "Evercraft Website Launch: Evercraft Website Launch is an Evercraft done for you business website service capability. Common needs: build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself.",
       "content_sha256": "7e252103deb773e13ba46c10d95951482a06f7b87a93a8fd6a1c36abc0fcad5b",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "website-launch:9d629a8feb30f1c6c2ccb0a0ce38bcedd9bb5364148f724b373743ee33bda4b7",
+      "product_key": "website-launch",
+      "name": "Evercraft Website Launch",
+      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "discovery_path": "/chum/products/website-launch/ai-discovery.json",
+      "text": "Evercraft Website Launch: Evercraft Website Launch is an Evercraft done for you business website service capability. Common needs: build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself.",
+      "content_sha256": "9d629a8feb30f1c6c2ccb0a0ce38bcedd9bb5364148f724b373743ee33bda4b7",
       "requires_authorized_destination": true
     }
   ]

@@ -228,7 +228,7 @@
       "discovery": "/chum/products/deck-capital-fit/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
-      "content_sha256": "86c07a04a21c2a1edd2ed18f5c6a2782e6b3a09885733f467425e83c8ec8ce8a"
+      "content_sha256": "af5876361e68537939bbd8a305069b077b3c0c1bc9c2fc425b0bb62864ab712f"
     },
     {
       "product_key": "evercraft-fantasy-intelligence",
@@ -349,7 +349,7 @@
       "discovery": "/chum/products/website-launch/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/website-launch",
       "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
-      "content_sha256": "7e252103deb773e13ba46c10d95951482a06f7b87a93a8fd6a1c36abc0fcad5b"
+      "content_sha256": "9d629a8feb30f1c6c2ccb0a0ce38bcedd9bb5364148f724b373743ee33bda4b7"
     },
     {
       "product_key": "evercraft-wildlife-atlas",
@@ -459,7 +459,7 @@
       "discovery": "/chum/products/guardian/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "a73e12d8d3c101177c1336a971251d7f1616490e857984f1f466002cc6ffc45c"
+      "content_sha256": "3f03d200a6df71ab2bfbfa0fdad646d53d7fa21a6e7175b289f9943a5c66cc18"
     },
     {
       "product_key": "infinite-classroom",
