@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T19:48:12.611Z",
+  "updated_at": "2026-09-28T19:51:06.316Z",
   "max_records": 500,
   "records": [
     {
@@ -3523,6 +3523,24 @@
       "prompt_sha256": "9f48d79857337385e1ad66bcdcdebf31b5b4fdf840f99590ba2ad310f0511815",
       "pickup_observed": false,
       "provider_receipt_sha256": "23a671f07585de293b45ac2d8a7a72a3997c647bbf94d4388aa0286d406e301a",
+      "response_sha256": "00bef41bc8814754094fa88f1f93f24e31346253515409edc7a59cf623c0fa8a",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "de7c85de4802bbc4888eb16f239c8b7fd91a0291b978fb65a80c1e212e366052",
+      "observed_at": "2026-09-28T19:51:06.315Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "findmypart",
+      "case_id": "hard-part-001",
+      "prompt_sha256": "9f48d79857337385e1ad66bcdcdebf31b5b4fdf840f99590ba2ad310f0511815",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "e8c068299c7f5e4b08dc026bbfef5072bb3539841c05b959f0731cebf02d1deb",
       "response_sha256": "00bef41bc8814754094fa88f1f93f24e31346253515409edc7a59cf623c0fa8a",
       "source": "authorized_provider_probe",
       "privacy": {
