@@ -9,6 +9,7 @@ import {
 } from './studio-world.js';
 import type {
   CameraKeyframe,
+  EvidenceState,
   MediaLayer,
   NumericKeyframe,
   VisualLayer,
@@ -36,6 +37,15 @@ export interface VirtualProductionHost {
   loop?:boolean;
 }
 
+export interface VirtualProductionForeground {
+  assetId:string;
+  mediaKind:'image'|'video';
+  evidenceState?:EvidenceState;
+  sourceRefs:string[];
+  parallax?:number;
+  loop?:boolean;
+}
+
 export interface VirtualProductionBeat {
   id:string;
   roomId:StudioRoomId;
@@ -48,6 +58,7 @@ export interface VirtualProductionBeat {
   hostEntryXPct?:number;
   hostExitXPct?:number;
   hostScale?:number;
+  foreground?:VirtualProductionForeground;
 }
 
 export interface VirtualProductionEpisode {
@@ -81,6 +92,7 @@ export interface VirtualProductionPlan {
     continuousWorldSpace:true;
     hostIdentityEvidenceRequired:true;
     syntheticHostIdentityForbidden:true;
+    foregroundAlphaOcclusionSupported:true;
     publicationAuthorityGranted:false;
   };
   createdAt:string;
@@ -244,6 +256,27 @@ export function compileVirtualProductionEpisode(
       layers.push(withPrefixAndOffset(layer,`${index}-${beat.id}`,offsetX,index,startSec));
     }
 
+    if(beat.foreground){
+      if(!beat.foreground.assetId?.trim()) throw new Error(`virtual_production_foreground_asset_missing:${beat.id}`);
+      if(!beat.foreground.sourceRefs?.length) throw new Error(`virtual_production_foreground_source_refs_missing:${beat.id}`);
+      layers.push({
+        id:`${index}-${beat.id}-foreground-occlusion`,
+        kind:'media',
+        z:1200+(index*30),
+        x:offsetX,
+        y:0,
+        width,
+        height,
+        sourcePath:`asset://${beat.foreground.assetId}`,
+        mediaKind:beat.foreground.mediaKind,
+        fit:'cover',
+        loop:beat.foreground.loop??true,
+        parallax:beat.foreground.parallax??1.18,
+        evidenceState:beat.foreground.evidenceState,
+        sourceRefs:beat.foreground.sourceRefs,
+      });
+    }
+
     const hostEntryX=offsetX+(entryPct*width)-(hostWidth/2);
     const hostExitX=offsetX+(exitPct*width)-(hostWidth/2);
     pushNumericKeyframe(hostX,{t:startSec,value:hostEntryX,ease:'ease_in_out'});
@@ -368,6 +401,7 @@ export function compileVirtualProductionEpisode(
       continuousWorldSpace:true,
       hostIdentityEvidenceRequired:true,
       syntheticHostIdentityForbidden:true,
+      foregroundAlphaOcclusionSupported:true,
       publicationAuthorityGranted:false,
     },
     createdAt:new Date().toISOString(),
