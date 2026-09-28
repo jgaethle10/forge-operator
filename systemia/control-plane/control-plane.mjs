@@ -130,13 +130,14 @@ export function routeTask(task) {
   const unsupportedSaban = parallelRequested && softwareId && !allowed.has(softwareId);
   const consequence = consequenceFor(task);
   const metered = task.metered === true || Boolean(clean(task.meter_metric));
+  const relationshipPreflightRequired =
+    consequence.impact === 'external_message' ||
+    ['external_message', 'outreach'].includes(workType);
   const executionGateRequired =
     consequence.required ||
     metered ||
+    relationshipPreflightRequired ||
     task.execution_gate_required === true;
-  const relationshipPreflightRequired =
-    consequence.impact === 'external_message' ||
-    ['external_message', 'outreach', 'contact'].includes(workType);
   const contextAccessRecommended =
     task.context_required === true ||
     ['research', 'analyze', 'qa', 'security'].includes(workType);
