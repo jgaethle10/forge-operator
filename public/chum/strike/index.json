@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-28T17:23:02.186Z",
+  "generated_at": "2026-09-28T17:30:31.138Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
@@ -170,17 +170,6 @@
       ]
     },
     {
-      "path": "/forensiscope/developers/llms.txt",
-      "score": 231,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/forensiscope/distribution/llms.txt",
       "score": 231,
       "urgency": "strike_now",
@@ -319,6 +308,16 @@
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
         "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/forensiscope/developers/llms.txt",
+      "score": 223,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
@@ -615,16 +614,6 @@
     },
     {
       "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
-      "score": 215,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [
@@ -1025,6 +1014,16 @@
     },
     {
       "path": "/chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json",
+      "score": 215,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json",
       "score": 215,
       "urgency": "strike_now",
       "reasons": [
