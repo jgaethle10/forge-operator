@@ -85,38 +85,52 @@ test('managed ASR falls back to one timed segment for text-only JSON', async () 
 test('Gemini ASR auto-selects from GEMINI_API_KEY and normalizes speaker word annotations', async () => {
   const fixture = wavFixture();
   const calls = [];
-  const deleted = [];
-  const fakeClient = {
-    files: {
-      async upload(request) {
-        calls.push({ type: 'upload', request });
-        return {
-          name: 'files/fixture',
-          uri: 'https://example.invalid/files/fixture',
-          mimeType: 'audio/wav'
-        };
-      },
-      async delete(request) {
-        deleted.push(request);
-      }
-    },
-    interactions: {
-      async create(request) {
-        calls.push({ type: 'interaction', request });
-        return {
-          output_text: 'Hello world Yes',
-          steps: [{
-            content: [{
-              annotations: [
-                { type: 'word_info', text: 'Hello', speaker: 'spk_1', start_offset: '0.100s', end_offset: '0.450s' },
-                { type: 'word_info', text: 'world', speaker: 'spk_1', start_offset: '0.500s', end_offset: '0.850s' },
-                { type: 'word_info', text: 'Yes', speaker: 'spk_2', start_offset: '1.100s', end_offset: '1.350s' }
-              ]
-            }]
-          }]
-        };
-      }
+
+  const fetchImpl = async (url, options = {}) => {
+    calls.push({ url: String(url), options });
+
+    if (String(url).endsWith('/upload/v1beta/files')) {
+      return new Response('', {
+        status: 200,
+        headers: { 'x-goog-upload-url': 'https://upload.example.invalid/session/abc' }
+      });
     }
+
+    if (String(url) === 'https://upload.example.invalid/session/abc') {
+      return new Response(JSON.stringify({
+        file: {
+          name: 'files/fixture',
+          uri: 'https://generativelanguage.googleapis.com/v1beta/files/fixture'
+        }
+      }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' }
+      });
+    }
+
+    if (String(url).endsWith('/v1beta/interactions')) {
+      return new Response(JSON.stringify({
+        output_text: 'Hello world Yes',
+        steps: [{
+          content: [{
+            annotations: [
+              { type: 'word_info', text: 'Hello', speaker: 'spk_1', start_offset: '0.100s', end_offset: '0.450s' },
+              { type: 'word_info', text: 'world', speaker: 'spk_1', start_offset: '0.500s', end_offset: '0.850s' },
+              { type: 'word_info', text: 'Yes', speaker: 'spk_2', start_offset: '1.100s', end_offset: '1.350s' }
+            ]
+          }]
+        }]
+      }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' }
+      });
+    }
+
+    if (options.method === 'DELETE' && String(url).endsWith('/v1beta/files/fixture')) {
+      return new Response('', { status: 200 });
+    }
+
+    throw new Error(`Unexpected request: ${options.method || 'GET'} ${url}`);
   };
 
   try {
@@ -129,7 +143,7 @@ test('Gemini ASR auto-selects from GEMINI_API_KEY and normalizes speaker word an
       inputPath: fixture.file,
       durationSeconds: 2,
       env,
-      geminiClient: fakeClient
+      fetchImpl
     });
 
     assert.equal(result.engine_id, 'gemini:gemini-3.5-transcribe');
@@ -138,17 +152,25 @@ test('Gemini ASR auto-selects from GEMINI_API_KEY and normalizes speaker word an
       { start: 1.1, end: 1.35, text: 'Yes', speaker: 'spk_2' }
     ]);
 
-    const interaction = calls.find((entry) => entry.type === 'interaction')?.request;
-    assert.equal(interaction.model, 'gemini-3.5-transcribe');
+    const startUpload = calls[0];
+    assert.equal(startUpload.options.headers['X-Goog-Upload-Protocol'], 'resumable');
+    assert.equal(startUpload.options.headers['x-goog-api-key'], 'gemini-test-key');
+
+    const interactionCall = calls.find((entry) => entry.url.endsWith('/v1beta/interactions'));
+    const interactionBody = JSON.parse(interactionCall.options.body);
+    assert.equal(interactionBody.model, 'gemini-3.5-transcribe');
     assert.equal(
-      interaction.generation_config.transcription_config.mode.diarization_mode,
+      interactionBody.generation_config.transcription_config.mode.diarization_mode,
       'speaker'
     );
     assert.deepEqual(
-      interaction.generation_config.transcription_config.mode.timestamp_granularities,
+      interactionBody.generation_config.transcription_config.mode.timestamp_granularities,
       ['word']
     );
-    assert.deepEqual(deleted, [{ name: 'files/fixture' }]);
+    assert.ok(calls.some((entry) =>
+      entry.options.method === 'DELETE' &&
+      entry.url.endsWith('/v1beta/files/fixture')
+    ));
   } finally {
     fs.rmSync(fixture.dir, { recursive: true, force: true });
   }
@@ -156,20 +178,26 @@ test('Gemini ASR auto-selects from GEMINI_API_KEY and normalizes speaker word an
 
 test('Gemini ASR falls back to full transcript text when annotations are absent', async () => {
   const fixture = wavFixture();
-  const fakeClient = {
-    files: {
-      async upload() {
-        return {
-          uri: 'https://example.invalid/files/fixture',
-          mimeType: 'audio/wav'
-        };
-      }
-    },
-    interactions: {
-      async create() {
-        return { output_text: 'Fallback transcript' };
-      }
+  const fetchImpl = async (url, options = {}) => {
+    if (String(url).endsWith('/upload/v1beta/files')) {
+      return new Response('', {
+        status: 200,
+        headers: { 'x-goog-upload-url': 'https://upload.example.invalid/session/fallback' }
+      });
     }
+    if (String(url) === 'https://upload.example.invalid/session/fallback') {
+      return new Response(JSON.stringify({
+        file: {
+          name: 'files/fallback',
+          uri: 'https://generativelanguage.googleapis.com/v1beta/files/fallback'
+        }
+      }), { status: 200 });
+    }
+    if (String(url).endsWith('/v1beta/interactions')) {
+      return new Response(JSON.stringify({ output_text: 'Fallback transcript' }), { status: 200 });
+    }
+    if (options.method === 'DELETE') return new Response('', { status: 200 });
+    throw new Error(`Unexpected request: ${options.method || 'GET'} ${url}`);
   };
 
   try {
@@ -180,7 +208,7 @@ test('Gemini ASR falls back to full transcript text when annotations are absent'
         FORENSISCOPE_ASR_PROVIDER: 'gemini',
         GEMINI_API_KEY: 'gemini-test-key'
       },
-      geminiClient: fakeClient
+      fetchImpl
     });
     assert.deepEqual(result.segments, [{
       start: 0,
