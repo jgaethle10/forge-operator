@@ -32,6 +32,17 @@ import {
   prepareHostPlate,
   type HostPlatePrepInput,
 } from './host-plate.js';
+import {
+  buildVisualFinishPlan,
+  buildVisualModelPlan,
+  type VisualFinishRequest,
+  type VisualModelEndpoint,
+  type VisualShotRequest,
+} from './model-fabric.js';
+import {
+  assessProductionGrade,
+  type ProductionBeatQualityInput,
+} from './production-grade-gate.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -64,6 +75,9 @@ function usage() {
     '  npm run media:studio -- studio-journey <journey.json> <journey-plan.json>',
     '  npm run media:studio -- virtual-production <episode.json> <production-plan.json> [stage.html]',
     '  npm run media:studio -- host-plate <prep.json> <receipt.json>',
+    '  npm run media:studio -- model-plan <payload.json> <model-plan.json>',
+    '  npm run media:studio -- finish-plan <payload.json> <finish-plan.json>',
+    '  npm run media:studio -- production-grade <beats.json> <report.json>',
   ].join('\n'));
 }
 
@@ -72,6 +86,46 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'model-plan') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ request: VisualShotRequest; endpoints: VisualModelEndpoint[] }>(input);
+    const plan = buildVisualModelPlan(payload.request, payload.endpoints);
+    writeJson(output, plan);
+    console.log(`Visual model plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'finish-plan') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ request: VisualFinishRequest; endpoints: VisualModelEndpoint[] }>(input);
+    const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
+    writeJson(output, plan);
+    console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'production-grade') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const beats = readJson<ProductionBeatQualityInput[]>(input);
+    const report = assessProductionGrade(beats);
+    writeJson(output, report);
+    console.log(`Production-grade report created: ${path.resolve(output)}`);
+    if (report.status !== 'accepted') process.exitCode = 2;
     return;
   }
 
