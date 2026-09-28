@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1';
 const DEFAULT_OPENAI_MODEL = 'gpt-4o-transcribe-diarize';
 const DEFAULT_GEMINI_MODEL = 'gemini-3.5-transcribe';
-const DEFAULT_GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
+const DEFAULT_GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com';
 const DEFAULT_TIMEOUT_MS = 5 * 60 * 1000;
 
 function required(value, name) {
@@ -186,22 +186,62 @@ export function resolveAsrProvider(env = process.env) {
   };
 }
 
-async function createGeminiClient(apiKey) {
-  const mod = await import('@google/genai');
-  return new mod.GoogleGenAI({ apiKey });
-}
-
 async function transcribeWithGemini({
   inputPath,
   durationSeconds,
   config,
-  geminiClient = null
+  fetchImpl = fetch
 }) {
-  const client = geminiClient || await createGeminiClient(config.apiKey);
-  const uploaded = await client.files.upload({
-    file: inputPath,
-    config: { mimeType: mimeFor(inputPath) }
+  const bytes = fs.readFileSync(inputPath);
+  const mimeType = mimeFor(inputPath);
+  const apiRoot = config.baseUrl.replace(/\/+$/, '');
+
+  const startResponse = await fetchImpl(`${apiRoot}/upload/v1beta/files`, {
+    method: 'POST',
+    headers: {
+      'x-goog-api-key': config.apiKey,
+      'X-Goog-Upload-Protocol': 'resumable',
+      'X-Goog-Upload-Command': 'start',
+      'X-Goog-Upload-Header-Content-Length': String(bytes.length),
+      'X-Goog-Upload-Header-Content-Type': mimeType,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      file: { display_name: path.basename(inputPath) }
+    })
   });
+
+  if (!startResponse.ok) {
+    const body = await startResponse.text();
+    throw new Error(`Gemini file upload start returned HTTP ${startResponse.status}: ${body.slice(-1200)}`);
+  }
+
+  const uploadUrl = startResponse.headers.get('x-goog-upload-url');
+  if (!uploadUrl) throw new Error('Gemini resumable upload did not return x-goog-upload-url.');
+
+  const uploadResponse = await fetchImpl(uploadUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Length': String(bytes.length),
+      'X-Goog-Upload-Offset': '0',
+      'X-Goog-Upload-Command': 'upload, finalize',
+      'Content-Type': mimeType
+    },
+    body: bytes
+  });
+
+  const uploadRaw = await uploadResponse.text();
+  if (!uploadResponse.ok) {
+    throw new Error(`Gemini file upload returned HTTP ${uploadResponse.status}: ${uploadRaw.slice(-1200)}`);
+  }
+
+  let uploaded;
+  try {
+    uploaded = JSON.parse(uploadRaw)?.file || null;
+  } catch {
+    throw new Error('Gemini file upload returned non-JSON metadata.');
+  }
+  if (!uploaded?.uri) throw new Error('Gemini file upload did not return a file URI.');
 
   try {
     const transcriptionConfig = {
@@ -211,21 +251,38 @@ async function transcribeWithGemini({
         timestamp_granularities: ['word']
       }
     };
-    if (config.language) {
-      transcriptionConfig.language_codes = [config.language];
+    if (config.language) transcriptionConfig.language_codes = [config.language];
+
+    const interactionResponse = await fetchImpl(`${apiRoot}/v1beta/interactions`, {
+      method: 'POST',
+      headers: {
+        'x-goog-api-key': config.apiKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: config.model,
+        input: [{
+          type: 'audio',
+          uri: uploaded.uri,
+          mime_type: mimeType
+        }],
+        generation_config: {
+          transcription_config: transcriptionConfig
+        }
+      })
+    });
+
+    const interactionRaw = await interactionResponse.text();
+    if (!interactionResponse.ok) {
+      throw new Error(`Gemini transcription returned HTTP ${interactionResponse.status}: ${interactionRaw.slice(-1200)}`);
     }
 
-    const interaction = await client.interactions.create({
-      model: config.model,
-      input: [{
-        type: 'audio',
-        uri: uploaded.uri,
-        mime_type: uploaded.mimeType || uploaded.mime_type || mimeFor(inputPath)
-      }],
-      generation_config: {
-        transcription_config: transcriptionConfig
-      }
-    });
+    let interaction;
+    try {
+      interaction = JSON.parse(interactionRaw);
+    } catch {
+      throw new Error('Gemini transcription returned non-JSON output.');
+    }
 
     return {
       engine_id: `gemini:${config.model}`,
@@ -234,11 +291,14 @@ async function transcribeWithGemini({
       segments: normalizeGeminiInteraction(interaction, durationSeconds)
     };
   } finally {
-    if (uploaded?.name && typeof client.files?.delete === 'function') {
+    if (uploaded?.name) {
       try {
-        await client.files.delete({ name: uploaded.name });
+        await fetchImpl(`${apiRoot}/v1beta/${uploaded.name}`, {
+          method: 'DELETE',
+          headers: { 'x-goog-api-key': config.apiKey }
+        });
       } catch {
-        // Gemini Files API objects expire automatically; cleanup is best-effort.
+        // Gemini files expire automatically; cleanup is best-effort.
       }
     }
   }
@@ -248,8 +308,7 @@ export async function transcribeWithProvider({
   inputPath,
   durationSeconds = null,
   env = process.env,
-  fetchImpl = fetch,
-  geminiClient = null
+  fetchImpl = fetch
 }) {
   const config = resolveAsrProvider(env);
   if (config.provider === 'gemini') {
@@ -257,7 +316,7 @@ export async function transcribeWithProvider({
       inputPath,
       durationSeconds,
       config,
-      geminiClient
+      fetchImpl
     });
   }
 
@@ -327,7 +386,7 @@ export async function healthcheckProvider({ env = process.env, fetchImpl = fetch
 
   const gemini = config.provider === 'gemini';
   const url = gemini
-    ? `${config.baseUrl.replace(/\/+$/, '')}/models/${encodeURIComponent(config.model)}`
+    ? `${config.baseUrl.replace(/\/+$/, '')}/v1beta/models/${encodeURIComponent(config.model)}`
     : `${config.baseUrl.replace(/\/+$/, '')}/models`;
   const response = await fetchImpl(url, {
     headers: gemini
