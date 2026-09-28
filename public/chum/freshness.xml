@@ -2,14 +2,17 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-27T23:57:05.941Z</updated>
+<updated>2026-09-28T01:34:24.270Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-27T23:57:05.941Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-27T23:57:05.941Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-27T23:57:05.941Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-28T01:34:24.270Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-28T01:34:24.270Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-28T01:34:24.270Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-09-28T01:34:24.270Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-09-28T01:34:24.270Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-09-28T01:34:24.270Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-28T01:34:24.270Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-27T23:57:05.941Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-27T23:57:05.941Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-27T23:54:40.179Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:3fba73c665c9f87f7bf4ae41</id><title>/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:fe983b3a2bd992eb85b3745d</id><title>/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/</title><updated>2026-09-27T23:52:44.847Z</updated><link href="/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/"/><category term="priority-160"/></entry>
@@ -102,7 +105,4 @@
 <entry><id>urn:evercraft:chum:c238864b3571dcd778b97ff6</id><title>/chum/answers/doors/local-events-near-me-e826ea2875.json</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/local-events-near-me-e826ea2875.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:d0e886f99d4d21c3b26febf7</id><title>/chum/answers/doors/local-events-near-me-e826ea2875/</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/local-events-near-me-e826ea2875/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:0b00c1ee4ec311e69560c375</id><title>/chum/answers/doors/no-account-contractor-estimate-d0de142039.json</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/no-account-contractor-estimate-d0de142039.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:5df6956a70317971ebbd4356</id><title>/chum/answers/doors/no-account-contractor-estimate-d0de142039/</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/no-account-contractor-estimate-d0de142039/"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:a93f06b6779eff3e0839fed0</id><title>/chum/answers/doors/painting-estimate-calculator-825b60b4de.json</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/painting-estimate-calculator-825b60b4de.json"/><category term="priority-100"/></entry>
-<entry><id>urn:evercraft:chum:2f97ef1d12f3a11a0b636b27</id><title>/chum/answers/doors/painting-estimate-calculator-825b60b4de/</title><updated>2026-09-27T23:49:53.447Z</updated><link href="/chum/answers/doors/painting-estimate-calculator-825b60b4de/"/><category term="priority-100"/></entry>
 </feed>
