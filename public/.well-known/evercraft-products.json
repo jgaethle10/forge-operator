@@ -355,6 +355,9 @@
         "does not make lending or investment decisions",
         "does not guarantee financing",
         "checkout creation is not payment proof"
+      ],
+      "aliases": [
+        "Evercraft Deck Engine"
       ]
     },
     {
@@ -1268,7 +1271,8 @@
       "product_key": "guardian",
       "name": "Guardian",
       "aliases": [
-        "Guardian by Evercraft"
+        "Guardian by Evercraft",
+        "Guardian Pilot"
       ],
       "class": "privacy_first_protection_navigation_and_prevention",
       "canonical_url": "https://guardian-pilot.base44.app/",
@@ -2091,6 +2095,9 @@
         "scope depends on the selected service tier",
         "checkout creation is not payment proof",
         "fulfillment requires verified payment"
+      ],
+      "aliases": [
+        "Instant Website Builder USA"
       ]
     }
   ],
