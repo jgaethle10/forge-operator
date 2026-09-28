@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-28T17:11:51.533Z",
+  "generated_at": "2026-09-28T17:23:02.186Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -161,12 +161,91 @@
       ]
     },
     {
+      "path": "/chum/products/deck-capital-fit/",
+      "product_key": "deck-capital-fit",
+      "score": 246,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-09-28T17:11:58.389Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:04.034Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01b93be69463882a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T20:54:00.448Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01f5df2b824918b8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:23:46.386Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-15f5b2276c7ab7ac.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:11.184Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-19f519a8e4c9105b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:47.842Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-2b5def755f027cb5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:31.478Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-547a00af10ba674d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:07.754Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-9ea9f908d2f3e85b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:50.895Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-df13c49c29adaf41.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:47.706Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-e2ef32443c25aa59.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/products/deck-capital-fit/ai-conformance.json",
       "product_key": "deck-capital-fit",
       "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-28T16:07:14.264Z",
+      "last_changed": "2026-09-28T17:11:58.389Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -245,7 +324,7 @@
       "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-28T16:07:14.264Z",
+      "last_changed": "2026-09-28T17:11:58.389Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -303,6 +382,79 @@
           "observed_at": "2026-09-26T11:27:47.706Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-e2ef32443c25aa59.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-containment/",
+      "product_key": "evercraft-containment",
+      "score": 246,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-09-28T16:07:14.264Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:54.992Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-1d6565bdbedede2b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:11.899Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-29fbc5abb55d2cf4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:56.779Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-6150ae389b3f7d81.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:22.696Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-74569bf39d1b2580.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:18.940Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-84986aa9be1252d3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:23:56.979Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-a636fb7a6ae09c41.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:02.627Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-d68b278db0e72138.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:38.336Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-ec0bcd05eae1a83c.json"
         }
       ],
       "reasons": [
@@ -449,6 +601,380 @@
           "observed_at": "2026-09-26T05:00:38.336Z",
           "source": "authorized_provider_probe",
           "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-ec0bcd05eae1a83c.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/",
+      "product_key": "evercraft-network",
+      "score": 246,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-09-28T16:07:14.264Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:16:58.567Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-0615d66dc72adb4c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:24.331Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-2f37944e5052e797.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:13.964Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-450a858b4c3ca5d3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:34:23.070Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-4e23a6f52d6b6065.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:36.385Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-64f2c63c7d6cb940.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:22.361Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-7f0846a44b8a9347.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:11.058Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-a5a3be10dbc2b144.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:50.489Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-b50b7597134b27bb.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:06.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bccb611d895af8fc.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:28:30.049Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bf5f0a48dcd9732f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:40.059Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-ca5b7b4e741c34b3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:20.448Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:09.130Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:34.503Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:05.502Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:38.128Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-70b4a46386f1b706.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:12.656Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-a6d1cface17820b4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:49.026Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fb8fe632142a6c3e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:23.237Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fc4fe6d5449ad81e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:38.181Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-042dab635908df52.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:24.207Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-54db661616785a83.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:15.525Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-577a947fa5553b1d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:41.909Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-b62de3a5a4983cb5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:12.158Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ba91191c99a5c792.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:51.496Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-d72b4495d12255c1.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:26.125Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-e88e9945c51eb854.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:07.667Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ee988958b13a3e52.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-conformance.json",
+      "product_key": "evercraft-network",
+      "score": 246,
+      "urgency": "strike_now",
+      "crawl_priority": 154,
+      "last_changed": "2026-09-28T16:07:14.264Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:16:58.567Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-0615d66dc72adb4c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:24.331Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-2f37944e5052e797.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:13.964Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-450a858b4c3ca5d3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:34:23.070Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-4e23a6f52d6b6065.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:36.385Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-64f2c63c7d6cb940.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:22.361Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-7f0846a44b8a9347.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:11.058Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-a5a3be10dbc2b144.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:50.489Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-b50b7597134b27bb.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:06.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bccb611d895af8fc.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:28:30.049Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bf5f0a48dcd9732f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:40.059Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-ca5b7b4e741c34b3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:20.448Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:09.130Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:34.503Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:05.502Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:38.128Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-70b4a46386f1b706.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:12.656Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-a6d1cface17820b4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:49.026Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fb8fe632142a6c3e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:23.237Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fc4fe6d5449ad81e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:38.181Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-042dab635908df52.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:24.207Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-54db661616785a83.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:15.525Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-577a947fa5553b1d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:41.909Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-b62de3a5a4983cb5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:12.158Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ba91191c99a5c792.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:51.496Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-d72b4495d12255c1.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:26.125Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-e88e9945c51eb854.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:07.667Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ee988958b13a3e52.json"
         }
       ],
       "reasons": [
@@ -19412,532 +19938,6 @@
       "recommended_actions": [
         "verify_live_bytes_then_indexnow",
         "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/deck-capital-fit/",
-      "product_key": "deck-capital-fit",
-      "score": 186,
-      "urgency": "strike_now",
-      "crawl_priority": 94,
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:04.034Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01b93be69463882a.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T20:54:00.448Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01f5df2b824918b8.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:23:46.386Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-15f5b2276c7ab7ac.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:11.184Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-19f519a8e4c9105b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:47.842Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-2b5def755f027cb5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:31.478Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-547a00af10ba674d.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:07.754Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-9ea9f908d2f3e85b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:12:50.895Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-df13c49c29adaf41.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:47.706Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-e2ef32443c25aa59.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-containment/",
-      "product_key": "evercraft-containment",
-      "score": 186,
-      "urgency": "strike_now",
-      "crawl_priority": 94,
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:06:54.992Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-1d6565bdbedede2b.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:11.899Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-29fbc5abb55d2cf4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:27:56.779Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-6150ae389b3f7d81.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:22.696Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-74569bf39d1b2580.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:18.940Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-84986aa9be1252d3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:23:56.979Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-a636fb7a6ae09c41.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:02.627Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-d68b278db0e72138.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:38.336Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-containment-persistence-001-ec0bcd05eae1a83c.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-network/",
-      "product_key": "evercraft-network",
-      "score": 186,
-      "urgency": "strike_now",
-      "crawl_priority": 94,
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:16:58.567Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-0615d66dc72adb4c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:24.331Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-2f37944e5052e797.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:13.964Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-450a858b4c3ca5d3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:34:23.070Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-4e23a6f52d6b6065.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:36.385Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-64f2c63c7d6cb940.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:22.361Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-7f0846a44b8a9347.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:11.058Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-a5a3be10dbc2b144.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:50.489Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-b50b7597134b27bb.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:06.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bccb611d895af8fc.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:28:30.049Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bf5f0a48dcd9732f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:40.059Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-ca5b7b4e741c34b3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:20.448Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:09.130Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:34.503Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:05.502Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:38.128Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-70b4a46386f1b706.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:12.656Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-a6d1cface17820b4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:49.026Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fb8fe632142a6c3e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:23.237Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fc4fe6d5449ad81e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:38.181Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-042dab635908df52.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:24.207Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-54db661616785a83.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:15.525Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-577a947fa5553b1d.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:41.909Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-b62de3a5a4983cb5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:12.158Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ba91191c99a5c792.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:51.496Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-d72b4495d12255c1.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:26.125Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-e88e9945c51eb854.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:07.667Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ee988958b13a3e52.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-network/ai-conformance.json",
-      "product_key": "evercraft-network",
-      "score": 186,
-      "urgency": "strike_now",
-      "crawl_priority": 94,
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:16:58.567Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-0615d66dc72adb4c.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:24.331Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-2f37944e5052e797.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:13.964Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-450a858b4c3ca5d3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:34:23.070Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-4e23a6f52d6b6065.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:36.385Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-64f2c63c7d6cb940.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:22.361Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-7f0846a44b8a9347.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:11.058Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-a5a3be10dbc2b144.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:50.489Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-b50b7597134b27bb.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:06.599Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bccb611d895af8fc.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T06:28:30.049Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bf5f0a48dcd9732f.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:40.059Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-ca5b7b4e741c34b3.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:20.448Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:09.130Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:34.503Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:05.502Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:38.128Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-70b4a46386f1b706.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:12.656Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-a6d1cface17820b4.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:49.026Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fb8fe632142a6c3e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:23.237Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fc4fe6d5449ad81e.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T15:12:38.181Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-042dab635908df52.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T21:13:24.207Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-54db661616785a83.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T12:24:15.525Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-577a947fa5553b1d.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T18:05:41.909Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-b62de3a5a4983cb5.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T11:28:12.158Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ba91191c99a5c792.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T05:00:51.496Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-d72b4495d12255c1.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T16:27:26.125Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-e88e9945c51eb854.json"
-        },
-        {
-          "provider": "generic_agent",
-          "observed_at": "2026-09-26T17:07:07.667Z",
-          "source": "authorized_provider_probe",
-          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ee988958b13a3e52.json"
-        }
-      ],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "run_brand_blind_provider_probe_after_publication",
         "increase_internal_crosslinks_from_relevant_public_surfaces"
       ]
     }

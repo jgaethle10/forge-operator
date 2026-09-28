@@ -22,11 +22,11 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-28T17:14:36.394Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-28T17:14:36.394Z</lastmod></url>
-  <url><loc>/chum/strike/</loc><lastmod>2026-09-28T17:11:51.764Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-28T17:11:51.764Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-28T17:11:51.764Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-28T17:11:51.764Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-28T17:23:02.342Z</lastmod></url>
+  <url><loc>/chum/strike/</loc><lastmod>2026-09-28T17:23:02.342Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-28T17:23:02.342Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-28T17:23:02.342Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-28T17:23:02.342Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
   <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-28T17:05:39.009Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
@@ -132,7 +132,7 @@
   <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-28T17:11:58.389Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-28T16:59:50.301Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-28T17:11:51.200Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-28T17:23:01.975Z</lastmod></url>
   <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-28T17:11:58.389Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
