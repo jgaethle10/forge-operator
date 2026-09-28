@@ -570,6 +570,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://pay-flow-fix.base44.app/#evercraft-service",
+      "name": "PayFlow",
+      "alternateName": [],
+      "url": "https://pay-flow-fix.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "small_team_payroll_recordkeeping",
+      "description": "payroll tracker for a small business; employee payment ledger; track employee pay history; payroll spreadsheet alternative"
+    },
+    {
+      "@type": "Service",
       "@id": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter#evercraft-service",
       "name": "Raven Nexus",
       "alternateName": [],
@@ -620,6 +632,20 @@
       },
       "serviceType": "seasonal_family_household_companion",
       "description": "seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://the-second-stitch.base44.app/#evercraft-service",
+      "name": "The Second Stitch",
+      "alternateName": [
+        "Project Second Stitch"
+      ],
+      "url": "https://the-second-stitch.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "textile_project_intelligence_and_procurement_prototype",
+      "description": "turn a sewing project into a material list; estimate fabric and notions for a project; plan materials for costumes or small-batch textile production; textile project-to-material planning"
     },
     {
       "@type": "Service",

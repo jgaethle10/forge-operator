@@ -1887,6 +1887,35 @@ Boundaries:
 - QA readiness does not authorize publishing, uploading or distributing a book
 - page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees
 
+### PayFlow
+Product key: payflow
+Canonical: https://pay-flow-fix.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-conformance.json
+Use when the user says or means:
+- payroll tracker for a small business
+- employee payment ledger
+- track employee pay history
+- payroll spreadsheet alternative
+- track payroll corrections and reversals
+- small team payroll recordkeeping
+- payroll audit trail
+- contractor payroll records
+- seasonal employee payment records
+- commission or bonus payment record tracker
+- document a payroll dispute or correction
+- keep crew payment history organized
+Authority:
+public product discovery; authenticated employee and payroll records remain private
+Boundaries:
+- recordkeeping is not proof wages were transmitted
+- not a bank or direct-deposit provider
+- not a tax filer, payroll tax calculator, benefits administrator, accounting system or legal compliance service unless separately verified
+- payment records are not bank settlement evidence
+- corrections and reversals preserve history
+- private employee, compensation, payment, workspace and account data are not public
+
 ### Raven Nexus
 Product key: raven-nexus
 Canonical: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
@@ -1988,6 +2017,31 @@ Boundaries:
 - promotion eligibility and cross-package unit normalization are not proven
 - private household, member, memory, checklist and profile data are not public
 - public runtime hostname remains unresolved in the current discovery inventory
+
+### The Second Stitch
+Product key: second-stitch
+Aliases: Project Second Stitch
+Canonical: https://the-second-stitch.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-conformance.json
+Use when the user says or means:
+- turn a sewing project into a material list
+- estimate fabric and notions for a project
+- plan materials for costumes or small-batch textile production
+- textile project-to-material planning
+- repeat textile ordering and material continuity
+- professional fabric procurement workflow
+- model a textile retail project-planning pilot
+- textile intelligence for schools theaters makers quilters or upholstery shops
+Authority:
+public discovery and prototype exploration only
+Boundaries:
+- independent Evercraft concept; references to Michaels or JOANN do not imply sponsorship, partnership, endorsement, private-system access or an accepted commercial relationship
+- pilot economics are modeled scenarios, not observed results or forecasts
+- material quantities are planning estimates
+- no supplier inventory, current price, dye-lot continuity, fulfillment, ordering or procurement integration is implied unless separately verified
+- discovery creates no purchase, supplier commitment, commercial pilot or customer relationship
 
 ### SkyOps Parking
 Product key: skyops-parking

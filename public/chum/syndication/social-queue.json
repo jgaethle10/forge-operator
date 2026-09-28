@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-28T17:11:58.221Z",
+  "generated_at": "2026-09-28T17:23:09.155Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -1035,6 +1035,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "payflow:5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089",
+      "product_key": "payflow",
+      "name": "PayFlow",
+      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "discovery_path": "/chum/products/payflow/ai-discovery.json",
+      "text": "PayFlow: PayFlow is an Evercraft small team payroll recordkeeping capability. Common needs: payroll tracker for a small business; employee payment ledger; track employee pay history; payroll spreadsheet alternative.",
+      "content_sha256": "5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "raven-nexus:cca215b172b9abdabff5eee848de3b2b002a4f56295088895fd85e6177bcdf03",
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
@@ -1122,6 +1132,16 @@
       "discovery_path": "/chum/products/seasonally/ai-discovery.json",
       "text": "Season & Story: Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
       "content_sha256": "f35eaf9c478ce3be7b6a8ec2ce2f7c921fae2fbe372d50459e6d3f2fb7d46b89",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "second-stitch:2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778",
+      "product_key": "second-stitch",
+      "name": "The Second Stitch",
+      "canonical_url": "https://the-second-stitch.base44.app/",
+      "discovery_path": "/chum/products/second-stitch/ai-discovery.json",
+      "text": "The Second Stitch: The Second Stitch is an Evercraft textile project intelligence and procurement prototype capability. Common needs: turn a sewing project into a material list; estimate fabric and notions for a project; plan materials for costumes or small-batch textile production; textile project-to-material planning.",
+      "content_sha256": "2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778",
       "requires_authorized_destination": true
     },
     {

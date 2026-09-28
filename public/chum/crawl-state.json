@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:23:02.342Z",
-  "url_count": 2460,
+  "updated_at": "2026-09-28T17:23:09.322Z",
+  "url_count": 2508,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "836944b8635f937f607b776979a80012b6d1b097c0ee480fc1aa9b94d576620e",
-      "last_changed": "2026-09-28T16:59:50.301Z",
+      "content_sha256": "3f356f771908b0138d5bdc82a5c416f4972724e594ddcc98aeebbd468f64d5da",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "9cc4e64b2569c606833f04dff26fd12c77a8acbdbd59e125750265a02b4a402a",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "9f1475557a863f14a9825b192c943de798d5983a33f8c73280e2d29a1cdfd17f",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "aed228849e9dd147915ae30f8bbceeb3ffdaa2e42359d429b59d53a5b8bd5210",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "8c930e4477bb569a52d2d5d4876b165e8ef5ce707abd480ec43c4e267eb41597",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "cdfc18abe764159a6670a7c536d231ef7cb655419467058b81d4ce2491b99c8c",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "af70607683852d69a1c91517b2ea3092d4b1ab26a1bd119f53e56141f106f1b8",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "3479c541b41b4ebaa4f7e01e34087633749f8d16bad49ded1c3c35fe069e5fd6",
-      "last_changed": "2026-09-28T17:03:20.114Z",
+      "content_sha256": "009ca440d46b5b8f914878fcba36a327937d5ecf0c7de72dbf8fe65132a91724",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "7150a29d39d3e140b8cb19ad81c70aa7e198f0f70854f04862b904a3c97cb9f5",
-      "last_changed": "2026-09-28T17:03:20.114Z",
+      "content_sha256": "fa452b93fd840dfa5f258b42935268691ab12bf2375c9279cbb03744ceeaa5bb",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "7efcc3fb8a1477add2af507c02c39d2f3e3ebaf07f3a63a1bc9b10e98f10cc0d",
-      "last_changed": "2026-09-28T17:03:20.114Z",
+      "content_sha256": "6c287acadbc71f3eb410fc02b4b54549b5603dc0b21aac1e41e6420a85b0b5aa",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "c00e444f4e267ebf744f6ea77eb175d25f76f4fc7c76cf8847bf8c6ff9127cb3",
-      "last_changed": "2026-09-28T17:23:02.342Z",
+      "content_sha256": "21e182b177649d84c17a7ea8953287e2233f6b97f1f58e0981ec827b87c62f49",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -243,14 +243,14 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "4da71904463495fa5125fcf6e2f43fb6380443df990883dd776cc1dcbad058e1",
-      "last_changed": "2026-09-28T17:03:20.114Z",
+      "content_sha256": "5392581cf234ddbfcad492ed4ca790528e710836d4ea703b94142c2ec59515ba",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
       "path": "/chum/sitemaps/products.xml",
-      "content_sha256": "522e504ffbc8d26698fb187c9bad1b996c27058386697babb8c324903c468c14",
-      "last_changed": "2026-09-28T16:59:50.301Z",
+      "content_sha256": "87060cd3687360600b290311bc51b7a1067502af3ff37dd77f58a3dd41c2fd43",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 108
     },
     "/chum/sitemaps/machine.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "aed228849e9dd147915ae30f8bbceeb3ffdaa2e42359d429b59d53a5b8bd5210",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "8c930e4477bb569a52d2d5d4876b165e8ef5ce707abd480ec43c4e267eb41597",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "17f19d920d745343e5a7bb739a8e2c3c88cf381034d21ef5a56da8880cb17378",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "2e5737b45d2a3f4a70df8556f5e3d2a4cc8f14f1caae8dfc2e5e770fcbf782a7",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -741,8 +741,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "fbd3f73ab9a528fdd494033a8bf670b8f32e5ac9e45d2235a12fa751b35fe0c7",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "c2c550d811cb2d5bab3acf40920387a4cdb1779cb2347faedad929c947ba21ad",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -759,8 +759,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "f52ff93c4306a603262d93f7331c821dc8c279e407c21d7b34ab91abbc1cada3",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "502d623c5ff60e525a85a4769bffc656779601ea1e4d958fd2d43c063079de69",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -3295,6 +3295,30 @@
       "last_changed": "2026-09-28T16:07:14.264Z",
       "priority": 94
     },
+    "/chum/products/payflow/": {
+      "path": "/chum/products/payflow/",
+      "content_sha256": "27990a044b18762024ec2f8c33ba3f18a7f999072958307c5fa8bab31f2ba68b",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 94
+    },
+    "/chum/products/payflow/llms.txt": {
+      "path": "/chum/products/payflow/llms.txt",
+      "content_sha256": "34ff533190fbb92c005b7d813f7b04704cc5fbe4e936f447164ce5248ceefb2c",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 94
+    },
+    "/chum/products/payflow/ai-discovery.json": {
+      "path": "/chum/products/payflow/ai-discovery.json",
+      "content_sha256": "3c56f8be275dc25f25a72c48e59c90508400647ca9dfce6f1e06b61f687cb702",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 94
+    },
+    "/chum/products/payflow/ai-conformance.json": {
+      "path": "/chum/products/payflow/ai-conformance.json",
+      "content_sha256": "c26473f82bbb308e8cd37d43681f32b8716a98325c0b9b9f107b0af5902845ce",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 94
+    },
     "/chum/products/raven-nexus/": {
       "path": "/chum/products/raven-nexus/",
       "content_sha256": "60f46c3d173a659afb934b3bc6662a960fc99580db32db806580c99a4be56656",
@@ -3389,6 +3413,30 @@
       "path": "/chum/products/seasonally/ai-conformance.json",
       "content_sha256": "a65a470ef3000a4dcb73e7e2b0b7de343d9bb04fdc43b89fcc01ab41dfceae16",
       "last_changed": "2026-09-28T16:07:14.264Z",
+      "priority": 94
+    },
+    "/chum/products/second-stitch/": {
+      "path": "/chum/products/second-stitch/",
+      "content_sha256": "564d51516f73b11ed3d13f18d0d880db1e89be879d652ac8cd7a7b3dc41149f4",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 94
+    },
+    "/chum/products/second-stitch/llms.txt": {
+      "path": "/chum/products/second-stitch/llms.txt",
+      "content_sha256": "c2a85c219d5ef9509fef98f01b07f2d9ced7654fc0d831f691111feefca88cfa",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 94
+    },
+    "/chum/products/second-stitch/ai-discovery.json": {
+      "path": "/chum/products/second-stitch/ai-discovery.json",
+      "content_sha256": "d222d60c806fe00118e9ef36830d3f7e05caf09b9bc7d4b30ce9192e1edc4427",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 94
+    },
+    "/chum/products/second-stitch/ai-conformance.json": {
+      "path": "/chum/products/second-stitch/ai-conformance.json",
+      "content_sha256": "81abd854e5141058f1bc41007feab30aa78c9a39d6e0fc4806e7d7aca7b6adb0",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 94
     },
     "/chum/products/skyops-parking/": {
@@ -5731,6 +5779,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9/": {
+      "path": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9/",
+      "content_sha256": "6e80141dd21f09f87aae6606c13d0b9b542138319c844802ed96a13b8a224963",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json": {
+      "path": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json",
+      "content_sha256": "863350f7ac36e50ddaba7ad958d9a91858975b17377d75266ac1149adb821879",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/community-health-data-e8c1d524e0/": {
       "path": "/chum/answers/doors/community-health-data-e8c1d524e0/",
       "content_sha256": "52c4ac0d2e3109ca5208182de5cbafbb0dc23840480894e125950bcbb515ff86",
@@ -6175,6 +6235,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/contractor-payroll-records-38d24b5ae9/": {
+      "path": "/chum/answers/doors/contractor-payroll-records-38d24b5ae9/",
+      "content_sha256": "a9807b7e72799c7d450ec5105274f7ee76023777ce4b72e08cf919805bc66be4",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/contractor-payroll-records-38d24b5ae9.json": {
+      "path": "/chum/answers/doors/contractor-payroll-records-38d24b5ae9.json",
+      "content_sha256": "8136c65c025a099bf467283341ef4c1d36e1fe686d7f565364475ec631be10e9",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/contractor-pricing-api-33e8e59e36/": {
       "path": "/chum/answers/doors/contractor-pricing-api-33e8e59e36/",
       "content_sha256": "052935f8562c6a948792c4b24c993a7cb98e675d561725c01f140a824c92a8a5",
@@ -6571,6 +6643,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
     },
+    "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c/": {
+      "path": "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c/",
+      "content_sha256": "386344a3d0a1e6ad3c16757b8d58f7cf2772bddb90b16ec36ce566a257226e5e",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c.json": {
+      "path": "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c.json",
+      "content_sha256": "2f83bf574d672b1e5eda5fe5a5eea0bd4d5e7aec475a30d5fa954a937b148aa7",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/earn-evercraft-points-near-me-425423859c/": {
       "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c/",
       "content_sha256": "9266ca41ab7b043f65d5abb0efdbd0c869d89754273c594da05e5366fd1855a7",
@@ -6619,6 +6703,18 @@
       "last_changed": "2026-09-27T23:52:44.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/employee-payment-ledger-b2267a81f9/": {
+      "path": "/chum/answers/doors/employee-payment-ledger-b2267a81f9/",
+      "content_sha256": "68e0166399fa5f7862008deef581be9b636f5aa6eddbb210f63b43290253a222",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/employee-payment-ledger-b2267a81f9.json": {
+      "path": "/chum/answers/doors/employee-payment-ledger-b2267a81f9.json",
+      "content_sha256": "59d2bd0873249b4e162fa6133210d7935ddf02ef8afd4119e3007cca03d5af6a",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc/": {
       "path": "/chum/answers/doors/escape-vendor-lock-in-9bf9834ecc/",
       "content_sha256": "7f1dbac55af31b3fd1cc075264d3d3d59b549795e1ad915a63b198369c30cbe3",
@@ -6654,6 +6750,18 @@
       "content_sha256": "373f9583ab6e37c8daf3a06afb8b1db0e5c26fff8abf0a305cae83767e3ef283",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a/": {
+      "path": "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a/",
+      "content_sha256": "de46b7bef41e1bec4716d67fb3977c0af8bad990df50091c58af6357c61d6db2",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a.json": {
+      "path": "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a.json",
+      "content_sha256": "eb1994967bbe47ced4d0fa926393be8cefea8b5a28909ced3594744065ce11df",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
     },
     "/chum/answers/doors/estimate-from-photos-ef10e7fa6e/": {
       "path": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e/",
@@ -9391,6 +9499,18 @@
       "last_changed": "2026-09-26T22:24:22.586Z",
       "priority": 100
     },
+    "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb/": {
+      "path": "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb/",
+      "content_sha256": "3e3d8f1a2719d14abea09664b3192e4940b9e098e71ddde5058186bb02c72ba0",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb.json": {
+      "path": "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb.json",
+      "content_sha256": "0e3beb274c0d73dee33cc84de439841535d148f1661814c2e298cf265a24674c",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55/": {
       "path": "/chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55/",
       "content_sha256": "13426be5366202e3c9bdf0a4623a0e06acea2f59d4a9d3f07433a7801f33ca38",
@@ -10147,6 +10267,18 @@
       "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
+    "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579/": {
+      "path": "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579/",
+      "content_sha256": "39c60f60ea323657ca0b9b0814683f0646809d89dacc3c27539c995a1c939796",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579.json": {
+      "path": "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579.json",
+      "content_sha256": "8426383868d9df6818a4d92ac0c4bac0b7f8d33345a6e0d44c4d8a022425366c",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/": {
       "path": "/chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/",
       "content_sha256": "04cd15bbc6f5c5322a5ce28cdb272defe79e854db4b17e9d7c6d3072847f070f",
@@ -10675,6 +10807,42 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/payroll-audit-trail-ec00cd145f/": {
+      "path": "/chum/answers/doors/payroll-audit-trail-ec00cd145f/",
+      "content_sha256": "ffa1d4a5c209f7516daea89d3fd453d55c3b4522ea5539e5054b51b1b4969d8a",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/payroll-audit-trail-ec00cd145f.json": {
+      "path": "/chum/answers/doors/payroll-audit-trail-ec00cd145f.json",
+      "content_sha256": "1726fc638a108a8f0492933f2a8ae7d6e8b3eca25369d05e57aa12ca7b1277ac",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16/": {
+      "path": "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16/",
+      "content_sha256": "e3ec3e94cb0b10f3eb184f69abcd0ef6ea67da9b83e6459b5c5bd55c3ac22238",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16.json": {
+      "path": "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16.json",
+      "content_sha256": "8cb53c9eab31d439663a055053801a816c8c20d84636c5c0c9d69995364bfe75",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c/": {
+      "path": "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c/",
+      "content_sha256": "3dc3e2bd0fb0446b8669c245183c296df5ad2943085441fb9ca84def9b51280a",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c.json": {
+      "path": "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c.json",
+      "content_sha256": "afb9d3ab95e50edaa7f6435d63fe00d4f5dec48903ecdac7155d010bd48c0e56",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52/": {
       "path": "/chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52/",
       "content_sha256": "fe8e7a5c0e6bd97f83f3fc6e5edb7b452d9095d8ce4c6738397d84dac508f9a6",
@@ -10709,6 +10877,18 @@
       "path": "/chum/answers/doors/plan-a-social-video-clipping-job-cb32427490.json",
       "content_sha256": "c9d93ffd8cb1a67e668db787d25ebd9528d3ad2da3452862bbca44a03f04514e",
       "last_changed": "2026-09-28T17:11:58.389Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13/": {
+      "path": "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13/",
+      "content_sha256": "0227b1eff572f6a83d118265f0cc9e03c807c0a224d29ce4be4e84633f10e206",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13.json": {
+      "path": "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13.json",
+      "content_sha256": "12992fa55df6d3d8d62112ad00333e34789b4cf2e6b24eb7b2ed2027f89d8ef1",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 100
     },
     "/chum/answers/doors/playwright-api-89ca564562/": {
@@ -11045,6 +11225,18 @@
       "path": "/chum/answers/doors/production-risk-a9bc1937b3.json",
       "content_sha256": "327d89d45c009f262bd9cae25eb2705d544b71db5085af85a218658cc1a90637",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe/": {
+      "path": "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe/",
+      "content_sha256": "23ae22b01260648e71379148b17c42014e8b7e450d21d4e31d66b27e80d8b4af",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe.json": {
+      "path": "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe.json",
+      "content_sha256": "881b2bb1cf057a16b51a4d3c0964723c76694443123f9165ca8d737e2f69458e",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 100
     },
     "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea/": {
@@ -11585,6 +11777,18 @@
       "path": "/chum/answers/doors/repair-shop-hard-part-sourcing-136fa98fdd.json",
       "content_sha256": "151f838f0ca648f6fc3a6a904bf14906ab105306d31bc2e57b291d4980f6d0d5",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16/": {
+      "path": "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16/",
+      "content_sha256": "d3a7256e52e483b96d51c49ed360ad24b8ef0973329646b8305a7fa7f53cce18",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16.json": {
+      "path": "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16.json",
+      "content_sha256": "0a2f322cd1a894a948d86763eb57d7198d731aaf1ab77a133dfb04b8989dd1db",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 100
     },
     "/chum/answers/doors/replace-an-outdated-business-website-c4b399f638/": {
@@ -12247,6 +12451,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4/": {
+      "path": "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4/",
+      "content_sha256": "0eb80bc7900fd6b77342b8d5e0cda6e46ce16ec12fcd69b7e402792b0b10145e",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4.json": {
+      "path": "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4.json",
+      "content_sha256": "6d41364c27271bb354bcbdfd942d1cee94d58015f2b39ca6de19164b7486c69c",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/seasonal-family-activities-42be4e5b00/": {
       "path": "/chum/answers/doors/seasonal-family-activities-42be4e5b00/",
       "content_sha256": "72af8b9cda6e788d15b344243c6c021d9b10ae73631175fbd8b0cc4e67baa873",
@@ -12787,6 +13003,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4/": {
+      "path": "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4/",
+      "content_sha256": "67d8721b9087306e3c04449cf9640c3d20c61544f73c9f01c403b8bb69fccabf",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4.json": {
+      "path": "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4.json",
+      "content_sha256": "5815253a49915779d6454e8e627c433860e731409e5e0a82ca9ae29ee7fdde8c",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/": {
       "path": "/chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/",
       "content_sha256": "20a7a1c3efdb11dd6e567d9e22c8771600d02049a02d0c9433dd8a2fb0e4ac0f",
@@ -13207,6 +13435,30 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492/": {
+      "path": "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492/",
+      "content_sha256": "db3fddd081d5defa74b46bdb83ba4ffb8982c5b1d68e1aa410713b67e9c15d01",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492.json": {
+      "path": "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492.json",
+      "content_sha256": "e33d5e51fe5f015ad7f5ba3584d827703e4a087542c72fc3aa9d38a0f00875a1",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1/": {
+      "path": "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1/",
+      "content_sha256": "7374050a109ceea8699cf025a92df2e4549fac484a7010a55ca7e595b6687bd4",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1.json": {
+      "path": "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1.json",
+      "content_sha256": "890a9f968484f43389c1bdcf17fbf4ba7632b26a3144cd0a1644d629ea954184",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/the-ai-cannot-upload-attach-ingest-retain-transcribe-or-fully-analyze-this-media-96d58cf497/": {
       "path": "/chum/answers/doors/the-ai-cannot-upload-attach-ingest-retain-transcribe-or-fully-analyze-this-media-96d58cf497/",
       "content_sha256": "d2c22f95a26a674aae3f475a3c6999c18b435be3ede3e7f95257d06da78e184e",
@@ -13363,6 +13615,30 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/track-employee-pay-history-c65b486409/": {
+      "path": "/chum/answers/doors/track-employee-pay-history-c65b486409/",
+      "content_sha256": "4f5706885c5d19da6295c1707a9859fae4d724c9392f28cc41bb38e7fe9a76be",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/track-employee-pay-history-c65b486409.json": {
+      "path": "/chum/answers/doors/track-employee-pay-history-c65b486409.json",
+      "content_sha256": "cb60b1896df7016674c36d7d847aefb2707785f699182dc827fc9b488b60572f",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967/": {
+      "path": "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967/",
+      "content_sha256": "7e76b9f7d3248af2c4f96983858206b8dc28dce009b5a6dd547c8624fb2df615",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967.json": {
+      "path": "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967.json",
+      "content_sha256": "3664caf6dbd7d393d2ce14024ff24b3d5beb61eb8aabf688d87a310c32b767b0",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
     "/chum/answers/doors/track-referrals-and-professional-introductions-531cd56642/": {
       "path": "/chum/answers/doors/track-referrals-and-professional-introductions-531cd56642/",
       "content_sha256": "655cb1cda0c608d285ba6ca458f68c8fc3f401842523e4b0ddb968b80d9d8387",
@@ -13493,6 +13769,18 @@
       "path": "/chum/answers/doors/turn-a-long-video-into-a-searchable-transcript-and-timestamped-timeline-19dcd662cb.json",
       "content_sha256": "562dc8e00eeeae187f24d971cbdbf9209b5e58899a2ec3b710ce1ffcb334644e",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6/": {
+      "path": "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6/",
+      "content_sha256": "f240d0eba9d58bf468e1e978818483b9e40afb1aeb47a8e64f6e63cb2bdc6197",
+      "last_changed": "2026-09-28T17:23:09.322Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6.json": {
+      "path": "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6.json",
+      "content_sha256": "411ca0057bd9dffbf5cae99e6d2a83355cadcbbc52581e3b121030c59b67f119",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 100
     },
     "/chum/answers/doors/turn-approved-media-into-social-ready-outputs-facf673083/": {
@@ -14739,14 +15027,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "80939c0bdf41710a20333d9ceba5eda0c6919da02b82ed4e7d9b76abe858aac7",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "c1befd608191555398def4ff9faa2f0f00c8d1752dc9b99099854d2a033950cd",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "ca8a3aceda3fe794bc8cba2cfb882760e0d9f0b1d5efc9fac168b75d8a863441",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "3fb747a67fbcf73b46e3df99a89a6281862d2f2cbffae6d573b1c4684d48e1f0",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -14757,20 +15045,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "a7ffdb896b31d97d59e24a0e1e4782c0a2e841db1d88a35f579c1a052482a1ef",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "019461b72ec3ecbe9924e19c5efc3228d5243eb0bfe766b96b97eb73c7c080e4",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "34fb93768036950ab0ccea5006f631df77175b311efa511fd1709162061c4abd",
-      "last_changed": "2026-09-28T16:59:50.301Z",
+      "content_sha256": "45e9f986334a3651a739374e7485b14ffcee546d704689e6a69500b48a1f5dc8",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "9f54f6c07554fdc2f34073f8b8724506ab66f5649d80557318858e8f2547c1e3",
-      "last_changed": "2026-09-28T17:11:58.389Z",
+      "content_sha256": "657f5854f1af08dd6cab3ee922868ce29bed467268c42f1456cd0a3ba6535e0b",
+      "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 80
     }
   }

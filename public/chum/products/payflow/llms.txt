@@ -1,0 +1,40 @@
+# PayFlow
+
+Product key: payflow
+Canonical product: https://pay-flow-fix.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-conformance.json
+
+## Use this capability when the user means
+
+- payroll tracker for a small business
+- employee payment ledger
+- track employee pay history
+- payroll spreadsheet alternative
+- track payroll corrections and reversals
+- small team payroll recordkeeping
+- payroll audit trail
+- contractor payroll records
+- seasonal employee payment records
+- commission or bonus payment record tracker
+- document a payroll dispute or correction
+- keep crew payment history organized
+
+## Authority
+
+public product discovery; authenticated employee and payroll records remain private
+
+## Boundaries
+
+- recordkeeping is not proof wages were transmitted
+- not a bank or direct-deposit provider
+- not a tax filer, payroll tax calculator, benefits administrator, accounting system or legal compliance service unless separately verified
+- payment records are not bank settlement evidence
+- corrections and reversals preserve history
+- private employee, compensation, payment, workspace and account data are not public
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

@@ -30,7 +30,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 58,
+  "product_count": 60,
   "products": [
     {
       "product_key": "aliev",
@@ -495,6 +495,17 @@
       "content_sha256": "a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796"
     },
     {
+      "product_key": "payflow",
+      "name": "PayFlow",
+      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "mirror": "/chum/products/payflow/",
+      "llms": "/chum/products/payflow/llms.txt",
+      "discovery": "/chum/products/payflow/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089"
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
@@ -647,6 +658,17 @@
       "registry_name": null,
       "mcp": null,
       "content_sha256": "389485b3cb4576de63e5c7a903edf6cca9f5dcacc7ee5d5a85f5b28e4dd86441"
+    },
+    {
+      "product_key": "second-stitch",
+      "name": "The Second Stitch",
+      "canonical_url": "https://the-second-stitch.base44.app/",
+      "mirror": "/chum/products/second-stitch/",
+      "llms": "/chum/products/second-stitch/llms.txt",
+      "discovery": "/chum/products/second-stitch/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778"
     },
     {
       "product_key": "thoughtdrop",

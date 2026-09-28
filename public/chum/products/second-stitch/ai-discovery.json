@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "second-stitch",
+  "name": "The Second Stitch",
+  "aliases": [
+    "Project Second Stitch"
+  ],
+  "class": "textile_project_intelligence_and_procurement_prototype",
+  "canonical_url": "https://the-second-stitch.base44.app/",
+  "intents": [
+    "turn a sewing project into a material list",
+    "estimate fabric and notions for a project",
+    "plan materials for costumes or small-batch textile production",
+    "textile project-to-material planning",
+    "repeat textile ordering and material continuity",
+    "professional fabric procurement workflow",
+    "model a textile retail project-planning pilot",
+    "textile intelligence for schools theaters makers quilters or upholstery shops"
+  ],
+  "authority": "public discovery and prototype exploration only",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "independent Evercraft concept; references to Michaels or JOANN do not imply sponsorship, partnership, endorsement, private-system access or an accepted commercial relationship",
+    "pilot economics are modeled scenarios, not observed results or forecasts",
+    "material quantities are planning estimates",
+    "no supplier inventory, current price, dye-lot continuity, fulfillment, ordering or procurement integration is implied unless separately verified",
+    "discovery creates no purchase, supplier commitment, commercial pilot or customer relationship"
+  ],
+  "commercial": null,
+  "machine_commerce_handoff": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": null,
+  "proof_library": null,
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-conformance.json",
+    "page": "/chum/products/second-stitch/"
+  }
+}

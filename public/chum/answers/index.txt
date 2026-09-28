@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 103
-Unique user phrases: 867
-Candidate edges: 961
+Pain-index entries: 105
+Unique user phrases: 887
+Candidate edges: 981
 Ambiguous phrases: 94
 
 ## 15 GB video analysis
@@ -976,6 +976,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
 
+## commission or bonus payment record tracker
+Answer ID: intent:ae24a6e0d9
+Human-readable match: /chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## community health data
 Answer ID: intent:e8c1d524e0
 Human-readable match: /chum/answers/doors/community-health-data-e8c1d524e0/
@@ -1238,6 +1245,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Contractor Cloud | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
 
+## contractor payroll records
+Answer ID: intent:38d24b5ae9
+Human-readable match: /chum/answers/doors/contractor-payroll-records-38d24b5ae9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-payroll-records-38d24b5ae9.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## contractor pricing API
 Answer ID: intent:33e8e59e36
 Human-readable match: /chum/answers/doors/contractor-pricing-api-33e8e59e36/
@@ -1473,6 +1487,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://faie.base44.app/functions/faieAgentGateway?view=docs
 
+## document a payroll dispute or correction
+Answer ID: intent:1d40b88f4c
+Human-readable match: /chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## earn Evercraft Points near me
 Answer ID: intent:425423859c
 Human-readable match: /chum/answers/doors/earn-evercraft-points-near-me-425423859c/
@@ -1501,6 +1522,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
 
+## employee payment ledger
+Answer ID: intent:b2267a81f9
+Human-readable match: /chum/answers/doors/employee-payment-ledger-b2267a81f9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/employee-payment-ledger-b2267a81f9.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## escape vendor lock-in
 Answer ID: intent:9bf9834ecc
 Human-readable match: /chum/answers/doors/escape-vendor-lock-in-9bf9834ecc/
@@ -1521,6 +1549,13 @@ Human-readable match: /chum/answers/doors/estimate-ev-charging-opportunity-a920f
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-ev-charging-opportunity-a920fb36c4.json
 Candidates:
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## estimate fabric and notions for a project
+Answer ID: intent:f45fe0f80a
+Human-readable match: /chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
 
 ## estimate from photos
 Answer ID: intent:ef10e7fa6e
@@ -3143,6 +3178,13 @@ Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 - Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
+## keep crew payment history organized
+Answer ID: intent:23d7dd4ddb
+Human-readable match: /chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## keep my application connected when networks change
 Answer ID: intent:fb6ce2df55
 Human-readable match: /chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55/
@@ -3592,6 +3634,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## model a textile retail project-planning pilot
+Answer ID: intent:c3d8e2a579
+Human-readable match: /chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
+
 ## model cash flow and operations before making a business decision
 Answer ID: intent:12c6dfcf10
 Human-readable match: /chum/answers/doors/model-cash-flow-and-operations-before-making-a-business-decision-12c6dfcf10/
@@ -3908,6 +3957,27 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Repair Shop Sourcing Desk | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://findmypart.base44.app/
 
+## payroll audit trail
+Answer ID: intent:ec00cd145f
+Human-readable match: /chum/answers/doors/payroll-audit-trail-ec00cd145f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/payroll-audit-trail-ec00cd145f.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
+## payroll spreadsheet alternative
+Answer ID: intent:ecdc6feb16
+Human-readable match: /chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
+## payroll tracker for a small business
+Answer ID: intent:5465cc649c
+Human-readable match: /chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## people visit my site but do not contact me
 Answer ID: intent:76a2e42c52
 Human-readable match: /chum/answers/doors/people-visit-my-site-but-do-not-contact-me-76a2e42c52/
@@ -3929,6 +3999,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Clip Social Video Production | kind=machine_offer | commercial=verification_required | machine=invocation_ready | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
+## plan materials for costumes or small-batch textile production
+Answer ID: intent:9f374d4d13
+Human-readable match: /chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
 
 ## Playwright API
 Answer ID: intent:89ca564562
@@ -4128,6 +4205,13 @@ Human-readable match: /chum/answers/doors/production-risk-a9bc1937b3/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/production-risk-a9bc1937b3.json
 Candidates:
 - FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://faie.base44.app/
+
+## professional fabric procurement workflow
+Answer ID: intent:52b7de91fe
+Human-readable match: /chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
 
 ## professional holiday lighting for my house
 Answer ID: intent:0e96f125ea
@@ -4445,6 +4529,13 @@ Human-readable match: /chum/answers/doors/repair-shop-hard-part-sourcing-136fa98
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repair-shop-hard-part-sourcing-136fa98fdd.json
 Candidates:
 - Repair Shop Sourcing Desk | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://findmypart.base44.app/
+
+## repeat textile ordering and material continuity
+Answer ID: intent:2344d2dc16
+Human-readable match: /chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
 
 ## replace an outdated business website
 Answer ID: intent:c4b399f638
@@ -4836,6 +4927,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## seasonal employee payment records
+Answer ID: intent:280a8fefe4
+Human-readable match: /chum/answers/doors/seasonal-employee-payment-records-280a8fefe4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## seasonal family activities
 Answer ID: intent:42be4e5b00
 Human-readable match: /chum/answers/doors/seasonal-family-activities-42be4e5b00/
@@ -5156,6 +5254,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
+## small team payroll recordkeeping
+Answer ID: intent:b7712e0eb4
+Human-readable match: /chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## social video clipping and distribution
 Answer ID: intent:5bb9bdaade
 Human-readable match: /chum/answers/doors/social-video-clipping-and-distribution-5bb9bdaade/
@@ -5406,6 +5511,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Agent Proving Mission | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/agent-proving-mission-v1/
 
+## textile intelligence for schools theaters makers quilters or upholstery shops
+Answer ID: intent:df5253c492
+Human-readable match: /chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
+
+## textile project-to-material planning
+Answer ID: intent:78f6c45fd1
+Human-readable match: /chum/answers/doors/textile-project-to-material-planning-78f6c45fd1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
+
 ## the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media
 Answer ID: intent:96d58cf497
 Human-readable match: /chum/answers/doors/the-ai-cannot-upload-attach-ingest-retain-transcribe-or-fully-analyze-this-media-96d58cf497/
@@ -5498,6 +5617,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
 
+## track employee pay history
+Answer ID: intent:c65b486409
+Human-readable match: /chum/answers/doors/track-employee-pay-history-c65b486409/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-employee-pay-history-c65b486409.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
+## track payroll corrections and reversals
+Answer ID: intent:4f3d30a967
+Human-readable match: /chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967.json
+Candidates:
+- PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
 ## track referrals and professional introductions
 Answer ID: intent:531cd56642
 Human-readable match: /chum/answers/doors/track-referrals-and-professional-introductions-531cd56642/
@@ -5574,6 +5707,13 @@ Human-readable match: /chum/answers/doors/turn-a-long-video-into-a-searchable-tr
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-a-long-video-into-a-searchable-transcript-and-timestamped-timeline-19dcd662cb.json
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
+
+## turn a sewing project into a material list
+Answer ID: intent:6abeb211c6
+Human-readable match: /chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6.json
+Candidates:
+- The Second Stitch | kind=product | commercial=product_contract | machine=discovery_only | public=https://the-second-stitch.base44.app/
 
 ## turn approved media into social-ready outputs
 Answer ID: intent:facf673083

@@ -1171,6 +1171,37 @@
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
+      "product_key": "payflow",
+      "name": "PayFlow",
+      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "mirror_path": "/chum/products/payflow/",
+      "llms_path": "/chum/products/payflow/llms.txt",
+      "discovery_path": "/chum/products/payflow/ai-discovery.json",
+      "registry_name": "",
+      "mcp": "",
+      "class": "small_team_payroll_recordkeeping",
+      "intents": [
+        "payroll tracker for a small business",
+        "employee payment ledger",
+        "track employee pay history",
+        "payroll spreadsheet alternative",
+        "track payroll corrections and reversals",
+        "small team payroll recordkeeping",
+        "payroll audit trail",
+        "contractor payroll records",
+        "seasonal employee payment records",
+        "commission or bonus payment record tracker",
+        "document a payroll dispute or correction",
+        "keep crew payment history organized"
+      ],
+      "authority": "public product discovery; authenticated employee and payroll records remain private",
+      "human_confirmation_required": true,
+      "commercial_status": "not_declared",
+      "description": "PayFlow is an Evercraft small team payroll recordkeeping capability. Common needs: payroll tracker for a small business; employee payment ledger; track employee pay history; payroll spreadsheet alternative.",
+      "content_sha256": "5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089",
+      "updated_at": "2026-09-28T00:00:00.000Z"
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
@@ -1548,6 +1579,33 @@
       "commercial_status": "",
       "description": "The Forensic Record is an Evercraft source linked public record research archive capability. Common needs: search source-linked Epstein court records; verify an Epstein-related claim against public records; trace a name place or document through Epstein-related records; study the legal process in Epstein-related public records.",
       "content_sha256": "389485b3cb4576de63e5c7a903edf6cca9f5dcacc7ee5d5a85f5b28e4dd86441",
+      "updated_at": "2026-09-28T00:00:00.000Z"
+    },
+    {
+      "product_key": "second-stitch",
+      "name": "The Second Stitch",
+      "canonical_url": "https://the-second-stitch.base44.app/",
+      "mirror_path": "/chum/products/second-stitch/",
+      "llms_path": "/chum/products/second-stitch/llms.txt",
+      "discovery_path": "/chum/products/second-stitch/ai-discovery.json",
+      "registry_name": "",
+      "mcp": "",
+      "class": "textile_project_intelligence_and_procurement_prototype",
+      "intents": [
+        "turn a sewing project into a material list",
+        "estimate fabric and notions for a project",
+        "plan materials for costumes or small-batch textile production",
+        "textile project-to-material planning",
+        "repeat textile ordering and material continuity",
+        "professional fabric procurement workflow",
+        "model a textile retail project-planning pilot",
+        "textile intelligence for schools theaters makers quilters or upholstery shops"
+      ],
+      "authority": "public discovery and prototype exploration only",
+      "human_confirmation_required": true,
+      "commercial_status": "not_declared",
+      "description": "The Second Stitch is an Evercraft textile project intelligence and procurement prototype capability. Common needs: turn a sewing project into a material list; estimate fabric and notions for a project; plan materials for costumes or small-batch textile production; textile project-to-material planning.",
+      "content_sha256": "2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {

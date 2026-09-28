@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 103,
-    "unique_user_phrases": 867,
-    "mapped_candidate_edges": 961,
+    "pain_index_entries": 105,
+    "unique_user_phrases": 887,
+    "mapped_candidate_edges": 981,
     "ambiguous_phrases": 94,
-    "product_candidates": 58,
+    "product_candidates": 60,
     "machine_offer_candidates": 45
   },
   "doors": [
@@ -3313,6 +3313,29 @@
       ]
     },
     {
+      "answer_id": "intent:ae24a6e0d9",
+      "user_language": "commission or bonus payment record tracker",
+      "normalized": "commission or bonus payment record tracker",
+      "relative_json": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json",
+      "relative_page": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e8c1d524e0",
       "user_language": "community health data",
       "normalized": "community health data",
@@ -4200,6 +4223,29 @@
       ]
     },
     {
+      "answer_id": "intent:38d24b5ae9",
+      "user_language": "contractor payroll records",
+      "normalized": "contractor payroll records",
+      "relative_json": "/chum/answers/doors/contractor-payroll-records-38d24b5ae9.json",
+      "relative_page": "/chum/answers/doors/contractor-payroll-records-38d24b5ae9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-payroll-records-38d24b5ae9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:33e8e59e36",
       "user_language": "contractor pricing API",
       "normalized": "contractor pricing api",
@@ -5007,6 +5053,29 @@
       ]
     },
     {
+      "answer_id": "intent:1d40b88f4c",
+      "user_language": "document a payroll dispute or correction",
+      "normalized": "document a payroll dispute or correction",
+      "relative_json": "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c.json",
+      "relative_page": "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:425423859c",
       "user_language": "earn Evercraft Points near me",
       "normalized": "earn evercraft points near me",
@@ -5099,6 +5168,29 @@
       ]
     },
     {
+      "answer_id": "intent:b2267a81f9",
+      "user_language": "employee payment ledger",
+      "normalized": "employee payment ledger",
+      "relative_json": "/chum/answers/doors/employee-payment-ledger-b2267a81f9.json",
+      "relative_page": "/chum/answers/doors/employee-payment-ledger-b2267a81f9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/employee-payment-ledger-b2267a81f9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9bf9834ecc",
       "user_language": "escape vendor lock-in",
       "normalized": "escape vendor lock in",
@@ -5164,6 +5256,29 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f45fe0f80a",
+      "user_language": "estimate fabric and notions for a project",
+      "normalized": "estimate fabric and notions for a project",
+      "relative_json": "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a.json",
+      "relative_page": "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -10712,6 +10827,29 @@
       ]
     },
     {
+      "answer_id": "intent:23d7dd4ddb",
+      "user_language": "keep crew payment history organized",
+      "normalized": "keep crew payment history organized",
+      "relative_json": "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb.json",
+      "relative_page": "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:fb6ce2df55",
       "user_language": "keep my application connected when networks change",
       "normalized": "keep my application connected when networks change",
@@ -12257,6 +12395,29 @@
       ]
     },
     {
+      "answer_id": "intent:c3d8e2a579",
+      "user_language": "model a textile retail project-planning pilot",
+      "normalized": "model a textile retail project planning pilot",
+      "relative_json": "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579.json",
+      "relative_page": "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:12c6dfcf10",
       "user_language": "model cash flow and operations before making a business decision",
       "normalized": "model cash flow and operations before making a business decision",
@@ -13365,6 +13526,75 @@
       ]
     },
     {
+      "answer_id": "intent:ec00cd145f",
+      "user_language": "payroll audit trail",
+      "normalized": "payroll audit trail",
+      "relative_json": "/chum/answers/doors/payroll-audit-trail-ec00cd145f.json",
+      "relative_page": "/chum/answers/doors/payroll-audit-trail-ec00cd145f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/payroll-audit-trail-ec00cd145f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ecdc6feb16",
+      "user_language": "payroll spreadsheet alternative",
+      "normalized": "payroll spreadsheet alternative",
+      "relative_json": "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16.json",
+      "relative_page": "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5465cc649c",
+      "user_language": "payroll tracker for a small business",
+      "normalized": "payroll tracker for a small business",
+      "relative_json": "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c.json",
+      "relative_page": "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:76a2e42c52",
       "user_language": "people visit my site but do not contact me",
       "normalized": "people visit my site but do not contact me",
@@ -13442,6 +13672,29 @@
           "pain_page": "/chum/products/evercraft-clip/",
           "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-clip"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9f374d4d13",
+      "user_language": "plan materials for costumes or small-batch textile production",
+      "normalized": "plan materials for costumes or small batch textile production",
+      "relative_json": "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13.json",
+      "relative_page": "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -14122,6 +14375,29 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://faie.base44.app/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:52b7de91fe",
+      "user_language": "professional fabric procurement workflow",
+      "normalized": "professional fabric procurement workflow",
+      "relative_json": "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe.json",
+      "relative_page": "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -15180,6 +15456,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
           "public_url": "https://findmypart.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:2344d2dc16",
+      "user_language": "repeat textile ordering and material continuity",
+      "normalized": "repeat textile ordering and material continuity",
+      "relative_json": "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16.json",
+      "relative_page": "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
           "registry_name": null
         }
       ]
@@ -16510,6 +16809,29 @@
       ]
     },
     {
+      "answer_id": "intent:280a8fefe4",
+      "user_language": "seasonal employee payment records",
+      "normalized": "seasonal employee payment records",
+      "relative_json": "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4.json",
+      "relative_page": "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:42be4e5b00",
       "user_language": "seasonal family activities",
       "normalized": "seasonal family activities",
@@ -17605,6 +17927,29 @@
       ]
     },
     {
+      "answer_id": "intent:b7712e0eb4",
+      "user_language": "small team payroll recordkeeping",
+      "normalized": "small team payroll recordkeeping",
+      "relative_json": "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4.json",
+      "relative_page": "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5bb9bdaade",
       "user_language": "social video clipping and distribution",
       "normalized": "social video clipping and distribution",
@@ -18470,6 +18815,52 @@
       ]
     },
     {
+      "answer_id": "intent:df5253c492",
+      "user_language": "textile intelligence for schools theaters makers quilters or upholstery shops",
+      "normalized": "textile intelligence for schools theaters makers quilters or upholstery shops",
+      "relative_json": "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492.json",
+      "relative_page": "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:78f6c45fd1",
+      "user_language": "textile project-to-material planning",
+      "normalized": "textile project to material planning",
+      "relative_json": "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1.json",
+      "relative_page": "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:96d58cf497",
       "user_language": "the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media",
       "normalized": "the ai cannot upload attach ingest retain transcribe or fully analyze this media",
@@ -18781,6 +19172,52 @@
       ]
     },
     {
+      "answer_id": "intent:c65b486409",
+      "user_language": "track employee pay history",
+      "normalized": "track employee pay history",
+      "relative_json": "/chum/answers/doors/track-employee-pay-history-c65b486409.json",
+      "relative_page": "/chum/answers/doors/track-employee-pay-history-c65b486409/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-employee-pay-history-c65b486409.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:4f3d30a967",
+      "user_language": "track payroll corrections and reversals",
+      "normalized": "track payroll corrections and reversals",
+      "relative_json": "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967.json",
+      "relative_page": "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:payflow",
+          "kind": "product",
+          "product_key": "payflow",
+          "public_id": null,
+          "name": "PayFlow",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/payflow/",
+          "public_url": "https://pay-flow-fix.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:531cd56642",
       "user_language": "track referrals and professional introductions",
       "normalized": "track referrals and professional introductions",
@@ -19030,6 +19467,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6abeb211c6",
+      "user_language": "turn a sewing project into a material list",
+      "normalized": "turn a sewing project into a material list",
+      "relative_json": "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6.json",
+      "relative_page": "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:second-stitch",
+          "kind": "product",
+          "product_key": "second-stitch",
+          "public_id": null,
+          "name": "The Second Stitch",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/second-stitch/",
+          "public_url": "https://the-second-stitch.base44.app/",
+          "registry_name": null
         }
       ]
     },

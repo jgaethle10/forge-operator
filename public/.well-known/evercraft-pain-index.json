@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 103,
-    "product_entries": 58,
+    "entries": 105,
+    "product_entries": 60,
     "machine_offer_entries": 45,
-    "entries_with_pain_language": 103,
+    "entries_with_pain_language": 105,
     "sell_now_machine_offers": 13,
     "entries_with_declared_mcp": 60,
     "callable_or_routable_entries": 41,
@@ -4380,6 +4380,59 @@
       ]
     },
     {
+      "capability_id": "product:payflow",
+      "product_key": "payflow",
+      "kind": "product",
+      "name": "PayFlow",
+      "class": "small_team_payroll_recordkeeping",
+      "pain_phrases": [
+        "payroll tracker for a small business",
+        "employee payment ledger",
+        "track employee pay history",
+        "payroll spreadsheet alternative",
+        "track payroll corrections and reversals",
+        "small team payroll recordkeeping",
+        "payroll audit trail",
+        "contractor payroll records",
+        "seasonal employee payment records",
+        "commission or bonus payment record tracker",
+        "document a payroll dispute or correction",
+        "keep crew payment history organized"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public product discovery; authenticated employee and payroll records remain private",
+      "boundaries": [
+        "recordkeeping is not proof wages were transmitted",
+        "not a bank or direct-deposit provider",
+        "not a tax filer, payroll tax calculator, benefits administrator, accounting system or legal compliance service unless separately verified",
+        "payment records are not bank settlement evidence",
+        "corrections and reversals preserve history",
+        "private employee, compensation, payment, workspace and account data are not public"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:raven-nexus",
       "product_key": "raven-nexus",
       "kind": "product",
@@ -4560,6 +4613,54 @@
         "promotion eligibility and cross-package unit normalization are not proven",
         "private household, member, memory, checklist and profile data are not public",
         "public runtime hostname remains unresolved in the current discovery inventory"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:second-stitch",
+      "product_key": "second-stitch",
+      "kind": "product",
+      "name": "The Second Stitch",
+      "class": "textile_project_intelligence_and_procurement_prototype",
+      "pain_phrases": [
+        "turn a sewing project into a material list",
+        "estimate fabric and notions for a project",
+        "plan materials for costumes or small-batch textile production",
+        "textile project-to-material planning",
+        "repeat textile ordering and material continuity",
+        "professional fabric procurement workflow",
+        "model a textile retail project-planning pilot",
+        "textile intelligence for schools theaters makers quilters or upholstery shops"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://the-second-stitch.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery and prototype exploration only",
+      "boundaries": [
+        "independent Evercraft concept; references to Michaels or JOANN do not imply sponsorship, partnership, endorsement, private-system access or an accepted commercial relationship",
+        "pilot economics are modeled scenarios, not observed results or forecasts",
+        "material quantities are planning estimates",
+        "no supplier inventory, current price, dye-lot continuity, fulfillment, ordering or procurement integration is implied unless separately verified",
+        "discovery creates no purchase, supplier commitment, commercial pilot or customer relationship"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",

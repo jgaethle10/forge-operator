@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-28T17:11:58.221Z",
+  "updated_at": "2026-09-28T17:23:09.155Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
@@ -45,6 +45,7 @@
     "infinite-classroom": "23ec03ee339efcdd74961d214f62df94212e04b87d1379c1826f4a252d21c502",
     "legacy-rescue-lab": "4547b6f8228a33a4b8bd222421e18425d464a8e6c53bd68c83fe4f08cae7f588",
     "little-red-book-export-qa": "a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796",
+    "payflow": "5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089",
     "raven-nexus": "37c01da15778cd16c2306a2da2d81f2f446487aeaef40d404ea6ee6fba6cb4b0",
     "roasted": "e6bb993c0aa0bb4d67bb3d7bd730dac1b98f8c2e7bf61a06892095f0e0effa6e",
     "seasonally": "f35eaf9c478ce3be7b6a8ec2ce2f7c921fae2fbe372d50459e6d3f2fb7d46b89",
@@ -59,6 +60,7 @@
     "systemia-website-audit": "53e5c5ad20cb368c4be7207d28d28984222d4d4e04255105d0897112b6f72891",
     "talent-atlas": "7c8ba10447a2e9fca4c6bc7e25eca58c2ec6c861ea6d805f583f7b892b7309b9",
     "forensic-record": "389485b3cb4576de63e5c7a903edf6cca9f5dcacc7ee5d5a85f5b28e4dd86441",
+    "second-stitch": "2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778",
     "thoughtdrop": "a197c824f3a7264f4e8d32e3f005d46d188809af309afde3289ba197bb39d8c5",
     "towi-research": "8b84c8376c0c4fd84e9d4aaba6c3680c368189cbc32658674b10920e9f7ad60a"
   }

@@ -744,6 +744,25 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:payflow:5d9d0425323d04d7",
+      "url": "https://pay-flow-fix.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-discovery.json",
+      "title": "PayFlow",
+      "summary": "PayFlow is an Evercraft small team payroll recordkeeping capability. Common needs: payroll tracker for a small business; employee payment ledger; track employee pay history; payroll spreadsheet alternative.",
+      "date_modified": "2026-09-28T00:00:00.000Z",
+      "tags": [
+        "small_team_payroll_recordkeeping",
+        "payroll tracker for a small business",
+        "employee payment ledger",
+        "track employee pay history",
+        "payroll spreadsheet alternative",
+        "track payroll corrections and reversals",
+        "small team payroll recordkeeping",
+        "payroll audit trail",
+        "contractor payroll records"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:raven-nexus:37c01da15778cd16",
       "url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
@@ -981,6 +1000,25 @@
         "study the legal process in Epstein-related public records",
         "review source-linked survivor or witness testimony",
         "separate documented evidence allegations and commentary in Epstein records"
+      ]
+    },
+    {
+      "id": "urn:evercraft:product:second-stitch:2d8cdaffa6a9a951",
+      "url": "https://the-second-stitch.base44.app/",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-discovery.json",
+      "title": "The Second Stitch",
+      "summary": "The Second Stitch is an Evercraft textile project intelligence and procurement prototype capability. Common needs: turn a sewing project into a material list; estimate fabric and notions for a project; plan materials for costumes or small-batch textile production; textile project-to-material planning.",
+      "date_modified": "2026-09-28T00:00:00.000Z",
+      "tags": [
+        "textile_project_intelligence_and_procurement_prototype",
+        "turn a sewing project into a material list",
+        "estimate fabric and notions for a project",
+        "plan materials for costumes or small-batch textile production",
+        "textile project-to-material planning",
+        "repeat textile ordering and material continuity",
+        "professional fabric procurement workflow",
+        "model a textile retail project-planning pilot",
+        "textile intelligence for schools theaters makers quilters or upholstery shops"
       ]
     },
     {

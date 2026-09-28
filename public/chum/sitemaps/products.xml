@@ -164,6 +164,10 @@
   <url><loc>/chum/products/little-red-book-export-qa/ai-conformance.json</loc></url>
   <url><loc>/chum/products/little-red-book-export-qa/ai-discovery.json</loc></url>
   <url><loc>/chum/products/little-red-book-export-qa/llms.txt</loc></url>
+  <url><loc>/chum/products/payflow/</loc></url>
+  <url><loc>/chum/products/payflow/ai-conformance.json</loc></url>
+  <url><loc>/chum/products/payflow/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/payflow/llms.txt</loc></url>
   <url><loc>/chum/products/raven-nexus/</loc></url>
   <url><loc>/chum/products/raven-nexus/ai-conformance.json</loc></url>
   <url><loc>/chum/products/raven-nexus/ai-discovery.json</loc></url>
@@ -180,6 +184,10 @@
   <url><loc>/chum/products/seasonally/ai-conformance.json</loc></url>
   <url><loc>/chum/products/seasonally/ai-discovery.json</loc></url>
   <url><loc>/chum/products/seasonally/llms.txt</loc></url>
+  <url><loc>/chum/products/second-stitch/</loc></url>
+  <url><loc>/chum/products/second-stitch/ai-conformance.json</loc></url>
+  <url><loc>/chum/products/second-stitch/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/second-stitch/llms.txt</loc></url>
   <url><loc>/chum/products/skyops-parking/</loc></url>
   <url><loc>/chum/products/skyops-parking/ai-conformance.json</loc></url>
   <url><loc>/chum/products/skyops-parking/ai-discovery.json</loc></url>

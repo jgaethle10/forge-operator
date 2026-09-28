@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "payflow",
+  "name": "PayFlow",
+  "aliases": [],
+  "class": "small_team_payroll_recordkeeping",
+  "canonical_url": "https://pay-flow-fix.base44.app/",
+  "intents": [
+    "payroll tracker for a small business",
+    "employee payment ledger",
+    "track employee pay history",
+    "payroll spreadsheet alternative",
+    "track payroll corrections and reversals",
+    "small team payroll recordkeeping",
+    "payroll audit trail",
+    "contractor payroll records",
+    "seasonal employee payment records",
+    "commission or bonus payment record tracker",
+    "document a payroll dispute or correction",
+    "keep crew payment history organized"
+  ],
+  "authority": "public product discovery; authenticated employee and payroll records remain private",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "recordkeeping is not proof wages were transmitted",
+    "not a bank or direct-deposit provider",
+    "not a tax filer, payroll tax calculator, benefits administrator, accounting system or legal compliance service unless separately verified",
+    "payment records are not bank settlement evidence",
+    "corrections and reversals preserve history",
+    "private employee, compensation, payment, workspace and account data are not public"
+  ],
+  "commercial": null,
+  "machine_commerce_handoff": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": null,
+  "proof_library": null,
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-conformance.json",
+    "page": "/chum/products/payflow/"
+  }
+}

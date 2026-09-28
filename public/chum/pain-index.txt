@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 103
-Product entries: 58
+Entries: 105
+Product entries: 60
 Machine-offer entries: 45
 Sell-now machine offers: 13
 
@@ -1811,6 +1811,28 @@ Use when the user means:
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
+## PayFlow
+Capability ID: product:payflow
+Product key: payflow
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://pay-flow-fix.base44.app/
+Use when the user means:
+- payroll tracker for a small business
+- employee payment ledger
+- track employee pay history
+- payroll spreadsheet alternative
+- track payroll corrections and reversals
+- small team payroll recordkeeping
+- payroll audit trail
+- contractor payroll records
+- seasonal employee payment records
+- commission or bonus payment record tracker
+- document a payroll dispute or correction
+- keep crew payment history organized
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
 ## Raven Nexus
 Capability ID: product:raven-nexus
 Product key: raven-nexus
@@ -1880,6 +1902,24 @@ Use when the user means:
 - local seasonal events and adventures
 - compare grocery basket prices near me
 - cheapest groceries for this recipe
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## The Second Stitch
+Capability ID: product:second-stitch
+Product key: second-stitch
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://the-second-stitch.base44.app/
+Use when the user means:
+- turn a sewing project into a material list
+- estimate fabric and notions for a project
+- plan materials for costumes or small-batch textile production
+- textile project-to-material planning
+- repeat textile ordering and material continuity
+- professional fabric procurement workflow
+- model a textile retail project-planning pilot
+- textile intelligence for schools theaters makers quilters or upholstery shops
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
