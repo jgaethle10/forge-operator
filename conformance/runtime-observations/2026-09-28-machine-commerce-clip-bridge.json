@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.runtime-observation.v1",
+  "product_key": "evercraft-machine-commerce",
+  "observed_on": "2026-09-28",
+  "runtime": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "observed_server_version": "1.5.0",
+  "checkpoint": {
+    "base44_checkpoint_id": "6aba993690ff82bf680e253d",
+    "base44_git_commit": "d30b4905342445ffb3988b9636af55ef46b051f3"
+  },
+  "capability": {
+    "tool": "plan_social_video_with_clip",
+    "specialist": "Evercraft Clip V2",
+    "mode": "read_only_planning",
+    "ordinary_media_route": "clip",
+    "oversized_full_timeline_route": "forensiscope",
+    "automatic_media_transfer": false,
+    "creates_order": false,
+    "creates_checkout": false,
+    "charges": false,
+    "renders": false,
+    "publishes": false
+  },
+  "proof": {
+    "build": "pass",
+    "machine_commerce_catalog_consistency": "pass_45",
+    "evercraft_web_discovery": "pass",
+    "systemia_release_policy": "pass",
+    "money_radar_telemetry_contract": "pass",
+    "clip_bridge_smoke": "MACHINE_COMMERCE_CLIP_BRIDGE_PASS"
+  },
+  "registry_publication_state": "staged_pending_official_registry_publication_receipt",
+  "truth_boundary": "This receipt proves the live Machine Commerce runtime and read-only Clip V2 specialist bridge observed on 2026-09-28. It does not prove Official MCP Registry publication of version 1.5.0, provider recommendation, checkout, payment, media rendering, publishing, or revenue."
+}
