@@ -1,0 +1,244 @@
+name: Fallen Studio World
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/studio-world.ts"
+      - "systemia/media-studio/studio-world.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/render-worker/**"
+      - "systemia/media-studio/distributed-render*"
+      - ".github/workflows/fallen-studio-world.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/studio-world.ts"
+      - "systemia/media-studio/studio-world.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/render-worker/**"
+      - "systemia/media-studio/distributed-render*"
+      - ".github/workflows/fallen-studio-world.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  global-ops-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install root runtime
+        run: npm install --no-audit --no-fund
+
+      - name: Studio world tests
+        run: node --import tsx --test systemia/media-studio/studio-world.test.ts
+
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+
+      - name: Generate bounded CI set plate
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/.ci-assets/studio-ci-assets"
+          ffmpeg -y -v error \
+            -f lavfi -i "color=c=0x0B1014:s=1920x1080:d=1" \
+            -vf "drawgrid=w=120:h=120:t=1:c=0x2B3640@0.30,drawbox=x=70:y=120:w=710:h=660:color=0x202A33@0.86:t=fill,drawbox=x=880:y=100:w=940:h=690:color=0x18242C@0.88:t=fill,drawbox=x=100:y=850:w=1620:h=120:color=0x151F25@0.92:t=fill" \
+            -frames:v 1 \
+            "$GITHUB_WORKSPACE/.ci-assets/studio-ci-assets/global-ops.png"
+
+      - name: Compile canonical Global Operations room
+        run: |
+          cat >/tmp/global-ops-room.json <<'JSON'
+          {
+            "id":"studio-world-ci-global-ops",
+            "roomId":"global_ops",
+            "headline":"THE WORLD MOVED",
+            "subhead":"Evercraft Global Operations visual-stage canary",
+            "durationSec":4,
+            "aspectRatio":"16:9",
+            "contents":[
+              {
+                "slotId":"subject-wall",
+                "kind":"text",
+                "text":"SOURCE MEDIA SLOT\nREAL SUBJECT LIVES HERE",
+                "fontSize":46,
+                "fontWeight":700
+              },
+              {
+                "slotId":"world-wall",
+                "kind":"geo",
+                "projection":"mercator",
+                "centerLat":24,
+                "centerLon":155,
+                "zoom":1.35,
+                "grid":true,
+                "routes":[
+                  {
+                    "id":"ci-route",
+                    "points":[
+                      {"lat":34,"lon":140},
+                      {"lat":30,"lon":154},
+                      {"lat":27,"lon":168}
+                    ],
+                    "evidenceState":"synthetic_visualization",
+                    "sourceRefs":["ci:route-visualization"]
+                  }
+                ],
+                "points":[
+                  {
+                    "id":"ci-track",
+                    "lat":31,
+                    "lon":154,
+                    "label":"TRACK A",
+                    "evidenceState":"synthetic_visualization",
+                    "sourceRefs":["ci:route-visualization"]
+                  }
+                ],
+                "evidenceState":"synthetic_visualization",
+                "sourceRefs":["ci:route-visualization"]
+              },
+              {
+                "slotId":"ops-strip",
+                "kind":"metric",
+                "label":"RENDER FABRIC",
+                "value":2,
+                "unit":" NODES",
+                "evidenceState":"observed",
+                "sourceRefs":["ci:two-worker-canary"]
+              }
+            ]
+          }
+          JSON
+          npm run media:studio -- studio-room /tmp/global-ops-room.json /tmp/global-ops.stage.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const stage=JSON.parse(fs.readFileSync('/tmp/global-ops.stage.json','utf8'));
+          stage.fps=12;
+          fs.writeFileSync('/tmp/global-ops.stage.json',JSON.stringify(stage,null,2));
+          NODE
+
+      - name: Build render plan with mounted set asset
+        run: |
+          export PLATE="$GITHUB_WORKSPACE/.ci-assets/studio-ci-assets/global-ops.png"
+          export PLATE_SHA="$(sha256sum "$PLATE" | awk '{print $1}')"
+          node - <<'NODE'
+          const fs=require('fs');
+          const stage=JSON.parse(fs.readFileSync('/tmp/global-ops.stage.json','utf8'));
+          const input={
+            id:'studio-world-ci-render',
+            stage,
+            assetScopeId:'studio-ci-assets',
+            maxFramesPerShard:12,
+            assets:[
+              {
+                id:'evercraft-hq-global-ops-v1',
+                filename:'global-ops.png',
+                sha256:process.env.PLATE_SHA,
+                media_type:'image/png'
+              }
+            ]
+          };
+          fs.writeFileSync('/tmp/global-ops.render-input.json',JSON.stringify(input,null,2));
+          NODE
+          npm run media:studio -- render-plan /tmp/global-ops.render-input.json /tmp/global-ops.render-plan.json
+
+      - name: Build renderer image
+        run: docker build -t evercraft/fallen-render-worker:studio-ci systemia/media-studio/render-worker
+
+      - name: Start two studio render workers
+        run: |
+          docker run -d --name fallen-studio-a \
+            -p 8794:8787 \
+            -v "$GITHUB_WORKSPACE/.ci-assets:/work/assets:ro" \
+            -e FALLEN_RENDER_WORKER_TOKEN=studio-a \
+            evercraft/fallen-render-worker:studio-ci
+          docker run -d --name fallen-studio-b \
+            -p 8795:8787 \
+            -v "$GITHUB_WORKSPACE/.ci-assets:/work/assets:ro" \
+            -e FALLEN_RENDER_WORKER_TOKEN=studio-b \
+            evercraft/fallen-render-worker:studio-ci
+          for port in 8794 8795; do
+            healthy=0
+            for i in $(seq 1 40); do
+              if curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null; then
+                healthy=1
+                break
+              fi
+              sleep 1
+            done
+            if [ "$healthy" != "1" ]; then
+              docker logs fallen-studio-a || true
+              docker logs fallen-studio-b || true
+              exit 1
+            fi
+          done
+
+      - name: Render Global Operations through the fabric
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"studio-a","url":"http://127.0.0.1:8794","token":"studio-a"},{"id":"studio-b","url":"http://127.0.0.1:8795","token":"studio-b"}]
+        run: |
+          node systemia/media-studio/distributed-render-coordinator.mjs \
+            /tmp/global-ops.render-plan.json \
+            /tmp/global-ops-canary.mp4 \
+            /tmp/global-ops-canary.receipt.json
+
+      - name: Verify rendered studio canary
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const receipt=JSON.parse(fs.readFileSync('/tmp/global-ops-canary.receipt.json','utf8'));
+          if(receipt.schema!=='evercraft.fallen.distributed-render-receipt.v1') throw new Error('receipt_schema');
+          if(receipt.workers.length!==2) throw new Error('two_workers_not_used');
+          if(receipt.total_frames!==48) throw new Error('unexpected_frame_count');
+          if(receipt.boundaries?.every_frame_sha256_verified!==true) throw new Error('frame_verification_missing');
+          if(receipt.boundaries?.no_gap_no_duplicate_gate!==true) throw new Error('lattice_gate_missing');
+          if(!fs.statSync('/tmp/global-ops-canary.mp4').size) throw new Error('studio_movie_empty');
+          console.log(JSON.stringify({
+            output_sha256:receipt.output_sha256,
+            frame_set_sha256:receipt.frame_set_sha256,
+            workers:receipt.workers,
+            frames:receipt.total_frames
+          }));
+          NODE
+          ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate,nb_frames -show_entries format=duration,size -of json /tmp/global-ops-canary.mp4
+
+      - name: Package studio specimen
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/artifacts/studio-world-canary"
+          cp /tmp/global-ops-canary.mp4 "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+          cp /tmp/global-ops-canary.receipt.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+          cp /tmp/global-ops.stage.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+          cp /tmp/global-ops.render-plan.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+
+      - name: Upload watchable studio specimen
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-studio-world-global-ops-canary
+          path: artifacts/studio-world-canary/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Show worker logs on failure
+        if: failure()
+        run: |
+          docker logs fallen-studio-a || true
+          docker logs fallen-studio-b || true
+
+      - name: Stop workers
+        if: always()
+        run: |
+          docker rm -f fallen-studio-a || true
+          docker rm -f fallen-studio-b || true
