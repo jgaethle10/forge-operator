@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T07:42:44.652Z",
+  "updated_at": "2026-09-28T07:50:27.577Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,96 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-28T07:42:44.652Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-28T07:50:27.577Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-28T07:50:27.577Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T07:42:44.652Z",
+      "last_changed": "2026-09-28T07:50:27.577Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-28T07:50:27.577Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-28T07:42:44.652Z",
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-28T07:50:27.577Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-28T07:50:27.577Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T07:50:27.577Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-28T07:50:27.577Z",
+      "priority": 80
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-28T07:50:27.019Z",
+      "priority": 86
+    },
+    {
+      "path": "/llms.txt",
+      "url": "/llms.txt",
+      "last_changed": "2026-09-28T07:50:27.019Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "url": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-28T07:50:27.019Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-09-28T07:50:27.019Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-09-28T07:50:27.019Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-09-28T07:50:27.019Z",
+      "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "url": "/ai-discovery.json",
+      "last_changed": "2026-09-28T07:50:27.019Z",
+      "priority": 60
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-09-28T07:42:44.652Z",
       "priority": 80
     },
@@ -236,42 +306,6 @@
       "path": "/chum/pain-index.txt",
       "url": "/chum/pain-index.txt",
       "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-28T07:39:06.298Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-28T07:39:06.298Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-28T07:39:06.298Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-09-28T07:35:44.911Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-09-28T07:35:44.911Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-09-28T07:35:44.911Z",
       "priority": 80
     },
     {
@@ -531,12 +565,6 @@
       "url": "/chum/products/evercraft-rewards/llms.txt",
       "last_changed": "2026-09-27T23:52:03.465Z",
       "priority": 94
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-27T23:52:03.465Z",
-      "priority": 86
     },
     {
       "path": "/.well-known/evercraft-agent-directory.json",
@@ -869,12 +897,6 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-discovery.json",
-      "url": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/",
       "url": "/chum/",
       "last_changed": "2026-09-27T23:49:53.447Z",
@@ -885,12 +907,6 @@
       "url": "/chum/syndication/",
       "last_changed": "2026-09-27T23:49:53.447Z",
       "priority": 80
-    },
-    {
-      "path": "/ai-discovery.json",
-      "url": "/ai-discovery.json",
-      "last_changed": "2026-09-27T23:49:53.447Z",
-      "priority": 60
     },
     {
       "path": "/schema.jsonld",
@@ -1513,12 +1529,6 @@
     {
       "path": "/chum/products/evercraft-network/ai-discovery.json",
       "url": "/chum/products/evercraft-network/ai-discovery.json",
-      "last_changed": "2026-09-27T14:53:47.616Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-physics-atlas/ai-conformance.json",
-      "url": "/chum/products/evercraft-physics-atlas/ai-conformance.json",
       "last_changed": "2026-09-27T14:53:47.616Z",
       "priority": 94
     }
