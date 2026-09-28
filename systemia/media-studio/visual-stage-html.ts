@@ -121,7 +121,7 @@ body{display:flex;align-items:center;justify-content:center}
 .timeline-event{position:absolute;top:42%;width:8px;height:8px;border-radius:50%;background:var(--ev-text)}
 </style>
 </head>
-<body style="--ev-font:${esc(theme.fontFamily)"};">
+<body style="--ev-font:${esc(theme.fontFamily)};">
 <div id="viewport"><div id="camera">${layers}</div></div>
 <script id="evercraft-stage-data" type="application/json">${json}</script>
 <script>
