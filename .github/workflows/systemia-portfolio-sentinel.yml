@@ -22,6 +22,10 @@ on:
       - "server.ts"
       - "systemia/chum/build-commercial-discovery-mesh.mjs"
       - "public/.well-known/evercraft-machine-catalog.json"
+      - "registry/public-products.json"
+      - "registry/**/server.json"
+      - "mcp-registry/**"
+      - "scripts/reconcile-public-mcp-registry.mjs"
       - "tests/chum-live-intent-hunter.test.mjs"
       - ".github/workflows/**"
   pull_request:
@@ -40,6 +44,10 @@ on:
       - "server.ts"
       - "systemia/chum/build-commercial-discovery-mesh.mjs"
       - "public/.well-known/evercraft-machine-catalog.json"
+      - "registry/public-products.json"
+      - "registry/**/server.json"
+      - "mcp-registry/**"
+      - "scripts/reconcile-public-mcp-registry.mjs"
       - "tests/chum-live-intent-hunter.test.mjs"
       - ".github/workflows/**"
   schedule:
