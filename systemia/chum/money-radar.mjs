@@ -131,6 +131,21 @@ function latencySummary(values) {
   };
 }
 
+function velocityMetric(current, previous) {
+  const now = Number(current || 0);
+  const prior = Number(previous || 0);
+  return {
+    current: now,
+    previous: prior,
+    delta: now - prior,
+    change_rate: prior > 0 ? Number(((now - prior) / prior).toFixed(4)) : null,
+    state: prior === 0 && now > 0 ? 'new'
+      : now > prior ? 'up'
+        : now < prior ? 'down'
+          : 'flat',
+  };
+}
+
 function addAttributionObservation(map, key, event, actor) {
   const id = clean(key).toLowerCase() || 'unknown';
   map[id] ||= {
@@ -721,6 +736,14 @@ export async function buildMoneyRadar({
   const prior24End = new Date(effectiveNowMs - 24 * 3600_000).toISOString();
   const prior24 = windowSnapshot(accepted, prior24End, 24);
   const current24 = windows['24h'];
+  const velocity_comparison = {
+    window: '24h_vs_previous_24h',
+    raw_offer_views: velocityMetric(current24.raw_offer_views, prior24.raw_offer_views),
+    qualified_offer_views: velocityMetric(current24.offer_views, prior24.offer_views),
+    unique_buyer_sessions: velocityMetric(current24.unique_buyer_sessions, prior24.unique_buyer_sessions),
+    continue_clicks: velocityMetric(current24.continue_clicks, prior24.continue_clicks),
+    checkout_starts: velocityMetric(current24.checkout_starts, prior24.checkout_starts),
+  };
   const current24AcquisitionEvents = accepted.filter((event) => {
     if (event._source_kind !== 'public_acquisition_https' || !PUBLIC_STAGES.has(event.stage)) return false;
     const t = Date.parse(event.occurred_at || '');
@@ -773,6 +796,14 @@ export async function buildMoneyRadar({
       code: 'first_qualified_buyer_activity',
       message: current24.unique_buyer_sessions + ' qualified buyer session(s) appeared in the last 24 hours after zero in the preceding 24 hours.',
       action: 'inspect_source_campaign_surface_and_offer_path_immediately',
+    });
+  }
+  if (prior24.unique_buyer_sessions >= 3 && current24.unique_buyer_sessions === 0) {
+    operator_alerts.push({
+      severity: 'P1',
+      code: 'qualified_buyer_activity_disappeared',
+      message: prior24.unique_buyer_sessions + ' qualified buyer sessions in the preceding 24 hours fell to zero in the current 24-hour window.',
+      action: 'inspect_distribution_source_and_entry_surface_changes_before_editing_offers',
     });
   }
   if (current24.raw_offer_views >= 20 && current24.offer_views === 0) {
@@ -877,6 +908,7 @@ export async function buildMoneyRadar({
     payment_measurement_state: paymentMeasurementState,
     buyer_signal_state: buyerSignalState,
     telemetry_quality,
+    velocity_comparison,
     source: {
       acquisition: {
         configured: acquisitionConfigured,
@@ -972,6 +1004,7 @@ export async function buildMoneyRadar({
     `Telemetry v2 coverage (24h): ${telemetry_quality.v2_coverage_rate ?? 'n/a'}`,
     `Qualified session coverage (24h): ${telemetry_quality.qualified_session_coverage_rate ?? 'n/a'}`,
     `Conversion decision safe: ${telemetry_quality.conversion_decision_safe}`,
+    `24h velocity vs prior 24h: ${JSON.stringify(velocity_comparison)}`,
     '',
     '## Traffic truth',
     '',
