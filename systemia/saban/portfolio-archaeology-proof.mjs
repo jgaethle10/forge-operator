@@ -18,7 +18,7 @@ const workItems = loadPrivateInventory(inventoryPath, {
   privacy: contract.inventory_privacy || {}
 });
 
-assert.equal(workItems.length, 6);
+assert.equal(workItems.length, 11);
 assert.ok(workItems.every((item) => item.raw?.source_identifiers_redacted === true));
 assert.ok(workItems.every((item) => !JSON.stringify(item).includes('private-source-id-')));
 
@@ -48,6 +48,18 @@ assert.ok(receipt.reconciliation.classification_counts.placeholder >= 1);
 assert.ok(receipt.reconciliation.classification_counts.commercial_candidate >= 1);
 assert.ok(receipt.reconciliation.classification_counts.internal_only_candidate >= 1);
 assert.ok(receipt.reconciliation.duplicate_name_groups.length >= 1);
+
+const falseAliasNames = new Set([
+  'Evercraft AI Suite',
+  'Evercraft HQ',
+  'Evercraft Emergency Command',
+  'Evercraft Earth Atlas',
+  'Evercraft WGS'
+]);
+const falseAliasRows = receipt.reconciliation.admission_queue.filter((row) => falseAliasNames.has(row.name));
+assert.equal(falseAliasRows.length, falseAliasNames.size);
+assert.ok(falseAliasRows.every((row) => row.classification === 'needs_review'));
+assert.ok(falseAliasRows.every((row) => row.classification !== 'likely_alias'));
 
 const serialized = JSON.stringify(receipt);
 assert.ok(!serialized.includes('private-source-id-'));
