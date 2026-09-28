@@ -315,6 +315,11 @@ test('Money Radar preserves aggregate first-touch last-touch campaign and surfac
   assert.equal(receipt.campaign_breakdown.find((row) => row.campaign === 'llm-discovery').unique_buyer_sessions, 1);
   assert.equal(receipt.surface_breakdown.find((row) => row.surface === 'answer-door').unique_buyer_sessions, 1);
   assert.equal(receipt.experiment_breakdown.find((row) => row.experiment_variant === 'offer-headline::b').unique_buyer_sessions, 1);
+  assert.equal(receipt.stage_latency.landing_to_offer.samples, 1);
+  assert.equal(receipt.stage_latency.landing_to_offer.p50_seconds, 60);
+  assert.equal(receipt.stage_latency.offer_to_continue.samples, 1);
+  assert.equal(receipt.stage_latency.offer_to_continue.p50_seconds, 60);
+  assert.equal(receipt.stage_latency.continue_to_checkout.samples, 0);
 });
 
 
