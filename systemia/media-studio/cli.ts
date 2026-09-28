@@ -28,6 +28,10 @@ import {
   compileVirtualProductionEpisode,
   type VirtualProductionEpisode,
 } from './virtual-production.js';
+import {
+  prepareHostPlate,
+  type HostPlatePrepInput,
+} from './host-plate.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -59,6 +63,7 @@ function usage() {
     '  npm run media:studio -- studio-room <room.json> <visual-stage.json>',
     '  npm run media:studio -- studio-journey <journey.json> <journey-plan.json>',
     '  npm run media:studio -- virtual-production <episode.json> <production-plan.json> [stage.html]',
+    '  npm run media:studio -- host-plate <prep.json> <receipt.json>',
   ].join('\n'));
 }
 
@@ -93,6 +98,20 @@ function main() {
     const journey = compileStudioJourney(journeyInput);
     writeJson(output, journey);
     console.log(`Studio journey created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'host-plate') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const request = readJson<HostPlatePrepInput>(input);
+    const receipt = prepareHostPlate(request);
+    writeJson(output, receipt);
+    console.log(`Host performance plate created: ${receipt.outputPath}`);
+    console.log(`Host plate receipt created: ${path.resolve(output)}`);
     return;
   }
 
