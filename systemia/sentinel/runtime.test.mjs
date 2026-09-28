@@ -27,6 +27,8 @@ const deviation = scoreAgainstBaseline(baseline, {
 
 assert.equal(deviation.result.baseline_ready, true);
 assert.ok(deviation.result.anomaly_score > 0.5);
+assert.equal(deviation.result.baseline_updated, false);
+assert.equal(deviation.result.baseline_update_reason, 'strong_deviation_frozen');
 
 const adapter = createFeedAdapter({
   adapter_id: 'test-public-infra',
@@ -50,6 +52,36 @@ assert.equal(adapted.region_key, 'zone-a');
 assert.equal(adapted.adapter_receipt.exact_coordinates_retained, false);
 assert.equal('lat' in adapted, false);
 assert.equal('long' in adapted, false);
+
+const boundedTrust = adapter({
+  id: 'row-untrusted',
+  timestamp: '2026-09-28T00:20:30Z',
+  kind: 'service-rate',
+  evidence_state: 'verified',
+  hazard_state: 'confirmed_hazard'
+}, {
+  region_key: 'zone-a',
+  anomaly_score: 1
+});
+assert.equal(boundedTrust.evidence_state, 'observed');
+assert.equal(boundedTrust.hazard_state, 'unknown');
+
+const officialAdapter = createFeedAdapter({
+  adapter_id: 'authorized-public-safety',
+  domain: 'emergency_report',
+  source_family: 'authorized-public-safety-feed',
+  evidence_state: 'verified',
+  reliability: 0.95,
+  authority: 'authorized_official'
+});
+const official = officialAdapter({
+  id: 'official-1',
+  timestamp: '2026-09-28T00:24:00Z',
+  kind: 'confirmed-hazard',
+  hazard_state: 'confirmed_hazard'
+}, { region_key: 'zone-a', anomaly_score: 1 });
+assert.equal(official.evidence_state, 'verified');
+assert.equal(official.hazard_state, 'confirmed_hazard');
 
 let state = emptyState();
 const observations = [
