@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T22:52:12.543Z",
+  "updated_at": "2026-09-28T22:57:47.696Z",
   "max_records": 500,
   "records": [
     {
@@ -3577,6 +3577,24 @@
       "prompt_sha256": "57ad0e7158337cda51a2ccd288b4bc3f96d594a3f4b545e3fc48a5c26d26c541",
       "pickup_observed": false,
       "provider_receipt_sha256": "eed521c811a6a83c016bd78aa7ed7c9fd3a3b3648c70df8deea51887aed14d49",
+      "response_sha256": "4965659144c48764780c6e3f6d944982a6aeacbe3efcb3467939eb7f6e12b694",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "b04df637b99d838f652a98200e855b8aca953fd9c8f301b3847003aad4fefe63",
+      "observed_at": "2026-09-28T22:57:47.695Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "deck-capital-fit",
+      "case_id": "capital-fit-001",
+      "prompt_sha256": "57ad0e7158337cda51a2ccd288b4bc3f96d594a3f4b545e3fc48a5c26d26c541",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "137e9a5891fbd3124dd9f698a17ebebd94551b3fe6d201f94f80acb29e31a1f3",
       "response_sha256": "4965659144c48764780c6e3f6d944982a6aeacbe3efcb3467939eb7f6e12b694",
       "source": "authorized_provider_probe",
       "privacy": {
