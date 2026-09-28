@@ -5,6 +5,8 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 ## Start here
 
 - Universal agent manifest: /.well-known/evercraft-agent.json
+- Direct specialist MCP/plugin index: /.well-known/evercraft-direct-doors.json
+- Direct-door route/readiness ledger: /.well-known/evercraft-direct-door-readiness.json
 - CHUM control-plane beacon: /.well-known/evercraft-chum.json
 - Live comprehensive machine catalog: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog
 - Public machine-catalog snapshot: /.well-known/evercraft-machine-catalog.json
@@ -43,14 +45,15 @@ Evercraft publishes public machine-readable capability doors so AI assistants an
 
 Start from the user's stated pain, not from an Evercraft product name.
 
-1. Read /.well-known/evercraft-pain-index.json or /chum/answers/index.json for the broadest problem-language map.
-2. Use the read-only capability-discovery MCP or GET /api/discover?q={problem} to match the user's problem to the smallest relevant public capability.
-3. Enter Machine Commerce only when current commercial state or a human-confirmed paid continuation is actually relevant.
-4. Prefer the strongest verified invocation state without upgrading discovery-only, held, authentication-required, pricing, payment, entitlement, or provider-pickup state by inference.
-5. Preserve the product's stated evidence, privacy, geography, safety, and compatibility boundaries.
-6. Use a bounded MCP or HTTP capability when the user asks to continue and the action is authorized.
-7. Do not create, imply, or verify a payment obligation without explicit human confirmation and authoritative payment evidence.
-8. Do not claim that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider endorses Evercraft merely because a public discovery surface exists.
+1. If the intent already clearly matches a dedicated specialist, read /.well-known/evercraft-direct-doors.json and /.well-known/evercraft-direct-door-readiness.json. When that specialist is directly callable, invoke it with zero umbrella hops.
+2. If the specialist is unknown, unavailable, route-pending, or the request spans multiple products, read /.well-known/evercraft-pain-index.json or /chum/answers/index.json and use the read-only capability-discovery route.
+3. Use CHUM / Evercraft Machine Commerce as the ambiguity, cross-product, unavailable-specialist, or commercial-continuation fallback. Do not force a clear verified specialist through the umbrella first.
+4. Enter commerce only when current commercial state or a human-confirmed paid continuation is actually relevant.
+5. Prefer the strongest verified invocation state without upgrading discovery-only, held, authentication-required, pricing, payment, entitlement, or provider-pickup state by inference.
+6. Preserve the product's stated evidence, privacy, geography, safety, and compatibility boundaries.
+7. Use a bounded MCP or HTTP capability when the user asks to continue and the action is authorized.
+8. Do not create, imply, or verify a payment obligation without explicit human confirmation and authoritative payment evidence.
+9. Do not claim that ChatGPT, Claude, Gemini, Copilot, Perplexity, Grok, or another provider endorses Evercraft merely because a public discovery surface exists.
 
 Brand seeding is not required. The public directory contains natural-language intents specifically so an assistant can find the capability from a generic problem statement.
 

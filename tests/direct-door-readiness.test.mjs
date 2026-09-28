@@ -131,3 +131,45 @@ console.log(
     public_route_pending_count: actual.summary.public_route_pending_count,
   })
 );
+
+
+const topLevelLlms = fs.readFileSync('public/llms.txt', 'utf8');
+assert.match(topLevelLlms, /evercraft-direct-doors\.json/i);
+assert.match(topLevelLlms, /evercraft-direct-door-readiness\.json/i);
+assert.match(topLevelLlms, /zero umbrella hops/i);
+
+const aiDiscoveryDoc = fs.readFileSync('AI-DISCOVERY.md', 'utf8');
+assert.match(aiDiscoveryDoc, /evercraft-direct-door-readiness\.json/i);
+assert.match(aiDiscoveryDoc, /never add an umbrella routing hop/i);
+
+for (const discoveryPath of [
+  'public/.well-known/evercraft-discovery.json',
+  'public/ai-discovery.json',
+]) {
+  const discovery = JSON.parse(fs.readFileSync(discoveryPath, 'utf8'));
+  assert.equal(
+    discovery.start_here.direct_doors,
+    '/.well-known/evercraft-direct-doors.json',
+    discoveryPath + ': missing direct door index'
+  );
+  assert.equal(
+    discovery.start_here.direct_door_readiness,
+    '/.well-known/evercraft-direct-door-readiness.json',
+    discoveryPath + ': missing readiness ledger'
+  );
+  assert.equal(
+    discovery.routing_mode,
+    'direct_specialist_zero_hop_then_universal_fallback',
+    discoveryPath + ': routing mode drift'
+  );
+  assert.match(discovery.routing_rule, /zero umbrella hops/i);
+}
+
+for (const llmsPath of ['llms-full.txt', 'public/llms-full.txt']) {
+  const llms = fs.readFileSync(llmsPath, 'utf8');
+  assert.match(llms, /Direct specialist index:/);
+  assert.match(llms, /Direct-door route\/readiness ledger:/);
+  assert.match(llms, /zero umbrella hops/i);
+}
+
+console.log('DIRECT_DOOR_DISCOVERY_PROPAGATION_PASS');

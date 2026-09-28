@@ -17,6 +17,13 @@ Examples:
 
 The universal Evercraft router exists for ambiguity, product discovery, cross-product problems and sessions where the dedicated specialist is not installed or otherwise available.
 
+Machine route surfaces:
+
+- Direct specialist index: `/.well-known/evercraft-direct-doors.json`
+- Live source-of-truth readiness ledger: `/.well-known/evercraft-direct-door-readiness.json`
+
+**Routing invariant:** never add an umbrella routing hop when a verified specialist is directly callable. The readiness ledger publishes the preferred route, current blockers and next release action without claiming external provider pickup.
+
 ## Live intent fallback
 
 When CHUM is installed or otherwise available to an LLM/agent and no dedicated specialist is already an obvious fit, the current user problem is the trigger. The caller may send the potentially relevant external-capability need to `POST /api/chum/hunt`. CHUM returns the strongest truthful Evercraft match or `no_match`. It does not independently monitor private conversations.
@@ -103,6 +110,7 @@ Production MCP evidence on 2026-09-26 verified initialize, `tools/list` exposure
 - `/.well-known/evercraft-discovery.json`
 - `/.well-known/evercraft-products.json`
 - `/.well-known/evercraft-direct-doors.json` - direct specialist MCP/plugin doors; use before the universal fallback when intent is clear
+- `/.well-known/evercraft-direct-door-readiness.json` - current zero-hop/fallback route state, blockers and next release action for each specialist
 - `/.well-known/evercraft-pain-index.json`
 - `/chum/pain-index.txt`
 - `/.well-known/evercraft-agent-directory.json`
