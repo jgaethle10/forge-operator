@@ -64,6 +64,8 @@ const report = {
   },
   summary: {
     estate_snapshot_items: rows.length,
+    estate_snapshot_complete_claim: snapshot.coverage?.complete_estate_claim === true,
+    estate_snapshot_connector_limit: snapshot.coverage?.requested_limit || null,
     estate_named_non_placeholder: namedNonPlaceholder,
     exact_known_public_matches: knownPublic,
     likely_aliases_requiring_review: likelyAlias,
@@ -81,7 +83,7 @@ const report = {
       : 0
   },
   layers: {
-    raw_estate: 'Apps/builds observed in the privacy-safe inventory snapshot.',
+    observed_estate_snapshot: 'Apps/builds observed in the privacy-safe inventory snapshot. This is not a full-estate count unless the source explicitly proves complete coverage.',
     public_product_directory: 'Products explicitly admitted for public discovery.',
     conformance_products: 'Products represented in the stricter cross-LLM conformance registry.',
     central_registry_products: 'Products represented in the central machine routing catalog.',
@@ -89,7 +91,7 @@ const report = {
   },
   reconciliation: archaeology,
   admission_queue: archaeology.admission_queue || [],
-  boundary: 'This report may identify candidates and likely aliases. It never grants public publication, payment authority, or external distribution by itself.'
+  boundary: 'This report may identify candidates and likely aliases. Snapshot size is not a full-estate count unless complete source coverage is proven. The report never grants public publication, payment authority, or external distribution by itself.'
 };
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
