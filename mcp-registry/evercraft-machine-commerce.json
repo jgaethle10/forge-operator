@@ -10,5 +10,9 @@
       "type": "streamable-http",
       "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
     }
-  ]
+  ],
+  "repository": {
+    "url": "https://github.com/jgaethle10/forge-operator",
+    "source": "github"
+  }
 }
