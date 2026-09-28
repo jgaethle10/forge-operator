@@ -4,41 +4,176 @@
   "purpose": "Seed registry for nationwide observed EV charging-session acquisition. Candidate status does not imply licensing, access, or site-level session availability.",
   "canonical_entity": "EVObservedUsageAggregate",
   "existing_domestic_ingestors": [
-    {"jurisdiction":"NY","adapter":"ingestNYCPlugNYCObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"NC","adapter":"ingestCaryObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"CO","adapter":"ingestBoulderObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"},
-    {"jurisdiction":"CA","adapter":"ingestPaloAltoObservedUsage","status":"wired","evidence_class":"public_observed_aggregate"}
+    {
+      "jurisdiction": "NY",
+      "adapter": "ingestNYCPlugNYCObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "NC",
+      "adapter": "ingestCaryObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "CO",
+      "adapter": "ingestBoulderObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    },
+    {
+      "jurisdiction": "CA",
+      "adapter": "ingestPaloAltoObservedUsage",
+      "status": "wired",
+      "evidence_class": "public_observed_aggregate"
+    }
   ],
   "national_candidates": [
     {
-      "name":"Joint Office EV-ChART",
-      "lane":"federal-funded-publication",
-      "status":"restricted_raw_public_aggregates_available",
-      "notes":"Quarterly charging-session data are collected for federally funded infrastructure. Raw portal access is limited to funding recipients/authorized parties; public outputs are aggregated/anonymized. Hunt state recipient publications and public reports, not restricted raw records."
+      "name": "Joint Office EV-ChART",
+      "lane": "federal-funded-publication",
+      "status": "restricted_raw_public_aggregates_available",
+      "notes": "Quarterly charging-session data are collected for federally funded infrastructure. Raw portal access is limited to funding recipients/authorized parties; public outputs are aggregated/anonymized. Hunt state recipient publications and public reports, not restricted raw records."
     },
     {
-      "name":"DOE Livewire / EV WATTS",
-      "lane":"federal-funded-publication",
-      "status":"candidate",
-      "notes":"Nationwide real-world EVSE dataset and analytics include sessions, utilization and energy. Verify current downloadable geographic resolution and reuse terms before ingest."
+      "name": "DOE Livewire / EV WATTS",
+      "lane": "federal-funded-publication",
+      "status": "HIGH_VALUE_ACCESS_AND_LICENSE_GATE",
+      "notes": "Federal/public national EV charging resource. OpenEnergyHub metadata currently exposes no explicit dataset license and its record API is not publicly queryable; project materials say a free LiveWire account is used to download. Do not bypass access controls or assume commercial redistribution rights. Resolve dataset-specific license/access before commercial RIVET ingest."
     },
     {
-      "name":"California Energy Commission funded-project reporting",
-      "lane":"grant-project-reports",
-      "status":"candidate_with_confidentiality_boundary",
-      "notes":"CEC-funded projects submit detailed utilization/session data. Individual-charger utilization may be confidential, but public grant/project reports can contain publishable site/project aggregates."
+      "name": "California Energy Commission funded-project reporting",
+      "lane": "grant-project-reports",
+      "status": "candidate_with_confidentiality_boundary",
+      "notes": "CEC-funded projects submit detailed utilization/session data. Individual-charger utilization may be confidential, but public grant/project reports can contain publishable site/project aggregates."
     },
     {
-      "name":"Stable Auto",
-      "lane":"licensed-utilization-provider",
-      "status":"commercial_candidate",
-      "notes":"Markets nationwide utilization intelligence based on real charging operating data. Requires commercial evaluation and explicit purchasing authority before any paid integration."
+      "name": "Stable Auto",
+      "lane": "licensed-utilization-provider",
+      "status": "commercial_candidate",
+      "notes": "Markets nationwide utilization intelligence based on real charging operating data. Requires commercial evaluation and explicit purchasing authority before any paid integration."
     },
     {
-      "name":"AFDC charging-network directory",
-      "lane":"operator-utility-public",
-      "status":"lead_generator_only",
-      "notes":"Strong national inventory/network directory for identifying operators and station IDs. Inventory is not session telemetry and must never be promoted to observed usage."
+      "name": "AFDC charging-network directory",
+      "lane": "operator-utility-public",
+      "status": "lead_generator_only",
+      "notes": "Strong national inventory/network directory for identifying operators and station IDs. Inventory is not session telemetry and must never be promoted to observed usage."
+    },
+    {
+      "name": "Seattle SDOT EVCROW Evaluation Report",
+      "lane": "operator-utility-public",
+      "jurisdiction": "WA",
+      "status": "adapter_candidate_high",
+      "evidence_class": "public_observed_site_aggregate",
+      "source_url": "https://www.seattle.gov/Documents/Departments/SDOT/NewMobilityProgram/EVCROW_Evaluation_Report.pdf",
+      "notes": "Official Seattle report publishes monthly observed session counts and kWh for two Seattle City Light DC fast chargers on the 2500 block of 16th Ave S near Beacon Hill station for 2018. Site is block-resolved rather than exact charger GPS. Strong immediate RIVET ingest candidate with block-level spatial precision disclosure."
+    },
+    {
+      "name": "Austin Energy FY2026 Q1 EV Charging Network",
+      "lane": "operator-utility-public",
+      "jurisdiction": "TX",
+      "status": "network_aggregate_supporting_only",
+      "evidence_class": "public_observed_network_aggregate",
+      "source_url": "https://services.austintexas.gov/edims/document.cfm?id=469215",
+      "notes": "Current public Austin Energy reporting publishes monthly network session totals, average energy dispensed and charging-time context. Useful market evidence, but not site-resolved and therefore does not satisfy RIVET observed-session coverage for a specific address."
+    },
+    {
+      "name": "ACN-Data",
+      "lane": "grant-project-reports",
+      "jurisdiction": "CA",
+      "status": "commercial_use_blocked_by_current_terms",
+      "evidence_class": "public_session_level_research_only",
+      "source_url": "https://ev.caltech.edu/dataset",
+      "notes": "Excellent session-level fields and site IDs, but registration terms state educational and research use only. Do not ingest into commercial RIVET reports without separate permission or changed terms."
+    },
+    {
+      "name": "Seattle EVCROW Beacon Hill DCFC",
+      "lane": "operator-utility-public",
+      "jurisdiction": "WA",
+      "status": "site_level_observed_ready_for_adapter",
+      "evidence_class": "public_observed_site_aggregate",
+      "source_url": "https://www.seattle.gov/Documents/Departments/SDOT/NewMobilityProgram/EVCROW_Evaluation_Report.pdf",
+      "notes": "Monthly 2018 values: sessions [22,63,80,93,121,80,180,129,130,145,178,200]; kWh [130,721,946,1083,1309,796,1826,1499,1638,1543,1861,2155]. Official report states 3.2 average sessions/day across the period."
     }
-  ]
+  ],
+  "live_ingest_receipts": [
+    {
+      "id": "paloalto-official-chargepoint-history",
+      "jurisdiction": "CA",
+      "rows_spatial": 675,
+      "physical_site_families": 9,
+      "observed_sessions": 279512,
+      "status": "INGESTED",
+      "precision": "source coordinates",
+      "source_integrity": "official source download SHA-256 matched pinned digest"
+    },
+    {
+      "id": "boulder-official-city-sessions",
+      "jurisdiction": "CO",
+      "rows_spatial": 1590,
+      "station_ids": 50,
+      "observed_sessions": 148354,
+      "status": "INGESTED",
+      "precision": "source/same-station/address-resolved coordinates",
+      "note": "Missing historical coordinates were recovered only from same-station anchors or independently resolved site addresses."
+    },
+    {
+      "id": "cary-official-public-sessions",
+      "jurisdiction": "NC",
+      "rows_spatial": 264,
+      "physical_sites": 6,
+      "observed_sessions": 20142,
+      "status": "INGESTED",
+      "precision": "official physical address + bounded geocode"
+    },
+    {
+      "id": "seattle-evcrow-2018",
+      "jurisdiction": "WA",
+      "rows_spatial": 12,
+      "physical_site_groups": 1,
+      "observed_sessions": 1421,
+      "status": "INGESTED",
+      "precision": "block-level spatial anchor",
+      "note": "Official report combines two DC fast chargers on the 2500 block of 16th Ave S. Do not represent the anchor as exact charger GPS."
+    },
+    {
+      "id": "nyc-plugnyc-historical-spatial-backfill",
+      "jurisdiction": "NY",
+      "rows_total": 3584,
+      "rows_spatial": 3571,
+      "unresolved_rows": 13,
+      "observed_sessions_spatial": 255192,
+      "status": "INGESTED_AND_SPATIALLY_RECOVERED",
+      "precision": "municipal facility aliases mapped to verified facility anchors",
+      "note": "13 rows remain unresolved because the source location is N/A. They stay dark."
+    },
+    {
+      "id": "nyc-plugnyc-2026-08-site-layer",
+      "jurisdiction": "NY",
+      "rows_spatial": 9,
+      "physical_sites": 9,
+      "observed_sessions": 4977,
+      "status": "INGESTED_OVERLAPPING_SITE_VIEW",
+      "precision": "facility-address geocoded",
+      "note": "This site-level August 2026 layer overlaps underlying PlugNYC session history and is excluded from the conservative non-overlap session total."
+    }
+  ],
+  "live_coverage_baseline": {
+    "accepted_spatial_site_period_rows_including_overlapping_site_view": 6121,
+    "accepted_spatial_site_period_rows_conservative_nonoverlap": 6112,
+    "observed_sessions_represented_conservative_nonoverlap": 704621,
+    "active_us_jurisdiction_lanes": [
+      "CA",
+      "CO",
+      "NC",
+      "WA",
+      "NY"
+    ],
+    "jurisdiction_count": 5,
+    "unresolved_source_rows": 13,
+    "unresolved_reason": "NYC source location is N/A; geography intentionally not invented.",
+    "physical_site_count_note": "Do not infer physical-site count from station_external_id across schemas because some historical sources use charge-box IDs or site-family IDs.",
+    "as_of": "2026-09-26T23:30:00Z"
+  }
 }
