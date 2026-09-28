@@ -59,7 +59,7 @@ const endpoints:VisualModelEndpoint[]=[
     capabilities:[{
       task:'video',
       inputModes:['text','image_reference'],
-      requirements:['reference_identity','commercial_rights','provenance_receipt'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
       aspectRatios:['16:9'],
       maxDurationSec:10,
       maxReferences:3,
@@ -149,7 +149,10 @@ test('reference identity fails closed when no identity reference is supplied',()
   const plan=buildVisualModelPlan({...request,references:[]},endpoints);
   assert.equal(plan.status,'blocked');
   assert.equal(plan.jobs.length,0);
-  assert.ok(plan.rejectedModels.every(row=>row.reasons.some(reason=>reason.includes('identity_reference_missing'))||row.reasons.includes('endpoint_not_verified')));
+  const videoModelIds=new Set(['cinema-a','cinema-b','cinema-c']);
+  const videoRejections=plan.rejectedModels.filter(row=>videoModelIds.has(row.modelId));
+  assert.equal(videoRejections.length,3);
+  assert.ok(videoRejections.every(row=>row.reasons.includes('identity_reference_missing')));
 });
 
 test('native audio requirement narrows routing to a capable model',()=>{
