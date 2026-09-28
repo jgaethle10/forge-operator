@@ -322,6 +322,10 @@ async function main() {
 
   const local = inspectLocalPortfolio({ rootDir });
   const humanExperience = loadHumanExperienceFindings(rootDir);
+  const estateConvergence = loadJson(
+    path.join(rootDir, 'artifacts/portfolio-sentinel/estate-convergence.json'),
+    null
+  );
   const findings = [...local.findings, ...humanExperience.findings];
   const network = { url_probes: [], github: null };
   let scanned = local.scanned + Number(humanExperience.receipt?.summary?.surfaces || 0);
@@ -416,12 +420,20 @@ async function main() {
       matched_repair_recipes: activeFindings.filter((row) => row.repair_recipe?.recipe_id).length,
       human_experience_surfaces: Number(humanExperience.receipt?.summary?.surfaces || 0),
       human_experience_findings: Number(humanExperience.receipt?.summary?.findings || 0),
-      human_experience_browser_blocked: humanExperience.receipt?.summary?.browser_visual_blocked ?? null
+      human_experience_browser_blocked: humanExperience.receipt?.summary?.browser_visual_blocked ?? null,
+      estate_snapshot_items: estateConvergence?.summary?.estate_snapshot_items ?? null,
+      estate_named_non_placeholder: estateConvergence?.summary?.estate_named_non_placeholder ?? null,
+      public_product_directory: estateConvergence?.summary?.public_product_directory ?? null,
+      conformance_products: estateConvergence?.summary?.conformance_products ?? null,
+      central_registry_products: estateConvergence?.summary?.central_registry_products ?? null,
+      mcp_registry_published: estateConvergence?.summary?.mcp_registry_published ?? null,
+      estate_admission_queue: estateConvergence?.summary?.admission_queue ?? null
     },
     inventory: {
       ...local.inventory,
       github: network.github,
-      human_experience: humanExperience.receipt?.summary || null
+      human_experience: humanExperience.receipt?.summary || null,
+      estate_convergence: estateConvergence?.summary || null
     },
     local_checks: local.checks,
     network,
@@ -441,6 +453,8 @@ async function main() {
       repair_recipe_memory: recipeRegistryResult.ok ? 'loaded' : 'invalid',
       human_experience_gate: 'saban_static_evidence_plus_owned_browser_receipts',
       blocked_human_experience_never_counts_as_pass: true,
+      estate_inventory_not_publication: true,
+      product_count_layers_must_remain_distinct: true,
       production_mutation_requires_human_gate: true,
       payment_mutation_requires_human_gate: true,
       external_outreach_requires_human_gate: true
