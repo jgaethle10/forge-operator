@@ -279,3 +279,123 @@ test('raw message body is never stored in ledger events', () => {
 
   fs.rmSync(root, { recursive: true, force: true });
 });
+
+
+test('approved outbound contact gets a single-use permit bound to the exact message', () => {
+  const { root, passport, ledger } = setup();
+  grantEmail(passport);
+
+  const prepared = ledger.prepareContactPermit({
+    subject_ref: 'contact:acme',
+    channel: 'email',
+    actor_ref: 'agent:relationship-assistant',
+    content: 'Here is the exact approved follow-up.',
+    at: '2026-09-27T18:00:00Z',
+    minimum_cooldown_minutes: 0,
+    permit_id: 'permit_contact_once',
+    permit_idempotency_key: 'permit:contact:once',
+    permit_ttl_seconds: 300,
+  });
+
+  assert.equal(prepared.state, 'permit_minted');
+  assert.equal(prepared.preflight.decision, 'allow');
+  assert.equal(prepared.permit.single_use, true);
+  assert.equal(prepared.send_performed, false);
+
+  const finalized = ledger.finalizePermittedContact({
+    permit_id: 'permit_contact_once',
+    permit_consumption_idempotency_key: 'consume:contact:once',
+    interaction_idempotency_key: 'event:permitted:outbound:1',
+    subject_ref: 'contact:acme',
+    channel: 'email',
+    actor_ref: 'agent:relationship-assistant',
+    content_fingerprint: prepared.preflight.signals.content_fingerprint,
+    provider_evidence_ref: 'mail:provider:accepted:001',
+    occurred_at: '2026-09-27T18:01:00Z',
+  });
+
+  assert.equal(finalized.state, 'finalized');
+  assert.equal(finalized.outbound_recorded, true);
+
+  assert.throws(
+    () =>
+      ledger.finalizePermittedContact({
+        permit_id: 'permit_contact_once',
+        permit_consumption_idempotency_key: 'consume:contact:replay',
+        interaction_idempotency_key: 'event:permitted:outbound:replay',
+        subject_ref: 'contact:acme',
+        channel: 'email',
+        actor_ref: 'agent:relationship-assistant',
+        content_fingerprint: prepared.preflight.signals.content_fingerprint,
+        provider_evidence_ref: 'mail:provider:accepted:replay',
+        occurred_at: '2026-09-27T18:02:00Z',
+      }),
+    /permit_already_consumed/
+  );
+
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('denied contact preflight never mints an action permit', () => {
+  const { root, passport, ledger } = setup();
+  grantEmail(passport);
+
+  ledger.recordEvent({
+    idempotency_key: 'event:optout:permit',
+    subject_ref: 'contact:acme',
+    channel: 'email',
+    direction: 'inbound',
+    event_type: 'opt_out',
+    evidence_ref: 'mail:thread:optout',
+    occurred_at: '2026-09-27T17:00:00Z',
+  });
+
+  const prepared = ledger.prepareContactPermit({
+    subject_ref: 'contact:acme',
+    channel: 'email',
+    actor_ref: 'agent:relationship-assistant',
+    content: 'This should never receive a permit.',
+    at: '2026-09-27T18:00:00Z',
+    permit_idempotency_key: 'permit:must-not-exist',
+  });
+
+  assert.equal(prepared.state, 'denied');
+  assert.equal(prepared.permit, null);
+  assert.ok(prepared.preflight.reasons.includes('channel_opted_out'));
+
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('changing approved message content causes permit consumption to fail', () => {
+  const { root, passport, ledger } = setup();
+  grantEmail(passport);
+
+  const prepared = ledger.prepareContactPermit({
+    subject_ref: 'contact:acme',
+    channel: 'email',
+    actor_ref: 'agent:relationship-assistant',
+    content: 'Approved copy',
+    at: '2026-09-27T18:00:00Z',
+    minimum_cooldown_minutes: 0,
+    permit_id: 'permit_exact_copy',
+    permit_idempotency_key: 'permit:exact-copy',
+  });
+
+  assert.throws(
+    () =>
+      ledger.finalizePermittedContact({
+        permit_id: 'permit_exact_copy',
+        permit_consumption_idempotency_key: 'consume:altered-copy',
+        interaction_idempotency_key: 'event:altered-copy',
+        subject_ref: 'contact:acme',
+        channel: 'email',
+        actor_ref: 'agent:relationship-assistant',
+        content_fingerprint: 'sha256:' + '9'.repeat(64),
+        provider_evidence_ref: 'mail:provider:altered',
+        occurred_at: '2026-09-27T18:01:00Z',
+      }),
+    /permit_request_fingerprint_mismatch/
+  );
+
+  fs.rmSync(root, { recursive: true, force: true });
+});
