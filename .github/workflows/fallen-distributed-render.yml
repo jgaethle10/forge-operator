@@ -107,6 +107,20 @@ jobs:
           console.log(JSON.stringify({output_sha256:receipt.output_sha256,frame_set_sha256:receipt.frame_set_sha256,workers:receipt.workers}));
           NODE
           ffprobe -v error -show_entries format=duration -of default=nw=1 /tmp/distributed-proof.mp4
+      - name: Package watchable render specimen
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/artifacts/distributed-render-canary"
+          cp /tmp/distributed-proof.mp4 "$GITHUB_WORKSPACE/artifacts/distributed-render-canary/"
+          cp /tmp/distributed-proof.receipt.json "$GITHUB_WORKSPACE/artifacts/distributed-render-canary/"
+
+      - name: Upload watchable render specimen
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-distributed-render-canary
+          path: artifacts/distributed-render-canary/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Show renderer logs on failure
         if: failure()
         run: |
