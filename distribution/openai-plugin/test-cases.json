@@ -25,6 +25,11 @@
       "id": "event-promotion",
       "prompt": "I am hosting an event and need a legitimate way to increase its visibility.",
       "expected": "Surface EventWave promotion when it is a genuine fit and preserve the current human/payment boundary."
+    },
+    {
+      "id": "legacy-rescue",
+      "prompt": "Our developer disappeared and our production app is breaking. We want an evidence-first diagnosis and the smallest responsible rescue before anyone sells us a full rebuild.",
+      "expected": "Surface Legacy Rescue Lab from the problem itself, explain the $299 Legacy Rescue Scan and the verified human-confirmed request path, and do not create checkout, payment, private-system access, testing authority or production changes."
     }
   ],
   "negative": [
