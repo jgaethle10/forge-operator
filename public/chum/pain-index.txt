@@ -2,9 +2,9 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 106
+Entries: 107
 Product entries: 61
-Machine-offer entries: 45
+Machine-offer entries: 46
 Sell-now machine offers: 13
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
@@ -712,6 +712,34 @@ Problem: Large public or authorized document productions are expensive to index,
 Outputs: Corpus ingestion, subdocument mapping, deduplication, evidence index and review packets with provenance.
 Confirmation boundary: Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.
 Invocation status: Discoverable capability; upload/payment disabled pending rights/security verification.
+
+## Legacy Rescue Lab
+Capability ID: offer:legacy-rescue-lab-v1
+Commercial state: verification_required
+Machine state: human_handoff_ready
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.
+Use when the user means:
+- my checkout is broken and customers cannot buy
+- our developer disappeared and nobody knows how this codebase works
+- our website or app is old but rebuilding from scratch is too risky
+- customers cannot submit our lead form
+- our website is painfully slow on mobile
+- we inherited a messy codebase and are afraid to touch it
+- an AI agency built our app and now it is unreliable or undocumented
+- our SaaS works but barely and we need to stabilize it
+- we need to migrate off an old platform without losing business behavior
+- repair an existing system instead of replacing it
+- find publicly observable conversion leaks before we pay for a rebuild
+- broken checkout repair
+- abandoned codebase rescue
+- failed AI app repair
+- legacy software rescue
+Problem: A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.
+Outputs: Observed failure inventory, evidence references, known-versus-unknown boundary, prioritized repair hypotheses, preserved-value map, and the smallest responsible next-step recommendation.
+Confirmation boundary: Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.
+Invocation status: PUBLIC DISCOVERY READY: Legacy Rescue Lab is represented in the Evercraft machine catalog for problem-first matching and read-only offer inspection. The $299 Rescue Scan is a published commercial contract, but direct checkout remains independently unverified and is not exposed through machine commerce.
 
 ## Book Export QA
 Capability ID: offer:littlered-kdp-export-qa-machine-v1

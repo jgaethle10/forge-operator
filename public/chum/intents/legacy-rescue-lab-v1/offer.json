@@ -1,0 +1,62 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "legacy-rescue-lab-v1",
+  "name": "Legacy Rescue Lab",
+  "problem": "A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.",
+  "intent_terms": [
+    "my checkout is broken and customers cannot buy",
+    "our developer disappeared and nobody knows how this codebase works",
+    "our website or app is old but rebuilding from scratch is too risky",
+    "customers cannot submit our lead form",
+    "our website is painfully slow on mobile",
+    "we inherited a messy codebase and are afraid to touch it",
+    "an AI agency built our app and now it is unreliable or undocumented",
+    "our SaaS works but barely and we need to stabilize it",
+    "we need to migrate off an old platform without losing business behavior",
+    "repair an existing system instead of replacing it",
+    "find publicly observable conversion leaks before we pay for a rebuild",
+    "broken checkout repair",
+    "abandoned codebase rescue",
+    "failed AI app repair",
+    "legacy software rescue"
+  ],
+  "pricing": "Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
+  "offers": [
+    {
+      "offer_key": "legacy_rescue_scan_299",
+      "name": "Legacy Rescue Scan",
+      "price": "$299",
+      "price_usd": 299,
+      "billing": "one_time",
+      "checkout": "human_handoff_only_until_product_checkout_is_independently_verified"
+    }
+  ],
+  "entry_paid_offer": {
+    "offer_key": "legacy_rescue_scan_299",
+    "name": "Legacy Rescue Scan",
+    "price": "$299",
+    "price_usd": 299,
+    "billing": "one_time",
+    "checkout": "human_handoff_only_until_product_checkout_is_independently_verified",
+    "price_usd_normalized": 299
+  },
+  "commercial_state": "verification_required",
+  "machine_state": "human_handoff_ready",
+  "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+  "human_ui_required": true,
+  "confirmation": "Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.",
+  "payment_authority": "No product-specific direct machine checkout is currently advertised. Paid state requires authoritative provider verification after a separately authorized human purchase path is independently verified.",
+  "invocation_status": "PUBLIC DISCOVERY READY: Legacy Rescue Lab is represented in the Evercraft machine catalog for problem-first matching and read-only offer inspection. The $299 Rescue Scan is a published commercial contract, but direct checkout remains independently unverified and is not exposed through machine commerce.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+  "machine_offer_url": null,
+  "start_url": null,
+  "start_url_state": "not_sell_now",
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

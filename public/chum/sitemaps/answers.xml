@@ -6,6 +6,8 @@
   <url><loc>/chum/answers/doors/4-hour-video-analysis-b25c640591/</loc></url>
   <url><loc>/chum/answers/doors/abandoned-codebase-0b031fae30.json</loc></url>
   <url><loc>/chum/answers/doors/abandoned-codebase-0b031fae30/</loc></url>
+  <url><loc>/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json</loc></url>
+  <url><loc>/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f/</loc></url>
   <url><loc>/chum/answers/doors/account-takeover-protection-6a5072fc31.json</loc></url>
   <url><loc>/chum/answers/doors/account-takeover-protection-6a5072fc31/</loc></url>
   <url><loc>/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json</loc></url>
@@ -148,6 +150,8 @@
   <url><loc>/chum/answers/doors/boost-this-event-02f04ebd41/</loc></url>
   <url><loc>/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5.json</loc></url>
   <url><loc>/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/</loc></url>
+  <url><loc>/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json</loc></url>
+  <url><loc>/chum/answers/doors/broken-checkout-repair-aaf4ff756b/</loc></url>
   <url><loc>/chum/answers/doors/broken-lead-form-261baa60c4.json</loc></url>
   <url><loc>/chum/answers/doors/broken-lead-form-261baa60c4/</loc></url>
   <url><loc>/chum/answers/doors/browser-automation-api-0925c49aa4.json</loc></url>
@@ -516,6 +520,8 @@
   <url><loc>/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f/</loc></url>
   <url><loc>/chum/answers/doors/extract-readable-text-from-a-web-page-for-an-llm-d2532adcf6.json</loc></url>
   <url><loc>/chum/answers/doors/extract-readable-text-from-a-web-page-for-an-llm-d2532adcf6/</loc></url>
+  <url><loc>/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json</loc></url>
+  <url><loc>/chum/answers/doors/failed-ai-app-repair-cb7497ef5b/</loc></url>
   <url><loc>/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5.json</loc></url>
   <url><loc>/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5/</loc></url>
   <url><loc>/chum/answers/doors/family-check-in-safety-90b9db7865.json</loc></url>
@@ -934,6 +940,8 @@
   <url><loc>/chum/answers/doors/learn-physics-interactively-e71c8a1db5/</loc></url>
   <url><loc>/chum/answers/doors/legacy-platform-migration-5f5d0cb41c.json</loc></url>
   <url><loc>/chum/answers/doors/legacy-platform-migration-5f5d0cb41c/</loc></url>
+  <url><loc>/chum/answers/doors/legacy-software-rescue-9cd924f010.json</loc></url>
+  <url><loc>/chum/answers/doors/legacy-software-rescue-9cd924f010/</loc></url>
   <url><loc>/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6.json</loc></url>
   <url><loc>/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6/</loc></url>
   <url><loc>/chum/answers/doors/let-an-ai-act-on-business-systems-safely-75cb05b2ed.json</loc></url>

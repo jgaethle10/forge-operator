@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-26T04:35:00.000Z",
+  "updated_at": "2026-09-28T18:43:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 106,
-    "unique_user_phrases": 897,
-    "mapped_candidate_edges": 991,
-    "ambiguous_phrases": 94,
+    "pain_index_entries": 107,
+    "unique_user_phrases": 901,
+    "mapped_candidate_edges": 1006,
+    "ambiguous_phrases": 105,
     "product_candidates": 61,
-    "machine_offer_candidates": 45
+    "machine_offer_candidates": 46
   },
   "doors": [
     {
@@ -92,6 +92,29 @@
           "commercial_state": "product_contract",
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:07e27eb24f",
+      "user_language": "abandoned codebase rescue",
+      "normalized": "abandoned codebase rescue",
+      "relative_json": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json",
+      "relative_page": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
@@ -703,8 +726,20 @@
       "relative_json": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
       "relative_page": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -1797,6 +1832,29 @@
           "commercial_state": "product_contract",
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/legacy-rescue-lab/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:aaf4ff756b",
+      "user_language": "broken checkout repair",
+      "normalized": "broken checkout repair",
+      "relative_json": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json",
+      "relative_page": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
           "registry_name": null
         }
@@ -4713,8 +4771,20 @@
       "relative_json": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json",
       "relative_page": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -6299,6 +6369,29 @@
       ]
     },
     {
+      "answer_id": "intent:cb7497ef5b",
+      "user_language": "failed AI app repair",
+      "normalized": "failed ai app repair",
+      "relative_json": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json",
+      "relative_page": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5b4d9ef6a5",
       "user_language": "failed AI-built application",
       "normalized": "failed ai built application",
@@ -7560,8 +7653,20 @@
       "relative_json": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json",
       "relative_page": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -11310,6 +11415,29 @@
       ]
     },
     {
+      "answer_id": "intent:9cd924f010",
+      "user_language": "legacy software rescue",
+      "normalized": "legacy software rescue",
+      "relative_json": "/chum/answers/doors/legacy-software-rescue-9cd924f010.json",
+      "relative_page": "/chum/answers/doors/legacy-software-rescue-9cd924f010/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/legacy-software-rescue-9cd924f010.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:643af72cd6",
       "user_language": "legacy website or app modernization",
       "normalized": "legacy website or app modernization",
@@ -12736,8 +12864,20 @@
       "relative_json": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json",
       "relative_page": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -13267,8 +13407,20 @@
       "relative_json": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json",
       "relative_page": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -13313,8 +13465,20 @@
       "relative_json": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json",
       "relative_page": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -13359,8 +13523,20 @@
       "relative_json": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json",
       "relative_page": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -13382,8 +13558,20 @@
       "relative_json": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json",
       "relative_page": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -15444,8 +15632,20 @@
       "relative_json": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json",
       "relative_page": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -20550,8 +20750,20 @@
       "relative_json": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json",
       "relative_page": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",
@@ -20619,8 +20831,20 @@
       "relative_json": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json",
       "relative_page": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:legacy-rescue-lab-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "legacy-rescue-lab-v1",
+          "name": "Legacy Rescue Lab",
+          "commercial_state": "verification_required",
+          "machine_state": "human_handoff_ready",
+          "pain_page": "/chum/intents/legacy-rescue-lab-v1/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+          "registry_name": null
+        },
         {
           "capability_id": "product:legacy-rescue-lab",
           "kind": "product",

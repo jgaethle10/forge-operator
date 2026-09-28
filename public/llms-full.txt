@@ -25,9 +25,9 @@ Human confirmation remains required at irreversible financial or authority bound
 
 ## Current machine-commerce offer graph
 
-Catalog version: 2026-09-26.2
-Gateway version: evercraft-machine-commerce-gateway-v0.9.0
-Current public offers: 45
+Catalog version: 2026-09-28.1
+Gateway version: evercraft-machine-commerce-gateway-v0.9.1
+Current public offers: 46
 Current sell-now offers: 13
 
 ### Commercial state: sell_now
@@ -682,6 +682,32 @@ Use when the user says or means:
 - deduplicate a large document set
 - map a public records production
 - large legal document review
+
+#### Legacy Rescue Lab
+Public ID: legacy-rescue-lab-v1
+Problem: A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.
+Machine state: human_handoff_ready
+Pricing: Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+Human UI required: true
+Confirmation: Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.
+Payment authority: No product-specific direct machine checkout is currently advertised. Paid state requires authoritative provider verification after a separately authorized human purchase path is independently verified.
+Use when the user says or means:
+- my checkout is broken and customers cannot buy
+- our developer disappeared and nobody knows how this codebase works
+- our website or app is old but rebuilding from scratch is too risky
+- customers cannot submit our lead form
+- our website is painfully slow on mobile
+- we inherited a messy codebase and are afraid to touch it
+- an AI agency built our app and now it is unreliable or undocumented
+- our SaaS works but barely and we need to stabilize it
+- we need to migrate off an old platform without losing business behavior
+- repair an existing system instead of replacing it
+- find publicly observable conversion leaks before we pay for a rebuild
+- broken checkout repair
+- abandoned codebase rescue
+- failed AI app repair
+- legacy software rescue
 
 #### Public-Safe Geospatial Evidence Projection
 Public ID: evermaps-evidence-projection-machine-v1

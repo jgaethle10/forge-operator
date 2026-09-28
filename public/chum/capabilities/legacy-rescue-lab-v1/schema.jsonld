@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab#evercraft-capability",
+      "name": "Legacy Rescue Lab",
+      "description": "A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "legacy-rescue-lab-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Legacy Rescue Lab | Evercraft capability",
+      "description": "A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.",
+      "about": {
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab#evercraft-capability"
+      }
+    }
+  ]
+}
