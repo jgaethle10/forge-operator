@@ -6,8 +6,8 @@
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6ab9ad1477304adfa9c7de3d",
-    "checkpoint_commit": "32c6a489e31d6141cad0777da075de573dcd9f4d",
+    "checkpoint_id": "6ab9afb6eaaa828270ca2f47",
+    "checkpoint_commit": "807e02aeb62ba47a3d297d133228413c25ada7a1",
     "public_url": null,
     "publication_state": "not_claimed_public"
   },
@@ -26,7 +26,12 @@
     "browser-local SHA-256 file fingerprinting",
     "fingerprint-only vault registration with content_uploaded=false",
     "vault records do not require uploading protected file bytes",
-    "cross-industry complementarity smoke proof for designer/printer and musician/studio"
+    "cross-industry complementarity smoke proof for designer/printer and musician/studio",
+    "accepted connections can open private Formation Rooms",
+    "formation terms are SHA-256 fingerprinted before party approval",
+    "owner and partner approval hashes are independently identity-scoped",
+    "mutual readiness is derived only when both approval hashes match the current terms fingerprint",
+    "requester self-acceptance is blocked at ConnectionRequest update RLS"
   ],
   "verification": {
     "app_lint": "pass",
@@ -49,6 +54,15 @@
       "musician_studio_score": 322,
       "printer_opportunity_score": 204,
       "result": "pass"
+    },
+    "security_smoke": {
+      "result": "pass",
+      "private_contact_fields": 2,
+      "requester_self_acceptance_blocked": true,
+      "vault_owner_scoped": true,
+      "vault_file_upload_path_present": false,
+      "independent_terms_approval_hashes": true,
+      "formation_identity_fields_locked_to_admin_updates": true
     }
   },
   "known_limits": [
@@ -58,7 +72,8 @@
     "protected asset upload/reveal is intentionally not exposed in the public listing flow",
     "fingerprint registration is evidence support and is not represented as copyright registration, patent filing, or dispositive proof of ownership",
     "public deployment URL is not yet claimed",
-    "full repository Forge check remains blocked by the separate Evercraft Network discovery invariant"
+    "Formation mutual snapshot approval is a technical consent/evidence step, not a signed legal agreement or authorization to disclose protected assets",
+    "Current branch source fixes the previously stale Evercraft Network discovery invariant; a fresh connector-triggered GitHub Actions run is not available for the newest connector-authored head, so the invariant was re-evaluated directly against branch files"
   ],
   "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
 }
