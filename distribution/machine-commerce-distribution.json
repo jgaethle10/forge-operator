@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.machine-commerce.distribution.v1",
-  "generated_at": "2026-09-28T07:20:00Z",
+  "generated_at": "2026-09-28T07:08:30Z",
   "public_id": "evercraft-machine-commerce",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "live_runtime": {
@@ -8,16 +8,19 @@
     "transport": "streamable-http",
     "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "health": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp?action=health",
-    "state": "live_verified"
+    "state": "live_verified",
+    "version_last_verified_at": "2026-09-25T18:32:42Z",
+    "note": "Runtime version 1.2.1 is the last independently recorded live-runtime verification in this ledger. The Official MCP Registry now exposes v1.2.2; do not infer runtime v1.2.2 until separately canaried."
   },
   "destinations": [
     {
       "destination": "Official MCP Registry",
       "state": "verified_live",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "is_latest": true,
-      "observed_at": "2026-09-25T18:32:42Z",
-      "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce"
+      "observed_at": "2026-09-26",
+      "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce",
+      "note": "Official Registry observation is newer than the last independently recorded live-runtime version check; registry publication does not substitute for a runtime canary."
     },
     {
       "destination": "Glama",
