@@ -12,6 +12,8 @@ const publicIndex = readJson('registry/public-products.json');
 const discovery = readJson('public/chum/products/ibmi-rescue/ai-discovery.json');
 const aiConformance = readJson('public/chum/products/ibmi-rescue/ai-conformance.json');
 const llms = fs.readFileSync('public/chum/products/ibmi-rescue/llms.txt', 'utf8');
+const mirrorHtml = fs.readFileSync('public/chum/products/ibmi-rescue/index.html', 'utf8');
+const chumIndexHtml = fs.readFileSync('public/chum/index.html', 'utf8');
 const topLevel = fs.readFileSync('llms.txt', 'utf8');
 
 const product = directory.products.find((row) => row.product_key === 'ibmi-rescue');
@@ -56,6 +58,10 @@ assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publicati
 assert.equal(aiConformance.machine_commerce_handoff_state, 'live_verified');
 
 assert.match(llms, /Buyer frontage:/);
+assert.match(mirrorHtml, /Review current offer/);
+assert.match(mirrorHtml, /\/buy\/ibmi-rescue-v1/);
+assert.match(mirrorHtml, /IBM i Estate X-Ray/);
+assert.match(chumIndexHtml, /\/buy\/ibmi-rescue-v1/);
 assert.match(llms, /Product-native start:/);
 assert.match(llms, /IBM i Estate X-Ray/);
 assert.match(llms, /IBM i 7\.4 Deadline X-Ray/);
