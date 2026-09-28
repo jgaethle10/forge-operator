@@ -265,3 +265,49 @@ test('Fire Control treats intermittent pickup as distribution debt before checko
   assert.equal(rivet.evidence.provider_pickup_consistency_state, 'intermittent');
   assert.equal(rivet.evidence.provider_pickup_consistency_best_rate, 0.25);
 });
+
+
+test('Fire Control treats raw machine attention as acquisition work, not buyer CTA failure', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes.results = [
+    { product_key: 'forensiscope', status: 'completed', evaluation: { pickup_observed: true } },
+    { product_key: 'rivet', status: 'completed', evaluation: { pickup_observed: true } }
+  ];
+  data.moneyRadar = {
+    schema: 'evercraft.chum.money-radar.v2',
+    measurement_state: 'measured',
+    acquisition_measurement_state: 'measured',
+    payment_measurement_state: 'measured',
+    products: [
+      { public_id: 'forensiscope-v1', product_key: 'forensiscope', landings: 2, offer_views: 2, continue_clicks: 2, checkout_starts: 1, verified_payments: 1, funnel_state: 'paid' },
+      {
+        public_id: 'rivet-v1',
+        product_key: 'rivet',
+        raw_landings: 50,
+        raw_offer_views: 50,
+        landings: 0,
+        offer_views: 0,
+        continue_clicks: 0,
+        checkout_starts: 0,
+        unique_buyer_sessions: 0,
+        traffic_class_counts: { machine_client: 45, crawler: 5 },
+        classification_counts: { classified: 50 },
+        funnel_state: 'unqualified_traffic_only',
+        diagnosis: 'raw_views_without_qualified_buyer_signal'
+      }
+    ]
+  };
+  data.revenueEvents = data.revenueEvents.filter((event) => event.public_id !== 'rivet-v1');
+
+  const receipt = buildFireControl({ root, ...data });
+  const row = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(row.first_broken_stage, 'provider_verified_payment');
+  assert.equal(row.next_action.action, 'increase_qualified_discovery_traffic_and_measure_conversion');
+  assert.equal(row.evidence.raw_attributed_offer_views, 50);
+  assert.equal(row.evidence.attributed_offer_views, 0);
+  assert.equal(row.evidence.unique_buyer_sessions, 0);
+  assert.equal(row.evidence.money_diagnosis, 'raw_views_without_qualified_buyer_signal');
+  assert.deepEqual(row.evidence.traffic_class_counts, { machine_client: 45, crawler: 5 });
+});
