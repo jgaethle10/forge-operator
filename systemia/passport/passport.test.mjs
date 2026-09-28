@@ -433,3 +433,110 @@ test('expired action permit cannot be consumed and state survives restart', () =
 
   fs.rmSync(stateDir, { recursive: true, force: true });
 });
+
+
+test('unconsumed action permit can be cancelled and cannot later execute', () => {
+  const stateDir = temp('passport-permit-cancel-');
+  const passport = new EvercraftPassport({ stateDir });
+  rootGrant(passport);
+
+  passport.mintActionPermit({
+    permit_id: 'permit_cancel_me',
+    idempotency_key: 'permit:cancel-me:mint',
+    grant_id: 'grant_root',
+    actor_ref: 'user:operator',
+    scope: 'report.generate',
+    resource_ref: 'site:yakima-001',
+    request_fingerprint: 'sha256:' + '2'.repeat(64),
+    ttl_seconds: 600,
+    minted_at: '2026-09-27T18:00:00Z',
+  });
+
+  const cancelled = passport.cancelActionPermit({
+    idempotency_key: 'permit:cancel-me:cancel',
+    permit_id: 'permit_cancel_me',
+    actor_ref: 'user:operator',
+    reason: 'execution_lease_cancelled',
+    cancelled_at: '2026-09-27T18:01:00Z',
+  });
+  assert.equal(cancelled.state, 'cancelled');
+
+  const duplicate = passport.cancelActionPermit({
+    idempotency_key: 'permit:cancel-me:cancel',
+    permit_id: 'permit_cancel_me',
+    actor_ref: 'user:operator',
+    reason: 'execution_lease_cancelled',
+    cancelled_at: '2026-09-27T18:01:00Z',
+  });
+  assert.equal(duplicate.state, 'duplicate');
+
+  const state = passport.getActionPermitState('permit_cancel_me', {
+    at: '2026-09-27T18:02:00Z',
+  });
+  assert.equal(state.active, false);
+  assert.equal(state.cancelled, true);
+  assert.match(state.cancellation_receipt, /^sha256:[a-f0-9]{64}$/);
+
+  assert.throws(
+    () =>
+      passport.consumeActionPermit({
+        idempotency_key: 'permit:cancel-me:consume',
+        permit_id: 'permit_cancel_me',
+        actor_ref: 'user:operator',
+        request_fingerprint: 'sha256:' + '2'.repeat(64),
+        evidence_ref: 'execution:must-not-run',
+        consumed_at: '2026-09-27T18:02:00Z',
+      }),
+    /permit_cancelled/
+  );
+
+  const restarted = new EvercraftPassport({ stateDir });
+  assert.equal(
+    restarted.getActionPermitState('permit_cancel_me', {
+      at: '2026-09-27T18:03:00Z',
+    }).cancelled,
+    true
+  );
+
+  fs.rmSync(stateDir, { recursive: true, force: true });
+});
+
+test('consumed permit cannot be cancelled afterward', () => {
+  const stateDir = temp('passport-permit-cancel-consumed-');
+  const passport = new EvercraftPassport({ stateDir });
+  rootGrant(passport);
+
+  passport.mintActionPermit({
+    permit_id: 'permit_used',
+    idempotency_key: 'permit:used:mint',
+    grant_id: 'grant_root',
+    actor_ref: 'user:operator',
+    scope: 'report.generate',
+    resource_ref: 'site:yakima-001',
+    request_fingerprint: 'sha256:' + '3'.repeat(64),
+    ttl_seconds: 600,
+    minted_at: '2026-09-27T18:00:00Z',
+  });
+  passport.consumeActionPermit({
+    idempotency_key: 'permit:used:consume',
+    permit_id: 'permit_used',
+    actor_ref: 'user:operator',
+    request_fingerprint: 'sha256:' + '3'.repeat(64),
+    evidence_ref: 'execution:started:001',
+    consumed_at: '2026-09-27T18:01:00Z',
+  });
+
+  assert.throws(
+    () =>
+      passport.cancelActionPermit({
+        idempotency_key: 'permit:used:cancel',
+        permit_id: 'permit_used',
+        actor_ref: 'user:operator',
+        reason: 'too_late',
+        cancelled_at: '2026-09-27T18:02:00Z',
+      }),
+    /permit_already_consumed/
+  );
+
+  fs.rmSync(stateDir, { recursive: true, force: true });
+});

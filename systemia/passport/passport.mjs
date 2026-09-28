@@ -93,6 +93,7 @@ export class EvercraftPassport {
     this.revocationsFile = path.join(this.stateDir, 'revocations.jsonl');
     this.permitsFile = path.join(this.stateDir, 'action-permits.jsonl');
     this.permitConsumptionsFile = path.join(this.stateDir, 'action-permit-consumptions.jsonl');
+    this.permitCancellationsFile = path.join(this.stateDir, 'action-permit-cancellations.jsonl');
     this.lockDir = path.join(this.stateDir, '.mutation-lock');
 
     this.grants = new Map();
@@ -103,6 +104,8 @@ export class EvercraftPassport {
     this.permitMintIdempotency = new Map();
     this.permitConsumptions = new Map();
     this.permitConsumeIdempotency = new Map();
+    this.permitCancellations = new Map();
+    this.permitCancelIdempotency = new Map();
     this.#reload();
   }
 
@@ -115,6 +118,8 @@ export class EvercraftPassport {
     this.permitMintIdempotency.clear();
     this.permitConsumptions.clear();
     this.permitConsumeIdempotency.clear();
+    this.permitCancellations.clear();
+    this.permitCancelIdempotency.clear();
 
     for (const grant of readJsonl(this.grantsFile)) {
       this.grants.set(grant.grant_id, grant);
@@ -131,6 +136,10 @@ export class EvercraftPassport {
     for (const consumption of readJsonl(this.permitConsumptionsFile)) {
       this.permitConsumptions.set(consumption.permit_id, consumption);
       this.permitConsumeIdempotency.set(consumption.idempotency_key, consumption);
+    }
+    for (const cancellation of readJsonl(this.permitCancellationsFile)) {
+      this.permitCancellations.set(cancellation.permit_id, cancellation);
+      this.permitCancelIdempotency.set(cancellation.idempotency_key, cancellation);
     }
   }
 
@@ -653,6 +662,7 @@ export class EvercraftPassport {
 
     const grantState = this.#grantStateUnlocked(permit.grant_id, instant);
     const consumption = this.permitConsumptions.get(id) || null;
+    const cancellation = this.permitCancellations.get(id) || null;
     const expired = new Date(instant) >= new Date(permit.expires_at);
 
     return {
@@ -664,9 +674,11 @@ export class EvercraftPassport {
       scope: permit.scope,
       resource_ref: permit.resource_ref,
       request_fingerprint: permit.request_fingerprint,
-      active: grantState.active && !expired && !consumption,
+      active: grantState.active && !expired && !consumption && !cancellation,
       consumed: Boolean(consumption),
       consumption_receipt: consumption?.receipt_hash || null,
+      cancelled: Boolean(cancellation),
+      cancellation_receipt: cancellation?.receipt_hash || null,
       expired,
       grant_active: grantState.active,
       observed_at: instant,
@@ -694,6 +706,7 @@ export class EvercraftPassport {
       const permit = this.permits.get(permitId);
       if (!permit) throw new Error('permit_not_found');
       if (this.permitConsumptions.has(permitId)) throw new Error('permit_already_consumed');
+      if (this.permitCancellations.has(permitId)) throw new Error('permit_cancelled');
 
       const actorRef = requiredString(input?.actor_ref, 'actor_ref');
       if (actorRef !== permit.actor_ref) throw new Error('permit_actor_mismatch');
@@ -748,6 +761,69 @@ export class EvercraftPassport {
           resource_ref: permit.resource_ref,
           request_fingerprint: requestFingerprint,
           evidence_ref: evidenceRef,
+        }),
+      };
+    });
+  }
+
+  cancelActionPermit(input) {
+    return this.#mutate(() => {
+      const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
+      const duplicate = this.permitCancelIdempotency.get(idempotencyKey);
+      if (duplicate) {
+        return {
+          state: 'duplicate',
+          cancellation: duplicate,
+          receipt: stableReceipt({
+            schema: 'evercraft.passport.action-permit-cancellation-receipt.v1',
+            state: 'duplicate',
+            permit_id: duplicate.permit_id,
+            idempotency_key: idempotencyKey,
+          }),
+        };
+      }
+
+      const permitId = requiredString(input?.permit_id, 'permit_id');
+      const permit = this.permits.get(permitId);
+      if (!permit) throw new Error('permit_not_found');
+      if (this.permitConsumptions.has(permitId)) throw new Error('permit_already_consumed');
+
+      const prior = this.permitCancellations.get(permitId);
+      if (prior) throw new Error('permit_already_cancelled');
+
+      const actorRef = requiredString(input?.actor_ref, 'actor_ref');
+      if (actorRef !== permit.actor_ref) throw new Error('permit_actor_mismatch');
+
+      const cancelledAt = iso(input?.cancelled_at || new Date().toISOString(), 'cancelled_at');
+      const cancellation = stableReceipt({
+        schema: 'evercraft.passport.action-permit-cancellation.v1',
+        cancellation_id: 'cancel_' + randomUUID(),
+        idempotency_key: idempotencyKey,
+        permit_id: permitId,
+        grant_id: permit.grant_id,
+        actor_ref: actorRef,
+        product: permit.product,
+        scope: permit.scope,
+        resource_ref: permit.resource_ref,
+        request_fingerprint: permit.request_fingerprint,
+        reason: input?.reason ? String(input.reason) : null,
+        cancelled_at: cancelledAt,
+      });
+
+      this.permitCancellations.set(permitId, cancellation);
+      this.permitCancelIdempotency.set(idempotencyKey, cancellation);
+      appendJsonl(this.permitCancellationsFile, cancellation);
+
+      return {
+        state: 'cancelled',
+        cancellation,
+        receipt: stableReceipt({
+          schema: 'evercraft.passport.action-permit-cancellation-receipt.v1',
+          state: 'cancelled',
+          permit_id: permitId,
+          grant_id: permit.grant_id,
+          actor_ref: actorRef,
+          reason: cancellation.reason,
         }),
       };
     });
