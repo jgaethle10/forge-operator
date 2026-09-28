@@ -1,0 +1,155 @@
+{
+  "schema": "evercraft.chum.directory-expansion-targets.v1",
+  "generated_at": "2026-09-28",
+  "owner": "CHUM",
+  "orchestration_owner": "Systemia",
+  "objective": "Maximize truthful Evercraft MCP and agent-directory distribution without conflating submission, indexing, pickup, recommendation, invocation, checkout, or payment.",
+  "universal_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "universal_endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "rules": {
+    "pain_first": true,
+    "specialist_first_when_available": true,
+    "no_false_listing_claims": true,
+    "no_duplicate_outreach_without_history_check": true,
+    "external_auth_or_paid_submission_requires_explicit_authorization": true,
+    "no_fabricated_package_artifacts": true,
+    "preserve_evidence_boundaries": true
+  },
+  "targets": [
+    {
+      "destination": "Official MCP Registry",
+      "mode": "registry",
+      "state": "verified_live",
+      "priority": "P0",
+      "submission_url": "https://registry.modelcontextprotocol.io",
+      "action": "Keep official manifests current and use the registry as the upstream source of truth."
+    },
+    {
+      "destination": "Glama",
+      "mode": "auto_index_plus_claim",
+      "state": "verified_live",
+      "priority": "P0",
+      "submission_url": "https://glama.ai/mcp/connectors",
+      "action": "Continue namespace pickup checks and verify specialist cards, tool counts, health and version propagation."
+    },
+    {
+      "destination": "MCP.Directory",
+      "mode": "reviewed_submission",
+      "state": "submitted_pending_review",
+      "priority": "P0",
+      "submission_url": "https://mcp.directory/submit",
+      "action": "Verify review outcome before changing state to listed."
+    },
+    {
+      "destination": "PulseMCP",
+      "mode": "upstream_ingestion",
+      "state": "pickup_expected_not_verified",
+      "priority": "P0",
+      "submission_url": "https://www.pulsemcp.com",
+      "action": "Probe for exact Evercraft namespace pickup from the Official MCP Registry."
+    },
+    {
+      "destination": "Launch MCP",
+      "mode": "email_submission_or_registry_import",
+      "state": "eligible_blocked_duplicate_history_check",
+      "priority": "P1",
+      "submission_url": "https://launchmcp.co/about",
+      "action": "Check prior sent history before any email submission. Do not send duplicate outreach."
+    },
+    {
+      "destination": "mcp.so",
+      "mode": "form_or_github_issue",
+      "state": "eligible_external_write_blocked",
+      "priority": "P1",
+      "submission_url": "https://mcp.so/submit?type=server",
+      "action": "Retry only through an authorized submission path; prior third-party GitHub issue write was permission-blocked, not rejected."
+    },
+    {
+      "destination": "Smithery",
+      "mode": "authenticated_publisher",
+      "state": "eligible_auth_required",
+      "priority": "P1",
+      "submission_url": "https://smithery.ai",
+      "action": "Publish remote Streamable HTTP specialist servers after Smithery authorization."
+    },
+    {
+      "destination": "LobeHub MCP Marketplace",
+      "mode": "marketplace_submission",
+      "state": "eligible_auth_or_ui_required",
+      "priority": "P1",
+      "submission_url": "https://lobehub.com/mcp",
+      "action": "Submit universal and specialist MCPs through an authorized publisher session."
+    },
+    {
+      "destination": "MCP Marketplace",
+      "mode": "marketplace_submission",
+      "state": "eligible_auth_or_ui_required",
+      "priority": "P1",
+      "submission_url": "https://mcp-marketplace.io/submit",
+      "action": "Submit remote MCP endpoints through an authorized creator account."
+    },
+    {
+      "destination": "Unyly",
+      "mode": "official_registry_ingestion_plus_direct_submission",
+      "state": "pickup_to_verify",
+      "priority": "P1",
+      "submission_url": "https://unyly.org/submit",
+      "action": "Probe automatic registry ingestion first, then direct-submit only missing servers."
+    },
+    {
+      "destination": "ProMCP",
+      "mode": "curated_submission",
+      "state": "eligible",
+      "priority": "P2",
+      "submission_url": "https://www.promcpservers.com/submit",
+      "action": "Package working endpoint, public source, README, install/use instructions and declared auth scopes."
+    },
+    {
+      "destination": "Awesome MCP Servers (punkpeye)",
+      "mode": "github_pull_request",
+      "state": "eligible_external_fork_or_pr_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "action": "Prepare one-server-per-line contribution using verified Glama listing and score badge where required."
+    },
+    {
+      "destination": "TensorBlock Awesome MCP Servers",
+      "mode": "github_issue_or_pull_request",
+      "state": "eligible_external_write_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/TensorBlock/awesome-mcp-servers",
+      "action": "Submit through the repository's documented intake after exact duplicate check."
+    },
+    {
+      "destination": "Cline MCP Marketplace",
+      "mode": "github_issue_submission",
+      "state": "eligible_external_write_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/cline/mcp-marketplace",
+      "action": "Prepare repository URL, 400x400 logo and reason-for-addition packet; submit only through authorized external write."
+    },
+    {
+      "destination": "MCPFind",
+      "mode": "package_plus_repository_submission",
+      "state": "not_eligible_without_real_package",
+      "priority": "P3",
+      "submission_url": "https://www.mcpfind.org/",
+      "action": "Do not fabricate npm/PyPI/Docker packaging. Revisit only when a real distributable package exists."
+    }
+  ],
+  "measurement": {
+    "states": [
+      "candidate",
+      "eligible",
+      "submitted",
+      "listed",
+      "indexed",
+      "healthy",
+      "invoked",
+      "human_handoff",
+      "checkout_created",
+      "provider_verified_payment"
+    ],
+    "note": "A later state must be supported by its own receipt. Earlier states never imply later states."
+  }
+}
