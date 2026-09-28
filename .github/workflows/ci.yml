@@ -154,11 +154,11 @@ jobs:
           curl --fail-with-body --silent -H 'Host: discovery.example.test' -H 'X-Forwarded-Proto: https' \
             http://127.0.0.1:3000/.well-known/agent-card.json > /tmp/a2a-agent-card.json
           echo "Smoke: A2A message:send"
-          curl --fail-with-body --silent -X POST http://127.0.0.1:3000/a2a/message:send \
+          curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:3000/a2a/message:send \
             -H 'Content-Type: application/a2a+json' \
             -H 'A2A-Version: 1.0' \
             --data '{"message":{"messageId":"smoke-a2a-1","role":"ROLE_USER","parts":[{"text":"My AI cannot process this three hour video and I need the whole recording reviewed"}]}}' \
-            > /tmp/a2a-discovery-response.json
+            | tee /tmp/a2a-discovery-response.json
           curl --fail --silent -D /tmp/buyer-handoff-headers.txt -o /dev/null \
             "http://127.0.0.1:3000/api/chum/go/roasted-text-pressure-test-machine-v1?surface=ci_buyer_frontage"
 
