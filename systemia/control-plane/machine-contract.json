@@ -212,7 +212,11 @@
     "execution_gate_start_is_not_external_completion": true
   },
   "consequential_work_types": [
-    "trust_change"
+    "trust_change",
+    "external_message",
+    "outreach",
+    "external_purchase",
+    "payment"
   ],
   "pre_dispatch": {
     "default_consequential_gate": "evercraft-execution-gate",
