@@ -55,6 +55,8 @@
     ],
     "payment_state": "Evercraft Payments is authoritative; secure machine intake and central machine checkout remain verification-gated; paid state requires authoritative verification"
   },
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": {
     "hub": "/forensiscope/developers/",
     "status": "/forensiscope/developers/status.json",

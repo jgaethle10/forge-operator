@@ -27,6 +27,8 @@
     "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
   ],
   "commercial": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

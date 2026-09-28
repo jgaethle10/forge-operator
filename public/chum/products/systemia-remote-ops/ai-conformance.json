@@ -38,6 +38,8 @@
     "pricing": "No public price is represented as verified.",
     "payment_state": "Discovery only. Do not create or imply checkout, payment, entitlement or paid execution until a public commercial path is independently verified."
   },
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": {

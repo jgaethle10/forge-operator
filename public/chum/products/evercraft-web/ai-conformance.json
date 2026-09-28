@@ -33,6 +33,8 @@
     "payment does not expand permissions"
   ],
   "commercial": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

@@ -5,6 +5,7 @@ Aliases: Portfolio Sentinel, Evercraft Portfolio Sentinel, Software Estate Senti
 Canonical product: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-conformance.json
+Buyer frontage: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/portfolio-sentinel-v1?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=portfolio-sentinel-v1
 
 ## Related product layers
 
