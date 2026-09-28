@@ -351,6 +351,9 @@ test('Money Radar arms and fires the first-qualified-buyer tripwire without clai
   assert.equal(receipt.telemetry_quality.v2_coverage_rate, 1);
   assert.equal(receipt.telemetry_quality.qualified_session_coverage_rate, 1);
   assert.equal(receipt.telemetry_quality.conversion_decision_safe, true);
+  assert.equal(receipt.velocity_comparison.unique_buyer_sessions.state, 'new');
+  assert.equal(receipt.velocity_comparison.unique_buyer_sessions.current, 1);
+  assert.equal(receipt.velocity_comparison.unique_buyer_sessions.previous, 0);
 });
 
 
@@ -424,4 +427,26 @@ test('Money Radar marks legacy-heavy telemetry as unsafe for conversion diagnosi
   assert.equal(receipt.telemetry_quality.state, 'transitioning_or_legacy_heavy');
   assert.equal(receipt.telemetry_quality.conversion_decision_safe, false);
   assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'telemetry_v2_coverage_low'));
+});
+
+
+test('Money Radar flags when qualified buyer velocity disappears across adjacent 24h windows', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const priorEvents = Array.from({ length: 3 }, (_, index) => ({
+    ...publicEvent('offer_view', 'prior-buyer-' + index),
+    session_key: 'buyer_prior_session_' + index,
+    occurred_at: '2026-09-27T10:0' + index + ':00.000Z',
+  }));
+  const { receipt } = await buildMoneyRadar({
+    root,
+    generatedAt: '2026-09-28T12:00:00.000Z',
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: priorEvents,
+  });
+
+  assert.equal(receipt.velocity_comparison.unique_buyer_sessions.current, 0);
+  assert.equal(receipt.velocity_comparison.unique_buyer_sessions.previous, 3);
+  assert.equal(receipt.velocity_comparison.unique_buyer_sessions.state, 'down');
+  assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'qualified_buyer_activity_disappeared'));
 });
