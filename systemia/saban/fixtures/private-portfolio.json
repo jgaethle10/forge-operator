@@ -27,6 +27,26 @@
       "name": "Internal Ops Console",
       "id": "private-source-id-6",
       "visibility": "internal_only"
+    },
+    {
+      "name": "Evercraft AI Suite",
+      "id": "private-source-id-7"
+    },
+    {
+      "name": "Evercraft HQ",
+      "id": "private-source-id-8"
+    },
+    {
+      "name": "Evercraft Emergency Command",
+      "id": "private-source-id-9"
+    },
+    {
+      "name": "Evercraft Earth Atlas",
+      "id": "private-source-id-10"
+    },
+    {
+      "name": "Evercraft WGS",
+      "id": "private-source-id-11"
     }
   ]
 }
