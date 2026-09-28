@@ -1,0 +1,30 @@
+name: Evercraft Context Fabric
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/context-fabric/**'
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-context-fabric.yml'
+  pull_request:
+    paths:
+      - 'systemia/context-fabric/**'
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-context-fabric.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  context-fabric:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove permission-aware evidence retrieval
+        run: |
+          node --test systemia/passport/passport.test.mjs
+          node --test systemia/context-fabric/fabric.test.mjs
