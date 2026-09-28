@@ -50,9 +50,13 @@ assert.equal(discovery.product_key, 'ibmi-rescue');
 assert.equal(discovery.human_confirmation_required, true);
 assert.equal(discovery.commercial?.offers?.length, 3);
 assert.equal(discovery.mcp, null);
+assert.match(discovery.buyer_frontage_url || '', /\/buy\/ibmi-rescue-v1/);
+assert.equal(discovery.human_start_url, 'https://findmypart.base44.app/ibmi-rescue');
 assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publication');
 assert.equal(aiConformance.machine_commerce_handoff_state, 'live_verified');
 
+assert.match(llms, /Buyer frontage:/);
+assert.match(llms, /Product-native start:/);
 assert.match(llms, /IBM i Estate X-Ray/);
 assert.match(llms, /IBM i 7\.4 Deadline X-Ray/);
 assert.match(llms, /\$250 one-time/);
