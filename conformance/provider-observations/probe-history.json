@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T18:20:50.705Z",
+  "updated_at": "2026-09-28T18:47:14.200Z",
   "max_records": 500,
   "records": [
     {
@@ -3289,6 +3289,24 @@
       "prompt_sha256": "5f41a44f8b04c7a0cf57615eee536960de0e3da25a3522fc6e43587b07ca7159",
       "pickup_observed": false,
       "provider_receipt_sha256": "42f56a554268919e2fab231781813dc2f43d630e61d40f6a42124f38ab5dbe1f",
+      "response_sha256": "80504076844996db86b982ebcb436055e41834494ba38fda2df1893674d55313",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "78dab280014f2c840229dc5a1736c331f5bfd0c389619b3f25645b116eacea60",
+      "observed_at": "2026-09-28T18:47:14.199Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-containment",
+      "case_id": "containment-persistence-001",
+      "prompt_sha256": "5f41a44f8b04c7a0cf57615eee536960de0e3da25a3522fc6e43587b07ca7159",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "beb7c5770ff6b89db37dd73c6d55d6ba01e9ef0f376685b6ea8cf409440efa52",
       "response_sha256": "80504076844996db86b982ebcb436055e41834494ba38fda2df1893674d55313",
       "source": "authorized_provider_probe",
       "privacy": {
