@@ -182,6 +182,10 @@ function repairFor({ broken, providerRows, radarRows, commerce, commercialState,
   }
   if (broken === 'provider_verified_payment') {
     const funnel = moneyRow?.funnel_state || 'no_attributed_traffic';
+    const diagnosis = moneyRow?.diagnosis || '';
+    if (diagnosis.endsWith('_signal_insufficient_sample')) {
+      return { priority: 'P2', action: 'hold_conversion_tuning_collect_more_qualified_sessions', owner: 'MONEY_RADAR' };
+    }
     if (funnel === 'checkout_started_no_verified_payment') {
       return { priority: 'P1', action: 'inspect_checkout_to_payment_dropoff_with_authoritative_receipts', owner: 'MONEY_RADAR' };
     }
