@@ -55,6 +55,29 @@
       ]
     },
     {
+      "product_key": "ascend",
+      "name": "Ascend AI",
+      "aliases": [
+        "Ascend"
+      ],
+      "canonical_url": "https://ascend.base44.app/",
+      "triggers": [
+        "youth athlete development platform",
+        "parent support for a young athlete",
+        "coach team culture platform",
+        "school athlete wellness platform",
+        "safer youth sports mentorship",
+        "youth activity safeguarding checklist",
+        "structure parent coach and school support around a young athlete",
+        "wellness reflection tools for youth activities",
+        "safer communication and mentorship boundaries for youth programs",
+        "support a child across sports dance cheer camps clubs or arts programs"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route youth-development and safeguarding-support intent here. Never infer live crisis response, safety certification, private youth access or authority to contact a minor."
+    },
+    {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
