@@ -246,7 +246,7 @@ jobs:
           if (!/^link:.*chum\/sitemaps\/index\.xml/im.test(chumHeaders)) throw new Error('CHUM response missing segmented sitemap Link header');
           if (!/^link:.*chum\/commercial\/feed\.json/im.test(chumHeaders)) throw new Error('CHUM response missing commercial intent feed Link header');
           if (!/^access-control-allow-origin:\s*\*/im.test(chumHeaders)) throw new Error('CHUM public discovery CORS missing');
-          if (!/^location:\s*https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/api\/apps\/692b4178919afe7d08c4d2b8\/functions\/machineCommerceGateway\?view=service&public_id=roasted-text-pressure-test-machine-v1/im.test(buyerHandoffHeaders)) {
+          if (!/^location:\s*https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/roasted-text-pressure-test-machine-v1\?/im.test(buyerHandoffHeaders)) {
             throw new Error('CHUM human handoff did not route to the live Evercraft buyer frontage');
           }
           if (!/location:.*ec_surface=ci_buyer_frontage/im.test(buyerHandoffHeaders)) {
