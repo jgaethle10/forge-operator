@@ -39,6 +39,7 @@ const READ_ONLY_DISCOVERY_REGISTRY =
   'io.github.jgaethle10/evercraft-capability-discovery';
 const MACHINE_COMMERCE_GATEWAY =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
   'www.systemiacommandcenters.com'
@@ -53,6 +54,21 @@ function safePublicUrl(value, fallback = null) {
     return url.toString();
   } catch {
     return fallback;
+  }
+}
+
+function buyerFrontageUrlFor(product) {
+  const publicId = String(product?.commercial?.machine_commerce_handoff?.public_id || '').trim();
+  if (!publicId) return null;
+  try {
+    const target = new URL('/buy/' + encodeURIComponent(publicId), BUYER_FRONTAGE_ORIGIN);
+    target.searchParams.set('src', 'chum');
+    target.searchParams.set('campaign', 'product-mirror');
+    target.searchParams.set('ec_surface', 'chum_product_mirror');
+    target.searchParams.set('ec_public_id', publicId);
+    return target.toString();
+  } catch {
+    return null;
   }
 }
 
@@ -166,6 +182,8 @@ for (const product of directory.products || []) {
   const canonicalUrl = safePublicUrl(product.canonical_url, base + '/index.html');
   const specialistMcp = safePublicUrl(registry?.mcp, null);
   const registryName = registryNameFor(registry, conf);
+  const humanStartUrl = safePublicUrl(product.human_start_url || product.origin_product_url, null);
+  const buyerFrontageUrl = buyerFrontageUrlFor(product);
 
   const discovery = {
     schema: 'evercraft.chum.product-discovery.v1',
@@ -180,6 +198,8 @@ for (const product of directory.products || []) {
     boundaries: product.boundaries || [],
     commercial: product.commercial || null,
     machine_commerce_handoff: product.commercial?.machine_commerce_handoff || null,
+    human_start_url: humanStartUrl,
+    buyer_frontage_url: buyerFrontageUrl,
     registry_name: registryName,
     mcp: specialistMcp,
     machine_commerce_mcp: safePublicUrl(catalog.universal_front_door?.mcp, null),
@@ -214,6 +234,8 @@ for (const product of directory.products || []) {
     human_confirmation_required: Boolean(product.human_confirmation_required),
     boundaries: product.boundaries || [],
     commercial: product.commercial || null,
+    human_start_url: discovery.human_start_url,
+    buyer_frontage_url: discovery.buyer_frontage_url,
     developer_surfaces: product.developer_surfaces || null,
     editorial_surfaces: product.editorial_surfaces || null,
     knowledge_surfaces: product.knowledge_surfaces || null,
@@ -244,6 +266,8 @@ for (const product of directory.products || []) {
     discovery.mcp ? `Remote MCP: ${discovery.mcp}` : null,
     `CHUM discovery JSON: ${discovery.mirror.discovery}`,
     `AI conformance: ${discovery.mirror.conformance}`,
+    discovery.buyer_frontage_url ? `Buyer frontage: ${discovery.buyer_frontage_url}` : null,
+    discovery.human_start_url ? `Product-native start: ${discovery.human_start_url}` : null,
     proofLibrary ? `Receipt-backed proof: ${proofLibrary.product_card}` : null,
     proofLibrary ? `Proof evidence state: ${proofLibrary.evidence_state}` : null,
     ...(relationshipLines.length ? ['', '## Related product layers', '', ...relationshipLines] : []),
@@ -346,7 +370,9 @@ for (const product of directory.products || []) {
     ...(product.intents || []).map((intent) => `<li>${escapeHtml(intent)}</li>`),
     '</ul></div>',
     '<div class="card"><h2>Open capability</h2>',
-    `<p><a href="${escapeHtml(canonicalUrl)}">Open ${escapeHtml(product.name)}</a></p>`,
+    discovery.buyer_frontage_url ? `<p><a href="${escapeHtml(discovery.buyer_frontage_url)}"><strong>Review current offer</strong></a> · measured buyer frontage</p>` : '',
+    discovery.human_start_url ? `<p><a href="${escapeHtml(discovery.human_start_url)}">Open product-native buyer route</a></p>` : '',
+    `<p><a href="${escapeHtml(canonicalUrl)}">Open public capability record</a></p>`,
     discovery.registry_name ? `<p>Official MCP Registry name: <code>${escapeHtml(discovery.registry_name)}</code></p>` : '',
     discovery.mcp ? `<p>Remote MCP: <code>${escapeHtml(discovery.mcp)}</code></p>` : '',
     '<p>Universal pain-first routing: <a href="/chum/">CHUM</a></p>',
@@ -365,6 +391,11 @@ for (const product of directory.products || []) {
       `<p><strong>Status:</strong> ${escapeHtml(product.commercial.status || 'unspecified')}</p>`,
       ...(product.commercial.offer ? [`<p><strong>Offer:</strong> ${escapeHtml(product.commercial.offer)}</p>`] : []),
       ...(product.commercial.pricing ? [`<p><strong>Pricing:</strong> ${escapeHtml(product.commercial.pricing)}</p>`] : []),
+      ...(Array.isArray(product.commercial.offers) && product.commercial.offers.length ? [
+        '<h3>Current offers</h3><ul>',
+        ...product.commercial.offers.map((offer) => `<li>${escapeHtml(offer.name || 'Offer')} · ${escapeHtml(offer.price || 'Price not published')}</li>`),
+        '</ul>'
+      ] : []),
       ...(product.commercial.payment_state ? [`<p><strong>Payment state:</strong> ${escapeHtml(product.commercial.payment_state)}</p>`] : []),
       '</div>'
     ] : []),
