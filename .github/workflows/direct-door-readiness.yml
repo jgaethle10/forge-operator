@@ -9,6 +9,12 @@ on:
       - 'public/.well-known/evercraft-direct-door-readiness.json'
       - 'systemia/chum/direct-door-readiness.mjs'
       - 'tests/direct-door-readiness.test.mjs'
+      - 'AI-DISCOVERY.md'
+      - 'llms-full.txt'
+      - 'public/llms.txt'
+      - 'public/llms-full.txt'
+      - 'public/ai-discovery.json'
+      - 'public/.well-known/evercraft-discovery.json'
       - '.github/workflows/direct-door-readiness.yml'
   pull_request:
     paths:
@@ -17,6 +23,12 @@ on:
       - 'public/.well-known/evercraft-direct-door-readiness.json'
       - 'systemia/chum/direct-door-readiness.mjs'
       - 'tests/direct-door-readiness.test.mjs'
+      - 'AI-DISCOVERY.md'
+      - 'llms-full.txt'
+      - 'public/llms.txt'
+      - 'public/llms-full.txt'
+      - 'public/ai-discovery.json'
+      - 'public/.well-known/evercraft-discovery.json'
       - '.github/workflows/direct-door-readiness.yml'
 
 permissions:
