@@ -24,6 +24,10 @@ import {
   type StudioJourneyStop,
   type StudioRoomStageInput,
 } from './studio-world.js';
+import {
+  compileVirtualProductionEpisode,
+  type VirtualProductionEpisode,
+} from './virtual-production.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -54,6 +58,7 @@ function usage() {
     '  npm run media:studio -- render-plan <render-plan-input.json> <distributed-plan.json>',
     '  npm run media:studio -- studio-room <room.json> <visual-stage.json>',
     '  npm run media:studio -- studio-journey <journey.json> <journey-plan.json>',
+    '  npm run media:studio -- virtual-production <episode.json> <production-plan.json> [stage.html]',
   ].join('\n'));
 }
 
@@ -88,6 +93,24 @@ function main() {
     const journey = compileStudioJourney(journeyInput);
     writeJson(output, journey);
     console.log(`Studio journey created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'virtual-production') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const episode = readJson<VirtualProductionEpisode>(input);
+    const plan = compileVirtualProductionEpisode(episode);
+    writeJson(output, plan);
+    if (optionalPlan) {
+      fs.mkdirSync(path.dirname(path.resolve(optionalPlan)), { recursive: true });
+      fs.writeFileSync(path.resolve(optionalPlan), buildVisualStageHtml(plan.stage), 'utf8');
+    }
+    console.log(`Virtual production plan created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Virtual production stage HTML created: ${path.resolve(optionalPlan)}`);
     return;
   }
 
