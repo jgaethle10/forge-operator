@@ -36,6 +36,9 @@ function publicEvent(stage, id = stage) {
     occurred_at: '2026-09-26T05:00:00.000Z',
     actor_class: 'human_probable',
     actor_confidence: 'high',
+    provider_claim: 'direct',
+    campaign: 'buyer-frontage',
+    surface: 'chum_capability_page',
     session_key: 'buyer_test_session_1',
     telemetry_version: 'money-radar-v2',
     revenue: { verified: false, amount_cents: 0, currency: null },
@@ -260,4 +263,53 @@ test('Money Radar counts buyer sessions once across repeated funnel events', asy
   assert.equal(receipt.windows['30d'].unique_buyer_sessions, 1);
   assert.equal(receipt.windows['30d'].view_to_continue_rate, 1);
   assert.equal(receipt.action_queue[0].action, 'inspect_buyer_handoff_and_checkout_friction');
+});
+
+
+test('Money Radar preserves aggregate first-touch last-touch campaign and surface lineage', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const { receipt } = await buildMoneyRadar({
+    root,
+    generatedAt: '2026-09-28T12:00:00.000Z',
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: [
+      {
+        ...publicEvent('landing', 'journey-landing'),
+        occurred_at: '2026-09-28T10:00:00.000Z',
+        provider_claim: 'chatgpt',
+        campaign: 'llm-discovery',
+        surface: 'answer-door',
+        experiment_key: 'offer-headline',
+        variant_key: 'b',
+      },
+      {
+        ...publicEvent('offer_view', 'journey-view'),
+        occurred_at: '2026-09-28T10:01:00.000Z',
+        provider_claim: 'chatgpt',
+        campaign: 'llm-discovery',
+        surface: 'evercraft_buyer_frontage',
+        experiment_key: 'offer-headline',
+        variant_key: 'b',
+      },
+      {
+        ...publicEvent('continue_clicked', 'journey-click'),
+        occurred_at: '2026-09-28T10:02:00.000Z',
+        provider_claim: 'direct',
+        campaign: 'buyer-frontage',
+        surface: 'evercraft_buyer_frontage',
+        experiment_key: 'offer-headline',
+        variant_key: 'b',
+      },
+    ],
+  });
+
+  assert.equal(receipt.journey_attribution.sessions_with_lineage, 1);
+  assert.deepEqual(receipt.journey_attribution.first_touch_source[0], { source: 'chatgpt', sessions: 1 });
+  assert.deepEqual(receipt.journey_attribution.last_touch_source[0], { source: 'direct', sessions: 1 });
+  assert.equal(receipt.journey_attribution.source_paths[0].path, 'chatgpt → direct');
+  assert.equal(receipt.journey_attribution.source_paths[0].reached_continue, 1);
+  assert.equal(receipt.campaign_breakdown.find((row) => row.campaign === 'llm-discovery').unique_buyer_sessions, 1);
+  assert.equal(receipt.surface_breakdown.find((row) => row.surface === 'answer-door').unique_buyer_sessions, 1);
+  assert.equal(receipt.experiment_breakdown.find((row) => row.experiment_variant === 'offer-headline::b').unique_buyer_sessions, 1);
 });
