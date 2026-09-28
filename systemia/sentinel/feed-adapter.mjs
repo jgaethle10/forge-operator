@@ -10,6 +10,7 @@ const ALLOWED_DOMAINS = new Set([
 ]);
 
 const EVIDENCE_STATES = new Set(['modeled', 'reported', 'observed', 'verified']);
+const EVIDENCE_RANK = Object.freeze({ modeled: 0, reported: 1, observed: 2, verified: 3 });
 
 function required(value, name) {
   const text = String(value ?? '').trim();
@@ -37,6 +38,9 @@ export function createFeedAdapter(config = {}) {
   }
 
   const reliability = finite01(config.reliability, 0.7);
+  const canConfirmHazard = domain === 'emergency_report' &&
+    evidenceState === 'verified' &&
+    String(config.authority || '').toLowerCase() === 'authorized_official';
 
   return function normalizeFeedRecord(record = {}, context = {}) {
     const regionKey = required(
@@ -55,6 +59,23 @@ export function createFeedAdapter(config = {}) {
       throw new TypeError('record timestamp must be valid');
     }
 
+    const requestedEvidence = String(
+      context.evidence_state || record.evidence_state || evidenceState
+    ).toLowerCase();
+    if (!EVIDENCE_STATES.has(requestedEvidence)) {
+      throw new TypeError('record evidence_state is invalid');
+    }
+    const boundedEvidence = EVIDENCE_RANK[requestedEvidence] <= EVIDENCE_RANK[evidenceState]
+      ? requestedEvidence
+      : evidenceState;
+
+    const requestedHazardState = String(
+      context.hazard_state || record.hazard_state || 'unknown'
+    ).toLowerCase();
+    const boundedHazardState = requestedHazardState === 'confirmed_hazard' && !canConfirmHazard
+      ? 'unknown'
+      : requestedHazardState;
+
     return {
       observation_id: adapterId + ':' + observationId,
       created_at: createdAt.toISOString(),
@@ -70,12 +91,8 @@ export function createFeedAdapter(config = {}) {
         context.reliability ?? record.reliability,
         reliability
       ),
-      evidence_state: String(
-        context.evidence_state || record.evidence_state || evidenceState
-      ).toLowerCase(),
-      hazard_state: String(
-        context.hazard_state || record.hazard_state || 'unknown'
-      ).toLowerCase(),
+      evidence_state: boundedEvidence,
+      hazard_state: boundedHazardState,
       provenance_ref: String(
         record.provenance_ref || context.provenance_ref || (adapterId + '://' + observationId)
       ),
@@ -83,7 +100,9 @@ export function createFeedAdapter(config = {}) {
       adapter_receipt: {
         adapter_id: adapterId,
         exact_coordinates_retained: false,
-        source_family: sourceFamily
+        source_family: sourceFamily,
+        evidence_ceiling: evidenceState,
+        confirmed_hazard_authority: canConfirmHazard
       }
     };
   };
@@ -116,6 +135,7 @@ export const PUBLIC_FEED_ADAPTER_BLUEPRINTS = Object.freeze([
     domain: 'emergency_report',
     source_family: 'authorized-public-safety-feed',
     evidence_state: 'verified',
-    reliability: 0.95
+    reliability: 0.95,
+    authority: 'authorized_official'
   }
 ]);
