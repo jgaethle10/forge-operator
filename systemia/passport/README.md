@@ -15,6 +15,8 @@ verified authority
   -> grant
   -> optional bounded delegation
   -> authorize
+  -> mint short-lived action permit when consequence requires it
+  -> consume permit exactly once
   -> revoke at any ancestor
 ```
 
@@ -46,6 +48,11 @@ A user can authorize an agent to read one RIVET report without implicitly granti
 - Delegation depth is bounded.
 - Revocation of any ancestor invalidates every descendant.
 - Authorization checks are read-only and receipt-backed.
+- Consequential actions can be narrowed further into single-use action permits.
+- Action permits are bound to one grant, actor, product, scope, resource, exact request fingerprint, and a maximum 15-minute lifetime.
+- Consuming a permit is durable and replay-safe; a second consumption is rejected.
+- Revoking the backing grant invalidates an unconsumed permit immediately.
+- Action permits are explicitly not bearer credentials. Possession of a permit ID alone grants nothing.
 - Capability envelopes are tamper-evident snapshots, not bearer credentials and not self-authenticating tokens.
 - Receiving systems must verify current state with the authoritative Passport service before consequential action.
 - Raw personal identifiers are outside this core by design.
@@ -86,3 +93,31 @@ because neither authority exists in the parent grant.
 - **Systemia** orchestrates work while respecting all of those boundaries.
 
 Passport should become the common authorization membrane around reusable Evercraft capabilities instead of each application growing its own incompatible permission island.
+
+
+## Single-use action permits
+
+Long-lived authorization is useful for ordinary read access, but it is too broad for many consequential agent actions. Passport therefore supports a second layer: a short-lived action permit.
+
+Example:
+
+```
+grant:
+  product: rivet
+  scope: report.generate
+  resource: site:yakima-001
+
+permit:
+  actor: user:operator
+  scope: report.generate
+  resource: site:yakima-001
+  request_fingerprint: sha256:<exact normalized request>
+  expires: <= 15 minutes
+  single_use: true
+```
+
+The receiving execution service still verifies the current permit state with Passport. It then consumes the permit with an evidence reference when the exact action begins or completes according to that service's execution contract.
+
+Changing the request changes the fingerprint and causes consumption to fail. Replaying a consumed permit fails. Revoking the parent grant before consumption also fails.
+
+This lets Evercraft move from broad session authority toward **transaction-scoped authority**, which is a better fit for autonomous agents operating real systems.
