@@ -436,6 +436,7 @@ export function buildFireControl({
       surface_breakdown: Array.isArray(money?.surface_breakdown) ? money.surface_breakdown.slice(0, 20) : [],
       experiment_breakdown: Array.isArray(money?.experiment_breakdown) ? money.experiment_breakdown.slice(0, 20) : [],
       journey_attribution: money?.journey_attribution || null,
+      stage_latency: money?.stage_latency || null,
       windows: money?.windows || null,
     },
     command_events: commandEvents,
