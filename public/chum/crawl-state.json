@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T22:52:15.412Z",
+  "updated_at": "2026-09-28T22:55:46.514Z",
   "url_count": 2548,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "fbd662c7eef61b890abfe2942311196ed9f922f066562cb9cfae8099b1810737",
-      "last_changed": "2026-09-28T22:52:15.412Z",
+      "content_sha256": "8e4cfdd0ac6f3902e3dc391db0c2263e25f19a860be87cf472dc4f5bd7df0516",
+      "last_changed": "2026-09-28T22:55:46.514Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -465,8 +465,8 @@
     },
     "/forensiscope/developers/status.json": {
       "path": "/forensiscope/developers/status.json",
-      "content_sha256": "5c82c092e8ad6f02e958a36851bf3485719277518f332f1655acadd0019213b7",
-      "last_changed": "2026-09-25T17:29:56.413Z",
+      "content_sha256": "2284f8da96fe1b661daf2f6bb0be0e91c698a0f5750f01af5d037ef9f64d94d5",
+      "last_changed": "2026-09-28T22:55:46.514Z",
       "priority": 60
     },
     "/forensiscope/developers/examples.json": {
