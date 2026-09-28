@@ -10,5 +10,9 @@
       "type": "streamable-http",
       "url": "https://aliev.base44.app/functions/alievMcp"
     }
-  ]
+  ],
+  "repository": {
+    "url": "https://github.com/jgaethle10/forge-operator",
+    "source": "github"
+  }
 }
