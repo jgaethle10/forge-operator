@@ -313,3 +313,29 @@ test('Money Radar preserves aggregate first-touch last-touch campaign and surfac
   assert.equal(receipt.surface_breakdown.find((row) => row.surface === 'answer-door').unique_buyer_sessions, 1);
   assert.equal(receipt.experiment_breakdown.find((row) => row.experiment_variant === 'offer-headline::b').unique_buyer_sessions, 1);
 });
+
+
+test('Money Radar arms and fires the first-qualified-buyer tripwire without claiming payment', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const event = {
+    ...publicEvent('offer_view', 'first-qualified-view'),
+    occurred_at: '2026-09-28T11:30:00.000Z',
+    provider_claim: 'chatgpt',
+    campaign: 'answer-door',
+    surface: 'chum_answer_door',
+  };
+
+  const { receipt } = await buildMoneyRadar({
+    root,
+    generatedAt: '2026-09-28T12:00:00.000Z',
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: [event],
+  });
+
+  assert.equal(receipt.buyer_milestones.first_buyer_tripwire_armed, false);
+  assert.equal(receipt.buyer_milestones.first_qualified_event_at, '2026-09-28T11:30:00.000Z');
+  assert.equal(receipt.totals.unique_verified_payments, 0);
+  assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'first_qualified_buyer_activity'));
+  assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'qualified_offer_view_zero_continue'));
+});
