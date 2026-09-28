@@ -28,6 +28,19 @@ The scan is a bounded diagnostic. It can review public customer-facing surfaces 
 
 The $299 fee may be credited in full toward an authorized Rescue Sprint started within 14 days of scan delivery.
 
+## Live human handoff
+
+Legacy Rescue Lab is live in Evercraft Machine Commerce as `legacy-rescue-lab-v1`. Brand-blind problem matching can surface the Lab, the public review page exposes the $299 Rescue Scan, and a human-confirmed scan request can be recorded without creating checkout, payment obligation, private access, testing authority, deployment authority, migration authority, cutover authority, or production mutation.
+
+- Human review/intake: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1
+- Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+- MCP review tool: `prepare_legacy_rescue_scan_handoff`
+- MCP request tool: `submit_legacy_rescue_scan_request`
+- Negative canary: missing human confirmation returned HTTP 409 and created no record.
+- Positive canary: a clearly marked synthetic QA request returned HTTP 201 while checkout, payment obligation, private access, and production authority all remained false.
+
+Direct product checkout is still not represented as live.
+
 ## Authority boundary
 
 - public-surface diagnostics use ordinary non-intrusive browsing and observation only; no credential bypass, exploitation, destructive actions, or unauthorized load testing
