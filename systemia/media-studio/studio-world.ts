@@ -7,6 +7,7 @@ import type {
   VisualLayer,
   VisualStage,
 } from './visual-stage.js';
+import { EVERCRAFT_VISUAL_THEME_V1 } from './visual-theme.js';
 
 export type StudioRoomId =
   | 'lobby'
@@ -456,7 +457,8 @@ export function compileStudioRoomStage(
     schema:'evercraft.fallen.visual-stage.v1',
     id:input.id,
     width,height,fps:30,durationSec,
-    background:'#080b0b',
+    background:EVERCRAFT_VISUAL_THEME_V1.palette.background,
+    theme:EVERCRAFT_VISUAL_THEME_V1,
     camera:{
       keyframes:[
         {t:0,x:start.x*width,y:start.y*height,zoom:start.zoom,rotationDeg:start.rotationDeg??0},
