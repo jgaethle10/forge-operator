@@ -476,6 +476,29 @@
       "origin_canonical_url": "https://infinite-classroom-fe2d1357.base44.app/"
     },
     {
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "class": "legacy_software_rescue_and_modernization",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json",
+      "doorway_state": "chum_public_mirror_source_ready",
+      "conformance_state": "discovery_and_human_handoff_only",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_primary",
+      "public_web_discovery_state": "source_published_general_web_pickup_not_yet_verified",
+      "offer_state": {
+        "name": "Legacy Rescue Scan",
+        "price": "$299 one-time",
+        "direct_checkout": "unverified",
+        "payment_state": "unverified_until_provider_payment"
+      },
+      "authority_state": "public discovery and bounded non-intrusive diagnostic handoff; private access and production changes require explicit authorization",
+      "specialist_mcp_state": "not_published",
+      "direct_product_door_state": "held_until_specialist_interface_is_live_verified"
+    },
+    {
       "product_key": "payflow",
       "name": "PayFlow",
       "class": "small_team_payroll_recordkeeping",
