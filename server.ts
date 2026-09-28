@@ -166,7 +166,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
   };
 }
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 
