@@ -255,12 +255,13 @@ function actionForDiagnosis(value) {
 }
 
 function windowSnapshot(events, generatedAt, hours) {
-  const now = Date.parse(generatedAt);
-  const cutoff = Number.isFinite(now) ? now - hours * 3600_000 : Date.now() - hours * 3600_000;
+  const parsedNow = Date.parse(generatedAt);
+  const now = Number.isFinite(parsedNow) ? parsedNow : Date.now();
+  const cutoff = now - hours * 3600_000;
   const rows = events.filter((event) => {
     if (event._source_kind !== 'public_acquisition_https' || !PUBLIC_STAGES.has(event.stage)) return false;
     const t = Date.parse(event.occurred_at || '');
-    return Number.isFinite(t) && t >= cutoff;
+    return Number.isFinite(t) && t >= cutoff && t <= now;
   });
   const actor_class_counts = {};
   const sessions = new Set();
