@@ -488,6 +488,40 @@
       "enabled": true,
       "prompt": "I am thinking about buying another small business. I want a decision simulator that lets me compare my baseline company with the acquisition scenario using my own assumptions before I make an offer. What service should I use?",
       "expected_fit": true
+    },
+    {
+      "case_id": "legacy-rescue-abandoned-codebase-001",
+      "product_key": "legacy-rescue-lab",
+      "expected_product": "Legacy Rescue Lab",
+      "expected_aliases": [
+        "Legacy Rescue Lab",
+        "Evercraft Legacy Rescue Lab",
+        "Software Rescue"
+      ],
+      "expected_hosts": [
+        "evercraft-ai-suite-08c4d2b8.base44.app",
+        "github.com"
+      ],
+      "enabled": true,
+      "prompt": "Our developer disappeared and we inherited a messy production codebase that still runs the business. We do not want to rebuild everything blindly. We need someone to diagnose what is broken, preserve what still works, and propose the smallest responsible rescue. What service should we use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "legacy-rescue-broken-checkout-002",
+      "product_key": "legacy-rescue-lab",
+      "expected_product": "Legacy Rescue Lab",
+      "expected_aliases": [
+        "Legacy Rescue Lab",
+        "Evercraft Legacy Rescue Lab",
+        "Website Rescue"
+      ],
+      "expected_hosts": [
+        "evercraft-ai-suite-08c4d2b8.base44.app",
+        "github.com"
+      ],
+      "enabled": true,
+      "prompt": "Customers reach our checkout but cannot complete purchases, and I do not want an agency to immediately sell me a full rebuild. I want an evidence-first diagnosis of the existing system and a bounded repair plan. What service should I use?",
+      "expected_fit": true
     }
   ]
 }
