@@ -502,11 +502,22 @@ export class EvercraftIntakeFabric {
     });
   }
 
-  buildSystemiaAdmissionPacket(candidateId) {
+  buildSystemiaAdmissionPacket(candidateId, { actor_ref, at = new Date().toISOString() } = {}) {
     this.#reload();
     const id = requiredString(candidateId, 'candidate_id');
     const candidate = this.candidates.get(id);
     if (!candidate) throw new Error('candidate_not_found');
+    const instant = iso(at, 'at');
+    const actorRef = requiredString(actor_ref, 'actor_ref');
+    const readAuth = this.passport.authorize({
+      subject_ref: actorRef,
+      product: 'evercraft-intake',
+      scope: 'intake.read',
+      resource_ref: id,
+      at: instant,
+    });
+    if (readAuth.decision !== 'allow') throw new Error('intake_read_not_authorized');
+
     const decision = this.#latestDecision(id);
     if (!decision || decision.decision !== 'accept') {
       throw new Error('candidate_not_accepted');
@@ -538,11 +549,22 @@ export class EvercraftIntakeFabric {
     });
   }
 
-  getCandidate(candidateId) {
+  getCandidate(candidateId, { actor_ref, at = new Date().toISOString() } = {}) {
     this.#reload();
     const id = requiredString(candidateId, 'candidate_id');
     const candidate = this.candidates.get(id);
     if (!candidate) return null;
+    const instant = iso(at, 'at');
+    const actorRef = requiredString(actor_ref, 'actor_ref');
+    const readAuth = this.passport.authorize({
+      subject_ref: actorRef,
+      product: 'evercraft-intake',
+      scope: 'intake.read',
+      resource_ref: id,
+      at: instant,
+    });
+    if (readAuth.decision !== 'allow') return null;
+
     return {
       ...candidate,
       quarantine_released: this.quarantineReleases.has(id),
