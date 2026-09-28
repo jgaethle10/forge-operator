@@ -7,6 +7,12 @@ export const DEFAULT_PUBLIC_ACQUISITION_EXPORT_URL =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition?view=export&hours=720';
 
 const PUBLIC_STAGES = new Set(['landing', 'offer_view', 'continue_clicked', 'checkout_started']);
+const DECISION_THRESHOLDS = Object.freeze({
+  qualified_landings: 5,
+  qualified_offer_views: 5,
+  qualified_continue_clicks: 3,
+  qualified_checkout_starts: 2,
+});
 const QUALIFIED_BUYER_CLASSES = new Set([
   'human_probable',
   'ai_referral_human_probable',
@@ -208,11 +214,27 @@ function funnelState(bucket) {
 
 function diagnosis(bucket) {
   if (bucket.verified_payments > 0) return 'paid_conversion_observed';
-  if (bucket.checkout_starts > 0) return 'checkout_to_payment_dropoff';
-  if (bucket.continue_clicks > 0) return 'continue_to_checkout_dropoff';
-  if (bucket.offer_views > 0) return 'offer_to_continue_dropoff';
+  if (bucket.checkout_starts > 0) {
+    return bucket.checkout_starts >= DECISION_THRESHOLDS.qualified_checkout_starts
+      ? 'checkout_to_payment_dropoff'
+      : 'checkout_signal_insufficient_sample';
+  }
+  if (bucket.continue_clicks > 0) {
+    return bucket.continue_clicks >= DECISION_THRESHOLDS.qualified_continue_clicks
+      ? 'continue_to_checkout_dropoff'
+      : 'continue_signal_insufficient_sample';
+  }
+  if (bucket.offer_views > 0) {
+    return bucket.offer_views >= DECISION_THRESHOLDS.qualified_offer_views
+      ? 'offer_to_continue_dropoff'
+      : 'offer_signal_insufficient_sample';
+  }
   if (bucket.raw_offer_views > 0) return 'raw_views_without_qualified_buyer_signal';
-  if (bucket.landings > 0) return 'landing_to_offer_dropoff';
+  if (bucket.landings > 0) {
+    return bucket.landings >= DECISION_THRESHOLDS.qualified_landings
+      ? 'landing_to_offer_dropoff'
+      : 'landing_signal_insufficient_sample';
+  }
   if (bucket.raw_landings > 0) return 'raw_landings_without_qualified_buyer_signal';
   return 'no_measured_acquisition';
 }
@@ -222,6 +244,9 @@ function actionForDiagnosis(value) {
   if (value === 'continue_to_checkout_dropoff') return { priority: 'P1', action: 'inspect_buyer_handoff_and_checkout_friction' };
   if (value === 'offer_to_continue_dropoff') return { priority: 'P1', action: 'repair_offer_trust_value_or_primary_cta' };
   if (value === 'landing_to_offer_dropoff') return { priority: 'P1', action: 'inspect_discovery_to_offer_frontage_dropoff' };
+  if (value.endsWith('_signal_insufficient_sample')) {
+    return { priority: 'P2', action: 'hold_conversion_tuning_collect_more_qualified_sessions' };
+  }
   if (value === 'raw_views_without_qualified_buyer_signal' || value === 'raw_landings_without_qualified_buyer_signal') {
     return { priority: 'P1', action: 'increase_qualified_discovery_traffic_without_tuning_checkout_from_machine_noise' };
   }
@@ -504,6 +529,7 @@ export async function buildMoneyRadar({
     bucket.raw_to_qualified_view_rate = rate(bucket.offer_views, bucket.raw_offer_views);
     bucket.funnel_state = funnelState(bucket);
     bucket.diagnosis = diagnosis(bucket);
+    bucket.decision_ready = !bucket.diagnosis.endsWith('_signal_insufficient_sample');
   }
 
   for (const row of Object.values(sourceBreakdown)) {
@@ -644,7 +670,7 @@ export async function buildMoneyRadar({
       action: 'separate_distribution_success_from_human_acquisition_and_expand_human_reach',
     });
   }
-  if (current24.offer_views > 0 && current24.continue_clicks === 0) {
+  if (current24.offer_views >= DECISION_THRESHOLDS.qualified_offer_views && current24.continue_clicks === 0) {
     operator_alerts.push({
       severity: 'P1',
       code: 'qualified_offer_view_zero_continue',
@@ -652,7 +678,7 @@ export async function buildMoneyRadar({
       action: 'repair_offer_trust_value_or_primary_cta',
     });
   }
-  if (current24.continue_clicks > 0 && current24.checkout_starts === 0) {
+  if (current24.continue_clicks >= DECISION_THRESHOLDS.qualified_continue_clicks && current24.checkout_starts === 0) {
     operator_alerts.push({
       severity: 'P1',
       code: 'continue_zero_checkout',
@@ -660,7 +686,7 @@ export async function buildMoneyRadar({
       action: 'inspect_buyer_handoff_and_checkout_friction',
     });
   }
-  if (current24.checkout_starts > 0 && current24.verified_payments === 0) {
+  if (current24.checkout_starts >= DECISION_THRESHOLDS.qualified_checkout_starts && current24.verified_payments === 0) {
     operator_alerts.push({
       severity: 'P1',
       code: 'checkout_zero_verified_payment',
@@ -741,7 +767,9 @@ export async function buildMoneyRadar({
       unique_buyer_is_session_based_not_person_identity: true,
       exported_session_dedupe_is_one_way_and_product_scoped: true,
       journey_attribution_is_aggregate_and_does_not_expose_session_buckets: true,
+      conversion_repair_requires_minimum_sample_before_action: true,
     },
+    decision_thresholds: DECISION_THRESHOLDS,
     totals: {
       source_events: taggedEvents.length,
       acquisition_source_events: acquisitionEvents.length,
