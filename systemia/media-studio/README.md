@@ -178,6 +178,36 @@ npm run media:studio -- world-intel ./tmp/story.json ./tmp/world-stage.json ./tm
 
 This is intended for Week in Motion, TOWI, FAIE and other geography/time/scale-heavy stories where the visuals need to carry the explanation rather than sit behind typography.
 
+## Evercraft Studio World
+
+Week in Motion now has a canonical virtual headquarters instead of disposable backgrounds. The world schema fixes room identity, set-plate asset IDs, camera anchors, display geometry and permitted room-to-room transitions so episodes can revisit recognizable spaces without silently rebuilding the building every week.
+
+The first world contains seven recurring rooms:
+
+- Lobby
+- Global Operations
+- Product Gallery
+- Research Lab
+- Field Bay
+- Proof Room
+- Observation Deck
+
+Display surfaces are named contracts such as `subject-wall`, `world-wall`, `ops-strip`, `hero-product`, `evidence-wall` and `receipt-wall`. Story content binds to those surfaces while the room geometry remains canon. A stable world digest lets later production receipts prove which studio layout an episode used.
+
+Compile one room:
+
+```bash
+npm run media:studio -- studio-room ./tmp/global-ops.json ./tmp/global-ops.stage.json
+```
+
+Compile a room journey:
+
+```bash
+npm run media:studio -- studio-journey ./tmp/week-journey.json ./tmp/week-journey.plan.json
+```
+
+The journey compiler fails closed on room movements that are not in the studio transition graph instead of inventing new hallways or changing geography between episodes.
+
 ## Distributed rendering
 
 Visual Stage frames can be sharded across multiple private Fallen Render Workers. The planner creates exact, non-overlapping frame ranges; workers render only their assigned lattice slice; the coordinator retrieves each PNG through the worker's authenticated artifact endpoint, re-hashes the bytes locally, proves full no-gap/no-duplicate coverage, and only then assembles the master with FFmpeg.
