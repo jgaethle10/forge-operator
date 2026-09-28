@@ -30,6 +30,10 @@ function normalize(value) {
   return clean(value).toLowerCase();
 }
 
+function isMoneyRadarReceipt(value) {
+  return value?.schema === 'evercraft.chum.money-radar.v1' || value?.schema === 'evercraft.chum.money-radar.v2';
+}
+
 function productKeysForOffer(offer, probeSuite) {
   const offerHost = hostOf(offer.public_url);
   const offerName = normalize(offer.name);
@@ -357,6 +361,14 @@ export function buildFireControl({
     }));
 
   const sellNowRows = rows.filter((row) => row.commercial_state === 'sell_now');
+  const moneyOperatorAlerts = Array.isArray(money?.operator_alerts) ? money.operator_alerts : [];
+  const commandEvents = moneyOperatorAlerts.map((alert) => ({
+    source: 'money_radar',
+    severity: alert.severity || 'P2',
+    code: alert.code || 'money_radar_alert',
+    message: alert.message || '',
+    action: alert.action || 'inspect_money_radar',
+  }));
   const receipt = {
     schema: 'evercraft.chum.fire-control.v1',
     generated_at: generatedAt,
@@ -379,7 +391,7 @@ export function buildFireControl({
       provider_probe_receipt_present: probes?.schema === 'evercraft.chum.cross-llm-run-receipt.v1',
       provider_probe_bridge_configured: probes?.bridge_configured === true,
       commerce_canary_present: commerce?.schema === 'evercraft.chum.commerce-canary.v1',
-      money_radar_present: money?.schema === 'evercraft.chum.money-radar.v1',
+      money_radar_present: isMoneyRadarReceipt(money),
       pickup_consistency_present: pickupConsistencyPresent,
       pickup_consistency_rollups: pickup?.rollups?.length || 0,
       money_radar_measurement_state: money?.measurement_state || 'unknown',
@@ -410,6 +422,17 @@ export function buildFireControl({
         provider_verified_payment: stageCount(sellNowRows, 'provider_verified_payment'),
       },
     },
+    money_intelligence: {
+      buyer_signal_state: money?.buyer_signal_state || 'unknown',
+      buyer_milestones: money?.buyer_milestones || null,
+      operator_alert_count: moneyOperatorAlerts.length,
+      campaign_breakdown: Array.isArray(money?.campaign_breakdown) ? money.campaign_breakdown.slice(0, 20) : [],
+      surface_breakdown: Array.isArray(money?.surface_breakdown) ? money.surface_breakdown.slice(0, 20) : [],
+      experiment_breakdown: Array.isArray(money?.experiment_breakdown) ? money.experiment_breakdown.slice(0, 20) : [],
+      journey_attribution: money?.journey_attribution || null,
+      windows: money?.windows || null,
+    },
+    command_events: commandEvents,
     action_queue: actionQueue,
     offers: rows,
   };
@@ -430,6 +453,12 @@ export function buildFireControl({
     `Sell-now acquisition measurement ready: ${receipt.funnel.sell_now.acquisition_measurement_ready}`,
     `Sell-now payment measurement ready: ${receipt.funnel.sell_now.payment_measurement_ready}`,
     `Sell-now provider-verified payments: ${receipt.funnel.sell_now.provider_verified_payment}`,
+    '',
+    '## Money Radar command events',
+    '',
+    ...(commandEvents.length
+      ? commandEvents.map((row) => `- [${row.severity}] ${row.code} :: ${row.message} :: ${row.action}`)
+      : ['- No Money Radar command event in the current receipt.']),
     '',
     '## Action queue',
     '',
