@@ -208,6 +208,32 @@ npm run media:studio -- studio-journey ./tmp/week-journey.json ./tmp/week-journe
 
 The journey compiler fails closed on room movements that are not in the studio transition graph instead of inventing new hallways or changing geography between episodes.
 
+
+## Virtual Production Stage
+
+Studio World room cards are useful for previews, but they are not the final Week in Motion grammar. Fallen's **Virtual Production Stage** compiles the canonical HQ into one continuous world-space so the camera and host can physically travel through it.
+
+The compiler adds:
+
+- one shared stage spanning multiple canonical rooms rather than concatenated room cards;
+- an evidence-bound host performance layer from an approved image or alpha-video asset;
+- mandatory host identity evidence and source references, with synthetic host identity rejected;
+- host movement tracks that continue through room transitions;
+- camera modes for host-follow, wide reveals and pushes into named display surfaces;
+- room-local motion shifted onto the episode clock so screens and graphics wake up when the host reaches that department;
+- looping performance plates for longer walkthroughs;
+- preserved evidence state and provenance on the product screens inside the environment.
+
+Compile a hosted episode:
+
+```bash
+npm run media:studio -- virtual-production ./tmp/week-episode.json ./tmp/week-production-plan.json ./tmp/week-stage.html
+```
+
+The output is one Visual Stage suitable for the existing private Fallen Render Workers and distributed exact-frame renderer. Render completion still does not grant publication authority.
+
+The production boundary is deliberate: Fallen can move an approved host reference through the world, but it will not fabricate a founder identity merely because a script asks for one. A real Week in Motion host pass requires an approved Jesse reference/performance asset or another explicitly licensed host asset.
+
 ## Visual themes
 
 The Visual Stage carries a renderer-level theme contract instead of relying on scattered hard-coded CSS. Theme identity participates in the stage digest, so changing the visual system changes the reproducible render identity.
