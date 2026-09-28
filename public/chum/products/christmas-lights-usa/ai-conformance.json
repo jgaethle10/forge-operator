@@ -50,7 +50,16 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "evercraft-property-services": {
+      "name": "Evercraft Property Services",
+      "description": "General Central Washington property-maintenance work can route to EPS. Holiday-light projects remain in the specialized Christmas Lights USA workflow."
+    },
+    "contractor-cloud": {
+      "name": "Evercraft Contractor Cloud",
+      "description": "Broader home-project contractor matching remains Contractor Cloud territory when the need is not specifically holiday lighting."
+    }
+  },
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,

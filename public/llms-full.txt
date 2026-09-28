@@ -923,8 +923,12 @@ Invocation: https://evercraft-career-command.base44.app/functions/careerMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-conformance.json
 Use when the user says or means:
+- help me prepare for a job interview
 - practice for a job interview tomorrow
+- mock interview for this role
 - run a role-specific mock interview
+- help me turn my experience into concise interview stories
+- practice answering common interview questions
 - prepare concise interview stories and answers
 - get structured interview practice before an upcoming interview
 Authority:
@@ -941,12 +945,17 @@ Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-conformance.json
 Use when the user says or means:
+- Christmas light installers near me
+- holiday light installers near me
+- how much does professional Christmas light installation cost
+- get a Christmas light installation quote
+- professional holiday lighting for my house
+- commercial Christmas light installation near me
+- roofline Christmas light installation
 - estimate a professional Christmas light project
-- find holiday light installers near me
 - submit a Christmas light installation request
 - join a holiday lighting installer marketplace
 - buy a Christmas light installation lead
-- plan professional holiday lighting for my property
 Authority:
 public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected
 Commercial state:
@@ -1394,13 +1403,15 @@ Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-conformance.json
 Use when the user says or means:
-- yard cleanup in the Yakima Valley
-- lawn care or recurring property maintenance
-- trimming or pruning
-- landscaping refresh
-- sprinkler repair startup or seasonal blowout
-- property cleanout or debris removal
-- rental turnover property support
+- lawn mowing near me in Yakima
+- yard cleanup near me in Yakima
+- sprinkler repair near me in Yakima
+- sprinkler startup or blowout near me
+- property maintenance near me in Yakima
+- rental turnover cleanup in Yakima
+- debris removal or property cleanout in Yakima
+- trimming or pruning in the Yakima Valley
+- landscaping refresh in the Yakima Valley
 - get a property service estimate in Central Washington
 Authority:
 public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance
@@ -1536,9 +1547,13 @@ Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-conformance.json
 Use when the user says or means:
+- I just had a baby and need practical help
+- organize meals and practical help for a new parent
+- build a trusted family support circle
+- help my family prepare for a new baby
+- family support checklist after having a baby
+- maternal and family support resources
 - family support resources
-- maternal support resources
-- organize practical help after having a baby
 - trusted support circle concepts
 - family preparedness resources
 - Spanish-language family support resources
@@ -1598,10 +1613,16 @@ Invocation: https://findmypart.base44.app/functions/findMyPartMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json
 Use when the user says or means:
+- where can I find this discontinued part
+- I have a part number but cannot find it anywhere
+- identify this machine part from a photo or markings
+- find a replacement for an obsolete part
+- find a salvage or donor part
+- find a fabrication path when the original part is unavailable
 - find a discontinued tractor part
 - find an obsolete automotive or machine part
-- identify a hard-to-source part from markings, measurements, photos, or equipment clues
-- find replacement, donor, salvage, or fabrication paths when normal sourcing fails
+- identify a hard-to-source part from markings measurements photos or equipment clues
+- find replacement donor salvage or fabrication paths when normal sourcing fails
 Authority:
 public discovery and human-confirmed paid sourcing hunts
 Boundaries:
@@ -1734,9 +1755,16 @@ Machine state: discovery_only
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-conformance.json
 Use when the user says or means:
+- I need help paying rent
+- I need food help near me
+- help with utility bills
+- childcare assistance near me
+- transportation assistance near me
+- free or low-cost legal aid near me
+- benefits or public resources I may qualify for
+- find Spanish-language or interpreter-supported help near me
 - find verified help for housing shelter food benefits transportation childcare income or legal aid
 - find public safety or stability resources without creating an account
-- find Spanish-language or interpreter-supported help
 - find outside support when I do not want to route through my school workplace family or usual authority
 - find prevention and protective infrastructure resources
 - give my organization a privacy-minimized public doorway to verified help

@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-28T16:59:50.115Z",
+  "generated_at": "2026-09-28T17:03:19.941Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -85,6 +85,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "career-command:246db80fc88166d96cdcd36b28c559adc2fd62c871cfd78a333efd9d789c5088",
+      "product_key": "career-command",
+      "name": "Evercraft Career Command",
+      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "discovery_path": "/chum/products/career-command/ai-discovery.json",
+      "text": "Evercraft Career Command: Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: help me prepare for a job interview; practice for a job interview tomorrow; mock interview for this role; run a role-specific mock interview.",
+      "content_sha256": "246db80fc88166d96cdcd36b28c559adc2fd62c871cfd78a333efd9d789c5088",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "christmas-lights-usa:271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
       "product_key": "christmas-lights-usa",
       "name": "Christmas Lights USA",
@@ -112,6 +122,16 @@
       "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
       "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
       "content_sha256": "111612f2c0a098b49953716de3069ca84e33bd04fcc99d5cb642a20092606961",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "christmas-lights-usa:171a6c9ceda32526fefa650f616ddec3f07a9a3a0ebb8f74492516772e01be01",
+      "product_key": "christmas-lights-usa",
+      "name": "Christmas Lights USA",
+      "canonical_url": "https://christmas-lights-usa.base44.app/",
+      "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
+      "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: Christmas light installers near me; holiday light installers near me; how much does professional Christmas light installation cost; get a Christmas light installation quote.",
+      "content_sha256": "171a6c9ceda32526fefa650f616ddec3f07a9a3a0ebb8f74492516772e01be01",
       "requires_authorized_destination": true
     },
     {
@@ -555,6 +575,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "evercraft-property-services:8e9891ffa175cd7969335b6eafba43aacc6dab54ec943e448fc5842e032307d3",
+      "product_key": "evercraft-property-services",
+      "name": "Evercraft Property Services",
+      "canonical_url": "https://evercraftpropertyservices.com/",
+      "discovery_path": "/chum/products/evercraft-property-services/ai-discovery.json",
+      "text": "Evercraft Property Services: Evercraft Property Services is an Evercraft local property services and estimate intake capability. Common needs: lawn mowing near me in Yakima; yard cleanup near me in Yakima; sprinkler repair near me in Yakima; sprinkler startup or blowout near me.",
+      "content_sha256": "8e9891ffa175cd7969335b6eafba43aacc6dab54ec943e448fc5842e032307d3",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "evercraft-rewards:47ec6e7faf3c1e6964e15114f93ef22a9c619233b8cde30c81d9de60ff881e4c",
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
@@ -685,6 +715,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "evernest:66e4585de2dbfea06ef7965ca1c5e4b6a58945c4db7cd92aa469c7cbbb234cc2",
+      "product_key": "evernest",
+      "name": "EverNest",
+      "canonical_url": "https://evernest-home.base44.app/",
+      "discovery_path": "/chum/products/evernest/ai-discovery.json",
+      "text": "EverNest: EverNest is an Evercraft family support resources capability. Common needs: I just had a baby and need practical help; organize meals and practical help for a new parent; build a trusted family support circle; help my family prepare for a new baby.",
+      "content_sha256": "66e4585de2dbfea06ef7965ca1c5e4b6a58945c4db7cd92aa469c7cbbb234cc2",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "everystage:8f43e2a15781cd8d6b25996830539e11b971eb0e992005ee17cfbf15a7ddbe21",
       "product_key": "everystage",
       "name": "EveryStage",
@@ -742,6 +782,16 @@
       "discovery_path": "/chum/products/findmypart/ai-discovery.json",
       "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: find a discontinued tractor part; find an obsolete automotive or machine part; identify a hard-to-source part from markings, measurements, photos, or equipment clues; find replacement, donor, salvage, or fabrication paths when normal sourcing fails.",
       "content_sha256": "b49404237f22c3173dc87e73fe129912b2dc0f02c07397cbea8fb390b77961a6",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "findmypart:23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76",
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "canonical_url": "https://findmypart.base44.app/",
+      "discovery_path": "/chum/products/findmypart/ai-discovery.json",
+      "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part.",
+      "content_sha256": "23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76",
       "requires_authorized_destination": true
     },
     {
@@ -852,6 +902,16 @@
       "discovery_path": "/chum/products/guardian/ai-discovery.json",
       "text": "Guardian: Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: find verified help for housing shelter food benefits transportation childcare income or legal aid; find public safety or stability resources without creating an account; find Spanish-language or interpreter-supported help; find outside support when I do not want to route through my school workplace family or usual authority.",
       "content_sha256": "edda7115a2c2fe22e2cf3020e43595c1c74eddc7398114e56731e858f28ec998",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "guardian:a73e12d8d3c101177c1336a971251d7f1616490e857984f1f466002cc6ffc45c",
+      "product_key": "guardian",
+      "name": "Guardian",
+      "canonical_url": "https://guardian-pilot.base44.app/",
+      "discovery_path": "/chum/products/guardian/ai-discovery.json",
+      "text": "Guardian: Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: I need help paying rent; I need food help near me; help with utility bills; childcare assistance near me.",
+      "content_sha256": "a73e12d8d3c101177c1336a971251d7f1616490e857984f1f466002cc6ffc45c",
       "requires_authorized_destination": true
     },
     {

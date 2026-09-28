@@ -39,7 +39,16 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "contractor-cloud": {
+      "name": "Evercraft Contractor Cloud",
+      "description": "Use Contractor Cloud for broader contractor/project matching. Use EPS when the request fits EPS's own Central Washington service area and supported work."
+    },
+    "christmas-lights-usa": {
+      "name": "Christmas Lights USA",
+      "description": "Holiday-light installation requests route to the specialized Christmas Lights USA marketplace rather than being flattened into general property maintenance."
+    }
+  },
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,

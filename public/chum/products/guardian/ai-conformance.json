@@ -35,7 +35,16 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "revenue-war-map": {
+      "name": "Evercraft Revenue War Map",
+      "description": "When immediate stability needs are addressed, a user may choose longer-term private income planning. Guardian does not treat a modeled income plan as a substitute for urgent basic-needs resources."
+    },
+    "evernest": {
+      "name": "EverNest",
+      "description": "Family and new-parent practical support can route to EverNest when the need is family coordination rather than provider/resource navigation."
+    }
+  },
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,

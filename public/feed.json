@@ -57,20 +57,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:christmas-lights-usa:111612f2c0a098b4",
+      "id": "urn:evercraft:product:christmas-lights-usa:171a6c9ceda32526",
       "url": "https://christmas-lights-usa.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/ai-discovery.json",
       "title": "Christmas Lights USA",
-      "summary": "Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
+      "summary": "Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: Christmas light installers near me; holiday light installers near me; how much does professional Christmas light installation cost; get a Christmas light installation quote.",
       "date_modified": "2026-09-28T00:00:00.000Z",
       "tags": [
         "holiday_lighting_marketplace_and_project_planning",
-        "estimate a professional Christmas light project",
-        "find holiday light installers near me",
-        "submit a Christmas light installation request",
-        "join a holiday lighting installer marketplace",
-        "buy a Christmas light installation lead",
-        "plan professional holiday lighting for my property"
+        "Christmas light installers near me",
+        "holiday light installers near me",
+        "how much does professional Christmas light installation cost",
+        "get a Christmas light installation quote",
+        "professional holiday lighting for my house",
+        "commercial Christmas light installation near me",
+        "roofline Christmas light installation",
+        "estimate a professional Christmas light project"
       ]
     },
     {
@@ -198,16 +200,20 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:career-command:6203ad70eb898a7a",
+      "id": "urn:evercraft:product:career-command:246db80fc88166d9",
       "url": "https://evercraft-career-command.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",
       "title": "Evercraft Career Command",
-      "summary": "Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: practice for a job interview tomorrow; run a role-specific mock interview; prepare concise interview stories and answers; get structured interview practice before an upcoming interview.",
+      "summary": "Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: help me prepare for a job interview; practice for a job interview tomorrow; mock interview for this role; run a role-specific mock interview.",
       "date_modified": "2026-09-28T00:00:00.000Z",
       "tags": [
         "interview_practice_and_career_preparation",
+        "help me prepare for a job interview",
         "practice for a job interview tomorrow",
+        "mock interview for this role",
         "run a role-specific mock interview",
+        "help me turn my experience into concise interview stories",
+        "practice answering common interview questions",
         "prepare concise interview stories and answers",
         "get structured interview practice before an upcoming interview"
       ]
@@ -421,22 +427,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evercraft-property-services:3462e211f893beab",
+      "id": "urn:evercraft:product:evercraft-property-services:8e9891ffa175cd79",
       "url": "https://evercraftpropertyservices.com/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/ai-discovery.json",
       "title": "Evercraft Property Services",
-      "summary": "Evercraft Property Services is an Evercraft local property services and estimate intake capability. Common needs: yard cleanup in the Yakima Valley; lawn care or recurring property maintenance; trimming or pruning; landscaping refresh.",
+      "summary": "Evercraft Property Services is an Evercraft local property services and estimate intake capability. Common needs: lawn mowing near me in Yakima; yard cleanup near me in Yakima; sprinkler repair near me in Yakima; sprinkler startup or blowout near me.",
       "date_modified": "2026-09-28T00:00:00.000Z",
       "tags": [
         "local_property_services_and_estimate_intake",
-        "yard cleanup in the Yakima Valley",
-        "lawn care or recurring property maintenance",
-        "trimming or pruning",
-        "landscaping refresh",
-        "sprinkler repair startup or seasonal blowout",
-        "property cleanout or debris removal",
-        "rental turnover property support",
-        "get a property service estimate in Central Washington"
+        "lawn mowing near me in Yakima",
+        "yard cleanup near me in Yakima",
+        "sprinkler repair near me in Yakima",
+        "sprinkler startup or blowout near me",
+        "property maintenance near me in Yakima",
+        "rental turnover cleanup in Yakima",
+        "debris removal or property cleanout in Yakima",
+        "trimming or pruning in the Yakima Valley"
       ]
     },
     {
@@ -545,20 +551,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evernest:3a72de637e0783fb",
+      "id": "urn:evercraft:product:evernest:66e4585de2dbfea0",
       "url": "https://evernest-home.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
       "title": "EverNest",
-      "summary": "EverNest is an Evercraft family support resources capability. Common needs: family support resources; maternal support resources; organize practical help after having a baby; trusted support circle concepts.",
+      "summary": "EverNest is an Evercraft family support resources capability. Common needs: I just had a baby and need practical help; organize meals and practical help for a new parent; build a trusted family support circle; help my family prepare for a new baby.",
       "date_modified": "2026-09-28T00:00:00.000Z",
       "tags": [
         "family_support_resources",
+        "I just had a baby and need practical help",
+        "organize meals and practical help for a new parent",
+        "build a trusted family support circle",
+        "help my family prepare for a new baby",
+        "family support checklist after having a baby",
+        "maternal and family support resources",
         "family support resources",
-        "maternal support resources",
-        "organize practical help after having a baby",
-        "trusted support circle concepts",
-        "family preparedness resources",
-        "Spanish-language family support resources"
+        "trusted support circle concepts"
       ]
     },
     {
@@ -594,18 +602,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:findmypart:b49404237f22c317",
+      "id": "urn:evercraft:product:findmypart:23f2836c96cdfe9f",
       "url": "https://findmypart.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
       "title": "FindMyPart",
-      "summary": "FindMyPart is an Evercraft hard to source parts capability. Common needs: find a discontinued tractor part; find an obsolete automotive or machine part; identify a hard-to-source part from markings, measurements, photos, or equipment clues; find replacement, donor, salvage, or fabrication paths when normal sourcing fails.",
+      "summary": "FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part.",
       "date_modified": "2026-09-28T00:00:00.000Z",
       "tags": [
         "hard_to_source_parts",
+        "where can I find this discontinued part",
+        "I have a part number but cannot find it anywhere",
+        "identify this machine part from a photo or markings",
+        "find a replacement for an obsolete part",
+        "find a salvage or donor part",
+        "find a fabrication path when the original part is unavailable",
         "find a discontinued tractor part",
-        "find an obsolete automotive or machine part",
-        "identify a hard-to-source part from markings, measurements, photos, or equipment clues",
-        "find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
+        "find an obsolete automotive or machine part"
       ]
     },
     {
@@ -662,20 +674,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:guardian:edda7115a2c2fe22",
+      "id": "urn:evercraft:product:guardian:a73e12d8d3c10117",
       "url": "https://guardian-pilot.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
       "title": "Guardian",
-      "summary": "Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: find verified help for housing shelter food benefits transportation childcare income or legal aid; find public safety or stability resources without creating an account; find Spanish-language or interpreter-supported help; find outside support when I do not want to route through my school workplace family or usual authority.",
+      "summary": "Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: I need help paying rent; I need food help near me; help with utility bills; childcare assistance near me.",
       "date_modified": "2026-09-28T00:00:00.000Z",
       "tags": [
         "privacy_first_protection_navigation_and_prevention",
-        "find verified help for housing shelter food benefits transportation childcare income or legal aid",
-        "find public safety or stability resources without creating an account",
-        "find Spanish-language or interpreter-supported help",
-        "find outside support when I do not want to route through my school workplace family or usual authority",
-        "find prevention and protective infrastructure resources",
-        "give my organization a privacy-minimized public doorway to verified help"
+        "I need help paying rent",
+        "I need food help near me",
+        "help with utility bills",
+        "childcare assistance near me",
+        "transportation assistance near me",
+        "free or low-cost legal aid near me",
+        "benefits or public resources I may qualify for",
+        "find Spanish-language or interpreter-supported help near me"
       ]
     },
     {

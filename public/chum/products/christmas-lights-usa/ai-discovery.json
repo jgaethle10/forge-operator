@@ -6,12 +6,17 @@
   "class": "holiday_lighting_marketplace_and_project_planning",
   "canonical_url": "https://christmas-lights-usa.base44.app/",
   "intents": [
+    "Christmas light installers near me",
+    "holiday light installers near me",
+    "how much does professional Christmas light installation cost",
+    "get a Christmas light installation quote",
+    "professional holiday lighting for my house",
+    "commercial Christmas light installation near me",
+    "roofline Christmas light installation",
     "estimate a professional Christmas light project",
-    "find holiday light installers near me",
     "submit a Christmas light installation request",
     "join a holiday lighting installer marketplace",
-    "buy a Christmas light installation lead",
-    "plan professional holiday lighting for my property"
+    "buy a Christmas light installation lead"
   ],
   "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
   "human_confirmation_required": true,
@@ -50,7 +55,16 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "evercraft-property-services": {
+      "name": "Evercraft Property Services",
+      "description": "General Central Washington property-maintenance work can route to EPS. Holiday-light projects remain in the specialized Christmas Lights USA workflow."
+    },
+    "contractor-cloud": {
+      "name": "Evercraft Contractor Cloud",
+      "description": "Broader home-project contractor matching remains Contractor Cloud territory when the need is not specifically holiday lighting."
+    }
+  },
   "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {

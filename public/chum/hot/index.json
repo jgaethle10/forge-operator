@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:02:37.885Z",
+  "updated_at": "2026-09-28T17:03:20.114Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -273,7 +273,7 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-09-28T16:59:50.301Z"
+      "last_changed": "2026-09-28T17:03:20.114Z"
     },
     {
       "path": "/chum/sitemaps/products.xml",
@@ -321,7 +321,7 @@
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-28T16:59:50.301Z"
+      "last_changed": "2026-09-28T17:03:20.114Z"
     },
     {
       "path": "/chum/revenue.json",
@@ -346,6 +346,18 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
       "last_changed": "2026-09-28T16:59:50.301Z"
+    },
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
+      "url": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
+      "priority": 160,
+      "last_changed": "2026-09-28T17:03:20.114Z"
+    },
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
+      "url": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
+      "priority": 160,
+      "last_changed": "2026-09-28T17:03:20.114Z"
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
@@ -458,12 +470,6 @@
     {
       "path": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
       "url": "/chum/answers/doors/estimate-a-professional-christmas-light-project-d420395d77.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T22:18:18.960Z"
-    },
-    {
-      "path": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
-      "url": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
       "priority": 160,
       "last_changed": "2026-09-26T22:18:18.960Z"
     },
@@ -1196,12 +1202,6 @@
     {
       "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
       "url": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
-      "url": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
       "priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z"
     }

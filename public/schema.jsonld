@@ -73,7 +73,7 @@
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "interview_practice_and_career_preparation",
-      "description": "practice for a job interview tomorrow; run a role-specific mock interview; prepare concise interview stories and answers; get structured interview practice before an upcoming interview"
+      "description": "help me prepare for a job interview; practice for a job interview tomorrow; mock interview for this role; run a role-specific mock interview"
     },
     {
       "@type": "Service",
@@ -85,7 +85,7 @@
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "holiday_lighting_marketplace_and_project_planning",
-      "description": "estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace"
+      "description": "Christmas light installers near me; holiday light installers near me; how much does professional Christmas light installation cost; get a Christmas light installation quote"
     },
     {
       "@type": "Service",
@@ -333,7 +333,7 @@
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "local_property_services_and_estimate_intake",
-      "description": "yard cleanup in the Yakima Valley; lawn care or recurring property maintenance; trimming or pruning; landscaping refresh"
+      "description": "lawn mowing near me in Yakima; yard cleanup near me in Yakima; sprinkler repair near me in Yakima; sprinkler startup or blowout near me"
     },
     {
       "@type": "Service",
@@ -400,7 +400,7 @@
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "family_support_resources",
-      "description": "family support resources; maternal support resources; organize practical help after having a baby; trusted support circle concepts"
+      "description": "I just had a baby and need practical help; organize meals and practical help for a new parent; build a trusted family support circle; help my family prepare for a new baby"
     },
     {
       "@type": "Service",
@@ -436,7 +436,7 @@
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "hard_to_source_parts",
-      "description": "find a discontinued tractor part; find an obsolete automotive or machine part; identify a hard-to-source part from markings, measurements, photos, or equipment clues; find replacement, donor, salvage, or fabrication paths when normal sourcing fails"
+      "description": "where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part"
     },
     {
       "@type": "Service",
@@ -503,7 +503,7 @@
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "privacy_first_protection_navigation_and_prevention",
-      "description": "find verified help for housing shelter food benefits transportation childcare income or legal aid; find public safety or stability resources without creating an account; find Spanish-language or interpreter-supported help; find outside support when I do not want to route through my school workplace family or usual authority"
+      "description": "I need help paying rent; I need food help near me; help with utility bills; childcare assistance near me"
     },
     {
       "@type": "Service",

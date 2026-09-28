@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 103,
-    "unique_user_phrases": 852,
-    "mapped_candidate_edges": 946,
+    "unique_user_phrases": 867,
+    "mapped_candidate_edges": 961,
     "ambiguous_phrases": 94,
     "product_candidates": 58,
     "machine_offer_candidates": 45
@@ -1653,6 +1653,29 @@
       ]
     },
     {
+      "answer_id": "intent:1931483d92",
+      "user_language": "benefits or public resources I may qualify for",
+      "normalized": "benefits or public resources i may qualify for",
+      "relative_json": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92.json",
+      "relative_page": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:bdd1126970",
       "user_language": "bilingual field supervisor training",
       "normalized": "bilingual field supervisor training",
@@ -2157,6 +2180,29 @@
           "pain_page": "/chum/products/forensiscope/",
           "public_url": "https://evercraft-forensiscope.base44.app/",
           "registry_name": "io.github.jgaethle10/forensiscope"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:afad5cd989",
+      "user_language": "build a trusted family support circle",
+      "normalized": "build a trusted family support circle",
+      "relative_json": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989.json",
+      "relative_page": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest",
+          "kind": "product",
+          "product_key": "evernest",
+          "public_id": null,
+          "name": "EverNest",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest/",
+          "public_url": "https://evernest-home.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -3083,6 +3129,52 @@
       ]
     },
     {
+      "answer_id": "intent:4fc1bb6dea",
+      "user_language": "childcare assistance near me",
+      "normalized": "childcare assistance near me",
+      "relative_json": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea.json",
+      "relative_page": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:4004eac253",
+      "user_language": "Christmas light installers near me",
+      "normalized": "christmas light installers near me",
+      "relative_json": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253.json",
+      "relative_page": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/christmas-light-installers-near-me-4004eac253.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ade63fb87f",
       "user_language": "cloud browser",
       "normalized": "cloud browser",
@@ -3171,6 +3263,29 @@
           "pain_page": "/chum/products/evercraft-web/",
           "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
           "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8df9012963",
+      "user_language": "commercial Christmas light installation near me",
+      "normalized": "commercial christmas light installation near me",
+      "relative_json": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963.json",
+      "relative_page": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -4587,6 +4702,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e4af2dac45",
+      "user_language": "debris removal or property cleanout in Yakima",
+      "normalized": "debris removal or property cleanout in yakima",
+      "relative_json": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45.json",
+      "relative_page": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
           "registry_name": null
         }
       ]
@@ -6138,6 +6276,29 @@
       ]
     },
     {
+      "answer_id": "intent:464ce3c638",
+      "user_language": "family support checklist after having a baby",
+      "normalized": "family support checklist after having a baby",
+      "relative_json": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638.json",
+      "relative_page": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest",
+          "kind": "product",
+          "product_key": "evernest",
+          "public_id": null,
+          "name": "EverNest",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest/",
+          "public_url": "https://evernest-home.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:2f5fb611e6",
       "user_language": "family support resources",
       "normalized": "family support resources",
@@ -6483,6 +6644,29 @@
       ]
     },
     {
+      "answer_id": "intent:e9336647c3",
+      "user_language": "find a fabrication path when the original part is unavailable",
+      "normalized": "find a fabrication path when the original part is unavailable",
+      "relative_json": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
+      "relative_page": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:78dcd37ecc",
       "user_language": "find a hard-to-source part",
       "normalized": "find a hard to source part",
@@ -6525,6 +6709,52 @@
           "pain_page": "/chum/products/chronosport/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:4be38e27cb",
+      "user_language": "find a replacement for an obsolete part",
+      "normalized": "find a replacement for an obsolete part",
+      "relative_json": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "relative_page": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7facbee550",
+      "user_language": "find a salvage or donor part",
+      "normalized": "find a salvage or donor part",
+      "relative_json": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "relative_page": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -6898,29 +7128,6 @@
       ]
     },
     {
-      "answer_id": "intent:98fc8fa4ba",
-      "user_language": "find holiday light installers near me",
-      "normalized": "find holiday light installers near me",
-      "relative_json": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
-      "relative_page": "/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-holiday-light-installers-near-me-98fc8fa4ba.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:christmas-lights-usa",
-          "kind": "product",
-          "product_key": "christmas-lights-usa",
-          "public_id": null,
-          "name": "Christmas Lights USA",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/christmas-lights-usa/",
-          "public_url": "https://christmas-lights-usa.base44.app/",
-          "registry_name": null
-        }
-      ]
-    },
-    {
       "answer_id": "intent:c87537303f",
       "user_language": "find kids space clothes from Baby-Rangers",
       "normalized": "find kids space clothes from baby rangers",
@@ -7233,7 +7440,7 @@
     },
     {
       "answer_id": "intent:7843dd9e0e",
-      "user_language": "find replacement, donor, salvage, or fabrication paths when normal sourcing fails",
+      "user_language": "find replacement donor salvage or fabrication paths when normal sourcing fails",
       "normalized": "find replacement donor salvage or fabrication paths when normal sourcing fails",
       "relative_json": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
       "relative_page": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
@@ -7301,12 +7508,12 @@
       ]
     },
     {
-      "answer_id": "intent:62ae11f473",
-      "user_language": "find Spanish-language or interpreter-supported help",
-      "normalized": "find spanish language or interpreter supported help",
-      "relative_json": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-62ae11f473.json",
-      "relative_page": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-62ae11f473/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-62ae11f473.json",
+      "answer_id": "intent:55a422cb3d",
+      "user_language": "find Spanish-language or interpreter-supported help near me",
+      "normalized": "find spanish language or interpreter supported help near me",
+      "relative_json": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d.json",
+      "relative_page": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -7682,6 +7889,29 @@
       ]
     },
     {
+      "answer_id": "intent:54aad16cc8",
+      "user_language": "free or low-cost legal aid near me",
+      "normalized": "free or low cost legal aid near me",
+      "relative_json": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8.json",
+      "relative_page": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ce82691a55",
       "user_language": "freight operations workforce training",
       "normalized": "freight operations workforce training",
@@ -7769,6 +7999,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-fantasy-intelligence/",
           "public_url": "https://evercraftjournal.base44.app/sports/fantasy",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8892957ef7",
+      "user_language": "get a Christmas light installation quote",
+      "normalized": "get a christmas light installation quote",
+      "relative_json": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7.json",
+      "relative_page": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa.base44.app/",
           "registry_name": null
         }
       ]
@@ -8201,29 +8454,6 @@
       ]
     },
     {
-      "answer_id": "intent:4d522c93b7",
-      "user_language": "hard-to-find part",
-      "normalized": "hard to find part",
-      "relative_json": "/chum/answers/doors/hard-to-find-part-4d522c93b7.json",
-      "relative_page": "/chum/answers/doors/hard-to-find-part-4d522c93b7/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/hard-to-find-part-4d522c93b7.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
-        }
-      ]
-    },
-    {
       "answer_id": "intent:f3814bb265",
       "user_language": "headless browser",
       "normalized": "headless browser",
@@ -8443,6 +8673,29 @@
       ]
     },
     {
+      "answer_id": "intent:d453e9d074",
+      "user_language": "help me prepare for a job interview",
+      "normalized": "help me prepare for a job interview",
+      "relative_json": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074.json",
+      "relative_page": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:career-command",
+          "kind": "product",
+          "product_key": "career-command",
+          "public_id": null,
+          "name": "Evercraft Career Command",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/career-command/",
+          "public_url": "https://evercraft-career-command.base44.app/",
+          "registry_name": "io.github.jgaethle10/career-command"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:3cd8855170",
       "user_language": "help me prepare for SBA financing",
       "normalized": "help me prepare for sba financing",
@@ -8531,6 +8784,29 @@
           "pain_page": "/chum/products/evercraft-containment/",
           "public_url": "https://evercraft.base44.app/containment",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b1ed26452f",
+      "user_language": "help me turn my experience into concise interview stories",
+      "normalized": "help me turn my experience into concise interview stories",
+      "relative_json": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f.json",
+      "relative_page": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:career-command",
+          "kind": "product",
+          "product_key": "career-command",
+          "public_id": null,
+          "name": "Evercraft Career Command",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/career-command/",
+          "public_url": "https://evercraft-career-command.base44.app/",
+          "registry_name": "io.github.jgaethle10/career-command"
         }
       ]
     },
@@ -8627,6 +8903,29 @@
       ]
     },
     {
+      "answer_id": "intent:df0ed6e14f",
+      "user_language": "help my family prepare for a new baby",
+      "normalized": "help my family prepare for a new baby",
+      "relative_json": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f.json",
+      "relative_page": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest",
+          "kind": "product",
+          "product_key": "evernest",
+          "public_id": null,
+          "name": "EverNest",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest/",
+          "public_url": "https://evernest-home.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:89faf273d0",
       "user_language": "help people find my event",
       "normalized": "help people find my event",
@@ -8708,6 +9007,29 @@
       ]
     },
     {
+      "answer_id": "intent:95b8898064",
+      "user_language": "help with utility bills",
+      "normalized": "help with utility bills",
+      "relative_json": "/chum/answers/doors/help-with-utility-bills-95b8898064.json",
+      "relative_page": "/chum/answers/doors/help-with-utility-bills-95b8898064/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-with-utility-bills-95b8898064.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e531082763",
       "user_language": "hire vs automate",
       "normalized": "hire vs automate",
@@ -8749,6 +9071,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-decision-lab/",
           "public_url": "https://systemiadecisionlab.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6aab350fa1",
+      "user_language": "holiday light installers near me",
+      "normalized": "holiday light installers near me",
+      "relative_json": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1.json",
+      "relative_page": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa.base44.app/",
           "registry_name": null
         }
       ]
@@ -8939,6 +9284,29 @@
       ]
     },
     {
+      "answer_id": "intent:b725426ed1",
+      "user_language": "how much does professional Christmas light installation cost",
+      "normalized": "how much does professional christmas light installation cost",
+      "relative_json": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1.json",
+      "relative_page": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:6d0359b43e",
       "user_language": "I am considering opening another location and hiring more people before I sign a lease or add payroll",
       "normalized": "i am considering opening another location and hiring more people before i sign a lease or add payroll",
@@ -9089,6 +9457,29 @@
       ]
     },
     {
+      "answer_id": "intent:f84b529cb2",
+      "user_language": "I have a part number but cannot find it anywhere",
+      "normalized": "i have a part number but cannot find it anywhere",
+      "relative_json": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "relative_page": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0fe9809d38",
       "user_language": "I have an interview tomorrow",
       "normalized": "i have an interview tomorrow",
@@ -9107,6 +9498,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
           "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:523390b128",
+      "user_language": "I just had a baby and need practical help",
+      "normalized": "i just had a baby and need practical help",
+      "relative_json": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128.json",
+      "relative_page": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest",
+          "kind": "product",
+          "product_key": "evernest",
+          "public_id": null,
+          "name": "EverNest",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest/",
+          "public_url": "https://evernest-home.base44.app/",
           "registry_name": null
         }
       ]
@@ -9269,6 +9683,52 @@
           "pain_page": "/chum/products/systemia-field-library/",
           "public_url": "https://systemiafieldlibrary.com/",
           "registry_name": "io.github.jgaethle10/systemia-field-library"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7d875dd90b",
+      "user_language": "I need food help near me",
+      "normalized": "i need food help near me",
+      "relative_json": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b.json",
+      "relative_page": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-food-help-near-me-7d875dd90b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:965ea01227",
+      "user_language": "I need help paying rent",
+      "normalized": "i need help paying rent",
+      "relative_json": "/chum/answers/doors/i-need-help-paying-rent-965ea01227.json",
+      "relative_page": "/chum/answers/doors/i-need-help-paying-rent-965ea01227/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-help-paying-rent-965ea01227.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -9585,7 +10045,7 @@
     },
     {
       "answer_id": "intent:310d387d80",
-      "user_language": "identify a hard-to-source part from markings, measurements, photos, or equipment clues",
+      "user_language": "identify a hard-to-source part from markings measurements photos or equipment clues",
       "normalized": "identify a hard to source part from markings measurements photos or equipment clues",
       "relative_json": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json",
       "relative_page": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/",
@@ -9626,6 +10086,29 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:42b537ac03",
+      "user_language": "identify this machine part from a photo or markings",
+      "normalized": "identify this machine part from a photo or markings",
+      "relative_json": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "relative_page": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -9787,29 +10270,6 @@
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:feef6fa090",
-      "user_language": "interview tomorrow",
-      "normalized": "interview tomorrow",
-      "relative_json": "/chum/answers/doors/interview-tomorrow-feef6fa090.json",
-      "relative_page": "/chum/answers/doors/interview-tomorrow-feef6fa090/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/interview-tomorrow-feef6fa090.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:career-command",
-          "kind": "product",
-          "product_key": "career-command",
-          "public_id": null,
-          "name": "Evercraft Career Command",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/career-command/",
-          "public_url": "https://evercraft-career-command.base44.app/",
-          "registry_name": "io.github.jgaethle10/career-command"
         }
       ]
     },
@@ -10075,29 +10535,6 @@
           "pain_page": "/chum/products/systemia-field-library/",
           "public_url": "https://systemiafieldlibrary.com/",
           "registry_name": "io.github.jgaethle10/systemia-field-library"
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:d7dad5994f",
-      "user_language": "job interview practice",
-      "normalized": "job interview practice",
-      "relative_json": "/chum/answers/doors/job-interview-practice-d7dad5994f.json",
-      "relative_page": "/chum/answers/doors/job-interview-practice-d7dad5994f/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/job-interview-practice-d7dad5994f.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:career-command",
-          "kind": "product",
-          "product_key": "career-command",
-          "public_id": null,
-          "name": "Evercraft Career Command",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/career-command/",
-          "public_url": "https://evercraft-career-command.base44.app/",
-          "registry_name": "io.github.jgaethle10/career-command"
         }
       ]
     },
@@ -10413,12 +10850,12 @@
       ]
     },
     {
-      "answer_id": "intent:8f7672daf4",
-      "user_language": "landscaping refresh",
-      "normalized": "landscaping refresh",
-      "relative_json": "/chum/answers/doors/landscaping-refresh-8f7672daf4.json",
-      "relative_page": "/chum/answers/doors/landscaping-refresh-8f7672daf4/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/landscaping-refresh-8f7672daf4.json",
+      "answer_id": "intent:8910725d79",
+      "user_language": "landscaping refresh in the Yakima Valley",
+      "normalized": "landscaping refresh in the yakima valley",
+      "relative_json": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79.json",
+      "relative_page": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -10528,12 +10965,12 @@
       ]
     },
     {
-      "answer_id": "intent:0ce6dda194",
-      "user_language": "lawn care or recurring property maintenance",
-      "normalized": "lawn care or recurring property maintenance",
-      "relative_json": "/chum/answers/doors/lawn-care-or-recurring-property-maintenance-0ce6dda194.json",
-      "relative_page": "/chum/answers/doors/lawn-care-or-recurring-property-maintenance-0ce6dda194/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/lawn-care-or-recurring-property-maintenance-0ce6dda194.json",
+      "answer_id": "intent:6e5c28e4b0",
+      "user_language": "lawn mowing near me in Yakima",
+      "normalized": "lawn mowing near me in yakima",
+      "relative_json": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0.json",
+      "relative_page": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -11590,12 +12027,12 @@
       ]
     },
     {
-      "answer_id": "intent:fd5c93b03a",
-      "user_language": "maternal support resources",
-      "normalized": "maternal support resources",
-      "relative_json": "/chum/answers/doors/maternal-support-resources-fd5c93b03a.json",
-      "relative_page": "/chum/answers/doors/maternal-support-resources-fd5c93b03a/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/maternal-support-resources-fd5c93b03a.json",
+      "answer_id": "intent:ec5ccd4cb5",
+      "user_language": "maternal and family support resources",
+      "normalized": "maternal and family support resources",
+      "relative_json": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5.json",
+      "relative_page": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -11751,12 +12188,12 @@
       ]
     },
     {
-      "answer_id": "intent:aebd06eb36",
-      "user_language": "mock interview",
-      "normalized": "mock interview",
-      "relative_json": "/chum/answers/doors/mock-interview-aebd06eb36.json",
-      "relative_page": "/chum/answers/doors/mock-interview-aebd06eb36/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/mock-interview-aebd06eb36.json",
+      "answer_id": "intent:5c19cb7df8",
+      "user_language": "mock interview for this role",
+      "normalized": "mock interview for this role",
+      "relative_json": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8.json",
+      "relative_page": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -12351,29 +12788,6 @@
       ]
     },
     {
-      "answer_id": "intent:bf265dd596",
-      "user_language": "obsolete part",
-      "normalized": "obsolete part",
-      "relative_json": "/chum/answers/doors/obsolete-part-bf265dd596.json",
-      "relative_page": "/chum/answers/doors/obsolete-part-bf265dd596/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/obsolete-part-bf265dd596.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
-        }
-      ]
-    },
-    {
       "answer_id": "intent:e683e6994b",
       "user_language": "offline operations plan",
       "normalized": "offline operations plan",
@@ -12501,6 +12915,29 @@
       ]
     },
     {
+      "answer_id": "intent:a9e7f357e2",
+      "user_language": "organize meals and practical help for a new parent",
+      "normalized": "organize meals and practical help for a new parent",
+      "relative_json": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2.json",
+      "relative_page": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest",
+          "kind": "product",
+          "product_key": "evernest",
+          "public_id": null,
+          "name": "EverNest",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest/",
+          "public_url": "https://evernest-home.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:a776d0ce65",
       "user_language": "organize my robocall evidence",
       "normalized": "organize my robocall evidence",
@@ -12531,29 +12968,6 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/callproof-vault/",
           "public_url": "https://call-proof-vault.base44.app/",
-          "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:623c097c13",
-      "user_language": "organize practical help after having a baby",
-      "normalized": "organize practical help after having a baby",
-      "relative_json": "/chum/answers/doors/organize-practical-help-after-having-a-baby-623c097c13.json",
-      "relative_page": "/chum/answers/doors/organize-practical-help-after-having-a-baby-623c097c13/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/organize-practical-help-after-having-a-baby-623c097c13.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:evernest",
-          "kind": "product",
-          "product_key": "evernest",
-          "public_id": null,
-          "name": "EverNest",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/evernest/",
-          "public_url": "https://evernest-home.base44.app/",
           "registry_name": null
         }
       ]
@@ -12801,29 +13215,6 @@
       ]
     },
     {
-      "answer_id": "intent:4909c5cfd2",
-      "user_language": "outside support without routing through school workplace family or usual authority",
-      "normalized": "outside support without routing through school workplace family or usual authority",
-      "relative_json": "/chum/answers/doors/outside-support-without-routing-through-school-workplace-family-or-usual-authority-4909c5cfd2.json",
-      "relative_page": "/chum/answers/doors/outside-support-without-routing-through-school-workplace-family-or-usual-authority-4909c5cfd2/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/outside-support-without-routing-through-school-workplace-family-or-usual-authority-4909c5cfd2.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:guardian",
-          "kind": "product",
-          "product_key": "guardian",
-          "public_id": null,
-          "name": "Guardian",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/guardian/",
-          "public_url": "https://guardian-pilot.base44.app/",
-          "registry_name": null
-        }
-      ]
-    },
-    {
       "answer_id": "intent:825b60b4de",
       "user_language": "painting estimate calculator",
       "normalized": "painting estimate calculator",
@@ -13055,29 +13446,6 @@
       ]
     },
     {
-      "answer_id": "intent:a886251485",
-      "user_language": "plan professional holiday lighting for my property",
-      "normalized": "plan professional holiday lighting for my property",
-      "relative_json": "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
-      "relative_page": "/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-professional-holiday-lighting-for-my-property-a886251485.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:christmas-lights-usa",
-          "kind": "product",
-          "product_key": "christmas-lights-usa",
-          "public_id": null,
-          "name": "Christmas Lights USA",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/christmas-lights-usa/",
-          "public_url": "https://christmas-lights-usa.base44.app/",
-          "registry_name": null
-        }
-      ]
-    },
-    {
       "answer_id": "intent:89ca564562",
       "user_language": "Playwright API",
       "normalized": "playwright api",
@@ -13178,6 +13546,29 @@
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://evermaps.base44.app/",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5885e960c7",
+      "user_language": "practice answering common interview questions",
+      "normalized": "practice answering common interview questions",
+      "relative_json": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7.json",
+      "relative_page": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:career-command",
+          "kind": "product",
+          "product_key": "career-command",
+          "public_id": null,
+          "name": "Evercraft Career Command",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/career-command/",
+          "public_url": "https://evercraft-career-command.base44.app/",
+          "registry_name": "io.github.jgaethle10/career-command"
         }
       ]
     },
@@ -13643,29 +14034,6 @@
       ]
     },
     {
-      "answer_id": "intent:1e913d4055",
-      "user_language": "prevention and protective infrastructure resources",
-      "normalized": "prevention and protective infrastructure resources",
-      "relative_json": "/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055.json",
-      "relative_page": "/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prevention-and-protective-infrastructure-resources-1e913d4055.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:guardian",
-          "kind": "product",
-          "product_key": "guardian",
-          "public_id": null,
-          "name": "Guardian",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/guardian/",
-          "public_url": "https://guardian-pilot.base44.app/",
-          "registry_name": null
-        }
-      ]
-    },
-    {
       "answer_id": "intent:aef270b551",
       "user_language": "price this contractor job",
       "normalized": "price this contractor job",
@@ -13712,29 +14080,6 @@
       ]
     },
     {
-      "answer_id": "intent:216d826ec1",
-      "user_language": "privacy-minimized public doorway to verified help",
-      "normalized": "privacy minimized public doorway to verified help",
-      "relative_json": "/chum/answers/doors/privacy-minimized-public-doorway-to-verified-help-216d826ec1.json",
-      "relative_page": "/chum/answers/doors/privacy-minimized-public-doorway-to-verified-help-216d826ec1/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/privacy-minimized-public-doorway-to-verified-help-216d826ec1.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:guardian",
-          "kind": "product",
-          "product_key": "guardian",
-          "public_id": null,
-          "name": "Guardian",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/guardian/",
-          "public_url": "https://guardian-pilot.base44.app/",
-          "registry_name": null
-        }
-      ]
-    },
-    {
       "answer_id": "intent:dadfea5847",
       "user_language": "process mining from operational history",
       "normalized": "process mining from operational history",
@@ -13777,6 +14122,29 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://faie.base44.app/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0e96f125ea",
+      "user_language": "professional holiday lighting for my house",
+      "normalized": "professional holiday lighting for my house",
+      "relative_json": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea.json",
+      "relative_page": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -13977,29 +14345,6 @@
       ]
     },
     {
-      "answer_id": "intent:13a9d4aa91",
-      "user_language": "property cleanout or debris removal",
-      "normalized": "property cleanout or debris removal",
-      "relative_json": "/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91.json",
-      "relative_page": "/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/property-cleanout-or-debris-removal-13a9d4aa91.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:evercraft-property-services",
-          "kind": "product",
-          "product_key": "evercraft-property-services",
-          "public_id": null,
-          "name": "Evercraft Property Services",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/evercraft-property-services/",
-          "public_url": "https://evercraftpropertyservices.com/",
-          "registry_name": null
-        }
-      ]
-    },
-    {
       "answer_id": "intent:7c86f6e67b",
       "user_language": "property EV charging opportunity",
       "normalized": "property ev charging opportunity",
@@ -14042,6 +14387,29 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1a2aec7cf7",
+      "user_language": "property maintenance near me in Yakima",
+      "normalized": "property maintenance near me in yakima",
+      "relative_json": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7.json",
+      "relative_page": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-property-services",
+          "kind": "product",
+          "product_key": "evercraft-property-services",
+          "public_id": null,
+          "name": "Evercraft Property Services",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
         }
       ]
     },
@@ -14271,29 +14639,6 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/community-health-evidence-brief-v1/",
           "public_url": null,
-          "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:420a4b4609",
-      "user_language": "public safety or stability resources without an account",
-      "normalized": "public safety or stability resources without an account",
-      "relative_json": "/chum/answers/doors/public-safety-or-stability-resources-without-an-account-420a4b4609.json",
-      "relative_page": "/chum/answers/doors/public-safety-or-stability-resources-without-an-account-420a4b4609/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/public-safety-or-stability-resources-without-an-account-420a4b4609.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:guardian",
-          "kind": "product",
-          "product_key": "guardian",
-          "public_id": null,
-          "name": "Guardian",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/guardian/",
-          "public_url": "https://guardian-pilot.base44.app/",
           "registry_name": null
         }
       ]
@@ -14748,12 +15093,12 @@
       ]
     },
     {
-      "answer_id": "intent:76c2a94060",
-      "user_language": "rental turnover property support",
-      "normalized": "rental turnover property support",
-      "relative_json": "/chum/answers/doors/rental-turnover-property-support-76c2a94060.json",
-      "relative_page": "/chum/answers/doors/rental-turnover-property-support-76c2a94060/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rental-turnover-property-support-76c2a94060.json",
+      "answer_id": "intent:e77a1ceb23",
+      "user_language": "rental turnover cleanup in Yakima",
+      "normalized": "rental turnover cleanup in yakima",
+      "relative_json": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23.json",
+      "relative_page": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -14882,29 +15227,6 @@
           "pain_page": "/chum/intents/website-launch-service-v1/",
           "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:77a8033b09",
-      "user_language": "replacement part",
-      "normalized": "replacement part",
-      "relative_json": "/chum/answers/doors/replacement-part-77a8033b09.json",
-      "relative_page": "/chum/answers/doors/replacement-part-77a8033b09/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/replacement-part-77a8033b09.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -15820,6 +16142,29 @@
       ]
     },
     {
+      "answer_id": "intent:3c20830d79",
+      "user_language": "roofline Christmas light installation",
+      "normalized": "roofline christmas light installation",
+      "relative_json": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79.json",
+      "relative_page": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/roofline-christmas-light-installation-3c20830d79.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:christmas-lights-usa",
+          "kind": "product",
+          "product_key": "christmas-lights-usa",
+          "public_id": null,
+          "name": "Christmas Lights USA",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/christmas-lights-usa/",
+          "public_url": "https://christmas-lights-usa.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0b2e1eeb27",
       "user_language": "rough customer quote range",
       "normalized": "rough customer quote range",
@@ -16023,29 +16368,6 @@
           "pain_page": "/chum/products/systemia-remote-ops/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:7f3ff0b452",
-      "user_language": "salvage part",
-      "normalized": "salvage part",
-      "relative_json": "/chum/answers/doors/salvage-part-7f3ff0b452.json",
-      "relative_page": "/chum/answers/doors/salvage-part-7f3ff0b452/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/salvage-part-7f3ff0b452.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -17526,35 +17848,35 @@
       ]
     },
     {
-      "answer_id": "intent:4d32dffe31",
-      "user_language": "Spanish-language or interpreter-supported help",
-      "normalized": "spanish language or interpreter supported help",
-      "relative_json": "/chum/answers/doors/spanish-language-or-interpreter-supported-help-4d32dffe31.json",
-      "relative_page": "/chum/answers/doors/spanish-language-or-interpreter-supported-help-4d32dffe31/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/spanish-language-or-interpreter-supported-help-4d32dffe31.json",
+      "answer_id": "intent:f069243a23",
+      "user_language": "sprinkler repair near me in Yakima",
+      "normalized": "sprinkler repair near me in yakima",
+      "relative_json": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23.json",
+      "relative_page": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23.json",
       "candidate_count": 1,
       "candidates": [
         {
-          "capability_id": "product:guardian",
+          "capability_id": "product:evercraft-property-services",
           "kind": "product",
-          "product_key": "guardian",
+          "product_key": "evercraft-property-services",
           "public_id": null,
-          "name": "Guardian",
+          "name": "Evercraft Property Services",
           "commercial_state": "product_contract",
           "machine_state": "discovery_only",
-          "pain_page": "/chum/products/guardian/",
-          "public_url": "https://guardian-pilot.base44.app/",
+          "pain_page": "/chum/products/evercraft-property-services/",
+          "public_url": "https://evercraftpropertyservices.com/",
           "registry_name": null
         }
       ]
     },
     {
-      "answer_id": "intent:82909e5687",
-      "user_language": "sprinkler repair startup or seasonal blowout",
-      "normalized": "sprinkler repair startup or seasonal blowout",
-      "relative_json": "/chum/answers/doors/sprinkler-repair-startup-or-seasonal-blowout-82909e5687.json",
-      "relative_page": "/chum/answers/doors/sprinkler-repair-startup-or-seasonal-blowout-82909e5687/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/sprinkler-repair-startup-or-seasonal-blowout-82909e5687.json",
+      "answer_id": "intent:1a3d18d692",
+      "user_language": "sprinkler startup or blowout near me",
+      "normalized": "sprinkler startup or blowout near me",
+      "relative_json": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692.json",
+      "relative_page": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -18620,12 +18942,35 @@
       ]
     },
     {
-      "answer_id": "intent:f5f863710a",
-      "user_language": "trimming or pruning",
-      "normalized": "trimming or pruning",
-      "relative_json": "/chum/answers/doors/trimming-or-pruning-f5f863710a.json",
-      "relative_page": "/chum/answers/doors/trimming-or-pruning-f5f863710a/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trimming-or-pruning-f5f863710a.json",
+      "answer_id": "intent:ad00c7a4eb",
+      "user_language": "transportation assistance near me",
+      "normalized": "transportation assistance near me",
+      "relative_json": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb.json",
+      "relative_page": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:guardian",
+          "kind": "product",
+          "product_key": "guardian",
+          "public_id": null,
+          "name": "Guardian",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/guardian/",
+          "public_url": "https://guardian-pilot.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:38fb51fd90",
+      "user_language": "trimming or pruning in the Yakima Valley",
+      "normalized": "trimming or pruning in the yakima valley",
+      "relative_json": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90.json",
+      "relative_page": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -19262,29 +19607,6 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/everystage/",
           "public_url": "https://every-stage.base44.app/product",
-          "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:94525a01c7",
-      "user_language": "verified help for housing shelter food benefits transportation childcare income or legal aid",
-      "normalized": "verified help for housing shelter food benefits transportation childcare income or legal aid",
-      "relative_json": "/chum/answers/doors/verified-help-for-housing-shelter-food-benefits-transportation-childcare-income-or-94525a01c7.json",
-      "relative_page": "/chum/answers/doors/verified-help-for-housing-shelter-food-benefits-transportation-childcare-income-or-94525a01c7/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verified-help-for-housing-shelter-food-benefits-transportation-childcare-income-or-94525a01c7.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:guardian",
-          "kind": "product",
-          "product_key": "guardian",
-          "public_id": null,
-          "name": "Guardian",
-          "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
-          "pain_page": "/chum/products/guardian/",
-          "public_url": "https://guardian-pilot.base44.app/",
           "registry_name": null
         }
       ]
@@ -20442,6 +20764,29 @@
       ]
     },
     {
+      "answer_id": "intent:fbe2473669",
+      "user_language": "where can I find this discontinued part",
+      "normalized": "where can i find this discontinued part",
+      "relative_json": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "relative_page": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:b0f7c0a824",
       "user_language": "where is Evercraft Network verified",
       "normalized": "where is evercraft network verified",
@@ -20707,12 +21052,12 @@
       ]
     },
     {
-      "answer_id": "intent:04161b4865",
-      "user_language": "yard cleanup in the Yakima Valley",
-      "normalized": "yard cleanup in the yakima valley",
-      "relative_json": "/chum/answers/doors/yard-cleanup-in-the-yakima-valley-04161b4865.json",
-      "relative_page": "/chum/answers/doors/yard-cleanup-in-the-yakima-valley-04161b4865/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/yard-cleanup-in-the-yakima-valley-04161b4865.json",
+      "answer_id": "intent:e8071f4a5d",
+      "user_language": "yard cleanup near me in Yakima",
+      "normalized": "yard cleanup near me in yakima",
+      "relative_json": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d.json",
+      "relative_page": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d.json",
       "candidate_count": 1,
       "candidates": [
         {

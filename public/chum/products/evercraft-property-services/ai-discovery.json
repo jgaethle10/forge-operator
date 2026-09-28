@@ -8,13 +8,15 @@
   "class": "local_property_services_and_estimate_intake",
   "canonical_url": "https://evercraftpropertyservices.com/",
   "intents": [
-    "yard cleanup in the Yakima Valley",
-    "lawn care or recurring property maintenance",
-    "trimming or pruning",
-    "landscaping refresh",
-    "sprinkler repair startup or seasonal blowout",
-    "property cleanout or debris removal",
-    "rental turnover property support",
+    "lawn mowing near me in Yakima",
+    "yard cleanup near me in Yakima",
+    "sprinkler repair near me in Yakima",
+    "sprinkler startup or blowout near me",
+    "property maintenance near me in Yakima",
+    "rental turnover cleanup in Yakima",
+    "debris removal or property cleanout in Yakima",
+    "trimming or pruning in the Yakima Valley",
+    "landscaping refresh in the Yakima Valley",
     "get a property service estimate in Central Washington"
   ],
   "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
@@ -41,7 +43,16 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "contractor-cloud": {
+      "name": "Evercraft Contractor Cloud",
+      "description": "Use Contractor Cloud for broader contractor/project matching. Use EPS when the request fits EPS's own Central Washington service area and supported work."
+    },
+    "christmas-lights-usa": {
+      "name": "Christmas Lights USA",
+      "description": "Holiday-light installation requests route to the specialized Christmas Lights USA marketplace rather than being flattened into general property maintenance."
+    }
+  },
   "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {

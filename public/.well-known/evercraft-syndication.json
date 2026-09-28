@@ -74,7 +74,7 @@
       "discovery": "/chum/products/christmas-lights-usa/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "111612f2c0a098b49953716de3069ca84e33bd04fcc99d5cb642a20092606961"
+      "content_sha256": "171a6c9ceda32526fefa650f616ddec3f07a9a3a0ebb8f74492516772e01be01"
     },
     {
       "product_key": "chronosport",
@@ -162,7 +162,7 @@
       "discovery": "/chum/products/career-command/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/career-command",
       "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
-      "content_sha256": "6203ad70eb898a7ac28d56ec1571b3671f8915d191e1f568ba1de08f7044080f"
+      "content_sha256": "246db80fc88166d96cdcd36b28c559adc2fd62c871cfd78a333efd9d789c5088"
     },
     {
       "product_key": "evercraft-circles",
@@ -305,7 +305,7 @@
       "discovery": "/chum/products/evercraft-property-services/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "3462e211f893beab062b693d172f1232c3c2a0827358fc794a7312e109d1668f"
+      "content_sha256": "8e9891ffa175cd7969335b6eafba43aacc6dab54ec943e448fc5842e032307d3"
     },
     {
       "product_key": "revenue-war-map",
@@ -382,7 +382,7 @@
       "discovery": "/chum/products/evernest/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "3a72de637e0783fb3b8f056343e3c323426c613925a44e562917c56fa60a5de0"
+      "content_sha256": "66e4585de2dbfea06ef7965ca1c5e4b6a58945c4db7cd92aa469c7cbbb234cc2"
     },
     {
       "product_key": "everystage",
@@ -415,7 +415,7 @@
       "discovery": "/chum/products/findmypart/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/findmypart",
       "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "content_sha256": "b49404237f22c3173dc87e73fe129912b2dc0f02c07397cbea8fb390b77961a6"
+      "content_sha256": "23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76"
     },
     {
       "product_key": "forensiscope",
@@ -459,7 +459,7 @@
       "discovery": "/chum/products/guardian/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "edda7115a2c2fe22e2cf3020e43595c1c74eddc7398114e56731e858f28ec998"
+      "content_sha256": "a73e12d8d3c101177c1336a971251d7f1616490e857984f1f466002cc6ffc45c"
     },
     {
       "product_key": "infinite-classroom",

@@ -6,9 +6,13 @@
   "class": "family_support_resources",
   "canonical_url": "https://evernest-home.base44.app/",
   "intents": [
+    "I just had a baby and need practical help",
+    "organize meals and practical help for a new parent",
+    "build a trusted family support circle",
+    "help my family prepare for a new baby",
+    "family support checklist after having a baby",
+    "maternal and family support resources",
     "family support resources",
-    "maternal support resources",
-    "organize practical help after having a baby",
     "trusted support circle concepts",
     "family preparedness resources",
     "Spanish-language family support resources"
@@ -31,7 +35,16 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "guardian": {
+      "name": "Guardian",
+      "description": "Use Guardian for verified public resource navigation such as food, housing, childcare, transportation, benefits or legal-aid resources. EverNest remains family coordination/support, not emergency response."
+    },
+    "evercraft-home": {
+      "name": "Evercraft Home",
+      "description": "Family memories and community history can live in Evercraft Home while EverNest focuses on practical support and trusted circles."
+    }
+  },
   "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {

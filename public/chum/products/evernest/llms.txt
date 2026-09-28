@@ -5,11 +5,20 @@ Canonical product: https://evernest-home.base44.app/
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-conformance.json
 
+## Related product layers
+
+- Guardian: Use Guardian for verified public resource navigation such as food, housing, childcare, transportation, benefits or legal-aid resources. EverNest remains family coordination/support, not emergency response.
+- Evercraft Home: Family memories and community history can live in Evercraft Home while EverNest focuses on practical support and trusted circles.
+
 ## Use this capability when the user means
 
+- I just had a baby and need practical help
+- organize meals and practical help for a new parent
+- build a trusted family support circle
+- help my family prepare for a new baby
+- family support checklist after having a baby
+- maternal and family support resources
 - family support resources
-- maternal support resources
-- organize practical help after having a baby
 - trusted support circle concepts
 - family preparedness resources
 - Spanish-language family support resources

@@ -31,7 +31,12 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": null,
+  "relationships": {
+    "revenue-war-map": {
+      "name": "Evercraft Revenue War Map",
+      "description": "When a private income plan identifies a career move as a practical path, Career Command can handle interview practice without implying a job offer or hiring outcome."
+    }
+  },
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,

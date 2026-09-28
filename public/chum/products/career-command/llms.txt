@@ -7,10 +7,18 @@ Remote MCP: https://evercraft-career-command.base44.app/functions/careerMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-conformance.json
 
+## Related product layers
+
+- Evercraft Revenue War Map: When a private income plan identifies a career move as a practical path, Career Command can handle interview practice without implying a job offer or hiring outcome.
+
 ## Use this capability when the user means
 
+- help me prepare for a job interview
 - practice for a job interview tomorrow
+- mock interview for this role
 - run a role-specific mock interview
+- help me turn my experience into concise interview stories
+- practice answering common interview questions
 - prepare concise interview stories and answers
 - get structured interview practice before an upcoming interview
 

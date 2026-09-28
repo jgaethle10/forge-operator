@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:02:37.885Z",
+  "updated_at": "2026-09-28T17:03:20.114Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,162 +11,1052 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/products/career-command/",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 160
     },
     {
-      "path": "/chum/products/career-command/ai-conformance.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 160
     },
     {
-      "path": "/chum/products/career-command/ai-discovery.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 108
     },
     {
-      "path": "/chum/products/career-command/llms.txt",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/christmas-lights-usa/",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/christmas-lights-usa/ai-conformance.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/christmas-lights-usa/ai-discovery.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/christmas-lights-usa/llms.txt",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evercraft-property-services/",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evercraft-property-services/ai-conformance.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evercraft-property-services/ai-discovery.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evercraft-property-services/llms.txt",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evernest/",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evernest/ai-conformance.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evernest/ai-discovery.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/evernest/llms.txt",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/findmypart/",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/findmypart/ai-discovery.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/findmypart/llms.txt",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/guardian/",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/guardian/ai-conformance.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/guardian/ai-discovery.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/chum/products/guardian/llms.txt",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 94
+      "path": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
     },
     {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-28T17:02:37.885Z",
+      "path": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-with-utility-bills-95b8898064.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-with-utility-bills-95b8898064/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-help-paying-rent-965ea01227.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-help-paying-rent-965ea01227/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
+      "last_changed": "2026-09-28T17:03:20.114Z",
       "priority": 86
     },
     {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 84
+      "path": "/chum/answers/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
     },
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 84
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
+      "last_changed": "2026-09-28T17:03:20.114Z",
       "priority": 80
     },
     {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
       "priority": 80
     },
     {
-      "path": "/feed.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 60
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
+      "url": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
+      "url": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 160
+    },
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92.json",
+      "url": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92/",
+      "url": "/chum/answers/doors/benefits-or-public-resources-i-may-qualify-for-1931483d92/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989.json",
+      "url": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989/",
+      "url": "/chum/answers/doors/build-a-trusted-family-support-circle-afad5cd989/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea.json",
+      "url": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea/",
+      "url": "/chum/answers/doors/childcare-assistance-near-me-4fc1bb6dea/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253.json",
+      "url": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253/",
+      "url": "/chum/answers/doors/christmas-light-installers-near-me-4004eac253/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963.json",
+      "url": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963/",
+      "url": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45.json",
+      "url": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45/",
+      "url": "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638.json",
+      "url": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638/",
+      "url": "/chum/answers/doors/family-support-checklist-after-having-a-baby-464ce3c638/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
+      "url": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/",
+      "url": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "url": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/",
+      "url": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "url": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550/",
+      "url": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d.json",
+      "url": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d/",
+      "url": "/chum/answers/doors/find-spanish-language-or-interpreter-supported-help-near-me-55a422cb3d/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8.json",
+      "url": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8/",
+      "url": "/chum/answers/doors/free-or-low-cost-legal-aid-near-me-54aad16cc8/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7.json",
+      "url": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7/",
+      "url": "/chum/answers/doors/get-a-christmas-light-installation-quote-8892957ef7/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074.json",
+      "url": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074/",
+      "url": "/chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f.json",
+      "url": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f/",
+      "url": "/chum/answers/doors/help-me-turn-my-experience-into-concise-interview-stories-b1ed26452f/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f.json",
+      "url": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f/",
+      "url": "/chum/answers/doors/help-my-family-prepare-for-a-new-baby-df0ed6e14f/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-with-utility-bills-95b8898064.json",
+      "url": "/chum/answers/doors/help-with-utility-bills-95b8898064.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/help-with-utility-bills-95b8898064/",
+      "url": "/chum/answers/doors/help-with-utility-bills-95b8898064/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1.json",
+      "url": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1/",
+      "url": "/chum/answers/doors/holiday-light-installers-near-me-6aab350fa1/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1.json",
+      "url": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1/",
+      "url": "/chum/answers/doors/how-much-does-professional-christmas-light-installation-cost-b725426ed1/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "url": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2/",
+      "url": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128.json",
+      "url": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128/",
+      "url": "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b.json",
+      "url": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b/",
+      "url": "/chum/answers/doors/i-need-food-help-near-me-7d875dd90b/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-help-paying-rent-965ea01227.json",
+      "url": "/chum/answers/doors/i-need-help-paying-rent-965ea01227.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-need-help-paying-rent-965ea01227/",
+      "url": "/chum/answers/doors/i-need-help-paying-rent-965ea01227/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json",
+      "url": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/",
+      "url": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "url": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03/",
+      "url": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79.json",
+      "url": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79/",
+      "url": "/chum/answers/doors/landscaping-refresh-in-the-yakima-valley-8910725d79/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0.json",
+      "url": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0/",
+      "url": "/chum/answers/doors/lawn-mowing-near-me-in-yakima-6e5c28e4b0/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5.json",
+      "url": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5/",
+      "url": "/chum/answers/doors/maternal-and-family-support-resources-ec5ccd4cb5/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8.json",
+      "url": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8/",
+      "url": "/chum/answers/doors/mock-interview-for-this-role-5c19cb7df8/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2.json",
+      "url": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2/",
+      "url": "/chum/answers/doors/organize-meals-and-practical-help-for-a-new-parent-a9e7f357e2/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7.json",
+      "url": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7/",
+      "url": "/chum/answers/doors/practice-answering-common-interview-questions-5885e960c7/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea.json",
+      "url": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea/",
+      "url": "/chum/answers/doors/professional-holiday-lighting-for-my-house-0e96f125ea/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7.json",
+      "url": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7/",
+      "url": "/chum/answers/doors/property-maintenance-near-me-in-yakima-1a2aec7cf7/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23.json",
+      "url": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23/",
+      "url": "/chum/answers/doors/rental-turnover-cleanup-in-yakima-e77a1ceb23/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79.json",
+      "url": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79/",
+      "url": "/chum/answers/doors/roofline-christmas-light-installation-3c20830d79/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23.json",
+      "url": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23/",
+      "url": "/chum/answers/doors/sprinkler-repair-near-me-in-yakima-f069243a23/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692.json",
+      "url": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692/",
+      "url": "/chum/answers/doors/sprinkler-startup-or-blowout-near-me-1a3d18d692/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb.json",
+      "url": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb/",
+      "url": "/chum/answers/doors/transportation-assistance-near-me-ad00c7a4eb/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90.json",
+      "url": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90/",
+      "url": "/chum/answers/doors/trimming-or-pruning-in-the-yakima-valley-38fb51fd90/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "url": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669/",
+      "url": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d.json",
+      "url": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d/",
+      "url": "/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 100
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
+      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 86
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
+      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
+      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-28T17:03:20.114Z",
+      "priority": 80
+    },
     {
       "path": "/chum/products/career-command/",
       "url": "/chum/products/career-command/",
@@ -324,12 +1214,6 @@
       "priority": 84
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T17:02:37.885Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/syndication/index.json",
       "url": "/chum/syndication/index.json",
       "last_changed": "2026-09-28T17:02:37.885Z",
@@ -400,12 +1284,6 @@
       "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
       "last_changed": "2026-09-28T16:59:50.301Z",
       "priority": 160
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "url": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 108
     },
     {
       "path": "/chum/sitemaps/products.xml",
@@ -654,12 +1532,6 @@
       "priority": 92
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 90
-    },
-    {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
       "last_changed": "2026-09-28T16:59:50.301Z",
@@ -696,24 +1568,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/capabilities.json",
       "url": "/chum/capabilities.json",
       "last_changed": "2026-09-28T16:59:50.301Z",
@@ -722,18 +1576,6 @@
     {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
       "last_changed": "2026-09-28T16:59:50.301Z",
       "priority": 80
     },
@@ -1142,528 +1984,6 @@
     {
       "path": "/chum/products/evercraft-clip/ai-discovery.json",
       "url": "/chum/products/evercraft-clip/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-containment/",
-      "url": "/chum/products/evercraft-containment/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-cosmos-atlas/",
-      "url": "/chum/products/evercraft-cosmos-atlas/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-cosmos-atlas/ai-conformance.json",
-      "url": "/chum/products/evercraft-cosmos-atlas/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
-      "url": "/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-fantasy-intelligence/",
-      "url": "/chum/products/evercraft-fantasy-intelligence/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-fantasy-intelligence/ai-conformance.json",
-      "url": "/chum/products/evercraft-fantasy-intelligence/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
-      "url": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/",
-      "url": "/chum/products/evercraft-front-door/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/ai-conformance.json",
-      "url": "/chum/products/evercraft-front-door/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "url": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-global-health-atlas/",
-      "url": "/chum/products/evercraft-global-health-atlas/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-global-health-atlas/ai-conformance.json",
-      "url": "/chum/products/evercraft-global-health-atlas/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
-      "url": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/",
-      "url": "/chum/products/evercraft-home/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/ai-conformance.json",
-      "url": "/chum/products/evercraft-home/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-home/ai-discovery.json",
-      "url": "/chum/products/evercraft-home/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-network/",
-      "url": "/chum/products/evercraft-network/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-network/ai-conformance.json",
-      "url": "/chum/products/evercraft-network/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-network/ai-discovery.json",
-      "url": "/chum/products/evercraft-network/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-physics-atlas/",
-      "url": "/chum/products/evercraft-physics-atlas/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-physics-atlas/ai-conformance.json",
-      "url": "/chum/products/evercraft-physics-atlas/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-physics-atlas/ai-discovery.json",
-      "url": "/chum/products/evercraft-physics-atlas/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/",
-      "url": "/chum/products/evercraft-rewards/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "url": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "url": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/",
-      "url": "/chum/products/evercraft-web/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/ai-conformance.json",
-      "url": "/chum/products/evercraft-web/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-web/ai-discovery.json",
-      "url": "/chum/products/evercraft-web/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-wildlife-atlas/",
-      "url": "/chum/products/evercraft-wildlife-atlas/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-wildlife-atlas/ai-conformance.json",
-      "url": "/chum/products/evercraft-wildlife-atlas/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
-      "url": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/",
-      "url": "/chum/products/evermaps/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/ai-conformance.json",
-      "url": "/chum/products/evermaps/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/ai-discovery.json",
-      "url": "/chum/products/evermaps/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/everystage/",
-      "url": "/chum/products/everystage/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/everystage/ai-conformance.json",
-      "url": "/chum/products/everystage/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/everystage/ai-discovery.json",
-      "url": "/chum/products/everystage/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/",
-      "url": "/chum/products/faie/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/ai-conformance.json",
-      "url": "/chum/products/faie/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/faie/ai-discovery.json",
-      "url": "/chum/products/faie/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/findmypart/ai-conformance.json",
-      "url": "/chum/products/findmypart/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/forensic-record/",
-      "url": "/chum/products/forensic-record/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/forensic-record/ai-conformance.json",
-      "url": "/chum/products/forensic-record/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/forensic-record/ai-discovery.json",
-      "url": "/chum/products/forensic-record/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/global-energy-atlas/",
-      "url": "/chum/products/global-energy-atlas/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/global-energy-atlas/ai-conformance.json",
-      "url": "/chum/products/global-energy-atlas/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/global-energy-atlas/ai-discovery.json",
-      "url": "/chum/products/global-energy-atlas/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/",
-      "url": "/chum/products/globalstat/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/ai-conformance.json",
-      "url": "/chum/products/globalstat/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/ai-discovery.json",
-      "url": "/chum/products/globalstat/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/",
-      "url": "/chum/products/ibmi-rescue/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "url": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "url": "/chum/products/ibmi-rescue/llms.txt",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/infinite-classroom/",
-      "url": "/chum/products/infinite-classroom/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/infinite-classroom/ai-conformance.json",
-      "url": "/chum/products/infinite-classroom/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/infinite-classroom/ai-discovery.json",
-      "url": "/chum/products/infinite-classroom/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/",
-      "url": "/chum/products/legacy-rescue-lab/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "url": "/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "url": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/",
-      "url": "/chum/products/little-red-book-export-qa/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/ai-conformance.json",
-      "url": "/chum/products/little-red-book-export-qa/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "url": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/",
-      "url": "/chum/products/raven-nexus/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/ai-conformance.json",
-      "url": "/chum/products/raven-nexus/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/raven-nexus/ai-discovery.json",
-      "url": "/chum/products/raven-nexus/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/roasted/",
-      "url": "/chum/products/roasted/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/roasted/ai-conformance.json",
-      "url": "/chum/products/roasted/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/roasted/ai-discovery.json",
-      "url": "/chum/products/roasted/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/",
-      "url": "/chum/products/seasonally/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/ai-conformance.json",
-      "url": "/chum/products/seasonally/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/seasonally/ai-discovery.json",
-      "url": "/chum/products/seasonally/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/skyops-parking/",
-      "url": "/chum/products/skyops-parking/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/skyops-parking/ai-conformance.json",
-      "url": "/chum/products/skyops-parking/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/skyops-parking/ai-discovery.json",
-      "url": "/chum/products/skyops-parking/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/space-dudz/",
-      "url": "/chum/products/space-dudz/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/space-dudz/ai-conformance.json",
-      "url": "/chum/products/space-dudz/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/space-dudz/ai-discovery.json",
-      "url": "/chum/products/space-dudz/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-atlas-freight/",
-      "url": "/chum/products/systemia-atlas-freight/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-atlas-freight/ai-conformance.json",
-      "url": "/chum/products/systemia-atlas-freight/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-atlas-freight/ai-discovery.json",
-      "url": "/chum/products/systemia-atlas-freight/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-decision-lab/",
-      "url": "/chum/products/systemia-decision-lab/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-decision-lab/ai-conformance.json",
-      "url": "/chum/products/systemia-decision-lab/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-decision-lab/ai-discovery.json",
-      "url": "/chum/products/systemia-decision-lab/ai-discovery.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-field-library/",
-      "url": "/chum/products/systemia-field-library/",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-field-library/ai-conformance.json",
-      "url": "/chum/products/systemia-field-library/ai-conformance.json",
-      "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-field-library/ai-discovery.json",
-      "url": "/chum/products/systemia-field-library/ai-discovery.json",
       "last_changed": "2026-09-28T16:07:14.264Z",
       "priority": 94
     }
