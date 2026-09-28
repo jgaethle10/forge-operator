@@ -1,6 +1,6 @@
 # ForensiScope production ASR binding
 
-ForensiScope keeps speech recognition behind its existing transcription-engine contract. The evidence pipeline does not depend on one vendor: private/local command engines remain supported, while the managed provider runner supplies a production HTTP lane for OpenAI-compatible transcription APIs.
+ForensiScope keeps speech recognition behind its existing transcription-engine contract. The evidence pipeline does not depend on one vendor: private/local command engines remain supported, while the managed provider runner supports OpenAI-compatible transcription and Google's Gemini transcription stack.
 
 ## Managed provider lane
 
@@ -17,12 +17,36 @@ Optional settings:
 
 - `FORENSISCOPE_ASR_BASE_URL`: defaults to `https://api.openai.com/v1`; use an OpenAI-compatible endpoint for another provider or a private gateway.
 - `FORENSISCOPE_ASR_MODEL`: defaults to `gpt-4o-transcribe-diarize`.
-- `FORENSISCOPE_ASR_LANGUAGE`: ISO-639-1 language hint.
+- `FORENSISCOPE_ASR_LANGUAGE`: language hint. OpenAI-compatible providers accept their supported language format; Gemini expects a BCP-47 code such as `en-US`.
 - `FORENSISCOPE_ASR_PROMPT`: vocabulary/context prompt when the selected model supports prompts.
 - `FORENSISCOPE_ASR_TIMEOUT_MS`: provider request timeout, default five minutes.
 - `FORENSISCOPE_ASR_HEALTHCHECK_REMOTE=true`: opt into a remote `/models` healthcheck. Default healthchecks verify configuration without making a network request.
 
 The default diarization profile requests `diarized_json` with automatic server chunking and converts provider segments into the canonical ForensiScope `{start,end,text,speaker,confidence?}` contract. `whisper-1` uses verbose JSON segment timestamps. Text-only provider responses are retained as one shard-wide timed segment instead of being discarded.
+
+
+
+### Gemini lane
+
+Evercraft runtimes that already expose `GEMINI_API_KEY` automatically gain a ForensiScope managed ASR lane unless transcription is explicitly disabled. No duplicate credential is required.
+
+```bash
+GEMINI_API_KEY=...
+# Optional explicit selection:
+FORENSISCOPE_ASR_PROVIDER=gemini
+FORENSISCOPE_ASR_MODEL=gemini-3.5-transcribe
+```
+
+The Gemini lane uses `gemini-3.5-transcribe` by default and requests verbatim transcription with speaker diarization and word-level timestamps. ForensiScope groups the returned word annotations into speaker turns and converts the offsets into its canonical segment contract.
+
+Provider selection precedence is:
+
+1. `FORENSISCOPE_ASR_PROVIDER` when explicitly set.
+2. Gemini when `GEMINI_API_KEY` is present.
+3. OpenAI when `FORENSISCOPE_ASR_API_KEY` or `OPENAI_API_KEY` is present.
+4. The private/local executable contract when explicitly configured.
+
+Set `FORENSISCOPE_TRANSCRIBE_ENABLED=false` to disable all managed and local transcription discovery on a node.
 
 ## Private/local lane
 

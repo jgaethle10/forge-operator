@@ -20,6 +20,7 @@ COPY --from=build /app/server.ts ./server.ts
 COPY --from=build /app/systemia/chum ./systemia/chum
 COPY --from=build /app/systemia/mcp ./systemia/mcp
 COPY --from=build /app/systemia/media-studio ./systemia/media-studio
+COPY --from=build /app/systemia/forensiscope ./systemia/forensiscope
 COPY --from=build /app/systemia/rivet ./systemia/rivet
 COPY --from=build /app/systemia/beast-mode ./systemia/beast-mode
 COPY --from=build /app/registry ./registry

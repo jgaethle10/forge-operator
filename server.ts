@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-router.mjs';
+import { transcriptionCapabilityStatus } from './systemia/forensiscope/transcription-engine.mjs';
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
@@ -439,12 +440,19 @@ async function persistChumAttributionEvent(event: unknown) {
 
 
 app.get('/api/health', (_req: Request, res: Response) => {
+  const speech = transcriptionCapabilityStatus();
   res.json({
     ok: true,
     service: 'forge-operator',
     provider: 'Evercraft',
-    version: '2026-09-24',
+    version: '2026-09-28',
     timestamp: new Date().toISOString(),
+    forensiscope: {
+      transcription_ready: speech.ready,
+      transcription_state: speech.state,
+      engine_id: speech.engine_id,
+      probe_state: speech.probe_state,
+    },
   });
 });
 
@@ -459,6 +467,15 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       checkout: checkoutUrl ? '/api/checkout' : null,
       pricingState: 'human-gated',
     },
+    forensiscope: (() => {
+      const speech = transcriptionCapabilityStatus();
+      return {
+        transcriptionReady: speech.ready,
+        transcriptionState: speech.state,
+        engineId: speech.engine_id,
+        probeState: speech.probe_state,
+      };
+    })(),
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',

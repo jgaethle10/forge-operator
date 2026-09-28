@@ -37,10 +37,17 @@ function substitute(value, context) {
 
 
 function managedProviderEngine(env) {
-  const provider = String(env.FORENSISCOPE_ASR_PROVIDER || '').trim().toLowerCase();
+  const explicitProvider = String(env.FORENSISCOPE_ASR_PROVIDER || '').trim().toLowerCase();
+  const provider = explicitProvider || (
+    String(env.GEMINI_API_KEY || '').trim()
+      ? 'gemini'
+      : String(env.FORENSISCOPE_ASR_API_KEY || env.OPENAI_API_KEY || '').trim()
+        ? 'openai'
+        : ''
+  );
   if (!provider) return null;
 
-  if (!['openai', 'openai-compatible'].includes(provider)) {
+  if (!['openai', 'openai-compatible', 'gemini'].includes(provider)) {
     return {
       state: 'misconfigured',
       engine_id: null,
@@ -48,16 +55,26 @@ function managedProviderEngine(env) {
     };
   }
 
-  const apiKeyPresent = Boolean(String(env.FORENSISCOPE_ASR_API_KEY || env.OPENAI_API_KEY || '').trim());
+  const gemini = provider === 'gemini';
+  const apiKeyPresent = Boolean(String(
+    gemini
+      ? (env.FORENSISCOPE_ASR_API_KEY || env.GEMINI_API_KEY || '')
+      : (env.FORENSISCOPE_ASR_API_KEY || env.OPENAI_API_KEY || '')
+  ).trim());
   if (!apiKeyPresent) {
     return {
       state: 'misconfigured',
       engine_id: null,
-      reason: 'Managed ASR requires FORENSISCOPE_ASR_API_KEY or OPENAI_API_KEY.'
+      reason: gemini
+        ? 'Gemini ASR requires FORENSISCOPE_ASR_API_KEY or GEMINI_API_KEY.'
+        : 'Managed ASR requires FORENSISCOPE_ASR_API_KEY or OPENAI_API_KEY.'
     };
   }
 
-  const model = String(env.FORENSISCOPE_ASR_MODEL || 'gpt-4o-transcribe-diarize').trim();
+  const model = String(
+    env.FORENSISCOPE_ASR_MODEL ||
+    (gemini ? 'gemini-3.5-transcribe' : 'gpt-4o-transcribe-diarize')
+  ).trim();
   return {
     state: 'configured',
     engine_id: `${provider}:${model}`,
@@ -79,7 +96,7 @@ export function resolveTranscriptionEngine(env = process.env) {
     return {
       state: 'disabled',
       engine_id: null,
-      reason: 'Transcription is disabled. Set FORENSISCOPE_TRANSCRIBE_ENABLED=true or configure FORENSISCOPE_ASR_PROVIDER.'
+      reason: 'Transcription is disabled. Set FORENSISCOPE_TRANSCRIBE_ENABLED=true, configure FORENSISCOPE_ASR_PROVIDER, or provide a supported provider key such as GEMINI_API_KEY.'
     };
   }
 
