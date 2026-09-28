@@ -75,6 +75,7 @@ export async function startLocalOrganism({
   graceSeconds = 90,
   remoteBrokerUrl = '',
   remoteAdmissionRetryMs = 5_000,
+  placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute'],
 } = {}) {
   if (!root) throw new Error('root is required');
   if (!/^[a-f0-9]{40}$/i.test(String(releaseRef || ''))) {
@@ -99,6 +100,7 @@ export async function startLocalOrganism({
     port: 0,
     advertiseHost: '127.0.0.1',
     allocatorToken,
+    placementLabels,
     announce: false,
   });
 
@@ -333,6 +335,10 @@ if (isCli) {
       '--remote-broker',
       process.env.EVERCRAFT_REMOTE_BROKER_URL || ''
     ),
+    placementLabels: String(
+      process.env.EVERCRAFT_LOCAL_NODE_LABELS ||
+      'opportunistic,private,outbound-only,personal-compute'
+    ).split(',').map((label) => label.trim().toLowerCase()).filter(Boolean),
   });
 
   console.log(JSON.stringify({
